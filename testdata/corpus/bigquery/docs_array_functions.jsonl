@@ -1,7 +1,7 @@
 {"sql":"ARRAY(subquery)","reject":true}
 {"sql":"SELECT ARRAY\n  (SELECT 1 UNION ALL\n   SELECT 2 UNION ALL\n   SELECT 3) AS new_array","shape":"SELECT ARRAY((SELECT 1 UNION ALL SELECT 2) UNION ALL SELECT 3) AS new_array;"}
-{"sql":"SELECT\n  ARRAY\n    (SELECT AS STRUCT 1, 2, 3\n     UNION ALL SELECT AS STRUCT 4, 5, 6) AS new_array"}
-{"sql":"SELECT ARRAY\n  (SELECT AS STRUCT [1, 2, 3] UNION ALL\n   SELECT AS STRUCT [4, 5, 6]) AS new_array"}
+{"sql":"SELECT\n  ARRAY\n    (SELECT AS STRUCT 1, 2, 3\n     UNION ALL SELECT AS STRUCT 4, 5, 6) AS new_array","shape":"SELECT ARRAY(SELECT AS STRUCT 1, 2, 3 UNION ALL SELECT AS STRUCT 4, 5, 6) AS new_array;"}
+{"sql":"SELECT ARRAY\n  (SELECT AS STRUCT [1, 2, 3] UNION ALL\n   SELECT AS STRUCT [4, 5, 6]) AS new_array","shape":"SELECT ARRAY(SELECT AS STRUCT ARRAY[1, 2, 3] UNION ALL SELECT AS STRUCT ARRAY[4, 5, 6]) AS new_array;"}
 {"sql":"SELECT ARRAY_CONCAT([1, 2], [3, 4], [5, 6]) as count_to_six","shape":"SELECT ARRAY_CONCAT(ARRAY[1, 2], ARRAY[3, 4], ARRAY[5, 6]) AS count_to_six;"}
 {"sql":"ARRAY_FIRST(array_expression)","reject":true}
 {"sql":"SELECT ARRAY_FIRST(['a','b','c','d']) as first_element","shape":"SELECT ARRAY_FIRST(ARRAY['a', 'b', 'c', 'd']) AS first_element;"}
@@ -36,7 +36,7 @@
 {"sql":"SELECT GENERATE_ARRAY(4, 4, 10) AS example_array","shape":"SELECT GENERATE_ARRAY(4, 4, 10) AS example_array;"}
 {"sql":"SELECT GENERATE_ARRAY(10, 0, 3) AS example_array","shape":"SELECT GENERATE_ARRAY(10, 0, 3) AS example_array;"}
 {"sql":"SELECT GENERATE_ARRAY(5, NULL, 1) AS example_array","shape":"SELECT GENERATE_ARRAY(5, NULL, 1) AS example_array;"}
-{"sql":"SELECT GENERATE_ARRAY(start, 5) AS example_array\nFROM UNNEST([3, 4, 5]) AS start"}
+{"sql":"SELECT GENERATE_ARRAY(start, 5) AS example_array\nFROM UNNEST([3, 4, 5]) AS start","shape":"SELECT GENERATE_ARRAY(start, 5) AS example_array FROM UNNEST(ARRAY[3, 4, 5]) AS start;"}
 {"sql":"GENERATE_DATE_ARRAY(start_date, end_date[, INTERVAL step_size step_unit])","reject":true}
 {"sql":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-08') AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-08') AS example;"}
 {"sql":"SELECT GENERATE_DATE_ARRAY(\n '2016-10-05', '2016-10-09', INTERVAL 2 DAY) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-09', INTERVAL 2 DAY) AS example;"}

@@ -77,13 +77,14 @@ var BigQuery = &Dialect{
 			ArrayLiterals: true, TypedStringLiteral: true, AtParams: true, Int64Literals: true,
 			FreePostfix: true, BracketArrays: true, AngleTypes: true, Extract: true, SafeCast: true,
 			CastFormat: true, IntervalUnits: true, LikeQuantified: true, IsUnknown: true, NamedArgs: true,
+			AggregateModifiers: true,
 		},
 		Names: NameFeatures{
 			QualifiedFunctions: true, MaxRelationParts: 3,
 		},
 		Query: QueryFeatures{
 			ParenQueries: true, SetQuantifierRequired: true, UnmixedSetOps: true, Qualify: true,
-			GroupingSets: true, GroupByAll: true,
+			GroupingSets: true, GroupByAll: true, Unnest: true, StarModifiers: true, SelectAs: true,
 		},
 	},
 }

@@ -37,7 +37,7 @@
 {"sql":"SELECT CAST('2020.06.03 00:00:53+00' AS TIMESTAMP FORMAT 'YYYY.MM.DD HH:MI:SSTZH') AS string_to_date_time"}
 {"sql":"CAST(string_expression AS data_type FORMAT format_string_expression)","reject":true}
 {"sql":"CAST(numeric_expression AS STRING FORMAT format_string_expression)","reject":true}
-{"sql":"SELECT input, CAST(input AS STRING FORMAT '$999,999.999') AS output\nFROM UNNEST([1.2, 12.3, 123.456, 1234.56, -12345.678, 1234567.89]) AS input"}
+{"sql":"SELECT input, CAST(input AS STRING FORMAT '$999,999.999') AS output\nFROM UNNEST([1.2, 12.3, 123.456, 1234.56, -12345.678, 1234567.89]) AS input","shape":"SELECT input, CAST(input AS STRING FORMAT '$999,999.999') AS output FROM UNNEST(ARRAY[1.2, 12.3, 123.456, 1234.56, -12345.678, 1234567.89]) AS input;"}
 {"sql":"SELECT\n  CAST(12 AS STRING FORMAT '999') as a,\n  CAST(-12 AS STRING FORMAT '999') as b","shape":"SELECT CAST(12 AS STRING FORMAT '999') AS a, CAST(-12 AS STRING FORMAT '999') AS b;"}
 {"sql":"SELECT CAST(12.5 AS STRING FORMAT '99.99') as a","shape":"SELECT CAST(12.5 AS STRING FORMAT '99.99') AS a;"}
 {"sql":"SELECT\n  CAST(12 AS STRING FORMAT 'S99') as a,\n  CAST(-12 AS STRING FORMAT 'S99') as b","shape":"SELECT CAST(12 AS STRING FORMAT 'S99') AS a, CAST(-12 AS STRING FORMAT 'S99') AS b;"}

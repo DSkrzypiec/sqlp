@@ -1,43 +1,43 @@
-{"sql":"SELECT CORR(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, 7.0)])"}
-{"sql":"SELECT\n  y,\n  x,\n  CORR(y, x)\n    OVER (\n      ORDER BY y\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, 7.0)])"}
-{"sql":"SELECT CORR(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, NULL)])"}
-{"sql":"SELECT CORR(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, 3.0)])"}
-{"sql":"SELECT CORR(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, NULL)])"}
-{"sql":"SELECT CORR(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, 7.0),\n      (5.0, 1.0),\n      (7.0, CAST('Infinity' as FLOAT64))])"}
+{"sql":"SELECT CORR(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, 7.0)])","shape":"SELECT CORR(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 5.0 AS x), (3.0, 9.0), (4.0, 7.0)]);"}
+{"sql":"SELECT\n  y,\n  x,\n  CORR(y, x)\n    OVER (\n      ORDER BY y\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, 7.0)])","shape":"SELECT y, x, CORR(y, x) OVER (ORDER BY y ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 5.0 AS x), (3.0, 9.0), (4.0, 7.0)]);"}
+{"sql":"SELECT CORR(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, NULL)])","shape":"SELECT CORR(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 5.0 AS x), (3.0, 9.0), (4.0, NULL)]);"}
+{"sql":"SELECT CORR(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, 3.0)])","shape":"SELECT CORR(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, NULL AS x), (9.0, 3.0)]);"}
+{"sql":"SELECT CORR(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, NULL)])","shape":"SELECT CORR(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, NULL AS x), (9.0, NULL)]);"}
+{"sql":"SELECT CORR(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 5.0 AS x),\n      (3.0, 9.0),\n      (4.0, 7.0),\n      (5.0, 1.0),\n      (7.0, CAST('Infinity' as FLOAT64))])","shape":"SELECT CORR(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 5.0 AS x), (3.0, 9.0), (4.0, 7.0), (5.0, 1.0), (7.0, CAST('Infinity' AS FLOAT64))]);"}
 {"sql":"SELECT CORR(x, y) AS results\nFROM\n  (\n    SELECT 0 AS x, 0 AS y\n    UNION ALL\n    SELECT 0 AS x, 0 AS y\n  )","shape":"SELECT CORR(x, y) AS results FROM (SELECT 0 AS x, 0 AS y UNION ALL SELECT 0 AS x, 0 AS y);"}
-{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (9.0, 3.0)])"}
-{"sql":"SELECT\n  item,\n  y,\n  x,\n  COVAR_POP(y, x)\n    OVER (\n      ORDER BY item\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1 AS item, 1.0 AS y, 1.0 AS x),\n      (2, 2.0, 6.0),\n      (3, 9.0, 3.0),\n      (4, 2.0, 6.0),\n      (5, 9.0, 3.0)])"}
-{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, 3.0)])"}
-{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, NULL)])"}
-{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (NULL, 3.0)])"}
-{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (CAST('Infinity' as FLOAT64), 3.0)])"}
-{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (9.0, 3.0)])"}
-{"sql":"SELECT\n  item,\n  y,\n  x,\n  COVAR_SAMP(y, x)\n    OVER (\n      ORDER BY item\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1 AS item, 1.0 AS y, 1.0 AS x),\n      (2, 2.0, 6.0),\n      (3, 9.0, 3.0),\n      (4, 2.0, 6.0),\n      (5, 9.0, 3.0)])"}
-{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (NULL, 3.0)])"}
-{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, 3.0)])"}
-{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, NULL)])"}
-{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (CAST('Infinity' as FLOAT64), 3.0)])"}
-{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT\n  x,\n  STDDEV_POP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, 14, NULL]) AS x"}
-{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, NULL]) AS x"}
-{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([NULL]) AS x"}
-{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x"}
-{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT\n  x,\n  STDDEV_SAMP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, 14, NULL]) AS x"}
-{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, NULL]) AS x"}
-{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([NULL]) AS x"}
-{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x"}
-{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT\n  x,\n  VAR_POP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, 14, NULL]) AS x"}
-{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, NULL]) AS x"}
-{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([NULL]) AS x"}
-{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x"}
-{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT\n  x,\n  VAR_SAMP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x"}
-{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, 14, NULL]) AS x"}
-{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, NULL]) AS x"}
-{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([NULL]) AS x"}
-{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x"}
+{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (9.0, 3.0)])","shape":"SELECT COVAR_POP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 1.0 AS x), (2.0, 6.0), (9.0, 3.0), (2.0, 6.0), (9.0, 3.0)]);"}
+{"sql":"SELECT\n  item,\n  y,\n  x,\n  COVAR_POP(y, x)\n    OVER (\n      ORDER BY item\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1 AS item, 1.0 AS y, 1.0 AS x),\n      (2, 2.0, 6.0),\n      (3, 9.0, 3.0),\n      (4, 2.0, 6.0),\n      (5, 9.0, 3.0)])","shape":"SELECT item, y, x, COVAR_POP(y, x) OVER (ORDER BY item ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[STRUCT(1 AS item, 1.0 AS y, 1.0 AS x), (2, 2.0, 6.0), (3, 9.0, 3.0), (4, 2.0, 6.0), (5, 9.0, 3.0)]);"}
+{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, 3.0)])","shape":"SELECT COVAR_POP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, NULL AS x), (9.0, 3.0)]);"}
+{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, NULL)])","shape":"SELECT COVAR_POP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, NULL AS x), (9.0, NULL)]);"}
+{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (NULL, 3.0)])","shape":"SELECT COVAR_POP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 1.0 AS x), (2.0, 6.0), (9.0, 3.0), (2.0, 6.0), (NULL, 3.0)]);"}
+{"sql":"SELECT COVAR_POP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (CAST('Infinity' as FLOAT64), 3.0)])","shape":"SELECT COVAR_POP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 1.0 AS x), (2.0, 6.0), (9.0, 3.0), (2.0, 6.0), (CAST('Infinity' AS FLOAT64), 3.0)]);"}
+{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (9.0, 3.0)])","shape":"SELECT COVAR_SAMP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 1.0 AS x), (2.0, 6.0), (9.0, 3.0), (2.0, 6.0), (9.0, 3.0)]);"}
+{"sql":"SELECT\n  item,\n  y,\n  x,\n  COVAR_SAMP(y, x)\n    OVER (\n      ORDER BY item\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1 AS item, 1.0 AS y, 1.0 AS x),\n      (2, 2.0, 6.0),\n      (3, 9.0, 3.0),\n      (4, 2.0, 6.0),\n      (5, 9.0, 3.0)])","shape":"SELECT item, y, x, COVAR_SAMP(y, x) OVER (ORDER BY item ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[STRUCT(1 AS item, 1.0 AS y, 1.0 AS x), (2, 2.0, 6.0), (3, 9.0, 3.0), (4, 2.0, 6.0), (5, 9.0, 3.0)]);"}
+{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (NULL, 3.0)])","shape":"SELECT COVAR_SAMP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 1.0 AS x), (2.0, 6.0), (9.0, 3.0), (2.0, 6.0), (NULL, 3.0)]);"}
+{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, 3.0)])","shape":"SELECT COVAR_SAMP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, NULL AS x), (9.0, 3.0)]);"}
+{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM UNNEST([STRUCT(1.0 AS y, NULL AS x),(9.0, NULL)])","shape":"SELECT COVAR_SAMP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, NULL AS x), (9.0, NULL)]);"}
+{"sql":"SELECT COVAR_SAMP(y, x) AS results\nFROM\n  UNNEST(\n    [\n      STRUCT(1.0 AS y, 1.0 AS x),\n      (2.0, 6.0),\n      (9.0, 3.0),\n      (2.0, 6.0),\n      (CAST('Infinity' as FLOAT64), 3.0)])","shape":"SELECT COVAR_SAMP(y, x) AS results FROM UNNEST(ARRAY[STRUCT(1.0 AS y, 1.0 AS x), (2.0, 6.0), (9.0, 3.0), (2.0, 6.0), (CAST('Infinity' AS FLOAT64), 3.0)]);"}
+{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, 14, 18]) AS x","shape":"SELECT STDDEV_POP(x) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT\n  x,\n  STDDEV_POP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x","shape":"SELECT x, STDDEV_POP(x) OVER (ORDER BY x ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, 14, NULL]) AS x","shape":"SELECT STDDEV_POP(x) AS results FROM UNNEST(ARRAY[10, 14, NULL]) AS x;"}
+{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, NULL]) AS x","shape":"SELECT STDDEV_POP(x) AS results FROM UNNEST(ARRAY[10, NULL]) AS x;"}
+{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([NULL]) AS x","shape":"SELECT STDDEV_POP(x) AS results FROM UNNEST(ARRAY[NULL]) AS x;"}
+{"sql":"SELECT STDDEV_POP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x","shape":"SELECT STDDEV_POP(x) AS results FROM UNNEST(ARRAY[10, 14, CAST('Infinity' AS FLOAT64)]) AS x;"}
+{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, 14, 18]) AS x","shape":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT\n  x,\n  STDDEV_SAMP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x","shape":"SELECT x, STDDEV_SAMP(x) OVER (ORDER BY x ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, 14, NULL]) AS x","shape":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST(ARRAY[10, 14, NULL]) AS x;"}
+{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, NULL]) AS x","shape":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST(ARRAY[10, NULL]) AS x;"}
+{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([NULL]) AS x","shape":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST(ARRAY[NULL]) AS x;"}
+{"sql":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x","shape":"SELECT STDDEV_SAMP(x) AS results FROM UNNEST(ARRAY[10, 14, CAST('Infinity' AS FLOAT64)]) AS x;"}
+{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, 14, 18]) AS x","shape":"SELECT VAR_POP(x) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT\n  x,\n  VAR_POP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x","shape":"SELECT x, VAR_POP(x) OVER (ORDER BY x ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, 14, NULL]) AS x","shape":"SELECT VAR_POP(x) AS results FROM UNNEST(ARRAY[10, 14, NULL]) AS x;"}
+{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, NULL]) AS x","shape":"SELECT VAR_POP(x) AS results FROM UNNEST(ARRAY[10, NULL]) AS x;"}
+{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([NULL]) AS x","shape":"SELECT VAR_POP(x) AS results FROM UNNEST(ARRAY[NULL]) AS x;"}
+{"sql":"SELECT VAR_POP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x","shape":"SELECT VAR_POP(x) AS results FROM UNNEST(ARRAY[10, 14, CAST('Infinity' AS FLOAT64)]) AS x;"}
+{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, 14, 18]) AS x","shape":"SELECT VAR_SAMP(x) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT\n  x,\n  VAR_SAMP(x)\n    OVER (\n      ORDER BY x\n      ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) AS results\nFROM UNNEST([10, 14, 18]) AS x","shape":"SELECT x, VAR_SAMP(x) OVER (ORDER BY x ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS results FROM UNNEST(ARRAY[10, 14, 18]) AS x;"}
+{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, 14, NULL]) AS x","shape":"SELECT VAR_SAMP(x) AS results FROM UNNEST(ARRAY[10, 14, NULL]) AS x;"}
+{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, NULL]) AS x","shape":"SELECT VAR_SAMP(x) AS results FROM UNNEST(ARRAY[10, NULL]) AS x;"}
+{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([NULL]) AS x","shape":"SELECT VAR_SAMP(x) AS results FROM UNNEST(ARRAY[NULL]) AS x;"}
+{"sql":"SELECT VAR_SAMP(x) AS results FROM UNNEST([10, 14, CAST('Infinity' as FLOAT64)]) AS x","shape":"SELECT VAR_SAMP(x) AS results FROM UNNEST(ARRAY[10, 14, CAST('Infinity' AS FLOAT64)]) AS x;"}

@@ -106,6 +106,7 @@ type ExprFeatures struct {
 	CastFormat           bool // CAST(x AS t FORMAT 'fmt' [AT TIME ZONE tz]) (BigQuery)
 	IntervalUnits        bool // INTERVAL expr unit, as in INTERVAL 5 DAY (BigQuery)
 	LikeQuantified       bool // LIKE ANY|SOME|ALL (pattern, ...) (BigQuery)
+	AggregateModifiers   bool // f(x IGNORE NULLS HAVING MAX y ORDER BY z LIMIT n) (BigQuery)
 	Int64Literals        bool // integer literals must fit INT64, -9223372036854775808 included (BigQuery)
 }
 
@@ -143,6 +144,9 @@ type QueryFeatures struct {
 	InTable               bool // x IN tbl, x IN f(args), x IN () (SQLite)
 	GroupingSets          bool // ROLLUP, CUBE, GROUPING SETS, GROUP BY ()
 	GroupByAll            bool // GROUP BY ALL, grouping by every non-aggregate output (BigQuery)
+	Unnest                bool // FROM UNNEST(a) [alias] WITH OFFSET, x IN UNNEST(a), LIKE ANY UNNEST(a) (BigQuery)
+	StarModifiers         bool // * EXCEPT (a, b), * REPLACE (expr AS a) (BigQuery)
+	SelectAs              bool // SELECT AS STRUCT, SELECT AS VALUE (BigQuery)
 	OrderByUsing          bool // ORDER BY x USING <
 	FetchFirst            bool // FETCH FIRST n ROWS ONLY
 	OffsetWithoutLimit    bool // OFFSET without LIMIT, LIMIT ALL

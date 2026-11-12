@@ -61,9 +61,12 @@ type Name struct {
 // Last returns the final (unqualified) part.
 func (n *Name) Last() Ident { return n.Parts[len(n.Parts)-1] }
 
-// Star is `*` or `t.*`.
+// Star is `*` or `t.*`. Except and Replace are BigQuery's
+// * EXCEPT (a, b) and * REPLACE (expr AS a).
 type Star struct {
 	Qualifier *Name
+	Except    []Ident
+	Replace   []*SelectItem
 }
 
 // LiteralKind classifies a Literal.
@@ -139,9 +142,10 @@ type Binary struct {
 // Quantified is `ANY (subquery|array)`, `ALL (...)`, `SOME (...)` as the
 // right operand of a comparison.
 type Quantified struct {
-	Kind string // ANY, ALL, SOME
-	Expr Expr   // *Subquery or array-valued expression
-	List []Expr // LIKE ANY ('a%', 'b%'), when Expr is nil (BigQuery)
+	Kind   string    // ANY, ALL, SOME
+	Expr   Expr      // *Subquery or array-valued expression
+	List   []Expr    // LIKE ANY ('a%', 'b%'), when Expr is nil (BigQuery)
+	Unnest *FuncCall // LIKE ANY UNNEST(patterns), when Expr is nil (BigQuery)
 }
 
 // IsKind classifies an Is predicate.
@@ -305,6 +309,17 @@ type FuncCall struct {
 	Over        *WindowSpec  // OVER (...) or OVER name
 	NoParens    bool         // CURRENT_DATE, CURRENT_USER, ...
 	RawArgs     *string      // argument text kept verbatim, for RawArgFuncs
+	// BigQuery's aggregate modifiers: IGNORE or RESPECT NULLS, HAVING MAX|MIN,
+	// and LIMIT after the ORDER BY.
+	Nulls  string // "IGNORE", "RESPECT" or ""
+	Having *HavingBound
+	Limit  Expr
+}
+
+// HavingBound is HAVING MAX expr or HAVING MIN expr in an aggregate call.
+type HavingBound struct {
+	Max  bool
+	Expr Expr
 }
 
 // NamedArg is `name => value` (or `name := value`) in a call.
@@ -474,7 +489,8 @@ type Select struct {
 	GroupBy    *GroupBy
 	Having     Expr
 	Windows    []*NamedWindow
-	Qualify    Expr // Snowflake/DuckDB-style; parsed when the dialect allows it
+	Qualify    Expr   // Snowflake/DuckDB-style; parsed when the dialect allows it
+	As         string // SELECT AS STRUCT or AS VALUE (BigQuery): "STRUCT", "VALUE" or ""
 }
 
 // IntoTable is the target of SELECT ... INTO [TEMP|UNLOGGED] [TABLE] name.
@@ -650,6 +666,9 @@ type FuncRef struct {
 	RowsFromColumns [][]*ColumnDef // parallel to RowsFrom: AS (a int, ...)
 	Ordinality      bool
 	Alias           *Alias
+	// Offset is BigQuery's UNNEST(...) [alias] WITH OFFSET [[AS] name].
+	Offset      bool
+	OffsetAlias *Ident
 }
 
 // JoinKind classifies a join.

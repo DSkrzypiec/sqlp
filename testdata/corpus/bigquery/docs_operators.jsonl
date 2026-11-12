@@ -7,7 +7,7 @@
 {"sql":"SELECT STRUCT<INT64, STRING, BOOL>(23, \"tea\", FALSE)[OFFSET(6)] AS field_offset"}
 {"sql":"json_expression \"[\" array_element_id \"]\"","reject":true}
 {"sql":"json_expression \"[\" field_name \"]\"","reject":true}
-{"sql":"SELECT json_value.class.students[0]['name'] AS first_student\nFROM\n  UNNEST(\n    [\n      JSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}',\n      JSON '{\"class\" : {\"students\" : []}}',\n      JSON '{\"class\" : {\"students\" : [{\"name\" : \"John\"}, {\"name\": \"Jamie\"}]}}'])\n    AS json_value"}
+{"sql":"SELECT json_value.class.students[0]['name'] AS first_student\nFROM\n  UNNEST(\n    [\n      JSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}',\n      JSON '{\"class\" : {\"students\" : []}}',\n      JSON '{\"class\" : {\"students\" : [{\"name\" : \"John\"}, {\"name\": \"Jamie\"}]}}'])\n    AS json_value","shape":"SELECT json_value.class.students[0]['name'] AS first_student FROM UNNEST(ARRAY[JSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}', JSON '{\"class\" : {\"students\" : []}}', JSON '{\"class\" : {\"students\" : [{\"name\" : \"John\"}, {\"name\": \"Jamie\"}]}}']) AS json_value;"}
 {"sql":"date_expression + int64_expression\nint64_expression + date_expression\ndate_expression - int64_expression","reject":true}
 {"sql":"SELECT DATE \"2020-09-22\" + 1 AS day_later, DATE \"2020-09-22\" - 7 AS week_ago","shape":"SELECT DATE '2020-09-22' + 1 AS day_later, DATE '2020-09-22' - 7 AS week_ago;"}
 {"sql":"date_expression - date_expression\ntimestamp_expression - timestamp_expression\ndatetime_expression - datetime_expression","reject":true}
@@ -48,7 +48,7 @@
 {"sql":"SELECT '%a' NOT LIKE 'apple'","shape":"SELECT '%a' NOT LIKE 'apple';"}
 {"sql":"SELECT NULL LIKE 'a%'"}
 {"sql":"SELECT 'apple' LIKE NULL"}
-{"sql":"WITH Words AS\n (SELECT 'Intend with clarity.' as value UNION ALL\n  SELECT 'Secure with intention.' UNION ALL\n  SELECT 'Clarity and security.')\nSELECT value\nFROM Words WHERE\n  EXISTS(\n    SELECT value FROM UNNEST(['%ity%', '%and%']) AS pattern\n    WHERE value LIKE pattern\n  )"}
+{"sql":"WITH Words AS\n (SELECT 'Intend with clarity.' as value UNION ALL\n  SELECT 'Secure with intention.' UNION ALL\n  SELECT 'Clarity and security.')\nSELECT value\nFROM Words WHERE\n  EXISTS(\n    SELECT value FROM UNNEST(['%ity%', '%and%']) AS pattern\n    WHERE value LIKE pattern\n  )","shape":"WITH Words AS ((SELECT 'Intend with clarity.' AS value UNION ALL SELECT 'Secure with intention.') UNION ALL SELECT 'Clarity and security.') SELECT value FROM Words WHERE EXISTS (SELECT value FROM UNNEST(ARRAY['%ity%', '%and%']) AS pattern WHERE value LIKE pattern);"}
 {"sql":"'Foo' LIKE '%foo%'","reject":true}
 {"sql":"COLLATE('Foo', 'und:ci') LIKE COLLATE('%foo%', 'und:ci')","reject":true}
 {"sql":"COLLATE('Foo', 'und:ci') = COLLATE('foo', 'und:ci')","reject":true}

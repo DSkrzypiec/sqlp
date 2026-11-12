@@ -313,6 +313,21 @@ func (g *Generator) expr(e ast.Expr) {
 			g.w(".")
 		}
 		g.w("*")
+		if len(e.Except) > 0 {
+			g.w(" EXCEPT (")
+			for i, id := range e.Except {
+				if i > 0 {
+					g.w(", ")
+				}
+				g.ident(id)
+			}
+			g.w(")")
+		}
+		if len(e.Replace) > 0 {
+			g.w(" REPLACE (")
+			g.selectItems(e.Replace)
+			g.w(")")
+		}
 	case *ast.Literal:
 		g.literal(e)
 	case *ast.TypedString:
@@ -374,6 +389,11 @@ func (g *Generator) expr(e ast.Expr) {
 		g.w(" ", op, " ")
 		g.operand(e.Right, p, true)
 	case *ast.Quantified:
+		if e.Unnest != nil {
+			g.w(e.Kind, " ")
+			g.funcCall(e.Unnest)
+			break
+		}
 		g.w(e.Kind, " (")
 		if e.List != nil {
 			g.exprList(e.List)
@@ -855,7 +875,7 @@ func (g *Generator) dataType(dt *ast.DataType) {
 func (g *Generator) funcName(f *ast.FuncCall) {
 	if len(f.Name.Parts) == 1 && !f.Name.Parts[0].Quoted {
 		word := strings.ToUpper(f.Name.Parts[0].Name)
-		if f.NoParens || g.d.FuncNameKeywords[word] || g.d.BareFuncs[word] {
+		if f.NoParens || g.d.FuncNameKeywords[word] || g.d.BareFuncs[word] || word == "UNNEST" && g.d.Features.Query.Unnest {
 			g.w(f.Name.Parts[0].Name)
 			return
 		}
@@ -880,10 +900,21 @@ func (g *Generator) funcCall(f *ast.FuncCall) {
 	}
 	g.kwInline(f.Distinct, "DISTINCT ")
 	g.exprList(f.Args)
+	if f.Nulls != "" {
+		g.w(" ", f.Nulls, " NULLS")
+	}
+	if f.Having != nil {
+		g.w(map[bool]string{true: " HAVING MAX ", false: " HAVING MIN "}[f.Having.Max])
+		g.expr(f.Having.Expr)
+	}
 	if len(f.OrderBy) > 0 {
 		g.kwInline(len(f.Args) > 0, " ")
 		g.w("ORDER BY ")
 		g.orderItems(f.OrderBy)
+	}
+	if f.Limit != nil {
+		g.w(" LIMIT ")
+		g.expr(f.Limit)
 	}
 	g.w(")")
 	if len(f.WithinGroup) > 0 {
@@ -1187,6 +1218,9 @@ func (g *Generator) sel(s *ast.Select) {
 			g.warn("DISTINCT ON")
 		}
 	}
+	if s.As != "" {
+		g.w(" AS ", s.As)
+	}
 	if len(s.Items) > 0 {
 		g.w(" ")
 		g.selectItems(s.Items)
@@ -1316,6 +1350,13 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 			g.kw(t.Ordinality, "WITH ORDINALITY")
 		}
 		g.alias(t.Alias)
+		if t.Offset {
+			g.w(" WITH OFFSET")
+			if t.OffsetAlias != nil {
+				g.w(" AS ")
+				g.ident(*t.OffsetAlias)
+			}
+		}
 	case *ast.Join:
 		g.joinOperand(t.Left)
 		if t.Comma {

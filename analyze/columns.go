@@ -723,22 +723,7 @@ func (b *colBuilder) appendCols(cols, more []col) []col {
 
 func (b *colBuilder) selectItem(it *ast.SelectItem, sc *colScope) []col {
 	if st, ok := it.Expr.(*ast.Star); ok {
-		if st.Qualifier == nil {
-			if len(sc.items) == 1 {
-				return sc.items[0].cols
-			}
-			var cols []col
-			for _, rl := range sc.items {
-				cols = b.appendCols(cols, rl.cols)
-			}
-			return cols
-		}
-		qual := b.idents(st.Qualifier)
-		if rl := b.relNamed(qual, sc); rl != nil {
-			return rl.cols
-		}
-		b.diag("%s names no relation in scope", strings.Join(qual, "."))
-		return nil
+		return b.starModifiers(b.star(st, sc), st, sc)
 	}
 	name := ""
 	if it.Alias != nil {
@@ -747,6 +732,53 @@ func (b *colBuilder) selectItem(it *ast.SelectItem, sc *colScope) []col {
 		name = b.outName(it.Expr)
 	}
 	return []col{b.newCol(name, b.exprSrcs(it.Expr, sc), "")}
+}
+
+func (b *colBuilder) star(st *ast.Star, sc *colScope) []col {
+	if st.Qualifier == nil {
+		if len(sc.items) == 1 {
+			return sc.items[0].cols
+		}
+		var cols []col
+		for _, rl := range sc.items {
+			cols = b.appendCols(cols, rl.cols)
+		}
+		return cols
+	}
+	qual := b.idents(st.Qualifier)
+	if rl := b.relNamed(qual, sc); rl != nil {
+		return rl.cols
+	}
+	b.diag("%s names no relation in scope", strings.Join(qual, "."))
+	return nil
+}
+
+// starModifiers applies BigQuery's * EXCEPT (a) and * REPLACE (expr AS a):
+// a column left out is not part of the result, and a replaced one is
+// computed from its expression instead.
+func (b *colBuilder) starModifiers(cols []col, st *ast.Star, sc *colScope) []col {
+	if len(st.Except) == 0 && len(st.Replace) == 0 {
+		return cols
+	}
+	drop := map[string]bool{}
+	for _, id := range st.Except {
+		drop[b.r.key(b.r.ident(id))] = true
+	}
+	with := map[string]*ast.SelectItem{}
+	for _, it := range st.Replace {
+		with[b.r.key(b.r.ident(*it.Alias))] = it
+	}
+	var out []col
+	for _, c := range cols {
+		switch {
+		case c.open == nil && drop[c.key]:
+		case c.open == nil && with[c.key] != nil:
+			out = append(out, b.newCol(c.name, b.exprSrcs(with[c.key].Expr, sc), c.from))
+		default:
+			out = append(out, c)
+		}
+	}
+	return out
 }
 
 func (b *colBuilder) values(v *ast.Values, sc *colScope) []col {
@@ -1312,6 +1344,15 @@ func (b *colBuilder) funcRel(x *ast.FuncRef, sc *colScope) *rel {
 			}
 		}
 	}
+	// BigQuery's WITH OFFSET adds a column computed from nothing.
+	var offset []col
+	if x.Offset {
+		n := "offset"
+		if x.OffsetAlias != nil {
+			n = b.r.ident(*x.OffsetAlias)
+		}
+		offset = []col{b.newCol(n, nil, name)}
+	}
 	if len(names) > 0 {
 		for i, n := range names {
 			s := srcs
@@ -1320,9 +1361,10 @@ func (b *colBuilder) funcRel(x *ast.FuncRef, sc *colScope) *rel {
 			}
 			rl.cols = append(rl.cols, b.newCol(n, s, name))
 		}
+		rl.cols = append(rl.cols, offset...)
 		return rl
 	}
-	rl.cols = []col{b.newCol(name, srcs, name), {open: &openCols{srcs: srcs, labels: []string{label}}}}
+	rl.cols = append(append([]col{b.newCol(name, srcs, name)}, offset...), col{open: &openCols{srcs: srcs, labels: []string{label}}})
 	if x.Ordinality {
 		rl.cols = append(rl.cols, b.newCol("ordinality", nil, name))
 	}
@@ -1500,6 +1542,8 @@ func (b *colBuilder) callSrcs(f *ast.FuncCall, sc *colScope) []int {
 		b.walk(reflect.ValueOf(a), sc, &acc)
 	}
 	b.walk(reflect.ValueOf(f.OrderBy), sc, &acc)
+	b.walk(reflect.ValueOf(f.Having), sc, &acc) // HAVING MAX|MIN picks the rows the result comes from
+	b.walk(reflect.ValueOf(f.Limit), sc, &acc)
 	b.walk(reflect.ValueOf(f.WithinGroup), sc, &acc)
 	b.walk(reflect.ValueOf(f.Filter), sc, &acc)
 	b.walk(reflect.ValueOf(f.Over), sc, &acc)

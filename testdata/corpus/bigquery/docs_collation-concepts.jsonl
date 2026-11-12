@@ -1,5 +1,5 @@
-{"sql":"SELECT *\nFROM UNNEST([\n  COLLATE('B', 'und:ci'),\n  'b',\n  'a'\n]) AS character\nORDER BY character"}
-{"sql":"SELECT *\nFROM UNNEST([\n  'B',\n  'b',\n  'a'\n]) AS character\nORDER BY character"}
+{"sql":"SELECT *\nFROM UNNEST([\n  COLLATE('B', 'und:ci'),\n  'b',\n  'a'\n]) AS character\nORDER BY character","shape":"SELECT * FROM UNNEST(ARRAY[COLLATE('B', 'und:ci'), 'b', 'a']) AS character ORDER BY character;"}
+{"sql":"SELECT *\nFROM UNNEST([\n  'B',\n  'b',\n  'a'\n]) AS character\nORDER BY character","shape":"SELECT * FROM UNNEST(ARRAY['B', 'b', 'a']) AS character ORDER BY character;"}
 {"sql":"CREATE TABLE (\n  case_insensitive_column STRING COLLATE 'und:ci'\n)","reject":true}
 {"sql":"SELECT COLLATE('a', 'und:ci') AS character","shape":"SELECT COLLATE('a', 'und:ci') AS character;"}
 {"sql":"CREATE TABLE table_a\n(\n    col_a STRING COLLATE 'und:ci',\n    col_b STRING COLLATE '',\n    col_c STRING,\n    col_d STRING COLLATE 'und:ci'\n)"}
@@ -10,7 +10,7 @@
 {"sql":"SELECT STARTS_WITH(col_c_expression, col_d_expression)\nFROM table_a"}
 {"sql":"collation_specification:\n  'language_tag:collation_attribute'","reject":true}
 {"sql":"COLLATE('orange1', 'und:ci')","reject":true}
-{"sql":"SELECT *\nFROM UNNEST([\n  COLLATE('oran\\u2060ge1', 'und:ci'),\n  COLLATE('\\u2060orange2', 'und:ci'),\n  COLLATE('orange3', 'und:ci')\n]) AS fruit\nORDER BY fruit"}
+{"sql":"SELECT *\nFROM UNNEST([\n  COLLATE('oran\\u2060ge1', 'und:ci'),\n  COLLATE('\\u2060orange2', 'und:ci'),\n  COLLATE('orange3', 'und:ci')\n]) AS fruit\nORDER BY fruit","shape":"SELECT * FROM UNNEST(ARRAY[COLLATE('oran⁠ge1', 'und:ci'), COLLATE('⁠orange2', 'und:ci'), COLLATE('orange3', 'und:ci')]) AS fruit ORDER BY fruit;"}
 {"sql":"CREATE TABLE my_dataset.my_table\n(\n  word STRING COLLATE 'und:ci',\n  number INT64\n)\nCLUSTER BY word"}
 {"sql":"CREATE MATERIALIZED VIEW my_dataset.my_view\nAS SELECT\n  -- Assume collated_table.col_ci is a string column with 'und:ci' collation.\n  ARRAY_AGG(col_int64 ORDER BY col_ci) AS col_int64_arr\nFROM my_dataset.collated_table"}
 {"sql":"CREATE MATERIALIZED VIEW my_dataset.my_mv\nAS SELECT\n  t1.col_ci AS t1_col_ci,\n  t2.col_int64 AS t2_col_int64\nFROM my_dataset.collated_table1 AS t1\nJOIN my_dataset.collated_table2 AS t2\nON t1.col_ci = t2.col_ci\n\nSELECT * FROM my_dataset.my_mv\nWHERE t1_col_ci = 'abc'\n\n-- Assuming collated_table1.col_ci and collated_table2.col_ci are columns\n-- with 'und:ci' collation, the query to my_mv may use data from\n-- collated_table1 and collated_table2, rather than data from my_mv.","reject":true}

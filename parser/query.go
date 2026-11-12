@@ -469,6 +469,10 @@ func (p *Parser) parseSelect() *ast.Select {
 			p.expectOp(")")
 		}
 	}
+	if p.d.Features.Query.SelectAs && p.isKw("AS") && p.isKwAt(1, "STRUCT", "VALUE") {
+		p.next()
+		s.As = p.next().Value
+	}
 	if !(p.d.Features.Query.EmptySelectList && s.Distinct != ast.Distinct && s.Distinct != ast.DistinctOn && p.atSelectListEnd()) {
 		s.Items = p.parseSelectItems()
 	}
@@ -552,6 +556,38 @@ func (p *Parser) parseIntoTable() *ast.IntoTable {
 	return into
 }
 
+// parseStarModifiers parses BigQuery's * EXCEPT (a, b) and * REPLACE (expr AS a).
+func (p *Parser) parseStarModifiers(s *ast.Star) *ast.Star {
+	if !p.d.Features.Query.StarModifiers {
+		return s
+	}
+	if p.isKw("EXCEPT") && p.isOpAt(1, "(") {
+		p.pos += 2
+		for {
+			s.Except = append(s.Except, p.parseAnyIdent())
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectOp(")")
+	}
+	if p.isKw("REPLACE") && p.isOpAt(1, "(") {
+		p.pos += 2
+		for {
+			item := &ast.SelectItem{Expr: p.parseExpr()}
+			p.expectKw("AS")
+			name := p.parseAnyIdent()
+			item.Alias = &name
+			s.Replace = append(s.Replace, item)
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectOp(")")
+	}
+	return s
+}
+
 func (p *Parser) parseSelectItems() []*ast.SelectItem {
 	items := []*ast.SelectItem{p.parseSelectItem()}
 	for p.acceptOp(",") {
@@ -562,13 +598,13 @@ func (p *Parser) parseSelectItems() []*ast.SelectItem {
 
 func (p *Parser) parseSelectItem() *ast.SelectItem {
 	if p.acceptOp("*") {
-		return &ast.SelectItem{Expr: &ast.Star{}}
+		return &ast.SelectItem{Expr: p.parseStarModifiers(&ast.Star{})}
 	}
 	if !p.d.Features.Names.KeywordLabels && p.canBeIdent() && p.isOpAt(1, ".") && p.isOpAt(2, "*") {
 		// SQLite only has t.* at the top level of a select list, without alias.
 		name := &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
 		p.pos += 2
-		return &ast.SelectItem{Expr: &ast.Star{Qualifier: name}}
+		return &ast.SelectItem{Expr: p.parseStarModifiers(&ast.Star{Qualifier: name})}
 	}
 	item := &ast.SelectItem{Expr: p.parseExpr()}
 	switch {
@@ -852,6 +888,16 @@ func (p *Parser) parseTableFactor() ast.TableExpr {
 		fr := &ast.FuncRef{Lateral: lateral, Expr: p.parsePrimary()}
 		fr.Ordinality = p.d.Features.Query.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
 		fr.Alias = p.parseAlias(true)
+		return fr
+	}
+	if p.d.Features.Query.Unnest && p.isKw("UNNEST") && p.isOpAt(1, "(") {
+		fr := &ast.FuncRef{Func: p.parseUnnest(), Alias: p.parseAlias(false)}
+		if p.acceptKwSeq("WITH", "OFFSET") {
+			fr.Offset = true
+			if a := p.parseAlias(false); a != nil {
+				fr.OffsetAlias = &a.Name
+			}
+		}
 		return fr
 	}
 	only, name, namePos := p.parseRelationExprMaybeCall()

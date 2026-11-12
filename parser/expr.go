@@ -344,6 +344,10 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 		return &ast.Between{Expr: left, Not: not, Symmetric: sym, Low: low, High: high}
 	case "IN":
 		in := &ast.In{Expr: left, Not: not}
+		if p.d.Features.Query.Unnest && p.isKw("UNNEST") && p.isOpAt(1, "(") {
+			in.Func = p.parseUnnest()
+			return in
+		}
 		if p.d.Features.Query.InTable && !p.isOp("(") {
 			name := p.parseName()
 			if p.isOp("(") {
@@ -389,6 +393,11 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 
 // tryQuantifiedLike parses LIKE ANY (...) and friends.
 func (p *Parser) tryQuantifiedLike() *ast.Quantified {
+	if p.d.Features.Expr.LikeQuantified && p.d.Features.Query.Unnest && p.isKw("ANY", "SOME", "ALL") && p.isKwAt(1, "UNNEST") {
+		q := &ast.Quantified{Kind: p.next().Value}
+		q.Unnest = p.parseUnnest()
+		return q
+	}
 	if p.d.Features.Expr.LikeQuantified && p.isKw("ANY", "SOME", "ALL") && p.isOpAt(1, "(") {
 		q := &ast.Quantified{Kind: p.next().Value}
 		p.expectOp("(")
@@ -944,6 +953,11 @@ func (p *Parser) parseNameExpr() ast.Expr {
 	return name
 }
 
+// parseUnnest parses UNNEST(array), a reserved word called like a function.
+func (p *Parser) parseUnnest() *ast.FuncCall {
+	return p.parseFuncCall(&ast.Name{Parts: []ast.Ident{{Name: p.next().Text}}})
+}
+
 func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 	fc := &ast.FuncCall{Name: name}
 	if len(name.Parts) == 1 && !name.Parts[0].Quoted && p.d.RawArgFuncs[strings.ToUpper(name.Parts[0].Name)] {
@@ -972,8 +986,24 @@ func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 					fc.Args = append(fc.Args, p.parseFuncArg())
 				}
 			}
+			if p.d.Features.Expr.AggregateModifiers {
+				if w := p.acceptOneOf("IGNORE", "RESPECT"); w != "" {
+					p.expectKw("NULLS")
+					fc.Nulls = w
+				}
+				if p.acceptKw("HAVING") {
+					bound := p.acceptOneOf("MAX", "MIN")
+					if bound == "" {
+						p.unexpected("MAX or MIN")
+					}
+					fc.Having = &ast.HavingBound{Max: bound == "MAX", Expr: p.parseExpr()}
+				}
+			}
 			if p.acceptKwSeq("ORDER", "BY") {
 				fc.OrderBy = p.parseOrderItems()
+			}
+			if p.d.Features.Expr.AggregateModifiers && p.acceptKw("LIMIT") {
+				fc.Limit = p.parseExpr()
 			}
 		}
 		p.expectOp(")")
