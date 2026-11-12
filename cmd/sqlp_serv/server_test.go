@@ -128,13 +128,17 @@ func TestSamples(t *testing.T) {
 	if !strings.Contains(sql, `id="sql"`) || !strings.Contains(cat, `id="catalog"`) {
 		t.Fatalf("samples are not editors:\n%s\n%s", sql, cat)
 	}
+	if _, bq := get(t, ts, "/sample/sql?dialect=bigquery"); !strings.Contains(bq, "acme-shop.sales.orders") {
+		t.Errorf("BigQuery's sample query is not served:\n%s", bq)
+	}
 	// The samples must work together: everything resolves, nothing is reported.
-	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
-		stmts, err := parser.Parse(sampleSQL, d)
+	for _, d := range dialect.All {
+		sample := sampleFor(d.Name)
+		stmts, err := parser.Parse(sample.SQL, d)
 		if err != nil {
 			t.Fatalf("%s: %v", d.Name, err)
 		}
-		cat, err := parseCatalog(sampleCatalog)
+		cat, err := parseCatalog(sample.Catalog)
 		if err != nil {
 			t.Fatal(err)
 		}

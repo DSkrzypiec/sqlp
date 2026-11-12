@@ -1,0 +1,23 @@
+{
+  "database": "acme-shop",
+  "objects": [
+    {"schema": "sales", "name": "orders", "kind": "table", "columns": [
+      {"name": "id", "type": "INT64"}, {"name": "customer_id", "type": "INT64"},
+      {"name": "created_at", "type": "TIMESTAMP"}, {"name": "status", "type": "STRING"}]},
+    {"schema": "sales", "name": "order_items", "kind": "table", "columns": [
+      {"name": "order_id", "type": "INT64"}, {"name": "product_id", "type": "INT64"},
+      {"name": "quantity", "type": "INT64"}]},
+    {"schema": "sales", "name": "products", "kind": "table", "columns": [
+      {"name": "id", "type": "INT64"}, {"name": "name", "type": "STRING"},
+      {"name": "price", "type": "NUMERIC"}]},
+    {"schema": "crm", "name": "customers", "kind": "table", "columns": [
+      {"name": "id", "type": "INT64"}, {"name": "name", "type": "STRING"},
+      {"name": "country", "type": "STRING"}, {"name": "deleted_at", "type": "TIMESTAMP"}]},
+    {"schema": "crm", "name": "active_customers", "kind": "view", "columns": [
+      {"name": "id"}, {"name": "name"}, {"name": "country"}],
+     "definition": "SELECT id, name, country FROM `acme-shop.crm.customers` WHERE deleted_at IS NULL"},
+    {"schema": "web", "name": "sessions", "kind": "table", "columns": [
+      {"name": "customer_id", "type": "INT64"}, {"name": "started_at", "type": "TIMESTAMP"},
+      {"name": "page_views", "type": "INT64"}]}
+  ]
+}

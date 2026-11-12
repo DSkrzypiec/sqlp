@@ -109,6 +109,7 @@ var bqAccepts = messageTable(
 	`Name .* not found inside `,
 	`Cannot access field `,
 	`Column name .* is ambiguous`,
+	`Duplicate table alias `,
 	`Name .* in GROUP BY clause is ambiguous`,
 	`Positional parameters are not supported`,
 	// types

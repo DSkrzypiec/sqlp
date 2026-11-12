@@ -783,7 +783,22 @@ accepts and BigQuery rejects, 72 the other way round. They are the work list:
 - [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,
   `EXECUTE IMMEDIATE`, transactions, `CALL`, `RAISE`, `ASSERT`.
 - [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.
-- [ ] 8. Web UI, transpile, run-log triage.
+- [ ] 8. Web UI, transpile, run-log triage. Done 2026-11-12: BigQuery is a dialect
+  of the web UI, with its own sample query and catalog (`web/samples/`, files
+  because of the backquotes). A dialect change swaps an editor that still holds
+  a sample to the new dialect's (`samples` block in the page, `app.js`), and the
+  reset buttons send the dialect. `TestSamples` requires every dialect's sample
+  to resolve fully; BigQuery's also dry-ran on copies of its tables. Highlighting
+  is CodeMirror's SQL mode set up for BigQuery (`text/x-bigquery` in `app.js`).
+  htmx no longer copies `style` attributes on swaps
+  (`htmx.config.attributesToSettle`): with CodeMirror on the SQL textarea, that
+  copy broke the CSP now and then. Analysis name rules for BigQuery, all checked
+  with dry runs: columns, aliases and CTEs ignore case, datasets and tables do
+  not (`NameRules.CaseSensitiveObjects`); a quoted `project.dataset.table` is a
+  path whose implicit alias is the whole quoted name (`NameRules.QuotedPaths`);
+  unqualified names are in the default dataset (search path `""`); `USING`
+  columns come first. Still to do: transpile to and from BigQuery, run-log
+  triage with dry runs (ask the owner first: it sends visitors' SQL to Google).
 
 Every phase follows section 3: AST node, parser, generator, identity test, then
 an oracle run. No verdict is written by hand.

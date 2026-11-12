@@ -39,13 +39,49 @@ function restore() {
 // run already uses the restored catalog.
 restore();
 
+// htmx copies an element's class and style onto the one that replaces it, for
+// CSS transitions. The page's CSP refuses style attributes, and CodeMirror
+// leaves one on the SQL textarea, so htmx must not copy style.
+if (typeof htmx !== "undefined") {
+  htmx.config.attributesToSettle = ["class", "width", "height"];
+}
+
 // The SQL editor highlights SQL in the chosen dialect, with CodeMirror 5
 // (static/codemirror, unchanged from its npm release 5.65.21). The textarea
 // stays the form's field: the editor copies its text there on every change,
 // so htmx sends it like any other field.
-const sqlModes = { postgres: "text/x-pgsql", sqlite: "text/x-sqlite" };
+const sqlModes = { postgres: "text/x-pgsql", sqlite: "text/x-sqlite", bigquery: "text/x-bigquery" };
 let editor = null;
 let resized = null;
+
+// CodeMirror has no BigQuery mode. This one is its SQL mode with BigQuery's
+// reserved words and types, "..." strings, # comments, and MySQL's handling of
+// `quoted` names and @parameters.
+if (typeof CodeMirror !== "undefined") {
+  const words = (s) => Object.fromEntries(s.split(" ").map((w) => [w, true]));
+  const mysql = CodeMirror.mimeModes["text/x-mysql"];
+  CodeMirror.defineMIME("text/x-bigquery", {
+    name: "sql",
+    keywords: words(
+      "all and any array as asc assert_rows_modified at between by case cast collate contains create cross " +
+        "cube current default define desc distinct else end enum escape except exclude exists extract false " +
+        "fetch following for from full graph_table group grouping groups hash having if ignore in inner " +
+        "intersect interval into is join lateral left like limit lookup merge natural new no not null nulls of " +
+        "on or order outer over partition preceding proto qualify range recursive respect right rollup rows " +
+        "select set some struct tablesample then to treat true unbounded union unnest using when where window " +
+        "with within offset ordinal replace options insert update delete truncate drop alter table view " +
+        "function procedure schema temp temporary returns declare begin commit rollback",
+    ),
+    builtin: words(
+      "int64 float64 numeric bignumeric decimal bigdecimal bool string bytes date datetime time timestamp json geography",
+    ),
+    atoms: words("false true null"),
+    operatorChars: /^[*+\-\/<>!=&|^~]/,
+    dateSQL: words("date datetime time timestamp"),
+    support: words("doubleQuote commentHash zerolessFloat hexNumber"),
+    hooks: { "@": mysql.hooks["@"], "`": mysql.hooks["`"] },
+  });
+}
 
 // CodeMirror's PostgreSQL keywords include the standard's one-letter ones
 // (C, P, T, ...), which would colour some of the one-letter aliases most
@@ -97,11 +133,47 @@ function stopEditor() {
 
 startEditor();
 
-document.addEventListener("change", (e) => {
-  if (e.target.name === "dialect" && editor) {
-    editor.setOption("mode", sqlMode());
+// Each dialect has its own sample query and catalog (the samples block in
+// the page). On a dialect change, an editor that still holds one of them gets
+// the new dialect's; an edited one is left alone. This listens in the capture
+// phase, so the run the change starts already sends the new sample.
+let samples = {};
+try {
+  samples = JSON.parse(document.getElementById("samples").textContent);
+} catch (e) {
+  // Without the block, dialect changes keep the editors as they are.
+}
+
+function swapSample(name, dialect) {
+  const el = field(name);
+  const own = samples[dialect];
+  if (!el || !own || el.value === own[name] || !Object.values(samples).some((s) => s[name] === el.value)) {
+    return;
   }
-});
+  if (name === "sql" && editor) {
+    editor.setValue(own.sql); // its change handler copies the text to the textarea
+  } else {
+    el.value = own[name];
+  }
+  if (kept.includes(name)) {
+    save(el);
+  }
+}
+
+document.addEventListener(
+  "change",
+  (e) => {
+    if (e.target.name !== "dialect") {
+      return;
+    }
+    if (editor) {
+      editor.setOption("mode", sqlMode());
+    }
+    swapSample("sql", e.target.value);
+    swapSample("catalog", e.target.value);
+  },
+  true,
+);
 
 // "Sample query" swaps in a fresh textarea: take the editor off the old one
 // first, and put it on the new one once it is in (htmx:afterSettle below).
@@ -120,14 +192,15 @@ for (const type of ["input", "change"]) {
 }
 
 // "Sample catalog" swaps in a fresh editor: remember it like an edit.
-// "Sample query" does too: put the SQL editor on it.
+// "Sample query" does too: put the SQL editor on it. Both ask for the sample
+// of the chosen dialect, so the path carries a query string.
 document.addEventListener("htmx:afterSettle", (e) => {
-  const path = e.detail && e.detail.pathInfo && e.detail.pathInfo.requestPath;
+  const path = (e.detail && e.detail.pathInfo && e.detail.pathInfo.requestPath) || "";
   const el = field("catalog");
-  if (path === "/sample/catalog" && el) {
+  if (path.startsWith("/sample/catalog") && el) {
     save(el);
   }
-  if (path === "/sample/sql" && !editor) {
+  if (path.startsWith("/sample/sql") && !editor) {
     startEditor();
   }
 });

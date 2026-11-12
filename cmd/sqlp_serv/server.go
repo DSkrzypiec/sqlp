@@ -128,8 +128,8 @@ func (s *server) routes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", s.handlePage)
 	mux.HandleFunc("POST /run", s.handleRun)
-	mux.HandleFunc("GET /sample/sql", s.handleSample("sqlbox", sampleSQL))
-	mux.HandleFunc("GET /sample/catalog", s.handleSample("catalogbox", sampleCatalog))
+	mux.HandleFunc("GET /sample/sql", s.handleSample("sqlbox", func(x sample) string { return x.SQL }))
+	mux.HandleFunc("GET /sample/catalog", s.handleSample("catalogbox", func(x sample) string { return x.Catalog }))
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		fmt.Fprintf(w, "ok %s\n", s.build)
@@ -194,6 +194,7 @@ type pageData struct {
 	Version, Build string
 	Recording      bool // runs are stored, which the page says
 	SQL, Catalog   string
+	Samples        map[string]sample // every dialect's, for the script
 	Dialects       []option
 	Actions        []option
 }
@@ -257,6 +258,41 @@ const sampleCatalog = `{
 }
 `
 
+// bigquerySample is BigQuery's sample, kept in files because its names are
+// written in backquotes: tables named by quoted project.dataset.table paths, a
+// query parameter, # comments, QUALIFY and SAFE_DIVIDE. In its catalog the
+// database is the project, the schema the dataset, and the types BigQuery's.
+var bigquerySample = sample{SQL: mustRead("web/samples/bigquery.sql"), Catalog: mustRead("web/samples/bigquery.json")}
+
+func mustRead(path string) string {
+	data, err := webFS.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+
+// sample is what the editors start with in one dialect.
+type sample struct {
+	SQL     string `json:"sql"`
+	Catalog string `json:"catalog"`
+}
+
+// samples holds each dialect's sample. The page's script swaps an editor to
+// the new dialect's sample when the dialect changes, unless it was edited.
+var samples = map[string]sample{
+	"postgres": {sampleSQL, sampleCatalog},
+	"sqlite":   {sampleSQL, sampleCatalog},
+	"bigquery": bigquerySample,
+}
+
+func sampleFor(dialect string) sample {
+	if s, ok := samples[dialect]; ok {
+		return s
+	}
+	return samples["postgres"]
+}
+
 func (s *server) handlePage(w http.ResponseWriter, r *http.Request) {
 	s.render(w, "page", pageData{
 		Version:   s.version,
@@ -264,9 +300,11 @@ func (s *server) handlePage(w http.ResponseWriter, r *http.Request) {
 		Recording: s.store != nil,
 		SQL:       sampleSQL,
 		Catalog:   sampleCatalog,
+		Samples:   samples,
 		Dialects: []option{
 			{Value: "postgres", Label: "PostgreSQL 16", Selected: true},
 			{Value: "sqlite", Label: "SQLite 3.51"},
+			{Value: "bigquery", Label: "BigQuery"},
 		},
 		Actions: []option{
 			{Value: "qstruct", Label: "Query structure", Selected: true},
@@ -276,9 +314,12 @@ func (s *server) handlePage(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// handleSample serves a fresh editor holding a sample, for the reset buttons.
-func (s *server) handleSample(name, text string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) { s.render(w, name, text) }
+// handleSample serves a fresh editor holding the sample of the dialect named
+// in the query string, for the reset buttons and dialect changes.
+func (s *server) handleSample(name string, text func(sample) string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.render(w, name, text(sampleFor(r.URL.Query().Get("dialect"))))
+	}
 }
 
 // render writes one template. A reply that would pass maxReply is replaced

@@ -17,7 +17,7 @@
 <body>
 <header class="top">
   <h1>sqlp</h1>
-  <p>Parse PostgreSQL and SQLite, and see what a query is made of.</p>
+  <p>Parse PostgreSQL, SQLite and BigQuery, and see what a query is made of.</p>
 </header>
 <main>
 <form id="form" hx-post="/run" hx-target="#result" hx-trigger="load, submit, change from:.auto"
@@ -26,7 +26,7 @@
     <section class="editor">
       <div class="editor-head">
         <label for="sql">SQL</label>
-        <button type="button" class="small" hx-get="/sample/sql" hx-target="#sql" hx-swap="outerHTML">Sample query</button>
+        <button type="button" class="small" hx-get="/sample/sql" hx-include="[name=dialect]" hx-target="#sql" hx-swap="outerHTML">Sample query</button>
       </div>
       {{template "sqlbox" .SQL}}
     </section>
@@ -36,13 +36,14 @@
         <label class="check"><input type="checkbox" name="use_catalog" class="auto" checked> Use</label>
         <span class="spacer"></span>
         <button type="button" class="small" data-format="catalog">Format</button>
-        <button type="button" class="small" hx-get="/sample/catalog" hx-target="#catalog" hx-swap="outerHTML">Sample catalog</button>
+        <button type="button" class="small" hx-get="/sample/catalog" hx-include="[name=dialect]" hx-target="#catalog" hx-swap="outerHTML">Sample catalog</button>
       </div>
       {{template "catalogbox" .Catalog}}
       <label class="check"><input type="checkbox" name="expand" class="auto" checked> Expand views through their definitions</label>
       <p class="hint fine">Names as the database stores them. <code>kind</code>: table, view, materialized_view or
         foreign_table. <code>columns</code>: in table order, to check columns and expand <code>*</code>.
-        <code>definition</code>: a view's query. <code>database</code> and <code>schema</code> fill in full names.
+        <code>definition</code>: a view's query. <code>database</code> and <code>schema</code> fill in full names
+        (in BigQuery: the project and the dataset).
         Your edits are kept in this browser.</p>
     </section>
   </div>
@@ -64,7 +65,8 @@
 </form>
 <section id="result" aria-live="polite"></section>
 </main>
-<footer>sqlp · PostgreSQL 16 and SQLite 3.51 · build {{.Build}}
+<script type="application/json" id="samples">{{.Samples}}</script>
+<footer>sqlp · PostgreSQL 16, SQLite 3.51 and BigQuery · build {{.Build}}
   {{- if .Recording}}<br>Each run is stored with your IP address, so that mistakes sqlp makes can be found and fixed.{{end}}</footer>
 </body>
 </html>

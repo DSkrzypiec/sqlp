@@ -39,6 +39,15 @@ var BigQuery = &Dialect{
 		},
 	},
 	Reserved: bigQueryReserved,
+	// Checked with dry runs: columns, aliases and CTEs match in any case,
+	// datasets and tables only in their own; unqualified names are in the
+	// request's default dataset, which the empty schema name stands for;
+	// `dataset.table` is a path; the columns of JOIN ... USING come first; a
+	// CTE sees only the ones before it.
+	Names: NameRules{
+		IgnoreCase: true, CaseSensitiveObjects: true, QuotedPaths: true, SearchPath: []string{""},
+		UsingColumnsFirst: true,
+	},
 	TypedLiterals: set("DATE", "DATETIME", "TIME", "TIMESTAMP", "NUMERIC", "BIGNUMERIC", "DECIMAL",
 		"BIGDECIMAL", "JSON", "INTERVAL", "RANGE"),
 

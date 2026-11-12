@@ -30,13 +30,13 @@ func main() { os.Exit(run(os.Args[1:], os.Stdout, os.Stderr)) }
 func run(args []string, stdout, stderr io.Writer) int {
 	flags := flag.NewFlagSet("sqlp", flag.ContinueOnError)
 	flags.SetOutput(stderr)
-	dialectName := flags.String("dialect", "postgres", "SQL dialect: postgres or sqlite")
+	dialectName := flags.String("dialect", "postgres", "SQL dialect: postgres, sqlite or bigquery")
 	qstruct := flags.Bool("qstruct", false, "print the objects each statement depends on, as JSON")
 	outcols := flags.Bool("outcols", false, "print the columns each statement uses, as JSON")
 	catalogFile := flags.String("catalog", "", "with -qstruct or -outcols: a JSON catalog to resolve names against")
 	expandViews := flags.Bool("expand-views", false, "with -qstruct or -outcols: follow the catalog's view definitions")
 	flags.Usage = func() {
-		fmt.Fprintf(stderr, "usage: sqlp [-dialect postgres|sqlite] [-qstruct|-outcols [-catalog file.json] [-expand-views]] \"query\"\n")
+		fmt.Fprintf(stderr, "usage: sqlp [-dialect postgres|sqlite|bigquery] [-qstruct|-outcols [-catalog file.json] [-expand-views]] \"query\"\n")
 		flags.PrintDefaults()
 	}
 	if err := flags.Parse(args); err != nil {
@@ -48,7 +48,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 	}
 	d, ok := dialect.ByName(*dialectName)
 	if !ok {
-		fmt.Fprintf(stderr, "sqlp: unknown dialect %q (want postgres or sqlite)\n", *dialectName)
+		fmt.Fprintf(stderr, "sqlp: unknown dialect %q (want postgres, sqlite or bigquery)\n", *dialectName)
 		return 2
 	}
 	if *qstruct && *outcols {

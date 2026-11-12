@@ -65,7 +65,7 @@ func newResolver(d *dialect.Dialect, o Options) (*resolver, error) {
 		path = d.Names.SearchPath
 	}
 	for _, s := range d.Names.ImplicitSchemas {
-		if !slices.ContainsFunc(path, func(p string) bool { return r.same(p, s) }) {
+		if !slices.ContainsFunc(path, func(p string) bool { return r.sameObject(p, s) }) {
 			r.path = append(r.path, s)
 		}
 	}
@@ -93,7 +93,7 @@ func newResolver(d *dialect.Dialect, o Options) (*resolver, error) {
 			continue
 		}
 		seen[k] = i
-		r.byName[r.key(o.Object)] = append(r.byName[r.key(o.Object)], o)
+		r.byName[r.objectKey(o.Object)] = append(r.byName[r.objectKey(o.Object)], o)
 	}
 	return r, errors.Join(errs...)
 }
@@ -119,7 +119,18 @@ func (r *resolver) ident(id ast.Ident) string {
 func (r *resolver) written(n *ast.Name) (catalog.Name, error) {
 	var parts []string
 	for _, p := range n.Parts {
-		parts = append(parts, r.ident(p))
+		if !p.Quoted || !r.d.Names.QuotedPaths {
+			parts = append(parts, r.ident(p))
+			continue
+		}
+		for _, piece := range strings.Split(r.ident(p), ".") {
+			if piece != "" {
+				parts = append(parts, piece)
+			}
+		}
+	}
+	if r.d.Names.QuotedPaths && len(parts) > 3 { // `a.b.c.d` is table c.d of dataset b
+		parts = append(parts[:2], strings.Join(parts[2:], "."))
 	}
 	switch len(parts) {
 	case 1:
@@ -142,8 +153,18 @@ func (r *resolver) key(s string) string {
 
 func (r *resolver) same(a, b string) bool { return r.key(a) == r.key(b) }
 
+// objectKey is what two names of databases, schemas or objects must share.
+func (r *resolver) objectKey(s string) string {
+	if r.d.Names.CaseSensitiveObjects {
+		return s
+	}
+	return r.key(s)
+}
+
+func (r *resolver) sameObject(a, b string) bool { return r.objectKey(a) == r.objectKey(b) }
+
 func (r *resolver) nameKey(n catalog.Name) string {
-	return r.key(n.Database) + "\x00" + r.key(n.Schema) + "\x00" + r.key(n.Object)
+	return r.objectKey(n.Database) + "\x00" + r.objectKey(n.Schema) + "\x00" + r.objectKey(n.Object)
 }
 
 // full is a catalog object's name with the catalog's database and the default
@@ -166,11 +187,11 @@ func (r *resolver) object(w catalog.Name) (catalog.Name, *catalog.Object, NameSt
 	if r.cat == nil {
 		return w, nil, Unchecked
 	}
-	cands := r.byName[r.key(w.Object)]
+	cands := r.byName[r.objectKey(w.Object)]
 	inSchema := func(schema string) *catalog.Object {
 		for _, o := range cands {
 			full := r.full(o)
-			if r.same(full.Schema, schema) && (w.Database == "" || full.Database == "" || r.same(w.Database, full.Database)) {
+			if r.sameObject(full.Schema, schema) && (w.Database == "" || full.Database == "" || r.sameObject(w.Database, full.Database)) {
 				return o
 			}
 		}

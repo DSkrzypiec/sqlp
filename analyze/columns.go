@@ -560,10 +560,10 @@ func (b *colBuilder) relNamed(qual []string, sc *colScope) *rel {
 // object was then not found in the catalog and may be in any schema.
 func (b *colBuilder) fullMatches(full catalog.Name, qual []string) bool {
 	n := len(qual)
-	if n > 3 || !b.r.same(full.Object, qual[n-1]) || full.Schema != "" && !b.r.same(full.Schema, qual[n-2]) {
+	if n > 3 || !b.r.sameObject(full.Object, qual[n-1]) || full.Schema != "" && !b.r.sameObject(full.Schema, qual[n-2]) {
 		return false
 	}
-	return n < 3 || full.Database == "" || b.r.same(full.Database, qual[0])
+	return n < 3 || full.Database == "" || b.r.sameObject(full.Database, qual[0])
 }
 
 func (b *colBuilder) idents(n *ast.Name) []string {

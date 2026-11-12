@@ -7,6 +7,7 @@ outside the standard library.
 |---|---|---|
 | PostgreSQL | 16 | `postgres` |
 | SQLite | 3.51 | `sqlite` |
+| BigQuery (GoogleSQL), in progress | none: verdicts are dated | `bigquery` |
 
 ## Using it
 

@@ -192,6 +192,15 @@ type NameRules struct {
 	// IgnoreCase is true when names match regardless of ASCII case, quoted or
 	// not (SQLite). Otherwise they match exactly, after FoldsToLower.
 	IgnoreCase bool
+	// CaseSensitiveObjects keeps IgnoreCase from applying to the names of
+	// databases, schemas and objects, which then match exactly (BigQuery:
+	// datasets and tables, but not columns, aliases or CTEs).
+	CaseSensitiveObjects bool
+	// QuotedPaths reads a quoted part of an object name that holds dots as
+	// several parts: `project.dataset.table` (BigQuery). Empty pieces are
+	// skipped, and pieces past the third stay in the object's name. Its
+	// implicit alias is still the whole quoted part.
+	QuotedPaths bool
 	// SearchPath lists the schemas searched for an unqualified object name, in
 	// order, when the caller gives none.
 	SearchPath []string
