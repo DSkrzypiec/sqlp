@@ -750,10 +750,10 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after the first DDL batch.** 12,194 frozen statements,
-6,758 rejected by BigQuery, 4,217 with a verified shape, no mismatch. Known
-disagreements: 261 valid statements sqlp rejects (before the day's work on the
-reference examples: 1,102) and 7 invalid ones it accepts (206). Many of the
+**Status, 2026-11-12, after CREATE, DROP and ALTER.** 12,559 frozen statements,
+7,059 rejected by BigQuery, 4,260 with a verified shape, no mismatch. Known
+disagreements: 203 valid statements sqlp rejects (before the day's work on the
+reference examples: 1,102) and 4 invalid ones it accepts (206). Many of the
 rest come from BigQuery's order of checks: it reports a missing name or a type
 error before the structural rule sqlp applies (GROUP BY tuples, keys that are
 enforced, parameters in CAST). The others: the DDL still to do (above), GQL
@@ -832,12 +832,14 @@ because the sample tables are recreated on every run.
   and SQL SECURITY INVOKER; materialized views and replicas (analysed as
   `SELECT * FROM source`); [EXTERNAL] schemas; every DROP kind (`DROP FUNCTION
   f(types)`, `ON table`, `ALL ROW ACCESS POLICIES`); UNDROP SCHEMA. Types are a
-  name and literal parameters (`Expr.SimpleTypeNames`), none in CAST. To do:
-  ALTER (TABLE, VIEW, MATERIALIZED VIEW, SCHEMA, ORGANIZATION, PROJECT,
-  BI_CAPACITY, CAPACITY, RESERVATION, CONNECTION, SEARCH/VECTOR INDEX),
-  functions (SQL, JavaScript, remote, TABLE and AGGREGATE), procedures (with
-  phase 6), row access policies, search and vector indexes, capacity,
-  reservation, assignment, connection, data policy, `GRANT`/`REVOKE`.
+  name and literal parameters (`Expr.SimpleTypeNames`), none in CAST. ALTER of
+  every object kind: `AlterTable` with a `Kind` (VIEW, SCHEMA, SEARCH INDEX,
+  ORGANIZATION, ...), one action list as BigQuery parses it, and the actions
+  each kind takes checked after (`googleAlterRefuses`), with the rules on
+  combined actions. To do: functions (SQL, JavaScript, remote, TABLE and
+  AGGREGATE), procedures (with phase 6), row access policies, search and
+  vector indexes, capacity, reservation, assignment, connection, data policy,
+  `GRANT`/`REVOKE`.
 - [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,
   `EXECUTE IMMEDIATE`, transactions, `CALL`, `RAISE`, `ASSERT`.
 - [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.

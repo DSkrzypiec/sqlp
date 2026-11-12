@@ -291,3 +291,33 @@ func (*MergeWhen) node()      {}
 func (*Privilege) node()      {}
 func (*FuncParam) node()      {}
 func (*MaintTarget) node()    {}
+
+// BigQuery's ALTER actions, beside those of AlterTable's own.
+type (
+	// SetOptions is SET OPTIONS (...).
+	SetOptions struct {
+		alterBase
+		Options []Option
+	}
+	// SetDefaultCollate is SET DEFAULT COLLATE 'collation'.
+	SetDefaultCollate struct {
+		alterBase
+		Collate string
+	}
+	// DropPrimaryKey is DROP PRIMARY KEY [IF EXISTS].
+	DropPrimaryKey struct {
+		alterBase
+		IfExists bool
+	}
+	// AddReplica is a schema's ADD REPLICA name [OPTIONS (...)].
+	AddReplica struct {
+		alterBase
+		Name    Ident
+		Options []Option
+	}
+	// DropReplica is a schema's DROP REPLICA name.
+	DropReplica struct {
+		alterBase
+		Name Ident
+	}
+)

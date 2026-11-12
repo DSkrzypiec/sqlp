@@ -1332,6 +1332,13 @@ type AlterTable struct {
 	Only     bool
 	Name     *Name
 	Actions  []AlterAction
+	// BigQuery alters other objects with the same actions: Kind is "" for a
+	// table, else VIEW, MATERIALIZED VIEW, SCHEMA, SEARCH INDEX, VECTOR
+	// INDEX (On names the table), ORGANIZATION (no Name), PROJECT, ...
+	// Rebuild is an index's REBUILD.
+	Kind    string
+	On      *Name
+	Rebuild bool
 }
 
 // AlterAction is one ALTER TABLE action.
@@ -1353,9 +1360,10 @@ type DropColumn struct {
 	Behavior string
 }
 
-// RenameColumn is RENAME [COLUMN] old TO new.
+// RenameColumn is RENAME [COLUMN] [IF EXISTS] old TO new.
 type RenameColumn struct {
 	Old, New Ident
+	IfExists bool // BigQuery
 }
 
 // RenameTable is RENAME TO new.
@@ -1378,12 +1386,17 @@ const (
 	DropNotNull
 	SetType
 	AddIdentity
+	SetColumnOptions // BigQuery: SET OPTIONS (...)
+	SetIdentity      // BigQuery: SET GENERATED ... AS IDENTITY (...)
+	DropGenerated    // BigQuery: DROP GENERATED
 )
 
 // AlterColumn is ALTER [COLUMN] name <action>.
 type AlterColumn struct {
+	IfExists  bool // BigQuery
 	Name      Ident
 	Kind      AlterColumnKind
+	Options   []Option         // SET OPTIONS (...)
 	Expr      Expr             // SET DEFAULT expr; SET DATA TYPE ... USING expr
 	Type      *DataType        // SET DATA TYPE
 	Collation *Name            // SET DATA TYPE ... COLLATE c
@@ -1393,7 +1406,8 @@ type AlterColumn struct {
 
 // AddConstraint is ADD table_constraint [NOT VALID].
 type AddConstraint struct {
-	Constraint *TableConstraint
+	Constraint  *TableConstraint
+	IfNotExists bool // BigQuery: ADD CONSTRAINT IF NOT EXISTS name ...
 }
 
 // DropConstraint is DROP CONSTRAINT [IF EXISTS] name [CASCADE|RESTRICT].

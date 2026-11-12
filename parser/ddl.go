@@ -1564,6 +1564,9 @@ var singlePartKinds = map[string]bool{
 func (p *Parser) parseAlter() ast.Statement {
 	start := p.pos
 	p.expectKw("ALTER")
+	if p.d.Features.DDL.GoogleSQL {
+		return p.parseGoogleAlter()
+	}
 	ext := p.d.Features.DDL.ExtendedDDL
 	if ext && p.isKw(opaqueAlter...) {
 		p.pos = start

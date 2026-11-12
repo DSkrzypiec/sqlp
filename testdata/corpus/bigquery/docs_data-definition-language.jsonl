@@ -154,20 +154,20 @@
 {"sql":"ALTER MATERIALIZED VIEW mydataset.my_mv\nSET OPTIONS (\n  enable_refresh=true,\n  refresh_interval_minutes=20\n)"}
 {"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  organization_set_options_list)","reject":true}
 {"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = \"America/Chicago\",\n  `region-us.default_job_query_timeout_ms` = 3600000\n)"}
-{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL)"}
+{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL)","shape":"ALTER ORGANIZATION SET OPTIONS (`region-us.default_time_zone` = NULL, `region-us.default_kms_key_name` = NULL, `region-us.default_query_job_timeout_ms` = NULL, `region-us.default_interactive_query_queue_timeout_ms` = NULL, `region-us.default_batch_query_queue_timeout_ms` = NULL);"}
 {"sql":"ALTER PROJECT project_id\nSET OPTIONS (project_set_options_list)","reject":true}
 {"sql":"ALTER PROJECT project_id\nSET OPTIONS (\n  `region-us.default_time_zone` = \"America/New_York\",\n  `region-us.default_job_query_timeout_ms` = 1800000\n)"}
 {"sql":"ALTER PROJECT project_id\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL,\n  `region-us.default_sql_dialect_option` = NULL)"}
 {"sql":"ALTER BI_CAPACITY `project_id.location_id.default`\nSET OPTIONS(bi_capacity_options_list)","reject":true}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250\n)"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 0\n)"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  preferred_tables = NULL\n)"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250,\n  preferred_tables = [\"data_project1.dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)"}
-{"sql":"ALTER BI_CAPACITY `region-us.default`\nSET OPTIONS(\n  preferred_tables = [\"dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250\n)","shape":"ALTER BI_CAPACITY `my-project.region-us.default` SET OPTIONS (size_gb = 250);"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 0\n)","shape":"ALTER BI_CAPACITY `my-project.region-us.default` SET OPTIONS (size_gb = 0);"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  preferred_tables = NULL\n)","shape":"ALTER BI_CAPACITY `my-project.region-us.default` SET OPTIONS (preferred_tables = NULL);"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250,\n  preferred_tables = [\"data_project1.dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)","shape":"ALTER BI_CAPACITY `my-project.region-us.default` SET OPTIONS (size_gb = 250, preferred_tables = ARRAY['data_project1.dataset1.table1', 'data_project2.dataset2.table2']);"}
+{"sql":"ALTER BI_CAPACITY `region-us.default`\nSET OPTIONS(\n  preferred_tables = [\"dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)","shape":"ALTER BI_CAPACITY `region-us.default` SET OPTIONS (preferred_tables = ARRAY['dataset1.table1', 'data_project2.dataset2.table2']);"}
 {"sql":"ALTER CAPACITY `project_id.location_id.commitment_id`\nSET OPTIONS (alter_capacity_commitment_option_list)","reject":true}
-{"sql":"ALTER CAPACITY `admin_project.region-us.my-commitment`\nSET OPTIONS (\n  plan = 'THREE_YEAR')"}
+{"sql":"ALTER CAPACITY `admin_project.region-us.my-commitment`\nSET OPTIONS (\n  plan = 'THREE_YEAR')","shape":"ALTER CAPACITY `admin_project.region-us.my-commitment` SET OPTIONS (plan = 'THREE_YEAR');"}
 {"sql":"ALTER RESERVATION `project_id.location_id.reservation_id`\nSET OPTIONS (alter_reservation_option_list)","reject":true}
-{"sql":"ALTER RESERVATION `admin_project.region-us.my-reservation`\nSET OPTIONS (\n  slot_capacity = 300,\n  autoscale_max_slots = 400)"}
+{"sql":"ALTER RESERVATION `admin_project.region-us.my-reservation`\nSET OPTIONS (\n  slot_capacity = 300,\n  autoscale_max_slots = 400)","shape":"ALTER RESERVATION `admin_project.region-us.my-reservation` SET OPTIONS (slot_capacity = 300, autoscale_max_slots = 400);"}
 {"sql":"CREATE TABLE dataset.complex_table(\n  a STRING,\n  my_struct STRUCT <string_field STRING, int_field INT64>,\n  b INT64\n)"}
 {"sql":"CREATE SEARCH INDEX my_index\nON dataset.complex_table(ALL COLUMNS)\nOPTIONS (data_types = ['STRING'])"}
 {"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nADD COLUMN b OPTIONS (data_types = ['INT64'],\n                      index_granularity = 'COLUMN')"}
@@ -177,7 +177,7 @@
 {"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\n  ADD COLUMN b OPTIONS(data_types = ['INT64'], index_granularity = 'COLUMN'),\n  ALTER COLUMN my_struct SET OPTIONS(data_types = ['STRING', 'INT64']),\n  DROP COLUMN a,\n  SET OPTIONS(default_index_column_granularity = 'GLOBAL'),\n  REBUILD"}
 {"sql":"ALTER VECTOR INDEX IF EXISTS index1\nON mydataset.sales\nREBUILD"}
 {"sql":"ALTER CONNECTION [IF EXISTS] `[[project_id.]location.]connection_id`\nSET OPTIONS (alter_connection_option_list)","reject":true}
-{"sql":"ALTER CONNECTION `us.my_cloud_resource_connection`\nSET OPTIONS (\n  description = \"Updated description for my Cloud resource connection\"\n  )"}
+{"sql":"ALTER CONNECTION `us.my_cloud_resource_connection`\nSET OPTIONS (\n  description = \"Updated description for my Cloud resource connection\"\n  )","shape":"ALTER CONNECTION `us.my_cloud_resource_connection` SET OPTIONS (description = 'Updated description for my Cloud resource connection');"}
 {"sql":"DROP SCHEMA mydataset"}
 {"sql":"DROP SCHEMA IF EXISTS mydataset CASCADE","shape":"DROP SCHEMA IF EXISTS mydataset CASCADE;"}
 {"sql":"UNDROP SCHEMA [IF NOT EXISTS]\n[project_name.]dataset_name\n[OPTIONS (location=\"us\")]","reject":true}

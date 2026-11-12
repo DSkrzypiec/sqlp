@@ -199,16 +199,7 @@ func (p *Parser) parseGoogleColumn() *ast.ColumnDef {
 	add := func(cc *ast.ColumnConstraint) { cd.Constraints = append(cd.Constraints, cc) }
 	identity := func(generated string) {
 		p.expectKw("AS", "IDENTITY")
-		cc := &ast.ColumnConstraint{Kind: ast.IdentityConstraint, Generated: generated}
-		p.expectOp("(")
-		if p.acceptKwSeq("START", "WITH") {
-			cc.Identity = append(cc.Identity, ast.SequenceOption{Name: "START WITH", Value: p.parseSignedNumber()})
-		}
-		if p.acceptKwSeq("INCREMENT", "BY") {
-			cc.Identity = append(cc.Identity, ast.SequenceOption{Name: "INCREMENT BY", Value: p.parseSignedNumber()})
-		}
-		p.expectOp(")")
-		add(cc)
+		add(&ast.ColumnConstraint{Kind: ast.IdentityConstraint, Generated: generated, Identity: p.parseGoogleIdentity()})
 	}
 	switch {
 	case p.acceptKw("DEFAULT"):
@@ -469,4 +460,256 @@ func (p *Parser) parseUndrop() ast.Statement {
 	p.expectKw("UNDROP")
 	p.expectKw("SCHEMA")
 	return &ast.Undrop{IfNotExists: p.parseIfNotExists(), Name: p.parseName()}
+}
+
+// parseGoogleIdentity parses ([START WITH n] [INCREMENT BY n]) after AS
+// IDENTITY.
+func (p *Parser) parseGoogleIdentity() []ast.SequenceOption {
+	opts := []ast.SequenceOption{}
+	p.expectOp("(")
+	if p.acceptKwSeq("START", "WITH") {
+		opts = append(opts, ast.SequenceOption{Name: "START WITH", Value: p.parseSignedNumber()})
+	}
+	if p.acceptKwSeq("INCREMENT", "BY") {
+		opts = append(opts, ast.SequenceOption{Name: "INCREMENT BY", Value: p.parseSignedNumber()})
+	}
+	p.expectOp(")")
+	return opts
+}
+
+// googleAlterKinds are the objects ALTER takes, longer names first.
+var googleAlterKinds = [][]string{
+	{"MATERIALIZED", "VIEW"}, {"SEARCH", "INDEX"}, {"VECTOR", "INDEX"}, {"TABLE"}, {"VIEW"}, {"SCHEMA"},
+	{"ORGANIZATION"}, {"PROJECT"}, {"BI_CAPACITY"}, {"CAPACITY"}, {"RESERVATION"}, {"CONNECTION"},
+	{"DATA_POLICY"},
+}
+
+// parseGoogleAlter parses ALTER ..., the word ALTER already read. BigQuery
+// parses one list of actions for every kind of object, then says which
+// actions each kind takes; so does this.
+func (p *Parser) parseGoogleAlter() ast.Statement {
+	at := &ast.AlterTable{}
+	found := false
+	for _, words := range googleAlterKinds {
+		if p.acceptKwSeq(words...) {
+			at.Kind, found = joinWords(words), true
+			break
+		}
+	}
+	if !found {
+		p.unexpected("TABLE, VIEW, SCHEMA or another object type")
+	}
+	if at.Kind == "TABLE" {
+		at.Kind = ""
+	}
+	pos := p.peek().Pos
+	at.IfExists = p.parseIfExists()
+	if at.IfExists && (at.Kind == "RESERVATION" || at.Kind == "ORGANIZATION") {
+		p.errorf(pos, "ALTER %s cannot have IF EXISTS", at.Kind)
+	}
+	switch at.Kind {
+	case "ORGANIZATION":
+	case "PROJECT":
+		if !p.isKw("SET") {
+			at.Name = p.parseName()
+		}
+	case "", "VIEW", "MATERIALIZED VIEW":
+		at.Name = p.parseRelationName()
+	default:
+		at.Name = p.parseName()
+	}
+	index := at.Kind == "SEARCH INDEX" || at.Kind == "VECTOR INDEX"
+	if index {
+		p.expectKw("ON")
+		at.On = p.parseRelationName()
+	}
+	for {
+		if index && p.acceptKw("REBUILD") { // the last action
+			at.Rebuild = true
+			break
+		}
+		pos := p.peek().Pos
+		a := p.parseGoogleAlterAction(at.Kind)
+		if what := googleAlterRefuses(at.Kind, a); what != "" {
+			p.errorf(pos, "%s is not an action of ALTER %s", what, map[bool]string{true: "TABLE", false: at.Kind}[at.Kind == ""])
+		}
+		at.Actions = append(at.Actions, a)
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.checkGoogleAlter(at, pos)
+	return at
+}
+
+// googleAlterRefuses names action a when the kind of object cannot take it.
+func googleAlterRefuses(kind string, a ast.AlterAction) string {
+	columnOptions := false
+	if ac, ok := a.(*ast.AlterColumn); ok {
+		columnOptions = ac.Kind == ast.SetColumnOptions
+	}
+	switch a.(type) {
+	case *ast.SetOptions:
+		return ""
+	case *ast.SetDefaultCollate:
+		if kind == "" || kind == "SCHEMA" {
+			return ""
+		}
+		return "SET DEFAULT COLLATE"
+	case *ast.AddReplica, *ast.DropReplica:
+		if kind == "SCHEMA" {
+			return ""
+		}
+		return "ADD or DROP REPLICA"
+	case *ast.AddColumn:
+		if kind == "" || kind == "SEARCH INDEX" {
+			return ""
+		}
+		return "ADD COLUMN"
+	case *ast.DropColumn:
+		if kind == "" || kind == "SEARCH INDEX" {
+			return ""
+		}
+		return "DROP COLUMN"
+	case *ast.AlterColumn:
+		if kind == "" || columnOptions && (kind == "VIEW" || kind == "MATERIALIZED VIEW" || kind == "SEARCH INDEX") {
+			return ""
+		}
+		return "ALTER COLUMN " + map[bool]string{true: "SET OPTIONS", false: "other than SET OPTIONS"}[columnOptions]
+	default:
+		if kind == "" {
+			return ""
+		}
+		return "this action"
+	}
+}
+
+// checkGoogleAlter applies the rules on combined actions: a table's SET
+// OPTIONS goes alone with column changes, and a schema takes one SET.
+func (p *Parser) checkGoogleAlter(at *ast.AlterTable, pos int) {
+	options, columns, sets := false, false, 0
+	for _, a := range at.Actions {
+		switch x := a.(type) {
+		case *ast.SetOptions:
+			options = true
+			sets++
+		case *ast.SetDefaultCollate:
+			sets++
+		case *ast.AddColumn, *ast.DropColumn, *ast.RenameColumn:
+			columns = true
+		case *ast.AlterColumn:
+			columns = columns || x.Kind == ast.SetType
+		}
+	}
+	switch {
+	case at.Kind == "" && options && columns:
+		p.errorf(pos, "ALTER TABLE cannot mix SET OPTIONS with ADD, DROP or RENAME COLUMN or SET DATA TYPE")
+	case at.Kind == "SCHEMA" && sets > 1:
+		p.errorf(pos, "ALTER SCHEMA takes one SET OPTIONS or SET DEFAULT COLLATE")
+	}
+}
+
+// parseGoogleAlterAction parses one action of ALTER; kind is the object's.
+func (p *Parser) parseGoogleAlterAction(kind string) ast.AlterAction {
+	switch {
+	case p.isKwSeq("SET", "OPTIONS"):
+		p.next()
+		return &ast.SetOptions{Options: p.parseOptionList()}
+	case p.acceptKwSeq("SET", "DEFAULT", "COLLATE"):
+		return &ast.SetDefaultCollate{Collate: p.parseStringValue()}
+	case p.acceptKwSeq("ADD", "COLUMN"):
+		ac := &ast.AddColumn{IfNotExists: p.parseIfNotExists()}
+		if kind == "SEARCH INDEX" { // a column to index, with its options
+			ac.Column = &ast.ColumnDef{Name: p.parseIdent()}
+			if p.isKw("OPTIONS") {
+				ac.Column.Options = p.parseOptionList()
+			}
+			return ac
+		}
+		pos := p.peek().Pos
+		ac.Column = p.parseGoogleColumn()
+		for _, cc := range ac.Column.Constraints {
+			if cc.Kind == ast.PrimaryKeyConstraint {
+				p.errorf(pos, "ADD COLUMN cannot make a primary key")
+			}
+		}
+		return ac
+	case p.acceptKwSeq("ADD", "PRIMARY", "KEY"):
+		tc := &ast.TableConstraint{Kind: ast.TablePrimaryKey, Columns: p.parseKeyColumns()}
+		p.parseNotEnforced(&tc.NotEnforced)
+		return &ast.AddConstraint{Constraint: tc}
+	case p.isKwSeq("ADD", "CONSTRAINT") || p.isKwSeq("ADD", "FOREIGN", "KEY"):
+		p.next()
+		ac := &ast.AddConstraint{Constraint: &ast.TableConstraint{Kind: ast.TableForeignKey}}
+		if p.acceptKw("CONSTRAINT") {
+			ac.IfNotExists = p.parseIfNotExists()
+			id := p.parseIdent()
+			ac.Constraint.Name = &id
+			if p.isKwSeq("PRIMARY", "KEY") {
+				p.errorf(p.peek().Pos, "a primary key cannot be named")
+			}
+		}
+		p.expectKw("FOREIGN", "KEY")
+		ac.Constraint.Columns = p.parseKeyColumns()
+		p.expectKw("REFERENCES")
+		ac.Constraint.References = p.parseGoogleReferences()
+		p.parseNotEnforced(&ac.Constraint.NotEnforced)
+		return ac
+	case p.acceptKwSeq("ADD", "REPLICA"):
+		ar := &ast.AddReplica{Name: p.parseIdent()}
+		if p.isKw("OPTIONS") {
+			ar.Options = p.parseOptionList()
+		}
+		return ar
+	case p.acceptKwSeq("RENAME", "TO"):
+		return &ast.RenameTable{New: p.parseIdent()}
+	case p.acceptKwSeq("RENAME", "COLUMN"):
+		rc := &ast.RenameColumn{IfExists: p.parseIfExists(), Old: p.parseIdent()}
+		p.expectKw("TO")
+		rc.New = p.parseIdent()
+		return rc
+	case p.acceptKwSeq("DROP", "COLUMN"):
+		return &ast.DropColumn{IfExists: p.parseIfExists(), Name: p.parseIdent()}
+	case p.acceptKwSeq("DROP", "CONSTRAINT"):
+		return &ast.DropConstraint{IfExists: p.parseIfExists(), Name: p.parseIdent()}
+	case p.acceptKwSeq("DROP", "PRIMARY", "KEY"):
+		return &ast.DropPrimaryKey{IfExists: p.parseIfExists()}
+	case p.acceptKwSeq("DROP", "REPLICA"):
+		return &ast.DropReplica{Name: p.parseIdent()}
+	case p.acceptKwSeq("ALTER", "COLUMN"):
+		ac := &ast.AlterColumn{IfExists: p.parseIfExists(), Name: p.parseIdent()}
+		switch {
+		case p.isKwSeq("SET", "OPTIONS"):
+			p.next()
+			ac.Kind, ac.Options = ast.SetColumnOptions, p.parseOptionList()
+		case p.acceptKwSeq("DROP", "NOT", "NULL"):
+			ac.Kind = ast.DropNotNull
+		case p.acceptKwSeq("SET", "DATA", "TYPE"):
+			ac.Kind, ac.Type = ast.SetType, p.parseSchemaType(false)
+			if p.isKwSeq("NOT", "NULL") {
+				p.errorf(p.peek().Pos, "SET DATA TYPE cannot add NOT NULL")
+			}
+		case p.acceptKwSeq("SET", "DEFAULT"):
+			ac.Kind, ac.Expr = ast.SetDefault, p.parseExpr()
+		case p.acceptKwSeq("DROP", "DEFAULT"):
+			ac.Kind = ast.DropDefault
+		case p.acceptKwSeq("SET", "GENERATED"):
+			ac.Kind = ast.SetIdentity
+			if p.acceptKwSeq("BY", "DEFAULT") {
+				ac.Generated = "BY DEFAULT"
+			} else {
+				p.expectKw("ALWAYS")
+				ac.Generated = "ALWAYS"
+			}
+			p.expectKw("AS", "IDENTITY")
+			ac.Identity = p.parseGoogleIdentity()
+		case p.acceptKwSeq("DROP", "GENERATED"):
+			ac.Kind = ast.DropGenerated
+		default:
+			p.unexpected("SET OPTIONS, SET DATA TYPE, SET DEFAULT, SET GENERATED or DROP")
+		}
+		return ac
+	}
+	p.unexpected("an ALTER action")
+	return nil
 }

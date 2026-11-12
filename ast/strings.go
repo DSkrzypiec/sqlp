@@ -45,6 +45,7 @@ var (
 	alterColumnKindNames = []string{
 		SetDefault: "SetDefault", DropDefault: "DropDefault", SetNotNull: "SetNotNull",
 		DropNotNull: "DropNotNull", SetType: "SetType", AddIdentity: "AddIdentity",
+		SetColumnOptions: "SetColumnOptions", SetIdentity: "SetIdentity", DropGenerated: "DropGenerated",
 	}
 )
 

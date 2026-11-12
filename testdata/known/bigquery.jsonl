@@ -32,57 +32,8 @@
 {"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (\n  index_type = 'IVF',\n  distance_type = 'COSINE',\n  ivf_options = '{\"num_lists\":2500}')","kind":"rejects-valid"}
 {"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (\n  index_type = 'TREE_AH',\n  distance_type = 'EUCLIDEAN',\n  tree_ah_options = '{\"normalization_type\": \"L2\"}')","kind":"rejects-valid"}
 {"sql":"CREATE CONNECTION IF NOT EXISTS `us.my_cloud_resource_connection`\nOPTIONS (\n  connection_type = \"CLOUD_RESOURCE\",\n  friendly_name = \"My Resource Connection\",\n  description = \"Connection to access Cloud resources\"\n  )","kind":"rejects-valid"}
-{"sql":"ALTER SCHEMA mydataset\nSET DEFAULT COLLATE 'und:ci'","kind":"rejects-valid"}
-{"sql":"ALTER SCHEMA mydataset\nSET OPTIONS(\n  default_table_expiration_days=3.75\n  )","kind":"rejects-valid"}
-{"sql":"ALTER SCHEMA mydataset\nSET OPTIONS(\n  is_case_insensitive=TRUE\n)","kind":"rejects-valid"}
-{"sql":"ALTER SCHEMA cross_region_dataset\nADD REPLICA `EU` OPTIONS(location=`eu`)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nSET OPTIONS (\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 7 DAY),\n  description=\"Table that expires seven days from now\"\n)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mypartitionedtable\nSET OPTIONS (require_partition_filter=true)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nSET OPTIONS (expiration_timestamp=NULL)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\n  ADD COLUMN A STRING,\n  ADD COLUMN IF NOT EXISTS B GEOGRAPHY,\n  ADD COLUMN C ARRAY <NUMERIC>,\n  ADD COLUMN D DATE OPTIONS(description=\"my description\")","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\n   ADD COLUMN A STRUCT<\n       B GEOGRAPHY,\n       C ARRAY <INT64>,\n       D INT64 NOT NULL,\n       E TIMESTAMP OPTIONS(description=\"creation time\")\n       >","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nADD COLUMN word STRING COLLATE 'und:ci'","kind":"rejects-valid"}
-{"sql":"ALTER TABLE pk_table\nADD PRIMARY KEY (x,y) NOT ENFORCED","kind":"rejects-valid"}
-{"sql":"ALTER TABLE fk_table\nADD CONSTRAINT my_fk_name FOREIGN KEY (u, v)\nREFERENCES pk_table(x, y) NOT ENFORCED","kind":"rejects-valid"}
-{"sql":"ALTER TABLE fk_table\nADD PRIMARY KEY (x,y) NOT ENFORCED,\nADD CONSTRAINT fk FOREIGN KEY (u, v) REFERENCES pk_table(x, y) NOT ENFORCED,\nADD CONSTRAINT fk2 FOREIGN KEY (i, j) REFERENCES pk_table(x, y) NOT ENFORCED","kind":"rejects-valid"}
-{"sql":"ALTER TABLE pk_table ADD PRIMARY KEY (x,y) NOT ENFORCED","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\n  RENAME COLUMN A TO columnA,\n  RENAME COLUMN IF EXISTS B TO columnB","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\n  RENAME COLUMN columnA TO temp_col,\n  RENAME COLUMN columnB TO columnA,\n  RENAME COLUMN temp_col TO columnB","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\n  DROP COLUMN A,\n  DROP COLUMN IF EXISTS B","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mytable DROP CONSTRAINT myConstraint","kind":"rejects-valid"}
-{"sql":"ALTER TABLE myTable\nDROP PRIMARY KEY","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nSET DEFAULT COLLATE ''","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN price\nSET OPTIONS (description = 'Price per unit')","kind":"rejects-valid"}
-{"sql":"ALTER VIEW mydataset.myview\nALTER COLUMN total\nSET OPTIONS (description = 'Total sales of the product')","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN mycolumn\nDROP NOT NULL","kind":"rejects-valid"}
-{"sql":"ALTER TABLE dataset.my_table ALTER COLUMN c1 SET DATA TYPE NUMERIC","kind":"rejects-valid"}
-{"sql":"ALTER TABLE dataset.my_table ALTER COLUMN s1\nSET DATA TYPE STRUCT <a NUMERIC, b STRING>","kind":"rejects-valid"}
-{"sql":"ALTER TABLE dataset.my_table\nALTER COLUMN pt\nSET DATA TYPE NUMERIC(8,2)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN mycolumn\nSET DEFAULT CURRENT_TIME()","kind":"rejects-valid"}
 {"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN id\nSET GENERATED AS IDENTITY (\n  START WITH 100\n  INCREMENT BY 10\n)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN mycolumn\nDROP DEFAULT","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN id_col\nDROP GENERATED","kind":"rejects-valid"}
-{"sql":"ALTER VIEW mydataset.myview\nSET OPTIONS (\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 7 DAY),\n  description=\"View that expires seven days from now\"\n)","kind":"rejects-valid"}
-{"sql":"ALTER MATERIALIZED VIEW mydataset.my_mv\nSET OPTIONS (\n  enable_refresh=true,\n  refresh_interval_minutes=20\n)","kind":"rejects-valid"}
-{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = \"America/Chicago\",\n  `region-us.default_job_query_timeout_ms` = 3600000\n)","kind":"rejects-valid"}
-{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL)","kind":"rejects-valid"}
-{"sql":"ALTER PROJECT project_id\nSET OPTIONS (\n  `region-us.default_time_zone` = \"America/New_York\",\n  `region-us.default_job_query_timeout_ms` = 1800000\n)","kind":"rejects-valid"}
-{"sql":"ALTER PROJECT project_id\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL,\n  `region-us.default_sql_dialect_option` = NULL)","kind":"rejects-valid"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250\n)","kind":"rejects-valid"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 0\n)","kind":"rejects-valid"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  preferred_tables = NULL\n)","kind":"rejects-valid"}
-{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250,\n  preferred_tables = [\"data_project1.dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)","kind":"rejects-valid"}
-{"sql":"ALTER BI_CAPACITY `region-us.default`\nSET OPTIONS(\n  preferred_tables = [\"dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)","kind":"rejects-valid"}
-{"sql":"ALTER CAPACITY `admin_project.region-us.my-commitment`\nSET OPTIONS (\n  plan = 'THREE_YEAR')","kind":"rejects-valid"}
-{"sql":"ALTER RESERVATION `admin_project.region-us.my-reservation`\nSET OPTIONS (\n  slot_capacity = 300,\n  autoscale_max_slots = 400)","kind":"rejects-valid"}
 {"sql":"CREATE SEARCH INDEX my_index\nON dataset.complex_table(ALL COLUMNS)\nOPTIONS (data_types = ['STRING'])","kind":"rejects-valid"}
-{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nADD COLUMN b OPTIONS (data_types = ['INT64'],\n                      index_granularity = 'COLUMN')","kind":"rejects-valid"}
-{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nALTER COLUMN my_struct SET OPTIONS(data_types = ['STRING', 'INT64'])","kind":"rejects-valid"}
-{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nSET OPTIONS(data_types = ['STRING', 'INT64'])","kind":"rejects-valid"}
-{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nDROP COLUMN a","kind":"rejects-valid"}
-{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\n  ADD COLUMN b OPTIONS(data_types = ['INT64'], index_granularity = 'COLUMN'),\n  ALTER COLUMN my_struct SET OPTIONS(data_types = ['STRING', 'INT64']),\n  DROP COLUMN a,\n  SET OPTIONS(default_index_column_granularity = 'GLOBAL'),\n  REBUILD","kind":"rejects-valid"}
-{"sql":"ALTER VECTOR INDEX IF EXISTS index1\nON mydataset.sales\nREBUILD","kind":"rejects-valid"}
-{"sql":"ALTER CONNECTION `us.my_cloud_resource_connection`\nSET OPTIONS (\n  description = \"Updated description for my Cloud resource connection\"\n  )","kind":"rejects-valid"}
 {"sql":"-- Declare a variable with type parameters.\nDECLARE x STRING(10);\n\n-- This is a valid assignment to x.\nSET x = \"hello\";\n\n-- This assignment to x violates the type parameter constraint and results in an OUT_OF_RANGE error.\nSET x = \"this string is too long\"","kind":"rejects-valid"}
 {"sql":"-- Declare variables with type parameters.\nDECLARE x NUMERIC(10) DEFAULT 12345;\nDECLARE y NUMERIC(5, 2) DEFAULT 123.45;\n\n-- The variable x is treated as a NUMERIC value when read, so the result of this query\n-- is a NUMERIC without type parameters.\nSELECT x;\n\n-- Type parameters aren't propagated within expressions, so variables x and y are treated\n-- as NUMERIC values when read and the result of this query is a NUMERIC without type parameters.\nSELECT x + y;","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN n.name","kind":"rejects-valid"}
@@ -94,7 +45,6 @@
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_ENCRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'Plaintext',\n    'your_surrogate',\n    'aad') AS results;","kind":"rejects-valid"}
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_DECRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'your_surrogate(36):AWDeSznl9C7+NzTaCgiqiEAZ8Y55fZSuvCQ=',\n    'your_surrogate',\n    'aad') AS results;","kind":"rejects-valid"}
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_ENCRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'Plaintext',\n    '',\n    'aad') AS results;","kind":"rejects-valid"}
-{"sql":"ALTER TABLE dataset.NewArrivals ALTER COLUMN quantity SET DEFAULT 100","kind":"rejects-valid"}
 {"sql":"SELECT (x).(SAFE.LEFT)(count) AS result","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION my_dataset.multiply_by_three(x INT64) AS (x * 3)","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (:Person)-[o:Owns]->(a:Account)\nRETURN a.id AS account_id, DESTINATION_NODE_ID(o) AS destination_node_id","kind":"rejects-valid"}
@@ -218,7 +168,6 @@
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    LAST(electronics.sale_date) AS last_electronics_sale_date,\n    FIRST(software.sale_date) AS first_software_sale_date,\n    DATE_DIFF(FIRST(software.sale_date), LAST(electronics.sale_date), day) AS date_gap\n  PATTERN (electronics+ any_category*? software+)\n  DEFINE\n    electronics AS product_category = 'Electronics',\n    software AS product_category = 'Software',\n    any_category AS TRUE\n)","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    MATCH_NUMBER() AS match_number,\n    ARRAY_AGG(STRUCT(MATCH_ROW_NUMBER() AS row,\n                     CLASSIFIER() AS symbol,\n                     sale_date,\n                     product_category)) AS sales\n  PATTERN (low+ mid+ high+)\n  DEFINE\n    low AS amount < 50,\n    mid AS amount >= 50 AND amount <= 100,\n    high AS amount > 100\n)","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    MATCH_NUMBER() AS match_number,\n    ARRAY_AGG(STRUCT(MATCH_ROW_NUMBER() AS row,\n                     CLASSIFIER() AS symbol,\n                     sale_date,\n                     product_category)) AS sales\n  AFTER MATCH SKIP TO NEXT ROW\n  PATTERN (low+ mid+ high+)\n  DEFINE\n    low AS amount < 50,\n    mid AS amount >= 50 AND amount <= 100,\n    high AS amount > 100\n)","kind":"rejects-valid"}
-{"sql":"ALTER TABLE `my_dataset.my_table`\nSET OPTIONS (enable_change_history = TRUE)","kind":"rejects-valid"}
 {"sql":"SELECT a FROM t GROUP BY (a, b)","kind":"rejects-valid"}
 {"sql":"SELECT a FROM a GROUP BY 1","kind":"accepts-invalid"}
 {"sql":"SELECT a FROM t GROUP BY ( t , b )","kind":"rejects-valid"}
@@ -232,17 +181,15 @@
 {"sql":"TABLE main . t","kind":"rejects-valid"}
 {"sql":"TABLE TABLE","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t ( a ) ENFORCED )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE TABLE","kind":"rejects-valid"}
 {"sql":"TABLE zz1","kind":"rejects-valid"}
-{"sql":"CREATE TABLE TABLE ( x )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 COPY x PARTITION BY a","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","kind":"rejects-valid"}
-{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED NOT ENFORCED )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE ) )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED AS ( x ) )","kind":"rejects-valid"}
-{"sql":"CREATE TABLE zz1 ( x INT64 , FOREIGN KEY ( x ) REFERENCES t ( TABLE ) )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( INT64 x , FOREIGN KEY ( x ) REFERENCES t ( a ) )","kind":"rejects-valid"}
-{"sql":"CREATE TEMP VIEW zz2 AS SELECT x AS a","kind":"rejects-valid"}
-{"sql":"CREATE ASSIGNMENT `zzp.region-us.r.a`","kind":"rejects-valid"}
+{"sql":"CREATE TEMP VIEW zz2 AS SELECT OPTIONS AS a","kind":"rejects-valid"}
+{"sql":"SELECT CAST ( [ t ] AS ARRAY < STRING ( 10 ) > )","kind":"rejects-valid"}
 {"sql":"SELECT a.1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a .1 .1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT ( t ) . 2 FROM t","kind":"rejects-valid"}
@@ -251,15 +198,7 @@
 {"sql":"SELECT * FROM t JOIN u ON t . ORDER IN ( SELECT u . a )","kind":"rejects-valid"}
 {"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE w . id = t . a )","kind":"rejects-valid"}
 {"sql":"SELECT CAST(a AS VARCHAR(5)) FROM t","kind":"rejects-valid"}
-{"sql":"ALTER TABLE t ADD z INTEGER","kind":"accepts-invalid"}
-{"sql":"ALTER TABLE t DROP a","kind":"accepts-invalid"}
 {"sql":"SELECT CAST(a AS DATE), CAST(b AS VARCHAR(20)) FROM t","kind":"rejects-valid"}
-{"sql":"ALTER TABLE t ALTER COLUMN a SET DATA TYPE BIGINT","kind":"rejects-valid"}
-{"sql":"ALTER TABLE t ALTER COLUMN a DROP NOT NULL","kind":"rejects-valid"}
-{"sql":"ALTER TABLE t ALTER COLUMN a SET DEFAULT 1","kind":"rejects-valid"}
-{"sql":"ALTER TABLE t ALTER COLUMN a DROP DEFAULT","kind":"rejects-valid"}
-{"sql":"ALTER TABLE t ADD CONSTRAINT c CHECK (a > 0)","kind":"accepts-invalid"}
-{"sql":"ALTER TABLE t DROP CONSTRAINT c","kind":"rejects-valid"}
 {"sql":"START TRANSACTION","kind":"rejects-valid"}
 {"sql":"SAVEPOINT s","kind":"accepts-invalid"}
 {"sql":"RELEASE SAVEPOINT s","kind":"accepts-invalid"}

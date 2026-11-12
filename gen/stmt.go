@@ -130,7 +130,11 @@ func (g *Generator) stmt(s ast.Statement) {
 		}
 		g.kw(s.Behavior != "", s.Behavior)
 	case *ast.AlterTable:
-		g.alterTable(s)
+		if g.d.Features.DDL.GoogleSQL {
+			g.googleAlter(s)
+		} else {
+			g.alterTable(s)
+		}
 	case *ast.Begin:
 		g.w("BEGIN")
 		if len(s.Modes) > 0 {

@@ -310,3 +310,138 @@ func (g *Generator) googleCreateSchema(s *ast.CreateSchema) {
 	}
 	g.googleOptions(s.Options)
 }
+
+// googleAlter writes ALTER of a table or of another of BigQuery's objects.
+func (g *Generator) googleAlter(s *ast.AlterTable) {
+	kind := s.Kind
+	if kind == "" {
+		kind = "TABLE"
+	}
+	if s.Only { // BigQuery has no ONLY
+		g.warn("ALTER TABLE ONLY")
+	}
+	g.w("ALTER ", kind)
+	g.kw(s.IfExists, "IF EXISTS")
+	if s.Name != nil {
+		g.w(" ")
+		g.name(s.Name)
+	}
+	if s.On != nil {
+		g.w(" ON ")
+		g.name(s.On)
+	}
+	for i, a := range s.Actions {
+		if i > 0 {
+			g.w(",")
+		}
+		g.w(" ")
+		g.googleAlterAction(a)
+	}
+	if s.Rebuild {
+		if len(s.Actions) > 0 {
+			g.w(",")
+		}
+		g.w(" REBUILD")
+	}
+}
+
+func (g *Generator) googleAlterAction(a ast.AlterAction) {
+	switch x := a.(type) {
+	case *ast.SetOptions:
+		g.w("SET")
+		g.googleOptions(x.Options)
+	case *ast.SetDefaultCollate:
+		g.w("SET DEFAULT COLLATE ")
+		g.str(x.Collate)
+	case *ast.AddColumn:
+		g.w("ADD COLUMN")
+		g.kw(x.IfNotExists, "IF NOT EXISTS")
+		g.w(" ")
+		if x.Column.Type == nil { // a search index's column
+			g.ident(x.Column.Name)
+			g.googleOptions(x.Column.Options)
+		} else {
+			g.googleColumn(x.Column)
+		}
+	case *ast.AddConstraint:
+		g.w("ADD ")
+		if x.Constraint.Kind == ast.TableForeignKey && x.Constraint.Name != nil {
+			g.w("CONSTRAINT")
+			g.kw(x.IfNotExists, "IF NOT EXISTS")
+			g.w(" ")
+			g.ident(*x.Constraint.Name)
+			g.w(" ")
+			c := *x.Constraint
+			c.Name = nil
+			g.googleKey(&c)
+			return
+		}
+		g.googleKey(x.Constraint)
+	case *ast.AddReplica:
+		g.w("ADD REPLICA ")
+		g.ident(x.Name)
+		g.googleOptions(x.Options)
+	case *ast.DropReplica:
+		g.w("DROP REPLICA ")
+		g.ident(x.Name)
+	case *ast.RenameTable:
+		g.w("RENAME TO ")
+		g.ident(x.New)
+	case *ast.RenameColumn:
+		g.w("RENAME COLUMN")
+		g.kw(x.IfExists, "IF EXISTS")
+		g.w(" ")
+		g.ident(x.Old)
+		g.w(" TO ")
+		g.ident(x.New)
+	case *ast.DropColumn:
+		g.w("DROP COLUMN")
+		g.kw(x.IfExists, "IF EXISTS")
+		g.w(" ")
+		g.ident(x.Name)
+	case *ast.DropConstraint:
+		g.w("DROP CONSTRAINT")
+		g.kw(x.IfExists, "IF EXISTS")
+		g.w(" ")
+		g.ident(x.Name)
+	case *ast.DropPrimaryKey:
+		g.w("DROP PRIMARY KEY")
+		g.kw(x.IfExists, "IF EXISTS")
+	case *ast.AlterColumn:
+		g.w("ALTER COLUMN")
+		g.kw(x.IfExists, "IF EXISTS")
+		g.w(" ")
+		g.ident(x.Name)
+		switch x.Kind {
+		case ast.SetColumnOptions:
+			g.w(" SET")
+			g.googleOptions(x.Options)
+		case ast.DropNotNull:
+			g.w(" DROP NOT NULL")
+		case ast.SetType:
+			g.w(" SET DATA TYPE ")
+			g.schemaType(x.Type)
+		case ast.SetDefault:
+			g.w(" SET DEFAULT ")
+			g.expr(x.Expr)
+		case ast.DropDefault:
+			g.w(" DROP DEFAULT")
+		case ast.SetIdentity, ast.AddIdentity:
+			g.w(" SET GENERATED ", x.Generated, " AS IDENTITY (")
+			for i, o := range x.Identity {
+				if i > 0 {
+					g.w(" ")
+				}
+				g.w(o.Name, " ")
+				g.expr(o.Value)
+			}
+			g.w(")")
+		case ast.DropGenerated:
+			g.w(" DROP GENERATED")
+		default:
+			g.warn("this ALTER COLUMN action")
+		}
+	default:
+		g.warn("this ALTER TABLE action")
+	}
+}
