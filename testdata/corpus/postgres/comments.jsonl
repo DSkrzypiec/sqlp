@@ -1,0 +1,6 @@
+{"sql":"SELECT 'trailing' AS first","shape":"SELECT 'trailing' AS first;"}
+{"sql":"SELECT /* embedded single line */ 'embedded' AS second","shape":"SELECT 'embedded' AS second;"}
+{"sql":"SELECT /* both embedded and trailing single line */ 'both' AS third","shape":"SELECT 'both' AS third;"}
+{"sql":"SELECT 'before multi-line' AS fourth","shape":"SELECT 'before multi-line' AS fourth;"}
+{"sql":"SELECT 'after multi-line' AS fifth","shape":"SELECT 'after multi-line' AS fifth;"}
+{"sql":"SELECT -- continued after the following block comments...\n/* Deeply nested comment.\n   This includes a single apostrophe to make sure we aren't decoding this part as a string.\nSELECT 'deep nest' AS n1;\n/* Second level of nesting...\nSELECT 'deeper nest' as n2;\n/* Third level of nesting...\nSELECT 'deepest nest' as n3;\n*/\nHoo boy. Still two deep...\n*/\nNow just one deep...\n*/\n'deeply nested example' AS sixth","shape":"SELECT 'deeply nested example' AS sixth;"}

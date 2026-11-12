@@ -1,0 +1,71 @@
+{"sql":"CREATE SCHEMA lock_schema1","shape":"CREATE SCHEMA lock_schema1;"}
+{"sql":"SET search_path = lock_schema1","shape":"SET search_path TO lock_schema1;"}
+{"sql":"CREATE TABLE lock_tbl1 (a BIGINT)","shape":"CREATE TABLE lock_tbl1 (a BIGINT);"}
+{"sql":"CREATE TABLE lock_tbl1a (a BIGINT)","shape":"CREATE TABLE lock_tbl1a (a BIGINT);"}
+{"sql":"CREATE VIEW lock_view1 AS SELECT * FROM lock_tbl1","shape":"CREATE VIEW lock_view1 AS SELECT * FROM lock_tbl1;"}
+{"sql":"CREATE VIEW lock_view2(a,b) AS SELECT * FROM lock_tbl1, lock_tbl1a","shape":"CREATE VIEW lock_view2 (a, b) AS SELECT * FROM lock_tbl1, lock_tbl1a;"}
+{"sql":"CREATE VIEW lock_view3 AS SELECT * from lock_view2","shape":"CREATE VIEW lock_view3 AS SELECT * FROM lock_view2;"}
+{"sql":"CREATE VIEW lock_view4 AS SELECT (select a from lock_tbl1a limit 1) from lock_tbl1","shape":"CREATE VIEW lock_view4 AS SELECT (SELECT a FROM lock_tbl1a LIMIT 1) FROM lock_tbl1;"}
+{"sql":"CREATE VIEW lock_view5 AS SELECT * from lock_tbl1 where a in (select * from lock_tbl1a)","shape":"CREATE VIEW lock_view5 AS SELECT * FROM lock_tbl1 WHERE a IN (SELECT * FROM lock_tbl1a);"}
+{"sql":"CREATE VIEW lock_view6 AS SELECT * from (select * from lock_tbl1) sub","shape":"CREATE VIEW lock_view6 AS SELECT * FROM (SELECT * FROM lock_tbl1) AS sub;"}
+{"sql":"CREATE ROLE regress_rol_lock1"}
+{"sql":"ALTER ROLE regress_rol_lock1 SET search_path = lock_schema1"}
+{"sql":"GRANT USAGE ON SCHEMA lock_schema1 TO regress_rol_lock1","shape":"GRANT USAGE ON SCHEMA lock_schema1 TO regress_rol_lock1;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ACCESS SHARE MODE","shape":"LOCK TABLE lock_tbl1 IN ACCESS SHARE MODE;"}
+{"sql":"LOCK lock_tbl1 IN ROW SHARE MODE","shape":"LOCK TABLE lock_tbl1 IN ROW SHARE MODE;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ROW EXCLUSIVE MODE","shape":"LOCK TABLE lock_tbl1 IN ROW EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_tbl1 IN SHARE UPDATE EXCLUSIVE MODE","shape":"LOCK TABLE lock_tbl1 IN SHARE UPDATE EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_tbl1 IN SHARE MODE","shape":"LOCK TABLE lock_tbl1 IN SHARE MODE;"}
+{"sql":"LOCK lock_tbl1 IN SHARE ROW EXCLUSIVE MODE","shape":"LOCK TABLE lock_tbl1 IN SHARE ROW EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_tbl1 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_tbl1 IN EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE lock_tbl1 IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ACCESS SHARE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN ACCESS SHARE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ROW SHARE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN ROW SHARE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ROW EXCLUSIVE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN ROW EXCLUSIVE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN SHARE UPDATE EXCLUSIVE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN SHARE UPDATE EXCLUSIVE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN SHARE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN SHARE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN SHARE ROW EXCLUSIVE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN SHARE ROW EXCLUSIVE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN EXCLUSIVE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN EXCLUSIVE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_tbl1 IN ACCESS EXCLUSIVE MODE NOWAIT","shape":"LOCK TABLE lock_tbl1 IN ACCESS EXCLUSIVE MODE NOWAIT;"}
+{"sql":"LOCK TABLE lock_view1 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view1 IN EXCLUSIVE MODE;"}
+{"sql":"select relname from pg_locks l, pg_class c\n where l.relation = c.oid and relname like '%lock_%' and mode = 'ExclusiveLock'\n order by relname","shape":"SELECT relname FROM pg_locks AS l, pg_class AS c WHERE ((l.relation = c.oid) AND (relname LIKE '%lock_%')) AND (mode = 'ExclusiveLock') ORDER BY relname;"}
+{"sql":"LOCK TABLE lock_view2 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view2 IN EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_view3 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view3 IN EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_view4 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view4 IN EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_view5 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view5 IN EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_view6 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view6 IN EXCLUSIVE MODE;"}
+{"sql":"CREATE OR REPLACE VIEW lock_view2 AS SELECT * from lock_view3","shape":"CREATE OR REPLACE VIEW lock_view2 AS SELECT * FROM lock_view3;"}
+{"sql":"CREATE VIEW lock_view7 AS SELECT * from lock_view2","shape":"CREATE VIEW lock_view7 AS SELECT * FROM lock_view2;"}
+{"sql":"LOCK TABLE lock_view7 IN EXCLUSIVE MODE","shape":"LOCK TABLE lock_view7 IN EXCLUSIVE MODE;"}
+{"sql":"CREATE TABLE lock_tbl2 (b BIGINT) INHERITS (lock_tbl1)","shape":"CREATE TABLE lock_tbl2 (b BIGINT) INHERITS (lock_tbl1);"}
+{"sql":"CREATE TABLE lock_tbl3 () INHERITS (lock_tbl2)","shape":"CREATE TABLE lock_tbl3 () INHERITS (lock_tbl2);"}
+{"sql":"LOCK TABLE lock_tbl1 * IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE lock_tbl1 IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"GRANT UPDATE ON TABLE lock_tbl1 TO regress_rol_lock1","shape":"GRANT UPDATE ON TABLE lock_tbl1 TO regress_rol_lock1;"}
+{"sql":"SET ROLE regress_rol_lock1"}
+{"sql":"LOCK TABLE lock_tbl2","shape":"LOCK TABLE lock_tbl2;"}
+{"sql":"LOCK TABLE ONLY lock_tbl1","shape":"LOCK TABLE ONLY lock_tbl1;"}
+{"sql":"REVOKE UPDATE ON TABLE lock_tbl1 FROM regress_rol_lock1","shape":"REVOKE UPDATE ON TABLE lock_tbl1 FROM regress_rol_lock1;"}
+{"sql":"LOCK TABLE lock_view1","shape":"LOCK TABLE lock_view1;"}
+{"sql":"GRANT UPDATE ON TABLE lock_view1 TO regress_rol_lock1","shape":"GRANT UPDATE ON TABLE lock_view1 TO regress_rol_lock1;"}
+{"sql":"LOCK TABLE lock_view1 IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE lock_view1 IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"select relname from pg_locks l, pg_class c\n where l.relation = c.oid and relname like '%lock_%' and mode = 'AccessExclusiveLock'\n order by relname","shape":"SELECT relname FROM pg_locks AS l, pg_class AS c WHERE ((l.relation = c.oid) AND (relname LIKE '%lock_%')) AND (mode = 'AccessExclusiveLock') ORDER BY relname;"}
+{"sql":"REVOKE UPDATE ON TABLE lock_view1 FROM regress_rol_lock1","shape":"REVOKE UPDATE ON TABLE lock_view1 FROM regress_rol_lock1;"}
+{"sql":"CREATE VIEW lock_view8 WITH (security_invoker) AS SELECT * FROM lock_tbl1","shape":"CREATE VIEW lock_view8 WITH (security_invoker) AS SELECT * FROM lock_tbl1;"}
+{"sql":"LOCK TABLE lock_view8","shape":"LOCK TABLE lock_view8;"}
+{"sql":"GRANT UPDATE ON TABLE lock_view8 TO regress_rol_lock1","shape":"GRANT UPDATE ON TABLE lock_view8 TO regress_rol_lock1;"}
+{"sql":"LOCK TABLE lock_view8 IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE lock_view8 IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"REVOKE UPDATE ON TABLE lock_view8 FROM regress_rol_lock1","shape":"REVOKE UPDATE ON TABLE lock_view8 FROM regress_rol_lock1;"}
+{"sql":"DROP VIEW lock_view8","shape":"DROP VIEW lock_view8;"}
+{"sql":"DROP VIEW lock_view7","shape":"DROP VIEW lock_view7;"}
+{"sql":"DROP VIEW lock_view6","shape":"DROP VIEW lock_view6;"}
+{"sql":"DROP VIEW lock_view5","shape":"DROP VIEW lock_view5;"}
+{"sql":"DROP VIEW lock_view4","shape":"DROP VIEW lock_view4;"}
+{"sql":"DROP VIEW lock_view3 CASCADE","shape":"DROP VIEW lock_view3 CASCADE;"}
+{"sql":"DROP VIEW lock_view1","shape":"DROP VIEW lock_view1;"}
+{"sql":"DROP TABLE lock_tbl3","shape":"DROP TABLE lock_tbl3;"}
+{"sql":"DROP TABLE lock_tbl2","shape":"DROP TABLE lock_tbl2;"}
+{"sql":"DROP TABLE lock_tbl1","shape":"DROP TABLE lock_tbl1;"}
+{"sql":"DROP TABLE lock_tbl1a","shape":"DROP TABLE lock_tbl1a;"}
+{"sql":"DROP SCHEMA lock_schema1 CASCADE","shape":"DROP SCHEMA lock_schema1 CASCADE;"}
+{"sql":"DROP ROLE regress_rol_lock1","shape":"DROP ROLE regress_rol_lock1;"}
+{"sql":"SELECT test_atomic_ops()","shape":"SELECT test_atomic_ops();"}

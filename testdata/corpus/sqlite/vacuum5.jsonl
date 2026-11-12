@@ -1,0 +1,20 @@
+{"sql":"CREATE TABLE main.t1(a,b)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<1000)\n    INSERT INTO t1(a,b) SELECT x, randomblob(1000) FROM c"}
+{"sql":"CREATE TEMP TABLE ttemp(x,y)"}
+{"sql":"INSERT INTO ttemp SELECT * FROM t1"}
+{"sql":"ATTACH 'test2.db' AS x2"}
+{"sql":"ATTACH 'test3.db' AS x3"}
+{"sql":"CREATE TABLE x2.t2(c,d)"}
+{"sql":"CREATE TABLE x3.t3(e,f)"}
+{"sql":"DELETE FROM t1 WHERE (rowid%3)!=0"}
+{"sql":"DELETE FROM t2 WHERE (rowid%4)!=0"}
+{"sql":"DELETE FROM t3 WHERE (rowid%5)!=0"}
+{"sql":"PRAGMA x2.integrity_check"}
+{"sql":"PRAGMA x3.integrity_check"}
+{"sql":"VACUUM main"}
+{"sql":"VACUUM x2"}
+{"sql":"VACUUM x3"}
+{"sql":"VACUUM temp"}
+{"sql":"VACUUM olaf"}
+{"sql":"CREATE TABLE t1(i INTEGER PRIMARY KEY, j UNIQUE)"}
+{"sql":"WITH s(i) AS (\n      VALUES(1) UNION ALL SELECT i+1 FROM s WHERE i<1000\n    )\n    INSERT INTO t1 SELECT NULL, randomblob(100) FROM s"}

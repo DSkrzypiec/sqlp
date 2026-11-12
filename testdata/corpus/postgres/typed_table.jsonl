@@ -1,0 +1,25 @@
+{"sql":"CREATE TABLE ttable1 OF nothing","shape":"CREATE TABLE ttable1 OF nothing;"}
+{"sql":"CREATE TYPE person_type AS (id int, name text)","shape":"CREATE TYPE person_type AS (id int, name text);"}
+{"sql":"CREATE TABLE persons OF person_type","shape":"CREATE TABLE persons OF person_type;"}
+{"sql":"CREATE TABLE IF NOT EXISTS persons OF person_type","shape":"CREATE TABLE IF NOT EXISTS persons OF person_type;"}
+{"sql":"SELECT * FROM persons","shape":"SELECT * FROM persons;"}
+{"sql":"CREATE FUNCTION get_all_persons() RETURNS SETOF person_type\nLANGUAGE SQL\nAS $$\n    SELECT * FROM persons;\n$$","shape":"CREATE FUNCTION get_all_persons() RETURNS SETOF person_type LANGUAGE SQL AS '\n    SELECT * FROM persons;\n';"}
+{"sql":"SELECT * FROM get_all_persons()","shape":"SELECT * FROM get_all_persons();"}
+{"sql":"ALTER TABLE persons ADD COLUMN comment text","shape":"ALTER TABLE persons ADD COLUMN comment text;"}
+{"sql":"ALTER TABLE persons DROP COLUMN name","shape":"ALTER TABLE persons DROP COLUMN name;"}
+{"sql":"ALTER TABLE persons RENAME COLUMN id TO num","shape":"ALTER TABLE persons RENAME COLUMN id TO num;"}
+{"sql":"ALTER TABLE persons ALTER COLUMN name TYPE varchar","shape":"ALTER TABLE persons ALTER COLUMN name SET DATA TYPE varchar;"}
+{"sql":"CREATE TABLE stuff (id int)","shape":"CREATE TABLE stuff (id int);"}
+{"sql":"ALTER TABLE persons INHERIT stuff"}
+{"sql":"CREATE TABLE personsx OF person_type (myname WITH OPTIONS NOT NULL)","shape":"CREATE TABLE personsx OF person_type (myname NOT NULL);"}
+{"sql":"CREATE TABLE persons2 OF person_type (\n    id WITH OPTIONS PRIMARY KEY,\n    UNIQUE (name)\n)","shape":"CREATE TABLE persons2 OF person_type (id PRIMARY KEY, UNIQUE (name));"}
+{"sql":"CREATE TABLE persons3 OF person_type (\n    PRIMARY KEY (id),\n    name WITH OPTIONS DEFAULT ''\n)"}
+{"sql":"CREATE TABLE persons4 OF person_type (\n    name WITH OPTIONS NOT NULL,\n    name WITH OPTIONS DEFAULT ''  -- error, specified more than once\n)","shape":"CREATE TABLE persons4 OF person_type (name NOT NULL, name DEFAULT '');"}
+{"sql":"DROP TYPE person_type RESTRICT","shape":"DROP TYPE person_type RESTRICT;"}
+{"sql":"DROP TYPE person_type CASCADE","shape":"DROP TYPE person_type CASCADE;"}
+{"sql":"CREATE TABLE persons5 OF stuff","shape":"CREATE TABLE persons5 OF stuff;"}
+{"sql":"DROP TABLE stuff","shape":"DROP TABLE stuff;"}
+{"sql":"INSERT INTO persons VALUES (1, 'test')","shape":"INSERT INTO persons VALUES (1, 'test');"}
+{"sql":"CREATE FUNCTION namelen(person_type) RETURNS int LANGUAGE SQL AS $$ SELECT length($1.name) $$","shape":"CREATE FUNCTION namelen(person_type) RETURNS int LANGUAGE SQL AS ' SELECT length($1.name) ';"}
+{"sql":"SELECT id, namelen(persons) FROM persons","shape":"SELECT id, namelen(persons) FROM persons;"}
+{"sql":"CREATE TABLE persons3 OF person_type (\n    PRIMARY KEY (id),\n    name NOT NULL DEFAULT ''\n)"}

@@ -1,0 +1,3 @@
+{"sql":"SELECT count(b) FROM t1"}
+{"sql":"PRAGMA journal_mode = wal"}
+{"sql":"WITH s(i) AS (\n    VALUES(1) UNION ALL SELECT i+1 FROM s WHERE i<100\n  )\n  INSERT INTO t1 SELECT NULL, randomblob(5000), randomblob(i) FROM s"}

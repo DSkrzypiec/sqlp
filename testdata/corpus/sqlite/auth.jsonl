@@ -1,0 +1,109 @@
+{"sql":"SELECT x"}
+{"sql":"SELECT name FROM sqlite_master"}
+{"sql":"CREATE TEMP TABLE t1(a,b,c)"}
+{"sql":"SELECT name FROM temp.sqlite_master"}
+{"sql":"SELECT name FROM sqlite_temp_master"}
+{"sql":"INSERT INTO t2 VALUES(1,2,3)"}
+{"sql":"ATTACH DATABASE 'test.db' AS two"}
+{"sql":"SELECT * FROM t2 WHERE b=2"}
+{"sql":"SELECT * FROM t2 WHERE b IS NULL"}
+{"sql":"SELECT a,c FROM t2 WHERE b IS NULL"}
+{"sql":"UPDATE t2 SET a=11"}
+{"sql":"UPDATE t2 SET b=22, c=33"}
+{"sql":"DELETE FROM t2 WHERE a=11"}
+{"sql":"INSERT INTO t2 VALUES(11, 2, 33)"}
+{"sql":"INSERT INTO t2 VALUES(7, 8, 9)"}
+{"sql":"CREATE VIEW v1 AS SELECT a+1,b+1 FROM t2"}
+{"sql":"CREATE TEMPORARY VIEW v1 AS SELECT a+1,b+1 FROM t2"}
+{"sql":"CREATE VIEW v2 AS SELECT a+1,b+1 FROM t2"}
+{"sql":"CREATE TEMP VIEW v1 AS SELECT a+1,b+1 FROM t1"}
+{"sql":"CREATE TRIGGER r2 DELETE on t2 BEGIN\n        SELECT NULL;\n    END"}
+{"sql":"CREATE TABLE tx(id)"}
+{"sql":"CREATE TRIGGER r2 AFTER INSERT ON t2 BEGIN\n       INSERT INTO tx VALUES(NEW.rowid);\n    END"}
+{"sql":"SELECT name FROM sqlite_master WHERE type='trigger'"}
+{"sql":"CREATE TRIGGER r1 DELETE on t1 BEGIN\n        SELECT NULL;\n    END"}
+{"sql":"DROP TRIGGER r2"}
+{"sql":"DROP TABLE tx"}
+{"sql":"DELETE FROM t2 WHERE a=1 AND b=2 AND c=3"}
+{"sql":"CREATE INDEX i2 ON t2(b)"}
+{"sql":"CREATE INDEX i1 ON t1(c)"}
+{"sql":"DROP INDEX i2"}
+{"sql":"DROP INDEX di205.t1x"}
+{"sql":"PRAGMA full_column_names=on"}
+{"sql":"PRAGMA full_column_names=OFF"}
+{"sql":"INSERT INTO t2 VALUES(44,55,66)"}
+{"sql":"END TRANSACTION"}
+{"sql":"ATTACH DATABASE ':memory:' AS test1"}
+{"sql":"DETACH DATABASE test1"}
+{"sql":"SELECT name FROM sqlite_temp_master WHERE type='table'"}
+{"sql":"SELECT name FROM temp.sqlite_master WHERE type='table'"}
+{"sql":"SELECT name FROM sqlite_master WHERE type='table'"}
+{"sql":"ALTER TABLE t2x RENAME TO t2"}
+{"sql":"CREATE TABLE t3(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE INDEX t3_idx1 ON t3(c COLLATE BINARY)"}
+{"sql":"CREATE INDEX t3_idx2 ON t3(b COLLATE NOCASE)"}
+{"sql":"REINDEX t3_idx1"}
+{"sql":"REINDEX BINARY"}
+{"sql":"REINDEX NOCASE"}
+{"sql":"REINDEX t3"}
+{"sql":"CREATE TEMP TABLE t3(a PRIMARY KEY, b, c)"}
+{"sql":"REINDEX temp.t3_idx1"}
+{"sql":"REINDEX temp.t3"}
+{"sql":"CREATE TABLE t4(a,b,c)"}
+{"sql":"CREATE INDEX t4i1 ON t4(a)"}
+{"sql":"CREATE INDEX t4i2 ON t4(b,a,c)"}
+{"sql":"INSERT INTO t4 VALUES(1,2,3)"}
+{"sql":"SELECT count(*) FROM sqlite_stat1"}
+{"sql":"CREATE TABLE t5(x)"}
+{"sql":"ALTER TABLE t5 ADD COLUMN new_col_1"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='t5'"}
+{"sql":"ALTER TABLE t5 DROP COLUMN new_col_1"}
+{"sql":"ALTER TABLE t5 ADD COLUMN new_col_2"}
+{"sql":"SELECT 1 FROM sqlite_schema WHERE name='t5' AND sql LIKE '%new_col_1%'"}
+{"sql":"ALTER TABLE t5 ADD COLUMN new_col_3"}
+{"sql":"SELECT sql FROM temp.sqlite_master WHERE type='t5'"}
+{"sql":"DROP TABLE t5"}
+{"sql":"WITH\n       auth1311(x,y) AS (SELECT a+b, b-a FROM t1)\n    SELECT * FROM auth1311 ORDER BY x"}
+{"sql":"WITH RECURSIVE\n       auth1312(x,y) AS (SELECT a+b, b-a FROM t1)\n    SELECT x, y FROM auth1312 ORDER BY x"}
+{"sql":"WITH RECURSIVE\n       auth1313(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM auth1313 WHERE x<5)\n    SELECT * FROM t1"}
+{"sql":"WITH RECURSIVE\n       auth1314(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM auth1314 WHERE x<5)\n    SELECT * FROM t1 LEFT JOIN auth1314"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN b TO bcdefg"}
+{"sql":"SELECT name FROM pragma_table_info('t1') ORDER BY cid"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN bcdefg TO b"}
+{"sql":"SELECT * FROM pragma_table_list WHERE name='xyzzy'"}
+{"sql":"CREATE TABLE t3(x INTEGER PRIMARY KEY, y, z)"}
+{"sql":"SELECT y,z FROM t3"}
+{"sql":"SELECT ROWID,y,z FROM t3"}
+{"sql":"SELECT OID,y,z FROM t3"}
+{"sql":"INSERT INTO t3 VALUES(44,55,66)"}
+{"sql":"SELECT rowid,y,z FROM t3"}
+{"sql":"SELECT ROWID,b,c FROM t2"}
+{"sql":"SELECT * FROM t2, t3"}
+{"sql":"CREATE TABLE tx(a1,a2,b1,b2,c1,c2)"}
+{"sql":"CREATE TRIGGER r1 AFTER UPDATE ON t2 FOR EACH ROW BEGIN\n        INSERT INTO tx VALUES(OLD.a,NEW.a,OLD.b,NEW.b,OLD.c,NEW.c);\n      END"}
+{"sql":"UPDATE t2 SET a=a+1"}
+{"sql":"DELETE FROM tx"}
+{"sql":"UPDATE t2 SET a=a+100"}
+{"sql":"CREATE VIEW v1 AS SELECT a+b AS x FROM t2"}
+{"sql":"CREATE TABLE v1chng(x1,x2)"}
+{"sql":"CREATE TRIGGER r2 INSTEAD OF UPDATE ON v1 BEGIN\n      INSERT INTO v1chng VALUES(OLD.x,NEW.x);\n    END"}
+{"sql":"UPDATE v1 SET x=1 WHERE x=117"}
+{"sql":"CREATE TRIGGER r3 INSTEAD OF DELETE ON v1 BEGIN\n      INSERT INTO v1chng VALUES(OLD.x,NULL);\n    END"}
+{"sql":"DELETE FROM v1 WHERE x=117"}
+{"sql":"SELECT count(a) AS cnt FROM t4 ORDER BY cnt"}
+{"sql":"DROP TABLE v1chng"}
+{"sql":"SELECT name FROM (\n        SELECT * FROM sqlite_master UNION ALL SELECT * FROM temp.sqlite_master)\n      WHERE type='table'\n      ORDER BY name"}
+{"sql":"CREATE TABLE t5 ( x )"}
+{"sql":"CREATE TRIGGER t5_tr1 AFTER INSERT ON t5 BEGIN \n        UPDATE t5 SET x = 1 WHERE NEW.x = 0;\n      END"}
+{"sql":"INSERT INTO t5 (x) values(0)"}
+{"sql":"CREATE TABLE t6(a,b,c,d,e,f,g,h)"}
+{"sql":"INSERT INTO t6 VALUES(1,2,3,4,5,6,7,8)"}
+{"sql":"UPDATE t6 SET rowID=rowID+100"}
+{"sql":"SELECT rowid, * FROM t6"}
+{"sql":"CREATE TABLE t7(a, b, c)"}
+{"sql":"CREATE VIEW v7 AS SELECT * FROM t7"}
+{"sql":"SELECT a, c FROM v7"}
+{"sql":"SELECT a, c FROM t7"}
+{"sql":"SELECT a, c FROM t7 AS v7"}
+{"sql":"SELECT count(*) FROM t7"}
+{"sql":"SELECT t6.a FROM t6, t7"}

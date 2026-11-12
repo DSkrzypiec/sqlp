@@ -1,0 +1,21 @@
+{"sql":"CREATE TEMP TABLE VARCHAR_TBL(f1 varchar(1))","shape":"CREATE TEMPORARY TABLE VARCHAR_TBL (f1 varchar(1));"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('a')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('a');"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('A')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('A');"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('1')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('1');"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES (2)","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES (2);"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('3')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('3');"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('');"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('cd')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('cd');"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('c     ')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('c     ');"}
+{"sql":"SELECT * FROM VARCHAR_TBL","shape":"SELECT * FROM VARCHAR_TBL;"}
+{"sql":"SELECT c.*\n   FROM VARCHAR_TBL c\n   WHERE c.f1 <> 'a'","shape":"SELECT c.* FROM VARCHAR_TBL AS c WHERE c.f1 <> 'a';"}
+{"sql":"SELECT c.*\n   FROM VARCHAR_TBL c\n   WHERE c.f1 = 'a'","shape":"SELECT c.* FROM VARCHAR_TBL AS c WHERE c.f1 = 'a';"}
+{"sql":"SELECT c.*\n   FROM VARCHAR_TBL c\n   WHERE c.f1 < 'a'","shape":"SELECT c.* FROM VARCHAR_TBL AS c WHERE c.f1 < 'a';"}
+{"sql":"SELECT c.*\n   FROM VARCHAR_TBL c\n   WHERE c.f1 <= 'a'","shape":"SELECT c.* FROM VARCHAR_TBL AS c WHERE c.f1 <= 'a';"}
+{"sql":"SELECT c.*\n   FROM VARCHAR_TBL c\n   WHERE c.f1 > 'a'","shape":"SELECT c.* FROM VARCHAR_TBL AS c WHERE c.f1 > 'a';"}
+{"sql":"SELECT c.*\n   FROM VARCHAR_TBL c\n   WHERE c.f1 >= 'a'","shape":"SELECT c.* FROM VARCHAR_TBL AS c WHERE c.f1 >= 'a';"}
+{"sql":"DROP TABLE VARCHAR_TBL","shape":"DROP TABLE VARCHAR_TBL;"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES ('abcde')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('abcde');"}
+{"sql":"SELECT pg_input_is_valid('abcd  ', 'varchar(4)')","shape":"SELECT pg_input_is_valid('abcd  ', 'varchar(4)');"}
+{"sql":"SELECT pg_input_is_valid('abcde', 'varchar(4)')","shape":"SELECT pg_input_is_valid('abcde', 'varchar(4)');"}
+{"sql":"SELECT * FROM pg_input_error_info('abcde', 'varchar(4)')","shape":"SELECT * FROM pg_input_error_info('abcde', 'varchar(4)');"}

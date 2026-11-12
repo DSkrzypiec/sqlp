@@ -1,0 +1,17 @@
+{"sql":"SELECT min(a), b FROM t1"}
+{"sql":"SELECT min(a), b FROM t1 WHERE a<50"}
+{"sql":"CREATE TABLE t0 (c0, c1)"}
+{"sql":"CREATE INDEX i0 ON t0(c1, c1 + 1 DESC)"}
+{"sql":"SELECT MIN(t0.c1), t0.c0 FROM t0 WHERE t0.c1 ISNULL"}
+{"sql":"CREATE TABLE t1 (a, b)"}
+{"sql":"INSERT INTO t1 VALUES(123, NULL)"}
+{"sql":"CREATE INDEX i1 ON t1(a, b DESC)"}
+{"sql":"SELECT MIN(a) FROM t1 WHERE a=123"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 1, 'x')"}
+{"sql":"SELECT min(a), b, c FROM t1 WHERE c='x'"}
+{"sql":"INSERT INTO t1 VALUES(1,    2, 'y')"}
+{"sql":"CREATE TABLE t0(c0 UNIQUE, c1)"}
+{"sql":"INSERT INTO t0(c1) VALUES (0)"}
+{"sql":"CREATE VIEW v0(c0, c1) AS \n      SELECT t0.c1, t0.c0 FROM t0 WHERE CAST(t0.rowid AS INT) = 1"}
+{"sql":"SELECT c0, c1 FROM v0"}
+{"sql":"SELECT v0.c0, MIN(v0.c1) FROM v0"}

@@ -1,0 +1,4 @@
+{"sql":"SELECT blockid, length(block) FROM t1_segments"}
+{"sql":"SELECT docid, content FROM t1 WHERE t1 MATCH 'a b'"}
+{"sql":"SELECT count(*) FROM t1 WHERE t1 MATCH 'a b'"}
+{"sql":"SELECT count(*) FROM t1 WHERE t1 MATCH 'b'"}

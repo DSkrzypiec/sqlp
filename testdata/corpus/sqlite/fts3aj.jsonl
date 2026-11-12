@@ -1,0 +1,10 @@
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'hello'"}
+{"sql":"CREATE VIRTUAL TABLE two.t2 USING fts3(content)"}
+{"sql":"INSERT INTO t2 (rowid, content) VALUES(1, 'hello world')"}
+{"sql":"INSERT INTO t2 (rowid, content) VALUES(2, 'hello there')"}
+{"sql":"INSERT INTO t2 (rowid, content) VALUES(3, 'cruel world')"}
+{"sql":"SELECT rowid FROM t2 WHERE t2 MATCH 'hello'"}
+{"sql":"CREATE VIRTUAL TABLE two.t3 USING fts3(content)"}
+{"sql":"INSERT INTO two.t3 (rowid, content) VALUES(2, 'hello there')"}
+{"sql":"INSERT INTO two.t3 (rowid, content) VALUES(3, 'cruel world')"}
+{"sql":"SELECT rowid FROM two.t3 WHERE t3 MATCH 'hello'"}

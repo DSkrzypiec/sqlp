@@ -1,0 +1,4 @@
+{"sql":"PRAGMA cache_size = 100"}
+{"sql":"WITH s(i) AS (\n        SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<200\n      ) INSERT INTO t1 SELECT randomblob(900) FROM s"}
+{"sql":"PRAGMA cache_spill = 0"}
+{"sql":"PRAGMA cache_spill = 1"}

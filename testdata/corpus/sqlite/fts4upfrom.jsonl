@@ -1,0 +1,11 @@
+{"sql":"DROP VIEW IF EXISTS changes"}
+{"sql":"DROP VIEW IF EXISTS ft"}
+{"sql":"INSERT INTO ft(a, b, c) VALUES('a', NULL, 'apple')"}
+{"sql":"INSERT INTO ft(a, b, c) VALUES('b', NULL, 'banana')"}
+{"sql":"INSERT INTO ft(a, b, c) VALUES('c', NULL, 'cherry')"}
+{"sql":"INSERT INTO ft(a, b, c) VALUES('d', NULL, 'damson plum')"}
+{"sql":"SELECT a, b, c FROM ft ORDER BY rowid"}
+{"sql":"UPDATE ft SET b=o.c FROM ft AS o WHERE (ft.a == char(unicode(o.a)+1))"}
+{"sql":"UPDATE ft SET c=v FROM changes WHERE a=k"}
+{"sql":"create view changes(k, v) AS \n      VALUES( 'd', 'dewberry' ) UNION ALL\n      VALUES( 'c', 'clementine' ) UNION ALL\n      VALUES( 'b', 'blueberry' ) UNION ALL\n      VALUES( 'a', 'apricot' )"}
+{"sql":"SELECT rowid, a, b, c FROM ft ORDER BY rowid"}

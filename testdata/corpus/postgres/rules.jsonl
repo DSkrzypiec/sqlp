@@ -1,0 +1,528 @@
+{"sql":"create table rtest_t1 (a int4, b int4)","shape":"CREATE TABLE rtest_t1 (a int4, b int4);"}
+{"sql":"create table rtest_t2 (a int4, b int4)","shape":"CREATE TABLE rtest_t2 (a int4, b int4);"}
+{"sql":"create table rtest_t3 (a int4, b int4)","shape":"CREATE TABLE rtest_t3 (a int4, b int4);"}
+{"sql":"create view rtest_v1 as select * from rtest_t1","shape":"CREATE VIEW rtest_v1 AS SELECT * FROM rtest_t1;"}
+{"sql":"create rule rtest_v1_ins as on insert to rtest_v1 do instead\n\tinsert into rtest_t1 values (new.a, new.b)"}
+{"sql":"create rule rtest_v1_upd as on update to rtest_v1 do instead\n\tupdate rtest_t1 set a = new.a, b = new.b\n\twhere a = old.a"}
+{"sql":"create rule rtest_v1_del as on delete to rtest_v1 do instead\n\tdelete from rtest_t1 where a = old.a"}
+{"sql":"COMMENT ON RULE rtest_v1_bad ON rtest_v1 IS 'bad rule'","shape":"COMMENT ON RULE rtest_v1_bad ON rtest_v1 IS 'bad rule';"}
+{"sql":"COMMENT ON RULE rtest_v1_del ON rtest_v1 IS 'delete rule'","shape":"COMMENT ON RULE rtest_v1_del ON rtest_v1 IS 'delete rule';"}
+{"sql":"COMMENT ON RULE rtest_v1_del ON rtest_v1 IS NULL","shape":"COMMENT ON RULE rtest_v1_del ON rtest_v1 IS NULL;"}
+{"sql":"create table rtest_system (sysname text, sysdesc text)","shape":"CREATE TABLE rtest_system (sysname text, sysdesc text);"}
+{"sql":"create table rtest_interface (sysname text, ifname text)","shape":"CREATE TABLE rtest_interface (sysname text, ifname text);"}
+{"sql":"create table rtest_person (pname text, pdesc text)","shape":"CREATE TABLE rtest_person (pname text, pdesc text);"}
+{"sql":"create table rtest_admin (pname text, sysname text)","shape":"CREATE TABLE rtest_admin (pname text, sysname text);"}
+{"sql":"create rule rtest_sys_upd as on update to rtest_system do also (\n\tupdate rtest_interface set sysname = new.sysname\n\t\twhere sysname = old.sysname;\n\tupdate rtest_admin set sysname = new.sysname\n\t\twhere sysname = old.sysname\n\t)"}
+{"sql":"create rule rtest_sys_del as on delete to rtest_system do also (\n\tdelete from rtest_interface where sysname = old.sysname;\n\tdelete from rtest_admin where sysname = old.sysname;\n\t)"}
+{"sql":"create rule rtest_pers_upd as on update to rtest_person do also\n\tupdate rtest_admin set pname = new.pname where pname = old.pname"}
+{"sql":"create rule rtest_pers_del as on delete to rtest_person do also\n\tdelete from rtest_admin where pname = old.pname"}
+{"sql":"create table rtest_emp (ename char(20), salary money)","shape":"CREATE TABLE rtest_emp (ename char(20), salary money);"}
+{"sql":"create table rtest_emplog (ename char(20), who name, action char(10), newsal money, oldsal money)","shape":"CREATE TABLE rtest_emplog (ename char(20), who name, action char(10), newsal money, oldsal money);"}
+{"sql":"create table rtest_empmass (ename char(20), salary money)","shape":"CREATE TABLE rtest_empmass (ename char(20), salary money);"}
+{"sql":"create rule rtest_emp_ins as on insert to rtest_emp do\n\tinsert into rtest_emplog values (new.ename, current_user,\n\t\t\t'hired', new.salary, '0.00')"}
+{"sql":"create rule rtest_emp_upd as on update to rtest_emp where new.salary != old.salary do\n\tinsert into rtest_emplog values (new.ename, current_user,\n\t\t\t'honored', new.salary, old.salary)"}
+{"sql":"create rule rtest_emp_del as on delete to rtest_emp do\n\tinsert into rtest_emplog values (old.ename, current_user,\n\t\t\t'fired', '0.00', old.salary)"}
+{"sql":"create table rtest_t4 (a int4, b text)","shape":"CREATE TABLE rtest_t4 (a int4, b text);"}
+{"sql":"create table rtest_t5 (a int4, b text)","shape":"CREATE TABLE rtest_t5 (a int4, b text);"}
+{"sql":"create table rtest_t6 (a int4, b text)","shape":"CREATE TABLE rtest_t6 (a int4, b text);"}
+{"sql":"create table rtest_t7 (a int4, b text)","shape":"CREATE TABLE rtest_t7 (a int4, b text);"}
+{"sql":"create table rtest_t8 (a int4, b text)","shape":"CREATE TABLE rtest_t8 (a int4, b text);"}
+{"sql":"create table rtest_t9 (a int4, b text)","shape":"CREATE TABLE rtest_t9 (a int4, b text);"}
+{"sql":"create rule rtest_t4_ins1 as on insert to rtest_t4\n\t\twhere new.a >= 10 and new.a < 20 do instead\n\tinsert into rtest_t5 values (new.a, new.b)"}
+{"sql":"create rule rtest_t4_ins2 as on insert to rtest_t4\n\t\twhere new.a >= 20 and new.a < 30 do\n\tinsert into rtest_t6 values (new.a, new.b)"}
+{"sql":"create rule rtest_t5_ins as on insert to rtest_t5\n\t\twhere new.a > 15 do\n\tinsert into rtest_t7 values (new.a, new.b)"}
+{"sql":"create rule rtest_t6_ins as on insert to rtest_t6\n\t\twhere new.a > 25 do instead\n\tinsert into rtest_t8 values (new.a, new.b)"}
+{"sql":"create table rtest_order1 (a int4)","shape":"CREATE TABLE rtest_order1 (a int4);"}
+{"sql":"create table rtest_order2 (a int4, b int4, c text)","shape":"CREATE TABLE rtest_order2 (a int4, b int4, c text);"}
+{"sql":"create sequence rtest_seq","shape":"CREATE SEQUENCE rtest_seq;"}
+{"sql":"create rule rtest_order_r3 as on insert to rtest_order1 do instead\n\tinsert into rtest_order2 values (new.a, nextval('rtest_seq'),\n\t\t'rule 3 - this should run 3rd')"}
+{"sql":"create rule rtest_order_r4 as on insert to rtest_order1\n\t\twhere a < 100 do instead\n\tinsert into rtest_order2 values (new.a, nextval('rtest_seq'),\n\t\t'rule 4 - this should run 4th')"}
+{"sql":"create rule rtest_order_r2 as on insert to rtest_order1 do\n\tinsert into rtest_order2 values (new.a, nextval('rtest_seq'),\n\t\t'rule 2 - this should run 2nd')"}
+{"sql":"create rule rtest_order_r1 as on insert to rtest_order1 do instead\n\tinsert into rtest_order2 values (new.a, nextval('rtest_seq'),\n\t\t'rule 1 - this should run 1st')"}
+{"sql":"create table rtest_nothn1 (a int4, b text)","shape":"CREATE TABLE rtest_nothn1 (a int4, b text);"}
+{"sql":"create table rtest_nothn2 (a int4, b text)","shape":"CREATE TABLE rtest_nothn2 (a int4, b text);"}
+{"sql":"create table rtest_nothn3 (a int4, b text)","shape":"CREATE TABLE rtest_nothn3 (a int4, b text);"}
+{"sql":"create table rtest_nothn4 (a int4, b text)","shape":"CREATE TABLE rtest_nothn4 (a int4, b text);"}
+{"sql":"create rule rtest_nothn_r1 as on insert to rtest_nothn1\n\twhere new.a >= 10 and new.a < 20 do instead nothing"}
+{"sql":"create rule rtest_nothn_r2 as on insert to rtest_nothn1\n\twhere new.a >= 30 and new.a < 40 do instead nothing"}
+{"sql":"create rule rtest_nothn_r3 as on insert to rtest_nothn2\n\twhere new.a >= 100 do instead\n\tinsert into rtest_nothn3 values (new.a, new.b)"}
+{"sql":"create rule rtest_nothn_r4 as on insert to rtest_nothn2\n\tdo instead nothing"}
+{"sql":"insert into rtest_t2 values (1, 21)","shape":"INSERT INTO rtest_t2 VALUES (1, 21);"}
+{"sql":"insert into rtest_t2 values (2, 22)","shape":"INSERT INTO rtest_t2 VALUES (2, 22);"}
+{"sql":"insert into rtest_t2 values (3, 23)","shape":"INSERT INTO rtest_t2 VALUES (3, 23);"}
+{"sql":"insert into rtest_t3 values (1, 31)","shape":"INSERT INTO rtest_t3 VALUES (1, 31);"}
+{"sql":"insert into rtest_t3 values (2, 32)","shape":"INSERT INTO rtest_t3 VALUES (2, 32);"}
+{"sql":"insert into rtest_t3 values (3, 33)","shape":"INSERT INTO rtest_t3 VALUES (3, 33);"}
+{"sql":"insert into rtest_t3 values (4, 34)","shape":"INSERT INTO rtest_t3 VALUES (4, 34);"}
+{"sql":"insert into rtest_t3 values (5, 35)","shape":"INSERT INTO rtest_t3 VALUES (5, 35);"}
+{"sql":"insert into rtest_v1 values (1, 11)","shape":"INSERT INTO rtest_v1 VALUES (1, 11);"}
+{"sql":"insert into rtest_v1 values (2, 12)","shape":"INSERT INTO rtest_v1 VALUES (2, 12);"}
+{"sql":"select * from rtest_v1","shape":"SELECT * FROM rtest_v1;"}
+{"sql":"delete from rtest_v1 where a = 1","shape":"DELETE FROM rtest_v1 WHERE a = 1;"}
+{"sql":"delete from rtest_v1 where b = 12","shape":"DELETE FROM rtest_v1 WHERE b = 12;"}
+{"sql":"insert into rtest_v1 values (2, 13)","shape":"INSERT INTO rtest_v1 VALUES (2, 13);"}
+{"sql":"delete from rtest_v1","shape":"DELETE FROM rtest_v1;"}
+{"sql":"insert into rtest_v1 select * from rtest_t2","shape":"INSERT INTO rtest_v1 SELECT * FROM rtest_t2;"}
+{"sql":"insert into rtest_v1 (b, a) select b, a from rtest_t2","shape":"INSERT INTO rtest_v1 (b, a) SELECT b, a FROM rtest_t2;"}
+{"sql":"insert into rtest_v1 (a) select a from rtest_t3","shape":"INSERT INTO rtest_v1 (a) SELECT a FROM rtest_t3;"}
+{"sql":"select * from rtest_v1 where b isnull","shape":"SELECT * FROM rtest_v1 WHERE b IS NULL;"}
+{"sql":"update rtest_t1 set a = a + 10 where b isnull","shape":"UPDATE rtest_t1 SET a = a + 10 WHERE b IS NULL;"}
+{"sql":"delete from rtest_v1 where b isnull","shape":"DELETE FROM rtest_v1 WHERE b IS NULL;"}
+{"sql":"update rtest_v1 set b = 42 where a = 2","shape":"UPDATE rtest_v1 SET b = 42 WHERE a = 2;"}
+{"sql":"update rtest_v1 set b = 99 where b = 42","shape":"UPDATE rtest_v1 SET b = 99 WHERE b = 42;"}
+{"sql":"update rtest_v1 set b = 88 where b < 50","shape":"UPDATE rtest_v1 SET b = 88 WHERE b < 50;"}
+{"sql":"insert into rtest_v1 select rtest_t2.a, rtest_t3.b\n    from rtest_t2, rtest_t3\n    where rtest_t2.a = rtest_t3.a","shape":"INSERT INTO rtest_v1 SELECT rtest_t2.a, rtest_t3.b FROM rtest_t2, rtest_t3 WHERE rtest_t2.a = rtest_t3.a;"}
+{"sql":"update rtest_v1 set b = rtest_t2.b from rtest_t2 where rtest_v1.a = rtest_t2.a","shape":"UPDATE rtest_v1 SET b = rtest_t2.b FROM rtest_t2 WHERE rtest_v1.a = rtest_t2.a;"}
+{"sql":"insert into rtest_v1 select * from rtest_t3","shape":"INSERT INTO rtest_v1 SELECT * FROM rtest_t3;"}
+{"sql":"update rtest_t1 set a = a + 10 where b > 30","shape":"UPDATE rtest_t1 SET a = a + 10 WHERE b > 30;"}
+{"sql":"update rtest_v1 set a = rtest_t3.a + 20 from rtest_t3 where rtest_v1.b = rtest_t3.b","shape":"UPDATE rtest_v1 SET a = rtest_t3.a + 20 FROM rtest_t3 WHERE rtest_v1.b = rtest_t3.b;"}
+{"sql":"insert into rtest_system values ('orion', 'Linux Jan Wieck')","shape":"INSERT INTO rtest_system VALUES ('orion', 'Linux Jan Wieck');"}
+{"sql":"insert into rtest_system values ('notjw', 'WinNT Jan Wieck (notebook)')","shape":"INSERT INTO rtest_system VALUES ('notjw', 'WinNT Jan Wieck (notebook)');"}
+{"sql":"insert into rtest_system values ('neptun', 'Fileserver')","shape":"INSERT INTO rtest_system VALUES ('neptun', 'Fileserver');"}
+{"sql":"insert into rtest_interface values ('orion', 'eth0')","shape":"INSERT INTO rtest_interface VALUES ('orion', 'eth0');"}
+{"sql":"insert into rtest_interface values ('orion', 'eth1')","shape":"INSERT INTO rtest_interface VALUES ('orion', 'eth1');"}
+{"sql":"insert into rtest_interface values ('notjw', 'eth0')","shape":"INSERT INTO rtest_interface VALUES ('notjw', 'eth0');"}
+{"sql":"insert into rtest_interface values ('neptun', 'eth0')","shape":"INSERT INTO rtest_interface VALUES ('neptun', 'eth0');"}
+{"sql":"insert into rtest_person values ('jw', 'Jan Wieck')","shape":"INSERT INTO rtest_person VALUES ('jw', 'Jan Wieck');"}
+{"sql":"insert into rtest_person values ('bm', 'Bruce Momjian')","shape":"INSERT INTO rtest_person VALUES ('bm', 'Bruce Momjian');"}
+{"sql":"insert into rtest_admin values ('jw', 'orion')","shape":"INSERT INTO rtest_admin VALUES ('jw', 'orion');"}
+{"sql":"insert into rtest_admin values ('jw', 'notjw')","shape":"INSERT INTO rtest_admin VALUES ('jw', 'notjw');"}
+{"sql":"insert into rtest_admin values ('bm', 'neptun')","shape":"INSERT INTO rtest_admin VALUES ('bm', 'neptun');"}
+{"sql":"update rtest_system set sysname = 'pluto' where sysname = 'neptun'","shape":"UPDATE rtest_system SET sysname = 'pluto' WHERE sysname = 'neptun';"}
+{"sql":"select * from rtest_interface","shape":"SELECT * FROM rtest_interface;"}
+{"sql":"select * from rtest_admin","shape":"SELECT * FROM rtest_admin;"}
+{"sql":"update rtest_person set pname = 'jwieck' where pdesc = 'Jan Wieck'","shape":"UPDATE rtest_person SET pname = 'jwieck' WHERE pdesc = 'Jan Wieck';"}
+{"sql":"select * from rtest_admin order by pname, sysname","shape":"SELECT * FROM rtest_admin ORDER BY pname, sysname;"}
+{"sql":"delete from rtest_system where sysname = 'orion'","shape":"DELETE FROM rtest_system WHERE sysname = 'orion';"}
+{"sql":"insert into rtest_emp values ('wiecc', '5000.00')","shape":"INSERT INTO rtest_emp VALUES ('wiecc', '5000.00');"}
+{"sql":"insert into rtest_emp values ('gates', '80000.00')","shape":"INSERT INTO rtest_emp VALUES ('gates', '80000.00');"}
+{"sql":"update rtest_emp set ename = 'wiecx' where ename = 'wiecc'","shape":"UPDATE rtest_emp SET ename = 'wiecx' WHERE ename = 'wiecc';"}
+{"sql":"update rtest_emp set ename = 'wieck', salary = '6000.00' where ename = 'wiecx'","shape":"UPDATE rtest_emp SET ename = 'wieck', salary = '6000.00' WHERE ename = 'wiecx';"}
+{"sql":"update rtest_emp set salary = '7000.00' where ename = 'wieck'","shape":"UPDATE rtest_emp SET salary = '7000.00' WHERE ename = 'wieck';"}
+{"sql":"delete from rtest_emp where ename = 'gates'","shape":"DELETE FROM rtest_emp WHERE ename = 'gates';"}
+{"sql":"select ename, who = current_user as \"matches user\", action, newsal, oldsal from rtest_emplog order by ename, action, newsal","shape":"SELECT ename, who = current_user AS \"matches user\", action, newsal, oldsal FROM rtest_emplog ORDER BY ename, action, newsal;"}
+{"sql":"insert into rtest_empmass values ('meyer', '4000.00')","shape":"INSERT INTO rtest_empmass VALUES ('meyer', '4000.00');"}
+{"sql":"insert into rtest_empmass values ('maier', '5000.00')","shape":"INSERT INTO rtest_empmass VALUES ('maier', '5000.00');"}
+{"sql":"insert into rtest_empmass values ('mayr', '6000.00')","shape":"INSERT INTO rtest_empmass VALUES ('mayr', '6000.00');"}
+{"sql":"insert into rtest_emp select * from rtest_empmass","shape":"INSERT INTO rtest_emp SELECT * FROM rtest_empmass;"}
+{"sql":"update rtest_empmass set salary = salary + '1000.00'","shape":"UPDATE rtest_empmass SET salary = salary + '1000.00';"}
+{"sql":"update rtest_emp set salary = rtest_empmass.salary from rtest_empmass where rtest_emp.ename = rtest_empmass.ename","shape":"UPDATE rtest_emp SET salary = rtest_empmass.salary FROM rtest_empmass WHERE rtest_emp.ename = rtest_empmass.ename;"}
+{"sql":"delete from rtest_emp using rtest_empmass where rtest_emp.ename = rtest_empmass.ename","shape":"DELETE FROM rtest_emp USING rtest_empmass WHERE rtest_emp.ename = rtest_empmass.ename;"}
+{"sql":"insert into rtest_t4 values (1, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t4 VALUES (1, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t4 values (2, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t4 VALUES (2, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t4 values (10, 'Record should go to rtest_t5')","shape":"INSERT INTO rtest_t4 VALUES (10, 'Record should go to rtest_t5');"}
+{"sql":"insert into rtest_t4 values (15, 'Record should go to rtest_t5')","shape":"INSERT INTO rtest_t4 VALUES (15, 'Record should go to rtest_t5');"}
+{"sql":"insert into rtest_t4 values (19, 'Record should go to rtest_t5 and t7')","shape":"INSERT INTO rtest_t4 VALUES (19, 'Record should go to rtest_t5 and t7');"}
+{"sql":"insert into rtest_t4 values (20, 'Record should go to rtest_t4 and t6')","shape":"INSERT INTO rtest_t4 VALUES (20, 'Record should go to rtest_t4 and t6');"}
+{"sql":"insert into rtest_t4 values (26, 'Record should go to rtest_t4 and t8')","shape":"INSERT INTO rtest_t4 VALUES (26, 'Record should go to rtest_t4 and t8');"}
+{"sql":"insert into rtest_t4 values (28, 'Record should go to rtest_t4 and t8')","shape":"INSERT INTO rtest_t4 VALUES (28, 'Record should go to rtest_t4 and t8');"}
+{"sql":"insert into rtest_t4 values (30, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t4 VALUES (30, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t4 values (40, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t4 VALUES (40, 'Record should go to rtest_t4');"}
+{"sql":"select * from rtest_t4","shape":"SELECT * FROM rtest_t4;"}
+{"sql":"select * from rtest_t5","shape":"SELECT * FROM rtest_t5;"}
+{"sql":"select * from rtest_t6","shape":"SELECT * FROM rtest_t6;"}
+{"sql":"select * from rtest_t7","shape":"SELECT * FROM rtest_t7;"}
+{"sql":"select * from rtest_t8","shape":"SELECT * FROM rtest_t8;"}
+{"sql":"delete from rtest_t4","shape":"DELETE FROM rtest_t4;"}
+{"sql":"delete from rtest_t5","shape":"DELETE FROM rtest_t5;"}
+{"sql":"delete from rtest_t6","shape":"DELETE FROM rtest_t6;"}
+{"sql":"delete from rtest_t7","shape":"DELETE FROM rtest_t7;"}
+{"sql":"delete from rtest_t8","shape":"DELETE FROM rtest_t8;"}
+{"sql":"insert into rtest_t9 values (1, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t9 VALUES (1, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t9 values (2, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t9 VALUES (2, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t9 values (10, 'Record should go to rtest_t5')","shape":"INSERT INTO rtest_t9 VALUES (10, 'Record should go to rtest_t5');"}
+{"sql":"insert into rtest_t9 values (15, 'Record should go to rtest_t5')","shape":"INSERT INTO rtest_t9 VALUES (15, 'Record should go to rtest_t5');"}
+{"sql":"insert into rtest_t9 values (19, 'Record should go to rtest_t5 and t7')","shape":"INSERT INTO rtest_t9 VALUES (19, 'Record should go to rtest_t5 and t7');"}
+{"sql":"insert into rtest_t9 values (20, 'Record should go to rtest_t4 and t6')","shape":"INSERT INTO rtest_t9 VALUES (20, 'Record should go to rtest_t4 and t6');"}
+{"sql":"insert into rtest_t9 values (26, 'Record should go to rtest_t4 and t8')","shape":"INSERT INTO rtest_t9 VALUES (26, 'Record should go to rtest_t4 and t8');"}
+{"sql":"insert into rtest_t9 values (28, 'Record should go to rtest_t4 and t8')","shape":"INSERT INTO rtest_t9 VALUES (28, 'Record should go to rtest_t4 and t8');"}
+{"sql":"insert into rtest_t9 values (30, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t9 VALUES (30, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t9 values (40, 'Record should go to rtest_t4')","shape":"INSERT INTO rtest_t9 VALUES (40, 'Record should go to rtest_t4');"}
+{"sql":"insert into rtest_t4 select * from rtest_t9 where a < 20","shape":"INSERT INTO rtest_t4 SELECT * FROM rtest_t9 WHERE a < 20;"}
+{"sql":"insert into rtest_t4 select * from rtest_t9 where b ~ 'and t8'","shape":"INSERT INTO rtest_t4 SELECT * FROM rtest_t9 WHERE b ~ 'and t8';"}
+{"sql":"insert into rtest_t4 select a + 1, b from rtest_t9 where a in (20, 30, 40)","shape":"INSERT INTO rtest_t4 SELECT a + 1, b FROM rtest_t9 WHERE a IN (20, 30, 40);"}
+{"sql":"insert into rtest_order1 values (1)","shape":"INSERT INTO rtest_order1 VALUES (1);"}
+{"sql":"select * from rtest_order2","shape":"SELECT * FROM rtest_order2;"}
+{"sql":"insert into rtest_nothn1 values (1, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (1, 'want this');"}
+{"sql":"insert into rtest_nothn1 values (2, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (2, 'want this');"}
+{"sql":"insert into rtest_nothn1 values (10, 'don''t want this')","shape":"INSERT INTO rtest_nothn1 VALUES (10, 'don''t want this');"}
+{"sql":"insert into rtest_nothn1 values (19, 'don''t want this')","shape":"INSERT INTO rtest_nothn1 VALUES (19, 'don''t want this');"}
+{"sql":"insert into rtest_nothn1 values (20, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (20, 'want this');"}
+{"sql":"insert into rtest_nothn1 values (29, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (29, 'want this');"}
+{"sql":"insert into rtest_nothn1 values (30, 'don''t want this')","shape":"INSERT INTO rtest_nothn1 VALUES (30, 'don''t want this');"}
+{"sql":"insert into rtest_nothn1 values (39, 'don''t want this')","shape":"INSERT INTO rtest_nothn1 VALUES (39, 'don''t want this');"}
+{"sql":"insert into rtest_nothn1 values (40, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (40, 'want this');"}
+{"sql":"insert into rtest_nothn1 values (50, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (50, 'want this');"}
+{"sql":"insert into rtest_nothn1 values (60, 'want this')","shape":"INSERT INTO rtest_nothn1 VALUES (60, 'want this');"}
+{"sql":"select * from rtest_nothn1","shape":"SELECT * FROM rtest_nothn1;"}
+{"sql":"insert into rtest_nothn2 values (10, 'too small')","shape":"INSERT INTO rtest_nothn2 VALUES (10, 'too small');"}
+{"sql":"insert into rtest_nothn2 values (50, 'too small')","shape":"INSERT INTO rtest_nothn2 VALUES (50, 'too small');"}
+{"sql":"insert into rtest_nothn2 values (100, 'OK')","shape":"INSERT INTO rtest_nothn2 VALUES (100, 'OK');"}
+{"sql":"insert into rtest_nothn2 values (200, 'OK')","shape":"INSERT INTO rtest_nothn2 VALUES (200, 'OK');"}
+{"sql":"select * from rtest_nothn2","shape":"SELECT * FROM rtest_nothn2;"}
+{"sql":"select * from rtest_nothn3","shape":"SELECT * FROM rtest_nothn3;"}
+{"sql":"delete from rtest_nothn1","shape":"DELETE FROM rtest_nothn1;"}
+{"sql":"delete from rtest_nothn2","shape":"DELETE FROM rtest_nothn2;"}
+{"sql":"delete from rtest_nothn3","shape":"DELETE FROM rtest_nothn3;"}
+{"sql":"insert into rtest_nothn4 values (1, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (1, 'want this');"}
+{"sql":"insert into rtest_nothn4 values (2, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (2, 'want this');"}
+{"sql":"insert into rtest_nothn4 values (10, 'don''t want this')","shape":"INSERT INTO rtest_nothn4 VALUES (10, 'don''t want this');"}
+{"sql":"insert into rtest_nothn4 values (19, 'don''t want this')","shape":"INSERT INTO rtest_nothn4 VALUES (19, 'don''t want this');"}
+{"sql":"insert into rtest_nothn4 values (20, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (20, 'want this');"}
+{"sql":"insert into rtest_nothn4 values (29, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (29, 'want this');"}
+{"sql":"insert into rtest_nothn4 values (30, 'don''t want this')","shape":"INSERT INTO rtest_nothn4 VALUES (30, 'don''t want this');"}
+{"sql":"insert into rtest_nothn4 values (39, 'don''t want this')","shape":"INSERT INTO rtest_nothn4 VALUES (39, 'don''t want this');"}
+{"sql":"insert into rtest_nothn4 values (40, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (40, 'want this');"}
+{"sql":"insert into rtest_nothn4 values (50, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (50, 'want this');"}
+{"sql":"insert into rtest_nothn4 values (60, 'want this')","shape":"INSERT INTO rtest_nothn4 VALUES (60, 'want this');"}
+{"sql":"insert into rtest_nothn1 select * from rtest_nothn4","shape":"INSERT INTO rtest_nothn1 SELECT * FROM rtest_nothn4;"}
+{"sql":"delete from rtest_nothn4","shape":"DELETE FROM rtest_nothn4;"}
+{"sql":"insert into rtest_nothn4 values (10, 'too small')","shape":"INSERT INTO rtest_nothn4 VALUES (10, 'too small');"}
+{"sql":"insert into rtest_nothn4 values (50, 'too small')","shape":"INSERT INTO rtest_nothn4 VALUES (50, 'too small');"}
+{"sql":"insert into rtest_nothn4 values (100, 'OK')","shape":"INSERT INTO rtest_nothn4 VALUES (100, 'OK');"}
+{"sql":"insert into rtest_nothn4 values (200, 'OK')","shape":"INSERT INTO rtest_nothn4 VALUES (200, 'OK');"}
+{"sql":"insert into rtest_nothn2 select * from rtest_nothn4","shape":"INSERT INTO rtest_nothn2 SELECT * FROM rtest_nothn4;"}
+{"sql":"create table rtest_view1 (a int4, b text, v bool)","shape":"CREATE TABLE rtest_view1 (a int4, b text, v bool);"}
+{"sql":"create table rtest_view2 (a int4)","shape":"CREATE TABLE rtest_view2 (a int4);"}
+{"sql":"create table rtest_view3 (a int4, b text)","shape":"CREATE TABLE rtest_view3 (a int4, b text);"}
+{"sql":"create table rtest_view4 (a int4, b text, c int4)","shape":"CREATE TABLE rtest_view4 (a int4, b text, c int4);"}
+{"sql":"create view rtest_vview1 as select a, b from rtest_view1 X\n\twhere 0 < (select count(*) from rtest_view2 Y where Y.a = X.a)","shape":"CREATE VIEW rtest_vview1 AS SELECT a, b FROM rtest_view1 AS X WHERE 0 < (SELECT count(*) FROM rtest_view2 AS Y WHERE Y.a = X.a);"}
+{"sql":"create view rtest_vview2 as select a, b from rtest_view1 where v","shape":"CREATE VIEW rtest_vview2 AS SELECT a, b FROM rtest_view1 WHERE v;"}
+{"sql":"create view rtest_vview3 as select a, b from rtest_vview2 X\n\twhere 0 < (select count(*) from rtest_view2 Y where Y.a = X.a)","shape":"CREATE VIEW rtest_vview3 AS SELECT a, b FROM rtest_vview2 AS X WHERE 0 < (SELECT count(*) FROM rtest_view2 AS Y WHERE Y.a = X.a);"}
+{"sql":"create view rtest_vview4 as select X.a, X.b, count(Y.a) as refcount\n\tfrom rtest_view1 X, rtest_view2 Y\n\twhere X.a = Y.a\n\tgroup by X.a, X.b","shape":"CREATE VIEW rtest_vview4 AS SELECT X.a, X.b, count(Y.a) AS refcount FROM rtest_view1 AS X, rtest_view2 AS Y WHERE X.a = Y.a GROUP BY X.a, X.b;"}
+{"sql":"create function rtest_viewfunc1(int4) returns int4 as\n\t'select count(*)::int4 from rtest_view2 where a = $1'\n\tlanguage sql","shape":"CREATE FUNCTION rtest_viewfunc1(int4) RETURNS int4 AS 'select count(*)::int4 from rtest_view2 where a = $1' LANGUAGE sql;"}
+{"sql":"create view rtest_vview5 as select a, b, rtest_viewfunc1(a) as refcount\n\tfrom rtest_view1","shape":"CREATE VIEW rtest_vview5 AS SELECT a, b, rtest_viewfunc1(a) AS refcount FROM rtest_view1;"}
+{"sql":"insert into rtest_view1 values (1, 'item 1', 't')","shape":"INSERT INTO rtest_view1 VALUES (1, 'item 1', 't');"}
+{"sql":"insert into rtest_view1 values (2, 'item 2', 't')","shape":"INSERT INTO rtest_view1 VALUES (2, 'item 2', 't');"}
+{"sql":"insert into rtest_view1 values (3, 'item 3', 't')","shape":"INSERT INTO rtest_view1 VALUES (3, 'item 3', 't');"}
+{"sql":"insert into rtest_view1 values (4, 'item 4', 'f')","shape":"INSERT INTO rtest_view1 VALUES (4, 'item 4', 'f');"}
+{"sql":"insert into rtest_view1 values (5, 'item 5', 't')","shape":"INSERT INTO rtest_view1 VALUES (5, 'item 5', 't');"}
+{"sql":"insert into rtest_view1 values (6, 'item 6', 'f')","shape":"INSERT INTO rtest_view1 VALUES (6, 'item 6', 'f');"}
+{"sql":"insert into rtest_view1 values (7, 'item 7', 't')","shape":"INSERT INTO rtest_view1 VALUES (7, 'item 7', 't');"}
+{"sql":"insert into rtest_view1 values (8, 'item 8', 't')","shape":"INSERT INTO rtest_view1 VALUES (8, 'item 8', 't');"}
+{"sql":"insert into rtest_view2 values (2)","shape":"INSERT INTO rtest_view2 VALUES (2);"}
+{"sql":"insert into rtest_view2 values (4)","shape":"INSERT INTO rtest_view2 VALUES (4);"}
+{"sql":"insert into rtest_view2 values (5)","shape":"INSERT INTO rtest_view2 VALUES (5);"}
+{"sql":"insert into rtest_view2 values (7)","shape":"INSERT INTO rtest_view2 VALUES (7);"}
+{"sql":"select * from rtest_vview1","shape":"SELECT * FROM rtest_vview1;"}
+{"sql":"select * from rtest_vview2","shape":"SELECT * FROM rtest_vview2;"}
+{"sql":"select * from rtest_vview3","shape":"SELECT * FROM rtest_vview3;"}
+{"sql":"select * from rtest_vview4 order by a, b","shape":"SELECT * FROM rtest_vview4 ORDER BY a, b;"}
+{"sql":"select * from rtest_vview5","shape":"SELECT * FROM rtest_vview5;"}
+{"sql":"insert into rtest_view3 select * from rtest_vview1 where a < 7","shape":"INSERT INTO rtest_view3 SELECT * FROM rtest_vview1 WHERE a < 7;"}
+{"sql":"select * from rtest_view3","shape":"SELECT * FROM rtest_view3;"}
+{"sql":"delete from rtest_view3","shape":"DELETE FROM rtest_view3;"}
+{"sql":"insert into rtest_view3 select * from rtest_vview2 where a != 5 and b !~ '2'","shape":"INSERT INTO rtest_view3 SELECT * FROM rtest_vview2 WHERE (a != 5) AND (b !~ '2');"}
+{"sql":"insert into rtest_view3 select * from rtest_vview3","shape":"INSERT INTO rtest_view3 SELECT * FROM rtest_vview3;"}
+{"sql":"insert into rtest_view4 select * from rtest_vview4 where 3 > refcount","shape":"INSERT INTO rtest_view4 SELECT * FROM rtest_vview4 WHERE 3 > refcount;"}
+{"sql":"select * from rtest_view4 order by a, b","shape":"SELECT * FROM rtest_view4 ORDER BY a, b;"}
+{"sql":"delete from rtest_view4","shape":"DELETE FROM rtest_view4;"}
+{"sql":"insert into rtest_view4 select * from rtest_vview5 where a > 2 and refcount = 0","shape":"INSERT INTO rtest_view4 SELECT * FROM rtest_vview5 WHERE (a > 2) AND (refcount = 0);"}
+{"sql":"select * from rtest_view4","shape":"SELECT * FROM rtest_view4;"}
+{"sql":"create table rtest_comp (\n\tpart\ttext,\n\tunit\tchar(4),\n\tsize\tfloat\n)","shape":"CREATE TABLE rtest_comp (part text, unit char(4), size float);"}
+{"sql":"create table rtest_unitfact (\n\tunit\tchar(4),\n\tfactor\tfloat\n)","shape":"CREATE TABLE rtest_unitfact (unit char(4), factor float);"}
+{"sql":"create view rtest_vcomp as\n\tselect X.part, (X.size * Y.factor) as size_in_cm\n\t\t\tfrom rtest_comp X, rtest_unitfact Y\n\t\t\twhere X.unit = Y.unit","shape":"CREATE VIEW rtest_vcomp AS SELECT X.part, (X.size * Y.factor) AS size_in_cm FROM rtest_comp AS X, rtest_unitfact AS Y WHERE X.unit = Y.unit;"}
+{"sql":"insert into rtest_unitfact values ('m', 100.0)","shape":"INSERT INTO rtest_unitfact VALUES ('m', 100.0);"}
+{"sql":"insert into rtest_unitfact values ('cm', 1.0)","shape":"INSERT INTO rtest_unitfact VALUES ('cm', 1.0);"}
+{"sql":"insert into rtest_unitfact values ('inch', 2.54)","shape":"INSERT INTO rtest_unitfact VALUES ('inch', 2.54);"}
+{"sql":"insert into rtest_comp values ('p1', 'm', 5.0)","shape":"INSERT INTO rtest_comp VALUES ('p1', 'm', 5.0);"}
+{"sql":"insert into rtest_comp values ('p2', 'm', 3.0)","shape":"INSERT INTO rtest_comp VALUES ('p2', 'm', 3.0);"}
+{"sql":"insert into rtest_comp values ('p3', 'cm', 5.0)","shape":"INSERT INTO rtest_comp VALUES ('p3', 'cm', 5.0);"}
+{"sql":"insert into rtest_comp values ('p4', 'cm', 15.0)","shape":"INSERT INTO rtest_comp VALUES ('p4', 'cm', 15.0);"}
+{"sql":"insert into rtest_comp values ('p5', 'inch', 7.0)","shape":"INSERT INTO rtest_comp VALUES ('p5', 'inch', 7.0);"}
+{"sql":"insert into rtest_comp values ('p6', 'inch', 4.4)","shape":"INSERT INTO rtest_comp VALUES ('p6', 'inch', 4.4);"}
+{"sql":"select * from rtest_vcomp order by part","shape":"SELECT * FROM rtest_vcomp ORDER BY part;"}
+{"sql":"select * from rtest_vcomp where size_in_cm > 10.0 order by size_in_cm using >","shape":"SELECT * FROM rtest_vcomp WHERE size_in_cm > 10.0 ORDER BY size_in_cm USING >;"}
+{"sql":"CREATE TABLE shoe_data (\n\tshoename   char(10),      -- primary key\n\tsh_avail   integer,       -- available # of pairs\n\tslcolor    char(10),      -- preferred shoelace color\n\tslminlen   float,         -- minimum shoelace length\n\tslmaxlen   float,         -- maximum shoelace length\n\tslunit     char(8)        -- length unit\n)","shape":"CREATE TABLE shoe_data (shoename char(10), sh_avail integer, slcolor char(10), slminlen float, slmaxlen float, slunit char(8));"}
+{"sql":"CREATE TABLE shoelace_data (\n\tsl_name    char(10),      -- primary key\n\tsl_avail   integer,       -- available # of pairs\n\tsl_color   char(10),      -- shoelace color\n\tsl_len     float,         -- shoelace length\n\tsl_unit    char(8)        -- length unit\n)","shape":"CREATE TABLE shoelace_data (sl_name char(10), sl_avail integer, sl_color char(10), sl_len float, sl_unit char(8));"}
+{"sql":"CREATE TABLE unit (\n\tun_name    char(8),       -- the primary key\n\tun_fact    float          -- factor to transform to cm\n)","shape":"CREATE TABLE unit (un_name char(8), un_fact float);"}
+{"sql":"CREATE VIEW shoe AS\n\tSELECT sh.shoename,\n\t\t   sh.sh_avail,\n\t\t   sh.slcolor,\n\t\t   sh.slminlen,\n\t\t   sh.slminlen * un.un_fact AS slminlen_cm,\n\t\t   sh.slmaxlen,\n\t\t   sh.slmaxlen * un.un_fact AS slmaxlen_cm,\n\t\t   sh.slunit\n\t  FROM shoe_data sh, unit un\n\t WHERE sh.slunit = un.un_name","shape":"CREATE VIEW shoe AS SELECT sh.shoename, sh.sh_avail, sh.slcolor, sh.slminlen, sh.slminlen * un.un_fact AS slminlen_cm, sh.slmaxlen, sh.slmaxlen * un.un_fact AS slmaxlen_cm, sh.slunit FROM shoe_data AS sh, unit AS un WHERE sh.slunit = un.un_name;"}
+{"sql":"CREATE VIEW shoelace AS\n\tSELECT s.sl_name,\n\t\t   s.sl_avail,\n\t\t   s.sl_color,\n\t\t   s.sl_len,\n\t\t   s.sl_unit,\n\t\t   s.sl_len * u.un_fact AS sl_len_cm\n\t  FROM shoelace_data s, unit u\n\t WHERE s.sl_unit = u.un_name","shape":"CREATE VIEW shoelace AS SELECT s.sl_name, s.sl_avail, s.sl_color, s.sl_len, s.sl_unit, s.sl_len * u.un_fact AS sl_len_cm FROM shoelace_data AS s, unit AS u WHERE s.sl_unit = u.un_name;"}
+{"sql":"CREATE VIEW shoe_ready AS\n\tSELECT rsh.shoename,\n\t\t   rsh.sh_avail,\n\t\t   rsl.sl_name,\n\t\t   rsl.sl_avail,\n\t\t   int4smaller(rsh.sh_avail, rsl.sl_avail) AS total_avail\n\t  FROM shoe rsh, shoelace rsl\n\t WHERE rsl.sl_color = rsh.slcolor\n\t   AND rsl.sl_len_cm >= rsh.slminlen_cm\n\t   AND rsl.sl_len_cm <= rsh.slmaxlen_cm","shape":"CREATE VIEW shoe_ready AS SELECT rsh.shoename, rsh.sh_avail, rsl.sl_name, rsl.sl_avail, int4smaller(rsh.sh_avail, rsl.sl_avail) AS total_avail FROM shoe AS rsh, shoelace AS rsl WHERE ((rsl.sl_color = rsh.slcolor) AND (rsl.sl_len_cm >= rsh.slminlen_cm)) AND (rsl.sl_len_cm <= rsh.slmaxlen_cm);"}
+{"sql":"INSERT INTO unit VALUES ('cm', 1.0)","shape":"INSERT INTO unit VALUES ('cm', 1.0);"}
+{"sql":"INSERT INTO unit VALUES ('m', 100.0)","shape":"INSERT INTO unit VALUES ('m', 100.0);"}
+{"sql":"INSERT INTO unit VALUES ('inch', 2.54)","shape":"INSERT INTO unit VALUES ('inch', 2.54);"}
+{"sql":"INSERT INTO shoe_data VALUES ('sh1', 2, 'black', 70.0, 90.0, 'cm')","shape":"INSERT INTO shoe_data VALUES ('sh1', 2, 'black', 70.0, 90.0, 'cm');"}
+{"sql":"INSERT INTO shoe_data VALUES ('sh2', 0, 'black', 30.0, 40.0, 'inch')","shape":"INSERT INTO shoe_data VALUES ('sh2', 0, 'black', 30.0, 40.0, 'inch');"}
+{"sql":"INSERT INTO shoe_data VALUES ('sh3', 4, 'brown', 50.0, 65.0, 'cm')","shape":"INSERT INTO shoe_data VALUES ('sh3', 4, 'brown', 50.0, 65.0, 'cm');"}
+{"sql":"INSERT INTO shoe_data VALUES ('sh4', 3, 'brown', 40.0, 50.0, 'inch')","shape":"INSERT INTO shoe_data VALUES ('sh4', 3, 'brown', 40.0, 50.0, 'inch');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl1', 5, 'black', 80.0, 'cm')","shape":"INSERT INTO shoelace_data VALUES ('sl1', 5, 'black', 80.0, 'cm');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl2', 6, 'black', 100.0, 'cm')","shape":"INSERT INTO shoelace_data VALUES ('sl2', 6, 'black', 100.0, 'cm');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl3', 0, 'black', 35.0 , 'inch')","shape":"INSERT INTO shoelace_data VALUES ('sl3', 0, 'black', 35.0, 'inch');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl4', 8, 'black', 40.0 , 'inch')","shape":"INSERT INTO shoelace_data VALUES ('sl4', 8, 'black', 40.0, 'inch');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl5', 4, 'brown', 1.0 , 'm')","shape":"INSERT INTO shoelace_data VALUES ('sl5', 4, 'brown', 1.0, 'm');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl6', 0, 'brown', 0.9 , 'm')","shape":"INSERT INTO shoelace_data VALUES ('sl6', 0, 'brown', 0.9, 'm');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl7', 7, 'brown', 60 , 'cm')","shape":"INSERT INTO shoelace_data VALUES ('sl7', 7, 'brown', 60, 'cm');"}
+{"sql":"INSERT INTO shoelace_data VALUES ('sl8', 1, 'brown', 40 , 'inch')","shape":"INSERT INTO shoelace_data VALUES ('sl8', 1, 'brown', 40, 'inch');"}
+{"sql":"SELECT * FROM shoelace ORDER BY sl_name","shape":"SELECT * FROM shoelace ORDER BY sl_name;"}
+{"sql":"SELECT * FROM shoe_ready WHERE total_avail >= 2 ORDER BY 1","shape":"SELECT * FROM shoe_ready WHERE total_avail >= 2 ORDER BY 1;"}
+{"sql":"CREATE TABLE shoelace_log (\n        sl_name    char(10),      -- shoelace changed\n        sl_avail   integer,       -- new available value\n        log_who    name,          -- who did it\n        log_when   timestamp      -- when\n    )","shape":"CREATE TABLE shoelace_log (sl_name char(10), sl_avail integer, log_who name, log_when timestamp);"}
+{"sql":"CREATE RULE log_shoelace AS ON UPDATE TO shoelace_data\n        WHERE NEW.sl_avail != OLD.sl_avail\n        DO INSERT INTO shoelace_log VALUES (\n                                        NEW.sl_name,\n                                        NEW.sl_avail,\n                                        'Al Bundy',\n                                        'epoch'\n                                    )"}
+{"sql":"UPDATE shoelace_data SET sl_avail = 6 WHERE  sl_name = 'sl7'","shape":"UPDATE shoelace_data SET sl_avail = 6 WHERE sl_name = 'sl7';"}
+{"sql":"SELECT * FROM shoelace_log","shape":"SELECT * FROM shoelace_log;"}
+{"sql":"CREATE RULE shoelace_ins AS ON INSERT TO shoelace\n        DO INSTEAD\n        INSERT INTO shoelace_data VALUES (\n               NEW.sl_name,\n               NEW.sl_avail,\n               NEW.sl_color,\n               NEW.sl_len,\n               NEW.sl_unit)"}
+{"sql":"CREATE RULE shoelace_upd AS ON UPDATE TO shoelace\n        DO INSTEAD\n        UPDATE shoelace_data SET\n               sl_name = NEW.sl_name,\n               sl_avail = NEW.sl_avail,\n               sl_color = NEW.sl_color,\n               sl_len = NEW.sl_len,\n               sl_unit = NEW.sl_unit\n         WHERE sl_name = OLD.sl_name"}
+{"sql":"CREATE RULE shoelace_del AS ON DELETE TO shoelace\n        DO INSTEAD\n        DELETE FROM shoelace_data\n         WHERE sl_name = OLD.sl_name"}
+{"sql":"CREATE TABLE shoelace_arrive (\n        arr_name    char(10),\n        arr_quant   integer\n    )","shape":"CREATE TABLE shoelace_arrive (arr_name char(10), arr_quant integer);"}
+{"sql":"CREATE TABLE shoelace_ok (\n        ok_name     char(10),\n        ok_quant    integer\n    )","shape":"CREATE TABLE shoelace_ok (ok_name char(10), ok_quant integer);"}
+{"sql":"CREATE RULE shoelace_ok_ins AS ON INSERT TO shoelace_ok\n        DO INSTEAD\n        UPDATE shoelace SET\n               sl_avail = sl_avail + NEW.ok_quant\n         WHERE sl_name = NEW.ok_name"}
+{"sql":"INSERT INTO shoelace_arrive VALUES ('sl3', 10)","shape":"INSERT INTO shoelace_arrive VALUES ('sl3', 10);"}
+{"sql":"INSERT INTO shoelace_arrive VALUES ('sl6', 20)","shape":"INSERT INTO shoelace_arrive VALUES ('sl6', 20);"}
+{"sql":"INSERT INTO shoelace_arrive VALUES ('sl8', 20)","shape":"INSERT INTO shoelace_arrive VALUES ('sl8', 20);"}
+{"sql":"insert into shoelace_ok select * from shoelace_arrive","shape":"INSERT INTO shoelace_ok SELECT * FROM shoelace_arrive;"}
+{"sql":"SELECT * FROM shoelace_log ORDER BY sl_name","shape":"SELECT * FROM shoelace_log ORDER BY sl_name;"}
+{"sql":"CREATE VIEW shoelace_obsolete AS\n\tSELECT * FROM shoelace WHERE NOT EXISTS\n\t    (SELECT shoename FROM shoe WHERE slcolor = sl_color)","shape":"CREATE VIEW shoelace_obsolete AS SELECT * FROM shoelace WHERE NOT EXISTS (SELECT shoename FROM shoe WHERE slcolor = sl_color);"}
+{"sql":"CREATE VIEW shoelace_candelete AS\n\tSELECT * FROM shoelace_obsolete WHERE sl_avail = 0","shape":"CREATE VIEW shoelace_candelete AS SELECT * FROM shoelace_obsolete WHERE sl_avail = 0;"}
+{"sql":"insert into shoelace values ('sl9', 0, 'pink', 35.0, 'inch', 0.0)","shape":"INSERT INTO shoelace VALUES ('sl9', 0, 'pink', 35.0, 'inch', 0.0);"}
+{"sql":"insert into shoelace values ('sl10', 1000, 'magenta', 40.0, 'inch', 0.0)","shape":"INSERT INTO shoelace VALUES ('sl10', 1000, 'magenta', 40.0, 'inch', 0.0);"}
+{"sql":"insert into shoelace values ('sl10', 1000, 'magenta', 40.0, 'inch', 0.0)\n  on conflict do nothing","shape":"INSERT INTO shoelace VALUES ('sl10', 1000, 'magenta', 40.0, 'inch', 0.0) ON CONFLICT DO NOTHING;"}
+{"sql":"SELECT * FROM shoelace_obsolete ORDER BY sl_len_cm","shape":"SELECT * FROM shoelace_obsolete ORDER BY sl_len_cm;"}
+{"sql":"SELECT * FROM shoelace_candelete","shape":"SELECT * FROM shoelace_candelete;"}
+{"sql":"DELETE FROM shoelace WHERE EXISTS\n    (SELECT * FROM shoelace_candelete\n             WHERE sl_name = shoelace.sl_name)","shape":"DELETE FROM shoelace WHERE EXISTS (SELECT * FROM shoelace_candelete WHERE sl_name = shoelace.sl_name);"}
+{"sql":"SELECT * FROM shoe ORDER BY shoename","shape":"SELECT * FROM shoe ORDER BY shoename;"}
+{"sql":"SELECT count(*) FROM shoe","shape":"SELECT count(*) FROM shoe;"}
+{"sql":"create table rules_foo (f1 int)","shape":"CREATE TABLE rules_foo (f1 int);"}
+{"sql":"create table rules_foo2 (f1 int)","shape":"CREATE TABLE rules_foo2 (f1 int);"}
+{"sql":"create rule rules_foorule as on insert to rules_foo where f1 < 100\ndo instead nothing"}
+{"sql":"insert into rules_foo values(1)","shape":"INSERT INTO rules_foo VALUES (1);"}
+{"sql":"insert into rules_foo values(1001)","shape":"INSERT INTO rules_foo VALUES (1001);"}
+{"sql":"select * from rules_foo","shape":"SELECT * FROM rules_foo;"}
+{"sql":"drop rule rules_foorule on rules_foo"}
+{"sql":"create rule rules_foorule as on insert to rules_foo where f1 < 100\ndo instead insert into rules_foo2 values (f1)"}
+{"sql":"create rule rules_foorule as on insert to rules_foo where f1 < 100\ndo instead insert into rules_foo2 values (new.f1)"}
+{"sql":"insert into rules_foo values(2)","shape":"INSERT INTO rules_foo VALUES (2);"}
+{"sql":"insert into rules_foo values(100)","shape":"INSERT INTO rules_foo VALUES (100);"}
+{"sql":"select * from rules_foo2","shape":"SELECT * FROM rules_foo2;"}
+{"sql":"drop table rules_foo","shape":"DROP TABLE rules_foo;"}
+{"sql":"drop table rules_foo2","shape":"DROP TABLE rules_foo2;"}
+{"sql":"create table pparent (pid int, txt text)","shape":"CREATE TABLE pparent (pid int, txt text);"}
+{"sql":"insert into pparent values (1,'parent1')","shape":"INSERT INTO pparent VALUES (1, 'parent1');"}
+{"sql":"insert into pparent values (2,'parent2')","shape":"INSERT INTO pparent VALUES (2, 'parent2');"}
+{"sql":"create table cchild (pid int, descrip text)","shape":"CREATE TABLE cchild (pid int, descrip text);"}
+{"sql":"insert into cchild values (1,'descrip1')","shape":"INSERT INTO cchild VALUES (1, 'descrip1');"}
+{"sql":"create view vview as\n  select pparent.pid, txt, descrip from\n    pparent left join cchild using (pid)","shape":"CREATE VIEW vview AS SELECT pparent.pid, txt, descrip FROM pparent LEFT JOIN cchild USING (pid);"}
+{"sql":"create rule rrule as\n  on update to vview do instead\n(\n  insert into cchild (pid, descrip)\n    select old.pid, new.descrip where old.descrip isnull;\n  update cchild set descrip = new.descrip where cchild.pid = old.pid;\n)"}
+{"sql":"select * from vview","shape":"SELECT * FROM vview;"}
+{"sql":"update vview set descrip='test1' where pid=1","shape":"UPDATE vview SET descrip = 'test1' WHERE pid = 1;"}
+{"sql":"update vview set descrip='test2' where pid=2","shape":"UPDATE vview SET descrip = 'test2' WHERE pid = 2;"}
+{"sql":"update vview set descrip='test3' where pid=3","shape":"UPDATE vview SET descrip = 'test3' WHERE pid = 3;"}
+{"sql":"select * from cchild","shape":"SELECT * FROM cchild;"}
+{"sql":"drop rule rrule on vview"}
+{"sql":"drop view vview","shape":"DROP VIEW vview;"}
+{"sql":"drop table pparent","shape":"DROP TABLE pparent;"}
+{"sql":"drop table cchild","shape":"DROP TABLE cchild;"}
+{"sql":"SELECT viewname, definition FROM pg_views\nWHERE schemaname = 'pg_catalog'\nORDER BY viewname","shape":"SELECT viewname, definition FROM pg_views WHERE schemaname = 'pg_catalog' ORDER BY viewname;"}
+{"sql":"SELECT tablename, rulename, definition FROM pg_rules\nWHERE schemaname = 'pg_catalog'\nORDER BY tablename, rulename","shape":"SELECT tablename, rulename, definition FROM pg_rules WHERE schemaname = 'pg_catalog' ORDER BY tablename, rulename;"}
+{"sql":"CREATE TABLE ruletest_tbl (a int, b int)","shape":"CREATE TABLE ruletest_tbl (a int, b int);"}
+{"sql":"CREATE TABLE ruletest_tbl2 (a int, b int)","shape":"CREATE TABLE ruletest_tbl2 (a int, b int);"}
+{"sql":"CREATE OR REPLACE RULE myrule AS ON INSERT TO ruletest_tbl\n\tDO INSTEAD INSERT INTO ruletest_tbl2 VALUES (10, 10)"}
+{"sql":"INSERT INTO ruletest_tbl VALUES (99, 99)","shape":"INSERT INTO ruletest_tbl VALUES (99, 99);"}
+{"sql":"CREATE OR REPLACE RULE myrule AS ON INSERT TO ruletest_tbl\n\tDO INSTEAD INSERT INTO ruletest_tbl2 VALUES (1000, 1000)"}
+{"sql":"SELECT * FROM ruletest_tbl2","shape":"SELECT * FROM ruletest_tbl2;"}
+{"sql":"create table rule_and_refint_t1 (\n\tid1a integer,\n\tid1b integer,\n\n\tprimary key (id1a, id1b)\n)","shape":"CREATE TABLE rule_and_refint_t1 (id1a integer, id1b integer, PRIMARY KEY (id1a, id1b));"}
+{"sql":"create table rule_and_refint_t2 (\n\tid2a integer,\n\tid2c integer,\n\n\tprimary key (id2a, id2c)\n)","shape":"CREATE TABLE rule_and_refint_t2 (id2a integer, id2c integer, PRIMARY KEY (id2a, id2c));"}
+{"sql":"create table rule_and_refint_t3 (\n\tid3a integer,\n\tid3b integer,\n\tid3c integer,\n\tdata text,\n\n\tprimary key (id3a, id3b, id3c),\n\n\tforeign key (id3a, id3b) references rule_and_refint_t1 (id1a, id1b),\n\tforeign key (id3a, id3c) references rule_and_refint_t2 (id2a, id2c)\n)","shape":"CREATE TABLE rule_and_refint_t3 (id3a integer, id3b integer, id3c integer, data text, PRIMARY KEY (id3a, id3b, id3c), FOREIGN KEY (id3a, id3b) REFERENCES rule_and_refint_t1 (id1a, id1b), FOREIGN KEY (id3a, id3c) REFERENCES rule_and_refint_t2 (id2a, id2c));"}
+{"sql":"insert into rule_and_refint_t1 values (1, 11)","shape":"INSERT INTO rule_and_refint_t1 VALUES (1, 11);"}
+{"sql":"insert into rule_and_refint_t1 values (1, 12)","shape":"INSERT INTO rule_and_refint_t1 VALUES (1, 12);"}
+{"sql":"insert into rule_and_refint_t1 values (2, 21)","shape":"INSERT INTO rule_and_refint_t1 VALUES (2, 21);"}
+{"sql":"insert into rule_and_refint_t1 values (2, 22)","shape":"INSERT INTO rule_and_refint_t1 VALUES (2, 22);"}
+{"sql":"insert into rule_and_refint_t2 values (1, 11)","shape":"INSERT INTO rule_and_refint_t2 VALUES (1, 11);"}
+{"sql":"insert into rule_and_refint_t2 values (1, 12)","shape":"INSERT INTO rule_and_refint_t2 VALUES (1, 12);"}
+{"sql":"insert into rule_and_refint_t2 values (2, 21)","shape":"INSERT INTO rule_and_refint_t2 VALUES (2, 21);"}
+{"sql":"insert into rule_and_refint_t2 values (2, 22)","shape":"INSERT INTO rule_and_refint_t2 VALUES (2, 22);"}
+{"sql":"insert into rule_and_refint_t3 values (1, 11, 11, 'row1')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 11, 11, 'row1');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 11, 12, 'row2')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 11, 12, 'row2');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 12, 11, 'row3')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 12, 11, 'row3');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 12, 12, 'row4')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 12, 12, 'row4');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 11, 13, 'row5')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 11, 13, 'row5');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 13, 11, 'row6')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 13, 11, 'row6');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 13, 11, 'row6')\n  on conflict do nothing","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 13, 11, 'row6') ON CONFLICT DO NOTHING;"}
+{"sql":"insert into rule_and_refint_t3 values (1, 13, 11, 'row6')\n  on conflict (id3a, id3b, id3c) do update\n  set id3b = excluded.id3b","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 13, 11, 'row6') ON CONFLICT (id3a, id3b, id3c) DO UPDATE SET id3b = excluded.id3b;"}
+{"sql":"insert into shoelace values ('sl9', 0, 'pink', 35.0, 'inch', 0.0)\n  on conflict (sl_name) do update\n  set sl_avail = excluded.sl_avail","shape":"INSERT INTO shoelace VALUES ('sl9', 0, 'pink', 35.0, 'inch', 0.0) ON CONFLICT (sl_name) DO UPDATE SET sl_avail = excluded.sl_avail;"}
+{"sql":"create rule rule_and_refint_t3_ins as on insert to rule_and_refint_t3\n\twhere (exists (select 1 from rule_and_refint_t3\n\t\t\twhere (((rule_and_refint_t3.id3a = new.id3a)\n\t\t\tand (rule_and_refint_t3.id3b = new.id3b))\n\t\t\tand (rule_and_refint_t3.id3c = new.id3c))))\n\tdo instead update rule_and_refint_t3 set data = new.data\n\twhere (((rule_and_refint_t3.id3a = new.id3a)\n\tand (rule_and_refint_t3.id3b = new.id3b))\n\tand (rule_and_refint_t3.id3c = new.id3c))"}
+{"sql":"insert into rule_and_refint_t3 values (1, 11, 13, 'row7')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 11, 13, 'row7');"}
+{"sql":"insert into rule_and_refint_t3 values (1, 13, 11, 'row8')","shape":"INSERT INTO rule_and_refint_t3 VALUES (1, 13, 11, 'row8');"}
+{"sql":"create view rules_fooview as select 'rules_foo'::text","shape":"CREATE VIEW rules_fooview AS SELECT 'rules_foo'::text;"}
+{"sql":"drop rule \"_RETURN\" on rules_fooview"}
+{"sql":"drop view rules_fooview","shape":"DROP VIEW rules_fooview;"}
+{"sql":"create table rules_fooview (x int, y text)","shape":"CREATE TABLE rules_fooview (x int, y text);"}
+{"sql":"create rule \"_RETURN\" as on select to rules_fooview do instead\n  select 1 as x, 'aaa'::text as y"}
+{"sql":"drop table rules_fooview","shape":"DROP TABLE rules_fooview;"}
+{"sql":"create table rules_fooview (x int, y text) partition by list (x)","shape":"CREATE TABLE rules_fooview (x int, y text) PARTITION BY LIST (x);"}
+{"sql":"create table rules_fooview_part partition of rules_fooview for values in (1)","shape":"CREATE TABLE rules_fooview_part PARTITION OF rules_fooview FOR VALUES IN (1);"}
+{"sql":"create rule \"_RETURN\" as on select to rules_fooview_part do instead\n  select 1 as x, 'aaa'::text as y"}
+{"sql":"create table id (id serial primary key, name text)","shape":"CREATE TABLE id (id serial PRIMARY KEY, name text);"}
+{"sql":"create table test_1 (id integer primary key) inherits (id)","shape":"CREATE TABLE test_1 (id integer PRIMARY KEY) INHERITS (id);"}
+{"sql":"create table test_2 (id integer primary key) inherits (id)","shape":"CREATE TABLE test_2 (id integer PRIMARY KEY) INHERITS (id);"}
+{"sql":"create table test_3 (id integer primary key) inherits (id)","shape":"CREATE TABLE test_3 (id integer PRIMARY KEY) INHERITS (id);"}
+{"sql":"insert into test_1 (name) values ('Test 1')","shape":"INSERT INTO test_1 (name) VALUES ('Test 1');"}
+{"sql":"insert into test_1 (name) values ('Test 2')","shape":"INSERT INTO test_1 (name) VALUES ('Test 2');"}
+{"sql":"insert into test_2 (name) values ('Test 3')","shape":"INSERT INTO test_2 (name) VALUES ('Test 3');"}
+{"sql":"insert into test_2 (name) values ('Test 4')","shape":"INSERT INTO test_2 (name) VALUES ('Test 4');"}
+{"sql":"insert into test_3 (name) values ('Test 5')","shape":"INSERT INTO test_3 (name) VALUES ('Test 5');"}
+{"sql":"insert into test_3 (name) values ('Test 6')","shape":"INSERT INTO test_3 (name) VALUES ('Test 6');"}
+{"sql":"create view id_ordered as select * from id order by id","shape":"CREATE VIEW id_ordered AS SELECT * FROM id ORDER BY id;"}
+{"sql":"create rule update_id_ordered as on update to id_ordered\n\tdo instead update id set name = new.name where id = old.id"}
+{"sql":"select * from id_ordered","shape":"SELECT * FROM id_ordered;"}
+{"sql":"update id_ordered set name = 'update 2' where id = 2","shape":"UPDATE id_ordered SET name = 'update 2' WHERE id = 2;"}
+{"sql":"update id_ordered set name = 'update 4' where id = 4","shape":"UPDATE id_ordered SET name = 'update 4' WHERE id = 4;"}
+{"sql":"update id_ordered set name = 'update 5' where id = 5","shape":"UPDATE id_ordered SET name = 'update 5' WHERE id = 5;"}
+{"sql":"drop table id cascade","shape":"DROP TABLE id CASCADE;"}
+{"sql":"create temp table t1 (a integer primary key)","shape":"CREATE TEMPORARY TABLE t1 (a integer PRIMARY KEY);"}
+{"sql":"create temp table t1_1 (check (a >= 0 and a < 10)) inherits (t1)","shape":"CREATE TEMPORARY TABLE t1_1 (CHECK ((a >= 0) AND (a < 10))) INHERITS (t1);"}
+{"sql":"create temp table t1_2 (check (a >= 10 and a < 20)) inherits (t1)","shape":"CREATE TEMPORARY TABLE t1_2 (CHECK ((a >= 10) AND (a < 20))) INHERITS (t1);"}
+{"sql":"create rule t1_ins_1 as on insert to t1\n\twhere new.a >= 0 and new.a < 10\n\tdo instead\n\tinsert into t1_1 values (new.a)"}
+{"sql":"create rule t1_ins_2 as on insert to t1\n\twhere new.a >= 10 and new.a < 20\n\tdo instead\n\tinsert into t1_2 values (new.a)"}
+{"sql":"create rule t1_upd_1 as on update to t1\n\twhere old.a >= 0 and old.a < 10\n\tdo instead\n\tupdate t1_1 set a = new.a where a = old.a"}
+{"sql":"create rule t1_upd_2 as on update to t1\n\twhere old.a >= 10 and old.a < 20\n\tdo instead\n\tupdate t1_2 set a = new.a where a = old.a"}
+{"sql":"insert into t1 select * from generate_series(5,19,1) g","shape":"INSERT INTO t1 SELECT * FROM generate_series(5, 19, 1) AS g;"}
+{"sql":"update t1 set a = 4 where a = 5","shape":"UPDATE t1 SET a = 4 WHERE a = 5;"}
+{"sql":"select * from only t1","shape":"SELECT * FROM ONLY t1;"}
+{"sql":"select * from only t1_1","shape":"SELECT * FROM ONLY t1_1;"}
+{"sql":"select * from only t1_2","shape":"SELECT * FROM ONLY t1_2;"}
+{"sql":"create table rules_base(f1 int, f2 int)","shape":"CREATE TABLE rules_base (f1 int, f2 int);"}
+{"sql":"insert into rules_base values(1,2), (11,12)","shape":"INSERT INTO rules_base VALUES (1, 2), (11, 12);"}
+{"sql":"create rule r1 as on update to rules_base do instead\n  select * from rules_base where f1 = 1 for update"}
+{"sql":"update rules_base set f2 = f2 + 1","shape":"UPDATE rules_base SET f2 = f2 + 1;"}
+{"sql":"create or replace rule r1 as on update to rules_base do instead\n  select * from rules_base where f1 = 11 for update of rules_base"}
+{"sql":"create or replace rule r1 as on update to rules_base do instead\n  select * from rules_base where f1 = 11 for update of old"}
+{"sql":"drop table rules_base","shape":"DROP TABLE rules_base;"}
+{"sql":"select pg_get_viewdef('shoe'::regclass) as unpretty","shape":"SELECT pg_get_viewdef('shoe'::regclass) AS unpretty;"}
+{"sql":"select pg_get_viewdef('shoe'::regclass,true) as pretty","shape":"SELECT pg_get_viewdef('shoe'::regclass, TRUE) AS pretty;"}
+{"sql":"select pg_get_viewdef('shoe'::regclass,0) as prettier","shape":"SELECT pg_get_viewdef('shoe'::regclass, 0) AS prettier;"}
+{"sql":"create table rules_src(f1 int, f2 int default 0)","shape":"CREATE TABLE rules_src (f1 int, f2 int DEFAULT 0);"}
+{"sql":"create table rules_log(f1 int, f2 int, tag text, id serial)","shape":"CREATE TABLE rules_log (f1 int, f2 int, tag text, id serial);"}
+{"sql":"insert into rules_src values(1,2), (11,12)","shape":"INSERT INTO rules_src VALUES (1, 2), (11, 12);"}
+{"sql":"create rule r1 as on update to rules_src do also\n  insert into rules_log values(old.*, 'old', default), (new.*, 'new', default)"}
+{"sql":"update rules_src set f2 = f2 + 1","shape":"UPDATE rules_src SET f2 = f2 + 1;"}
+{"sql":"update rules_src set f2 = f2 * 10","shape":"UPDATE rules_src SET f2 = f2 * 10;"}
+{"sql":"select * from rules_src","shape":"SELECT * FROM rules_src;"}
+{"sql":"select * from rules_log","shape":"SELECT * FROM rules_log;"}
+{"sql":"create rule r2 as on update to rules_src do also\n  values(old.*, 'old'), (new.*, 'new')"}
+{"sql":"update rules_src set f2 = f2 / 10","shape":"UPDATE rules_src SET f2 = f2 / 10;"}
+{"sql":"create rule r3 as on insert to rules_src do also\n  insert into rules_log values(null, null, '-', default), (new.*, 'new', default)"}
+{"sql":"insert into rules_src values(22,23), (33,default)","shape":"INSERT INTO rules_src VALUES (22, 23), (33, DEFAULT);"}
+{"sql":"create rule r4 as on delete to rules_src do notify rules_src_deletion"}
+{"sql":"create rule r5 as on insert to rules_src do instead insert into rules_log AS trgt SELECT NEW.* RETURNING trgt.f1, trgt.f2"}
+{"sql":"create rule r6 as on update to rules_src do instead UPDATE rules_log AS trgt SET tag = 'updated' WHERE trgt.f1 = new.f1"}
+{"sql":"create rule r7 as on delete to rules_src do instead\n  with wins as (insert into int4_tbl as trgt values (0) returning *),\n       wupd as (update int4_tbl trgt set f1 = f1+1 returning *),\n       wdel as (delete from int4_tbl trgt where f1 = 0 returning *)\n  insert into rules_log AS trgt select old.* from wins, wupd, wdel\n  returning trgt.f1, trgt.f2"}
+{"sql":"create table rule_t1(f1 int, f2 int)","shape":"CREATE TABLE rule_t1 (f1 int, f2 int);"}
+{"sql":"create table rule_dest(f1 int, f2 int[], tag text)","shape":"CREATE TABLE rule_dest (f1 int, f2 int[], tag text);"}
+{"sql":"create rule rr as on update to rule_t1 do instead UPDATE rule_dest trgt\n  SET (f2[1], f1, tag) = (SELECT new.f2, new.f1, 'updated'::varchar)\n  WHERE trgt.f1 = new.f1 RETURNING new.*"}
+{"sql":"drop table rule_t1, rule_dest","shape":"DROP TABLE rule_t1, rule_dest;"}
+{"sql":"CREATE TABLE rule_t1(a int, b text DEFAULT 'xxx', c int)","shape":"CREATE TABLE rule_t1 (a int, b text DEFAULT 'xxx', c int);"}
+{"sql":"CREATE VIEW rule_v1 AS SELECT * FROM rule_t1","shape":"CREATE VIEW rule_v1 AS SELECT * FROM rule_t1;"}
+{"sql":"CREATE RULE v1_ins AS ON INSERT TO rule_v1\n  DO ALSO INSERT INTO rule_t1\n  SELECT * FROM (SELECT a + 10 FROM rule_t1 WHERE a = NEW.a) tt"}
+{"sql":"CREATE RULE v1_upd AS ON UPDATE TO rule_v1\n  DO ALSO UPDATE rule_t1 t\n  SET c = tt.a * 10\n  FROM (SELECT a FROM rule_t1 WHERE a = OLD.a) tt WHERE t.a = tt.a"}
+{"sql":"INSERT INTO rule_v1 VALUES (1, 'a'), (2, 'b')","shape":"INSERT INTO rule_v1 VALUES (1, 'a'), (2, 'b');"}
+{"sql":"UPDATE rule_v1 SET b = upper(b)","shape":"UPDATE rule_v1 SET b = upper(b);"}
+{"sql":"SELECT * FROM rule_t1","shape":"SELECT * FROM rule_t1;"}
+{"sql":"DROP TABLE rule_t1 CASCADE","shape":"DROP TABLE rule_t1 CASCADE;"}
+{"sql":"CREATE TABLE rule_t1 (a INT)","shape":"CREATE TABLE rule_t1 (a INT);"}
+{"sql":"CREATE RULE InsertRule AS\n    ON INSERT TO rule_v1\n    DO INSTEAD\n        INSERT INTO rule_t1 VALUES(new.a)"}
+{"sql":"ALTER RULE InsertRule ON rule_v1 RENAME to NewInsertRule"}
+{"sql":"INSERT INTO rule_v1 VALUES(1)","shape":"INSERT INTO rule_v1 VALUES (1);"}
+{"sql":"SELECT * FROM rule_v1","shape":"SELECT * FROM rule_v1;"}
+{"sql":"ALTER RULE InsertRule ON rule_v1 RENAME TO NewInsertRule"}
+{"sql":"ALTER RULE NewInsertRule ON rule_v1 RENAME TO \"_RETURN\""}
+{"sql":"ALTER RULE \"_RETURN\" ON rule_v1 RENAME TO abc"}
+{"sql":"DROP VIEW rule_v1","shape":"DROP VIEW rule_v1;"}
+{"sql":"DROP TABLE rule_t1","shape":"DROP TABLE rule_t1;"}
+{"sql":"create view rule_v1 as values(1,2)","shape":"CREATE VIEW rule_v1 AS VALUES (1, 2);"}
+{"sql":"alter table rule_v1 rename column column2 to q2","shape":"ALTER TABLE rule_v1 RENAME COLUMN column2 TO q2;"}
+{"sql":"drop view rule_v1","shape":"DROP VIEW rule_v1;"}
+{"sql":"create view rule_v1(x) as values(1,2)","shape":"CREATE VIEW rule_v1 (x) AS VALUES (1, 2);"}
+{"sql":"create view rule_v1(x) as select * from (values(1,2)) v","shape":"CREATE VIEW rule_v1 (x) AS SELECT * FROM (VALUES (1, 2)) AS v;"}
+{"sql":"create view rule_v1(x) as select * from (values(1,2)) v(q,w)","shape":"CREATE VIEW rule_v1 (x) AS SELECT * FROM (VALUES (1, 2)) AS v(q, w);"}
+{"sql":"CREATE TABLE hats (\n\that_name    char(10) primary key,\n\that_color   char(10)      -- hat color\n)","shape":"CREATE TABLE hats (hat_name char(10) PRIMARY KEY, hat_color char(10));"}
+{"sql":"CREATE TABLE hat_data (\n\that_name    char(10),\n\that_color   char(10)      -- hat color\n)","shape":"CREATE TABLE hat_data (hat_name char(10), hat_color char(10));"}
+{"sql":"create unique index hat_data_unique_idx\n  on hat_data (hat_name COLLATE \"C\" bpchar_pattern_ops)","shape":"CREATE UNIQUE INDEX hat_data_unique_idx ON hat_data (hat_name COLLATE \"C\" bpchar_pattern_ops);"}
+{"sql":"CREATE RULE hat_nosert AS ON INSERT TO hats\n    DO INSTEAD\n    INSERT INTO hat_data VALUES (\n           NEW.hat_name,\n           NEW.hat_color)\n        ON CONFLICT (hat_name COLLATE \"C\" bpchar_pattern_ops) WHERE hat_color = 'green'\n        DO NOTHING\n        RETURNING *"}
+{"sql":"SELECT definition FROM pg_rules WHERE tablename = 'hats' ORDER BY rulename","shape":"SELECT definition FROM pg_rules WHERE tablename = 'hats' ORDER BY rulename;"}
+{"sql":"INSERT INTO hats VALUES ('h7', 'black') RETURNING *","shape":"INSERT INTO hats VALUES ('h7', 'black') RETURNING *;"}
+{"sql":"SELECT tablename, rulename, definition FROM pg_rules\n\tWHERE tablename = 'hats'","shape":"SELECT tablename, rulename, definition FROM pg_rules WHERE tablename = 'hats';"}
+{"sql":"DROP RULE hat_nosert ON hats"}
+{"sql":"CREATE RULE hat_nosert_all AS ON INSERT TO hats\n    DO INSTEAD\n    INSERT INTO hat_data VALUES (\n           NEW.hat_name,\n           NEW.hat_color)\n        ON CONFLICT\n        DO NOTHING\n        RETURNING *"}
+{"sql":"DROP RULE hat_nosert_all ON hats"}
+{"sql":"CREATE RULE hat_upsert AS ON INSERT TO hats\n    DO INSTEAD\n    INSERT INTO hat_data VALUES (\n           NEW.hat_name,\n           NEW.hat_color)\n        ON CONFLICT (hat_name)\n        DO UPDATE\n           SET hat_name = hat_data.hat_name, hat_color = excluded.hat_color\n           WHERE excluded.hat_color <>  'forbidden' AND hat_data.* != excluded.*\n        RETURNING *"}
+{"sql":"INSERT INTO hats VALUES ('h8', 'black') RETURNING *","shape":"INSERT INTO hats VALUES ('h8', 'black') RETURNING *;"}
+{"sql":"SELECT * FROM hat_data WHERE hat_name = 'h8'","shape":"SELECT * FROM hat_data WHERE hat_name = 'h8';"}
+{"sql":"INSERT INTO hats VALUES ('h8', 'white') RETURNING *","shape":"INSERT INTO hats VALUES ('h8', 'white') RETURNING *;"}
+{"sql":"INSERT INTO hats VALUES ('h8', 'forbidden') RETURNING *","shape":"INSERT INTO hats VALUES ('h8', 'forbidden') RETURNING *;"}
+{"sql":"explain (costs off) INSERT INTO hats VALUES ('h8', 'forbidden') RETURNING *","shape":"EXPLAIN (COSTS off) INSERT INTO hats VALUES ('h8', 'forbidden') RETURNING *;"}
+{"sql":"WITH data(hat_name, hat_color) AS MATERIALIZED (\n    VALUES ('h8', 'green'),\n        ('h9', 'blue'),\n        ('h7', 'forbidden')\n)\nINSERT INTO hats\n    SELECT * FROM data\nRETURNING *","shape":"WITH data(hat_name, hat_color) AS MATERIALIZED (VALUES ('h8', 'green'), ('h9', 'blue'), ('h7', 'forbidden')) INSERT INTO hats SELECT * FROM data RETURNING *;"}
+{"sql":"EXPLAIN (costs off)\nWITH data(hat_name, hat_color) AS MATERIALIZED (\n    VALUES ('h8', 'green'),\n        ('h9', 'blue'),\n        ('h7', 'forbidden')\n)\nINSERT INTO hats\n    SELECT * FROM data\nRETURNING *","shape":"EXPLAIN (COSTS off) WITH data(hat_name, hat_color) AS MATERIALIZED (VALUES ('h8', 'green'), ('h9', 'blue'), ('h7', 'forbidden')) INSERT INTO hats SELECT * FROM data RETURNING *;"}
+{"sql":"SELECT * FROM hat_data WHERE hat_name IN ('h8', 'h9', 'h7') ORDER BY hat_name","shape":"SELECT * FROM hat_data WHERE hat_name IN ('h8', 'h9', 'h7') ORDER BY hat_name;"}
+{"sql":"DROP RULE hat_upsert ON hats"}
+{"sql":"drop table hats","shape":"DROP TABLE hats;"}
+{"sql":"drop table hat_data","shape":"DROP TABLE hat_data;"}
+{"sql":"CREATE FUNCTION func_with_set_params() RETURNS integer\n    AS 'select 1;'\n    LANGUAGE SQL\n    SET search_path TO PG_CATALOG\n    SET extra_float_digits TO 2\n    SET work_mem TO '4MB'\n    SET datestyle to iso, mdy\n    SET local_preload_libraries TO \"Mixed/Case\", 'c:/''a\"/path', '', '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'\n    IMMUTABLE STRICT","shape":"CREATE FUNCTION func_with_set_params() RETURNS integer AS 'select 1;' LANGUAGE SQL SET search_path TO PG_CATALOG SET extra_float_digits TO 2 SET work_mem TO '4MB' SET datestyle TO iso, mdy SET local_preload_libraries TO \"Mixed/Case\", 'c:/''a\"/path', '', '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789' IMMUTABLE STRICT;"}
+{"sql":"SELECT pg_get_functiondef('func_with_set_params()'::regprocedure)","shape":"SELECT pg_get_functiondef('func_with_set_params()'::regprocedure);"}
+{"sql":"SELECT pg_get_constraintdef(0)","shape":"SELECT pg_get_constraintdef(0);"}
+{"sql":"SELECT pg_get_functiondef(0)","shape":"SELECT pg_get_functiondef(0);"}
+{"sql":"SELECT pg_get_indexdef(0)","shape":"SELECT pg_get_indexdef(0);"}
+{"sql":"SELECT pg_get_ruledef(0)","shape":"SELECT pg_get_ruledef(0);"}
+{"sql":"SELECT pg_get_statisticsobjdef(0)","shape":"SELECT pg_get_statisticsobjdef(0);"}
+{"sql":"SELECT pg_get_triggerdef(0)","shape":"SELECT pg_get_triggerdef(0);"}
+{"sql":"SELECT pg_get_viewdef(0)","shape":"SELECT pg_get_viewdef(0);"}
+{"sql":"SELECT pg_get_function_arguments(0)","shape":"SELECT pg_get_function_arguments(0);"}
+{"sql":"SELECT pg_get_function_identity_arguments(0)","shape":"SELECT pg_get_function_identity_arguments(0);"}
+{"sql":"SELECT pg_get_function_result(0)","shape":"SELECT pg_get_function_result(0);"}
+{"sql":"SELECT pg_get_function_arg_default(0, 0)","shape":"SELECT pg_get_function_arg_default(0, 0);"}
+{"sql":"SELECT pg_get_function_arg_default('pg_class'::regclass, 0)","shape":"SELECT pg_get_function_arg_default('pg_class'::regclass, 0);"}
+{"sql":"SELECT pg_get_partkeydef(0)","shape":"SELECT pg_get_partkeydef(0);"}
+{"sql":"CREATE TABLE rules_parted_table (a int) PARTITION BY LIST (a)","shape":"CREATE TABLE rules_parted_table (a int) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE rules_parted_table_1 PARTITION OF rules_parted_table FOR VALUES IN (1)","shape":"CREATE TABLE rules_parted_table_1 PARTITION OF rules_parted_table FOR VALUES IN (1);"}
+{"sql":"CREATE RULE rules_parted_table_insert AS ON INSERT to rules_parted_table\n    DO INSTEAD INSERT INTO rules_parted_table_1 VALUES (NEW.*)"}
+{"sql":"ALTER RULE rules_parted_table_insert ON rules_parted_table RENAME TO rules_parted_table_insert_redirect"}
+{"sql":"DROP TABLE rules_parted_table","shape":"DROP TABLE rules_parted_table;"}
+{"sql":"CREATE TABLE rule_merge1 (a int, b text)","shape":"CREATE TABLE rule_merge1 (a int, b text);"}
+{"sql":"CREATE TABLE rule_merge2 (a int, b text)","shape":"CREATE TABLE rule_merge2 (a int, b text);"}
+{"sql":"CREATE RULE rule1 AS ON INSERT TO rule_merge1\n\tDO INSTEAD INSERT INTO rule_merge2 VALUES (NEW.*)"}
+{"sql":"CREATE RULE rule2 AS ON UPDATE TO rule_merge1\n\tDO INSTEAD UPDATE rule_merge2 SET a = NEW.a, b = NEW.b\n\tWHERE a = OLD.a"}
+{"sql":"CREATE RULE rule3 AS ON DELETE TO rule_merge1\n\tDO INSTEAD DELETE FROM rule_merge2 WHERE a = OLD.a"}
+{"sql":"MERGE INTO rule_merge1 t USING (SELECT 1 AS a) s\n\tON t.a = s.a\n\tWHEN MATCHED AND t.a < 2 THEN\n\t\tUPDATE SET b = b || ' updated by merge'\n\tWHEN MATCHED AND t.a > 2 THEN\n\t\tDELETE\n\tWHEN NOT MATCHED THEN\n\t\tINSERT VALUES (s.a, '')","shape":"MERGE INTO rule_merge1 AS t USING (SELECT 1 AS a) AS s ON t.a = s.a WHEN MATCHED AND t.a < 2 THEN UPDATE SET b = b || ' updated by merge' WHEN MATCHED AND t.a > 2 THEN DELETE WHEN NOT MATCHED THEN INSERT VALUES (s.a, '');"}
+{"sql":"MERGE INTO rule_merge2 t USING (SELECT 1 AS a) s\n\tON t.a = s.a\n\tWHEN MATCHED AND t.a < 2 THEN\n\t\tUPDATE SET b = b || ' updated by merge'\n\tWHEN MATCHED AND t.a > 2 THEN\n\t\tDELETE\n\tWHEN NOT MATCHED THEN\n\t\tINSERT VALUES (s.a, '')","shape":"MERGE INTO rule_merge2 AS t USING (SELECT 1 AS a) AS s ON t.a = s.a WHEN MATCHED AND t.a < 2 THEN UPDATE SET b = b || ' updated by merge' WHEN MATCHED AND t.a > 2 THEN DELETE WHEN NOT MATCHED THEN INSERT VALUES (s.a, '');"}
+{"sql":"CREATE TABLE sf_target(id int, data text, filling int[])","shape":"CREATE TABLE sf_target (id int, data text, filling int[]);"}
+{"sql":"CREATE FUNCTION merge_sf_test()\n RETURNS void\n LANGUAGE sql\nBEGIN ATOMIC\n MERGE INTO sf_target t\n   USING rule_merge1 s\n   ON (s.a = t.id)\nWHEN MATCHED\n   AND (s.a + t.id) = 42\n   THEN UPDATE SET data = repeat(t.data, s.a) || s.b, id = length(s.b)\nWHEN NOT MATCHED\n   AND (s.b IS NOT NULL)\n   THEN INSERT (data, id)\n   VALUES (s.b, s.a)\nWHEN MATCHED\n   AND length(s.b || t.data) > 10\n   THEN UPDATE SET data = s.b\nWHEN MATCHED\n   AND s.a > 200\n   THEN UPDATE SET filling[s.a] = t.id\nWHEN MATCHED\n   AND s.a > 100\n   THEN DELETE\nWHEN MATCHED\n   THEN DO NOTHING\nWHEN NOT MATCHED\n   AND s.a > 200\n   THEN INSERT DEFAULT VALUES\nWHEN NOT MATCHED\n   AND s.a > 100\n   THEN INSERT (id, data) OVERRIDING USER VALUE\n   VALUES (s.a, DEFAULT)\nWHEN NOT MATCHED\n   AND s.a > 0\n   THEN INSERT\n   VALUES (s.a, s.b, DEFAULT)\nWHEN NOT MATCHED\n   THEN INSERT (filling[1], id)\n   VALUES (s.a, s.a);\nEND","shape":"CREATE FUNCTION merge_sf_test() RETURNS void LANGUAGE sql BEGIN ATOMIC MERGE INTO sf_target AS t USING rule_merge1 AS s ON (s.a = t.id) WHEN MATCHED AND (s.a + t.id) = 42 THEN UPDATE SET data = repeat(t.data, s.a) || s.b, id = length(s.b) WHEN NOT MATCHED AND (s.b IS NOT NULL) THEN INSERT (data, id) VALUES (s.b, s.a) WHEN MATCHED AND length(s.b || t.data) > 10 THEN UPDATE SET data = s.b WHEN MATCHED AND s.a > 200 THEN UPDATE SET filling[s.a] = t.id WHEN MATCHED AND s.a > 100 THEN DELETE WHEN MATCHED THEN DO NOTHING WHEN NOT MATCHED AND s.a > 200 THEN INSERT DEFAULT VALUES WHEN NOT MATCHED AND s.a > 100 THEN INSERT (id, data) OVERRIDING USER VALUE VALUES (s.a, DEFAULT) WHEN NOT MATCHED AND s.a > 0 THEN INSERT VALUES (s.a, s.b, DEFAULT) WHEN NOT MATCHED THEN INSERT (filling[1], id) VALUES (s.a, s.a); END;"}
+{"sql":"DROP FUNCTION merge_sf_test"}
+{"sql":"DROP TABLE sf_target","shape":"DROP TABLE sf_target;"}
+{"sql":"CREATE TABLE ruletest1 (a int)","shape":"CREATE TABLE ruletest1 (a int);"}
+{"sql":"CREATE TABLE ruletest2 (b int)","shape":"CREATE TABLE ruletest2 (b int);"}
+{"sql":"CREATE RULE rule1 AS ON INSERT TO ruletest1\n    DO INSTEAD INSERT INTO ruletest2 VALUES (NEW.*)"}
+{"sql":"INSERT INTO ruletest1 VALUES (1)","shape":"INSERT INTO ruletest1 VALUES (1);"}
+{"sql":"ALTER TABLE ruletest1 DISABLE RULE rule1"}
+{"sql":"INSERT INTO ruletest1 VALUES (2)","shape":"INSERT INTO ruletest1 VALUES (2);"}
+{"sql":"ALTER TABLE ruletest1 ENABLE RULE rule1"}
+{"sql":"SET session_replication_role = replica","shape":"SET session_replication_role TO replica;"}
+{"sql":"INSERT INTO ruletest1 VALUES (3)","shape":"INSERT INTO ruletest1 VALUES (3);"}
+{"sql":"ALTER TABLE ruletest1 ENABLE REPLICA RULE rule1"}
+{"sql":"INSERT INTO ruletest1 VALUES (4)","shape":"INSERT INTO ruletest1 VALUES (4);"}
+{"sql":"RESET session_replication_role","shape":"RESET session_replication_role;"}
+{"sql":"INSERT INTO ruletest1 VALUES (5)","shape":"INSERT INTO ruletest1 VALUES (5);"}
+{"sql":"SELECT * FROM ruletest1","shape":"SELECT * FROM ruletest1;"}
+{"sql":"SELECT * FROM ruletest2","shape":"SELECT * FROM ruletest2;"}
+{"sql":"DROP TABLE ruletest1","shape":"DROP TABLE ruletest1;"}
+{"sql":"DROP TABLE ruletest2","shape":"DROP TABLE ruletest2;"}
+{"sql":"CREATE USER regress_rule_user1"}
+{"sql":"CREATE TABLE ruletest_t1 (x int)","shape":"CREATE TABLE ruletest_t1 (x int);"}
+{"sql":"CREATE TABLE ruletest_t2 (x int)","shape":"CREATE TABLE ruletest_t2 (x int);"}
+{"sql":"CREATE VIEW ruletest_v1 WITH (security_invoker=true) AS\n    SELECT * FROM ruletest_t1","shape":"CREATE VIEW ruletest_v1 WITH (security_invoker = TRUE) AS SELECT * FROM ruletest_t1;"}
+{"sql":"GRANT INSERT ON ruletest_v1 TO regress_rule_user1","shape":"GRANT INSERT ON ruletest_v1 TO regress_rule_user1;"}
+{"sql":"CREATE RULE rule1 AS ON INSERT TO ruletest_v1\n    DO INSTEAD INSERT INTO ruletest_t2 VALUES (NEW.*)"}
+{"sql":"SET SESSION AUTHORIZATION regress_rule_user1"}
+{"sql":"INSERT INTO ruletest_v1 VALUES (1)","shape":"INSERT INTO ruletest_v1 VALUES (1);"}
+{"sql":"CREATE TABLE ruletest_t3 (x int)","shape":"CREATE TABLE ruletest_t3 (x int);"}
+{"sql":"CREATE RULE rule2 AS ON UPDATE TO ruletest_t1\n    DO INSTEAD INSERT INTO ruletest_t2 VALUES (OLD.*)"}
+{"sql":"REVOKE ALL ON ruletest_t2 FROM regress_rule_user1","shape":"REVOKE ALL PRIVILEGES ON ruletest_t2 FROM regress_rule_user1;"}
+{"sql":"REVOKE ALL ON ruletest_t3 FROM regress_rule_user1","shape":"REVOKE ALL PRIVILEGES ON ruletest_t3 FROM regress_rule_user1;"}
+{"sql":"ALTER TABLE ruletest_t1 OWNER TO regress_rule_user1"}
+{"sql":"UPDATE ruletest_t1 t1 SET x = 0 FROM ruletest_t3 t3 WHERE t1.x = t3.x","shape":"UPDATE ruletest_t1 AS t1 SET x = 0 FROM ruletest_t3 AS t3 WHERE t1.x = t3.x;"}
+{"sql":"SELECT * FROM ruletest_t1","shape":"SELECT * FROM ruletest_t1;"}
+{"sql":"SELECT * FROM ruletest_t2","shape":"SELECT * FROM ruletest_t2;"}
+{"sql":"DROP VIEW ruletest_v1","shape":"DROP VIEW ruletest_v1;"}
+{"sql":"DROP RULE rule2 ON ruletest_t1"}
+{"sql":"DROP TABLE ruletest_t3","shape":"DROP TABLE ruletest_t3;"}
+{"sql":"DROP TABLE ruletest_t2","shape":"DROP TABLE ruletest_t2;"}
+{"sql":"DROP TABLE ruletest_t1","shape":"DROP TABLE ruletest_t1;"}
+{"sql":"DROP USER regress_rule_user1","shape":"DROP USER regress_rule_user1;"}

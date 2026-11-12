@@ -1,0 +1,14 @@
+{"sql":"SELECT a,\n         SUM(1)                              AS t1,\n         SUM(CASE WHEN b->>'x'=1 THEN 1 END) AS t2,\n         SUM(c)                              AS t3,\n         SUM(CASE WHEN b->>'x'=1 THEN c END) AS t4\n    FROM t1\n   WHERE d BETWEEN 0 and 10\n   GROUP BY a"}
+{"sql":"EXPLAIN\n  SELECT a,\n         SUM(1)                              AS t1,\n         SUM(CASE WHEN b->>'x'=1 THEN 1 END) AS t2,\n         SUM(c)                              AS t3,\n         SUM(CASE WHEN b->>'x'=1 THEN c END) AS t4\n    FROM t1\n   WHERE d BETWEEN 0 and 10\n   GROUP BY a"}
+{"sql":"SELECT a,\n         SUM(1)                              AS t1,\n         SUM(CASE WHEN b->>'x'=1 THEN 1 END) AS t2,\n         SUM(c)                              AS t3,\n         SUM(CASE WHEN b->>'x'=1 THEN c END) AS t4\n    FROM t1\n   WHERE d BETWEEN 0 and 10\n   GROUP BY +a"}
+{"sql":"EXPLAIN\n  SELECT a,\n         SUM(1)                              AS t1,\n         SUM(CASE WHEN b->>'x'=1 THEN 1 END) AS t2,\n         SUM(c)                              AS t3,\n         SUM(CASE WHEN b->>'x'=1 THEN c END) AS t4\n    FROM t1\n   WHERE d BETWEEN 0 and 10\n   GROUP BY +a"}
+{"sql":"CREATE INDEX t1x ON t1(a, d, b->>'x', c)"}
+{"sql":"CREATE INDEX i1 ON t1(a,a=a)"}
+{"sql":"INSERT INTO t1 VALUES(1),(2),(3),(4)"}
+{"sql":"SELECT * FROM t1 NATURAL JOIN t1 \n   WHERE a==1\n      OR (\n           (SELECT avg(\n                (SELECT sum((SELECT 1 FROM t1 NATURAL RIGHT JOIN t1 WHERE a=a)))) AS xyz\n           )\n           AND a==2\n         )"}
+{"sql":"INSERT INTO t0(w) VALUES(1)"}
+{"sql":"CREATE INDEX t1x ON t1(x > 0)"}
+{"sql":"CREATE VIEW t2(y) AS SELECT avg(w) FROM t0 GROUP BY w>1"}
+{"sql":"CREATE VIEW t3(z) AS SELECT count(*) FROM t2 WHERE y BETWEEN 0 and 0"}
+{"sql":"SELECT count(*) FROM t1 NOT INDEXED WHERE (SELECT z FROM t3)"}
+{"sql":"SELECT count(*) FROM t1 INDEXED BY t1x WHERE (SELECT z FROM t3)"}

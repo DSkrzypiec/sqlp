@@ -1,0 +1,5 @@
+{"sql":"SELECT 123_456"}
+{"sql":"SELECT 0xFF_FF"}
+{"sql":"SELECT 0xFF_EF"}
+{"sql":"SELECT 0XFF_FF"}
+{"sql":"SELECT 0XFF_EF"}

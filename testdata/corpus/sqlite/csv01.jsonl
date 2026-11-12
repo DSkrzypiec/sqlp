@@ -1,0 +1,37 @@
+{"sql":"CREATE VIRTUAL TABLE temp.t1 USING csv(\n    data=\n'1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16\n',\n    columns=4\n  )"}
+{"sql":"SELECT * FROM t1 WHERE c1=10"}
+{"sql":"SELECT * FROM t1 WHERE c1='10'"}
+{"sql":"DROP TABLE temp.t1"}
+{"sql":"CREATE VIRTUAL TABLE temp.t1 USING csv(\n    data=\n'a,b,\"mix-bloom-eel\",\"soft opinion\"\n1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16\n',\n    header=1\n  )"}
+{"sql":"SELECT * FROM t1 WHERE \"soft opinion\"=12"}
+{"sql":"SELECT name FROM pragma_table_xinfo('t1')"}
+{"sql":"CREATE VIRTUAL TABLE temp.t1 USING csv(\n    data=\n'a,b,\"mix-bloom-eel\",\"soft opinion\"\n1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16\n',\n    header=false\n  )"}
+{"sql":"SELECT * FROM t1 WHERE c1='b'"}
+{"sql":"CREATE VIRTUAL TABLE temp.t1 USING csv(\n    data=\n'a,b,\"mix-bloom-eel\",\"soft opinion\"\n1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16\n',\n    header,\n    schema='CREATE TABLE x(x0,x1,x2,x3,x4)',\n    columns=5\n  )"}
+{"sql":"SELECT * FROM t1 WHERE x1='6'"}
+{"sql":"CREATE VIRTUAL TABLE temp.t2 USING csv(\n    data=\n'1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16\n',\n    columns=4,\n    schema='CREATE TABLE t2(a INT, b TEXT, c REAL, d BLOB)'\n  )"}
+{"sql":"SELECT * FROM t2 WHERE a=9"}
+{"sql":"SELECT * FROM t2 WHERE b=10"}
+{"sql":"SELECT * FROM t2 WHERE c=11"}
+{"sql":"SELECT * FROM t2 WHERE d=12"}
+{"sql":"SELECT * FROM t2 WHERE d='12'"}
+{"sql":"SELECT * FROM t2 WHERE a='9'"}
+{"sql":"CREATE VIRTUAL TABLE temp.t3 USING csv(\n    data=\n'1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16\n',\n    columns=4,\n    schema=\n      'CREATE TABLE t3(a PRIMARY KEY,b TEXT,c TEXT,d TEXT) WITHOUT ROWID',\n    testflags=1\n  )"}
+{"sql":"SELECT a FROM t3 WHERE b=6 OR c=7 OR d=12 ORDER BY +a"}
+{"sql":"SELECT a FROM t3 WHERE +b=6 OR c=7 OR d=12 ORDER BY +a"}
+{"sql":"SELECT rowid, a FROM t3"}
+{"sql":"CREATE VIRTUAL TABLE temp.t4 USING csv_wr(\n    data=\n'1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16',\n    columns=4,\n    schema=\n      'CREATE TABLE t3(a,b,c,d,PRIMARY KEY(a,b)) WITHOUT ROWID',\n    testflags=1\n  )"}
+{"sql":"DROP TABLE IF EXISTS t4"}
+{"sql":"CREATE VIRTUAL TABLE temp.t4 USING csv_wr(\n    data=\n'1,2,3,4\n5,6,7,8\n9,10,11,12\n13,14,15,16',\n    columns=4,\n    schema=\n      'CREATE TABLE t3(a,b,c,d,PRIMARY KEY(b)) WITHOUT ROWID',\n    testflags=1\n  )"}
+{"sql":"DROP TABLE IF EXISTS t5"}
+{"sql":"CREATE VIRTUAL TABLE temp.t5 USING csv_wr(\n      data=\n      '1,2,3,4\n      5,6,7,8\n      9,10,11,12\n      13,14,15,16',\n      columns=4,\n      schema=\n      'CREATE TABLE t3(a,b,c,d) WITHOUT ROWID',\n      testflags=1\n      )"}
+{"sql":"CREATE VIRTUAL TABLE IF NOT EXISTS temp.t1\n  USING csv(filename='FileDoesNotExist.csv')"}
+{"sql":"CREATE VIRTUAL TABLE temp.trent USING csv(data='1')"}
+{"sql":"SELECT * FROM trent"}
+{"sql":"CREATE VIRTUAL TABLE t5_1 USING csv(filename='csv01.csv')"}
+{"sql":"SELECT name FROM temp.pragma_table_info('t5_1')"}
+{"sql":"SELECT *, '|' FROM t5_1"}
+{"sql":"DROP TABLE t5_1"}
+{"sql":"CREATE VIRTUAL TABLE t5_1 USING csv(filename='csv01.csv', header)"}
+{"sql":"CREATE VIRTUAL TABLE abc USING csv(filename='csv.data', header=true)"}
+{"sql":"SELECT count(*) FROM abc"}

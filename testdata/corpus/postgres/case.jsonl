@@ -1,0 +1,56 @@
+{"sql":"CREATE TABLE CASE_TBL (\n  i integer,\n  f double precision\n)","shape":"CREATE TABLE CASE_TBL (i integer, f double precision);"}
+{"sql":"CREATE TABLE CASE2_TBL (\n  i integer,\n  j integer\n)","shape":"CREATE TABLE CASE2_TBL (i integer, j integer);"}
+{"sql":"INSERT INTO CASE_TBL VALUES (1, 10.1)","shape":"INSERT INTO CASE_TBL VALUES (1, 10.1);"}
+{"sql":"INSERT INTO CASE_TBL VALUES (2, 20.2)","shape":"INSERT INTO CASE_TBL VALUES (2, 20.2);"}
+{"sql":"INSERT INTO CASE_TBL VALUES (3, -30.3)","shape":"INSERT INTO CASE_TBL VALUES (3, -30.3);"}
+{"sql":"INSERT INTO CASE_TBL VALUES (4, NULL)","shape":"INSERT INTO CASE_TBL VALUES (4, NULL);"}
+{"sql":"INSERT INTO CASE2_TBL VALUES (1, -1)","shape":"INSERT INTO CASE2_TBL VALUES (1, -1);"}
+{"sql":"INSERT INTO CASE2_TBL VALUES (2, -2)","shape":"INSERT INTO CASE2_TBL VALUES (2, -2);"}
+{"sql":"INSERT INTO CASE2_TBL VALUES (3, -3)","shape":"INSERT INTO CASE2_TBL VALUES (3, -3);"}
+{"sql":"INSERT INTO CASE2_TBL VALUES (2, -4)","shape":"INSERT INTO CASE2_TBL VALUES (2, -4);"}
+{"sql":"INSERT INTO CASE2_TBL VALUES (1, NULL)","shape":"INSERT INTO CASE2_TBL VALUES (1, NULL);"}
+{"sql":"INSERT INTO CASE2_TBL VALUES (NULL, -6)","shape":"INSERT INTO CASE2_TBL VALUES (NULL, -6);"}
+{"sql":"SELECT '3' AS \"One\",\n  CASE\n    WHEN 1 < 2 THEN 3\n  END AS \"Simple WHEN\"","shape":"SELECT '3' AS \"One\", CASE WHEN 1 < 2 THEN 3 END AS \"Simple WHEN\";"}
+{"sql":"SELECT '<NULL>' AS \"One\",\n  CASE\n    WHEN 1 > 2 THEN 3\n  END AS \"Simple default\"","shape":"SELECT '<NULL>' AS \"One\", CASE WHEN 1 > 2 THEN 3 END AS \"Simple default\";"}
+{"sql":"SELECT '3' AS \"One\",\n  CASE\n    WHEN 1 < 2 THEN 3\n    ELSE 4\n  END AS \"Simple ELSE\"","shape":"SELECT '3' AS \"One\", CASE WHEN 1 < 2 THEN 3 ELSE 4 END AS \"Simple ELSE\";"}
+{"sql":"SELECT '4' AS \"One\",\n  CASE\n    WHEN 1 > 2 THEN 3\n    ELSE 4\n  END AS \"ELSE default\"","shape":"SELECT '4' AS \"One\", CASE WHEN 1 > 2 THEN 3 ELSE 4 END AS \"ELSE default\";"}
+{"sql":"SELECT '6' AS \"One\",\n  CASE\n    WHEN 1 > 2 THEN 3\n    WHEN 4 < 5 THEN 6\n    ELSE 7\n  END AS \"Two WHEN with default\"","shape":"SELECT '6' AS \"One\", CASE WHEN 1 > 2 THEN 3 WHEN 4 < 5 THEN 6 ELSE 7 END AS \"Two WHEN with default\";"}
+{"sql":"SELECT '7' AS \"None\",\n   CASE WHEN random() < 0 THEN 1\n   END AS \"NULL on no matches\"","shape":"SELECT '7' AS \"None\", CASE WHEN random() < 0 THEN 1 END AS \"NULL on no matches\";"}
+{"sql":"SELECT CASE WHEN 1=0 THEN 1/0 WHEN 1=1 THEN 1 ELSE 2/0 END","shape":"SELECT CASE WHEN 1 = 0 THEN 1 / 0 WHEN 1 = 1 THEN 1 ELSE 2 / 0 END;"}
+{"sql":"SELECT CASE 1 WHEN 0 THEN 1/0 WHEN 1 THEN 1 ELSE 2/0 END","shape":"SELECT CASE 1 WHEN 0 THEN 1 / 0 WHEN 1 THEN 1 ELSE 2 / 0 END;"}
+{"sql":"SELECT CASE WHEN i > 100 THEN 1/0 ELSE 0 END FROM case_tbl","shape":"SELECT CASE WHEN i > 100 THEN 1 / 0 ELSE 0 END FROM case_tbl;"}
+{"sql":"SELECT CASE 'a' WHEN 'a' THEN 1 ELSE 2 END","shape":"SELECT CASE 'a' WHEN 'a' THEN 1 ELSE 2 END;"}
+{"sql":"SELECT\n  CASE\n    WHEN i >= 3 THEN i\n  END AS \">= 3 or Null\"\n  FROM CASE_TBL","shape":"SELECT CASE WHEN i >= 3 THEN i END AS \">= 3 or Null\" FROM CASE_TBL;"}
+{"sql":"SELECT\n  CASE WHEN i >= 3 THEN (i + i)\n       ELSE i\n  END AS \"Simplest Math\"\n  FROM CASE_TBL","shape":"SELECT CASE WHEN i >= 3 THEN (i + i) ELSE i END AS \"Simplest Math\" FROM CASE_TBL;"}
+{"sql":"SELECT i AS \"Value\",\n  CASE WHEN (i < 0) THEN 'small'\n       WHEN (i = 0) THEN 'zero'\n       WHEN (i = 1) THEN 'one'\n       WHEN (i = 2) THEN 'two'\n       ELSE 'big'\n  END AS \"Category\"\n  FROM CASE_TBL","shape":"SELECT i AS \"Value\", CASE WHEN (i < 0) THEN 'small' WHEN (i = 0) THEN 'zero' WHEN (i = 1) THEN 'one' WHEN (i = 2) THEN 'two' ELSE 'big' END AS \"Category\" FROM CASE_TBL;"}
+{"sql":"SELECT\n  CASE WHEN ((i < 0) or (i < 0)) THEN 'small'\n       WHEN ((i = 0) or (i = 0)) THEN 'zero'\n       WHEN ((i = 1) or (i = 1)) THEN 'one'\n       WHEN ((i = 2) or (i = 2)) THEN 'two'\n       ELSE 'big'\n  END AS \"Category\"\n  FROM CASE_TBL","shape":"SELECT CASE WHEN ((i < 0) OR (i < 0)) THEN 'small' WHEN ((i = 0) OR (i = 0)) THEN 'zero' WHEN ((i = 1) OR (i = 1)) THEN 'one' WHEN ((i = 2) OR (i = 2)) THEN 'two' ELSE 'big' END AS \"Category\" FROM CASE_TBL;"}
+{"sql":"SELECT * FROM CASE_TBL WHERE COALESCE(f,i) = 4","shape":"SELECT * FROM CASE_TBL WHERE COALESCE(f, i) = 4;"}
+{"sql":"SELECT * FROM CASE_TBL WHERE NULLIF(f,i) = 2","shape":"SELECT * FROM CASE_TBL WHERE NULLIF(f, i) = 2;"}
+{"sql":"SELECT COALESCE(a.f, b.i, b.j)\n  FROM CASE_TBL a, CASE2_TBL b","shape":"SELECT COALESCE(a.f, b.i, b.j) FROM CASE_TBL AS a, CASE2_TBL AS b;"}
+{"sql":"SELECT *\n  FROM CASE_TBL a, CASE2_TBL b\n  WHERE COALESCE(a.f, b.i, b.j) = 2","shape":"SELECT * FROM CASE_TBL AS a, CASE2_TBL AS b WHERE COALESCE(a.f, b.i, b.j) = 2;"}
+{"sql":"SELECT NULLIF(a.i,b.i) AS \"NULLIF(a.i,b.i)\",\n  NULLIF(b.i, 4) AS \"NULLIF(b.i,4)\"\n  FROM CASE_TBL a, CASE2_TBL b","shape":"SELECT NULLIF(a.i, b.i) AS \"NULLIF(a.i,b.i)\", NULLIF(b.i, 4) AS \"NULLIF(b.i,4)\" FROM CASE_TBL AS a, CASE2_TBL AS b;"}
+{"sql":"SELECT *\n  FROM CASE_TBL a, CASE2_TBL b\n  WHERE COALESCE(f,b.i) = 2","shape":"SELECT * FROM CASE_TBL AS a, CASE2_TBL AS b WHERE COALESCE(f, b.i) = 2;"}
+{"sql":"explain (costs off)\nSELECT * FROM CASE_TBL WHERE NULLIF(1, 2) = 2","shape":"EXPLAIN (COSTS off) SELECT * FROM CASE_TBL WHERE NULLIF(1, 2) = 2;"}
+{"sql":"explain (costs off)\nSELECT * FROM CASE_TBL WHERE NULLIF(1, 1) IS NOT NULL","shape":"EXPLAIN (COSTS off) SELECT * FROM CASE_TBL WHERE NULLIF(1, 1) IS NOT NULL;"}
+{"sql":"explain (costs off)\nSELECT * FROM CASE_TBL WHERE NULLIF(1, null) = 2","shape":"EXPLAIN (COSTS off) SELECT * FROM CASE_TBL WHERE NULLIF(1, NULL) = 2;"}
+{"sql":"UPDATE CASE_TBL\n  SET i = CASE WHEN i >= 3 THEN (- i)\n                ELSE (2 * i) END","shape":"UPDATE CASE_TBL SET i = CASE WHEN i >= 3 THEN (-i) ELSE (2 * i) END;"}
+{"sql":"SELECT * FROM CASE_TBL","shape":"SELECT * FROM CASE_TBL;"}
+{"sql":"UPDATE CASE_TBL\n  SET i = CASE WHEN i >= 2 THEN (2 * i)\n                ELSE (3 * i) END","shape":"UPDATE CASE_TBL SET i = CASE WHEN i >= 2 THEN (2 * i) ELSE (3 * i) END;"}
+{"sql":"UPDATE CASE_TBL\n  SET i = CASE WHEN b.i >= 2 THEN (2 * j)\n                ELSE (3 * j) END\n  FROM CASE2_TBL b\n  WHERE j = -CASE_TBL.i","shape":"UPDATE CASE_TBL SET i = CASE WHEN b.i >= 2 THEN (2 * j) ELSE (3 * j) END FROM CASE2_TBL AS b WHERE j = (-CASE_TBL.i);"}
+{"sql":"CREATE FUNCTION vol(text) returns text as\n  'begin return $1; end' language plpgsql volatile","shape":"CREATE FUNCTION vol(text) RETURNS text AS 'begin return $1; end' LANGUAGE plpgsql VOLATILE;"}
+{"sql":"SELECT CASE\n  (CASE vol('bar')\n    WHEN 'foo' THEN 'it was foo!'\n    WHEN vol(null) THEN 'null input'\n    WHEN 'bar' THEN 'it was bar!' END\n  )\n  WHEN 'it was foo!' THEN 'foo recognized'\n  WHEN 'it was bar!' THEN 'bar recognized'\n  ELSE 'unrecognized' END","shape":"SELECT CASE (CASE vol('bar') WHEN 'foo' THEN 'it was foo!' WHEN vol(NULL) THEN 'null input' WHEN 'bar' THEN 'it was bar!' END) WHEN 'it was foo!' THEN 'foo recognized' WHEN 'it was bar!' THEN 'bar recognized' ELSE 'unrecognized' END;"}
+{"sql":"CREATE DOMAIN foodomain AS text","shape":"CREATE DOMAIN foodomain AS text;"}
+{"sql":"CREATE FUNCTION volfoo(text) returns foodomain as\n  'begin return $1::foodomain; end' language plpgsql volatile","shape":"CREATE FUNCTION volfoo(text) RETURNS foodomain AS 'begin return $1::foodomain; end' LANGUAGE plpgsql VOLATILE;"}
+{"sql":"CREATE FUNCTION inline_eq(foodomain, foodomain) returns boolean as\n  'SELECT CASE $2::text WHEN $1::text THEN true ELSE false END' language sql","shape":"CREATE FUNCTION inline_eq(foodomain, foodomain) RETURNS boolean AS 'SELECT CASE $2::text WHEN $1::text THEN true ELSE false END' LANGUAGE sql;"}
+{"sql":"CREATE OPERATOR = (procedure = inline_eq,\n                   leftarg = foodomain, rightarg = foodomain)"}
+{"sql":"SELECT CASE volfoo('bar') WHEN 'foo'::foodomain THEN 'is foo' ELSE 'is not foo' END","shape":"SELECT CASE volfoo('bar') WHEN 'foo'::foodomain THEN 'is foo' ELSE 'is not foo' END;"}
+{"sql":"CREATE DOMAIN arrdomain AS int[]","shape":"CREATE DOMAIN arrdomain AS int[];"}
+{"sql":"CREATE FUNCTION make_ad(int,int) returns arrdomain as\n  'declare x arrdomain;\n   begin\n     x := array[$1,$2];\n     return x;\n   end' language plpgsql volatile","shape":"CREATE FUNCTION make_ad(int, int) RETURNS arrdomain AS 'declare x arrdomain;\n   begin\n     x := array[$1,$2];\n     return x;\n   end' LANGUAGE plpgsql VOLATILE;"}
+{"sql":"CREATE FUNCTION ad_eq(arrdomain, arrdomain) returns boolean as\n  'begin return array_eq($1, $2); end' language plpgsql","shape":"CREATE FUNCTION ad_eq(arrdomain, arrdomain) RETURNS boolean AS 'begin return array_eq($1, $2); end' LANGUAGE plpgsql;"}
+{"sql":"CREATE OPERATOR = (procedure = ad_eq,\n                   leftarg = arrdomain, rightarg = arrdomain)"}
+{"sql":"SELECT CASE make_ad(1,2)\n  WHEN array[2,4]::arrdomain THEN 'wrong'\n  WHEN array[2,5]::arrdomain THEN 'still wrong'\n  WHEN array[1,2]::arrdomain THEN 'right'\n  END","shape":"SELECT CASE make_ad(1, 2) WHEN ARRAY[2, 4]::arrdomain THEN 'wrong' WHEN ARRAY[2, 5]::arrdomain THEN 'still wrong' WHEN ARRAY[1, 2]::arrdomain THEN 'right' END;"}
+{"sql":"SELECT NULLIF(make_ad(1,2), array[2,3]::arrdomain)","shape":"SELECT NULLIF(make_ad(1, 2), ARRAY[2, 3]::arrdomain);"}
+{"sql":"CREATE TYPE casetestenum AS ENUM ('e', 'f', 'g')","shape":"CREATE TYPE casetestenum AS ENUM ('e', 'f', 'g');"}
+{"sql":"SELECT\n  CASE 'foo'::text\n    WHEN 'foo' THEN ARRAY['a', 'b', 'c', 'd'] || enum_range(NULL::casetestenum)::text[]\n    ELSE ARRAY['x', 'y']\n    END","shape":"SELECT CASE 'foo'::text WHEN 'foo' THEN ARRAY['a', 'b', 'c', 'd'] || enum_range(NULL::casetestenum)::text[] ELSE ARRAY['x', 'y'] END;"}
+{"sql":"DROP TABLE CASE_TBL","shape":"DROP TABLE CASE_TBL;"}
+{"sql":"DROP TABLE CASE2_TBL","shape":"DROP TABLE CASE2_TBL;"}

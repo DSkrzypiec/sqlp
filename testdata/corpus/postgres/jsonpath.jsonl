@@ -1,0 +1,211 @@
+{"sql":"select ''::jsonpath","shape":"SELECT ''::jsonpath;"}
+{"sql":"select '$'::jsonpath","shape":"SELECT '$'::jsonpath;"}
+{"sql":"select 'strict $'::jsonpath","shape":"SELECT 'strict $'::jsonpath;"}
+{"sql":"select 'lax $'::jsonpath","shape":"SELECT 'lax $'::jsonpath;"}
+{"sql":"select '$.a'::jsonpath","shape":"SELECT '$.a'::jsonpath;"}
+{"sql":"select '$.a.v'::jsonpath","shape":"SELECT '$.a.v'::jsonpath;"}
+{"sql":"select '$.a.*'::jsonpath","shape":"SELECT '$.a.*'::jsonpath;"}
+{"sql":"select '$.*[*]'::jsonpath","shape":"SELECT '$.*[*]'::jsonpath;"}
+{"sql":"select '$.a[*]'::jsonpath","shape":"SELECT '$.a[*]'::jsonpath;"}
+{"sql":"select '$.a[*][*]'::jsonpath","shape":"SELECT '$.a[*][*]'::jsonpath;"}
+{"sql":"select '$[*]'::jsonpath","shape":"SELECT '$[*]'::jsonpath;"}
+{"sql":"select '$[0]'::jsonpath","shape":"SELECT '$[0]'::jsonpath;"}
+{"sql":"select '$[*][0]'::jsonpath","shape":"SELECT '$[*][0]'::jsonpath;"}
+{"sql":"select '$[*].a'::jsonpath","shape":"SELECT '$[*].a'::jsonpath;"}
+{"sql":"select '$[*][0].a.b'::jsonpath","shape":"SELECT '$[*][0].a.b'::jsonpath;"}
+{"sql":"select '$.a.**.b'::jsonpath","shape":"SELECT '$.a.**.b'::jsonpath;"}
+{"sql":"select '$.a.**{2}.b'::jsonpath","shape":"SELECT '$.a.**{2}.b'::jsonpath;"}
+{"sql":"select '$.a.**{2 to 2}.b'::jsonpath","shape":"SELECT '$.a.**{2 to 2}.b'::jsonpath;"}
+{"sql":"select '$.a.**{2 to 5}.b'::jsonpath","shape":"SELECT '$.a.**{2 to 5}.b'::jsonpath;"}
+{"sql":"select '$.a.**{0 to 5}.b'::jsonpath","shape":"SELECT '$.a.**{0 to 5}.b'::jsonpath;"}
+{"sql":"select '$.a.**{5 to last}.b'::jsonpath","shape":"SELECT '$.a.**{5 to last}.b'::jsonpath;"}
+{"sql":"select '$.a.**{last}.b'::jsonpath","shape":"SELECT '$.a.**{last}.b'::jsonpath;"}
+{"sql":"select '$.a.**{last to 5}.b'::jsonpath","shape":"SELECT '$.a.**{last to 5}.b'::jsonpath;"}
+{"sql":"select '$+1'::jsonpath","shape":"SELECT '$+1'::jsonpath;"}
+{"sql":"select '$-1'::jsonpath","shape":"SELECT '$-1'::jsonpath;"}
+{"sql":"select '$--+1'::jsonpath","shape":"SELECT '$--+1'::jsonpath;"}
+{"sql":"select '$.a/+-1'::jsonpath","shape":"SELECT '$.a/+-1'::jsonpath;"}
+{"sql":"select '1 * 2 + 4 % -3 != false'::jsonpath","shape":"SELECT '1 * 2 + 4 % -3 != false'::jsonpath;"}
+{"sql":"select '\"\\b\\f\\r\\n\\t\\v\\\"\\''\\\\\"'::jsonpath","shape":"SELECT '\"\\b\\f\\r\\n\\t\\v\\\"\\''\\\\\"'::jsonpath;"}
+{"sql":"select '\"\\x50\\u0067\\u{53}\\u{051}\\u{00004C}\"'::jsonpath","shape":"SELECT '\"\\x50\\u0067\\u{53}\\u{051}\\u{00004C}\"'::jsonpath;"}
+{"sql":"select '$.foo\\x50\\u0067\\u{53}\\u{051}\\u{00004C}\\t\\\"bar'::jsonpath","shape":"SELECT '$.foo\\x50\\u0067\\u{53}\\u{051}\\u{00004C}\\t\\\"bar'::jsonpath;"}
+{"sql":"select '\"\\z\"'::jsonpath","shape":"SELECT '\"\\z\"'::jsonpath;"}
+{"sql":"select '$.g ? ($.a == 1)'::jsonpath","shape":"SELECT '$.g ? ($.a == 1)'::jsonpath;"}
+{"sql":"select '$.g ? (@ == 1)'::jsonpath","shape":"SELECT '$.g ? (@ == 1)'::jsonpath;"}
+{"sql":"select '$.g ? (@.a == 1)'::jsonpath","shape":"SELECT '$.g ? (@.a == 1)'::jsonpath;"}
+{"sql":"select '$.g ? (@.a == 1 || @.a == 4)'::jsonpath","shape":"SELECT '$.g ? (@.a == 1 || @.a == 4)'::jsonpath;"}
+{"sql":"select '$.g ? (@.a == 1 && @.a == 4)'::jsonpath","shape":"SELECT '$.g ? (@.a == 1 && @.a == 4)'::jsonpath;"}
+{"sql":"select '$.g ? (@.a == 1 || @.a == 4 && @.b == 7)'::jsonpath","shape":"SELECT '$.g ? (@.a == 1 || @.a == 4 && @.b == 7)'::jsonpath;"}
+{"sql":"select '$.g ? (@.a == 1 || !(@.a == 4) && @.b == 7)'::jsonpath","shape":"SELECT '$.g ? (@.a == 1 || !(@.a == 4) && @.b == 7)'::jsonpath;"}
+{"sql":"select '$.g ? (@.a == 1 || !(@.x >= 123 || @.a == 4) && @.b == 7)'::jsonpath","shape":"SELECT '$.g ? (@.a == 1 || !(@.x >= 123 || @.a == 4) && @.b == 7)'::jsonpath;"}
+{"sql":"select '$.g ? (@.x >= @[*]?(@.a > \"abc\"))'::jsonpath","shape":"SELECT '$.g ? (@.x >= @[*]?(@.a > \"abc\"))'::jsonpath;"}
+{"sql":"select '$.g ? ((@.x >= 123 || @.a == 4) is unknown)'::jsonpath","shape":"SELECT '$.g ? ((@.x >= 123 || @.a == 4) is unknown)'::jsonpath;"}
+{"sql":"select '$.g ? (exists (@.x))'::jsonpath","shape":"SELECT '$.g ? (exists (@.x))'::jsonpath;"}
+{"sql":"select '$.g ? (exists (@.x ? (@ == 14)))'::jsonpath","shape":"SELECT '$.g ? (exists (@.x ? (@ == 14)))'::jsonpath;"}
+{"sql":"select '$.g ? ((@.x >= 123 || @.a == 4) && exists (@.x ? (@ == 14)))'::jsonpath","shape":"SELECT '$.g ? ((@.x >= 123 || @.a == 4) && exists (@.x ? (@ == 14)))'::jsonpath;"}
+{"sql":"select '$.g ? (+@.x >= +-(+@.a + 2))'::jsonpath","shape":"SELECT '$.g ? (+@.x >= +-(+@.a + 2))'::jsonpath;"}
+{"sql":"select '$a'::jsonpath","shape":"SELECT '$a'::jsonpath;"}
+{"sql":"select '$a.b'::jsonpath","shape":"SELECT '$a.b'::jsonpath;"}
+{"sql":"select '$a[*]'::jsonpath","shape":"SELECT '$a[*]'::jsonpath;"}
+{"sql":"select '$.g ? (@.zip == $zip)'::jsonpath","shape":"SELECT '$.g ? (@.zip == $zip)'::jsonpath;"}
+{"sql":"select '$.a[1,2, 3 to 16]'::jsonpath","shape":"SELECT '$.a[1,2, 3 to 16]'::jsonpath;"}
+{"sql":"select '$.a[$a + 1, ($b[*]) to -($[0] * 2)]'::jsonpath","shape":"SELECT '$.a[$a + 1, ($b[*]) to -($[0] * 2)]'::jsonpath;"}
+{"sql":"select '$.a[$.a.size() - 3]'::jsonpath","shape":"SELECT '$.a[$.a.size() - 3]'::jsonpath;"}
+{"sql":"select 'last'::jsonpath","shape":"SELECT 'last'::jsonpath;"}
+{"sql":"select '\"last\"'::jsonpath","shape":"SELECT '\"last\"'::jsonpath;"}
+{"sql":"select '$.last'::jsonpath","shape":"SELECT '$.last'::jsonpath;"}
+{"sql":"select '$ ? (last > 0)'::jsonpath","shape":"SELECT '$ ? (last > 0)'::jsonpath;"}
+{"sql":"select '$[last]'::jsonpath","shape":"SELECT '$[last]'::jsonpath;"}
+{"sql":"select '$[$[0] ? (last > 0)]'::jsonpath","shape":"SELECT '$[$[0] ? (last > 0)]'::jsonpath;"}
+{"sql":"select 'null.type()'::jsonpath","shape":"SELECT 'null.type()'::jsonpath;"}
+{"sql":"select '1.type()'::jsonpath","shape":"SELECT '1.type()'::jsonpath;"}
+{"sql":"select '(1).type()'::jsonpath","shape":"SELECT '(1).type()'::jsonpath;"}
+{"sql":"select '1.2.type()'::jsonpath","shape":"SELECT '1.2.type()'::jsonpath;"}
+{"sql":"select '\"aaa\".type()'::jsonpath","shape":"SELECT '\"aaa\".type()'::jsonpath;"}
+{"sql":"select 'true.type()'::jsonpath","shape":"SELECT 'true.type()'::jsonpath;"}
+{"sql":"select '$.double().floor().ceiling().abs()'::jsonpath","shape":"SELECT '$.double().floor().ceiling().abs()'::jsonpath;"}
+{"sql":"select '$.keyvalue().key'::jsonpath","shape":"SELECT '$.keyvalue().key'::jsonpath;"}
+{"sql":"select '$.datetime()'::jsonpath","shape":"SELECT '$.datetime()'::jsonpath;"}
+{"sql":"select '$.datetime(\"datetime template\")'::jsonpath","shape":"SELECT '$.datetime(\"datetime template\")'::jsonpath;"}
+{"sql":"select '$ ? (@ starts with \"abc\")'::jsonpath","shape":"SELECT '$ ? (@ starts with \"abc\")'::jsonpath;"}
+{"sql":"select '$ ? (@ starts with $var)'::jsonpath","shape":"SELECT '$ ? (@ starts with $var)'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"(invalid pattern\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"(invalid pattern\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"i\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"i\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"is\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"is\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"isim\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"isim\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"xsms\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"xsms\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"q\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"q\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"iq\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"iq\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"smixq\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"smixq\")'::jsonpath;"}
+{"sql":"select '$ ? (@ like_regex \"pattern\" flag \"a\")'::jsonpath","shape":"SELECT '$ ? (@ like_regex \"pattern\" flag \"a\")'::jsonpath;"}
+{"sql":"select '$ < 1'::jsonpath","shape":"SELECT '$ < 1'::jsonpath;"}
+{"sql":"select '($ < 1) || $.a.b <= $x'::jsonpath","shape":"SELECT '($ < 1) || $.a.b <= $x'::jsonpath;"}
+{"sql":"select '@ + 1'::jsonpath","shape":"SELECT '@ + 1'::jsonpath;"}
+{"sql":"select '($).a.b'::jsonpath","shape":"SELECT '($).a.b'::jsonpath;"}
+{"sql":"select '($.a.b).c.d'::jsonpath","shape":"SELECT '($.a.b).c.d'::jsonpath;"}
+{"sql":"select '($.a.b + -$.x.y).c.d'::jsonpath","shape":"SELECT '($.a.b + -$.x.y).c.d'::jsonpath;"}
+{"sql":"select '(-+$.a.b).c.d'::jsonpath","shape":"SELECT '(-+$.a.b).c.d'::jsonpath;"}
+{"sql":"select '1 + ($.a.b + 2).c.d'::jsonpath","shape":"SELECT '1 + ($.a.b + 2).c.d'::jsonpath;"}
+{"sql":"select '1 + ($.a.b > 2).c.d'::jsonpath","shape":"SELECT '1 + ($.a.b > 2).c.d'::jsonpath;"}
+{"sql":"select '($)'::jsonpath","shape":"SELECT '($)'::jsonpath;"}
+{"sql":"select '(($))'::jsonpath","shape":"SELECT '(($))'::jsonpath;"}
+{"sql":"select '((($ + 1)).a + ((2)).b ? ((((@ > 1)) || (exists(@.c)))))'::jsonpath","shape":"SELECT '((($ + 1)).a + ((2)).b ? ((((@ > 1)) || (exists(@.c)))))'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 1)'::jsonpath","shape":"SELECT '$ ? (@.a < 1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -1)'::jsonpath","shape":"SELECT '$ ? (@.a < -1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +1)'::jsonpath","shape":"SELECT '$ ? (@.a < +1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < .1)'::jsonpath","shape":"SELECT '$ ? (@.a < .1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -.1)'::jsonpath","shape":"SELECT '$ ? (@.a < -.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +.1)'::jsonpath","shape":"SELECT '$ ? (@.a < +.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 0.1)'::jsonpath","shape":"SELECT '$ ? (@.a < 0.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -0.1)'::jsonpath","shape":"SELECT '$ ? (@.a < -0.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +0.1)'::jsonpath","shape":"SELECT '$ ? (@.a < +0.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 10.1)'::jsonpath","shape":"SELECT '$ ? (@.a < 10.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -10.1)'::jsonpath","shape":"SELECT '$ ? (@.a < -10.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +10.1)'::jsonpath","shape":"SELECT '$ ? (@.a < +10.1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < 1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < -1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < +1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < .1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < .1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < -.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < +.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 0.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < 0.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -0.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < -0.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +0.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < +0.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 10.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < 10.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -10.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < -10.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +10.1e1)'::jsonpath","shape":"SELECT '$ ? (@.a < +10.1e1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < 1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < -1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < +1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < .1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < .1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < -.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < +.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 0.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < 0.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -0.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < -0.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +0.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < +0.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 10.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < 10.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -10.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < -10.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +10.1e-1)'::jsonpath","shape":"SELECT '$ ? (@.a < +10.1e-1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < 1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < -1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < +1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < .1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < .1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < -.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < +.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 0.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < 0.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -0.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < -0.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +0.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < +0.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < 10.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < 10.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < -10.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < -10.1e+1)'::jsonpath;"}
+{"sql":"select '$ ? (@.a < +10.1e+1)'::jsonpath","shape":"SELECT '$ ? (@.a < +10.1e+1)'::jsonpath;"}
+{"sql":"select '0'::jsonpath","shape":"SELECT '0'::jsonpath;"}
+{"sql":"select '00'::jsonpath","shape":"SELECT '00'::jsonpath;"}
+{"sql":"select '0755'::jsonpath","shape":"SELECT '0755'::jsonpath;"}
+{"sql":"select '0.0'::jsonpath","shape":"SELECT '0.0'::jsonpath;"}
+{"sql":"select '0.000'::jsonpath","shape":"SELECT '0.000'::jsonpath;"}
+{"sql":"select '0.000e1'::jsonpath","shape":"SELECT '0.000e1'::jsonpath;"}
+{"sql":"select '0.000e2'::jsonpath","shape":"SELECT '0.000e2'::jsonpath;"}
+{"sql":"select '0.000e3'::jsonpath","shape":"SELECT '0.000e3'::jsonpath;"}
+{"sql":"select '0.0010'::jsonpath","shape":"SELECT '0.0010'::jsonpath;"}
+{"sql":"select '0.0010e-1'::jsonpath","shape":"SELECT '0.0010e-1'::jsonpath;"}
+{"sql":"select '0.0010e+1'::jsonpath","shape":"SELECT '0.0010e+1'::jsonpath;"}
+{"sql":"select '0.0010e+2'::jsonpath","shape":"SELECT '0.0010e+2'::jsonpath;"}
+{"sql":"select '.001'::jsonpath","shape":"SELECT '.001'::jsonpath;"}
+{"sql":"select '.001e1'::jsonpath","shape":"SELECT '.001e1'::jsonpath;"}
+{"sql":"select '1.'::jsonpath","shape":"SELECT '1.'::jsonpath;"}
+{"sql":"select '1.e1'::jsonpath","shape":"SELECT '1.e1'::jsonpath;"}
+{"sql":"select '1a'::jsonpath","shape":"SELECT '1a'::jsonpath;"}
+{"sql":"select '1e'::jsonpath","shape":"SELECT '1e'::jsonpath;"}
+{"sql":"select '1.e'::jsonpath","shape":"SELECT '1.e'::jsonpath;"}
+{"sql":"select '1.2a'::jsonpath","shape":"SELECT '1.2a'::jsonpath;"}
+{"sql":"select '1.2e'::jsonpath","shape":"SELECT '1.2e'::jsonpath;"}
+{"sql":"select '1.2.e'::jsonpath","shape":"SELECT '1.2.e'::jsonpath;"}
+{"sql":"select '(1.2).e'::jsonpath","shape":"SELECT '(1.2).e'::jsonpath;"}
+{"sql":"select '1e3'::jsonpath","shape":"SELECT '1e3'::jsonpath;"}
+{"sql":"select '1.e3'::jsonpath","shape":"SELECT '1.e3'::jsonpath;"}
+{"sql":"select '1.e3.e'::jsonpath","shape":"SELECT '1.e3.e'::jsonpath;"}
+{"sql":"select '1.e3.e4'::jsonpath","shape":"SELECT '1.e3.e4'::jsonpath;"}
+{"sql":"select '1.2e3'::jsonpath","shape":"SELECT '1.2e3'::jsonpath;"}
+{"sql":"select '1.2e3a'::jsonpath","shape":"SELECT '1.2e3a'::jsonpath;"}
+{"sql":"select '1.2.e3'::jsonpath","shape":"SELECT '1.2.e3'::jsonpath;"}
+{"sql":"select '(1.2).e3'::jsonpath","shape":"SELECT '(1.2).e3'::jsonpath;"}
+{"sql":"select '1..e'::jsonpath","shape":"SELECT '1..e'::jsonpath;"}
+{"sql":"select '1..e3'::jsonpath","shape":"SELECT '1..e3'::jsonpath;"}
+{"sql":"select '(1.).e'::jsonpath","shape":"SELECT '(1.).e'::jsonpath;"}
+{"sql":"select '(1.).e3'::jsonpath","shape":"SELECT '(1.).e3'::jsonpath;"}
+{"sql":"select '1?(2>3)'::jsonpath","shape":"SELECT '1?(2>3)'::jsonpath;"}
+{"sql":"select '0b100101'::jsonpath","shape":"SELECT '0b100101'::jsonpath;"}
+{"sql":"select '0o273'::jsonpath","shape":"SELECT '0o273'::jsonpath;"}
+{"sql":"select '0x42F'::jsonpath","shape":"SELECT '0x42F'::jsonpath;"}
+{"sql":"select '0b'::jsonpath","shape":"SELECT '0b'::jsonpath;"}
+{"sql":"select '1b'::jsonpath","shape":"SELECT '1b'::jsonpath;"}
+{"sql":"select '0b0x'::jsonpath","shape":"SELECT '0b0x'::jsonpath;"}
+{"sql":"select '0o'::jsonpath","shape":"SELECT '0o'::jsonpath;"}
+{"sql":"select '1o'::jsonpath","shape":"SELECT '1o'::jsonpath;"}
+{"sql":"select '0o0x'::jsonpath","shape":"SELECT '0o0x'::jsonpath;"}
+{"sql":"select '0x'::jsonpath","shape":"SELECT '0x'::jsonpath;"}
+{"sql":"select '1x'::jsonpath","shape":"SELECT '1x'::jsonpath;"}
+{"sql":"select '0x0y'::jsonpath","shape":"SELECT '0x0y'::jsonpath;"}
+{"sql":"select '1_000_000'::jsonpath","shape":"SELECT '1_000_000'::jsonpath;"}
+{"sql":"select '1_2_3'::jsonpath","shape":"SELECT '1_2_3'::jsonpath;"}
+{"sql":"select '0x1EEE_FFFF'::jsonpath","shape":"SELECT '0x1EEE_FFFF'::jsonpath;"}
+{"sql":"select '0o2_73'::jsonpath","shape":"SELECT '0o2_73'::jsonpath;"}
+{"sql":"select '0b10_0101'::jsonpath","shape":"SELECT '0b10_0101'::jsonpath;"}
+{"sql":"select '1_000.000_005'::jsonpath","shape":"SELECT '1_000.000_005'::jsonpath;"}
+{"sql":"select '1_000.'::jsonpath","shape":"SELECT '1_000.'::jsonpath;"}
+{"sql":"select '.000_005'::jsonpath","shape":"SELECT '.000_005'::jsonpath;"}
+{"sql":"select '1_000.5e0_1'::jsonpath","shape":"SELECT '1_000.5e0_1'::jsonpath;"}
+{"sql":"select '_100'::jsonpath","shape":"SELECT '_100'::jsonpath;"}
+{"sql":"select '100_'::jsonpath","shape":"SELECT '100_'::jsonpath;"}
+{"sql":"select '100__000'::jsonpath","shape":"SELECT '100__000'::jsonpath;"}
+{"sql":"select '_1_000.5'::jsonpath","shape":"SELECT '_1_000.5'::jsonpath;"}
+{"sql":"select '1_000_.5'::jsonpath","shape":"SELECT '1_000_.5'::jsonpath;"}
+{"sql":"select '1_000._5'::jsonpath","shape":"SELECT '1_000._5'::jsonpath;"}
+{"sql":"select '1_000.5_'::jsonpath","shape":"SELECT '1_000.5_'::jsonpath;"}
+{"sql":"select '1_000.5e_1'::jsonpath","shape":"SELECT '1_000.5e_1'::jsonpath;"}
+{"sql":"select '0b_10_0101'::jsonpath","shape":"SELECT '0b_10_0101'::jsonpath;"}
+{"sql":"select '0o_273'::jsonpath","shape":"SELECT '0o_273'::jsonpath;"}
+{"sql":"select '0x_42F'::jsonpath","shape":"SELECT '0x_42F'::jsonpath;"}
+{"sql":"SELECT str as jsonpath,\n       pg_input_is_valid(str,'jsonpath') as ok,\n       errinfo.sql_error_code,\n       errinfo.message,\n       errinfo.detail,\n       errinfo.hint\nFROM unnest(ARRAY['$ ? (@ like_regex \"pattern\" flag \"smixq\")'::text,\n                  '$ ? (@ like_regex \"pattern\" flag \"a\")',\n                  '@ + 1',\n                  '00',\n                  '1a']) str,\n     LATERAL pg_input_error_info(str, 'jsonpath') as errinfo","shape":"SELECT str AS jsonpath, pg_input_is_valid(str, 'jsonpath') AS ok, errinfo.sql_error_code, errinfo.message, errinfo.detail, errinfo.hint FROM unnest(ARRAY['$ ? (@ like_regex \"pattern\" flag \"smixq\")'::text, '$ ? (@ like_regex \"pattern\" flag \"a\")', '@ + 1', '00', '1a']) AS str, LATERAL pg_input_error_info(str, 'jsonpath') AS errinfo;"}

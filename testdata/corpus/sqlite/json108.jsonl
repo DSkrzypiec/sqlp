@@ -1,0 +1,4 @@
+{"sql":"SELECT count(*) FROM t1 WHERE json(j0)==json(json_pretty(j0,NULL))"}
+{"sql":"SELECT count(*) FROM t1 WHERE json(j0)==json(json_pretty(j0,''))"}
+{"sql":"SELECT count(*) FROM t1 WHERE json(j0)==json(json_pretty(j0,char(9)))"}
+{"sql":"SELECT count(*) FROM t1 WHERE json(j0)==json(json_pretty(j0,'/*hello*/'))"}

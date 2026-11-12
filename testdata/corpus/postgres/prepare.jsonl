@@ -1,0 +1,27 @@
+{"sql":"SELECT name, statement, parameter_types, result_types FROM pg_prepared_statements","shape":"SELECT name, statement, parameter_types, result_types FROM pg_prepared_statements;"}
+{"sql":"PREPARE q1 AS SELECT 1 AS a","shape":"PREPARE q1 AS SELECT 1 AS a;"}
+{"sql":"EXECUTE q1","shape":"EXECUTE q1;"}
+{"sql":"PREPARE q1 AS SELECT 2","shape":"PREPARE q1 AS SELECT 2;"}
+{"sql":"DEALLOCATE q1","shape":"DEALLOCATE q1;"}
+{"sql":"PREPARE q2 AS SELECT 2 AS b","shape":"PREPARE q2 AS SELECT 2 AS b;"}
+{"sql":"DEALLOCATE PREPARE q1","shape":"DEALLOCATE q1;"}
+{"sql":"DEALLOCATE PREPARE q2","shape":"DEALLOCATE q2;"}
+{"sql":"PREPARE q2(text) AS\n\tSELECT datname, datistemplate, datallowconn\n\tFROM pg_database WHERE datname = $1","shape":"PREPARE q2 (text) AS SELECT datname, datistemplate, datallowconn FROM pg_database WHERE datname = $1;"}
+{"sql":"EXECUTE q2('postgres')","shape":"EXECUTE q2('postgres');"}
+{"sql":"PREPARE q3(text, int, float, boolean, smallint) AS\n\tSELECT * FROM tenk1 WHERE string4 = $1 AND (four = $2 OR\n\tten = $3::bigint OR true = $4 OR odd = $5::int)\n\tORDER BY unique1","shape":"PREPARE q3 (text, int, float, boolean, smallint) AS SELECT * FROM tenk1 WHERE (string4 = $1) AND ((((four = $2) OR (ten = $3::bigint)) OR (TRUE = $4)) OR (odd = $5::int)) ORDER BY unique1;"}
+{"sql":"EXECUTE q3('AAAAxx', 5::smallint, 10.5::float, false, 4::bigint)","shape":"EXECUTE q3('AAAAxx', 5::smallint, 10.5::float, FALSE, 4::bigint);"}
+{"sql":"EXECUTE q3('bool')","shape":"EXECUTE q3('bool');"}
+{"sql":"EXECUTE q3('bytea', 5::smallint, 10.5::float, false, 4::bigint, true)","shape":"EXECUTE q3('bytea', 5::smallint, 10.5::float, FALSE, 4::bigint, TRUE);"}
+{"sql":"EXECUTE q3(5::smallint, 10.5::float, false, 4::bigint, 'bytea')","shape":"EXECUTE q3(5::smallint, 10.5::float, FALSE, 4::bigint, 'bytea');"}
+{"sql":"PREPARE q4(nonexistenttype) AS SELECT $1","shape":"PREPARE q4 (nonexistenttype) AS SELECT $1;"}
+{"sql":"PREPARE q5(int, text) AS\n\tSELECT * FROM tenk1 WHERE unique1 = $1 OR stringu1 = $2\n\tORDER BY unique1","shape":"PREPARE q5 (int, text) AS SELECT * FROM tenk1 WHERE (unique1 = $1) OR (stringu1 = $2) ORDER BY unique1;"}
+{"sql":"CREATE TEMPORARY TABLE q5_prep_results AS EXECUTE q5(200, 'DTAAAA')","shape":"CREATE TEMPORARY TABLE q5_prep_results AS EXECUTE q5(200, 'DTAAAA');"}
+{"sql":"SELECT * FROM q5_prep_results","shape":"SELECT * FROM q5_prep_results;"}
+{"sql":"CREATE TEMPORARY TABLE q5_prep_nodata AS EXECUTE q5(200, 'DTAAAA')\n    WITH NO DATA","shape":"CREATE TEMPORARY TABLE q5_prep_nodata AS EXECUTE q5(200, 'DTAAAA') WITH NO DATA;"}
+{"sql":"SELECT * FROM q5_prep_nodata","shape":"SELECT * FROM q5_prep_nodata;"}
+{"sql":"PREPARE q6 AS\n    SELECT * FROM tenk1 WHERE unique1 = $1 AND stringu1 = $2","shape":"PREPARE q6 AS SELECT * FROM tenk1 WHERE (unique1 = $1) AND (stringu1 = $2);"}
+{"sql":"PREPARE q7(unknown) AS\n    SELECT * FROM road WHERE thepath = $1","shape":"PREPARE q7 (unknown) AS SELECT * FROM road WHERE thepath = $1;"}
+{"sql":"PREPARE q8 AS\n    UPDATE tenk1 SET stringu1 = $2 WHERE unique1 = $1","shape":"PREPARE q8 AS UPDATE tenk1 SET stringu1 = $2 WHERE unique1 = $1;"}
+{"sql":"SELECT name, statement, parameter_types, result_types FROM pg_prepared_statements\n    ORDER BY name","shape":"SELECT name, statement, parameter_types, result_types FROM pg_prepared_statements ORDER BY name;"}
+{"sql":"DEALLOCATE ALL","shape":"DEALLOCATE ALL;"}
+{"sql":"SELECT name, statement, parameter_types FROM pg_prepared_statements\n    ORDER BY name","shape":"SELECT name, statement, parameter_types FROM pg_prepared_statements ORDER BY name;"}

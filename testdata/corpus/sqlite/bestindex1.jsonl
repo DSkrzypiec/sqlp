@@ -1,0 +1,18 @@
+{"sql":"CREATE VIRTUAL TABLE x1 USING tcl(vtab_command)"}
+{"sql":"SELECT * FROM x1 WHERE a = 'abc'"}
+{"sql":"SELECT * FROM x1 WHERE a IN ('abc', 'def')"}
+{"sql":"CREATE TABLE t1x(i INTEGER PRIMARY KEY, a, b)"}
+{"sql":"INSERT INTO t1x VALUES(1, 'one', 1)"}
+{"sql":"INSERT INTO t1x VALUES(2, 'two', 2)"}
+{"sql":"INSERT INTO t1x VALUES(3, 'three', 3)"}
+{"sql":"INSERT INTO t1x VALUES(4, 'four', 4)"}
+{"sql":"SELECT rowid FROM t1"}
+{"sql":"SELECT rowid FROM t1 WHERE a='two'"}
+{"sql":"SELECT rowid FROM t1 WHERE a IN ('one', 'four') ORDER BY +rowid"}
+{"sql":"CREATE VIRTUAL TABLE VirtualTableA USING tcl(vtab_command)"}
+{"sql":"CREATE VIRTUAL TABLE VirtualTableB USING tcl(vtab_command)"}
+{"sql":"SELECT primarykey FROM VirtualTableA"}
+{"sql":"SELECT * FROM \n  VirtualTableA a CROSS JOIN VirtualTableB b ON b.PrimaryKey=a.PrimaryKey\n  WHERE a.ColumnA IN ('ValueA', 'ValueB') AND a.FlagA=0"}
+{"sql":"SELECT * FROM \n  VirtualTableA a CROSS JOIN VirtualTableB b ON b.PrimaryKey=a.PrimaryKey\n  WHERE a.FlagA=0 AND a.ColumnA IN ('ValueA', 'ValueB')"}
+{"sql":"SELECT * FROM x1 WHERE a=? AND b BETWEEN ? AND ? AND c IN (1, 2, 3, 4)"}
+{"sql":"SELECT * FROM tcl('abc')"}

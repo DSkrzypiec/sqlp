@@ -1,0 +1,31 @@
+{"sql":"SELECT quote(eval('SELECT * FROM t1 ORDER BY a','-abc-'))"}
+{"sql":"SELECT quote(eval('SELECT * FROM t1 ORDER BY a'))"}
+{"sql":"SELECT quote(eval('SELECT d FROM t1 ORDER BY a'))"}
+{"sql":"INSERT INTO t1 VALUES(7,null,9)"}
+{"sql":"SELECT eval('SELECT * FROM t1 ORDER BY a',',')"}
+{"sql":"INSERT INTO t1 VALUES(10,11,12)"}
+{"sql":"SELECT a, coalesce(b, eval('ROLLBACK; SELECT ''bam'';')), c\n   FROM t1 ORDER BY a"}
+{"sql":"SELECT a, coalesce(b, eval('SELECT ''bam''')), c\n    FROM t1\n   ORDER BY rowid"}
+{"sql":"SELECT a, coalesce(b, eval('DELETE FROM t1; SELECT ''bam''')), c\n    FROM t1\n   ORDER BY rowid"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3),(4,5,6),(7,null,9)"}
+{"sql":"SELECT a, coalesce(b, eval('ROLLBACK; SELECT ''bam''')), c\n    FROM t1\n   ORDER BY rowid"}
+{"sql":"PRAGMA empty_result_callbacks = 1"}
+{"sql":"SELECT eval('SELECT * FROM t1 WHERE 1 = 0;')"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b INTEGER) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t2(c INTEGER PRIMARY KEY, d INTEGER, x BLOB)"}
+{"sql":"INSERT INTO t1 VALUES(0,0)"}
+{"sql":"INSERT INTO t2 VALUES(1,1,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(2,2,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(3,3,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(4,4,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(5,5,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(6,6,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(7,7,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(8,8,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(9,9,zeroblob(200))"}
+{"sql":"INSERT INTO t2 VALUES(10,10,zeroblob(200))"}
+{"sql":"SELECT a, c, eval(\n      printf('DELETE FROM t2 WHERE c=%d AND %d>5', a+c, a+c)\n  ) FROM t1, t2"}
+{"sql":"SELECT *\n    FROM\n         (\n           (SELECT 0 AS i) AS x1,\n           (SELECT 1) AS x2\n         ) AS x3,\n         (SELECT 6 AS j UNION ALL SELECT 7) AS x4\n   WHERE i<rowid\n   ORDER BY 1"}
+{"sql":"ATTACH 'test2.db' AS aux2"}
+{"sql":"CREATE TABLE aux2.t2(c,d,e)"}
+{"sql":"SELECT name FROM icecube.sqlite_master"}

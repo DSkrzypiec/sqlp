@@ -1,0 +1,9 @@
+{"sql":"INSERT INTO t1 VALUES('one two', 'one')"}
+{"sql":"INSERT INTO t1 VALUES('one two', 'three')"}
+{"sql":"INSERT INTO t1 VALUES('one two', 'two')"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'one' \n  ORDER BY rank(matchinfo(t1), 1.0, 1.0) DESC, rowid"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'two' \n  ORDER BY rank(matchinfo(t1), 1.0, 1.0) DESC, rowid"}
+{"sql":"SELECT * FROM t1 ORDER BY rank(matchinfo(t1), 1.0, 1.0) DESC, rowid"}
+{"sql":"SELECT * FROM t1 ORDER BY rank(x'0000000000000000') DESC, rowid"}
+{"sql":"SELECT * FROM t1 ORDER BY rank(x'0100000001000000') DESC, rowid"}
+{"sql":"SELECT * FROM t1 ORDER BY rank(x'0000000100000001') DESC, rowid"}

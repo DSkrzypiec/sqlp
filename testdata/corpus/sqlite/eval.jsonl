@@ -1,0 +1,7 @@
+{"sql":"SELECT count(*), max(x) FROM t1"}
+{"sql":"SELECT x, test_eval('SELECT max(x) FROM t1 WHERE x<' || x) FROM t1 LIMIT 5"}
+{"sql":"INSERT INTO t2 SELECT x, x+1 FROM t1 WHERE x<5"}
+{"sql":"SELECT x, test_eval('DELETE FROM t2 WHERE x='||x), y FROM t2"}
+{"sql":"SELECT x, test_eval('DELETE FROM t2 WHERE x='||x), y FROM t2\n     ORDER BY rowid DESC"}
+{"sql":"SELECT x, test_eval('UPDATE t2 SET y=y+100 WHERE x='||x), y FROM t2"}
+{"sql":"SELECT test_eval('SELECT ''abcdefghij''')"}

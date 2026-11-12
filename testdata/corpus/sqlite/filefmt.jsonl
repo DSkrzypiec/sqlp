@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES(a_string(3000))"}
+{"sql":"ROLLBACK TO a"}
+{"sql":"INSERT INTO t2 SELECT randomblob(100), randomblob(100) FROM t1"}

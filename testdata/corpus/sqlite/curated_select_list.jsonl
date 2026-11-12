@@ -1,0 +1,384 @@
+{"sql":"SELECT 1","shape":"SELECT 1;"}
+{"sql":"SELECT 1, 2, 3","shape":"SELECT 1, 2, 3;"}
+{"sql":"SELECT 'x'","shape":"SELECT 'x';"}
+{"sql":"SELECT NULL","shape":"SELECT NULL;"}
+{"sql":"SELECT a, b, c FROM t","shape":"SELECT a, b, c FROM t;"}
+{"sql":"SELECT * FROM t","shape":"SELECT * FROM t;"}
+{"sql":"SELECT *, a FROM t","shape":"SELECT *, a FROM t;"}
+{"sql":"SELECT a, * FROM t","shape":"SELECT a, * FROM t;"}
+{"sql":"SELECT t.* FROM t","shape":"SELECT t.* FROM t;"}
+{"sql":"SELECT t.*, u.* FROM t, u","shape":"SELECT t.*, u.* FROM t, u;"}
+{"sql":"SELECT t.a, u.b FROM t, u","shape":"SELECT t.a, u.b FROM t, u;"}
+{"sql":"SELECT main.t.a FROM t","shape":"SELECT main.t.a FROM t;"}
+{"sql":"SELECT a AS x FROM t","shape":"SELECT a AS x FROM t;"}
+{"sql":"SELECT a x FROM t","shape":"SELECT a AS x FROM t;"}
+{"sql":"SELECT a AS \"x y\" FROM t","shape":"SELECT a AS \"x y\" FROM t;"}
+{"sql":"SELECT a \"x y\" FROM t","shape":"SELECT a AS \"x y\" FROM t;"}
+{"sql":"SELECT a + 1 AS x, b * 2 AS y FROM t","shape":"SELECT a + 1 AS x, b * 2 AS y FROM t;"}
+{"sql":"SELECT (a) FROM t","shape":"SELECT (a) FROM t;"}
+{"sql":"SELECT ((a)) FROM t","shape":"SELECT ((a)) FROM t;"}
+{"sql":"SELECT (a + b) * c FROM t","shape":"SELECT (a + b) * c FROM t;"}
+{"sql":"SELECT a + (b * c) FROM t","shape":"SELECT a + (b * c) FROM t;"}
+{"sql":"SELECT DISTINCT a FROM t","shape":"SELECT DISTINCT a FROM t;"}
+{"sql":"SELECT DISTINCT a, b FROM t","shape":"SELECT DISTINCT a, b FROM t;"}
+{"sql":"SELECT DISTINCT * FROM t","shape":"SELECT DISTINCT * FROM t;"}
+{"sql":"SELECT ALL a FROM t","shape":"SELECT ALL a FROM t;"}
+{"sql":"SELECT DISTINCT ON (a) a, b FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON (a, b) a FROM t ORDER BY a, b","reject":true}
+{"sql":"SELECT DISTINCT ON (a + 1) * FROM t","reject":true}
+{"sql":"SELECT COUNT(*) FROM t","shape":"SELECT COUNT(*) FROM t;"}
+{"sql":"SELECT COUNT(DISTINCT a) FROM t","shape":"SELECT COUNT(DISTINCT a) FROM t;"}
+{"sql":"SELECT COUNT(ALL a) FROM t","shape":"SELECT COUNT(a) FROM t;"}
+{"sql":"SELECT SUM(a), AVG(b), MIN(c), MAX(a) FROM t","shape":"SELECT SUM(a), AVG(b), MIN(c), MAX(a) FROM t;"}
+{"sql":"SELECT SUM(a) + 1 FROM t","shape":"SELECT SUM(a) + 1 FROM t;"}
+{"sql":"SELECT UPPER(name), LOWER(name) FROM t","shape":"SELECT UPPER(name), LOWER(name) FROM t;"}
+{"sql":"SELECT COALESCE(a, b, 0) FROM t","shape":"SELECT COALESCE(a, b, 0) FROM t;"}
+{"sql":"SELECT NULLIF(a, b) FROM t","shape":"SELECT NULLIF(a, b) FROM t;"}
+{"sql":"SELECT ABS(a) FROM t","shape":"SELECT ABS(a) FROM t;"}
+{"sql":"SELECT CASE WHEN a = 1 THEN 'one' END FROM t","shape":"SELECT CASE WHEN a = 1 THEN 'one' END FROM t;"}
+{"sql":"SELECT CASE WHEN a = 1 THEN 'one' ELSE 'other' END FROM t","shape":"SELECT CASE WHEN a = 1 THEN 'one' ELSE 'other' END FROM t;"}
+{"sql":"SELECT CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' END FROM t","shape":"SELECT CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' END FROM t;"}
+{"sql":"SELECT CASE WHEN a = 1 THEN CASE WHEN b = 2 THEN 'x' ELSE 'y' END ELSE 'z' END FROM t","shape":"SELECT CASE WHEN a = 1 THEN CASE WHEN b = 2 THEN 'x' ELSE 'y' END ELSE 'z' END FROM t;"}
+{"sql":"SELECT CASE WHEN a IN (1, 2) THEN 1 WHEN b IS NULL THEN 2 ELSE 3 END AS k FROM t","shape":"SELECT CASE WHEN a IN (1, 2) THEN 1 WHEN b IS NULL THEN 2 ELSE 3 END AS k FROM t;"}
+{"sql":"SELECT CAST(a AS INTEGER) FROM t","shape":"SELECT CAST(a AS INTEGER) FROM t;"}
+{"sql":"SELECT CAST(a + 1 AS TEXT) FROM t","shape":"SELECT CAST(a + 1 AS TEXT) FROM t;"}
+{"sql":"SELECT CAST(CAST(a AS TEXT) AS INTEGER) FROM t","shape":"SELECT CAST(CAST(a AS TEXT) AS INTEGER) FROM t;"}
+{"sql":"SELECT a::int FROM t","reject":true}
+{"sql":"SELECT a::int::text FROM t","reject":true}
+{"sql":"SELECT (a + 1)::text FROM t","reject":true}
+{"sql":"SELECT name || 'x' || name FROM t","shape":"SELECT (name || 'x') || name FROM t;"}
+{"sql":"SELECT a < b, a = b, a <> b FROM t","shape":"SELECT a < b, a = b, a <> b FROM t;"}
+{"sql":"SELECT a IS NULL, b IS NOT NULL FROM t","shape":"SELECT a IS NULL, b IS NOT NULL FROM t;"}
+{"sql":"SELECT a BETWEEN 1 AND 2 FROM t","shape":"SELECT a BETWEEN 1 AND 2 FROM t;"}
+{"sql":"SELECT a IN (1, 2), b NOT IN (3) FROM t","shape":"SELECT a IN (1, 2), b NOT IN (3) FROM t;"}
+{"sql":"SELECT name LIKE 'a%' FROM t","shape":"SELECT name LIKE 'a%' FROM t;"}
+{"sql":"SELECT NOT a = 1 FROM t","shape":"SELECT NOT (a = 1) FROM t;"}
+{"sql":"SELECT a = 1 AND b = 2 OR c = 3 FROM t","shape":"SELECT ((a = 1) AND (b = 2)) OR (c = 3) FROM t;"}
+{"sql":"SELECT a = 1 OR b = 2 AND c = 3 FROM t","shape":"SELECT (a = 1) OR ((b = 2) AND (c = 3)) FROM t;"}
+{"sql":"SELECT -a, +b, - - a FROM t","shape":"SELECT -a, +b, -(-a) FROM t;"}
+{"sql":"SELECT 1 + 2 * 3 - 4 / 5 % 6","shape":"SELECT (1 + (2 * 3)) - ((4 / 5) % 6);"}
+{"sql":"SELECT","reject":true}
+{"sql":"SELECT FROM t","reject":true}
+{"sql":"SELECT a, FROM t","reject":true}
+{"sql":"SELECT , a FROM t","reject":true}
+{"sql":"SELECT a b c FROM t","reject":true}
+{"sql":"SELECT a AS FROM t","reject":true}
+{"sql":"SELECT DISTINCT FROM t","reject":true}
+{"sql":"SELECT DISTINCT ALL a FROM t","reject":true}
+{"sql":"SELECT ALL DISTINCT a FROM t","reject":true}
+{"sql":"SELECT * * FROM t","reject":true}
+{"sql":"SELECT t.*.a FROM t","reject":true}
+{"sql":"SELECT * AS x FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON a FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON () a FROM t","reject":true}
+{"sql":"SELECT CASE END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a THEN END FROM t","reject":true}
+{"sql":"SELECT CASE a ELSE 1 END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a THEN 1 FROM t","reject":true}
+{"sql":"SELECT CAST(a) FROM t","reject":true}
+{"sql":"SELECT CAST(a AS) FROM t","shape":"SELECT CAST(a AS) FROM t;"}
+{"sql":"SELECT COUNT(DISTINCT) FROM t"}
+{"sql":"SELECT (a FROM t","reject":true}
+{"sql":"SELECT a) FROM t","reject":true}
+{"sql":"SELECT () FROM t","reject":true}
+{"sql":"SELECT *"}
+{"sql":"SELECT 1 1","reject":true}
+{"sql":"SELECT SELECT 1","reject":true}
+{"sql":"1","reject":true}
+{"sql":"1 SELECT , 2 , 3","reject":true}
+{"sql":"SELECT , 1 2 , 3","reject":true}
+{"sql":"SELECT 1 , 2 ,","reject":true}
+{"sql":"SELECT 1 ELSE 2 , 3","reject":true}
+{"sql":"'x' SELECT","reject":true}
+{"sql":"SELECT x"}
+{"sql":"NULL SELECT","reject":true}
+{"sql":"SELECT NULL NULL","reject":true}
+{"sql":"AS NULL","reject":true}
+{"sql":"SELECT CASE FROM t","reject":true}
+{"sql":"SELECT a FROM FROM t","reject":true}
+{"sql":"SELECT a t FROM","reject":true}
+{"sql":"SELECT a FROM t t","shape":"SELECT a FROM t AS t;"}
+{"sql":"SELECT a , , b c FROM t","reject":true}
+{"sql":"SELECT a , b name c FROM t","reject":true}
+{"sql":"SELECT a , b , c c FROM t","shape":"SELECT a, b, c AS c FROM t;"}
+{"sql":"SELECT a , b , a FROM t","shape":"SELECT a, b, a FROM t;"}
+{"sql":"SELECT * name t","reject":true}
+{"sql":"SELECT * , a t"}
+{"sql":"SELECT * , a FROM t","shape":"SELECT *, a FROM t;"}
+{"sql":"SELECT a * , FROM t","reject":true}
+{"sql":"SELECT a , FROM * t","reject":true}
+{"sql":"SELECT = , * FROM t","reject":true}
+{"sql":"SELECT a 1 * FROM t","reject":true}
+{"sql":"SELECT t t . * FROM t","reject":true}
+{"sql":"SELECT t . * FROM SELECT","reject":true}
+{"sql":"SELECT t . * FROM a"}
+{"sql":"SELECT t * FROM t","reject":true}
+{"sql":"SELECT t . * , u ( * FROM t , u","reject":true}
+{"sql":"SELECT t . * , u . FROM t , u","reject":true}
+{"sql":"SELECT t . * * , u . * FROM t , u","reject":true}
+{"sql":"SELECT t . . * , u . * FROM t , u","reject":true}
+{"sql":"SELECT t . a , u . ( FROM t , u","reject":true}
+{"sql":"SELECT t . a , u . b FROM t , u","shape":"SELECT t.a, u.b FROM t, u;"}
+{"sql":"SELECT t . a , u . b FROM t , , u","reject":true}
+{"sql":"SELECT t . a , u b FROM t , u"}
+{"sql":"SELECT main . . t . a FROM t","reject":true}
+{"sql":"SELECT main . t . a FROM t","shape":"SELECT main.t.a FROM t;"}
+{"sql":"SELECT SELECT main . t . a FROM t","reject":true}
+{"sql":"SELECT main . t t . a FROM t","reject":true}
+{"sql":"SELECT a AS FROM x t","reject":true}
+{"sql":"SELECT a x AS FROM t","reject":true}
+{"sql":"SELECT a AS CASE FROM t","reject":true}
+{"sql":"SELECT SELECT a AS x FROM t","reject":true}
+{"sql":"SELECT FROM x FROM t","reject":true}
+{"sql":"SELECT a 1 FROM t","reject":true}
+{"sql":") a x FROM t","reject":true}
+{"sql":"SELECT a x t FROM","reject":true}
+{"sql":"FROM a AS \"x y\" FROM t","reject":true}
+{"sql":"SELECT a AS \"x y\" FROM","reject":true}
+{"sql":"SELECT a AS \"x y\" t","reject":true}
+{"sql":"SELECT SELECT \"x y\" FROM t","reject":true}
+{"sql":"SELECT a \"x y\" FROM t t","shape":"SELECT a AS \"x y\" FROM t AS t;"}
+{"sql":"SELECT a \"x y\" FROM FROM t","reject":true}
+{"sql":"a SELECT + 1 AS x , b * 2 AS y FROM t","reject":true}
+{"sql":"u a + 1 AS x , b * 2 AS y FROM t","reject":true}
+{"sql":"SELECT a + 1 AS x , b 2 * AS y FROM t","reject":true}
+{"sql":"SELECT a + 1 AS x , b FROM 2 AS y FROM t","reject":true}
+{"sql":"a ( a ) FROM t","reject":true}
+{"sql":"( SELECT a ) FROM t","reject":true}
+{"sql":"SELECT ( a ) FROM","reject":true}
+{"sql":"SELECT ( ) a FROM t","reject":true}
+{"sql":"SELECT 3 ( a ) ) FROM t","reject":true}
+{"sql":"SELECT ( ( a ) ) FROM t","shape":"SELECT ((a)) FROM t;"}
+{"sql":"SELECT ( a ) ) FROM t","reject":true}
+{"sql":"SELECT ( ( a ) ) FROM","reject":true}
+{"sql":"SELECT ( a b + ) * c FROM t","reject":true}
+{"sql":"SELECT ( a + ( ) * c FROM t","reject":true}
+{"sql":"SELECT ( a + b * ) c FROM t","reject":true}
+{"sql":"SELECT ( a + b ) * c FROM","reject":true}
+{"sql":"SELECT a + ( b * c ) t"}
+{"sql":"SELECT a + ( b c * ) FROM t","reject":true}
+{"sql":"a + ( b * c ) FROM t","reject":true}
+{"sql":"SELECT a + ( b * c ) FROM","reject":true}
+{"sql":"SELECT DISTINCT DISTINCT a FROM t","reject":true}
+{"sql":"SELECT DISTINCT :: , b FROM t","reject":true}
+{"sql":"SELECT DISTINCT a , FROM b t","reject":true}
+{"sql":"SELECT DISTINCT a , b :: t","reject":true}
+{"sql":"DISTINCT a , b FROM t","reject":true}
+{"sql":"SELECT SELECT DISTINCT * FROM t","reject":true}
+{"sql":"SELECT DISTINCT * t t","reject":true}
+{"sql":"SELECT DISTINCT * t FROM","reject":true}
+{"sql":"SELECT * DISTINCT FROM t","reject":true}
+{"sql":"SELECT ALL FROM t","reject":true}
+{"sql":"ALL SELECT a FROM t","reject":true}
+{"sql":"SELECT ALL a FROM t t","shape":"SELECT ALL a FROM t AS t;"}
+{"sql":"ALL a FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ( a ) , a b FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ( a ) a , FROM t","reject":true}
+{"sql":"SELECT DISTINCT DISTINCT ON ( a ) a , b FROM t","reject":true}
+{"sql":"SELECT ON ( a ) a , b FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ( a , b ) FROM FROM t ORDER BY a , b","reject":true}
+{"sql":"SELECT DISTINCT ON ( a , b ) a FROM t ORDER BY a a , b","reject":true}
+{"sql":"SELECT DISTINCT ON ( a a , b ) a FROM t ORDER BY a , b","reject":true}
+{"sql":"SELECT DISTINCT ON ( a WHEN b ) a FROM t ORDER BY a , b","reject":true}
+{"sql":"SELECT DISTINCT ON ( + 1 ) * FROM t","reject":true}
+{"sql":"SELECT DISTINCT ( a + 1 ) * FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ( a int 1 ) * FROM t","reject":true}
+{"sql":"SELECT COUNT ( * FROM ) t","reject":true}
+{"sql":"SELECT SELECT COUNT ( * ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ) FROM t","shape":"SELECT COUNT() FROM t;"}
+{"sql":"DISTINCT COUNT ( DISTINCT a ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( DISTINCT a FROM t","reject":true}
+{"sql":"SELECT COUNT ( DISTINCT a FROM ) t","reject":true}
+{"sql":"COUNT ( DISTINCT a ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ALL ) a FROM t","shape":"SELECT COUNT() AS a FROM t;"}
+{"sql":"SELECT COUNT ( ALL ALL a ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ALL a ) FROM t t","shape":"SELECT COUNT(a) FROM t AS t;"}
+{"sql":"SELECT COUNT ( ALL a ) FROM t","shape":"SELECT COUNT(a) FROM t;"}
+{"sql":"SELECT SUM ( a ) , AVG ( b ) , MIN ( c ) , MAX ( a END FROM t","reject":true}
+{"sql":"SELECT ( ( a ) , AVG ( b ) , MIN ( c ) , MAX ( a ) FROM t","reject":true}
+{"sql":"SELECT ( SUM a ) , AVG ( b ) , MIN ( c ) , MAX ( a ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) , AVG ( b ) , UPPER ( c ) , MAX ( a ) FROM t","shape":"SELECT SUM(a), AVG(b), UPPER(c), MAX(a) FROM t;"}
+{"sql":"SELECT SUM ( ) + 1 FROM t"}
+{"sql":"SELECT SUM a ( ) + 1 FROM t","reject":true}
+{"sql":"SELECT SUM ( a COUNT + 1 FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) + 1 FROM FROM t","reject":true}
+{"sql":"SELECT UPPER FROM name ) , LOWER ( name ) FROM t","reject":true}
+{"sql":"SELECT UPPER ( name ) , ( ( name ) FROM t","reject":true}
+{"sql":"SELECT UPPER ( ) , LOWER ( name ) FROM t"}
+{"sql":"SELECT UPPER ( name ) , LOWER ( name ) FROM t t","shape":"SELECT UPPER(name), LOWER(name) FROM t AS t;"}
+{"sql":"SELECT COALESCE ( a , b , 0 ) = t"}
+{"sql":"SELECT COALESCE ( a , b , 0 ) FROM t","shape":"SELECT COALESCE(a, b, 0) FROM t;"}
+{"sql":"SELECT COALESCE ( a , b , 0 FROM ) t","reject":true}
+{"sql":"SELECT COALESCE ( a , b 0 ) FROM t","reject":true}
+{"sql":"SELECT NULLIF ( NULL , b ) FROM t","shape":"SELECT NULLIF(NULL, b) FROM t;"}
+{"sql":"SELECT NULLIF ( a , , b ) FROM t","reject":true}
+{"sql":"SELECT NULLIF ( a , b ) FROM t","shape":"SELECT NULLIF(a, b) FROM t;"}
+{"sql":"SELECT ( a , b ) FROM t"}
+{"sql":"SELECT ABS ( a a ) FROM t","reject":true}
+{"sql":"SELECT ABS a ( ) FROM t","reject":true}
+{"sql":"SELECT ABS ( a a FROM t","reject":true}
+{"sql":"SELECT ( a ) FROM t","shape":"SELECT (a) FROM t;"}
+{"sql":"SELECT CASE WHEN a = 1 THEN 'one' END FROM t t","shape":"SELECT CASE WHEN a = 1 THEN 'one' END FROM t AS t;"}
+{"sql":"SELECT CASE a = 1 THEN 'one' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN = 1 THEN 'one' END FROM t","reject":true}
+{"sql":"SELECT SELECT CASE WHEN a = 1 THEN 'one' ELSE 'other' END FROM t","reject":true}
+{"sql":"SELECT WHEN CASE a = 1 THEN 'one' ELSE 'other' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a a = 1 THEN 'one' ELSE 'other' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a = THEN 'one' ELSE 'other' END FROM t","reject":true}
+{"sql":"SELECT CASE a WHEN 1 THEN THEN 'one' WHEN 2 THEN 'two' END FROM t","reject":true}
+{"sql":"SELECT CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' END t"}
+{"sql":"SELECT CASE a WHEN 1 THEN , WHEN 2 THEN 'two' END FROM t","reject":true}
+{"sql":"SELECT CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' END FROM","reject":true}
+{"sql":"SELECT CASE WHEN a = 1 THEN CASE WHEN b = 2 THEN 'x' ELSE END 'y' ELSE 'z' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN = 1 THEN CASE WHEN b = 2 THEN 'x' ELSE 'y' END ELSE 'z' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a = 1 THEN CASE WHEN b = 2 THEN THEN 'x' ELSE 'y' END ELSE 'z' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a = THEN 1 CASE WHEN b = 2 THEN 'x' ELSE 'y' END ELSE 'z' END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a IN ( , 2 ) THEN 1 WHEN b IS NULL THEN 2 ELSE 3 END AS k FROM t","reject":true}
+{"sql":"SELECT CASE a WHEN IN ( 1 , 2 ) THEN 1 WHEN b IS NULL THEN 2 ELSE 3 END AS k FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a FROM ( 1 , 2 ) THEN 1 WHEN b IS NULL THEN 2 ELSE 3 END AS k FROM t","reject":true}
+{"sql":"SELECT CAST ( a AS INTEGER ) t t","reject":true}
+{"sql":"SELECT CAST ( a AS AS INTEGER ) FROM t","reject":true}
+{"sql":"SELECT CAST ( AS a INTEGER ) FROM t","reject":true}
+{"sql":"SELECT CAST CAST ( a AS INTEGER ) FROM t","reject":true}
+{"sql":"SELECT CAST ( a + 1 1 AS TEXT ) FROM t","reject":true}
+{"sql":"SELECT CAST ( a + 1 AS TEXT ) t FROM","reject":true}
+{"sql":"SELECT CAST a + 1 AS TEXT ) FROM t","reject":true}
+{"sql":"SELECT CAST ( a + 1 TEXT ) FROM t","reject":true}
+{"sql":"SELECT CAST ( CAST ( a AS TEXT ) AS INTEGER k FROM t","reject":true}
+{"sql":"SELECT CAST ( CAST CAST ( a AS TEXT ) AS INTEGER ) FROM t","reject":true}
+{"sql":"SELECT CAST ( CAST ( a AS TEXT ) AS a ) FROM t","shape":"SELECT CAST(CAST(a AS TEXT) AS a) FROM t;"}
+{"sql":"SELECT CAST ( CAST ( a AS TEXT ) AS INTEGER ) FROM t","shape":"SELECT CAST(CAST(a AS TEXT) AS INTEGER) FROM t;"}
+{"sql":"SELECT a :: SELECT FROM t","reject":true}
+{"sql":"SELECT , :: int FROM t","reject":true}
+{"sql":"SELECT a :: IN FROM t","reject":true}
+{"sql":"SELECT a :: int t","reject":true}
+{"sql":"SELECT a :: int int :: text FROM t","reject":true}
+{"sql":"SELECT a :: int :: text FROM FROM t","reject":true}
+{"sql":"SELECT t :: int :: text FROM t","reject":true}
+{"sql":"SELECT a :: int :: :: text FROM t","reject":true}
+{"sql":"SELECT ( a + 1 ) text :: FROM t","reject":true}
+{"sql":"SELECT ( a + - ) :: text FROM t","reject":true}
+{"sql":"SELECT ( a a + 1 ) :: text FROM t","reject":true}
+{"sql":"SELECT ( a + ) 1 :: text FROM t","reject":true}
+{"sql":"SELECT name || 'x' || name a t","reject":true}
+{"sql":"SELECT name || || 'x' name FROM t","reject":true}
+{"sql":"SELECT name || 'x' || name name FROM t","shape":"SELECT (name || 'x') || name AS name FROM t;"}
+{"sql":"SELECT name || 'x' || t FROM t"}
+{"sql":"SELECT a < b , a = b , a b <> FROM t","reject":true}
+{"sql":"SELECT a < b , a = , b a <> b FROM t","reject":true}
+{"sql":"SELECT a < u , a = b , a <> b FROM t"}
+{"sql":"SELECT a < < b , a = b , a <> b FROM t","reject":true}
+{"sql":"SELECT a IS NULL , b IS NOT NULL NULL FROM t","reject":true}
+{"sql":"SELECT a IS NULL b IS NOT NULL FROM t","reject":true}
+{"sql":"SELECT a IS , NULL b IS NOT NULL FROM t","reject":true}
+{"sql":"SELECT a IS NULL , b IS NULL FROM t","shape":"SELECT a IS NULL, b IS NULL FROM t;"}
+{"sql":"SELECT a BETWEEN 1 AND FROM t","reject":true}
+{"sql":"SELECT a ) 1 AND 2 FROM t","reject":true}
+{"sql":"SELECT SELECT a BETWEEN 1 AND 2 FROM t","reject":true}
+{"sql":"SELECT a BETWEEN 1 AND 2 ) t","reject":true}
+{"sql":"SELECT a IN ( ( 1 , 2 ) , b NOT IN ( 3 ) FROM t","reject":true}
+{"sql":"SELECT a IN ( 1 , 2 SELECT , b NOT IN ( 3 ) FROM t","reject":true}
+{"sql":"SELECT a IN ( 1 , 2 ) , b NOT IN ( 3 ) FROM","reject":true}
+{"sql":"SELECT a IN ( 1 , 2 ) , b NOT IN IN ( 3 ) FROM t","reject":true}
+{"sql":"SELECT name LIKE 'a%' END t","reject":true}
+{"sql":"SELECT name LIKE 'a%' t FROM","reject":true}
+{"sql":"SELECT name LIKE 'a%' t"}
+{"sql":"SELECT name LIKE FROM 'a%' t","reject":true}
+{"sql":"SELECT a NOT = 1 FROM t","reject":true}
+{"sql":"SELECT NOT a = 1 FROM FROM t","reject":true}
+{"sql":"SELECT NOT a = 1 t FROM","reject":true}
+{"sql":"SELECT a = 1 AND b = OR 2 c = 3 FROM t","reject":true}
+{"sql":"SELECT a = 1 AND = 2 OR c = 3 FROM t","reject":true}
+{"sql":"SELECT a 1 AND b = 2 OR c = 3 FROM t","reject":true}
+{"sql":"SELECT a = 1 OR b = 2 a c = 3 FROM t","reject":true}
+{"sql":"SELECT SELECT a = 1 OR b = 2 AND c = 3 FROM t","reject":true}
+{"sql":"SELECT a = 1 OR b = 2 AND c 3 = FROM t","reject":true}
+{"sql":"SELECT a = a OR b = 2 AND c = 3 FROM t","shape":"SELECT (a = a) OR ((b = 2) AND (c = 3)) FROM t;"}
+{"sql":"SELECT - a , + b , - - - a FROM t","shape":"SELECT -a, +b, -(-(-a)) FROM t;"}
+{"sql":"SELECT - a , + b , - - a t"}
+{"sql":"SELECT - a ( + b , - - a FROM t","reject":true}
+{"sql":"SELECT - a , ( b , - - a FROM t","reject":true}
+{"sql":"SELECT 1 + 2 3 - 4 / 5 % 6","reject":true}
+{"sql":"SELECT 1 + 2 * , - 4 / 5 % 6","reject":true}
+{"sql":"SELECT 1 + 2 * 3 - 4 5 / % 6","reject":true}
+{"sql":"SELECT 1 + 2 * 3 - 4 / % 6","reject":true}
+{"sql":"a","reject":true}
+{"sql":"SELECT SELECT","reject":true}
+{"sql":"SELECT SELECT FROM t","reject":true}
+{"sql":"SELECT FROM t t","reject":true}
+{"sql":"SELECT a , FROM t","reject":true}
+{"sql":"SELECT a , FROM FROM t","reject":true}
+{"sql":"a a , FROM t","reject":true}
+{"sql":"SELECT a FROM , t","reject":true}
+{"sql":"SELECT b a FROM t","shape":"SELECT b AS a FROM t;"}
+{"sql":", a FROM t","reject":true}
+{"sql":"SELECT , ) FROM t","reject":true}
+{"sql":"SELECT b c FROM t","shape":"SELECT b AS c FROM t;"}
+{"sql":"a SELECT b c FROM t","reject":true}
+{"sql":"SELECT a b b c FROM t","reject":true}
+{"sql":"SELECT a c b FROM t","reject":true}
+{"sql":"a SELECT AS FROM t","reject":true}
+{"sql":"SELECT a AS t"}
+{"sql":"SELECT AS FROM t","reject":true}
+{"sql":"a AS FROM t","reject":true}
+{"sql":"SELECT DISTINCT END t"}
+{"sql":"SELECT DISTINCT DISTINCT FROM t","reject":true}
+{"sql":"SELECT DISTINCT FROM FROM t","reject":true}
+{"sql":"SELECT DISTINCT ALL a FROM FROM t","reject":true}
+{"sql":"SELECT DISTINCT a ALL FROM t","reject":true}
+{"sql":"SELECT DISTINCT ALL a a FROM t","reject":true}
+{"sql":"SELECT ALL DISTINCT a ) t","reject":true}
+{"sql":"SELECT ALL DISTINCT a FROM","reject":true}
+{"sql":"SELECT SELECT ALL DISTINCT a FROM t","reject":true}
+{"sql":", ALL DISTINCT a FROM t","reject":true}
+{"sql":"SELECT * * * FROM t","reject":true}
+{"sql":"* * FROM t","reject":true}
+{"sql":"SELECT * * ( t","reject":true}
+{"sql":"SELECT t . * a . FROM t","reject":true}
+{"sql":"t . * . a FROM t","reject":true}
+{"sql":"SELECT t . * . a t FROM","reject":true}
+{"sql":"SELECT t . * . a FROM","reject":true}
+{"sql":"SELECT * x AS FROM t","reject":true}
+{"sql":"SELECT AS * x FROM t","reject":true}
+{"sql":"SELECT * AS FROM x t","reject":true}
+{"sql":"SELECT DISTINCT ON a FROM FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON FROM t","reject":true}
+{"sql":"SELECT ON DISTINCT a FROM t","reject":true}
+{"sql":"SELECT ON DISTINCT ( ) a FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ( ) a FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ON ( ) a FROM t","reject":true}
+{"sql":"SELECT DISTINCT ON ( ) a FROM","reject":true}
+{"sql":"2 CASE END FROM t","reject":true}
+{"sql":"CASE END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a THEN END FROM t t","reject":true}
+{"sql":"SELECT CASE WHEN a THEN END END FROM t"}
+{"sql":"SELECT ( WHEN a THEN END FROM t","reject":true}
+{"sql":"SELECT CASE a ELSE 1 a FROM t","reject":true}
+{"sql":"SELECT CASE 2 ELSE 1 END FROM t","reject":true}
+{"sql":"SELECT CASE a ELSE 1 END FROM SELECT","reject":true}
+{"sql":"SELECT CASE a ELSE a END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN a THEN 1 FROM","reject":true}
+{"sql":"SELECT CASE WHEN WHEN a THEN 1 FROM t","reject":true}
+{"sql":"SELECT CASE DISTINCT a THEN 1 FROM t","reject":true}
+{"sql":"SELECT t WHEN a THEN 1 FROM t","reject":true}
+{"sql":"SELECT CAST ( a ) FROM t t","reject":true}
+{"sql":"FROM CAST ( a ) FROM t","reject":true}
+{"sql":"SELECT CAST ( ) a FROM t","reject":true}
+{"sql":"SELECT ( a AS ) FROM t","reject":true}
+{"sql":"SELECT CAST ( a AS ) FROM t","shape":"SELECT CAST(a AS) FROM t;"}
+{"sql":"SELECT CAST ( AS ) FROM t","reject":true}
+{"sql":"SELECT CAST ( b AS ) FROM t","shape":"SELECT CAST(b AS) FROM t;"}
+{"sql":"SELECT COUNT ( DISTINCT ) ) FROM t","reject":true}
+{"sql":"SELECT SELECT COUNT ( DISTINCT ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( DISTINCT ) t"}
+{"sql":"SELECT COUNT ( DISTINCT ) a t","reject":true}
+{"sql":"SELECT ( a FROM","reject":true}
+{"sql":"SELECT ( FROM t","reject":true}
+{"sql":"SELECT ( FROM a t","reject":true}
+{"sql":"SELECT SELECT a ) FROM t","reject":true}
+{"sql":"SELECT a ) FROM t","reject":true}
+{"sql":"SELECT a ) t t","reject":true}
+{"sql":"SELECT a ) FROM","reject":true}
+{"sql":"SELECT ( ( ) FROM t","reject":true}
+{"sql":"SELECT ( ) t","reject":true}
+{"sql":"SELECT NULLIF ) FROM t","reject":true}

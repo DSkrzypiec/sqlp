@@ -1,0 +1,64 @@
+{"sql":"PRAGMA auto_vacuum=full"}
+{"sql":"CREATE TABLE one(a int PRIMARY KEY, b text)"}
+{"sql":"INSERT INTO one VALUES(1,'one')"}
+{"sql":"INSERT INTO one VALUES(2,'two')"}
+{"sql":"INSERT INTO one VALUES(3,'three')"}
+{"sql":"SELECT b FROM one ORDER BY a"}
+{"sql":"CREATE TABLE two(a int PRIMARY KEY, b text)"}
+{"sql":"INSERT INTO two VALUES(1,'I')"}
+{"sql":"INSERT INTO two VALUES(5,'V')"}
+{"sql":"INSERT INTO two VALUES(10,'X')"}
+{"sql":"SELECT b FROM two ORDER BY a"}
+{"sql":"END"}
+{"sql":"BEGIN TRANSACTION"}
+{"sql":"COMMIT TRANSACTION"}
+{"sql":"BEGIN TRANSACTION 'foo'"}
+{"sql":"ROLLBACK TRANSACTION 'foo'"}
+{"sql":"SELECT a FROM one ORDER BY a"}
+{"sql":"SELECT a FROM two ORDER BY a"}
+{"sql":"UPDATE one SET a = 0 WHERE 0"}
+{"sql":"INSERT INTO one VALUES(4,'four')"}
+{"sql":"INSERT INTO two VALUES(4,'IV')"}
+{"sql":"UPDATE two SET a = 0 WHERE 0"}
+{"sql":"DROP TABLE one"}
+{"sql":"DROP TABLE two"}
+{"sql":"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"}
+{"sql":"CREATE TABLE one(a text, b int)"}
+{"sql":"SELECT a,b FROM one ORDER BY b"}
+{"sql":"INSERT INTO one(a,b) VALUES('hello', 1)"}
+{"sql":"SELECT name fROM sqlite_master \n    WHERE type='table' OR type='index'\n    ORDER BY name"}
+{"sql":"CREATE TABLE t1(a int, b int, c int)"}
+{"sql":"CREATE TABLE t2(a int, b int, c int)"}
+{"sql":"CREATE INDEX i2a ON t2(a)"}
+{"sql":"CREATE INDEX i2b ON t2(b)"}
+{"sql":"CREATE TABLE t2(x int, y int, z int)"}
+{"sql":"CREATE INDEX i2x ON t2(x)"}
+{"sql":"CREATE INDEX i2y ON t2(y)"}
+{"sql":"SELECT x FROM t2 WHERE y=2"}
+{"sql":"CREATE TABLE t1(a integer primary key,b,c)"}
+{"sql":"INSERT INTO t1 VALUES(1,-2,-3)"}
+{"sql":"INSERT INTO t1 VALUES(4,-5,-6)"}
+{"sql":"SELECT * FROM t1 WHERE b<1"}
+{"sql":"SELECT * FROM t1 WHERE c<1"}
+{"sql":"CREATE TABLE t1(a int unique,b,c)"}
+{"sql":"SELECT * FROM t1 ORDER BY a"}
+{"sql":"SELECT md5sum(x,y,z) FROM t2"}
+{"sql":"SELECT md5sum(type,name,tbl_name,rootpage,sql) FROM sqlite_master"}
+{"sql":"SELECT count(*) FROM t2"}
+{"sql":"INSERT INTO t2 SELECT * FROM t2"}
+{"sql":"CREATE TABLE t3 AS SELECT * FROM t2"}
+{"sql":"INSERT INTO t2 SELECT * FROM t3"}
+{"sql":"CREATE TEMP TABLE t3 AS SELECT * FROM t2"}
+{"sql":"DROP INDEX i2x"}
+{"sql":"DROP INDEX i2y"}
+{"sql":"CREATE INDEX i3a ON t3(x)"}
+{"sql":"PRAGMA default_cache_size=10"}
+{"sql":"CREATE TABLE t3(x TEXT)"}
+{"sql":"INSERT INTO t3 VALUES(randstr(10,400))"}
+{"sql":"INSERT INTO t3 SELECT randstr(10,400) FROM t3"}
+{"sql":"SELECT count(*) FROM t3"}
+{"sql":"PRAGMA fullfsync=ON"}
+{"sql":"PRAGMA fullfsync=OFF"}
+{"sql":"DELETE FROM t3 WHERE random()%10!=0"}
+{"sql":"INSERT INTO t3 SELECT randstr(10,10)||x FROM t3"}
+{"sql":"INSERT INTO t3 SELECT randstr(10,400) FROM t3 WHERE random()%10==0"}

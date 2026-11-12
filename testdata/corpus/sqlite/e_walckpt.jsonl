@@ -1,0 +1,18 @@
+{"sql":"ATTACH 'test.db4' AS aux3"}
+{"sql":"CREATE TABLE aux.t2(x)"}
+{"sql":"CREATE TABLE aux2.t3(x)"}
+{"sql":"CREATE TABLE aux3.t4(x)"}
+{"sql":"PRAGMA main.journal_mode = WAL"}
+{"sql":"PRAGMA aux.journal_mode = WAL"}
+{"sql":"PRAGMA aux2.journal_mode = WAL"}
+{"sql":"INSERT INTO t1 VALUES('xyz')"}
+{"sql":"SELECT * FROM t1 UNION ALL SELECT * FROM t2"}
+{"sql":"INSERT INTO t2 VALUES(7, 8)"}
+{"sql":"INSERT INTO t2 VALUES(9, 10)"}
+{"sql":"ATTACH 'test.db2' AS aux2"}
+{"sql":"ATTACH 'test.db3' AS aux3"}
+{"sql":"PRAGMA aux3.journal_mode = WAL"}
+{"sql":"CREATE TABLE main.t1(x,y)"}
+{"sql":"CREATE TABLE aux2.t2(x,y)"}
+{"sql":"CREATE TABLE aux3.t3(x,y)"}
+{"sql":"INSERT INTO t3 VALUES('a', 'b')"}

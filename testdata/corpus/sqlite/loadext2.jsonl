@@ -1,0 +1,2 @@
+{"sql":"SELECT sqr(2)"}
+{"sql":"SELECT cube(2)"}

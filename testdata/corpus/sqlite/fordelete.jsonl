@@ -1,0 +1,11 @@
+{"sql":"CREATE INDEX t2a ON t2(a)"}
+{"sql":"CREATE INDEX t2c ON t2(c)"}
+{"sql":"CREATE TABLE x1(a INTEGER PRIMARY KEY, b, c, d)"}
+{"sql":"CREATE TABLE x2(a INTEGER PRIMARY KEY, b, c, d)"}
+{"sql":"DELETE FROM p1 WHERE one = 'a'"}
+{"sql":"CREATE TABLE tbl(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE TABLE log(a, b, c)"}
+{"sql":"INSERT INTO \"tbl\" VALUES(1,2,3)"}
+{"sql":"CREATE TRIGGER the_trigger BEFORE DELETE ON tbl BEGIN \n    INSERT INTO log VALUES(1, 2,3);\n  END"}
+{"sql":"DELETE FROM tbl WHERE a=1"}
+{"sql":"CREATE TABLE t2(\n      c INTEGER PRIMARY KEY,\n      d INTEGER DEFAULT 1 REFERENCES t1 ON DELETE SET DEFAULT\n  )"}

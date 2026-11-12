@@ -1,0 +1,188 @@
+{"sql":"CREATE TABLE xacttest (a smallint, b real)","shape":"CREATE TABLE xacttest (a smallint, b real);"}
+{"sql":"INSERT INTO xacttest VALUES\n  (56, 7.8),\n  (100, 99.097),\n  (0, 0.09561),\n  (42, 324.78)","shape":"INSERT INTO xacttest VALUES (56, 7.8), (100, 99.097), (0, 0.09561), (42, 324.78);"}
+{"sql":"INSERT INTO xacttest (a, b) VALUES (777, 777.777)","shape":"INSERT INTO xacttest (a, b) VALUES (777, 777.777);"}
+{"sql":"SELECT a FROM xacttest WHERE a > 100","shape":"SELECT a FROM xacttest WHERE a > 100;"}
+{"sql":"CREATE TABLE disappear (a int4)","shape":"CREATE TABLE disappear (a int4);"}
+{"sql":"DELETE FROM xacttest","shape":"DELETE FROM xacttest;"}
+{"sql":"SELECT * FROM xacttest","shape":"SELECT * FROM xacttest;"}
+{"sql":"SELECT oid FROM pg_class WHERE relname = 'disappear'","shape":"SELECT oid FROM pg_class WHERE relname = 'disappear';"}
+{"sql":"SELECT COUNT(*) FROM xacttest","shape":"SELECT COUNT(*) FROM xacttest;"}
+{"sql":"RESET transaction_isolation","shape":"RESET transaction_isolation;"}
+{"sql":"BEGIN TRANSACTION READ ONLY","shape":"BEGIN READ ONLY;"}
+{"sql":"RESET transaction_read_only","shape":"RESET transaction_read_only;"}
+{"sql":"BEGIN TRANSACTION DEFERRABLE","shape":"BEGIN DEFERRABLE;"}
+{"sql":"RESET transaction_deferrable","shape":"RESET transaction_deferrable;"}
+{"sql":"CREATE FUNCTION errfunc() RETURNS int LANGUAGE SQL AS 'SELECT 1'\nSET transaction_read_only = on","shape":"CREATE FUNCTION errfunc() RETURNS int LANGUAGE SQL AS 'SELECT 1' SET transaction_read_only TO on;"}
+{"sql":"CREATE TABLE writetest (a int)","shape":"CREATE TABLE writetest (a int);"}
+{"sql":"CREATE TEMPORARY TABLE temptest (a int)","shape":"CREATE TEMPORARY TABLE temptest (a int);"}
+{"sql":"SET TRANSACTION ISOLATION LEVEL SERIALIZABLE, READ ONLY, DEFERRABLE"}
+{"sql":"SELECT * FROM writetest","shape":"SELECT * FROM writetest;"}
+{"sql":"SET TRANSACTION READ WRITE"}
+{"sql":"SET TRANSACTION READ ONLY"}
+{"sql":"ROLLBACK TO SAVEPOINT x","shape":"ROLLBACK TO SAVEPOINT x;"}
+{"sql":"SHOW transaction_read_only","shape":"SHOW transaction_read_only;"}
+{"sql":"SAVEPOINT y","shape":"SAVEPOINT y;"}
+{"sql":"RELEASE SAVEPOINT y","shape":"RELEASE SAVEPOINT y;"}
+{"sql":"SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY"}
+{"sql":"DROP TABLE writetest","shape":"DROP TABLE writetest;"}
+{"sql":"INSERT INTO writetest VALUES (1)","shape":"INSERT INTO writetest VALUES (1);"}
+{"sql":"DELETE FROM temptest","shape":"DELETE FROM temptest;"}
+{"sql":"UPDATE temptest SET a = 0 FROM writetest WHERE temptest.a = 1 AND writetest.a = temptest.a","shape":"UPDATE temptest SET a = 0 FROM writetest WHERE (temptest.a = 1) AND (writetest.a = temptest.a);"}
+{"sql":"PREPARE test AS UPDATE writetest SET a = 0","shape":"PREPARE test AS UPDATE writetest SET a = 0;"}
+{"sql":"EXECUTE test","shape":"EXECUTE test;"}
+{"sql":"SELECT * FROM writetest, temptest","shape":"SELECT * FROM writetest, temptest;"}
+{"sql":"CREATE TABLE test AS SELECT * FROM writetest","shape":"CREATE TABLE test AS SELECT * FROM writetest;"}
+{"sql":"START TRANSACTION READ WRITE"}
+{"sql":"SET SESSION CHARACTERISTICS AS TRANSACTION READ WRITE"}
+{"sql":"CREATE TABLE trans_foobar (a int)","shape":"CREATE TABLE trans_foobar (a int);"}
+{"sql":"CREATE TABLE trans_foo (a int)","shape":"CREATE TABLE trans_foo (a int);"}
+{"sql":"SAVEPOINT one","shape":"SAVEPOINT one;"}
+{"sql":"DROP TABLE trans_foo","shape":"DROP TABLE trans_foo;"}
+{"sql":"CREATE TABLE trans_bar (a int)","shape":"CREATE TABLE trans_bar (a int);"}
+{"sql":"ROLLBACK TO SAVEPOINT one","shape":"ROLLBACK TO SAVEPOINT one;"}
+{"sql":"RELEASE SAVEPOINT one","shape":"RELEASE SAVEPOINT one;"}
+{"sql":"SAVEPOINT two","shape":"SAVEPOINT two;"}
+{"sql":"CREATE TABLE trans_baz (a int)","shape":"CREATE TABLE trans_baz (a int);"}
+{"sql":"RELEASE SAVEPOINT two","shape":"RELEASE SAVEPOINT two;"}
+{"sql":"drop TABLE trans_foobar","shape":"DROP TABLE trans_foobar;"}
+{"sql":"CREATE TABLE trans_barbaz (a int)","shape":"CREATE TABLE trans_barbaz (a int);"}
+{"sql":"SELECT * FROM trans_foo","shape":"SELECT * FROM trans_foo;"}
+{"sql":"SELECT * FROM trans_bar","shape":"SELECT * FROM trans_bar;"}
+{"sql":"SELECT * FROM trans_barbaz","shape":"SELECT * FROM trans_barbaz;"}
+{"sql":"SELECT * FROM trans_baz","shape":"SELECT * FROM trans_baz;"}
+{"sql":"INSERT INTO trans_foo VALUES (1)","shape":"INSERT INTO trans_foo VALUES (1);"}
+{"sql":"INSERT into trans_bar VALUES (1)","shape":"INSERT INTO trans_bar VALUES (1);"}
+{"sql":"ROLLBACK TO one","shape":"ROLLBACK TO SAVEPOINT one;"}
+{"sql":"INSERT into trans_barbaz VALUES (1)","shape":"INSERT INTO trans_barbaz VALUES (1);"}
+{"sql":"RELEASE two","shape":"RELEASE SAVEPOINT two;"}
+{"sql":"SAVEPOINT three","shape":"SAVEPOINT three;"}
+{"sql":"SAVEPOINT four","shape":"SAVEPOINT four;"}
+{"sql":"INSERT INTO trans_foo VALUES (2)","shape":"INSERT INTO trans_foo VALUES (2);"}
+{"sql":"RELEASE SAVEPOINT four","shape":"RELEASE SAVEPOINT four;"}
+{"sql":"ROLLBACK TO SAVEPOINT three","shape":"ROLLBACK TO SAVEPOINT three;"}
+{"sql":"RELEASE SAVEPOINT three","shape":"RELEASE SAVEPOINT three;"}
+{"sql":"INSERT INTO trans_foo VALUES (3)","shape":"INSERT INTO trans_foo VALUES (3);"}
+{"sql":"SELECT trans_foo","shape":"SELECT trans_foo;"}
+{"sql":"CREATE TABLE savepoints (a int)","shape":"CREATE TABLE savepoints (a int);"}
+{"sql":"INSERT INTO savepoints VALUES (1)","shape":"INSERT INTO savepoints VALUES (1);"}
+{"sql":"INSERT INTO savepoints VALUES (2)","shape":"INSERT INTO savepoints VALUES (2);"}
+{"sql":"SAVEPOINT five","shape":"SAVEPOINT five;"}
+{"sql":"INSERT INTO savepoints VALUES (3)","shape":"INSERT INTO savepoints VALUES (3);"}
+{"sql":"ROLLBACK TO SAVEPOINT five","shape":"ROLLBACK TO SAVEPOINT five;"}
+{"sql":"SELECT * FROM savepoints","shape":"SELECT * FROM savepoints;"}
+{"sql":"DELETE FROM savepoints WHERE a=1","shape":"DELETE FROM savepoints WHERE a = 1;"}
+{"sql":"DELETE FROM savepoints WHERE a=2","shape":"DELETE FROM savepoints WHERE a = 2;"}
+{"sql":"INSERT INTO savepoints VALUES (4)","shape":"INSERT INTO savepoints VALUES (4);"}
+{"sql":"INSERT INTO savepoints VALUES (5)","shape":"INSERT INTO savepoints VALUES (5);"}
+{"sql":"INSERT INTO savepoints VALUES (6)","shape":"INSERT INTO savepoints VALUES (6);"}
+{"sql":"INSERT INTO savepoints VALUES (7)","shape":"INSERT INTO savepoints VALUES (7);"}
+{"sql":"INSERT INTO savepoints VALUES (8)","shape":"INSERT INTO savepoints VALUES (8);"}
+{"sql":"SELECT a.xmin = b.xmin FROM savepoints a, savepoints b WHERE a.a=6 AND b.a=8","shape":"SELECT a.xmin = b.xmin FROM savepoints AS a, savepoints AS b WHERE (a.a = 6) AND (b.a = 8);"}
+{"sql":"SELECT a.xmin = b.xmin FROM savepoints a, savepoints b WHERE a.a=6 AND b.a=7","shape":"SELECT a.xmin = b.xmin FROM savepoints AS a, savepoints AS b WHERE (a.a = 6) AND (b.a = 7);"}
+{"sql":"INSERT INTO savepoints VALUES (9)","shape":"INSERT INTO savepoints VALUES (9);"}
+{"sql":"INSERT INTO savepoints VALUES (10)","shape":"INSERT INTO savepoints VALUES (10);"}
+{"sql":"INSERT INTO savepoints VALUES (11)","shape":"INSERT INTO savepoints VALUES (11);"}
+{"sql":"SELECT a FROM savepoints WHERE a in (9, 10, 11)","shape":"SELECT a FROM savepoints WHERE a IN (9, 10, 11);"}
+{"sql":"SELECT a.xmin = b.xmin FROM savepoints a, savepoints b WHERE a.a=9 AND b.a=11","shape":"SELECT a.xmin = b.xmin FROM savepoints AS a, savepoints AS b WHERE (a.a = 9) AND (b.a = 11);"}
+{"sql":"INSERT INTO savepoints VALUES (12)","shape":"INSERT INTO savepoints VALUES (12);"}
+{"sql":"INSERT INTO savepoints VALUES (13)","shape":"INSERT INTO savepoints VALUES (13);"}
+{"sql":"INSERT INTO savepoints VALUES (14)","shape":"INSERT INTO savepoints VALUES (14);"}
+{"sql":"INSERT INTO savepoints VALUES (15)","shape":"INSERT INTO savepoints VALUES (15);"}
+{"sql":"INSERT INTO savepoints VALUES (16)","shape":"INSERT INTO savepoints VALUES (16);"}
+{"sql":"INSERT INTO savepoints VALUES (17)","shape":"INSERT INTO savepoints VALUES (17);"}
+{"sql":"SELECT a FROM savepoints WHERE a BETWEEN 12 AND 17","shape":"SELECT a FROM savepoints WHERE a BETWEEN 12 AND 17;"}
+{"sql":"INSERT INTO savepoints VALUES (18)","shape":"INSERT INTO savepoints VALUES (18);"}
+{"sql":"INSERT INTO savepoints VALUES (19)","shape":"INSERT INTO savepoints VALUES (19);"}
+{"sql":"INSERT INTO savepoints VALUES (20)","shape":"INSERT INTO savepoints VALUES (20);"}
+{"sql":"INSERT INTO savepoints VALUES (21)","shape":"INSERT INTO savepoints VALUES (21);"}
+{"sql":"INSERT INTO savepoints VALUES (22)","shape":"INSERT INTO savepoints VALUES (22);"}
+{"sql":"SELECT a FROM savepoints WHERE a BETWEEN 18 AND 22","shape":"SELECT a FROM savepoints WHERE a BETWEEN 18 AND 22;"}
+{"sql":"DROP TABLE savepoints","shape":"DROP TABLE savepoints;"}
+{"sql":"SELECT 0/0","shape":"SELECT 0 / 0;"}
+{"sql":"SELECT 1","shape":"SELECT 1;"}
+{"sql":"DECLARE c CURSOR FOR SELECT unique2 FROM tenk1 ORDER BY unique2","shape":"DECLARE c CURSOR FOR SELECT unique2 FROM tenk1 ORDER BY unique2;"}
+{"sql":"FETCH 10 FROM c","shape":"FETCH 10 FROM c;"}
+{"sql":"DECLARE c CURSOR FOR SELECT unique2/0 FROM tenk1 ORDER BY unique2","shape":"DECLARE c CURSOR FOR SELECT unique2/0 FROM tenk1 ORDER BY unique2;"}
+{"sql":"ROLLBACK TO SAVEPOINT two","shape":"ROLLBACK TO SAVEPOINT two;"}
+{"sql":"select * from xacttest","shape":"SELECT * FROM xacttest;"}
+{"sql":"create or replace function max_xacttest() returns smallint language sql as\n'select max(a) from xacttest' stable","shape":"CREATE OR REPLACE FUNCTION max_xacttest() RETURNS smallint LANGUAGE sql AS 'select max(a) from xacttest' STABLE;"}
+{"sql":"update xacttest set a = max_xacttest() + 10 where a > 0","shape":"UPDATE xacttest SET a = max_xacttest() + 10 WHERE a > 0;"}
+{"sql":"create or replace function max_xacttest() returns smallint language sql as\n'select max(a) from xacttest' volatile","shape":"CREATE OR REPLACE FUNCTION max_xacttest() RETURNS smallint LANGUAGE sql AS 'select max(a) from xacttest' VOLATILE;"}
+{"sql":"create or replace function max_xacttest() returns smallint language plpgsql as\n'begin return max(a) from xacttest; end' stable","shape":"CREATE OR REPLACE FUNCTION max_xacttest() RETURNS smallint LANGUAGE plpgsql AS 'begin return max(a) from xacttest; end' STABLE;"}
+{"sql":"create or replace function max_xacttest() returns smallint language plpgsql as\n'begin return max(a) from xacttest; end' volatile","shape":"CREATE OR REPLACE FUNCTION max_xacttest() RETURNS smallint LANGUAGE plpgsql AS 'begin return max(a) from xacttest; end' VOLATILE;"}
+{"sql":"CREATE TABLE koju (a INT UNIQUE)","shape":"CREATE TABLE koju (a INT UNIQUE);"}
+{"sql":"INSERT INTO koju VALUES (1)","shape":"INSERT INTO koju VALUES (1);"}
+{"sql":"DROP TABLE trans_baz","shape":"DROP TABLE trans_baz;"}
+{"sql":"DROP TABLE trans_barbaz","shape":"DROP TABLE trans_barbaz;"}
+{"sql":"create function inverse(int) returns float8 as\n$$\nbegin\n  analyze revalidate_bug;\n  return 1::float8/$1;\nexception\n  when division_by_zero then return 0;\nend$$ language plpgsql volatile","shape":"CREATE FUNCTION inverse(int) RETURNS float8 AS '\nbegin\n  analyze revalidate_bug;\n  return 1::float8/$1;\nexception\n  when division_by_zero then return 0;\nend' LANGUAGE plpgsql VOLATILE;"}
+{"sql":"create table revalidate_bug (c float8 unique)","shape":"CREATE TABLE revalidate_bug (c float8 UNIQUE);"}
+{"sql":"insert into revalidate_bug values (1)","shape":"INSERT INTO revalidate_bug VALUES (1);"}
+{"sql":"insert into revalidate_bug values (inverse(0))","shape":"INSERT INTO revalidate_bug VALUES (inverse(0));"}
+{"sql":"drop table revalidate_bug","shape":"DROP TABLE revalidate_bug;"}
+{"sql":"drop function inverse(int)"}
+{"sql":"create table trans_abc (a int)","shape":"CREATE TABLE trans_abc (a int);"}
+{"sql":"insert into trans_abc values (5)","shape":"INSERT INTO trans_abc VALUES (5);"}
+{"sql":"insert into trans_abc values (10)","shape":"INSERT INTO trans_abc VALUES (10);"}
+{"sql":"declare foo cursor for select * from trans_abc","shape":"declare foo cursor for select * from trans_abc;"}
+{"sql":"fetch from foo","shape":"fetch from foo;"}
+{"sql":"insert into trans_abc values (15)","shape":"INSERT INTO trans_abc VALUES (15);"}
+{"sql":"CREATE FUNCTION invert(x float8) RETURNS float8 LANGUAGE plpgsql AS\n$$ begin return 1/x; end $$","shape":"CREATE FUNCTION invert(x float8) RETURNS float8 LANGUAGE plpgsql AS ' begin return 1/x; end ';"}
+{"sql":"CREATE FUNCTION create_temp_tab() RETURNS text\nLANGUAGE plpgsql AS $$\nBEGIN\n  CREATE TEMP TABLE new_table (f1 float8);\n  -- case of interest is that we fail while holding an open\n  -- relcache reference to new_table\n  INSERT INTO new_table SELECT invert(0.0);\n  RETURN 'foo';\nEND $$","shape":"CREATE FUNCTION create_temp_tab() RETURNS text LANGUAGE plpgsql AS '\nBEGIN\n  CREATE TEMP TABLE new_table (f1 float8);\n  -- case of interest is that we fail while holding an open\n  -- relcache reference to new_table\n  INSERT INTO new_table SELECT invert(0.0);\n  RETURN ''foo'';\nEND ';"}
+{"sql":"DECLARE ok CURSOR FOR SELECT * FROM int8_tbl","shape":"DECLARE ok CURSOR FOR SELECT * FROM int8_tbl;"}
+{"sql":"DECLARE ctt CURSOR FOR SELECT create_temp_tab()","shape":"DECLARE ctt CURSOR FOR SELECT create_temp_tab();"}
+{"sql":"FETCH ok","shape":"FETCH ok;"}
+{"sql":"FETCH ctt","shape":"FETCH ctt;"}
+{"sql":"DROP FUNCTION create_temp_tab()"}
+{"sql":"DROP FUNCTION invert(x float8)"}
+{"sql":"CREATE TABLE trans_abc (a int)","shape":"CREATE TABLE trans_abc (a int);"}
+{"sql":"SET default_transaction_read_only = on","shape":"SET default_transaction_read_only TO on;"}
+{"sql":"START TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ WRITE, DEFERRABLE"}
+{"sql":"SHOW transaction_isolation","shape":"SHOW transaction_isolation;"}
+{"sql":"SHOW transaction_deferrable","shape":"SHOW transaction_deferrable;"}
+{"sql":"INSERT INTO trans_abc VALUES (1)","shape":"INSERT INTO trans_abc VALUES (1);"}
+{"sql":"INSERT INTO trans_abc VALUES (2)","shape":"INSERT INTO trans_abc VALUES (2);"}
+{"sql":"COMMIT AND CHAIN","shape":"COMMIT AND CHAIN;"}
+{"sql":"INSERT INTO trans_abc VALUES ('error')","shape":"INSERT INTO trans_abc VALUES ('error');"}
+{"sql":"INSERT INTO trans_abc VALUES (3)","shape":"INSERT INTO trans_abc VALUES (3);"}
+{"sql":"INSERT INTO trans_abc VALUES (4)","shape":"INSERT INTO trans_abc VALUES (4);"}
+{"sql":"INSERT INTO trans_abc VALUES (5)","shape":"INSERT INTO trans_abc VALUES (5);"}
+{"sql":"START TRANSACTION ISOLATION LEVEL READ COMMITTED, READ WRITE, DEFERRABLE"}
+{"sql":"START TRANSACTION ISOLATION LEVEL SERIALIZABLE, READ WRITE, NOT DEFERRABLE"}
+{"sql":"INSERT INTO trans_abc VALUES (6)","shape":"INSERT INTO trans_abc VALUES (6);"}
+{"sql":"ROLLBACK AND CHAIN","shape":"ROLLBACK AND CHAIN;"}
+{"sql":"SELECT * FROM trans_abc ORDER BY 1","shape":"SELECT * FROM trans_abc ORDER BY 1;"}
+{"sql":"RESET default_transaction_read_only","shape":"RESET default_transaction_read_only;"}
+{"sql":"DROP TABLE trans_abc","shape":"DROP TABLE trans_abc;"}
+{"sql":"create temp table i_table (f1 int)","shape":"CREATE TEMPORARY TABLE i_table (f1 int);"}
+{"sql":"SELECT 2","shape":"SELECT 2;"}
+{"sql":"SELECT 3","shape":"SELECT 3;"}
+{"sql":"insert into i_table values(1)","shape":"INSERT INTO i_table VALUES (1);"}
+{"sql":"select * from i_table","shape":"SELECT * FROM i_table;"}
+{"sql":"insert into i_table values(2)","shape":"INSERT INTO i_table VALUES (2);"}
+{"sql":"insert into i_table values(3)","shape":"INSERT INTO i_table VALUES (3);"}
+{"sql":"insert into i_table values(4)","shape":"INSERT INTO i_table VALUES (4);"}
+{"sql":"insert into i_table values(5)","shape":"INSERT INTO i_table VALUES (5);"}
+{"sql":"insert into i_table values(6)","shape":"INSERT INTO i_table VALUES (6);"}
+{"sql":"insert into i_table values(7)","shape":"INSERT INTO i_table VALUES (7);"}
+{"sql":"insert into i_table values(8)","shape":"INSERT INTO i_table VALUES (8);"}
+{"sql":"insert into i_table values(9)","shape":"INSERT INTO i_table VALUES (9);"}
+{"sql":"select 2","shape":"SELECT 2;"}
+{"sql":"ROLLBACK TO SAVEPOINT sp","shape":"ROLLBACK TO SAVEPOINT sp;"}
+{"sql":"INSERT INTO trans_abc VALUES (7)","shape":"INSERT INTO trans_abc VALUES (7);"}
+{"sql":"INSERT INTO trans_abc VALUES (8)","shape":"INSERT INTO trans_abc VALUES (8);"}
+{"sql":"INSERT INTO trans_abc VALUES (9)","shape":"INSERT INTO trans_abc VALUES (9);"}
+{"sql":"INSERT INTO trans_abc VALUES (10)","shape":"INSERT INTO trans_abc VALUES (10);"}
+{"sql":"INSERT INTO trans_abc VALUES (11)","shape":"INSERT INTO trans_abc VALUES (11);"}
+{"sql":"INSERT INTO trans_abc VALUES (12)","shape":"INSERT INTO trans_abc VALUES (12);"}
+{"sql":"INSERT INTO trans_abc VALUES (13)","shape":"INSERT INTO trans_abc VALUES (13);"}
+{"sql":"INSERT INTO trans_abc VALUES (14)","shape":"INSERT INTO trans_abc VALUES (14);"}
+{"sql":"START TRANSACTION ISOLATION LEVEL REPEATABLE READ"}
+{"sql":"INSERT INTO trans_abc VALUES (15)","shape":"INSERT INTO trans_abc VALUES (15);"}
+{"sql":"INSERT INTO trans_abc VALUES (16)","shape":"INSERT INTO trans_abc VALUES (16);"}
+{"sql":"SET default_transaction_isolation = 'read committed'","shape":"SET default_transaction_isolation TO 'read committed';"}
+{"sql":"INSERT INTO trans_abc VALUES (17)","shape":"INSERT INTO trans_abc VALUES (17);"}
+{"sql":"INSERT INTO trans_abc VALUES (18)","shape":"INSERT INTO trans_abc VALUES (18);"}
+{"sql":"INSERT INTO trans_abc VALUES (19)","shape":"INSERT INTO trans_abc VALUES (19);"}
+{"sql":"INSERT INTO trans_abc VALUES (20)","shape":"INSERT INTO trans_abc VALUES (20);"}
+{"sql":"RESET default_transaction_isolation","shape":"RESET default_transaction_isolation;"}
+{"sql":"rollback to X","shape":"ROLLBACK TO SAVEPOINT X;"}

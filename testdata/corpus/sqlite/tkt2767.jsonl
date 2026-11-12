@@ -1,0 +1,6 @@
+{"sql":"CREATE TRIGGER r1 BEFORE UPDATE ON t1 BEGIN\n      SELECT raise(ignore);\n    END"}
+{"sql":"CREATE TRIGGER r2 BEFORE DELETE ON t1 BEGIN\n      SELECT raise(ignore);\n    END"}
+{"sql":"CREATE TRIGGER r3 BEFORE INSERT ON t1 BEGIN\n      SELECT raise(ignore);\n    END"}
+{"sql":"SELECT count(*), sum(x) FROM t1"}
+{"sql":"DELETE FROM t1 WHERE x>0"}
+{"sql":"UPDATE t1 SET x=x+1"}

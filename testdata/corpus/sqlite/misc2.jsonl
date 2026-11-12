@@ -1,0 +1,38 @@
+{"sql":"CREATE TABLE FOO(bar integer)"}
+{"sql":"CREATE TRIGGER foo_insert BEFORE INSERT ON foo BEGIN\n      SELECT CASE WHEN (NOT new.bar BETWEEN 0 AND 20)\n             THEN raise(rollback, 'aiieee') END;\n    END"}
+{"sql":"INSERT INTO foo(bar) VALUES (1)"}
+{"sql":"INSERT INTO foo(bar) VALUES (111)"}
+{"sql":"INSERT INTO t2 VALUES(7,8,9)"}
+{"sql":"SELECT rowid, * FROM (SELECT * FROM t1, t2)"}
+{"sql":"SELECT 'rowid', * FROM (SELECT * FROM t1, t2)"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t1, t2"}
+{"sql":"SELECT rowid, * FROM v1"}
+{"sql":"SELECT 'rowid', * FROM v1"}
+{"sql":"SELECT t1.b+t2.b AS a, t1.a, t2.a FROM t1, t2 WHERE a==10"}
+{"sql":"INSERT INTO t1 VALUES(4000000000,'a','b')"}
+{"sql":"SELECT a FROM t1 WHERE a>1"}
+{"sql":"INSERT INTO t1 VALUES(2147483648,'b2','c2')"}
+{"sql":"INSERT INTO t1 VALUES(2147483647,'b3','c3')"}
+{"sql":"SELECT a FROM t1 WHERE a>2147483647"}
+{"sql":"SELECT a FROM t1 WHERE a<2147483648"}
+{"sql":"SELECT a FROM t1 WHERE a<=2147483648"}
+{"sql":"SELECT a FROM t1 WHERE a<10000000000"}
+{"sql":"SELECT a FROM t1 WHERE a<1000000000000 ORDER BY 1"}
+{"sql":"CREATE TABLE x(a,b)"}
+{"sql":"CREATE VIEW y AS \n      SELECT x1.b AS p, x2.b AS q FROM x AS x1, x AS x2 WHERE x1.a=x2.a"}
+{"sql":"CREATE VIEW z AS\n      SELECT y1.p, y2.p FROM y AS y1, y AS y2 WHERE y1.q=y2.q"}
+{"sql":"SELECT * from z"}
+{"sql":"INSERT INTO t1(rowid,x) VALUES(10,10)"}
+{"sql":"CREATE TABLE counts(n INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO counts VALUES(0)"}
+{"sql":"INSERT INTO counts VALUES(1)"}
+{"sql":"INSERT INTO counts SELECT n+2 FROM counts"}
+{"sql":"INSERT INTO counts SELECT n+4 FROM counts"}
+{"sql":"INSERT INTO counts SELECT n+8 FROM counts"}
+{"sql":"CREATE TEMP TABLE x AS\n      SELECT dim1.n, dim2.n, dim3.n\n      FROM counts AS dim1, counts AS dim2, counts AS dim3\n      WHERE dim1.n<10 AND dim2.n<10 AND dim3.n<10"}
+{"sql":"SELECT count(*) FROM x"}
+{"sql":"CREATE TEMP TABLE x AS\n      SELECT dim1.n, dim2.n, dim3.n\n      FROM counts AS dim1, counts AS dim2, counts AS dim3\n      WHERE dim1.n>=6 AND dim2.n>=6 AND dim3.n>=6"}
+{"sql":"CREATE TEMP TABLE x AS\n      SELECT dim1.n, dim2.n, dim3.n, dim4.n\n      FROM counts AS dim1, counts AS dim2, counts AS dim3, counts AS dim4\n      WHERE dim1.n<5 AND dim2.n<5 AND dim3.n<5 AND dim4.n<5"}
+{"sql":"CREATE TABLE t1229(x)"}
+{"sql":"CREATE TRIGGER r1229 BEFORE INSERT ON t1229 BEGIN\n        INSERT INTO t1229 SELECT y FROM (SELECT new.x y);\n      END"}
+{"sql":"INSERT INTO t1229 VALUES(1)"}

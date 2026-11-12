@@ -1,0 +1,5 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts5(a, b, c)"}
+{"sql":"INSERT INTO t1 VALUES('one', 'two', 'three')"}
+{"sql":"CREATE TABLE t4(hello)"}
+{"sql":"CREATE virtual TABLE r1 USING fts5(x)"}
+{"sql":"CREATE TABLE t4(hello, check( hello IS NOT \"xyz\") )"}

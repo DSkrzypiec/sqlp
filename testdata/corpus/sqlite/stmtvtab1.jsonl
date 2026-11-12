@@ -1,0 +1,3 @@
+{"sql":"SELECT count(*) FROM sqlite_stmt WHERE NOT busy"}
+{"sql":"SELECT count(*) FROM sqlite_stmt WHERE mem>5000"}
+{"sql":"SELECT * FROM sqlite_stmt WHERE NOT busy"}

@@ -1,0 +1,11 @@
+{"sql":"INSERT INTO t1(docid, x) VALUES(-2, 'a b c d e f g h i j k')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(-1, 'b c d e f g h i j k a')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(0, 'c d e f g h i j k a b')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(1, 'd e f g h i j k a b c')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(2, 'e f g h i j k a b c d')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(3, 'f g h i j k a b c d e')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(4, 'a c e g i k')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(5, 'a d g j')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(6, 'c a b')"}
+{"sql":"INSERT INTO t1(t1) VALUES('optimize')"}
+{"sql":"SELECT docid FROM t1 WHERE t1 MATCH 'on* NEAR/3 fi*'"}

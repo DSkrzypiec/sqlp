@@ -1,0 +1,21 @@
+{"sql":"CREATE VIRTUAL TABLE aaa USING zipfile('testzip')"}
+{"sql":"CREATE VIRTUAL TABLE bbb USING zipfile(\"testzip\")"}
+{"sql":"CREATE VIRTUAL TABLE ccc USING zipfile(`testzip`)"}
+{"sql":"CREATE VIRTUAL TABLE ddd USING zipfile([testzip])"}
+{"sql":"CREATE VIRTUAL TABLE eee USING zipfile(testzip)"}
+{"sql":"CREATE VIRTUAL TABLE fff USING zipfile('test''zip')"}
+{"sql":"CREATE VIRTUAL TABLE hhh USING zipfile('testdir')"}
+{"sql":"SELECT * FROM hhh"}
+{"sql":"INSERT INTO hhh(name, data) VALUES('1.txt', 'file data')"}
+{"sql":"WITH contents(name,mtime,data) AS (\n        VALUES('a.txt', 1000000, 'contents of a.txt') UNION ALL\n        VALUES('b.txt', 1000000, 'contents of b.txt')\n    ) SELECT quote( zipfile(name,NULL,mtime,data) ) FROM contents"}
+{"sql":"CREATE VIRTUAL TABLE temp.zip USING zipfile('test.zip')"}
+{"sql":"INSERT INTO temp.zip (name,data) VALUES ('test1','test')"}
+{"sql":"INSERT INTO temp.zip (name,data) VALUES ('test2','test')"}
+{"sql":"UPDATE temp.zip SET name='test1' WHERE name='test2'"}
+{"sql":"DROP TABLE zip"}
+{"sql":"INSERT INTO temp.zip (name,data) VALUES ('test','test')"}
+{"sql":"UPDATE  temp.zip set name=name||'new' where name='test'"}
+{"sql":"UPDATE OR REPLACE zip SET name='test2' WHERE name='test1'"}
+{"sql":"SELECT name FROM zip"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING zipfile('test.zip')"}
+{"sql":"SELECT length(name) FROM t1"}

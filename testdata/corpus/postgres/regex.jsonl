@@ -1,0 +1,104 @@
+{"sql":"select 'bbbbb' ~ '^([bc])\\1*$' as t","shape":"SELECT 'bbbbb' ~ '^([bc])\\1*$' AS t;"}
+{"sql":"select 'ccc' ~ '^([bc])\\1*$' as t","shape":"SELECT 'ccc' ~ '^([bc])\\1*$' AS t;"}
+{"sql":"select 'xxx' ~ '^([bc])\\1*$' as f","shape":"SELECT 'xxx' ~ '^([bc])\\1*$' AS f;"}
+{"sql":"select 'bbc' ~ '^([bc])\\1*$' as f","shape":"SELECT 'bbc' ~ '^([bc])\\1*$' AS f;"}
+{"sql":"select 'b' ~ '^([bc])\\1*$' as t","shape":"SELECT 'b' ~ '^([bc])\\1*$' AS t;"}
+{"sql":"select 'abc abc abc' ~ '^(\\w+)( \\1)+$' as t","shape":"SELECT 'abc abc abc' ~ '^(\\w+)( \\1)+$' AS t;"}
+{"sql":"select 'abc abd abc' ~ '^(\\w+)( \\1)+$' as f","shape":"SELECT 'abc abd abc' ~ '^(\\w+)( \\1)+$' AS f;"}
+{"sql":"select 'abc abc abd' ~ '^(\\w+)( \\1)+$' as f","shape":"SELECT 'abc abc abd' ~ '^(\\w+)( \\1)+$' AS f;"}
+{"sql":"select 'abc abc abc' ~ '^(.+)( \\1)+$' as t","shape":"SELECT 'abc abc abc' ~ '^(.+)( \\1)+$' AS t;"}
+{"sql":"select 'abc abd abc' ~ '^(.+)( \\1)+$' as f","shape":"SELECT 'abc abd abc' ~ '^(.+)( \\1)+$' AS f;"}
+{"sql":"select 'abc abc abd' ~ '^(.+)( \\1)+$' as f","shape":"SELECT 'abc abc abd' ~ '^(.+)( \\1)+$' AS f;"}
+{"sql":"select substring('asd TO foo' from ' TO (([a-z0-9._]+|\"([^\"]+|\"\")+\")+)')","shape":"SELECT SUBSTRING('asd TO foo' FROM ' TO (([a-z0-9._]+|\"([^\"]+|\"\")+\")+)');"}
+{"sql":"select substring('a' from '((a))+')","shape":"SELECT SUBSTRING('a' FROM '((a))+');"}
+{"sql":"select substring('a' from '((a)+)')","shape":"SELECT SUBSTRING('a' FROM '((a)+)');"}
+{"sql":"select regexp_match('abc', '')","shape":"SELECT regexp_match('abc', '');"}
+{"sql":"select regexp_match('abc', 'bc')","shape":"SELECT regexp_match('abc', 'bc');"}
+{"sql":"select regexp_match('abc', 'd') is null","shape":"SELECT regexp_match('abc', 'd') IS NULL;"}
+{"sql":"select regexp_match('abc', '(B)(c)', 'i')","shape":"SELECT regexp_match('abc', '(B)(c)', 'i');"}
+{"sql":"select regexp_match('abc', 'Bd', 'ig')","shape":"SELECT regexp_match('abc', 'Bd', 'ig');"}
+{"sql":"select regexp_matches('ab', 'a(?=b)b*')","shape":"SELECT regexp_matches('ab', 'a(?=b)b*');"}
+{"sql":"select regexp_matches('a', 'a(?=b)b*')","shape":"SELECT regexp_matches('a', 'a(?=b)b*');"}
+{"sql":"select regexp_matches('abc', 'a(?=b)b*(?=c)c*')","shape":"SELECT regexp_matches('abc', 'a(?=b)b*(?=c)c*');"}
+{"sql":"select regexp_matches('ab', 'a(?=b)b*(?=c)c*')","shape":"SELECT regexp_matches('ab', 'a(?=b)b*(?=c)c*');"}
+{"sql":"select regexp_matches('ab', 'a(?!b)b*')","shape":"SELECT regexp_matches('ab', 'a(?!b)b*');"}
+{"sql":"select regexp_matches('a', 'a(?!b)b*')","shape":"SELECT regexp_matches('a', 'a(?!b)b*');"}
+{"sql":"select regexp_matches('b', '(?=b)b')","shape":"SELECT regexp_matches('b', '(?=b)b');"}
+{"sql":"select regexp_matches('a', '(?=b)b')","shape":"SELECT regexp_matches('a', '(?=b)b');"}
+{"sql":"select regexp_matches('abb', '(?<=a)b*')","shape":"SELECT regexp_matches('abb', '(?<=a)b*');"}
+{"sql":"select regexp_matches('a', 'a(?<=a)b*')","shape":"SELECT regexp_matches('a', 'a(?<=a)b*');"}
+{"sql":"select regexp_matches('abc', 'a(?<=a)b*(?<=b)c*')","shape":"SELECT regexp_matches('abc', 'a(?<=a)b*(?<=b)c*');"}
+{"sql":"select regexp_matches('ab', 'a(?<=a)b*(?<=b)c*')","shape":"SELECT regexp_matches('ab', 'a(?<=a)b*(?<=b)c*');"}
+{"sql":"select regexp_matches('ab', 'a*(?<!a)b*')","shape":"SELECT regexp_matches('ab', 'a*(?<!a)b*');"}
+{"sql":"select regexp_matches('ab', 'a*(?<!a)b+')","shape":"SELECT regexp_matches('ab', 'a*(?<!a)b+');"}
+{"sql":"select regexp_matches('b', 'a*(?<!a)b+')","shape":"SELECT regexp_matches('b', 'a*(?<!a)b+');"}
+{"sql":"select regexp_matches('a', 'a(?<!a)b*')","shape":"SELECT regexp_matches('a', 'a(?<!a)b*');"}
+{"sql":"select regexp_matches('b', '(?<=b)b')","shape":"SELECT regexp_matches('b', '(?<=b)b');"}
+{"sql":"select regexp_matches('foobar', '(?<=f)b+')","shape":"SELECT regexp_matches('foobar', '(?<=f)b+');"}
+{"sql":"select regexp_matches('foobar', '(?<=foo)b+')","shape":"SELECT regexp_matches('foobar', '(?<=foo)b+');"}
+{"sql":"select regexp_matches('foobar', '(?<=oo)b+')","shape":"SELECT regexp_matches('foobar', '(?<=oo)b+');"}
+{"sql":"select 'xz' ~ 'x(?=[xy])'","shape":"SELECT 'xz' ~ 'x(?=[xy])';"}
+{"sql":"select 'xy' ~ 'x(?=[xy])'","shape":"SELECT 'xy' ~ 'x(?=[xy])';"}
+{"sql":"select 'xz' ~ 'x(?![xy])'","shape":"SELECT 'xz' ~ 'x(?![xy])';"}
+{"sql":"select 'xy' ~ 'x(?![xy])'","shape":"SELECT 'xy' ~ 'x(?![xy])';"}
+{"sql":"select 'x'  ~ 'x(?![xy])'","shape":"SELECT 'x' ~ 'x(?![xy])';"}
+{"sql":"select 'xyy' ~ '(?<=[xy])yy+'","shape":"SELECT 'xyy' ~ '(?<=[xy])yy+';"}
+{"sql":"select 'zyy' ~ '(?<=[xy])yy+'","shape":"SELECT 'zyy' ~ '(?<=[xy])yy+';"}
+{"sql":"select 'xyy' ~ '(?<![xy])yy+'","shape":"SELECT 'xyy' ~ '(?<![xy])yy+';"}
+{"sql":"select 'zyy' ~ '(?<![xy])yy+'","shape":"SELECT 'zyy' ~ '(?<![xy])yy+';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ 'abc'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ 'abc';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^abc'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^abc';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^abc$'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^abc$';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^abcd*e'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^abcd*e';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^abc+d'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^abc+d';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^(abc)(def)'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^(abc)(def)';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^(abc)$'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^(abc)$';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^(abc)?d'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^(abc)?d';"}
+{"sql":"explain (costs off) select * from pg_proc where proname ~ '^abcd(x|(?=\\w\\w)q)'","shape":"EXPLAIN (COSTS off) SELECT * FROM pg_proc WHERE proname ~ '^abcd(x|(?=\\w\\w)q)';"}
+{"sql":"select 'a' ~ '($|^)*'","shape":"SELECT 'a' ~ '($|^)*';"}
+{"sql":"select 'a' ~ '(^)+^'","shape":"SELECT 'a' ~ '(^)+^';"}
+{"sql":"select 'a' ~ '$($$)+'","shape":"SELECT 'a' ~ '$($$)+';"}
+{"sql":"select 'a' ~ '($^)+'","shape":"SELECT 'a' ~ '($^)+';"}
+{"sql":"select 'a' ~ '(^$)*'","shape":"SELECT 'a' ~ '(^$)*';"}
+{"sql":"select 'aa bb cc' ~ '(^(?!aa))+'","shape":"SELECT 'aa bb cc' ~ '(^(?!aa))+';"}
+{"sql":"select 'aa x' ~ '(^(?!aa)(?!bb)(?!cc))+'","shape":"SELECT 'aa x' ~ '(^(?!aa)(?!bb)(?!cc))+';"}
+{"sql":"select 'bb x' ~ '(^(?!aa)(?!bb)(?!cc))+'","shape":"SELECT 'bb x' ~ '(^(?!aa)(?!bb)(?!cc))+';"}
+{"sql":"select 'cc x' ~ '(^(?!aa)(?!bb)(?!cc))+'","shape":"SELECT 'cc x' ~ '(^(?!aa)(?!bb)(?!cc))+';"}
+{"sql":"select 'dd x' ~ '(^(?!aa)(?!bb)(?!cc))+'","shape":"SELECT 'dd x' ~ '(^(?!aa)(?!bb)(?!cc))+';"}
+{"sql":"select 'a' ~ '((((((a)*)*)*)*)*)*'","shape":"SELECT 'a' ~ '((((((a)*)*)*)*)*)*';"}
+{"sql":"select 'a' ~ '((((((a+|)+|)+|)+|)+|)+|)'","shape":"SELECT 'a' ~ '((((((a+|)+|)+|)+|)+|)+|)';"}
+{"sql":"select 'x' ~ 'abcd(\\m)+xyz'","shape":"SELECT 'x' ~ 'abcd(\\m)+xyz';"}
+{"sql":"select 'a' ~ '^abcd*(((((^(a c(e?d)a+|)+|)+|)+|)+|a)+|)'","shape":"SELECT 'a' ~ '^abcd*(((((^(a c(e?d)a+|)+|)+|)+|)+|a)+|)';"}
+{"sql":"select 'x' ~ 'a^(^)bcd*xy(((((($a+|)+|)+|)+$|)+|)+|)^$'","shape":"SELECT 'x' ~ 'a^(^)bcd*xy(((((($a+|)+|)+|)+$|)+|)+|)^$';"}
+{"sql":"select 'x' ~ 'xyz(\\Y\\Y)+'","shape":"SELECT 'x' ~ 'xyz(\\Y\\Y)+';"}
+{"sql":"select 'x' ~ 'x|(?:\\M)+'","shape":"SELECT 'x' ~ 'x|(?:\\M)+';"}
+{"sql":"select 'x' ~ repeat('x*y*z*', 1000)","shape":"SELECT 'x' ~ repeat('x*y*z*', 1000);"}
+{"sql":"select 'Programmer' ~ '(\\w).*?\\1' as t","shape":"SELECT 'Programmer' ~ '(\\w).*?\\1' AS t;"}
+{"sql":"select regexp_matches('Programmer', '(\\w)(.*?\\1)', 'g')","shape":"SELECT regexp_matches('Programmer', '(\\w)(.*?\\1)', 'g');"}
+{"sql":"select regexp_matches('foo/bar/baz',\n                      '^([^/]+?)(?:/([^/]+?))(?:/([^/]+?))?$', '')","shape":"SELECT regexp_matches('foo/bar/baz', '^([^/]+?)(?:/([^/]+?))(?:/([^/]+?))?$', '');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*)(.*)(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*)(.*)(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*){1,1}(.*)(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*){1,1}(.*)(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*){1,1}?(.*)(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*){1,1}?(.*)(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*){1,1}?(.*){1,1}?(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*){1,1}?(.*){1,1}?(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*?)(.*)(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*?)(.*)(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*?){1,1}(.*)(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*?){1,1}(.*)(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*?){1,1}?(.*)(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*?){1,1}?(.*)(f*)$');"}
+{"sql":"select regexp_matches('llmmmfff', '^(l*?){1,1}?(.*){1,1}?(f*)$')","shape":"SELECT regexp_matches('llmmmfff', '^(l*?){1,1}?(.*){1,1}?(f*)$');"}
+{"sql":"select 'a' ~ '$()|^\\1'","shape":"SELECT 'a' ~ '$()|^\\1';"}
+{"sql":"select 'a' ~ '.. ()|\\1'","shape":"SELECT 'a' ~ '.. ()|\\1';"}
+{"sql":"select 'a' ~ '()*\\1'","shape":"SELECT 'a' ~ '()*\\1';"}
+{"sql":"select 'a' ~ '()+\\1'","shape":"SELECT 'a' ~ '()+\\1';"}
+{"sql":"select 'xxx' ~ '(.){0}(\\1)' as f","shape":"SELECT 'xxx' ~ '(.){0}(\\1)' AS f;"}
+{"sql":"select 'xxx' ~ '((.)){0}(\\2)' as f","shape":"SELECT 'xxx' ~ '((.)){0}(\\2)' AS f;"}
+{"sql":"select 'xyz' ~ '((.)){0}(\\2){0}' as t","shape":"SELECT 'xyz' ~ '((.)){0}(\\2){0}' AS t;"}
+{"sql":"select 'abcdef' ~ '^(.)\\1|\\1.' as f","shape":"SELECT 'abcdef' ~ '^(.)\\1|\\1.' AS f;"}
+{"sql":"select 'abadef' ~ '^((.)\\2|..)\\2' as f","shape":"SELECT 'abadef' ~ '^((.)\\2|..)\\2' AS f;"}
+{"sql":"select regexp_match('xy', '.|...')","shape":"SELECT regexp_match('xy', '.|...');"}
+{"sql":"select regexp_match('xyz', '.|...')","shape":"SELECT regexp_match('xyz', '.|...');"}
+{"sql":"select regexp_match('xy', '.*')","shape":"SELECT regexp_match('xy', '.*');"}
+{"sql":"select regexp_match('fooba', '(?:..)*')","shape":"SELECT regexp_match('fooba', '(?:..)*');"}
+{"sql":"select regexp_match('xyz', repeat('.', 260))","shape":"SELECT regexp_match('xyz', repeat('.', 260));"}
+{"sql":"select regexp_match('foo', '(?:.|){99}')","shape":"SELECT regexp_match('foo', '(?:.|){99}');"}
+{"sql":"select 'xyz' ~ 'x(\\w)(?=\\1)'","shape":"SELECT 'xyz' ~ 'x(\\w)(?=\\1)';"}
+{"sql":"select 'xyz' ~ 'x(\\w)(?=(\\1))'","shape":"SELECT 'xyz' ~ 'x(\\w)(?=(\\1))';"}
+{"sql":"select 'a' ~ '\\x7fffffff'","shape":"SELECT 'a' ~ '\\x7fffffff';"}

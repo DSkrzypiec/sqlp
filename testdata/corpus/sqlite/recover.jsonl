@@ -1,0 +1,8 @@
+{"sql":"DELETE FROM sqlite_master WHERE name='t1'"}
+{"sql":"CREATE TABLE lost_and_found(a, b, c)"}
+{"sql":"CREATE TABLE lost_and_found_0(a, b, c)"}
+{"sql":"PRAGMA secure_delete = 0"}
+{"sql":"CREATE TABLE t3(g, h, i)"}
+{"sql":"INSERT INTO t3 VALUES('one', 'two', 'three')"}
+{"sql":"SELECT name FROM sqlite_schema"}
+{"sql":"SELECT id, c0, c1, c2 FROM lost_and_found"}

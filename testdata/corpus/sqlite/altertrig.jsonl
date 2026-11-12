@@ -1,0 +1,8 @@
+{"sql":"CREATE TABLE t2(y)"}
+{"sql":"CREATE TABLE t3(z)"}
+{"sql":"CREATE TABLE t4(a)"}
+{"sql":"CREATE TRIGGER r1 INSERT ON t1 BEGIN \n    UPDATE t1 SET d='xyz' FROM t2, t3; \n  END"}
+{"sql":"CREATE TRIGGER r1 INSERT ON t1 BEGIN \n    UPDATE t1 SET d='xyz' FROM t2, (SELECT * FROM t5); \n  END"}
+{"sql":"CREATE TABLE t2(c,d)"}
+{"sql":"CREATE TABLE t3(e,f)"}
+{"sql":"CREATE TABLE t4(e,f)"}

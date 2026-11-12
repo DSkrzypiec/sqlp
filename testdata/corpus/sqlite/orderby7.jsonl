@@ -1,0 +1,13 @@
+{"sql":"CREATE VIRTUAL TABLE fts USING fts3(content TEXT)"}
+{"sql":"INSERT INTO fts(rowid,content)\n     VALUES(1,'this is a test of the fts3 virtual'),\n           (2,'table used as part of a join together'),\n           (3,'with the DISTINCT keyword.  There was'),\n           (4,'a bug at one time (2013-06 through 2014-04)'),\n           (5,'that prevented this from working correctly.'),\n           (11,'a row that occurs twice'),\n           (12,'a row that occurs twice')"}
+{"sql":"CREATE TABLE t1(x TEXT PRIMARY KEY, y)"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT content, rowid+100 FROM fts"}
+{"sql":"SELECT DISTINCT fts.rowid, t1.y\n    FROM fts, t1\n   WHERE fts MATCH 'that twice'\n     AND content=x\n   ORDER BY y"}
+{"sql":"SELECT DISTINCT fts.rowid, t1.x\n    FROM fts, t1\n   WHERE fts MATCH 'that twice'\n     AND content=x\n   ORDER BY 1"}
+{"sql":"SELECT DISTINCT t1.x\n    FROM fts, t1\n   WHERE fts MATCH 'that twice'\n     AND content=x\n   ORDER BY 1"}
+{"sql":"SELECT t1.x\n    FROM fts, t1\n   WHERE fts MATCH 'that twice'\n     AND content=x\n   ORDER BY 1"}
+{"sql":"SELECT DISTINCT t1.x\n    FROM fts, t1\n   WHERE fts MATCH 'that twice'\n     AND content=x"}
+{"sql":"SELECT t1.x\n    FROM fts, t1\n   WHERE fts MATCH 'that twice'\n     AND content=x"}
+{"sql":"SELECT DISTINCT t1.x\n    FROM fts, t1\n   WHERE fts.rowid=11\n     AND content=x\n   ORDER BY fts.rowid"}
+{"sql":"SELECT DISTINCT t1.*\n    FROM fts, t1\n   WHERE fts.rowid=11\n     AND content=x\n   ORDER BY fts.rowid"}
+{"sql":"SELECT DISTINCT t1.*\n    FROM fts, t1\n   WHERE fts.rowid=11\n     AND content=x\n   ORDER BY t1.y"}

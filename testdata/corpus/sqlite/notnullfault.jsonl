@@ -1,0 +1,3 @@
+{"sql":"SELECT * FROM t2 WHERE d NOT NULL"}
+{"sql":"CREATE TABLE t2(a, b, c, PRIMARY KEY(a, b, c)) WITHOUT ROWID"}
+{"sql":"SELECT dense_rank() OVER win FROM t2\n    WINDOW win AS (ORDER BY c IS NULL)"}

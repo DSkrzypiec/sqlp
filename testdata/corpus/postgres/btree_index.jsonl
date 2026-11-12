@@ -1,0 +1,72 @@
+{"sql":"CREATE TABLE bt_i4_heap (\n\tseqno \t\tint4,\n\trandom \t\tint4\n)","shape":"CREATE TABLE bt_i4_heap (seqno int4, random int4);"}
+{"sql":"CREATE TABLE bt_name_heap (\n\tseqno \t\tname,\n\trandom \t\tint4\n)","shape":"CREATE TABLE bt_name_heap (seqno name, random int4);"}
+{"sql":"CREATE TABLE bt_txt_heap (\n\tseqno \t\ttext,\n\trandom \t\tint4\n)","shape":"CREATE TABLE bt_txt_heap (seqno text, random int4);"}
+{"sql":"CREATE TABLE bt_f8_heap (\n\tseqno \t\tfloat8,\n\trandom \t\tint4\n)","shape":"CREATE TABLE bt_f8_heap (seqno float8, random int4);"}
+{"sql":"ANALYZE bt_i4_heap","shape":"ANALYZE bt_i4_heap;"}
+{"sql":"ANALYZE bt_name_heap","shape":"ANALYZE bt_name_heap;"}
+{"sql":"ANALYZE bt_txt_heap","shape":"ANALYZE bt_txt_heap;"}
+{"sql":"ANALYZE bt_f8_heap","shape":"ANALYZE bt_f8_heap;"}
+{"sql":"CREATE INDEX bt_i4_index ON bt_i4_heap USING btree (seqno int4_ops)","shape":"CREATE INDEX bt_i4_index ON bt_i4_heap USING btree (seqno int4_ops);"}
+{"sql":"CREATE INDEX bt_name_index ON bt_name_heap USING btree (seqno name_ops)","shape":"CREATE INDEX bt_name_index ON bt_name_heap USING btree (seqno name_ops);"}
+{"sql":"CREATE INDEX bt_txt_index ON bt_txt_heap USING btree (seqno text_ops)","shape":"CREATE INDEX bt_txt_index ON bt_txt_heap USING btree (seqno text_ops);"}
+{"sql":"CREATE INDEX bt_f8_index ON bt_f8_heap USING btree (seqno float8_ops)","shape":"CREATE INDEX bt_f8_index ON bt_f8_heap USING btree (seqno float8_ops);"}
+{"sql":"SELECT b.*\n   FROM bt_i4_heap b\n   WHERE b.seqno < 1","shape":"SELECT b.* FROM bt_i4_heap AS b WHERE b.seqno < 1;"}
+{"sql":"SELECT b.*\n   FROM bt_i4_heap b\n   WHERE b.seqno >= 9999","shape":"SELECT b.* FROM bt_i4_heap AS b WHERE b.seqno >= 9999;"}
+{"sql":"SELECT b.*\n   FROM bt_i4_heap b\n   WHERE b.seqno = 4500","shape":"SELECT b.* FROM bt_i4_heap AS b WHERE b.seqno = 4500;"}
+{"sql":"SELECT b.*\n   FROM bt_name_heap b\n   WHERE b.seqno < '1'::name","shape":"SELECT b.* FROM bt_name_heap AS b WHERE b.seqno < '1'::name;"}
+{"sql":"SELECT b.*\n   FROM bt_name_heap b\n   WHERE b.seqno >= '9999'::name","shape":"SELECT b.* FROM bt_name_heap AS b WHERE b.seqno >= '9999'::name;"}
+{"sql":"SELECT b.*\n   FROM bt_name_heap b\n   WHERE b.seqno = '4500'::name","shape":"SELECT b.* FROM bt_name_heap AS b WHERE b.seqno = '4500'::name;"}
+{"sql":"SELECT b.*\n   FROM bt_txt_heap b\n   WHERE b.seqno < '1'::text","shape":"SELECT b.* FROM bt_txt_heap AS b WHERE b.seqno < '1'::text;"}
+{"sql":"SELECT b.*\n   FROM bt_txt_heap b\n   WHERE b.seqno >= '9999'::text","shape":"SELECT b.* FROM bt_txt_heap AS b WHERE b.seqno >= '9999'::text;"}
+{"sql":"SELECT b.*\n   FROM bt_txt_heap b\n   WHERE b.seqno = '4500'::text","shape":"SELECT b.* FROM bt_txt_heap AS b WHERE b.seqno = '4500'::text;"}
+{"sql":"SELECT b.*\n   FROM bt_f8_heap b\n   WHERE b.seqno < '1'::float8","shape":"SELECT b.* FROM bt_f8_heap AS b WHERE b.seqno < '1'::float8;"}
+{"sql":"SELECT b.*\n   FROM bt_f8_heap b\n   WHERE b.seqno >= '9999'::float8","shape":"SELECT b.* FROM bt_f8_heap AS b WHERE b.seqno >= '9999'::float8;"}
+{"sql":"SELECT b.*\n   FROM bt_f8_heap b\n   WHERE b.seqno = '4500'::float8","shape":"SELECT b.* FROM bt_f8_heap AS b WHERE b.seqno = '4500'::float8;"}
+{"sql":"set enable_seqscan to false","shape":"SET enable_seqscan TO FALSE;"}
+{"sql":"set enable_indexscan to true","shape":"SET enable_indexscan TO TRUE;"}
+{"sql":"set enable_bitmapscan to false","shape":"SET enable_bitmapscan TO FALSE;"}
+{"sql":"explain (costs off)\nselect proname from pg_proc where proname like E'RI\\\\_FKey%del' order by 1","shape":"EXPLAIN (COSTS off) SELECT proname FROM pg_proc WHERE proname LIKE E'RI\\\\_FKey%del' ORDER BY 1;"}
+{"sql":"select proname from pg_proc where proname like E'RI\\\\_FKey%del' order by 1","shape":"SELECT proname FROM pg_proc WHERE proname LIKE E'RI\\\\_FKey%del' ORDER BY 1;"}
+{"sql":"explain (costs off)\nselect proname from pg_proc where proname ilike '00%foo' order by 1","shape":"EXPLAIN (COSTS off) SELECT proname FROM pg_proc WHERE proname ILIKE '00%foo' ORDER BY 1;"}
+{"sql":"select proname from pg_proc where proname ilike '00%foo' order by 1","shape":"SELECT proname FROM pg_proc WHERE proname ILIKE '00%foo' ORDER BY 1;"}
+{"sql":"explain (costs off)\nselect proname from pg_proc where proname ilike 'ri%foo' order by 1","shape":"EXPLAIN (COSTS off) SELECT proname FROM pg_proc WHERE proname ILIKE 'ri%foo' ORDER BY 1;"}
+{"sql":"set enable_indexscan to false","shape":"SET enable_indexscan TO FALSE;"}
+{"sql":"set enable_bitmapscan to true","shape":"SET enable_bitmapscan TO TRUE;"}
+{"sql":"reset enable_indexscan","shape":"RESET enable_indexscan;"}
+{"sql":"create temp table btree_bpchar (f1 text collate \"C\")","shape":"CREATE TEMPORARY TABLE btree_bpchar (f1 text COLLATE \"C\");"}
+{"sql":"create index on btree_bpchar(f1 bpchar_ops) WITH (deduplicate_items=on)","shape":"CREATE INDEX ON btree_bpchar (f1 bpchar_ops) WITH (deduplicate_items = on);"}
+{"sql":"insert into btree_bpchar values ('foo'), ('fool'), ('bar'), ('quux')","shape":"INSERT INTO btree_bpchar VALUES ('foo'), ('fool'), ('bar'), ('quux');"}
+{"sql":"explain (costs off)\nselect * from btree_bpchar where f1 like 'foo'","shape":"EXPLAIN (COSTS off) SELECT * FROM btree_bpchar WHERE f1 LIKE 'foo';"}
+{"sql":"select * from btree_bpchar where f1 like 'foo'","shape":"SELECT * FROM btree_bpchar WHERE f1 LIKE 'foo';"}
+{"sql":"explain (costs off)\nselect * from btree_bpchar where f1 like 'foo%'","shape":"EXPLAIN (COSTS off) SELECT * FROM btree_bpchar WHERE f1 LIKE 'foo%';"}
+{"sql":"select * from btree_bpchar where f1 like 'foo%'","shape":"SELECT * FROM btree_bpchar WHERE f1 LIKE 'foo%';"}
+{"sql":"explain (costs off)\nselect * from btree_bpchar where f1::bpchar like 'foo'","shape":"EXPLAIN (COSTS off) SELECT * FROM btree_bpchar WHERE f1::bpchar LIKE 'foo';"}
+{"sql":"select * from btree_bpchar where f1::bpchar like 'foo'","shape":"SELECT * FROM btree_bpchar WHERE f1::bpchar LIKE 'foo';"}
+{"sql":"explain (costs off)\nselect * from btree_bpchar where f1::bpchar like 'foo%'","shape":"EXPLAIN (COSTS off) SELECT * FROM btree_bpchar WHERE f1::bpchar LIKE 'foo%';"}
+{"sql":"select * from btree_bpchar where f1::bpchar like 'foo%'","shape":"SELECT * FROM btree_bpchar WHERE f1::bpchar LIKE 'foo%';"}
+{"sql":"insert into btree_bpchar select 'foo' from generate_series(1,1500)","shape":"INSERT INTO btree_bpchar SELECT 'foo' FROM generate_series(1, 1500);"}
+{"sql":"CREATE TABLE dedup_unique_test_table (a int) WITH (autovacuum_enabled=false)","shape":"CREATE TABLE dedup_unique_test_table (a int) WITH (autovacuum_enabled = FALSE);"}
+{"sql":"CREATE UNIQUE INDEX dedup_unique ON dedup_unique_test_table (a) WITH (deduplicate_items=on)","shape":"CREATE UNIQUE INDEX dedup_unique ON dedup_unique_test_table (a) WITH (deduplicate_items = on);"}
+{"sql":"CREATE UNIQUE INDEX plain_unique ON dedup_unique_test_table (a) WITH (deduplicate_items=off)","shape":"CREATE UNIQUE INDEX plain_unique ON dedup_unique_test_table (a) WITH (deduplicate_items = off);"}
+{"sql":"DO $$\nBEGIN\n    FOR r IN 1..1350 LOOP\n        DELETE FROM dedup_unique_test_table;\n        INSERT INTO dedup_unique_test_table SELECT 1;\n    END LOOP;\nEND$$","shape":"DO '\nBEGIN\n    FOR r IN 1..1350 LOOP\n        DELETE FROM dedup_unique_test_table;\n        INSERT INTO dedup_unique_test_table SELECT 1;\n    END LOOP;\nEND';"}
+{"sql":"DROP INDEX plain_unique","shape":"DROP INDEX plain_unique;"}
+{"sql":"DELETE FROM dedup_unique_test_table WHERE a = 1","shape":"DELETE FROM dedup_unique_test_table WHERE a = 1;"}
+{"sql":"INSERT INTO dedup_unique_test_table SELECT i FROM generate_series(0,450) i","shape":"INSERT INTO dedup_unique_test_table SELECT i FROM generate_series(0, 450) AS i;"}
+{"sql":"create table btree_tall_tbl(id int4, t text)","shape":"CREATE TABLE btree_tall_tbl (id int4, t text);"}
+{"sql":"alter table btree_tall_tbl alter COLUMN t set storage plain"}
+{"sql":"create index btree_tall_idx on btree_tall_tbl (t, id) with (fillfactor = 10)","shape":"CREATE INDEX btree_tall_idx ON btree_tall_tbl (t, id) WITH (fillfactor = 10);"}
+{"sql":"insert into btree_tall_tbl select g, repeat('x', 250)\nfrom generate_series(1, 130) g","shape":"INSERT INTO btree_tall_tbl SELECT g, repeat('x', 250) FROM generate_series(1, 130) AS g;"}
+{"sql":"CREATE TABLE delete_test_table (a bigint, b bigint, c bigint, d bigint)","shape":"CREATE TABLE delete_test_table (a bigint, b bigint, c bigint, d bigint);"}
+{"sql":"INSERT INTO delete_test_table SELECT i, 1, 2, 3 FROM generate_series(1,80000) i","shape":"INSERT INTO delete_test_table SELECT i, 1, 2, 3 FROM generate_series(1, 80000) AS i;"}
+{"sql":"ALTER TABLE delete_test_table ADD PRIMARY KEY (a,b,c,d)","shape":"ALTER TABLE delete_test_table ADD PRIMARY KEY (a, b, c, d);"}
+{"sql":"DELETE FROM delete_test_table WHERE a < 79990","shape":"DELETE FROM delete_test_table WHERE a < 79990;"}
+{"sql":"VACUUM delete_test_table","shape":"VACUUM delete_test_table;"}
+{"sql":"INSERT INTO delete_test_table SELECT i, 1, 2, 3 FROM generate_series(1,1000) i","shape":"INSERT INTO delete_test_table SELECT i, 1, 2, 3 FROM generate_series(1, 1000) AS i;"}
+{"sql":"create index on btree_tall_tbl (id int4_ops(foo=1))","shape":"CREATE INDEX ON btree_tall_tbl (id int4_ops(foo = 1));"}
+{"sql":"CREATE INDEX btree_tall_idx2 ON btree_tall_tbl (id)","shape":"CREATE INDEX btree_tall_idx2 ON btree_tall_tbl (id);"}
+{"sql":"ALTER INDEX btree_tall_idx2 ALTER COLUMN id SET (n_distinct=100)"}
+{"sql":"DROP INDEX btree_tall_idx2","shape":"DROP INDEX btree_tall_idx2;"}
+{"sql":"CREATE TABLE btree_part (id int4) PARTITION BY RANGE (id)","shape":"CREATE TABLE btree_part (id int4) PARTITION BY RANGE (id);"}
+{"sql":"CREATE INDEX btree_part_idx ON btree_part(id)","shape":"CREATE INDEX btree_part_idx ON btree_part (id);"}
+{"sql":"ALTER INDEX btree_part_idx ALTER COLUMN id SET (n_distinct=100)"}
+{"sql":"DROP TABLE btree_part","shape":"DROP TABLE btree_part;"}

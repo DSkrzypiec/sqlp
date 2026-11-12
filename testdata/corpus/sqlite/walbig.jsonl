@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(a_string(300), a_string(500))"}
+{"sql":"INSERT INTO t1 SELECT a_string(300), a_string(500) FROM t1"}
+{"sql":"SELECT a FROM t1 ORDER BY rowid"}
+{"sql":"SELECT b FROM t1 ORDER BY rowid"}

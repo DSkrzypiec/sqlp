@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(1,randstr(10,400))"}
+{"sql":"INSERT INTO t1 VALUES(2,randstr(10,400))"}
+{"sql":"INSERT INTO t1 SELECT a+2, a||b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+4, a||b FROM t1"}

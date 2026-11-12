@@ -1,0 +1,36 @@
+{"sql":"CREATE TABLE A (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)"}
+{"sql":"INSERT INTO A VALUES(1,'123')"}
+{"sql":"INSERT INTO A VALUES(2,'456')"}
+{"sql":"CREATE TABLE B (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)"}
+{"sql":"INSERT INTO B VALUES(1,1)"}
+{"sql":"INSERT INTO B VALUES(2,2)"}
+{"sql":"CREATE TABLE A_B (B_id INTEGER NOT NULL, A_id INTEGER)"}
+{"sql":"INSERT INTO A_B VALUES(1,1)"}
+{"sql":"INSERT INTO A_B VALUES(2,2)"}
+{"sql":"SELECT \n      CASE \n         WHEN B.val = 1 THEN 'XYZ' \n         ELSE A.val \n      END AS Col1\n    FROM B  \n    LEFT OUTER JOIN A_B ON B.id = A_B.B_id  \n    LEFT OUTER JOIN A ON A.id = A_B.A_id\n    ORDER BY Col1 ASC"}
+{"sql":"SELECT DISTINCT\n      CASE \n         WHEN B.val = 1 THEN 'XYZ' \n         ELSE A.val \n      END AS Col1\n    FROM B  \n    LEFT OUTER JOIN A_B ON B.id = A_B.B_id  \n    LEFT OUTER JOIN A ON A.id = A_B.A_id\n    ORDER BY Col1 ASC"}
+{"sql":"SELECT b.val, CASE WHEN b.val = 1 THEN 'xyz' ELSE b.val END AS col1 FROM b"}
+{"sql":"SELECT DISTINCT \n      b.val, \n      CASE WHEN b.val = 1 THEN 'xyz' ELSE b.val END AS col1 \n    FROM b"}
+{"sql":"SELECT DISTINCT \n      b.val, \n      CASE WHEN b.val = '1' THEN 'xyz' ELSE b.val END AS col1 \n    FROM b"}
+{"sql":"CREATE TABLE t1(a TEXT, b INT)"}
+{"sql":"INSERT INTO t1 VALUES(123, 456)"}
+{"sql":"SELECT a=123 FROM t1 GROUP BY a"}
+{"sql":"SELECT a=123 FROM t1"}
+{"sql":"SELECT a='123' FROM t1"}
+{"sql":"SELECT count(*), a=123 FROM t1"}
+{"sql":"SELECT count(*), +a=123 FROM t1"}
+{"sql":"SELECT b='456' FROM t1 GROUP BY a"}
+{"sql":"SELECT b='456' FROM t1 GROUP BY b"}
+{"sql":"SELECT b='456' FROM t1"}
+{"sql":"SELECT typeof(a), a FROM t1 GROUP BY a HAVING a=123"}
+{"sql":"SELECT typeof(a), a FROM t1 GROUP BY b HAVING a=123"}
+{"sql":"SELECT typeof(b), b FROM t1 GROUP BY a HAVING b='456'"}
+{"sql":"SELECT typeof(b), b FROM t1 GROUP BY b HAVING b='456'"}
+{"sql":"CREATE TABLE t2(a COLLATE NOCASE, b COLLATE BINARY)"}
+{"sql":"INSERT INTO t2 VALUES('aBc', 'DeF')"}
+{"sql":"SELECT a='abc' FROM t2 GROUP BY a"}
+{"sql":"SELECT a='abc' FROM t2"}
+{"sql":"SELECT a>b FROM t2 GROUP BY a, b"}
+{"sql":"SELECT a>b COLLATE BINARY FROM t2 GROUP BY a, b"}
+{"sql":"SELECT b>a FROM t2 GROUP BY a, b"}
+{"sql":"SELECT b>a COLLATE NOCASE FROM t2 GROUP BY a, b"}

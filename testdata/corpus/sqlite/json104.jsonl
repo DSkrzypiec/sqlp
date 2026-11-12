@@ -1,0 +1,16 @@
+{"sql":"SELECT json_patch('{\n       a: \"b\",\n       c: {\n         d: \"e\",\n         f: \"g\"\n       }\n     }','{\n       a:\"z\",\n       c: {\n         f: null\n       }\n     }')"}
+{"sql":"SELECT json_patch('{\n       \"title\": \"Goodbye!\",\n       \"author\" : {\n         \"givenName\" : \"John\",\n         \"familyName\" : \"Doe\"\n       },\n       \"tags\":[ \"example\", \"sample\" ],\n       \"content\": \"This will be unchanged\"\n     }','{\n       \"title\": \"Hello!\",\n       \"phoneNumber\": \"+01-123-456-7890\",\n       \"author\": {\n         \"familyName\": null\n       },\n       \"tags\": [ \"example\" ]\n     }')"}
+{"sql":"SELECT json_patch('[1,2,3]','{\"x\":null}')"}
+{"sql":"SELECT json_patch('[1,2,3]','{\"x\":null,\"y\":1,\"z\":null}')"}
+{"sql":"SELECT json_patch('{}','{\"a\":{\"bb\":{\"ccc\":null}}}')"}
+{"sql":"SELECT json_patch('{}','{\"a\":{\"bb\":{\"ccc\":[1,null,3]}}}')"}
+{"sql":"SELECT json_patch('{}','{\"a\":{\"bb\":{\"ccc\":[1,{\"dddd\":null},3]}}}')"}
+{"sql":"SELECT json_patch('{\"a\":\"b\"}','{\"a\":null}')"}
+{"sql":"SELECT json_patch('{\"a\":\"foo\"}','null')"}
+{"sql":"SELECT coalesce(json_patch('{\"a\":\"foo\"}',null), 'real-null')"}
+{"sql":"SELECT json_patch('{\"a\":\"foo\"}','\"bar\"')"}
+{"sql":"SELECT json_patch('{\"e\":null}','{\"a\":1}')"}
+{"sql":"SELECT json_patch('{\"x\":{\"one\":1}}','{\"x\":{\"two\":2},\"x\":\"three\"}')"}
+{"sql":"CREATE TABLE obj(x)"}
+{"sql":"INSERT INTO obj VALUES('{\"a\":1,\"b\":2}')"}
+{"sql":"SELECT * FROM obj"}

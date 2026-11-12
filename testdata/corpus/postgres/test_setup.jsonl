@@ -1,0 +1,58 @@
+{"sql":"SET synchronous_commit = on","shape":"SET synchronous_commit TO on;"}
+{"sql":"GRANT ALL ON SCHEMA public TO public","shape":"GRANT ALL PRIVILEGES ON SCHEMA public TO PUBLIC;"}
+{"sql":"CREATE TABLE CHAR_TBL(f1 char(4))","shape":"CREATE TABLE CHAR_TBL (f1 char(4));"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES\n  ('a'),\n  ('ab'),\n  ('abcd'),\n  ('abcd    ')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('a'), ('ab'), ('abcd'), ('abcd    ');"}
+{"sql":"VACUUM CHAR_TBL","shape":"VACUUM CHAR_TBL;"}
+{"sql":"CREATE TABLE FLOAT8_TBL(f1 float8)","shape":"CREATE TABLE FLOAT8_TBL (f1 float8);"}
+{"sql":"INSERT INTO FLOAT8_TBL(f1) VALUES\n  ('0.0'),\n  ('-34.84'),\n  ('-1004.30'),\n  ('-1.2345678901234e+200'),\n  ('-1.2345678901234e-200')","shape":"INSERT INTO FLOAT8_TBL (f1) VALUES ('0.0'), ('-34.84'), ('-1004.30'), ('-1.2345678901234e+200'), ('-1.2345678901234e-200');"}
+{"sql":"VACUUM FLOAT8_TBL","shape":"VACUUM FLOAT8_TBL;"}
+{"sql":"CREATE TABLE INT2_TBL(f1 int2)","shape":"CREATE TABLE INT2_TBL (f1 int2);"}
+{"sql":"INSERT INTO INT2_TBL(f1) VALUES\n  ('0   '),\n  ('  1234 '),\n  ('    -1234'),\n  ('32767'),  -- largest and smallest values\n  ('-32767')","shape":"INSERT INTO INT2_TBL (f1) VALUES ('0   '), ('  1234 '), ('    -1234'), ('32767'), ('-32767');"}
+{"sql":"VACUUM INT2_TBL","shape":"VACUUM INT2_TBL;"}
+{"sql":"CREATE TABLE INT4_TBL(f1 int4)","shape":"CREATE TABLE INT4_TBL (f1 int4);"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES\n  ('   0  '),\n  ('123456     '),\n  ('    -123456'),\n  ('2147483647'),  -- largest and smallest values\n  ('-2147483647')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('   0  '), ('123456     '), ('    -123456'), ('2147483647'), ('-2147483647');"}
+{"sql":"VACUUM INT4_TBL","shape":"VACUUM INT4_TBL;"}
+{"sql":"CREATE TABLE INT8_TBL(q1 int8, q2 int8)","shape":"CREATE TABLE INT8_TBL (q1 int8, q2 int8);"}
+{"sql":"INSERT INTO INT8_TBL VALUES\n  ('  123   ','  456'),\n  ('123   ','4567890123456789'),\n  ('4567890123456789','123'),\n  (+4567890123456789,'4567890123456789'),\n  ('+4567890123456789','-4567890123456789')","shape":"INSERT INTO INT8_TBL VALUES ('  123   ', '  456'), ('123   ', '4567890123456789'), ('4567890123456789', '123'), (+4567890123456789, '4567890123456789'), ('+4567890123456789', '-4567890123456789');"}
+{"sql":"VACUUM INT8_TBL","shape":"VACUUM INT8_TBL;"}
+{"sql":"CREATE TABLE POINT_TBL(f1 point)","shape":"CREATE TABLE POINT_TBL (f1 point);"}
+{"sql":"INSERT INTO POINT_TBL(f1) VALUES\n  ('(0.0,0.0)'),\n  ('(-10.0,0.0)'),\n  ('(-3.0,4.0)'),\n  ('(5.1, 34.5)'),\n  ('(-5.0,-12.0)'),\n  ('(1e-300,-1e-300)'),  -- To underflow\n  ('(1e+300,Inf)'),  -- To overflow\n  ('(Inf,1e+300)'),  -- Transposed\n  (' ( Nan , NaN ) '),\n  ('10.0,10.0')","shape":"INSERT INTO POINT_TBL (f1) VALUES ('(0.0,0.0)'), ('(-10.0,0.0)'), ('(-3.0,4.0)'), ('(5.1, 34.5)'), ('(-5.0,-12.0)'), ('(1e-300,-1e-300)'), ('(1e+300,Inf)'), ('(Inf,1e+300)'), (' ( Nan , NaN ) '), ('10.0,10.0');"}
+{"sql":"CREATE TABLE TEXT_TBL (f1 text)","shape":"CREATE TABLE TEXT_TBL (f1 text);"}
+{"sql":"INSERT INTO TEXT_TBL VALUES\n  ('doh!'),\n  ('hi de ho neighbor')","shape":"INSERT INTO TEXT_TBL VALUES ('doh!'), ('hi de ho neighbor');"}
+{"sql":"VACUUM TEXT_TBL","shape":"VACUUM TEXT_TBL;"}
+{"sql":"CREATE TABLE VARCHAR_TBL(f1 varchar(4))","shape":"CREATE TABLE VARCHAR_TBL (f1 varchar(4));"}
+{"sql":"INSERT INTO VARCHAR_TBL (f1) VALUES\n  ('a'),\n  ('ab'),\n  ('abcd'),\n  ('abcd    ')","shape":"INSERT INTO VARCHAR_TBL (f1) VALUES ('a'), ('ab'), ('abcd'), ('abcd    ');"}
+{"sql":"VACUUM VARCHAR_TBL","shape":"VACUUM VARCHAR_TBL;"}
+{"sql":"CREATE TABLE onek (\n\tunique1\t\tint4,\n\tunique2\t\tint4,\n\ttwo\t\t\tint4,\n\tfour\t\tint4,\n\tten\t\t\tint4,\n\ttwenty\t\tint4,\n\thundred\t\tint4,\n\tthousand\tint4,\n\ttwothousand\tint4,\n\tfivethous\tint4,\n\ttenthous\tint4,\n\todd\t\t\tint4,\n\teven\t\tint4,\n\tstringu1\tname,\n\tstringu2\tname,\n\tstring4\t\tname\n)","shape":"CREATE TABLE onek (unique1 int4, unique2 int4, two int4, four int4, ten int4, twenty int4, hundred int4, thousand int4, twothousand int4, fivethous int4, tenthous int4, odd int4, even int4, stringu1 name, stringu2 name, string4 name);"}
+{"sql":"VACUUM ANALYZE onek","shape":"VACUUM ANALYZE onek;"}
+{"sql":"CREATE TABLE onek2 AS SELECT * FROM onek","shape":"CREATE TABLE onek2 AS SELECT * FROM onek;"}
+{"sql":"VACUUM ANALYZE onek2","shape":"VACUUM ANALYZE onek2;"}
+{"sql":"CREATE TABLE tenk1 (\n\tunique1\t\tint4,\n\tunique2\t\tint4,\n\ttwo\t\t\tint4,\n\tfour\t\tint4,\n\tten\t\t\tint4,\n\ttwenty\t\tint4,\n\thundred\t\tint4,\n\tthousand\tint4,\n\ttwothousand\tint4,\n\tfivethous\tint4,\n\ttenthous\tint4,\n\todd\t\t\tint4,\n\teven\t\tint4,\n\tstringu1\tname,\n\tstringu2\tname,\n\tstring4\t\tname\n)","shape":"CREATE TABLE tenk1 (unique1 int4, unique2 int4, two int4, four int4, ten int4, twenty int4, hundred int4, thousand int4, twothousand int4, fivethous int4, tenthous int4, odd int4, even int4, stringu1 name, stringu2 name, string4 name);"}
+{"sql":"VACUUM ANALYZE tenk1","shape":"VACUUM ANALYZE tenk1;"}
+{"sql":"CREATE TABLE tenk2 AS SELECT * FROM tenk1","shape":"CREATE TABLE tenk2 AS SELECT * FROM tenk1;"}
+{"sql":"VACUUM ANALYZE tenk2","shape":"VACUUM ANALYZE tenk2;"}
+{"sql":"CREATE TABLE person (\n\tname \t\ttext,\n\tage\t\t\tint4,\n\tlocation \tpoint\n)","shape":"CREATE TABLE person (name text, age int4, location point);"}
+{"sql":"VACUUM ANALYZE person","shape":"VACUUM ANALYZE person;"}
+{"sql":"CREATE TABLE emp (\n\tsalary \t\tint4,\n\tmanager \tname\n) INHERITS (person)","shape":"CREATE TABLE emp (salary int4, manager name) INHERITS (person);"}
+{"sql":"VACUUM ANALYZE emp","shape":"VACUUM ANALYZE emp;"}
+{"sql":"CREATE TABLE student (\n\tgpa \t\tfloat8\n) INHERITS (person)","shape":"CREATE TABLE student (gpa float8) INHERITS (person);"}
+{"sql":"VACUUM ANALYZE student","shape":"VACUUM ANALYZE student;"}
+{"sql":"CREATE TABLE stud_emp (\n\tpercent \tint4\n) INHERITS (emp, student)","shape":"CREATE TABLE stud_emp (percent int4) INHERITS (emp, student);"}
+{"sql":"VACUUM ANALYZE stud_emp","shape":"VACUUM ANALYZE stud_emp;"}
+{"sql":"CREATE TABLE road (\n\tname\t\ttext,\n\tthepath \tpath\n)","shape":"CREATE TABLE road (name text, thepath path);"}
+{"sql":"VACUUM ANALYZE road","shape":"VACUUM ANALYZE road;"}
+{"sql":"CREATE TABLE ihighway () INHERITS (road)","shape":"CREATE TABLE ihighway () INHERITS (road);"}
+{"sql":"INSERT INTO ihighway\n   SELECT *\n   FROM ONLY road\n   WHERE name ~ 'I- .*'","shape":"INSERT INTO ihighway SELECT * FROM ONLY road WHERE name ~ 'I- .*';"}
+{"sql":"VACUUM ANALYZE ihighway","shape":"VACUUM ANALYZE ihighway;"}
+{"sql":"CREATE TABLE shighway (\n\tsurface\t\ttext\n) INHERITS (road)","shape":"CREATE TABLE shighway (surface text) INHERITS (road);"}
+{"sql":"INSERT INTO shighway\n   SELECT *, 'asphalt'\n   FROM ONLY road\n   WHERE name ~ 'State Hwy.*'","shape":"INSERT INTO shighway SELECT *, 'asphalt' FROM ONLY road WHERE name ~ 'State Hwy.*';"}
+{"sql":"VACUUM ANALYZE shighway","shape":"VACUUM ANALYZE shighway;"}
+{"sql":"create type stoplight as enum ('red', 'yellow', 'green')","shape":"CREATE TYPE stoplight AS ENUM ('red', 'yellow', 'green');"}
+{"sql":"create type float8range as range (subtype = float8, subtype_diff = float8mi)"}
+{"sql":"create type textrange as range (subtype = text, collation = \"C\")"}
+{"sql":"create function part_hashint4_noop(value int4, seed int8)\n    returns int8 as $$\n    select value + seed;\n    $$ language sql strict immutable parallel safe","shape":"CREATE FUNCTION part_hashint4_noop(value int4, seed int8) RETURNS int8 AS '\n    select value + seed;\n    ' LANGUAGE sql STRICT IMMUTABLE PARALLEL safe;"}
+{"sql":"create operator class part_test_int4_ops for type int4 using hash as\n    operator 1 =,\n    function 2 part_hashint4_noop(int4, int8)"}
+{"sql":"create function part_hashtext_length(value text, seed int8)\n    returns int8 as $$\n    select length(coalesce(value, ''))::int8\n    $$ language sql strict immutable parallel safe","shape":"CREATE FUNCTION part_hashtext_length(value text, seed int8) RETURNS int8 AS '\n    select length(coalesce(value, ''''))::int8\n    ' LANGUAGE sql STRICT IMMUTABLE PARALLEL safe;"}
+{"sql":"create operator class part_test_text_ops for type text using hash as\n    operator 1 =,\n    function 2 part_hashtext_length(text, int8)"}
+{"sql":"create function fipshash(bytea)\n    returns text\n    strict immutable parallel safe leakproof\n    return substr(encode(sha256($1), 'hex'), 1, 32)","shape":"CREATE FUNCTION fipshash(bytea) RETURNS text STRICT IMMUTABLE PARALLEL safe LEAKPROOF RETURN substr(encode(sha256($1), 'hex'), 1, 32);"}
+{"sql":"create function fipshash(text)\n    returns text\n    strict immutable parallel safe leakproof\n    return substr(encode(sha256($1::bytea), 'hex'), 1, 32)","shape":"CREATE FUNCTION fipshash(text) RETURNS text STRICT IMMUTABLE PARALLEL safe LEAKPROOF RETURN substr(encode(sha256($1::bytea), 'hex'), 1, 32);"}

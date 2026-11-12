@@ -1,0 +1,14 @@
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(order=desc)"}
+{"sql":"INSERT INTO t2 VALUES('aa bb')"}
+{"sql":"INSERT INTO t2 VALUES('bb cc')"}
+{"sql":"INSERT INTO t2 VALUES('cc aa')"}
+{"sql":"SELECT docid FROM t2 WHERE t2 MATCH 'aa'"}
+{"sql":"SELECT docid FROM t2 WHERE t2 MATCH 'aa' ORDER BY content"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(x, order=DESC)"}
+{"sql":"INSERT INTO t3(docid, x) VALUES(113382409004785664, 'aa')"}
+{"sql":"INSERT INTO t3(docid, x) VALUES(1, 'ab')"}
+{"sql":"SELECT rowid FROM t3 WHERE x MATCH 'a*' ORDER BY docid DESC"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4(x)"}
+{"sql":"INSERT INTO t4(docid, x) VALUES(-113382409004785664, 'aa')"}
+{"sql":"INSERT INTO t4(docid, x) VALUES(1, 'ab')"}
+{"sql":"SELECT rowid FROM t4 WHERE x MATCH 'a*'"}

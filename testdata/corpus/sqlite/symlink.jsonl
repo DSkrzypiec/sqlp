@@ -1,0 +1,2 @@
+{"sql":"ATTACH 'test.db2' AS aux1"}
+{"sql":"CREATE TABLE xyz(x, y, z)"}

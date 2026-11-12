@@ -1,0 +1,4 @@
+{"sql":"PRAGMA temp.cache_size = 10"}
+{"sql":"CREATE TABLE temp.tt(a, b)"}
+{"sql":"INSERT INTO tt VALUES(randomblob(500), randomblob(600))"}
+{"sql":"INSERT INTO tt SELECT randomblob(500), randomblob(600) FROM tt"}

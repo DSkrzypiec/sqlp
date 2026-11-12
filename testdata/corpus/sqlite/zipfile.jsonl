@@ -1,0 +1,102 @@
+{"sql":"CREATE VIRTUAL TABLE temp.zz USING zipfile('test.zip')"}
+{"sql":"PRAGMA table_info(zz)"}
+{"sql":"INSERT INTO zz(name, mode, mtime, sz, rawdata, method) \n  VALUES('f.txt', '-rw-r--r--', 1000000000, 5, 'abcde', 0)"}
+{"sql":"INSERT INTO zz(name, mtime, sz, data, method) \n  VALUES('g.txt', 1000000002, 5, '12345', 0)"}
+{"sql":"INSERT INTO zz(name, mtime, rawdata, method) \n  VALUES('g.txt', 1000000002, '12345', 0)"}
+{"sql":"INSERT INTO zz(name, data, method) \n  VALUES('g.txt', '12345', 7)"}
+{"sql":"INSERT INTO zz(name, mode, mtime, data, method) \n  VALUES('f.txt', '-rw-r--r--', 1000000000, 'abcde', 0)"}
+{"sql":"INSERT INTO zz(name, mode, mtime, data, method) \n  VALUES('g.txt', NULL, 1000000002, '12345', 0)"}
+{"sql":"SELECT name, mtime, data FROM zipfile('test.zip')"}
+{"sql":"INSERT INTO zz(name, mode, mtime, data) VALUES('h.txt', \n    '-rw-r--r--', 1000000004, 'aaaaaaaaaabbbbbbbbbb'\n  )"}
+{"sql":"SELECT name, mtime, data, method FROM zipfile('test.zip')"}
+{"sql":"SELECT zipfile_cds(mode) FROM zipfile('test.zip')"}
+{"sql":"INSERT INTO zz(name, mode, mtime, data, method)\n    VALUES('i.txt', '-rw-r--r--', 1000000006, 'zxcvb', 0)"}
+{"sql":"SELECT name FROM zz"}
+{"sql":"SELECT data FROM zz WHERE name='i.txt'"}
+{"sql":"DELETE FROM zz WHERE name='g.txt'"}
+{"sql":"SELECT name, mode, mtime, data, method FROM zipfile('test.zip')"}
+{"sql":"UPDATE zz SET mtime=4 WHERE name='i.txt'"}
+{"sql":"UPDATE zz SET name = 'blue.txt' WHERE name='f.txt'"}
+{"sql":"UPDATE zz SET data = 'edcba' WHERE name='blue.txt'"}
+{"sql":"UPDATE zz SET mode=NULL, data = NULL WHERE name='blue.txt'"}
+{"sql":"UPDATE zz SET data=NULL WHERE name='i.txt'"}
+{"sql":"UPDATE zz SET data = '' WHERE name='i.txt'"}
+{"sql":"SELECT name,mode,mtime,data,method from zipfile('test.zip')"}
+{"sql":"SELECT a.name, a.data \n  FROM zz AS a, zz AS b \n  WHERE a.name=+b.name AND +a.mode=b.mode"}
+{"sql":"SELECT name, data FROM zz WHERE name LIKE '%txt'"}
+{"sql":"DELETE FROM zz"}
+{"sql":"SELECT * FROM zz"}
+{"sql":"CREATE VIRTUAL TABLE zzz USING zipfile('test.zip')"}
+{"sql":"INSERT INTO zzz(name, mode) VALUES('dirname', 'drwxr-xr-x')"}
+{"sql":"SELECT name, mode, data FROM zzz"}
+{"sql":"INSERT INTO zzz(name, data) VALUES('dirname2', NULL)"}
+{"sql":"INSERT INTO zzz(name, data) VALUES('dirname2/file1.txt', 'abcdefghijklmnop')"}
+{"sql":"UPDATE zzz SET name = 'dirname3' WHERE name = 'dirname/'"}
+{"sql":"CREATE VIRTUAL TABLE temp.x1 USING zipfile('test.zip')"}
+{"sql":"INSERT INTO x1(name, data) VALUES('dir1/', NULL)"}
+{"sql":"INSERT INTO x1(name, data) VALUES('file1', '1234')"}
+{"sql":"INSERT INTO x1(name, data) VALUES('dir1/file2', '5678')"}
+{"sql":"SELECT rowid FROM x1"}
+{"sql":"CREATE VIRTUAL TABLE yyy USING zipfile()"}
+{"sql":"CREATE VIRTUAL TABLE yyy USING zipfile('test.zip', 'test.zip')"}
+{"sql":"SELECT * FROM zipfile()"}
+{"sql":"SELECT * FROM zipfile('/path/that/does/not/exist')"}
+{"sql":"WITH c(name,data) AS ( SELECT 'a.txt', 'abc')\n  SELECT zipfile(name) FROM c"}
+{"sql":"WITH c(name,data) AS ( \n    SELECT 'a.txt', 'abc' UNION ALL\n    SELECT NULL, 'def'\n  )\n  SELECT zipfile(name,data) FROM c"}
+{"sql":"WITH c(name,data,method) AS ( \n    SELECT 'a.txt', 'abc', 0\n    UNION SELECT 'b.txt', 'def', 8\n    UNION SELECT 'c.txt', 'ghi', 16\n  )\n  SELECT zipfile(name,NULL,NULL,data,method) FROM c"}
+{"sql":"WITH c(name,data) AS ( \n    SELECT 'a.txt', 'abc'\n    UNION SELECT 'b.txt', 'def'\n    UNION SELECT 'c.txt/', 'ghi'\n  )\n  SELECT zipfile(name,NULL,NULL,data) FROM c"}
+{"sql":"WITH c(name,mtime,data) AS (\n    SELECT 'a.txt', 946684800, 'abc'\n  )\n  SELECT name,mtime,data FROM zipfile(\n    ( SELECT rt( zipfile(name,NULL,mtime,data,NULL) ) FROM c )\n  )"}
+{"sql":"WITH c(name,mtime,data) AS (\n        SELECT 'a.txt', 946684800, 'abc' UNION ALL\n        SELECT 'b.txt', 1000000000, 'abc' UNION ALL\n        SELECT 'c.txt', 1111111000, 'abc'\n      )\n      SELECT writefile('test1.zip', rt( zipfile(name, NULL, mtime, data) ) ),\n             writefile('test2.zip',   ( zipfile(name, NULL, mtime, data) ) ) \n      FROM c"}
+{"sql":"SELECT name, mtime, data FROM zipfile('test1.zip')"}
+{"sql":"SELECT name, mtime, sz, rawdata, data FROM zipfile('test2.zip')"}
+{"sql":"WITH c(name,data) AS (\n        SELECT '1', randomblob(1000000) UNION ALL\n        SELECT '2', randomblob(1000000) UNION ALL\n        SELECT '3', randomblob(1000000) \n    )\n    SELECT writefile('test.zip', zipfile(name, data) ) FROM c"}
+{"sql":"CREATE VIRTUAL TABLE zz USING zipfile('test.zip')"}
+{"sql":"INSERT INTO zz(name, data) VALUES('a.txt', '1')"}
+{"sql":"INSERT INTO zz(name, data) VALUES('b.txt', '2')"}
+{"sql":"INSERT INTO zz(name, data) VALUES('c.txt', '1')"}
+{"sql":"INSERT INTO zz(name, data) VALUES('d.txt', '2')"}
+{"sql":"SELECT name, data FROM zz"}
+{"sql":"CREATE VIRTUAL TABLE nogood USING zipfile('test_unzip')"}
+{"sql":"INSERT INTO nogood(name, data) VALUES('abc', 'def')"}
+{"sql":"DROP TABLE nogood"}
+{"sql":"CREATE VIRTUAL TABLE ok USING zipfile('test.zip')"}
+{"sql":"INSERT INTO ok(name, data) VALUES ('sqlite3', 'elf')"}
+{"sql":"WITH src(nm) AS (\n    VALUES('dir1') UNION ALL\n    VALUES('dir2/') UNION ALL\n    VALUES('dir3//') UNION ALL\n    VALUES('dir4///') UNION ALL\n    VALUES('/') \n  )\n  SELECT name FROM zipfile((SELECT zipfile(nm, NULL) FROM src))"}
+{"sql":"CREATE VIRTUAL TABLE z USING zipfile('test.zip')"}
+{"sql":"INSERT INTO z(name,data) VALUES('a0','one'),('a0','two')"}
+{"sql":"SELECT name, data FROM z"}
+{"sql":"REPLACE INTO z(name,data) VALUES('a0','three'),('a0','four')"}
+{"sql":"INSERT OR IGNORE INTO z(name,data) VALUES('a0','five'),('a0','six')"}
+{"sql":"DELETE FROM z"}
+{"sql":"INSERT INTO z (name,data) VALUES ('b0','one')"}
+{"sql":"UPDATE z SET name = 'b1' WHERE name = 'b0'"}
+{"sql":"SELECT name, data FROM z ORDER BY name"}
+{"sql":"UPDATE z SET data = 'two' WHERE name = 'b0'"}
+{"sql":"UPDATE z SET name = 'b1'"}
+{"sql":"UPDATE z SET name = 'b2'"}
+{"sql":"UPDATE z SET name = name"}
+{"sql":"UPDATE z SET name = name || 'suffix'"}
+{"sql":"SELECT name FROM fsdir('subdir') ORDER BY 1"}
+{"sql":"CREATE TABLE d AS SELECT 'subdir' d"}
+{"sql":"CREATE TABLE x AS SELECT 1 x"}
+{"sql":"SELECT name FROM d JOIN x JOIN fsdir(d) ORDER BY 1"}
+{"sql":"SELECT name FROM d JOIN x JOIN fsdir('.', d) ORDER BY 1"}
+{"sql":"CREATE TABLE t0(a,b,c,d,e,f,g)"}
+{"sql":"REPLACE INTO t0(c,b,f) VALUES(10,10,10)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING zipfile('h.zip')"}
+{"sql":"REPLACE INTO t1 SELECT * FROM t0"}
+{"sql":"SELECT quote(name),quote(mode),quote(mtime),quote(sz),quote(rawdata),\n         quote(data),quote(method) FROM t1"}
+{"sql":"CREATE TABLE t1(x char)"}
+{"sql":"INSERT INTO t1(x) VALUES('1')"}
+{"sql":"INSERT INTO t1(x) SELECT zipfile(x, 'xyz') FROM t1"}
+{"sql":"INSERT INTO t1(x) SELECT zipfile(x, 'uvw') FROM t1"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING zipfile(null)"}
+{"sql":"REPLACE INTO t1 VALUES(null,null,0,null,null,null,null)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING zipfile(null)"}
+{"sql":"REPLACE INTO t2 values(null,null,null,null,null,10,null)"}
+{"sql":"DELETE FROM zipfile"}
+{"sql":"REPLACE INTO zipfile VALUES(null,null,null,null,null,123,null)"}
+{"sql":"WITH vlist(x) AS (\n     VALUES(9223372036854775807),\n           (-9223372036854775808),\n           (9223372036854775806),\n           (-9223372036854775807)\n  )\n  SELECT DISTINCT typeof(zipfile(0,0,x,0)) FROM vlist"}
+{"sql":"SELECT * FROM zipfile(NULL)"}
+{"sql":"SELECT * FROM zipfile(X'504b050600000000010001004000000000a3e1110000')"}
+{"sql":"SELECT * FROM zipfile(unhex('\n504b0304140000080000a60d3e5bd42728f602000000020000000500090068\n2e74787455540500012836db682120504b01021e03140000080000a60d3e5b\nd42728f602000000020000000500ffff0000000000000000a4810000000068\n2e74787455540500012836db68504b050600000000010001003c0000002e00\n00000000',char(0x0a,0x0d)))"}

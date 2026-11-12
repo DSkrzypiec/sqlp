@@ -1,0 +1,37 @@
+{"sql":"CREATE TABLE OID_TBL(f1 oid)","shape":"CREATE TABLE OID_TBL (f1 oid);"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('1234')","shape":"INSERT INTO OID_TBL (f1) VALUES ('1234');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('1235')","shape":"INSERT INTO OID_TBL (f1) VALUES ('1235');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('987')","shape":"INSERT INTO OID_TBL (f1) VALUES ('987');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('-1040')","shape":"INSERT INTO OID_TBL (f1) VALUES ('-1040');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('99999999')","shape":"INSERT INTO OID_TBL (f1) VALUES ('99999999');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('5     ')","shape":"INSERT INTO OID_TBL (f1) VALUES ('5     ');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('   10  ')","shape":"INSERT INTO OID_TBL (f1) VALUES ('   10  ');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('\t  15 \t  ')","shape":"INSERT INTO OID_TBL (f1) VALUES ('\t  15 \t  ');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('')","shape":"INSERT INTO OID_TBL (f1) VALUES ('');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('    ')","shape":"INSERT INTO OID_TBL (f1) VALUES ('    ');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('asdfasd')","shape":"INSERT INTO OID_TBL (f1) VALUES ('asdfasd');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('99asdfasd')","shape":"INSERT INTO OID_TBL (f1) VALUES ('99asdfasd');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('5    d')","shape":"INSERT INTO OID_TBL (f1) VALUES ('5    d');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('    5d')","shape":"INSERT INTO OID_TBL (f1) VALUES ('    5d');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('5    5')","shape":"INSERT INTO OID_TBL (f1) VALUES ('5    5');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES (' - 500')","shape":"INSERT INTO OID_TBL (f1) VALUES (' - 500');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('32958209582039852935')","shape":"INSERT INTO OID_TBL (f1) VALUES ('32958209582039852935');"}
+{"sql":"INSERT INTO OID_TBL(f1) VALUES ('-23582358720398502385')","shape":"INSERT INTO OID_TBL (f1) VALUES ('-23582358720398502385');"}
+{"sql":"SELECT * FROM OID_TBL","shape":"SELECT * FROM OID_TBL;"}
+{"sql":"SELECT pg_input_is_valid('1234', 'oid')","shape":"SELECT pg_input_is_valid('1234', 'oid');"}
+{"sql":"SELECT pg_input_is_valid('01XYZ', 'oid')","shape":"SELECT pg_input_is_valid('01XYZ', 'oid');"}
+{"sql":"SELECT * FROM pg_input_error_info('01XYZ', 'oid')","shape":"SELECT * FROM pg_input_error_info('01XYZ', 'oid');"}
+{"sql":"SELECT pg_input_is_valid('9999999999', 'oid')","shape":"SELECT pg_input_is_valid('9999999999', 'oid');"}
+{"sql":"SELECT * FROM pg_input_error_info('9999999999', 'oid')","shape":"SELECT * FROM pg_input_error_info('9999999999', 'oid');"}
+{"sql":"SELECT pg_input_is_valid(' 1 2  4 ', 'oidvector')","shape":"SELECT pg_input_is_valid(' 1 2  4 ', 'oidvector');"}
+{"sql":"SELECT pg_input_is_valid('01 01XYZ', 'oidvector')","shape":"SELECT pg_input_is_valid('01 01XYZ', 'oidvector');"}
+{"sql":"SELECT * FROM pg_input_error_info('01 01XYZ', 'oidvector')","shape":"SELECT * FROM pg_input_error_info('01 01XYZ', 'oidvector');"}
+{"sql":"SELECT pg_input_is_valid('01 9999999999', 'oidvector')","shape":"SELECT pg_input_is_valid('01 9999999999', 'oidvector');"}
+{"sql":"SELECT * FROM pg_input_error_info('01 9999999999', 'oidvector')","shape":"SELECT * FROM pg_input_error_info('01 9999999999', 'oidvector');"}
+{"sql":"SELECT o.* FROM OID_TBL o WHERE o.f1 = 1234","shape":"SELECT o.* FROM OID_TBL AS o WHERE o.f1 = 1234;"}
+{"sql":"SELECT o.* FROM OID_TBL o WHERE o.f1 <> '1234'","shape":"SELECT o.* FROM OID_TBL AS o WHERE o.f1 <> '1234';"}
+{"sql":"SELECT o.* FROM OID_TBL o WHERE o.f1 <= '1234'","shape":"SELECT o.* FROM OID_TBL AS o WHERE o.f1 <= '1234';"}
+{"sql":"SELECT o.* FROM OID_TBL o WHERE o.f1 < '1234'","shape":"SELECT o.* FROM OID_TBL AS o WHERE o.f1 < '1234';"}
+{"sql":"SELECT o.* FROM OID_TBL o WHERE o.f1 >= '1234'","shape":"SELECT o.* FROM OID_TBL AS o WHERE o.f1 >= '1234';"}
+{"sql":"SELECT o.* FROM OID_TBL o WHERE o.f1 > '1234'","shape":"SELECT o.* FROM OID_TBL AS o WHERE o.f1 > '1234';"}
+{"sql":"DROP TABLE OID_TBL","shape":"DROP TABLE OID_TBL;"}

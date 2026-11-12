@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO aux.t2 VALUES('a', 'b')"}
+{"sql":"PRAGMA schema_version = 450"}
+{"sql":"PRAGMA main.journal_mode = wal"}

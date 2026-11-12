@@ -1,0 +1,12 @@
+{"sql":"CREATE TABLE t1(a, b COLLATE string_compare)"}
+{"sql":"INSERT INTO t1 VALUES(10, 'string')"}
+{"sql":"INSERT INTO t1 VALUES(10, 'string2')"}
+{"sql":"PRAGMA encoding = \"UTF16be\""}
+{"sql":"INSERT INTO t1 VALUES('fghij')"}
+{"sql":"INSERT INTO t1 VALUES('pqrst')"}
+{"sql":"INSERT INTO t1 VALUES('abcde')"}
+{"sql":"INSERT INTO t1 VALUES('uvwxy')"}
+{"sql":"INSERT INTO t1 VALUES('klmno')"}
+{"sql":"SELECT * FROM t1 ORDER BY 1 COLLATE utf16bin"}
+{"sql":"CREATE VIEW a002 AS SELECT *, sum(b) AS m FROM t2 GROUP BY a"}
+{"sql":"SELECT t1.z, a002.m\n    FROM t1 JOIN a002 ON t1.y=a002.m\n    WHERE t1.x IN (1,2,3)"}

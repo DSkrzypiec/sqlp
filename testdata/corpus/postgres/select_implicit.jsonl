@@ -1,0 +1,44 @@
+{"sql":"CREATE TABLE test_missing_target (a int, b int, c char(8), d char)","shape":"CREATE TABLE test_missing_target (a int, b int, c char(8), d char);"}
+{"sql":"INSERT INTO test_missing_target VALUES (0, 1, 'XXXX', 'A')","shape":"INSERT INTO test_missing_target VALUES (0, 1, 'XXXX', 'A');"}
+{"sql":"INSERT INTO test_missing_target VALUES (1, 2, 'ABAB', 'b')","shape":"INSERT INTO test_missing_target VALUES (1, 2, 'ABAB', 'b');"}
+{"sql":"INSERT INTO test_missing_target VALUES (2, 2, 'ABAB', 'c')","shape":"INSERT INTO test_missing_target VALUES (2, 2, 'ABAB', 'c');"}
+{"sql":"INSERT INTO test_missing_target VALUES (3, 3, 'BBBB', 'D')","shape":"INSERT INTO test_missing_target VALUES (3, 3, 'BBBB', 'D');"}
+{"sql":"INSERT INTO test_missing_target VALUES (4, 3, 'BBBB', 'e')","shape":"INSERT INTO test_missing_target VALUES (4, 3, 'BBBB', 'e');"}
+{"sql":"INSERT INTO test_missing_target VALUES (5, 3, 'bbbb', 'F')","shape":"INSERT INTO test_missing_target VALUES (5, 3, 'bbbb', 'F');"}
+{"sql":"INSERT INTO test_missing_target VALUES (6, 4, 'cccc', 'g')","shape":"INSERT INTO test_missing_target VALUES (6, 4, 'cccc', 'g');"}
+{"sql":"INSERT INTO test_missing_target VALUES (7, 4, 'cccc', 'h')","shape":"INSERT INTO test_missing_target VALUES (7, 4, 'cccc', 'h');"}
+{"sql":"INSERT INTO test_missing_target VALUES (8, 4, 'CCCC', 'I')","shape":"INSERT INTO test_missing_target VALUES (8, 4, 'CCCC', 'I');"}
+{"sql":"INSERT INTO test_missing_target VALUES (9, 4, 'CCCC', 'j')","shape":"INSERT INTO test_missing_target VALUES (9, 4, 'CCCC', 'j');"}
+{"sql":"SELECT c, count(*) FROM test_missing_target GROUP BY test_missing_target.c ORDER BY c","shape":"SELECT c, count(*) FROM test_missing_target GROUP BY test_missing_target.c ORDER BY c;"}
+{"sql":"SELECT count(*) FROM test_missing_target GROUP BY test_missing_target.c ORDER BY c","shape":"SELECT count(*) FROM test_missing_target GROUP BY test_missing_target.c ORDER BY c;"}
+{"sql":"SELECT count(*) FROM test_missing_target GROUP BY a ORDER BY b","shape":"SELECT count(*) FROM test_missing_target GROUP BY a ORDER BY b;"}
+{"sql":"SELECT count(*) FROM test_missing_target GROUP BY b ORDER BY b","shape":"SELECT count(*) FROM test_missing_target GROUP BY b ORDER BY b;"}
+{"sql":"SELECT test_missing_target.b, count(*)\n  FROM test_missing_target GROUP BY b ORDER BY b","shape":"SELECT test_missing_target.b, count(*) FROM test_missing_target GROUP BY b ORDER BY b;"}
+{"sql":"SELECT c FROM test_missing_target ORDER BY a","shape":"SELECT c FROM test_missing_target ORDER BY a;"}
+{"sql":"SELECT count(*) FROM test_missing_target GROUP BY b ORDER BY b desc","shape":"SELECT count(*) FROM test_missing_target GROUP BY b ORDER BY b DESC;"}
+{"sql":"SELECT count(*) FROM test_missing_target ORDER BY 1 desc","shape":"SELECT count(*) FROM test_missing_target ORDER BY 1 DESC;"}
+{"sql":"SELECT c, count(*) FROM test_missing_target GROUP BY 1 ORDER BY 1","shape":"SELECT c, count(*) FROM test_missing_target GROUP BY 1 ORDER BY 1;"}
+{"sql":"SELECT c, count(*) FROM test_missing_target GROUP BY 3","shape":"SELECT c, count(*) FROM test_missing_target GROUP BY 3;"}
+{"sql":"SELECT count(*) FROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY b ORDER BY b","shape":"SELECT count(*) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY b ORDER BY b;"}
+{"sql":"SELECT a, a FROM test_missing_target\n\tORDER BY a","shape":"SELECT a, a FROM test_missing_target ORDER BY a;"}
+{"sql":"SELECT a/2, a/2 FROM test_missing_target\n\tORDER BY a/2","shape":"SELECT a / 2, a / 2 FROM test_missing_target ORDER BY a / 2;"}
+{"sql":"SELECT a/2, a/2 FROM test_missing_target\n\tGROUP BY a/2 ORDER BY a/2","shape":"SELECT a / 2, a / 2 FROM test_missing_target GROUP BY a / 2 ORDER BY a / 2;"}
+{"sql":"SELECT x.b, count(*) FROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY x.b ORDER BY x.b","shape":"SELECT x.b, count(*) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY x.b ORDER BY x.b;"}
+{"sql":"SELECT count(*) FROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY x.b ORDER BY x.b","shape":"SELECT count(*) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY x.b ORDER BY x.b;"}
+{"sql":"CREATE TABLE test_missing_target2 AS\nSELECT count(*)\nFROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY x.b ORDER BY x.b","shape":"CREATE TABLE test_missing_target2 AS SELECT count(*) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY x.b ORDER BY x.b;"}
+{"sql":"SELECT * FROM test_missing_target2","shape":"SELECT * FROM test_missing_target2;"}
+{"sql":"SELECT a%2, count(b) FROM test_missing_target\nGROUP BY test_missing_target.a%2\nORDER BY test_missing_target.a%2","shape":"SELECT a % 2, count(b) FROM test_missing_target GROUP BY test_missing_target.a % 2 ORDER BY test_missing_target.a % 2;"}
+{"sql":"SELECT count(c) FROM test_missing_target\nGROUP BY lower(test_missing_target.c)\nORDER BY lower(test_missing_target.c)","shape":"SELECT count(c) FROM test_missing_target GROUP BY lower(test_missing_target.c) ORDER BY lower(test_missing_target.c);"}
+{"sql":"SELECT count(a) FROM test_missing_target GROUP BY a ORDER BY b","shape":"SELECT count(a) FROM test_missing_target GROUP BY a ORDER BY b;"}
+{"sql":"SELECT count(b) FROM test_missing_target GROUP BY b/2 ORDER BY b/2","shape":"SELECT count(b) FROM test_missing_target GROUP BY b / 2 ORDER BY b / 2;"}
+{"sql":"SELECT lower(test_missing_target.c), count(c)\n  FROM test_missing_target GROUP BY lower(c) ORDER BY lower(c)","shape":"SELECT lower(test_missing_target.c), count(c) FROM test_missing_target GROUP BY lower(c) ORDER BY lower(c);"}
+{"sql":"SELECT a FROM test_missing_target ORDER BY upper(d)","shape":"SELECT a FROM test_missing_target ORDER BY upper(d);"}
+{"sql":"SELECT count(b) FROM test_missing_target\n\tGROUP BY (b + 1) / 2 ORDER BY (b + 1) / 2 desc","shape":"SELECT count(b) FROM test_missing_target GROUP BY (b + 1) / 2 ORDER BY (b + 1) / 2 DESC;"}
+{"sql":"SELECT count(x.a) FROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY b/2 ORDER BY b/2","shape":"SELECT count(x.a) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY b / 2 ORDER BY b / 2;"}
+{"sql":"SELECT x.b/2, count(x.b) FROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY x.b/2 ORDER BY x.b/2","shape":"SELECT x.b / 2, count(x.b) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY x.b / 2 ORDER BY x.b / 2;"}
+{"sql":"SELECT count(b) FROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY x.b/2","shape":"SELECT count(b) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY x.b / 2;"}
+{"sql":"CREATE TABLE test_missing_target3 AS\nSELECT count(x.b)\nFROM test_missing_target x, test_missing_target y\n\tWHERE x.a = y.a\n\tGROUP BY x.b/2 ORDER BY x.b/2","shape":"CREATE TABLE test_missing_target3 AS SELECT count(x.b) FROM test_missing_target AS x, test_missing_target AS y WHERE x.a = y.a GROUP BY x.b / 2 ORDER BY x.b / 2;"}
+{"sql":"SELECT * FROM test_missing_target3","shape":"SELECT * FROM test_missing_target3;"}
+{"sql":"DROP TABLE test_missing_target","shape":"DROP TABLE test_missing_target;"}
+{"sql":"DROP TABLE test_missing_target2","shape":"DROP TABLE test_missing_target2;"}
+{"sql":"DROP TABLE test_missing_target3","shape":"DROP TABLE test_missing_target3;"}

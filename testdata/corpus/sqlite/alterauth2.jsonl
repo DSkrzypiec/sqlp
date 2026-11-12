@@ -1,0 +1,2 @@
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    DELETE FROM t1 WHERE a<new.a;\n  END"}
+{"sql":"CREATE TEMP TRIGGER tr2 AFTER UPDATE OF a, b ON t1 BEGIN\n    UPDATE t1 SET a=a+1 WHERE new.b<b;\n  END"}

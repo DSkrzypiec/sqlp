@@ -1,0 +1,405 @@
+{"sql":"WITH x AS (SELECT 1) SELECT * FROM x","shape":"WITH x AS (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT a FROM x","shape":"WITH x AS (SELECT a FROM t) SELECT a FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT x.a FROM x","shape":"WITH x AS (SELECT a FROM t) SELECT x.a FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT y.a FROM x AS y","shape":"WITH x AS (SELECT a FROM t) SELECT y.a FROM x AS y;"}
+{"sql":"WITH x (p) AS (SELECT a FROM t) SELECT p FROM x","shape":"WITH x(p) AS (SELECT a FROM t) SELECT p FROM x;"}
+{"sql":"WITH x (p, q) AS (SELECT a, b FROM t) SELECT p, q FROM x","shape":"WITH x(p, q) AS (SELECT a, b FROM t) SELECT p, q FROM x;"}
+{"sql":"WITH \"x y\" AS (SELECT 1) SELECT * FROM \"x y\"","shape":"WITH \"x y\" AS (SELECT 1) SELECT * FROM \"x y\";"}
+{"sql":"WITH x AS (SELECT 1), y AS (SELECT 2) SELECT * FROM x, y","shape":"WITH x AS (SELECT 1), y AS (SELECT 2) SELECT * FROM x, y;"}
+{"sql":"WITH x AS (SELECT 1), y AS (SELECT * FROM x) SELECT * FROM y","shape":"WITH x AS (SELECT 1), y AS (SELECT * FROM x) SELECT * FROM y;"}
+{"sql":"WITH x AS (SELECT 1), y AS (SELECT * FROM x), z AS (SELECT * FROM y) SELECT * FROM z","shape":"WITH x AS (SELECT 1), y AS (SELECT * FROM x), z AS (SELECT * FROM y) SELECT * FROM z;"}
+{"sql":"WITH x (p) AS (SELECT 1), y (q) AS (SELECT p FROM x) SELECT q FROM y","shape":"WITH x(p) AS (SELECT 1), y(q) AS (SELECT p FROM x) SELECT q FROM y;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT * FROM x JOIN x AS y ON x.a = y.a","shape":"WITH x AS (SELECT a FROM t) SELECT * FROM x JOIN x AS y ON x.a = y.a;"}
+{"sql":"WITH x AS (SELECT a FROM t), y AS (SELECT a FROM u) SELECT * FROM x JOIN y ON x.a = y.a","shape":"WITH x AS (SELECT a FROM t), y AS (SELECT a FROM u) SELECT * FROM x JOIN y ON x.a = y.a;"}
+{"sql":"WITH x AS (SELECT a FROM t), y AS (SELECT a FROM u) SELECT * FROM x LEFT JOIN y USING (a)","shape":"WITH x AS (SELECT a FROM t), y AS (SELECT a FROM u) SELECT * FROM x LEFT JOIN y USING (a);"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT * FROM t WHERE a IN (SELECT a FROM x)","shape":"WITH x AS (SELECT a FROM t) SELECT * FROM t WHERE a IN (SELECT a FROM x);"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT * FROM t WHERE EXISTS (SELECT 1 FROM x WHERE x.a = t.a)","shape":"WITH x AS (SELECT a FROM t) SELECT * FROM t WHERE EXISTS (SELECT 1 FROM x WHERE x.a = t.a);"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT (SELECT MAX(a) FROM x)","shape":"WITH x AS (SELECT a FROM t) SELECT (SELECT MAX(a) FROM x);"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT a FROM x UNION SELECT a FROM x","shape":"WITH x AS (SELECT a FROM t) SELECT a FROM x UNION SELECT a FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT a FROM x ORDER BY a","shape":"WITH x AS (SELECT a FROM t) SELECT a FROM x ORDER BY a;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT a FROM x ORDER BY a LIMIT 1","shape":"WITH x AS (SELECT a FROM t) SELECT a FROM x ORDER BY a LIMIT 1;"}
+{"sql":"WITH x AS (SELECT a FROM t) SELECT a, COUNT(*) FROM x GROUP BY a HAVING COUNT(*) > 1","shape":"WITH x AS (SELECT a FROM t) SELECT a, COUNT(*) FROM x GROUP BY a HAVING COUNT(*) > 1;"}
+{"sql":"WITH x AS (SELECT a FROM t ORDER BY a LIMIT 1) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t ORDER BY a LIMIT 1) SELECT * FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t UNION SELECT a FROM u) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t UNION SELECT a FROM u) SELECT * FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t UNION ALL SELECT a FROM u ORDER BY a) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t UNION ALL SELECT a FROM u ORDER BY a) SELECT * FROM x;"}
+{"sql":"WITH x AS (VALUES (1), (2)) SELECT * FROM x","shape":"WITH x AS (VALUES (1), (2)) SELECT * FROM x;"}
+{"sql":"WITH x (p) AS (VALUES (1), (2)) SELECT p FROM x","shape":"WITH x(p) AS (VALUES (1), (2)) SELECT p FROM x;"}
+{"sql":"WITH x AS (SELECT * FROM (SELECT a FROM t) AS y) SELECT * FROM x","shape":"WITH x AS (SELECT * FROM (SELECT a FROM t) AS y) SELECT * FROM x;"}
+{"sql":"WITH x AS (SELECT a FROM t WHERE a IN (SELECT a FROM u)) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t WHERE a IN (SELECT a FROM u)) SELECT * FROM x;"}
+{"sql":"WITH x AS (WITH y AS (SELECT 1) SELECT * FROM y) SELECT * FROM x","shape":"WITH x AS (WITH y AS (SELECT 1) SELECT * FROM y) SELECT * FROM x;"}
+{"sql":"WITH x AS (WITH y AS (WITH z AS (SELECT 1) SELECT * FROM z) SELECT * FROM y) SELECT * FROM x","shape":"WITH x AS (WITH y AS (WITH z AS (SELECT 1) SELECT * FROM z) SELECT * FROM y) SELECT * FROM x;"}
+{"sql":"WITH x AS (WITH y AS (SELECT 1), z AS (SELECT 2) SELECT * FROM y, z) SELECT * FROM x","shape":"WITH x AS (WITH y AS (SELECT 1), z AS (SELECT 2) SELECT * FROM y, z) SELECT * FROM x;"}
+{"sql":"SELECT * FROM (WITH x AS (SELECT 1) SELECT * FROM x) AS y","shape":"SELECT * FROM (WITH x AS (SELECT 1) SELECT * FROM x) AS y;"}
+{"sql":"SELECT * FROM (WITH x AS (SELECT 1) SELECT * FROM x)","shape":"SELECT * FROM (WITH x AS (SELECT 1) SELECT * FROM x);"}
+{"sql":"SELECT (WITH x AS (SELECT 1) SELECT * FROM x)","shape":"SELECT (WITH x AS (SELECT 1) SELECT * FROM x);"}
+{"sql":"SELECT a FROM t WHERE a IN (WITH x AS (SELECT 1) SELECT * FROM x)","shape":"SELECT a FROM t WHERE a IN (WITH x AS (SELECT 1) SELECT * FROM x);"}
+{"sql":"SELECT a FROM t WHERE EXISTS (WITH x AS (SELECT 1) SELECT * FROM x)","shape":"SELECT a FROM t WHERE EXISTS (WITH x AS (SELECT 1) SELECT * FROM x);"}
+{"sql":"WITH x AS (SELECT 1) SELECT * FROM (WITH y AS (SELECT * FROM x) SELECT * FROM y) AS z","shape":"WITH x AS (SELECT 1) SELECT * FROM (WITH y AS (SELECT * FROM x) SELECT * FROM y) AS z;"}
+{"sql":"(WITH x AS (SELECT 1) SELECT * FROM x)","reject":true}
+{"sql":"(WITH x AS (SELECT 1) SELECT * FROM x) UNION SELECT 2","reject":true}
+{"sql":"WITH x AS (SELECT 1) (SELECT * FROM x)","reject":true}
+{"sql":"WITH x AS (SELECT 1) (SELECT * FROM x) UNION (SELECT 2)","reject":true}
+{"sql":"WITH x AS (SELECT 1) VALUES (1)","shape":"WITH x AS (SELECT 1) VALUES (1);"}
+{"sql":"WITH x AS MATERIALIZED (SELECT 1) SELECT * FROM x","shape":"WITH x AS MATERIALIZED (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH x AS NOT MATERIALIZED (SELECT 1) SELECT * FROM x","shape":"WITH x AS NOT MATERIALIZED (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH x AS MATERIALIZED (SELECT 1), y AS NOT MATERIALIZED (SELECT 2) SELECT * FROM x, y","shape":"WITH x AS MATERIALIZED (SELECT 1), y AS NOT MATERIALIZED (SELECT 2) SELECT * FROM x, y;"}
+{"sql":"WITH x (p) AS MATERIALIZED (SELECT 1) SELECT * FROM x","shape":"WITH x(p) AS MATERIALIZED (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH x AS (SELECT 1) INSERT INTO t (a) SELECT * FROM x","shape":"WITH x AS (SELECT 1) INSERT INTO t (a) SELECT * FROM x;"}
+{"sql":"WITH x AS (SELECT 1) UPDATE t SET a = (SELECT * FROM x)","shape":"WITH x AS (SELECT 1) UPDATE t SET a = (SELECT * FROM x);"}
+{"sql":"WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)","shape":"WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x);"}
+{"sql":"WITH x AS (INSERT INTO t (a) VALUES (1) RETURNING a) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (UPDATE t SET a = 1 RETURNING a) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (DELETE FROM t RETURNING a) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (DELETE FROM t RETURNING *) INSERT INTO u SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (INSERT INTO t (a) VALUES (1)) SELECT 1","reject":true}
+{"sql":"WITH recursive AS (SELECT 1) SELECT * FROM recursive","reject":true}
+{"sql":"WITH RECURSIVE x AS (SELECT 1) SELECT * FROM x","shape":"WITH RECURSIVE x AS (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH","reject":true}
+{"sql":"WITH x","reject":true}
+{"sql":"WITH x AS","reject":true}
+{"sql":"WITH x AS (","reject":true}
+{"sql":"WITH x AS ()","reject":true}
+{"sql":"WITH x AS (SELECT 1)","reject":true}
+{"sql":"WITH x AS (SELECT 1","reject":true}
+{"sql":"WITH x AS SELECT 1 SELECT * FROM x","reject":true}
+{"sql":"WITH AS (SELECT 1) SELECT 1","reject":true}
+{"sql":"WITH x (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x () AS (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x (p,) AS (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x (1) AS (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (SELECT 1), SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (SELECT 1) y AS (SELECT 2) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (SELECT 1), AS (SELECT 2) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (SELECT 1) WITH y AS (SELECT 2) SELECT * FROM x","reject":true}
+{"sql":"WITH 1 AS (SELECT 1) SELECT 1","reject":true}
+{"sql":"WITH select AS (SELECT 1) SELECT 1","reject":true}
+{"sql":"WITH x AS MATERIALIZED SELECT 1","reject":true}
+{"sql":"WITH x AS NOT (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS MATERIALIZED NOT (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS (SELECT 1) FROM x","reject":true}
+{"sql":"WITH x AS (FROM t) SELECT 1","reject":true}
+{"sql":"WITH x AS (t) SELECT 1","reject":true}
+{"sql":"SELECT 1 WITH x AS (SELECT 1)","reject":true}
+{"sql":"SELECT a FROM t WITH x AS (SELECT 1)","reject":true}
+{"sql":"WITH SELECT AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 SELECT * FROM x","reject":true}
+{"sql":"WITH x ( AS SELECT a FROM t ) SELECT a FROM x","reject":true}
+{"sql":"WITH x AS ( a SELECT FROM t ) SELECT a FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) a FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) FROM a FROM x","reject":true}
+{"sql":"WITH x ( AS SELECT a FROM t ) SELECT x . a FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT FROM a t ) SELECT x . a FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t SELECT ) x . a FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT x . ( FROM x","reject":true}
+{"sql":"WITH x AS ( a SELECT FROM t ) SELECT y . a FROM x AS y","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT y . a FROM x x AS y","reject":true}
+{"sql":"WITH x x ( SELECT a FROM t ) SELECT y . a FROM x AS y","reject":true}
+{"sql":"WITH x AS ( a FROM t ) SELECT y . a FROM x AS y","reject":true}
+{"sql":"WITH x ( p ) AS ( SELECT a * t ) SELECT p FROM x"}
+{"sql":"WITH x ( ( p ) AS ( SELECT a FROM t ) SELECT p FROM x","reject":true}
+{"sql":"WITH x p ( ) AS ( SELECT a FROM t ) SELECT p FROM x","reject":true}
+{"sql":"WITH x ( p p ) AS ( SELECT a FROM t ) SELECT p FROM x","reject":true}
+{"sql":"WITH x ( p , q ) AS ( SELECT a , b FROM t SELECT ) p , q FROM x","reject":true}
+{"sql":"* x ( p , q ) AS ( SELECT a , b FROM t ) SELECT p , q FROM x","reject":true}
+{"sql":"WITH x ( p , q ) AS ( SELECT a , b FROM t ) ) SELECT p , q FROM x","reject":true}
+{"sql":"WITH x ( p , q ) AS ( SELECT a , b FROM t ) SELECT p , RETURNING FROM x","reject":true}
+{"sql":"WITH \"x y\" AS ( SELECT 1 ) * FROM \"x y\"","reject":true}
+{"sql":"WITH \"x y\" AS ( SELECT 1 ) SELECT * FROM )","reject":true}
+{"sql":"WITH \"x y\" AS ( 1 SELECT ) SELECT * FROM \"x y\"","reject":true}
+{"sql":"WITH \"x y\" AS ( SELECT ) SELECT * FROM \"x y\"","reject":true}
+{"sql":"WITH x AS ( SELECT 1 , y AS ( SELECT 2 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH AS x ( SELECT 1 ) , y AS ( SELECT 2 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH x AS SELECT ( 1 ) , y AS ( SELECT 2 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH x AS SELECT 1 ) , y AS ( SELECT 2 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH x ( AS SELECT 1 ) , y AS ( SELECT * FROM x ) SELECT * FROM y","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) y , AS ( SELECT * FROM x ) SELECT * FROM y","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , y AS ( SELECT * FROM x ) SELECT AS FROM y","reject":true}
+{"sql":"1 x AS ( SELECT 1 ) , y AS ( SELECT * FROM x ) SELECT * FROM y","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , y AS ( SELECT * FROM x ) , z AS ( SELECT * FROM y y ) SELECT * FROM z","shape":"WITH x AS (SELECT 1), y AS (SELECT * FROM x), z AS (SELECT * FROM y AS y) SELECT * FROM z;"}
+{"sql":"WITH x AS ( SELECT 1 ) t y AS ( SELECT * FROM x ) , z AS ( SELECT * FROM y ) SELECT * FROM z","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , y AS ( SELECT * FROM x ) , z AS ( SELECT INSERT FROM y ) SELECT * FROM z","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , y AS ( SELECT FROM x ) , z AS ( SELECT * FROM y ) SELECT * FROM z","reject":true}
+{"sql":"WITH x ( p ) AS ( SELECT 1 ) , y ( q 2 AS ( SELECT p FROM x ) SELECT q FROM y","reject":true}
+{"sql":"WITH x ( p ) ( SELECT 1 ) , y ( q ) AS ( SELECT p FROM x ) SELECT q FROM y","reject":true}
+{"sql":"WITH x ( p ) AS ( SELECT 1 ) , y ( q ) AS ( SELECT p FROM FROM x ) SELECT q FROM y","reject":true}
+{"sql":"WITH x ( p ) AS ( SELECT 1 ) , y ( q ) AS ( SELECT p p FROM x ) SELECT q FROM y","shape":"WITH x(p) AS (SELECT 1), y(q) AS (SELECT p AS p FROM x) SELECT q FROM y;"}
+{"sql":"WITH a AS ( SELECT a FROM t ) SELECT * FROM x JOIN x AS y ON x . a = y . a"}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM JOIN x x AS y ON x . a = y . a","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * * FROM x JOIN x AS y ON x . a = y . a","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM x JOIN x y ON x . a = y . a","shape":"WITH x AS (SELECT a FROM t) SELECT * FROM x JOIN x AS y ON x.a = y.a;"}
+{"sql":"WITH x AS ( SELECT a FROM t ) , y y AS ( SELECT a FROM u ) SELECT * FROM x JOIN y ON x . a = y . a","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) , y AS ( SELECT a FROM u ) SELECT * FROM x JOIN y ON x . a = y . a","shape":"WITH x AS (SELECT a FROM t), y AS (SELECT a FROM u) SELECT * FROM x JOIN y ON x.a = y.a;"}
+{"sql":"WITH x AS ( SELECT a FROM t ) ) , y AS ( SELECT a FROM u ) SELECT * FROM x JOIN y ON x . a = y . a","reject":true}
+{"sql":"WITH x AS ( ( SELECT a FROM t ) , y AS ( SELECT a FROM u ) SELECT * FROM x JOIN y ON x . a = y . a","reject":true}
+{"sql":"x WITH AS ( SELECT a FROM t ) , y AS ( SELECT a FROM u ) SELECT * FROM x LEFT JOIN y USING ( a )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) , y AS ( a SELECT FROM u ) SELECT * FROM x LEFT JOIN y USING ( a )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) , y AS ( SELECT a FROM u ) SELECT * FROM x LEFT JOIN y x ( a )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) , y AS AS ( SELECT a FROM u ) SELECT * FROM x LEFT JOIN y USING ( a )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM t WHERE a IN ( SELECT a FROM x )","shape":"WITH x AS (SELECT a FROM t) SELECT * FROM t WHERE a IN (SELECT a FROM x);"}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM t WHERE a IN ( SELECT ) FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ( SELECT * FROM t WHERE a IN ( SELECT a FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT a t FROM ) SELECT * FROM t WHERE a IN ( SELECT a FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM t WHERE EXISTS ( SELECT 1 FROM x WHERE x 1 a = t . a )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM t WHERE EXISTS ( SELECT 1 FROM x WHERE x . a = t . )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM t WHERE EXISTS ( SELECT 1 x WHERE x . a = t . a )"}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM WHERE EXISTS ( SELECT 1 FROM x WHERE x . a = t . a )","reject":true}
+{"sql":"WITH x AS ( FROM a FROM t ) SELECT ( SELECT MAX ( a ) FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT SELECT FROM t ) SELECT ( SELECT MAX ( a ) FROM x )","reject":true}
+{"sql":"WITH x x AS ( SELECT a FROM t ) SELECT ( SELECT MAX ( a ) FROM x )","reject":true}
+{"sql":"WITH x AS AS ( SELECT a FROM t ) SELECT ( SELECT MAX ( a ) FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT a FROM UNION x SELECT a FROM x","reject":true}
+{"sql":"WITH x * ( SELECT a FROM t ) SELECT a FROM x UNION SELECT a FROM x","reject":true}
+{"sql":"WITH x AS ( a SELECT FROM t ) SELECT a FROM x UNION SELECT a FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a SELECT t ) SELECT a FROM x UNION SELECT a FROM x","reject":true}
+{"sql":"1 x AS ( SELECT a FROM t ) SELECT a FROM x ORDER BY a","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT a FROM x ORDER a BY","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM ) SELECT a FROM x ORDER BY a","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t SELECT ) a FROM x ORDER BY a","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT a FROM x x BY a LIMIT 1","reject":true}
+{"sql":"WITH x AS ( SELECT FROM a t ) SELECT a FROM x ORDER BY a LIMIT 1","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) a FROM x ORDER BY a LIMIT 1","reject":true}
+{"sql":"WITH x AS SELECT a FROM t ) SELECT a FROM x ORDER BY a LIMIT 1","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM ) t SELECT a , COUNT ( * ) FROM x GROUP BY a HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"WITH x AS ( ) a FROM t ) SELECT a , COUNT ( * ) FROM x GROUP BY a HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"WITH AS x ( SELECT a FROM t ) SELECT a , COUNT ( * ) FROM x GROUP BY a HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ) SELECT a , COUNT ( * ) FROM GROUP BY a HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"WITH x AS ( SELECT a t ORDER BY a LIMIT 1 ) SELECT * FROM x"}
+{"sql":"WITH x AS ( SELECT a FROM t ORDER BY a LIMIT 1 ) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t ORDER BY a LIMIT 1) SELECT * FROM x;"}
+{"sql":"WITH x AS ( SELECT a FROM t ORDER BY a LIMIT 1 ) * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t ORDER a LIMIT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a a FROM t UNION SELECT a FROM u ) SELECT * FROM x","shape":"WITH x AS (SELECT a AS a FROM t UNION SELECT a FROM u) SELECT * FROM x;"}
+{"sql":"WITH x AS ( SELECT a FROM t UNION SELECT a FROM u ) * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT FROM a t UNION SELECT a FROM u ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM UNION SELECT a FROM u ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t UNION ALL SELECT a FROM u ORDER BY a ) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t UNION ALL SELECT a FROM u ORDER BY a) SELECT * FROM x;"}
+{"sql":"x WITH AS ( SELECT a FROM t UNION ALL SELECT a FROM u ORDER BY a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t UNION ALL SELECT a FROM u ORDER BY a ) AS * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t UNION ALL SELECT a FROM u ORDER a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( VALUES ( 1 ) , ( 2 2 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( VALUES ( 1 1 , ( 2 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( AS VALUES ( 1 ) , ( 2 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( VALUES ( 1 ) , ( 2 ) ) SELECT FROM * x","reject":true}
+{"sql":"WITH x ( p ) AS ( VALUES ( 1 ) , 2 ) ) SELECT p FROM x","reject":true}
+{"sql":"x WITH ( p ) AS ( VALUES ( 1 ) , ( 2 ) ) SELECT p FROM x","reject":true}
+{"sql":"WITH x ( p ) AS ( VALUES ( 1 1 ) , ( 2 ) ) SELECT p FROM x","reject":true}
+{"sql":"x ( p ) AS ( VALUES ( 1 ) , ( 2 ) ) SELECT p FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT * FROM ( SELECT a FROM t ) AS y ) SELECT * FROM x","shape":"WITH x AS (SELECT * FROM (SELECT a FROM t) AS y) SELECT * FROM x;"}
+{"sql":"WITH x AS ( * FROM ( SELECT a FROM t ) AS y ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT * FROM ( SELECT a FROM t t ) AS y ) SELECT * FROM x","shape":"WITH x AS (SELECT * FROM (SELECT a FROM t AS t) AS y) SELECT * FROM x;"}
+{"sql":"WITH x AS ( SELECT * FROM ( SELECT a FROM t ) AS y ) SELECT FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t WHERE a IN ( SELECT a FROM u ) ) SELECT * FROM x","shape":"WITH x AS (SELECT a FROM t WHERE a IN (SELECT a FROM u)) SELECT * FROM x;"}
+{"sql":"WITH x AS ( SELECT a FROM t WHERE a a IN ( SELECT a FROM u ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS AS ( SELECT a FROM t WHERE a IN ( SELECT a FROM u ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT a FROM t WHERE a IN 1 SELECT a FROM u ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH y AS ( SELECT 1 ) SELECT * FROM ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( WITH y AS ( SELECT 1 ) SELECT * FROM y ) SELECT * FROM x","reject":true}
+{"sql":"x AS ( WITH y AS ( SELECT 1 ) SELECT * FROM y ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH y AS ( SELECT 1 ) SELECT * ( y ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH y AS ( WITH z AS ( SELECT 1 ) SELECT * FROM z ) SELECT * FROM ) y SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH WITH y AS ( WITH z AS ( SELECT 1 ) SELECT * FROM z ) SELECT * FROM y ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH y AS ( WITH z AS SELECT 1 ) SELECT * FROM z ) SELECT * FROM y ) SELECT * FROM x","reject":true}
+{"sql":"WITH AS ( WITH y AS ( WITH z AS ( SELECT 1 ) SELECT * FROM z ) SELECT * FROM y ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH p AS ( SELECT 1 ) , z AS ( SELECT 2 ) SELECT * FROM y , z ) SELECT * FROM x"}
+{"sql":"WITH x AS ( WITH y AS ( SELECT 1 ) , z AS ( SELECT 2 ) SELECT * FROM , z ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH y AS ( SELECT 1 ) , z AS ( SELECT 2 ) * SELECT FROM y , z ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( WITH y AS ( SELECT 1 ) , z AS ( SELECT 2 ) SELECT * FROM y , z ) SELECT * FROM","reject":true}
+{"sql":"SELECT * FROM ( WITH x AS ( SELECT 1 ) SELECT * FROM x ) y AS","reject":true}
+{"sql":"SELECT * * FROM ( WITH x AS ( SELECT 1 ) SELECT * FROM x ) AS y","reject":true}
+{"sql":"SELECT * FROM ( SELECT x AS ( SELECT 1 ) SELECT * FROM x ) AS y","reject":true}
+{"sql":"SELECT a FROM ( WITH x AS ( SELECT 1 ) SELECT * FROM x )"}
+{"sql":"SELECT * FROM ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","shape":"SELECT * FROM (WITH x AS (SELECT 1) SELECT * FROM x);"}
+{"sql":"SELECT * FROM ( WITH x AS ( SELECT 1 ) SELECT * x FROM )","reject":true}
+{"sql":"SELECT * FROM a WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"SELECT ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","shape":"SELECT (WITH x AS (SELECT 1) SELECT * FROM x);"}
+{"sql":"SELECT ( WITH x AS ( SELECT 1 ) SELECT ) FROM x )","reject":true}
+{"sql":"SELECT ( WITH x AS ( SELECT 1 ) SELECT * FROM x x )","shape":"SELECT (WITH x AS (SELECT 1) SELECT * FROM x AS x);"}
+{"sql":"SELECT a FROM t WHERE a ( ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( WITH x AS ( SELECT 1 ) SELECT * FROM t )"}
+{"sql":"SELECT a FROM WHERE a IN ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"SELECT a SELECT t WHERE EXISTS ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( t x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( EXISTS WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"a FROM t WHERE EXISTS ( WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) SELECT * FROM ( WITH y AS ( SELECT * FROM x ) SELECT . FROM y ) AS z","reject":true}
+{"sql":"WITH x AS ( SELECT SELECT 1 ) SELECT * FROM ( WITH y AS ( SELECT * FROM x ) SELECT * FROM y ) AS z","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) SELECT * FROM ( WITH y AS ( SELECT y FROM x ) SELECT * FROM y ) AS z"}
+{"sql":"WITH AS ( SELECT 1 ) SELECT * FROM ( WITH y AS ( SELECT * FROM x ) SELECT * FROM y ) AS z","reject":true}
+{"sql":"( WITH WITH x AS ( SELECT 1 ) SELECT * FROM x )","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT * x x )","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT FROM x )","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT * * FROM x ) UNION SELECT 2","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT * FROM x ) ) UNION SELECT 2","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT * x ) UNION SELECT 2","reject":true}
+{"sql":"( WITH x AS ( SELECT 1 ) SELECT * FROM x ) UNION SELECT","reject":true}
+{"sql":"WITH WITH x AS ( SELECT 1 ) ( SELECT * FROM x )","reject":true}
+{"sql":"WITH AS x ( SELECT 1 ) ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( ( SELECT 1 ) ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT ) ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( ( SELECT 1 ) ( SELECT * FROM x ) UNION ( SELECT 2 )","reject":true}
+{"sql":"x AS ( SELECT 1 ) ( SELECT * FROM x ) UNION ( SELECT 2 )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) ( SELECT * FROM x SELECT UNION ( SELECT 2 )","reject":true}
+{"sql":"WITH x AS SELECT 1 ) ( SELECT * FROM x ) UNION ( SELECT 2 )","reject":true}
+{"sql":"WITH x AS ( 1 SELECT ) VALUES ( 1 )","reject":true}
+{"sql":"WITH x AS SELECT 1 ) VALUES ( 1 )","reject":true}
+{"sql":"WITH x x AS ( SELECT 1 ) VALUES ( 1 )","reject":true}
+{"sql":"WITH x AS ( SELECT ) 1 VALUES ( 1 )","reject":true}
+{"sql":"WITH x MATERIALIZED ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) SELECT * FROM","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) SELECT FROM * x","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) SELECT * AS x","reject":true}
+{"sql":"WITH x AS ) MATERIALIZED ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS NOT NOT MATERIALIZED ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS NOT MATERIALIZED ( 1 SELECT ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS AS NOT MATERIALIZED ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) , y AS NOT MATERIALIZED ( SELECT 2 ) SELECT * FROM x x , y","shape":"WITH x AS MATERIALIZED (SELECT 1), y AS NOT MATERIALIZED (SELECT 2) SELECT * FROM x AS x, y;"}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) , y AS NOT MATERIALIZED ( SELECT 2 ) SELECT FROM * x , y","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( 1 ) , y AS NOT MATERIALIZED ( SELECT 2 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) , y AS NOT MATERIALIZED SELECT 2 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH x ( p ) AS MATERIALIZED ( SELECT 1 ) SELECT * FROM \"x y\""}
+{"sql":"WITH x ( p ) AS MATERIALIZED ( SELECT 1 ) SELECT * * FROM x","reject":true}
+{"sql":"WITH x ( p ) AS MATERIALIZED ( SELECT 1 ) SELECT * FROM SELECT","reject":true}
+{"sql":"WITH x ( p ) AS MATERIALIZED ( SELECT 1 ) SELECT * FROM x","shape":"WITH x(p) AS MATERIALIZED (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH a AS ( SELECT 1 ) INSERT INTO t ( a ) SELECT * FROM x"}
+{"sql":"WITH x AS ( x 1 ) INSERT INTO t ( a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) INSERT INTO t ( a ) SELECT * WITH x","reject":true}
+{"sql":"WITH x ( SELECT 1 ) INSERT INTO t ( a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) UPDATE t SET a = ( SELECT * FROM FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) ) UPDATE t SET a = ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) UPDATE t SET a = ( SELECT * SELECT x )","reject":true}
+{"sql":"WITH x AS AS ( SELECT 1 ) UPDATE t SET a = ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) DELETE t FROM WHERE a IN ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) DELETE FROM t WHERE a IN ( SELECT * FROM 1 )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) DELETE FROM t WHERE a IN ( ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x ( AS SELECT 1 ) DELETE FROM t WHERE a IN ( SELECT * FROM x )","reject":true}
+{"sql":"WITH x AS ( INSERT INTO t ( a ) VALUES ( 1 ) COUNT a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS INSERT ( INTO t ( a ) VALUES ( 1 ) RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS AS ( INSERT INTO t ( a ) VALUES ( 1 ) RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( INSERT INTO ( ( a ) VALUES ( 1 ) RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( UPDATE t SET a = 1 RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( UPDATE t SET a = 1 RETURNING a ) SELECT * x FROM","reject":true}
+{"sql":"WITH x AS ( UPDATE t SET a = x RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH WITH x AS ( UPDATE t SET a = 1 RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x x AS ( DELETE FROM t RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( DELETE FROM t RETURNING a ) SELECT FROM x","reject":true}
+{"sql":"WITH x AS ( DELETE FROM RETURNING t a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( DELETE t RETURNING a ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( FROM t RETURNING * ) INSERT INTO u SELECT * FROM x","reject":true}
+{"sql":"y x AS ( DELETE FROM t RETURNING * ) INSERT INTO u SELECT * FROM x","reject":true}
+{"sql":"WITH x x AS ( DELETE FROM t RETURNING * ) INSERT INTO u SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( DELETE FROM t RETURNING * ) INSERT INTO u SELECT * FROM SELECT","reject":true}
+{"sql":"WITH x AS ( ( INSERT INTO t ( a ) VALUES ( 1 ) ) SELECT 1","reject":true}
+{"sql":"WITH x AS ( INSERT INTO t WITH a ) VALUES ( 1 ) ) SELECT 1","reject":true}
+{"sql":"WITH x AS ( INSERT INTO t ( a ) VALUES ( 1 ) ) SELECT","reject":true}
+{"sql":"WITH x AS ( INSERT INTO t ( a ) VALUES ( ( 1 ) ) SELECT 1","reject":true}
+{"sql":"WITH recursive AS ( SELECT 1 ) a * FROM recursive","reject":true}
+{"sql":"WITH recursive AS ( SELECT ) 1 SELECT * FROM recursive","reject":true}
+{"sql":"WITH recursive AS ( SELECT 1 ) SELECT FROM recursive","reject":true}
+{"sql":"WITH recursive AS ( SELECT 1 ) SELECT * FROM recursive","reject":true}
+{"sql":"WITH RECURSIVE x ( AS SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x AS ( SELECT SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x RECURSIVE AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH WITH x","reject":true}
+{"sql":"x WITH","reject":true}
+{"sql":"WITH y","reject":true}
+{"sql":"WITH x x AS","reject":true}
+{"sql":"WITH AS","reject":true}
+{"sql":"( x AS","reject":true}
+{"sql":"WITH IN AS","reject":true}
+{"sql":"x AS (","reject":true}
+{"sql":"WITH SELECT AS (","reject":true}
+{"sql":"x WITH AS (","reject":true}
+{"sql":"WITH AS (","reject":true}
+{"sql":"WITH AS x ( )","reject":true}
+{"sql":"WITH x AS ( x","reject":true}
+{"sql":"WITH x AS ( )","reject":true}
+{"sql":"WITH x AS ( ) )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 )","reject":true}
+{"sql":"WITH x AS AS ( SELECT 1 )","reject":true}
+{"sql":"WITH WITH x AS ( SELECT 1 )","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) )","reject":true}
+{"sql":"x WITH AS ( SELECT 1","reject":true}
+{"sql":"WITH x x AS ( SELECT 1","reject":true}
+{"sql":"a x AS ( SELECT 1","reject":true}
+{"sql":"WITH x AS ( 1 SELECT","reject":true}
+{"sql":"WITH x AS SELECT 1 SELECT * SELECT x","reject":true}
+{"sql":"WITH AS SELECT 1 SELECT * FROM x","reject":true}
+{"sql":"WHERE x AS SELECT 1 SELECT * FROM x","reject":true}
+{"sql":"WITH ( SELECT 1 ) SELECT 1","reject":true}
+{"sql":"WITH AS ( SELECT 1 ) 1 SELECT","reject":true}
+{"sql":"WITH AS ( SELECT 1 ) SELECT SELECT 1","reject":true}
+{"sql":"WITH AS SELECT ( 1 ) SELECT 1","reject":true}
+{"sql":"x WITH ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( SELECT 1 ) SELECT * x","reject":true}
+{"sql":"WITH x ( SELECT 1 ) * FROM x","reject":true}
+{"sql":"WITH x ( SELECT 1 SELECT * FROM x","reject":true}
+{"sql":"WITH x ( ) AS ( q 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH WITH x ( ) AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( ( ) AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( ) AS ( SELECT SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x x ( p , ) AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( p , AS ) ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH WITH x ( p , ) AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( p , ) AS ( 1 SELECT ) SELECT * FROM x","reject":true}
+{"sql":"a x ( 1 ) AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( 1 ) AS ( SELECT 1 SELECT * FROM x","reject":true}
+{"sql":"WITH x ( 1 ) AS ( SELECT 1 1 ) SELECT * FROM x","reject":true}
+{"sql":"AS x ( 1 ) AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , SELECT * FROM x x","reject":true}
+{"sql":"WITH x AS ( 1 ) , SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , * SELECT FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 y , SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) y AS ( SELECT 2 ) * SELECT FROM x","reject":true}
+{"sql":"x AS ( SELECT 1 ) y AS ( SELECT 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) y AS ( SELECT 2 SELECT ) * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) y AS ( 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT ) 1 , AS ( SELECT 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x ( AS SELECT 1 ) , AS ( SELECT 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) , AS SELECT ( 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 , ) AS ( SELECT 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) WITH y AS ( 2 SELECT ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) WITH y AS ( ( SELECT 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) WITH y ( SELECT 2 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) WITH y AS ( SELECT 2 SELECT ) * FROM x","reject":true}
+{"sql":"WITH 1 AS ( 1 SELECT ) SELECT 1","reject":true}
+{"sql":"WITH 1 AS ( SELECT t ) SELECT 1","reject":true}
+{"sql":"WITH 1 AS ( SELECT SELECT 1 ) SELECT 1","reject":true}
+{"sql":"WITH AS ( SELECT 1 ) SELECT 1","reject":true}
+{"sql":"WITH select AS ( WITH 1 ) SELECT 1","reject":true}
+{"sql":"x select AS ( SELECT 1 ) SELECT 1","reject":true}
+{"sql":"WITH select AS ( SELECT 1 ) 1","reject":true}
+{"sql":"WITH AS x MATERIALIZED SELECT 1","reject":true}
+{"sql":"WITH x AS MATERIALIZED MATERIALIZED SELECT 1","reject":true}
+{"sql":"WITH x AS MATERIALIZED SELECT 1 1","reject":true}
+{"sql":"WITH IN AS MATERIALIZED SELECT 1","reject":true}
+{"sql":"WITH FROM AS NOT ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS NOT ( SELECT , ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS NOT ( SELECT 1 ( SELECT * FROM x","reject":true}
+{"sql":"WITH x AS NOT * SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) SELECT * FROM x","shape":"WITH x AS MATERIALIZED (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH x x AS MATERIALIZED NOT ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS MATERIALIZED NOT ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS MATERIALIZED NOT ( SELECT 1 x SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( SELECT 1 ) FROM x x","reject":true}
+{"sql":"x x AS ( SELECT 1 ) FROM x","reject":true}
+{"sql":"WITH x AS ( 1 SELECT ) FROM x","reject":true}
+{"sql":"WITH x AS SELECT 1 ) FROM x","reject":true}
+{"sql":"WITH x AS ( FROM t ) SELECT","reject":true}
+{"sql":"WITH x AS ( FROM FROM ) SELECT 1","reject":true}
+{"sql":"WITH x ( FROM t ) SELECT 1","reject":true}
+{"sql":"WITH x AS ( FROM t ) SELECT )","reject":true}
+{"sql":"WITH x AS ( t ) SELECT SELECT 1","reject":true}
+{"sql":"WITH x x AS ( t ) SELECT 1","reject":true}
+{"sql":"WITH x AS ( t ) SELECT","reject":true}
+{"sql":"WITH x AS ( t ) SELECT (","reject":true}
+{"sql":"SELECT 1 WITH x AS ( 1 )","reject":true}
+{"sql":"SELECT 1 x AS ( SELECT 1 )","reject":true}
+{"sql":"SELECT 1 WITH x AS SELECT 1 )","reject":true}
+{"sql":"SELECT 1 x WITH AS ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t t WITH x AS ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t WITH x AS SELECT ( 1 )","reject":true}
+{"sql":"SELECT a FROM t WITH ( AS ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t WITH x AS SELECT 1 )","reject":true}

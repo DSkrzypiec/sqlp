@@ -1,0 +1,52 @@
+{"sql":"SELECT group_concat(%x, '.') OVER (ORDER BY %y) FROM %t1","reject":true}
+{"sql":"SELECT sum(%x) OVER %w FROM %t1 WINDOW %w AS (ORDER BY %y)","reject":true}
+{"sql":"SELECT sum(%alias.%x) OVER %w FROM %t1 %alias WINDOW %w AS (ORDER BY %y)","reject":true}
+{"sql":"SELECT sum(%x) %alias FROM %t1","reject":true}
+{"sql":"SELECT window('hello world')"}
+{"sql":"CREATE TABLE window(x COLLATE window)"}
+{"sql":"INSERT INTO window VALUES('bob'), ('alice'), ('cate')"}
+{"sql":"SELECT * FROM window ORDER BY x COLLATE window"}
+{"sql":"DROP TABLE window"}
+{"sql":"INSERT INTO x1 VALUES('bob'), ('alice'), ('cate')"}
+{"sql":"CREATE INDEX window ON x1(x COLLATE window)"}
+{"sql":"SELECT * FROM x1 ORDER BY x COLLATE window"}
+{"sql":"PRAGMA parser_trace = 1"}
+{"sql":"SELECT * FROM t4 window, t4"}
+{"sql":"CREATE TABLE over(x, over)"}
+{"sql":"CREATE TABLE window(x, window)"}
+{"sql":"INSERT INTO over VALUES(1, 2), (3, 4), (5, 6)"}
+{"sql":"INSERT INTO window VALUES(1, 2), (3, 4), (5, 6)"}
+{"sql":"SELECT sum(x) over FROM over"}
+{"sql":"SELECT sum(x) over over FROM over WINDOW over AS ()"}
+{"sql":"SELECT sum(over) over over over FROM over over WINDOW over AS (ORDER BY over)"}
+{"sql":"SELECT sum(window) OVER window window FROM window window window window AS (ORDER BY window)"}
+{"sql":"SELECT count(*) OVER win FROM over\n  WINDOW win AS (ORDER BY x ROWS BETWEEN +2 FOLLOWING AND +3 FOLLOWING)"}
+{"sql":"SELECT LIKE('!', '', '!') x WHERE x"}
+{"sql":"SELECT LIKE(\"!\",\"\",\"!\")\"\"WHeRE\"\""}
+{"sql":"SELECT LIKE(\"!\",\"\",\"!\")\"\"window\"\"","reject":true}
+{"sql":"CREATE INDEX i1 ON t1(x COLLATE nocase)"}
+{"sql":"SELECT count(*) FROM t1 WHERE x LIKE '!' ESCAPE '!'"}
+{"sql":"CREATE TABLE IF NOT EXISTS \"sample\" (\n      \"id\" INTEGER NOT NULL PRIMARY KEY, \n      \"counter\" INTEGER NOT NULL, \n      \"value\" REAL NOT NULL\n  )"}
+{"sql":"INSERT INTO \"sample\" (counter, value) \n  VALUES (1, 10.), (1, 20.), (2, 1.), (2, 3.), (3, 100.)"}
+{"sql":"SELECT \"counter\", \"value\", RANK() OVER w AS \"rank\" \n  FROM \"sample\"\n  WINDOW w AS (PARTITION BY \"counter\" ORDER BY \"value\" DESC) \n  ORDER BY \"counter\", RANK() OVER w"}
+{"sql":"SELECT \"counter\", \"value\", SUM(\"value\") OVER \n  (ORDER BY \"id\" ROWS 2 PRECEDING) \n    FROM \"sample\" \n  ORDER BY \"id\""}
+{"sql":"SELECT SUM(\"value\") OVER \n  (ORDER BY \"id\" ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) \n    FROM \"sample\" \n  ORDER BY \"id\""}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT x, group_concat(x) OVER (ORDER BY x ROWS 2 PRECEDING)\n  FROM c"}
+{"sql":"#  WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n#  SELECT x, group_concat(x) OVER (ORDER BY x RANGE 2 PRECEDING)\n#  FROM c","reject":true}
+{"sql":"#  WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n#  SELECT x, group_concat(x) OVER (ORDER BY x RANGE BETWEEN UNBOUNDED PRECEDING AND 2 FOLLOWING)\n#  FROM c","reject":true}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT count(DISTINCT x) OVER (ORDER BY x) FROM c"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT count() OVER (ORDER BY x RANGE UNBOUNDED FOLLOWING) FROM c","reject":true}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT count() OVER (ORDER BY x RANGE BETWEEN UNBOUNDED FOLLOWING AND UNBOUNDED FOLLOWING) FROM c","reject":true}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT count() OVER (ORDER BY x RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED PRECEDING) FROM c","reject":true}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT count() OVER (\n      ORDER BY x ROWS BETWEEN a PRECEDING AND 2 FOLLOWING\n  ) FROM c"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n  SELECT count() OVER (\n      ORDER BY x ROWS BETWEEN 2 PRECEDING AND a FOLLOWING\n  ) FROM c"}
+{"sql":"WITH t1(a,b) AS (VALUES(1,2))\n  SELECT count() FILTER (where b<>5) OVER w1\n    FROM t1\n    WINDOW w1 AS (ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING)"}
+{"sql":"INSERT INTO t1 VALUES(10),(15),(20),(20),(25),(30),(30),(50)"}
+{"sql":"CREATE TABLE t3(x INT, y VARCHAR)"}
+{"sql":"INSERT INTO t3(x,y) VALUES(10,'ten'),('15','fifteen'),(30,'thirty')"}
+{"sql":"SELECT a, (SELECT y FROM t3 WHERE x=a) FROM t1 ORDER BY a"}
+{"sql":"SELECT a, (SELECT y FROM t3 WHERE x=a), sum(a) OVER (ORDER BY a)\n    FROM t1 ORDER BY a"}
+{"sql":"SELECT a, sum(a) OVER win FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)"}
+{"sql":"SELECT a, sum(a) OVER win FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING)"}
+{"sql":"SELECT a, sum(a) OVER win FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN UNBOUNDED PRECEDING AND 0 PRECEDING)"}
+{"sql":"SELECT y, group_concat(y, '.') OVER win FROM t3\n  WINDOW win AS (\n    ORDER BY y RANGE BETWEEN UNBOUNDED PRECEDING AND 10 PRECEDING\n  )"}

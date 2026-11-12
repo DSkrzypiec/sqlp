@@ -1,0 +1,42 @@
+{"sql":"SELECT getdatabaseencoding() <> 'UTF8' OR\n       (SELECT count(*) FROM pg_collation WHERE collname IN ('de_DE', 'en_US', 'sv_SE', 'tr_TR') AND collencoding = pg_char_to_encoding('UTF8')) <> 4 OR\n       version() !~ 'linux-gnu'\n       AS skip_test","shape":"SELECT ((getdatabaseencoding() <> 'UTF8') OR ((SELECT count(*) FROM pg_collation WHERE (collname IN ('de_DE', 'en_US', 'sv_SE', 'tr_TR')) AND (collencoding = pg_char_to_encoding('UTF8'))) <> 4)) OR (version() !~ 'linux-gnu') AS skip_test;"}
+{"sql":"CREATE TABLE collate_test1 (\n    a int,\n    b text COLLATE \"en_US\" NOT NULL\n)","shape":"CREATE TABLE collate_test1 (a int, b text COLLATE \"en_US\" NOT NULL);"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int,\n    b text COLLATE \"ja_JP.eucjp\"\n)","shape":"CREATE TABLE collate_test_fail (a int, b text COLLATE \"ja_JP.eucjp\");"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int,\n    b text COLLATE \"foo\"\n)","shape":"CREATE TABLE collate_test_fail (a int, b text COLLATE \"foo\");"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int COLLATE \"en_US\",\n    b text\n)","shape":"CREATE TABLE collate_test_fail (a int COLLATE \"en_US\", b text);"}
+{"sql":"CREATE TABLE collate_test2 (\n    a int,\n    b text COLLATE \"sv_SE\"\n)","shape":"CREATE TABLE collate_test2 (a int, b text COLLATE \"sv_SE\");"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'bbc' COLLATE \"en_US\"","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= ('bbc' COLLATE \"en_US\");"}
+{"sql":"CREATE DOMAIN testdomain_sv AS text COLLATE \"sv_SE\"","shape":"CREATE DOMAIN testdomain_sv AS text COLLATE \"sv_SE\";"}
+{"sql":"CREATE DOMAIN testdomain_i AS int COLLATE \"sv_SE\"","shape":"CREATE DOMAIN testdomain_i AS int COLLATE \"sv_SE\";"}
+{"sql":"CREATE TABLE collate_test5 (\n    a int,\n    b testdomain_sv COLLATE \"en_US\"\n)","shape":"CREATE TABLE collate_test5 (a int, b testdomain_sv COLLATE \"en_US\");"}
+{"sql":"SELECT 'bbc' COLLATE \"en_US\" > 'äbc' COLLATE \"en_US\" AS \"true\"","shape":"SELECT ('bbc' COLLATE \"en_US\") > ('äbc' COLLATE \"en_US\") AS \"true\";"}
+{"sql":"SELECT 'bbc' COLLATE \"sv_SE\" > 'äbc' COLLATE \"sv_SE\" AS \"false\"","shape":"SELECT ('bbc' COLLATE \"sv_SE\") > ('äbc' COLLATE \"sv_SE\") AS \"false\";"}
+{"sql":"CREATE TABLE collate_test10 (\n    a int,\n    x text COLLATE \"en_US\",\n    y text COLLATE \"tr_TR\"\n)","shape":"CREATE TABLE collate_test10 (a int, x text COLLATE \"en_US\", y text COLLATE \"tr_TR\");"}
+{"sql":"SELECT 'Türkiye' COLLATE \"en_US\" ILIKE '%KI%' AS \"true\"","shape":"SELECT ('Türkiye' COLLATE \"en_US\") ILIKE '%KI%' AS \"true\";"}
+{"sql":"SELECT 'Türkiye' COLLATE \"tr_TR\" ILIKE '%KI%' AS \"false\"","shape":"SELECT ('Türkiye' COLLATE \"tr_TR\") ILIKE '%KI%' AS \"false\";"}
+{"sql":"SELECT 'bıt' ILIKE 'BIT' COLLATE \"en_US\" AS \"false\"","shape":"SELECT 'bıt' ILIKE ('BIT' COLLATE \"en_US\") AS \"false\";"}
+{"sql":"SELECT 'bıt' ILIKE 'BIT' COLLATE \"tr_TR\" AS \"true\"","shape":"SELECT 'bıt' ILIKE ('BIT' COLLATE \"tr_TR\") AS \"true\";"}
+{"sql":"CREATE TABLE collate_test6 (\n    a int,\n    b text COLLATE \"en_US\"\n)","shape":"CREATE TABLE collate_test6 (a int, b text COLLATE \"en_US\");"}
+{"sql":"SELECT 'Türkiye' COLLATE \"en_US\" ~* 'KI' AS \"true\"","shape":"SELECT ('Türkiye' COLLATE \"en_US\") ~* 'KI' AS \"true\";"}
+{"sql":"SELECT 'Türkiye' COLLATE \"tr_TR\" ~* 'KI' AS \"false\"","shape":"SELECT ('Türkiye' COLLATE \"tr_TR\") ~* 'KI' AS \"false\";"}
+{"sql":"SELECT 'bıt' ~* 'BIT' COLLATE \"en_US\" AS \"false\"","shape":"SELECT 'bıt' ~* ('BIT' COLLATE \"en_US\") AS \"false\";"}
+{"sql":"SELECT 'bıt' ~* 'BIT' COLLATE \"tr_TR\" AS \"true\"","shape":"SELECT 'bıt' ~* ('BIT' COLLATE \"tr_TR\") AS \"true\";"}
+{"sql":"SET lc_time TO 'tr_TR'","shape":"SET lc_time TO 'tr_TR';"}
+{"sql":"SELECT to_char(date '2010-02-01', 'DD TMMON YYYY')","shape":"SELECT to_char(date '2010-02-01', 'DD TMMON YYYY');"}
+{"sql":"SELECT to_char(date '2010-02-01', 'DD TMMON YYYY' COLLATE \"tr_TR\")","shape":"SELECT to_char(date '2010-02-01', 'DD TMMON YYYY' COLLATE \"tr_TR\");"}
+{"sql":"SELECT to_char(date '2010-04-01', 'DD TMMON YYYY')","shape":"SELECT to_char(date '2010-04-01', 'DD TMMON YYYY');"}
+{"sql":"SELECT to_char(date '2010-04-01', 'DD TMMON YYYY' COLLATE \"tr_TR\")","shape":"SELECT to_char(date '2010-04-01', 'DD TMMON YYYY' COLLATE \"tr_TR\");"}
+{"sql":"SELECT to_date('01 ŞUB 2010', 'DD TMMON YYYY')","shape":"SELECT to_date('01 ŞUB 2010', 'DD TMMON YYYY');"}
+{"sql":"SELECT to_date('01 Şub 2010', 'DD TMMON YYYY')","shape":"SELECT to_date('01 Şub 2010', 'DD TMMON YYYY');"}
+{"sql":"SELECT to_date('1234567890ab 2010', 'TMMONTH YYYY')","shape":"SELECT to_date('1234567890ab 2010', 'TMMONTH YYYY');"}
+{"sql":"WITH RECURSIVE foo(x) AS\n   (SELECT x FROM (VALUES('a' COLLATE \"en_US\"),('b')) t(x)\n   UNION ALL\n   SELECT (x || 'c') COLLATE \"de_DE\" FROM foo WHERE length(x) < 10)\nSELECT * FROM foo","shape":"WITH RECURSIVE foo(x) AS (SELECT x FROM (VALUES ('a' COLLATE \"en_US\"), ('b')) AS t(x) UNION ALL SELECT (x || 'c') COLLATE \"de_DE\" FROM foo WHERE length(x) < 10) SELECT * FROM foo;"}
+{"sql":"SELECT mylt2('a', 'B' collate \"en_US\") as t, mylt2('a', 'B' collate \"C\") as f","shape":"SELECT mylt2('a', 'B' COLLATE \"en_US\") AS t, mylt2('a', 'B' COLLATE \"C\") AS f;"}
+{"sql":"do $$\nBEGIN\n  EXECUTE 'CREATE COLLATION test0 (locale = ' ||\n          quote_literal((SELECT datcollate FROM pg_database WHERE datname = current_database())) || ');';\nEND\n$$","shape":"DO '\nBEGIN\n  EXECUTE ''CREATE COLLATION test0 (locale = '' ||\n          quote_literal((SELECT datcollate FROM pg_database WHERE datname = current_database())) || '');'';\nEND\n';"}
+{"sql":"CREATE COLLATION IF NOT EXISTS test0 FROM \"C\""}
+{"sql":"CREATE COLLATION IF NOT EXISTS test0 (locale = 'foo')"}
+{"sql":"do $$\nBEGIN\n  EXECUTE 'CREATE COLLATION test1 (lc_collate = ' ||\n          quote_literal((SELECT datcollate FROM pg_database WHERE datname = current_database())) ||\n          ', lc_ctype = ' ||\n          quote_literal((SELECT datctype FROM pg_database WHERE datname = current_database())) || ');';\nEND\n$$","shape":"DO '\nBEGIN\n  EXECUTE ''CREATE COLLATION test1 (lc_collate = '' ||\n          quote_literal((SELECT datcollate FROM pg_database WHERE datname = current_database())) ||\n          '', lc_ctype = '' ||\n          quote_literal((SELECT datctype FROM pg_database WHERE datname = current_database())) || '');'';\nEND\n';"}
+{"sql":"CREATE COLLATION test3 (lc_collate = 'en_US.utf8')"}
+{"sql":"CREATE COLLATION testx (locale = 'nonsense')"}
+{"sql":"ALTER COLLATION \"en_US\" REFRESH VERSION"}
+{"sql":"create type textrange_en_us as range(subtype=text, collation=\"en_US\")"}
+{"sql":"CREATE COLLATION ctest_det (locale = 'en_US.utf8', deterministic = true)"}
+{"sql":"CREATE COLLATION ctest_nondet (locale = 'en_US.utf8', deterministic = false)"}

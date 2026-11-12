@@ -1,0 +1,236 @@
+{"sql":"SELECT '1'::tsvector","shape":"SELECT '1'::tsvector;"}
+{"sql":"SELECT '1 '::tsvector","shape":"SELECT '1 '::tsvector;"}
+{"sql":"SELECT ' 1'::tsvector","shape":"SELECT ' 1'::tsvector;"}
+{"sql":"SELECT ' 1 '::tsvector","shape":"SELECT ' 1 '::tsvector;"}
+{"sql":"SELECT '1 2'::tsvector","shape":"SELECT '1 2'::tsvector;"}
+{"sql":"SELECT '''1 2'''::tsvector","shape":"SELECT '''1 2'''::tsvector;"}
+{"sql":"SELECT E'''1 \\\\''2'''::tsvector","shape":"SELECT E'''1 \\\\''2'''::tsvector;"}
+{"sql":"SELECT E'''1 \\\\''2''3'::tsvector","shape":"SELECT E'''1 \\\\''2''3'::tsvector;"}
+{"sql":"SELECT E'''1 \\\\''2'' 3'::tsvector","shape":"SELECT E'''1 \\\\''2'' 3'::tsvector;"}
+{"sql":"SELECT E'''1 \\\\''2'' '' 3'' 4 '::tsvector","shape":"SELECT E'''1 \\\\''2'' '' 3'' 4 '::tsvector;"}
+{"sql":"SELECT $$'\\\\as' ab\\c ab\\\\c AB\\\\\\c ab\\\\\\\\c$$::tsvector","shape":"SELECT '''\\\\as'' ab\\c ab\\\\c AB\\\\\\c ab\\\\\\\\c'::tsvector;"}
+{"sql":"SELECT tsvectorin(tsvectorout($$'\\\\as' ab\\c ab\\\\c AB\\\\\\c ab\\\\\\\\c$$::tsvector))","shape":"SELECT tsvectorin(tsvectorout('''\\\\as'' ab\\c ab\\\\c AB\\\\\\c ab\\\\\\\\c'::tsvector));"}
+{"sql":"SELECT '''w'':4A,3B,2C,1D,5 a:8'","shape":"SELECT '''w'':4A,3B,2C,1D,5 a:8';"}
+{"sql":"SELECT 'a:3A b:2a'::tsvector || 'ba:1234 a:1B'","shape":"SELECT 'a:3A b:2a'::tsvector || 'ba:1234 a:1B';"}
+{"sql":"SELECT $$'' '1' '2'$$::tsvector","shape":"SELECT ''''' ''1'' ''2'''::tsvector;"}
+{"sql":"SELECT pg_input_is_valid('foo', 'tsvector')","shape":"SELECT pg_input_is_valid('foo', 'tsvector');"}
+{"sql":"SELECT pg_input_is_valid($$''$$, 'tsvector')","shape":"SELECT pg_input_is_valid('''''', 'tsvector');"}
+{"sql":"SELECT * FROM pg_input_error_info($$''$$, 'tsvector')","shape":"SELECT * FROM pg_input_error_info('''''', 'tsvector');"}
+{"sql":"SELECT '1'::tsquery","shape":"SELECT '1'::tsquery;"}
+{"sql":"SELECT '1 '::tsquery","shape":"SELECT '1 '::tsquery;"}
+{"sql":"SELECT ' 1'::tsquery","shape":"SELECT ' 1'::tsquery;"}
+{"sql":"SELECT ' 1 '::tsquery","shape":"SELECT ' 1 '::tsquery;"}
+{"sql":"SELECT '''1 2'''::tsquery","shape":"SELECT '''1 2'''::tsquery;"}
+{"sql":"SELECT E'''1 \\\\''2'''::tsquery","shape":"SELECT E'''1 \\\\''2'''::tsquery;"}
+{"sql":"SELECT '!1'::tsquery","shape":"SELECT '!1'::tsquery;"}
+{"sql":"SELECT '1|2'::tsquery","shape":"SELECT '1|2'::tsquery;"}
+{"sql":"SELECT '1|!2'::tsquery","shape":"SELECT '1|!2'::tsquery;"}
+{"sql":"SELECT '!1|2'::tsquery","shape":"SELECT '!1|2'::tsquery;"}
+{"sql":"SELECT '!1|!2'::tsquery","shape":"SELECT '!1|!2'::tsquery;"}
+{"sql":"SELECT '!(!1|!2)'::tsquery","shape":"SELECT '!(!1|!2)'::tsquery;"}
+{"sql":"SELECT '!(!1|2)'::tsquery","shape":"SELECT '!(!1|2)'::tsquery;"}
+{"sql":"SELECT '!(1|!2)'::tsquery","shape":"SELECT '!(1|!2)'::tsquery;"}
+{"sql":"SELECT '!(1|2)'::tsquery","shape":"SELECT '!(1|2)'::tsquery;"}
+{"sql":"SELECT '1&2'::tsquery","shape":"SELECT '1&2'::tsquery;"}
+{"sql":"SELECT '!1&2'::tsquery","shape":"SELECT '!1&2'::tsquery;"}
+{"sql":"SELECT '1&!2'::tsquery","shape":"SELECT '1&!2'::tsquery;"}
+{"sql":"SELECT '!1&!2'::tsquery","shape":"SELECT '!1&!2'::tsquery;"}
+{"sql":"SELECT '(1&2)'::tsquery","shape":"SELECT '(1&2)'::tsquery;"}
+{"sql":"SELECT '1&(2)'::tsquery","shape":"SELECT '1&(2)'::tsquery;"}
+{"sql":"SELECT '!(1)&2'::tsquery","shape":"SELECT '!(1)&2'::tsquery;"}
+{"sql":"SELECT '!(1&2)'::tsquery","shape":"SELECT '!(1&2)'::tsquery;"}
+{"sql":"SELECT '1|2&3'::tsquery","shape":"SELECT '1|2&3'::tsquery;"}
+{"sql":"SELECT '1|(2&3)'::tsquery","shape":"SELECT '1|(2&3)'::tsquery;"}
+{"sql":"SELECT '(1|2)&3'::tsquery","shape":"SELECT '(1|2)&3'::tsquery;"}
+{"sql":"SELECT '1|2&!3'::tsquery","shape":"SELECT '1|2&!3'::tsquery;"}
+{"sql":"SELECT '1|!2&3'::tsquery","shape":"SELECT '1|!2&3'::tsquery;"}
+{"sql":"SELECT '!1|2&3'::tsquery","shape":"SELECT '!1|2&3'::tsquery;"}
+{"sql":"SELECT '!1|(2&3)'::tsquery","shape":"SELECT '!1|(2&3)'::tsquery;"}
+{"sql":"SELECT '!(1|2)&3'::tsquery","shape":"SELECT '!(1|2)&3'::tsquery;"}
+{"sql":"SELECT '(!1|2)&3'::tsquery","shape":"SELECT '(!1|2)&3'::tsquery;"}
+{"sql":"SELECT '1|(2|(4|(5|6)))'::tsquery","shape":"SELECT '1|(2|(4|(5|6)))'::tsquery;"}
+{"sql":"SELECT '1|2|4|5|6'::tsquery","shape":"SELECT '1|2|4|5|6'::tsquery;"}
+{"sql":"SELECT '1&(2&(4&(5&6)))'::tsquery","shape":"SELECT '1&(2&(4&(5&6)))'::tsquery;"}
+{"sql":"SELECT '1&2&4&5&6'::tsquery","shape":"SELECT '1&2&4&5&6'::tsquery;"}
+{"sql":"SELECT '1&(2&(4&(5|6)))'::tsquery","shape":"SELECT '1&(2&(4&(5|6)))'::tsquery;"}
+{"sql":"SELECT '1&(2&(4&(5|!6)))'::tsquery","shape":"SELECT '1&(2&(4&(5|!6)))'::tsquery;"}
+{"sql":"SELECT E'1&(''2''&('' 4''&(\\\\|5 | ''6 \\\\'' !|&'')))'::tsquery","shape":"SELECT E'1&(''2''&('' 4''&(\\\\|5 | ''6 \\\\'' !|&'')))'::tsquery;"}
+{"sql":"SELECT $$'\\\\as'$$::tsquery","shape":"SELECT '''\\\\as'''::tsquery;"}
+{"sql":"SELECT 'a:* & nbb:*ac | doo:a* | goo'::tsquery","shape":"SELECT 'a:* & nbb:*ac | doo:a* | goo'::tsquery;"}
+{"sql":"SELECT '!!b'::tsquery","shape":"SELECT '!!b'::tsquery;"}
+{"sql":"SELECT '!!!b'::tsquery","shape":"SELECT '!!!b'::tsquery;"}
+{"sql":"SELECT '!(!b)'::tsquery","shape":"SELECT '!(!b)'::tsquery;"}
+{"sql":"SELECT 'a & !!b'::tsquery","shape":"SELECT 'a & !!b'::tsquery;"}
+{"sql":"SELECT '!!a & b'::tsquery","shape":"SELECT '!!a & b'::tsquery;"}
+{"sql":"SELECT '!!a & !!b'::tsquery","shape":"SELECT '!!a & !!b'::tsquery;"}
+{"sql":"SELECT pg_input_is_valid('foo', 'tsquery')","shape":"SELECT pg_input_is_valid('foo', 'tsquery');"}
+{"sql":"SELECT pg_input_is_valid('foo!', 'tsquery')","shape":"SELECT pg_input_is_valid('foo!', 'tsquery');"}
+{"sql":"SELECT * FROM pg_input_error_info('foo!', 'tsquery')","shape":"SELECT * FROM pg_input_error_info('foo!', 'tsquery');"}
+{"sql":"SELECT * FROM pg_input_error_info('a <100000> b', 'tsquery')","shape":"SELECT * FROM pg_input_error_info('a <100000> b', 'tsquery');"}
+{"sql":"SELECT 'a' < 'b & c'::tsquery as \"true\"","shape":"SELECT 'a' < 'b & c'::tsquery AS \"true\";"}
+{"sql":"SELECT 'a' > 'b & c'::tsquery as \"false\"","shape":"SELECT 'a' > 'b & c'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a | f' < 'b & c'::tsquery as \"false\"","shape":"SELECT 'a | f' < 'b & c'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a | ff' < 'b & c'::tsquery as \"false\"","shape":"SELECT 'a | ff' < 'b & c'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a | f | g' < 'b & c'::tsquery as \"false\"","shape":"SELECT 'a | f | g' < 'b & c'::tsquery AS \"false\";"}
+{"sql":"SELECT numnode( 'new'::tsquery )","shape":"SELECT numnode('new'::tsquery);"}
+{"sql":"SELECT numnode( 'new & york'::tsquery )","shape":"SELECT numnode('new & york'::tsquery);"}
+{"sql":"SELECT numnode( 'new & york | qwery'::tsquery )","shape":"SELECT numnode('new & york | qwery'::tsquery);"}
+{"sql":"SELECT 'foo & bar'::tsquery && 'asd'","shape":"SELECT 'foo & bar'::tsquery && 'asd';"}
+{"sql":"SELECT 'foo & bar'::tsquery || 'asd & fg'","shape":"SELECT 'foo & bar'::tsquery || 'asd & fg';"}
+{"sql":"SELECT 'foo & bar'::tsquery || !!'asd & fg'::tsquery","shape":"SELECT 'foo & bar'::tsquery || (!! 'asd & fg'::tsquery);"}
+{"sql":"SELECT 'foo & bar'::tsquery && 'asd | fg'","shape":"SELECT 'foo & bar'::tsquery && 'asd | fg';"}
+{"sql":"SELECT 'a' <-> 'b & d'::tsquery","shape":"SELECT 'a' <-> 'b & d'::tsquery;"}
+{"sql":"SELECT 'a & g' <-> 'b & d'::tsquery","shape":"SELECT 'a & g' <-> 'b & d'::tsquery;"}
+{"sql":"SELECT 'a & g' <-> 'b | d'::tsquery","shape":"SELECT 'a & g' <-> 'b | d'::tsquery;"}
+{"sql":"SELECT 'a & g' <-> 'b <-> d'::tsquery","shape":"SELECT 'a & g' <-> 'b <-> d'::tsquery;"}
+{"sql":"SELECT tsquery_phrase('a <3> g', 'b & d', 10)","shape":"SELECT tsquery_phrase('a <3> g', 'b & d', 10);"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:B' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:B' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:A' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:A' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:C' as \"false\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:C' AS \"false\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:CB' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & ca:CB' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & c:*C' as \"false\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & c:*C' AS \"false\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & c:*CB' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64b d:34c'::tsvector @@ 'd:AC & c:*CB' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64b cb:80c d:34c'::tsvector @@ 'd:AC & c:*C' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64b cb:80c d:34c'::tsvector @@ 'd:AC & c:*C' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64c cb:80b d:34c'::tsvector @@ 'd:AC & c:*C' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64c cb:80b d:34c'::tsvector @@ 'd:AC & c:*C' AS \"true\";"}
+{"sql":"SELECT 'a b:89  ca:23A,64c cb:80b d:34c'::tsvector @@ 'd:AC & c:*B' as \"true\"","shape":"SELECT 'a b:89  ca:23A,64c cb:80b d:34c'::tsvector @@ 'd:AC & c:*B' AS \"true\";"}
+{"sql":"SELECT 'wa:1D wb:2A'::tsvector @@ 'w:*D & w:*A'::tsquery as \"true\"","shape":"SELECT 'wa:1D wb:2A'::tsvector @@ 'w:*D & w:*A'::tsquery AS \"true\";"}
+{"sql":"SELECT 'wa:1D wb:2A'::tsvector @@ 'w:*D <-> w:*A'::tsquery as \"true\"","shape":"SELECT 'wa:1D wb:2A'::tsvector @@ 'w:*D <-> w:*A'::tsquery AS \"true\";"}
+{"sql":"SELECT 'wa:1A wb:2D'::tsvector @@ 'w:*D <-> w:*A'::tsquery as \"false\"","shape":"SELECT 'wa:1A wb:2D'::tsvector @@ 'w:*D <-> w:*A'::tsquery AS \"false\";"}
+{"sql":"SELECT 'wa:1A'::tsvector @@ 'w:*A'::tsquery as \"true\"","shape":"SELECT 'wa:1A'::tsvector @@ 'w:*A'::tsquery AS \"true\";"}
+{"sql":"SELECT 'wa:1A'::tsvector @@ 'w:*D'::tsquery as \"false\"","shape":"SELECT 'wa:1A'::tsvector @@ 'w:*D'::tsquery AS \"false\";"}
+{"sql":"SELECT 'wa:1A'::tsvector @@ '!w:*A'::tsquery as \"false\"","shape":"SELECT 'wa:1A'::tsvector @@ '!w:*A'::tsquery AS \"false\";"}
+{"sql":"SELECT 'wa:1A'::tsvector @@ '!w:*D'::tsquery as \"true\"","shape":"SELECT 'wa:1A'::tsvector @@ '!w:*D'::tsquery AS \"true\";"}
+{"sql":"SELECT strip('wa:1A'::tsvector) @@ 'w:*A'::tsquery as \"true\"","shape":"SELECT strip('wa:1A'::tsvector) @@ 'w:*A'::tsquery AS \"true\";"}
+{"sql":"SELECT strip('wa:1A'::tsvector) @@ 'w:*D'::tsquery as \"true\"","shape":"SELECT strip('wa:1A'::tsvector) @@ 'w:*D'::tsquery AS \"true\";"}
+{"sql":"SELECT strip('wa:1A'::tsvector) @@ '!w:*A'::tsquery as \"false\"","shape":"SELECT strip('wa:1A'::tsvector) @@ '!w:*A'::tsquery AS \"false\";"}
+{"sql":"SELECT strip('wa:1A'::tsvector) @@ '!w:*D'::tsquery as \"false\"","shape":"SELECT strip('wa:1A'::tsvector) @@ '!w:*D'::tsquery AS \"false\";"}
+{"sql":"SELECT 'supernova'::tsvector @@ 'super'::tsquery AS \"false\"","shape":"SELECT 'supernova'::tsvector @@ 'super'::tsquery AS \"false\";"}
+{"sql":"SELECT 'supeanova supernova'::tsvector @@ 'super'::tsquery AS \"false\"","shape":"SELECT 'supeanova supernova'::tsvector @@ 'super'::tsquery AS \"false\";"}
+{"sql":"SELECT 'supeznova supernova'::tsvector @@ 'super'::tsquery AS \"false\"","shape":"SELECT 'supeznova supernova'::tsvector @@ 'super'::tsquery AS \"false\";"}
+{"sql":"SELECT 'supernova'::tsvector @@ 'super:*'::tsquery AS \"true\"","shape":"SELECT 'supernova'::tsvector @@ 'super:*'::tsquery AS \"true\";"}
+{"sql":"SELECT 'supeanova supernova'::tsvector @@ 'super:*'::tsquery AS \"true\"","shape":"SELECT 'supeanova supernova'::tsvector @@ 'super:*'::tsquery AS \"true\";"}
+{"sql":"SELECT 'supeznova supernova'::tsvector @@ 'super:*'::tsquery AS \"true\"","shape":"SELECT 'supeznova supernova'::tsvector @@ 'super:*'::tsquery AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <-> 2' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <-> 2' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <2> 2' AS \"false\"","shape":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <2> 2' AS \"false\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <-> 3' AS \"false\"","shape":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <-> 3' AS \"false\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <2> 3' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 3 1') @@ '1 <2> 3' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 1 2') @@ '1 <3> 2' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 1 2') @@ '1 <3> 2' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 11 3') @@ '1 <-> 3' AS \"false\"","shape":"SELECT to_tsvector('simple', '1 2 11 3') @@ '1 <-> 3' AS \"false\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 11 3') @@ '1:* <-> 3' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 11 3') @@ '1:* <-> 3' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 4') @@ '1 <-> 2 <-> 3' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 3 4') @@ '1 <-> 2 <-> 3' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 4') @@ '(1 <-> 2) <-> 3' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 3 4') @@ '(1 <-> 2) <-> 3' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 4') @@ '1 <-> (2 <-> 3)' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 3 4') @@ '1 <-> (2 <-> 3)' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 3 4') @@ '1 <2> (2 <-> 3)' AS \"false\"","shape":"SELECT to_tsvector('simple', '1 2 3 4') @@ '1 <2> (2 <-> 3)' AS \"false\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 1 2 3 4') @@ '(1 <-> 2) <-> 3' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 1 2 3 4') @@ '(1 <-> 2) <-> 3' AS \"true\";"}
+{"sql":"SELECT to_tsvector('simple', '1 2 1 2 3 4') @@ '1 <-> 2 <-> 3' AS \"true\"","shape":"SELECT to_tsvector('simple', '1 2 1 2 3 4') @@ '1 <-> 2 <-> 3' AS \"true\";"}
+{"sql":"SELECT strip(to_tsvector('simple', '1 2 3 4')) @@ '1 <-> 2 <-> 3' AS \"false\"","shape":"SELECT strip(to_tsvector('simple', '1 2 3 4')) @@ '1 <-> 2 <-> 3' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'q x q y') @@ 'q <-> (x & y)' AS \"false\"","shape":"SELECT to_tsvector('simple', 'q x q y') @@ 'q <-> (x & y)' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'q x') @@ 'q <-> (x | y <-> z)' AS \"true\"","shape":"SELECT to_tsvector('simple', 'q x') @@ 'q <-> (x | y <-> z)' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'q y') @@ 'q <-> (x | y <-> z)' AS \"false\"","shape":"SELECT to_tsvector('simple', 'q y') @@ 'q <-> (x | y <-> z)' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'q y z') @@ 'q <-> (x | y <-> z)' AS \"true\"","shape":"SELECT to_tsvector('simple', 'q y z') @@ 'q <-> (x | y <-> z)' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'q y x') @@ 'q <-> (x | y <-> z)' AS \"false\"","shape":"SELECT to_tsvector('simple', 'q y x') @@ 'q <-> (x | y <-> z)' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'q x y') @@ 'q <-> (x | y <-> z)' AS \"true\"","shape":"SELECT to_tsvector('simple', 'q x y') @@ 'q <-> (x | y <-> z)' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'q x') @@ '(x | y <-> z) <-> q' AS \"false\"","shape":"SELECT to_tsvector('simple', 'q x') @@ '(x | y <-> z) <-> q' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'x q') @@ '(x | y <-> z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x q') @@ '(x | y <-> z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q') @@ '(x | y <-> z) <-> q' AS \"false\"","shape":"SELECT to_tsvector('simple', 'x y q') @@ '(x | y <-> z) <-> q' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'x y z') @@ '(x | y <-> z) <-> q' AS \"false\"","shape":"SELECT to_tsvector('simple', 'x y z') @@ '(x | y <-> z) <-> q' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'x y z q') @@ '(x | y <-> z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y z q') @@ '(x | y <-> z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'y z q') @@ '(x | y <-> z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'y z q') @@ '(x | y <-> z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'y y q') @@ '(x | y <-> z) <-> q' AS \"false\"","shape":"SELECT to_tsvector('simple', 'y y q') @@ '(x | y <-> z) <-> q' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'y y q') @@ '(!x | y <-> z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'y y q') @@ '(!x | y <-> z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q') @@ '(!x | y <-> z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q') @@ '(!x | y <-> z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'y y q') @@ '(x | y <-> !z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'y y q') @@ '(x | y <-> !z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x q') @@ '(x | y <-> !z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x q') @@ '(x | y <-> !z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x q') @@ '(!x | y <-> z) <-> q' AS \"false\"","shape":"SELECT to_tsvector('simple', 'x q') @@ '(!x | y <-> z) <-> q' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'z q') @@ '(!x | y <-> z) <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'z q') @@ '(!x | y <-> z) <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q') @@ '(!x | y) <-> y <-> q' AS \"false\"","shape":"SELECT to_tsvector('simple', 'x y q') @@ '(!x | y) <-> y <-> q' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'x y q') @@ '(!x | !y) <-> y <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q') @@ '(!x | !y) <-> y <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q') @@ '(x | !y) <-> y <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q') @@ '(x | !y) <-> y <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q') @@ '(x | !!z) <-> y <-> q' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q') @@ '(x | !!z) <-> y <-> q' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q y') @@ '!x <-> y' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q y') @@ '!x <-> y' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q y') @@ '!x <-> !y' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q y') @@ '!x <-> !y' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q y') @@ '!x <-> !!y' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q y') @@ '!x <-> !!y' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q y') @@ '!(x <-> y)' AS \"false\"","shape":"SELECT to_tsvector('simple', 'x y q y') @@ '!(x <-> y)' AS \"false\";"}
+{"sql":"select to_tsvector('simple', 'x y q y') @@ '!(x <2> y)' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q y') @@ '!(x <2> y)' AS \"true\";"}
+{"sql":"select strip(to_tsvector('simple', 'x y q y')) @@ '!x <-> y' AS \"false\"","shape":"SELECT strip(to_tsvector('simple', 'x y q y')) @@ '!x <-> y' AS \"false\";"}
+{"sql":"select strip(to_tsvector('simple', 'x y q y')) @@ '!x <-> !y' AS \"false\"","shape":"SELECT strip(to_tsvector('simple', 'x y q y')) @@ '!x <-> !y' AS \"false\";"}
+{"sql":"select strip(to_tsvector('simple', 'x y q y')) @@ '!x <-> !!y' AS \"false\"","shape":"SELECT strip(to_tsvector('simple', 'x y q y')) @@ '!x <-> !!y' AS \"false\";"}
+{"sql":"select strip(to_tsvector('simple', 'x y q y')) @@ '!(x <-> y)' AS \"true\"","shape":"SELECT strip(to_tsvector('simple', 'x y q y')) @@ '!(x <-> y)' AS \"true\";"}
+{"sql":"select strip(to_tsvector('simple', 'x y q y')) @@ '!(x <2> y)' AS \"true\"","shape":"SELECT strip(to_tsvector('simple', 'x y q y')) @@ '!(x <2> y)' AS \"true\";"}
+{"sql":"select to_tsvector('simple', 'x y q y') @@ '!foo' AS \"true\"","shape":"SELECT to_tsvector('simple', 'x y q y') @@ '!foo' AS \"true\";"}
+{"sql":"select to_tsvector('simple', '') @@ '!foo' AS \"true\"","shape":"SELECT to_tsvector('simple', '') @@ '!foo' AS \"true\";"}
+{"sql":"SELECT ts_rank(' a:1 s:2C d g'::tsvector, 'a | s')","shape":"SELECT ts_rank(' a:1 s:2C d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank(' a:1 sa:2C d g'::tsvector, 'a | s')","shape":"SELECT ts_rank(' a:1 sa:2C d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank(' a:1 sa:2C d g'::tsvector, 'a | s:*')","shape":"SELECT ts_rank(' a:1 sa:2C d g'::tsvector, 'a | s:*');"}
+{"sql":"SELECT ts_rank(' a:1 sa:2C d g'::tsvector, 'a | sa:*')","shape":"SELECT ts_rank(' a:1 sa:2C d g'::tsvector, 'a | sa:*');"}
+{"sql":"SELECT ts_rank(' a:1 s:2B d g'::tsvector, 'a | s')","shape":"SELECT ts_rank(' a:1 s:2B d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank(' a:1 s:2 d g'::tsvector, 'a | s')","shape":"SELECT ts_rank(' a:1 s:2 d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank(' a:1 s:2C d g'::tsvector, 'a & s')","shape":"SELECT ts_rank(' a:1 s:2C d g'::tsvector, 'a & s');"}
+{"sql":"SELECT ts_rank(' a:1 s:2B d g'::tsvector, 'a & s')","shape":"SELECT ts_rank(' a:1 s:2B d g'::tsvector, 'a & s');"}
+{"sql":"SELECT ts_rank(' a:1 s:2 d g'::tsvector, 'a & s')","shape":"SELECT ts_rank(' a:1 s:2 d g'::tsvector, 'a & s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2C d g'::tsvector, 'a | s')","shape":"SELECT ts_rank_cd(' a:1 s:2C d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2C d g'::tsvector, 'a | s')","shape":"SELECT ts_rank_cd(' a:1 sa:2C d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2C d g'::tsvector, 'a | s:*')","shape":"SELECT ts_rank_cd(' a:1 sa:2C d g'::tsvector, 'a | s:*');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2C d g'::tsvector, 'a | sa:*')","shape":"SELECT ts_rank_cd(' a:1 sa:2C d g'::tsvector, 'a | sa:*');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:3C sab:2c d g'::tsvector, 'a | sa:*')","shape":"SELECT ts_rank_cd(' a:1 sa:3C sab:2c d g'::tsvector, 'a | sa:*');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2B d g'::tsvector, 'a | s')","shape":"SELECT ts_rank_cd(' a:1 s:2B d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2 d g'::tsvector, 'a | s')","shape":"SELECT ts_rank_cd(' a:1 s:2 d g'::tsvector, 'a | s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2C d g'::tsvector, 'a & s')","shape":"SELECT ts_rank_cd(' a:1 s:2C d g'::tsvector, 'a & s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2B d g'::tsvector, 'a & s')","shape":"SELECT ts_rank_cd(' a:1 s:2B d g'::tsvector, 'a & s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2 d g'::tsvector, 'a & s')","shape":"SELECT ts_rank_cd(' a:1 s:2 d g'::tsvector, 'a & s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2A d g'::tsvector, 'a <-> s')","shape":"SELECT ts_rank_cd(' a:1 s:2A d g'::tsvector, 'a <-> s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2C d g'::tsvector, 'a <-> s')","shape":"SELECT ts_rank_cd(' a:1 s:2C d g'::tsvector, 'a <-> s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2 d g'::tsvector, 'a <-> s')","shape":"SELECT ts_rank_cd(' a:1 s:2 d g'::tsvector, 'a <-> s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2 d:2A g'::tsvector, 'a <-> s')","shape":"SELECT ts_rank_cd(' a:1 s:2 d:2A g'::tsvector, 'a <-> s');"}
+{"sql":"SELECT ts_rank_cd(' a:1 s:2,3A d:2A g'::tsvector, 'a <2> s:A')","shape":"SELECT ts_rank_cd(' a:1 s:2,3A d:2A g'::tsvector, 'a <2> s:A');"}
+{"sql":"SELECT ts_rank_cd(' a:1 b:2 s:3A d:2A g'::tsvector, 'a <2> s:A')","shape":"SELECT ts_rank_cd(' a:1 b:2 s:3A d:2A g'::tsvector, 'a <2> s:A');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2D sb:2A g'::tsvector, 'a <-> s:*')","shape":"SELECT ts_rank_cd(' a:1 sa:2D sb:2A g'::tsvector, 'a <-> s:*');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2A sb:2D g'::tsvector, 'a <-> s:*')","shape":"SELECT ts_rank_cd(' a:1 sa:2A sb:2D g'::tsvector, 'a <-> s:*');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2A sb:2D g'::tsvector, 'a <-> s:* <-> sa:A')","shape":"SELECT ts_rank_cd(' a:1 sa:2A sb:2D g'::tsvector, 'a <-> s:* <-> sa:A');"}
+{"sql":"SELECT ts_rank_cd(' a:1 sa:2A sb:2D g'::tsvector, 'a <-> s:* <-> sa:B')","shape":"SELECT ts_rank_cd(' a:1 sa:2A sb:2D g'::tsvector, 'a <-> s:* <-> sa:B');"}
+{"sql":"SELECT 'a:1 b:2'::tsvector @@ 'a <-> b'::tsquery AS \"true\"","shape":"SELECT 'a:1 b:2'::tsvector @@ 'a <-> b'::tsquery AS \"true\";"}
+{"sql":"SELECT 'a:1 b:2'::tsvector @@ 'a <0> b'::tsquery AS \"false\"","shape":"SELECT 'a:1 b:2'::tsvector @@ 'a <0> b'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a:1 b:2'::tsvector @@ 'a <1> b'::tsquery AS \"true\"","shape":"SELECT 'a:1 b:2'::tsvector @@ 'a <1> b'::tsquery AS \"true\";"}
+{"sql":"SELECT 'a:1 b:2'::tsvector @@ 'a <2> b'::tsquery AS \"false\"","shape":"SELECT 'a:1 b:2'::tsvector @@ 'a <2> b'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a:1 b:3'::tsvector @@ 'a <-> b'::tsquery AS \"false\"","shape":"SELECT 'a:1 b:3'::tsvector @@ 'a <-> b'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a:1 b:3'::tsvector @@ 'a <0> b'::tsquery AS \"false\"","shape":"SELECT 'a:1 b:3'::tsvector @@ 'a <0> b'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a:1 b:3'::tsvector @@ 'a <1> b'::tsquery AS \"false\"","shape":"SELECT 'a:1 b:3'::tsvector @@ 'a <1> b'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a:1 b:3'::tsvector @@ 'a <2> b'::tsquery AS \"true\"","shape":"SELECT 'a:1 b:3'::tsvector @@ 'a <2> b'::tsquery AS \"true\";"}
+{"sql":"SELECT 'a:1 b:3'::tsvector @@ 'a <3> b'::tsquery AS \"false\"","shape":"SELECT 'a:1 b:3'::tsvector @@ 'a <3> b'::tsquery AS \"false\";"}
+{"sql":"SELECT 'a:1 b:3'::tsvector @@ 'a <0> a:*'::tsquery AS \"true\"","shape":"SELECT 'a:1 b:3'::tsvector @@ 'a <0> a:*'::tsquery AS \"true\";"}
+{"sql":"SELECT strip('w:12B w:13* w:12,5,6 a:1,3* a:3 w asd:1dc asd'::tsvector)","shape":"SELECT strip('w:12B w:13* w:12,5,6 a:1,3* a:3 w asd:1dc asd'::tsvector);"}
+{"sql":"SELECT strip('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector)","shape":"SELECT strip('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector);"}
+{"sql":"SELECT strip('base hidden rebel spaceship strike'::tsvector)","shape":"SELECT strip('base hidden rebel spaceship strike'::tsvector);"}
+{"sql":"SELECT ts_delete(to_tsvector('english', 'Rebel spaceships, striking from a hidden base'), 'spaceship')","shape":"SELECT ts_delete(to_tsvector('english', 'Rebel spaceships, striking from a hidden base'), 'spaceship');"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'base')","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'base');"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'bas')","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'bas');"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'bases')","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'bases');"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'spaceship')","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, 'spaceship');"}
+{"sql":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, 'spaceship')","shape":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, 'spaceship');"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceship','rebel'])","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceship', 'rebel']);"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceships','rebel'])","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceships', 'rebel']);"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceshi','rebel'])","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceshi', 'rebel']);"}
+{"sql":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceship','leya','rebel'])","shape":"SELECT ts_delete('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector, ARRAY['spaceship', 'leya', 'rebel']);"}
+{"sql":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, ARRAY['spaceship','leya','rebel'])","shape":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, ARRAY['spaceship', 'leya', 'rebel']);"}
+{"sql":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, ARRAY['spaceship','leya','rebel','rebel'])","shape":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, ARRAY['spaceship', 'leya', 'rebel', 'rebel']);"}
+{"sql":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, ARRAY['spaceship','leya','rebel', '', NULL])","shape":"SELECT ts_delete('base hidden rebel spaceship strike'::tsvector, ARRAY['spaceship', 'leya', 'rebel', '', NULL]);"}
+{"sql":"SELECT unnest('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector)","shape":"SELECT unnest('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector);"}
+{"sql":"SELECT unnest('base hidden rebel spaceship strike'::tsvector)","shape":"SELECT unnest('base hidden rebel spaceship strike'::tsvector);"}
+{"sql":"SELECT * FROM unnest('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector)","shape":"SELECT * FROM unnest('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector);"}
+{"sql":"SELECT * FROM unnest('base hidden rebel spaceship strike'::tsvector)","shape":"SELECT * FROM unnest('base hidden rebel spaceship strike'::tsvector);"}
+{"sql":"SELECT lexeme, positions[1] from unnest('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector)","shape":"SELECT lexeme, positions[1] FROM unnest('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector);"}
+{"sql":"SELECT tsvector_to_array('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector)","shape":"SELECT tsvector_to_array('base:7 hidden:6 rebel:1 spaceship:2,33A,34B,35C,36D strike:3'::tsvector);"}
+{"sql":"SELECT tsvector_to_array('base hidden rebel spaceship strike'::tsvector)","shape":"SELECT tsvector_to_array('base hidden rebel spaceship strike'::tsvector);"}
+{"sql":"SELECT array_to_tsvector(ARRAY['base','hidden','rebel','spaceship','strike'])","shape":"SELECT array_to_tsvector(ARRAY['base', 'hidden', 'rebel', 'spaceship', 'strike']);"}
+{"sql":"SELECT array_to_tsvector(ARRAY['base','hidden','rebel','spaceship', NULL])","shape":"SELECT array_to_tsvector(ARRAY['base', 'hidden', 'rebel', 'spaceship', NULL]);"}
+{"sql":"SELECT array_to_tsvector(ARRAY['base','hidden','rebel','spaceship', ''])","shape":"SELECT array_to_tsvector(ARRAY['base', 'hidden', 'rebel', 'spaceship', '']);"}
+{"sql":"SELECT array_to_tsvector(ARRAY['foo','bar','baz','bar'])","shape":"SELECT array_to_tsvector(ARRAY['foo', 'bar', 'baz', 'bar']);"}
+{"sql":"SELECT setweight('w:12B w:13* w:12,5,6 a:1,3* a:3 w asd:1dc asd zxc:81,567,222A'::tsvector, 'c')","shape":"SELECT setweight('w:12B w:13* w:12,5,6 a:1,3* a:3 w asd:1dc asd zxc:81,567,222A'::tsvector, 'c');"}
+{"sql":"SELECT setweight('a:1,3A asd:1C w:5,6,12B,13A zxc:81,222A,567'::tsvector, 'c')","shape":"SELECT setweight('a:1,3A asd:1C w:5,6,12B,13A zxc:81,222A,567'::tsvector, 'c');"}
+{"sql":"SELECT setweight('a:1,3A asd:1C w:5,6,12B,13A zxc:81,222A,567'::tsvector, 'c', '{a}')","shape":"SELECT setweight('a:1,3A asd:1C w:5,6,12B,13A zxc:81,222A,567'::tsvector, 'c', '{a}');"}
+{"sql":"SELECT setweight('a:1,3A asd:1C w:5,6,12B,13A zxc:81,222A,567'::tsvector, 'c', '{a,zxc}')","shape":"SELECT setweight('a:1,3A asd:1C w:5,6,12B,13A zxc:81,222A,567'::tsvector, 'c', '{a,zxc}');"}
+{"sql":"SELECT setweight('a asd w:5,6,12B,13A zxc'::tsvector, 'c', ARRAY['a', 'zxc', '', NULL])","shape":"SELECT setweight('a asd w:5,6,12B,13A zxc'::tsvector, 'c', ARRAY['a', 'zxc', '', NULL]);"}
+{"sql":"SELECT ts_filter('base:7A empir:17 evil:15 first:11 galact:16 hidden:6A rebel:1A spaceship:2A strike:3A victori:12 won:9'::tsvector, '{a}')","shape":"SELECT ts_filter('base:7A empir:17 evil:15 first:11 galact:16 hidden:6A rebel:1A spaceship:2A strike:3A victori:12 won:9'::tsvector, '{a}');"}
+{"sql":"SELECT ts_filter('base hidden rebel spaceship strike'::tsvector, '{a}')","shape":"SELECT ts_filter('base hidden rebel spaceship strike'::tsvector, '{a}');"}
+{"sql":"SELECT ts_filter('base hidden rebel spaceship strike'::tsvector, '{a,b,NULL}')","shape":"SELECT ts_filter('base hidden rebel spaceship strike'::tsvector, '{a,b,NULL}');"}

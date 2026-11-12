@@ -1,0 +1,41 @@
+{"sql":"PRAGMA synchronous = normal"}
+{"sql":"SAVEPOINT sp"}
+{"sql":"ROLLBACK TO sp"}
+{"sql":"INSERT INTO t2 VALUES(blob(400), blob(400))"}
+{"sql":"INSERT INTO t2 SELECT blob(400), blob(400) FROM t2"}
+{"sql":"INSERT INTO t1 SELECT blob(400), blob(400) FROM t1"}
+{"sql":"INSERT INTO t2 VALUES('w', 'x')"}
+{"sql":"SAVEPOINT save"}
+{"sql":"INSERT INTO t2 VALUES('y', 'z')"}
+{"sql":"ROLLBACK TO save"}
+{"sql":"CREATE TEMP TABLE t3(x UNIQUE)"}
+{"sql":"INSERT INTO t3 VALUES('abc')"}
+{"sql":"INSERT INTO t1 VALUES(blob(900))"}
+{"sql":"INSERT INTO t1 SELECT blob(900) FROM t1"}
+{"sql":"DELETE FROM t1 WHERE rowid<54"}
+{"sql":"INSERT INTO t1 VALUES(19, 20)"}
+{"sql":"INSERT INTO t1 VALUES(23, 24)"}
+{"sql":"INSERT INTO t1 VALUES( blob(900) )"}
+{"sql":"INSERT INTO t1 VALUES('A', 1)"}
+{"sql":"UPDATE t1 SET y = 0 WHERE x = 'A'"}
+{"sql":"INSERT INTO t2 VALUES('B', 1)"}
+{"sql":"UPDATE t2 SET y = 2 WHERE x = 'B'"}
+{"sql":"UPDATE t1 SET y = 1 WHERE x = 'A'"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(10), randomblob(100))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(10), randomblob(100) FROM t1"}
+{"sql":"CREATE INDEX i1 on t1(b)"}
+{"sql":"PRAGMA main.auto_vacuum = 0"}
+{"sql":"PRAGMA aux.auto_vacuum = 0"}
+{"sql":"PRAGMA aux.synchronous = NORMAL"}
+{"sql":"CREATE TABLE main.t1(a, b, PRIMARY KEY(a, b))"}
+{"sql":"CREATE TABLE aux.t2(a, b, PRIMARY KEY(a, b))"}
+{"sql":"INSERT INTO t2 VALUES(1, randomblob(1000))"}
+{"sql":"INSERT INTO t2 VALUES(2, randomblob(1000))"}
+{"sql":"PRAGMA synchronous = FULL"}
+{"sql":"CREATE TABLE t(x)"}
+{"sql":"INSERT INTO t VALUES(randomblob(400))"}
+{"sql":"INSERT INTO t1 VALUES(0, 0)"}
+{"sql":"SAVEPOINT s"}
+{"sql":"INSERT INTO t1 SELECT randomblob(900), randomblob(900) FROM t1"}
+{"sql":"ROLLBACK TO s"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(5000))"}

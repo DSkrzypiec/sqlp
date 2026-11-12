@@ -1,0 +1,90 @@
+{"sql":"CREATE TEMP TABLE x (\n\ta serial,\n\tb int,\n\tc text not null default 'stuff',\n\td text,\n\te text\n)","shape":"CREATE TEMPORARY TABLE x (a serial, b int, c text NOT NULL DEFAULT 'stuff', d text, e text);"}
+{"sql":"CREATE FUNCTION fn_x_before () RETURNS TRIGGER AS '\n  BEGIN\n\t\tNEW.e := ''before trigger fired''::text;\n\t\treturn NEW;\n\tEND;\n' LANGUAGE plpgsql","shape":"CREATE FUNCTION fn_x_before() RETURNS TRIGGER AS '\n  BEGIN\n\t\tNEW.e := ''before trigger fired''::text;\n\t\treturn NEW;\n\tEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE FUNCTION fn_x_after () RETURNS TRIGGER AS '\n  BEGIN\n\t\tUPDATE x set e=''after trigger fired'' where c=''stuff'';\n\t\treturn NULL;\n\tEND;\n' LANGUAGE plpgsql","shape":"CREATE FUNCTION fn_x_after() RETURNS TRIGGER AS '\n  BEGIN\n\t\tUPDATE x set e=''after trigger fired'' where c=''stuff'';\n\t\treturn NULL;\n\tEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER trg_x_after AFTER INSERT ON x\nFOR EACH ROW EXECUTE PROCEDURE fn_x_after()","shape":"CREATE TRIGGER trg_x_after AFTER INSERT ON x FOR EACH ROW EXECUTE FUNCTION fn_x_after();"}
+{"sql":"CREATE TRIGGER trg_x_before BEFORE INSERT ON x\nFOR EACH ROW EXECUTE PROCEDURE fn_x_before()","shape":"CREATE TRIGGER trg_x_before BEFORE INSERT ON x FOR EACH ROW EXECUTE FUNCTION fn_x_before();"}
+{"sql":"COPY x (a, b, c, d, e) from stdin","shape":"COPY x (a, b, c, d, e) FROM STDIN;"}
+{"sql":"COPY x (b, d) from stdin","shape":"COPY x (b, d) FROM STDIN;"}
+{"sql":"COPY x (xyz) from stdin","shape":"COPY x (xyz) FROM STDIN;"}
+{"sql":"COPY x from stdin","shape":"COPY x FROM STDIN;"}
+{"sql":"COPY x (b, c, d, e) from stdin delimiter ',' null 'x'","shape":"COPY x (b, c, d, e) FROM STDIN DELIMITER ',' NULL 'x';"}
+{"sql":"COPY x from stdin WITH DELIMITER AS ';' NULL AS ''","shape":"COPY x FROM STDIN WITH DELIMITER ';' NULL '';"}
+{"sql":"COPY x from stdin WITH DELIMITER AS ':' NULL AS E'\\\\X' ENCODING 'sql_ascii'","shape":"COPY x FROM STDIN WITH DELIMITER ':' NULL E'\\\\X' ENCODING 'sql_ascii';"}
+{"sql":"COPY x TO stdout WHERE a = 1","reject":true}
+{"sql":"COPY x from stdin WHERE a = 50004","shape":"COPY x FROM STDIN WHERE a = 50004;"}
+{"sql":"COPY x from stdin WHERE a > 60003","shape":"COPY x FROM STDIN WHERE a > 60003;"}
+{"sql":"COPY x from stdin WHERE f > 60003","shape":"COPY x FROM STDIN WHERE f > 60003;"}
+{"sql":"CREATE TEMP TABLE testeoc (a text)","shape":"CREATE TEMPORARY TABLE testeoc (a text);"}
+{"sql":"COPY testeoc FROM stdin CSV","shape":"COPY testeoc FROM STDIN CSV;"}
+{"sql":"COPY testeoc TO stdout CSV","shape":"COPY testeoc TO STDOUT CSV;"}
+{"sql":"CREATE TEMP TABLE testnull(a int, b text)","shape":"CREATE TEMPORARY TABLE testnull (a int, b text);"}
+{"sql":"INSERT INTO testnull VALUES (1, E'\\\\0'), (NULL, NULL)","shape":"INSERT INTO testnull VALUES (1, E'\\\\0'), (NULL, NULL);"}
+{"sql":"COPY testnull TO stdout WITH NULL AS E'\\\\0'","shape":"COPY testnull TO STDOUT WITH NULL E'\\\\0';"}
+{"sql":"COPY testnull FROM stdin WITH NULL AS E'\\\\0'","shape":"COPY testnull FROM STDIN WITH NULL E'\\\\0';"}
+{"sql":"SELECT * FROM testnull","shape":"SELECT * FROM testnull;"}
+{"sql":"CREATE TABLE vistest (LIKE testeoc)","shape":"CREATE TABLE vistest (LIKE testeoc);"}
+{"sql":"COPY vistest FROM stdin CSV","shape":"COPY vistest FROM STDIN CSV;"}
+{"sql":"SELECT * FROM vistest","shape":"SELECT * FROM vistest;"}
+{"sql":"TRUNCATE vistest","shape":"TRUNCATE TABLE vistest;"}
+{"sql":"COPY vistest FROM stdin CSV FREEZE","shape":"COPY vistest FROM STDIN CSV FREEZE;"}
+{"sql":"INSERT INTO vistest VALUES ('z')","shape":"INSERT INTO vistest VALUES ('z');"}
+{"sql":"ROLLBACK TO SAVEPOINT s1","shape":"ROLLBACK TO SAVEPOINT s1;"}
+{"sql":"CREATE FUNCTION truncate_in_subxact() RETURNS VOID AS\n$$\nBEGIN\n\tTRUNCATE vistest;\nEXCEPTION\n  WHEN OTHERS THEN\n\tINSERT INTO vistest VALUES ('subxact failure');\nEND;\n$$ language plpgsql","shape":"CREATE FUNCTION truncate_in_subxact() RETURNS VOID AS '\nBEGIN\n\tTRUNCATE vistest;\nEXCEPTION\n  WHEN OTHERS THEN\n\tINSERT INTO vistest VALUES (''subxact failure'');\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"SELECT truncate_in_subxact()","shape":"SELECT truncate_in_subxact();"}
+{"sql":"CREATE TEMP TABLE forcetest (\n    a INT NOT NULL,\n    b TEXT NOT NULL,\n    c TEXT,\n    d TEXT,\n    e TEXT\n)","shape":"CREATE TEMPORARY TABLE forcetest (a INT NOT NULL, b TEXT NOT NULL, c TEXT, d TEXT, e TEXT);"}
+{"sql":"COPY forcetest (a, b, c) FROM STDIN WITH (FORMAT csv, FORCE_NOT_NULL(b), FORCE_NULL(c))","shape":"COPY forcetest (a, b, c) FROM STDIN WITH (FORMAT csv, FORCE_NOT_NULL (b), FORCE_NULL (c));"}
+{"sql":"SELECT b, c FROM forcetest WHERE a = 1","shape":"SELECT b, c FROM forcetest WHERE a = 1;"}
+{"sql":"COPY forcetest (a, b, c, d) FROM STDIN WITH (FORMAT csv, FORCE_NOT_NULL(c,d), FORCE_NULL(c,d))","shape":"COPY forcetest (a, b, c, d) FROM STDIN WITH (FORMAT csv, FORCE_NOT_NULL (c, d), FORCE_NULL (c, d));"}
+{"sql":"SELECT c, d FROM forcetest WHERE a = 2","shape":"SELECT c, d FROM forcetest WHERE a = 2;"}
+{"sql":"COPY forcetest (a, b, c) FROM STDIN WITH (FORMAT csv, FORCE_NULL(b), FORCE_NOT_NULL(c))","shape":"COPY forcetest (a, b, c) FROM STDIN WITH (FORMAT csv, FORCE_NULL (b), FORCE_NOT_NULL (c));"}
+{"sql":"COPY forcetest (d, e) FROM STDIN WITH (FORMAT csv, FORCE_NOT_NULL(b))","shape":"COPY forcetest (d, e) FROM STDIN WITH (FORMAT csv, FORCE_NOT_NULL (b));"}
+{"sql":"copy check_con_tbl from stdin","shape":"COPY check_con_tbl FROM STDIN;"}
+{"sql":"select * from check_con_tbl","shape":"SELECT * FROM check_con_tbl;"}
+{"sql":"CREATE ROLE regress_rls_copy_user"}
+{"sql":"CREATE ROLE regress_rls_copy_user_colperms"}
+{"sql":"CREATE TABLE rls_t1 (a int, b int, c int)","shape":"CREATE TABLE rls_t1 (a int, b int, c int);"}
+{"sql":"COPY rls_t1 (a, b, c) from stdin","shape":"COPY rls_t1 (a, b, c) FROM STDIN;"}
+{"sql":"CREATE POLICY p1 ON rls_t1 FOR SELECT USING (a % 2 = 0)"}
+{"sql":"ALTER TABLE rls_t1 ENABLE ROW LEVEL SECURITY"}
+{"sql":"ALTER TABLE rls_t1 FORCE ROW LEVEL SECURITY"}
+{"sql":"GRANT SELECT ON TABLE rls_t1 TO regress_rls_copy_user","shape":"GRANT SELECT ON TABLE rls_t1 TO regress_rls_copy_user;"}
+{"sql":"GRANT SELECT (a, b) ON TABLE rls_t1 TO regress_rls_copy_user_colperms","shape":"GRANT SELECT (a, b) ON TABLE rls_t1 TO regress_rls_copy_user_colperms;"}
+{"sql":"COPY rls_t1 TO stdout","shape":"COPY rls_t1 TO STDOUT;"}
+{"sql":"COPY rls_t1 (a, b, c) TO stdout","shape":"COPY rls_t1 (a, b, c) TO STDOUT;"}
+{"sql":"COPY rls_t1 (a) TO stdout","shape":"COPY rls_t1 (a) TO STDOUT;"}
+{"sql":"COPY rls_t1 (a, b) TO stdout","shape":"COPY rls_t1 (a, b) TO STDOUT;"}
+{"sql":"COPY rls_t1 (b, a) TO stdout","shape":"COPY rls_t1 (b, a) TO STDOUT;"}
+{"sql":"SET SESSION AUTHORIZATION regress_rls_copy_user"}
+{"sql":"SET SESSION AUTHORIZATION regress_rls_copy_user_colperms"}
+{"sql":"COPY rls_t1 (c) TO stdout","shape":"COPY rls_t1 (c) TO STDOUT;"}
+{"sql":"CREATE TABLE instead_of_insert_tbl(id serial, name text)","shape":"CREATE TABLE instead_of_insert_tbl (id serial, name text);"}
+{"sql":"CREATE VIEW instead_of_insert_tbl_view AS SELECT ''::text AS str","shape":"CREATE VIEW instead_of_insert_tbl_view AS SELECT ''::text AS str;"}
+{"sql":"COPY instead_of_insert_tbl_view FROM stdin","shape":"COPY instead_of_insert_tbl_view FROM STDIN;"}
+{"sql":"CREATE FUNCTION fun_instead_of_insert_tbl() RETURNS trigger AS $$\nBEGIN\n  INSERT INTO instead_of_insert_tbl (name) VALUES (NEW.str);\n  RETURN NULL;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION fun_instead_of_insert_tbl() RETURNS trigger AS '\nBEGIN\n  INSERT INTO instead_of_insert_tbl (name) VALUES (NEW.str);\n  RETURN NULL;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER trig_instead_of_insert_tbl_view\n  INSTEAD OF INSERT ON instead_of_insert_tbl_view\n  FOR EACH ROW EXECUTE PROCEDURE fun_instead_of_insert_tbl()","shape":"CREATE TRIGGER trig_instead_of_insert_tbl_view INSTEAD OF INSERT ON instead_of_insert_tbl_view FOR EACH ROW EXECUTE FUNCTION fun_instead_of_insert_tbl();"}
+{"sql":"SELECT * FROM instead_of_insert_tbl","shape":"SELECT * FROM instead_of_insert_tbl;"}
+{"sql":"CREATE VIEW instead_of_insert_tbl_view_2 as select ''::text as str","shape":"CREATE VIEW instead_of_insert_tbl_view_2 AS SELECT ''::text AS str;"}
+{"sql":"CREATE TRIGGER trig_instead_of_insert_tbl_view_2\n  INSTEAD OF INSERT ON instead_of_insert_tbl_view_2\n  FOR EACH ROW EXECUTE PROCEDURE fun_instead_of_insert_tbl()","shape":"CREATE TRIGGER trig_instead_of_insert_tbl_view_2 INSTEAD OF INSERT ON instead_of_insert_tbl_view_2 FOR EACH ROW EXECUTE FUNCTION fun_instead_of_insert_tbl();"}
+{"sql":"COPY instead_of_insert_tbl_view_2 FROM stdin","shape":"COPY instead_of_insert_tbl_view_2 FROM STDIN;"}
+{"sql":"DROP TABLE forcetest","shape":"DROP TABLE forcetest;"}
+{"sql":"DROP TABLE vistest","shape":"DROP TABLE vistest;"}
+{"sql":"DROP FUNCTION truncate_in_subxact()"}
+{"sql":"DROP TABLE x, y","shape":"DROP TABLE x, y;"}
+{"sql":"DROP TABLE rls_t1 CASCADE","shape":"DROP TABLE rls_t1 CASCADE;"}
+{"sql":"DROP ROLE regress_rls_copy_user","shape":"DROP ROLE regress_rls_copy_user;"}
+{"sql":"DROP ROLE regress_rls_copy_user_colperms","shape":"DROP ROLE regress_rls_copy_user_colperms;"}
+{"sql":"DROP FUNCTION fn_x_before()"}
+{"sql":"DROP FUNCTION fn_x_after()"}
+{"sql":"DROP TABLE instead_of_insert_tbl","shape":"DROP TABLE instead_of_insert_tbl;"}
+{"sql":"DROP VIEW instead_of_insert_tbl_view","shape":"DROP VIEW instead_of_insert_tbl_view;"}
+{"sql":"DROP VIEW instead_of_insert_tbl_view_2","shape":"DROP VIEW instead_of_insert_tbl_view_2;"}
+{"sql":"DROP FUNCTION fun_instead_of_insert_tbl()"}
+{"sql":"create temp table copy_default (\n\tid integer primary key,\n\ttext_value text not null default 'test',\n\tts_value timestamp without time zone not null default '2022-07-05'\n)","shape":"CREATE TEMPORARY TABLE copy_default (id integer PRIMARY KEY, text_value text NOT NULL DEFAULT 'test', ts_value timestamp WITHOUT TIME ZONE NOT NULL DEFAULT '2022-07-05');"}
+{"sql":"copy copy_default from stdin","shape":"COPY copy_default FROM STDIN;"}
+{"sql":"select id, text_value, ts_value from copy_default","shape":"SELECT id, text_value, ts_value FROM copy_default;"}
+{"sql":"truncate copy_default","shape":"TRUNCATE TABLE copy_default;"}
+{"sql":"copy copy_default from stdin with (format csv)","shape":"COPY copy_default FROM STDIN WITH (FORMAT csv);"}
+{"sql":"copy copy_default from stdin with (format binary, default '\\D')","shape":"COPY copy_default FROM STDIN WITH (FORMAT binary, DEFAULT '\\D');"}
+{"sql":"copy copy_default from stdin with (format csv, default '\\D')","shape":"COPY copy_default FROM STDIN WITH (FORMAT csv, DEFAULT '\\D');"}
+{"sql":"copy copy_default from stdin with (default '\\D')","shape":"COPY copy_default FROM STDIN WITH (DEFAULT '\\D');"}
+{"sql":"copy (select 1 as test) TO stdout with (default '\\D')","shape":"COPY (SELECT 1 AS test) TO STDOUT WITH (DEFAULT '\\D');"}

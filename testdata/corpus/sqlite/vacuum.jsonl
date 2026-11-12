@@ -1,0 +1,39 @@
+{"sql":"INSERT INTO t1 VALUES(NULL,randstr(10,100),randstr(5,50))"}
+{"sql":"INSERT INTO t1 VALUES(123456,randstr(10,100),randstr(5,50))"}
+{"sql":"INSERT INTO t1 SELECT NULL, b||'-'||rowid, c||'-'||rowid FROM t1"}
+{"sql":"CREATE INDEX i1 ON t1(b,c)"}
+{"sql":"CREATE UNIQUE INDEX i2 ON t1(c,a)"}
+{"sql":"CREATE TABLE t5 AS SELECT * FROM t1"}
+{"sql":"CREATE TABLE t6 AS SELECT * FROM t1"}
+{"sql":"CREATE TABLE t7 AS SELECT * FROM t1"}
+{"sql":"SELECT * FROM t7 LIMIT 1"}
+{"sql":"INSERT INTO t7 VALUES(1234567890,'hello','world')"}
+{"sql":"SELECT * FROM t7 WHERE a=1234567890"}
+{"sql":"INSERT INTO t7 SELECT * FROM t6"}
+{"sql":"CREATE TABLE Test (TestID int primary key)"}
+{"sql":"INSERT INTO Test VALUES (NULL)"}
+{"sql":"CREATE VIEW viewTest AS SELECT * FROM Test"}
+{"sql":"CREATE TABLE tempTest (TestID int primary key, Test2 int NULL)"}
+{"sql":"INSERT INTO tempTest SELECT TestID, 1 FROM Test"}
+{"sql":"DROP TABLE Test"}
+{"sql":"CREATE TABLE Test(TestID int primary key, Test2 int NULL)"}
+{"sql":"INSERT INTO Test SELECT * FROM tempTest"}
+{"sql":"DROP TABLE tempTest"}
+{"sql":"CREATE TABLE \"abc abc\"(a, b, c)"}
+{"sql":"INSERT INTO \"abc abc\" VALUES(1, 2, 3)"}
+{"sql":"select * from \"abc abc\""}
+{"sql":"DELETE FROM \"abc abc\""}
+{"sql":"INSERT INTO \"abc abc\" VALUES(X'00112233', NULL, NULL)"}
+{"sql":"select count(*) from \"abc abc\" WHERE a = X'00112233'"}
+{"sql":"CREATE TABLE t1(t)"}
+{"sql":"CREATE TABLE t2(t)"}
+{"sql":"CREATE TABLE t3(t)"}
+{"sql":"DROP TABLE 'abc abc'"}
+{"sql":"CREATE TABLE autoinc(a INTEGER PRIMARY KEY AUTOINCREMENT, b)"}
+{"sql":"INSERT INTO autoinc(b) VALUES('hi')"}
+{"sql":"INSERT INTO autoinc(b) VALUES('there')"}
+{"sql":"DELETE FROM autoinc"}
+{"sql":"INSERT INTO autoinc(b) VALUES('one')"}
+{"sql":"INSERT INTO autoinc(b) VALUES('two')"}
+{"sql":"INSERT INTO t8 VALUES('a', 'b')"}
+{"sql":"INSERT INTO t8 VALUES('c', 'd')"}

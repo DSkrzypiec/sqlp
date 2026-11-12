@@ -1,0 +1,40 @@
+{"sql":"SELECT name 'name string' = name 'name string' AS \"True\"","shape":"SELECT name 'name string' = name 'name string' AS \"True\";"}
+{"sql":"SELECT name 'name string' = name 'name string ' AS \"False\"","shape":"SELECT name 'name string' = name 'name string ' AS \"False\";"}
+{"sql":"CREATE TABLE NAME_TBL(f1 name)","shape":"CREATE TABLE NAME_TBL (f1 name);"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR');"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqr')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqr');"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('asdfghjkl;')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('asdfghjkl;');"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('343f%2a')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('343f%2a');"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('d34aaasdf')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('d34aaasdf');"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('');"}
+{"sql":"INSERT INTO NAME_TBL(f1) VALUES ('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')","shape":"INSERT INTO NAME_TBL (f1) VALUES ('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ');"}
+{"sql":"SELECT * FROM NAME_TBL","shape":"SELECT * FROM NAME_TBL;"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 <> '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 <> '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 < '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 < '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 <= '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 <= '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 > '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 > '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 >= '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 >= '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDEFGHIJKLMNOPQR';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 ~ '.*'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 ~ '.*';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 !~ '.*'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 !~ '.*';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 ~ '[0-9]'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 ~ '[0-9]';"}
+{"sql":"SELECT c.f1 FROM NAME_TBL c WHERE c.f1 ~ '.*asdf.*'","shape":"SELECT c.f1 FROM NAME_TBL AS c WHERE c.f1 ~ '.*asdf.*';"}
+{"sql":"DROP TABLE NAME_TBL","shape":"DROP TABLE NAME_TBL;"}
+{"sql":"DO $$\nDECLARE r text[];\nBEGIN\n  r := parse_ident('Schemax.Tabley');\n  RAISE NOTICE '%', format('%I.%I', r[1], r[2]);\n  r := parse_ident('\"SchemaX\".\"TableY\"');\n  RAISE NOTICE '%', format('%I.%I', r[1], r[2]);\nEND;\n$$","shape":"DO '\nDECLARE r text[];\nBEGIN\n  r := parse_ident(''Schemax.Tabley'');\n  RAISE NOTICE ''%'', format(''%I.%I'', r[1], r[2]);\n  r := parse_ident(''\"SchemaX\".\"TableY\"'');\n  RAISE NOTICE ''%'', format(''%I.%I'', r[1], r[2]);\nEND;\n';"}
+{"sql":"SELECT parse_ident('foo.boo')","shape":"SELECT parse_ident('foo.boo');"}
+{"sql":"SELECT parse_ident('foo.boo[]')","shape":"SELECT parse_ident('foo.boo[]');"}
+{"sql":"SELECT parse_ident('foo.boo[]', strict => false)","shape":"SELECT parse_ident('foo.boo[]', strict => FALSE);"}
+{"sql":"SELECT parse_ident(' ')","shape":"SELECT parse_ident(' ');"}
+{"sql":"SELECT parse_ident(' .aaa')","shape":"SELECT parse_ident(' .aaa');"}
+{"sql":"SELECT parse_ident(' aaa . ')","shape":"SELECT parse_ident(' aaa . ');"}
+{"sql":"SELECT parse_ident('aaa.a%b')","shape":"SELECT parse_ident('aaa.a%b');"}
+{"sql":"SELECT parse_ident(E'X\\rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')","shape":"SELECT parse_ident(E'X\\rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');"}
+{"sql":"SELECT length(a[1]), length(a[2]) from parse_ident('\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\".yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy') as a","shape":"SELECT length(a[1]), length(a[2]) FROM parse_ident('\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\".yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy') AS a;"}
+{"sql":"SELECT parse_ident(' first . \"  second  \" .\"   third   \". \"  ' || repeat('x',66) || '\"')","shape":"SELECT parse_ident((' first . \"  second  \" .\"   third   \". \"  ' || repeat('x', 66)) || '\"');"}
+{"sql":"SELECT parse_ident(' first . \"  second  \" .\"   third   \". \"  ' || repeat('x',66) || '\"')::name[]","shape":"SELECT parse_ident((' first . \"  second  \" .\"   third   \". \"  ' || repeat('x', 66)) || '\"')::name[];"}
+{"sql":"SELECT parse_ident(E'\"c\".X XXXX\\002XXXXXX')","shape":"SELECT parse_ident(E'\"c\".X XXXX\\002XXXXXX');"}
+{"sql":"SELECT parse_ident('1020')","shape":"SELECT parse_ident('1020');"}
+{"sql":"SELECT parse_ident('10.20')","shape":"SELECT parse_ident('10.20');"}
+{"sql":"SELECT parse_ident('.')","shape":"SELECT parse_ident('.');"}
+{"sql":"SELECT parse_ident('.1020')","shape":"SELECT parse_ident('.1020');"}
+{"sql":"SELECT parse_ident('xxx.1020')","shape":"SELECT parse_ident('xxx.1020');"}

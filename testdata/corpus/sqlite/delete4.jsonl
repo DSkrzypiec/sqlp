@@ -1,0 +1,74 @@
+{"sql":"INSERT INTO t1 VALUES(1, 0)"}
+{"sql":"INSERT INTO t1 VALUES(2, 1)"}
+{"sql":"INSERT INTO t1 VALUES(3, 0)"}
+{"sql":"INSERT INTO t1 VALUES(4, 1)"}
+{"sql":"INSERT INTO t1 VALUES(5, 0)"}
+{"sql":"INSERT INTO t1 VALUES(6, 1)"}
+{"sql":"INSERT INTO t1 VALUES(7, 0)"}
+{"sql":"INSERT INTO t1 VALUES(8, 1)"}
+{"sql":"DELETE FROM t1 WHERE y=1"}
+{"sql":"INSERT INTO t1 VALUES(1, 0, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(2, 1, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(3, 0, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(4, 1, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(5, 0, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(6, 1, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(7, 0, randomblob(200))"}
+{"sql":"INSERT INTO t1 VALUES(8, 1, randomblob(200))"}
+{"sql":"CREATE TABLE t1(a, b, PRIMARY KEY(a, b)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(2, 4)"}
+{"sql":"INSERT INTO t1 VALUES(1, 5)"}
+{"sql":"DELETE FROM t1 WHERE a=1"}
+{"sql":"SELECT printf('(%d)',changes())"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n     INSERT INTO t1(a,b) SELECT x, x+1 FROM c"}
+{"sql":"CREATE INDEX i1a ON t1(a)"}
+{"sql":"INSERT INTO t1 VALUES(1, 'one', 'i')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'two', 'ii')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'three', 'iii')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'four', 'iv')"}
+{"sql":"INSERT INTO t1 VALUES(5, 'one', 'i')"}
+{"sql":"INSERT INTO t1 VALUES(6, 'two', 'ii')"}
+{"sql":"INSERT INTO t1 VALUES(7, 'three', 'iii')"}
+{"sql":"INSERT INTO t1 VALUES(8, 'four', 'iv')"}
+{"sql":"DELETE FROM t1 WHERE a='two' OR b='iv'"}
+{"sql":"SELECT i FROM t1 ORDER BY i"}
+{"sql":"CREATE TABLE t4(col0, col1)"}
+{"sql":"INSERT INTO \"t4\" VALUES(14, 'abcde')"}
+{"sql":"CREATE INDEX idx_t4_0 ON t4 (col1, col0)"}
+{"sql":"CREATE INDEX idx_t4_3 ON t4 (col0)"}
+{"sql":"DELETE FROM t4 WHERE col0=69 OR col0>7"}
+{"sql":"CREATE TABLE t4(col0, col1, pk PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"INSERT INTO t4 VALUES(14, 'abcde','xyzzy')"}
+{"sql":"CREATE INDEX x1 ON t1(b, c)"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES(1, 1, zeroblob(80))"}
+{"sql":"INSERT INTO t1(a,b,c) SELECT a+1, 1, c FROM t1"}
+{"sql":"INSERT INTO t1(a,b,c) SELECT a+2, 1, c FROM t1"}
+{"sql":"INSERT INTO t1(a,b,c) SELECT a+10, 2, c FROM t1 WHERE b=1"}
+{"sql":"INSERT INTO t1(a,b,c) SELECT a+20, 3, c FROM t1 WHERE b=1"}
+{"sql":"PRAGMA reverse_unordered_selects = ON"}
+{"sql":"DELETE FROM t1 WHERE b=2"}
+{"sql":"SELECT a FROM t1 WHERE b=2"}
+{"sql":"CREATE TABLE t2(x INT)"}
+{"sql":"INSERT INTO t2(x) VALUES(1),(2),(3),(4),(5)"}
+{"sql":"DELETE FROM t2 WHERE EXISTS(SELECT 1 FROM t2 AS v WHERE v.x=t2.x-1)"}
+{"sql":"DELETE FROM t2 WHERE EXISTS(SELECT 1 FROM t2 AS v WHERE v.x=t2.x+1)"}
+{"sql":"CREATE TABLE t3(id INT PRIMARY KEY, a, b) WITHOUT ROWID"}
+{"sql":"INSERT INTO t3 VALUES(2, 2, 2)"}
+{"sql":"INSERT INTO t3 VALUES(3, 3, 3)"}
+{"sql":"INSERT INTO t3 VALUES(4, 4, 1)"}
+{"sql":"DELETE FROM t3 WHERE a=4 OR b=1"}
+{"sql":"CREATE TABLE t4(a PRIMARY KEY, b) WITHOUT ROWID"}
+{"sql":"CREATE INDEX t4i ON t4(b)"}
+{"sql":"INSERT INTO t4 VALUES(1, 'hello')"}
+{"sql":"INSERT INTO t4 VALUES(2, 'world')"}
+{"sql":"CREATE TABLE t5(a PRIMARY KEY, b) WITHOUT ROWID"}
+{"sql":"CREATE INDEX t5i ON t5(b)"}
+{"sql":"INSERT INTO t5 VALUES(1, 'hello')"}
+{"sql":"INSERT INTO t5 VALUES(3, 'world')"}
+{"sql":"UPDATE sqlite_master SET rootpage = (\n    SELECT rootpage FROM sqlite_master WHERE name = 't5'\n  ) WHERE name = 't4'"}
+{"sql":"DELETE FROM t4 WHERE b='world'"}
+{"sql":"INSERT INTO t3 VALUES(7, 8, 9)"}
+{"sql":"CREATE TRIGGER t3t BEFORE DELETE ON t3 BEGIN\n    DELETE FROM t3 WHERE id=old.id+3;\n  END"}
+{"sql":"DELETE FROM t3 WHERE a IN(2, 5, 8)"}
+{"sql":"DROP TRIGGER t3t"}
+{"sql":"CREATE TRIGGER t3t BEFORE DELETE ON t3 BEGIN\n    DELETE FROM t3 WHERE id=old.id;\n  END"}

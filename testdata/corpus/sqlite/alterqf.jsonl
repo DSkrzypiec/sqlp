@@ -1,0 +1,2 @@
+{"sql":"ALTER TABLE x1 RENAME two TO 'four'"}
+{"sql":"SELECT sql FROM sqlite_temp_schema"}

@@ -1,0 +1,31 @@
+{"sql":"SELECT char 'c' = char 'c' AS true","shape":"SELECT char 'c' = char 'c' AS true;"}
+{"sql":"CREATE TEMP TABLE CHAR_TBL(f1 char)","shape":"CREATE TEMPORARY TABLE CHAR_TBL (f1 char);"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('a')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('a');"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('A')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('A');"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('1')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('1');"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES (2)","shape":"INSERT INTO CHAR_TBL (f1) VALUES (2);"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('3')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('3');"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('');"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('cd')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('cd');"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('c     ')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('c     ');"}
+{"sql":"SELECT * FROM CHAR_TBL","shape":"SELECT * FROM CHAR_TBL;"}
+{"sql":"SELECT c.*\n   FROM CHAR_TBL c\n   WHERE c.f1 <> 'a'","shape":"SELECT c.* FROM CHAR_TBL AS c WHERE c.f1 <> 'a';"}
+{"sql":"SELECT c.*\n   FROM CHAR_TBL c\n   WHERE c.f1 = 'a'","shape":"SELECT c.* FROM CHAR_TBL AS c WHERE c.f1 = 'a';"}
+{"sql":"SELECT c.*\n   FROM CHAR_TBL c\n   WHERE c.f1 < 'a'","shape":"SELECT c.* FROM CHAR_TBL AS c WHERE c.f1 < 'a';"}
+{"sql":"SELECT c.*\n   FROM CHAR_TBL c\n   WHERE c.f1 <= 'a'","shape":"SELECT c.* FROM CHAR_TBL AS c WHERE c.f1 <= 'a';"}
+{"sql":"SELECT c.*\n   FROM CHAR_TBL c\n   WHERE c.f1 > 'a'","shape":"SELECT c.* FROM CHAR_TBL AS c WHERE c.f1 > 'a';"}
+{"sql":"SELECT c.*\n   FROM CHAR_TBL c\n   WHERE c.f1 >= 'a'","shape":"SELECT c.* FROM CHAR_TBL AS c WHERE c.f1 >= 'a';"}
+{"sql":"DROP TABLE CHAR_TBL","shape":"DROP TABLE CHAR_TBL;"}
+{"sql":"INSERT INTO CHAR_TBL (f1) VALUES ('abcde')","shape":"INSERT INTO CHAR_TBL (f1) VALUES ('abcde');"}
+{"sql":"SELECT pg_input_is_valid('abcd  ', 'char(4)')","shape":"SELECT pg_input_is_valid('abcd  ', 'char(4)');"}
+{"sql":"SELECT pg_input_is_valid('abcde', 'char(4)')","shape":"SELECT pg_input_is_valid('abcde', 'char(4)');"}
+{"sql":"SELECT * FROM pg_input_error_info('abcde', 'char(4)')","shape":"SELECT * FROM pg_input_error_info('abcde', 'char(4)');"}
+{"sql":"SELECT 'a'::\"char\"","shape":"SELECT 'a'::\"char\";"}
+{"sql":"SELECT '\\101'::\"char\"","shape":"SELECT '\\101'::\"char\";"}
+{"sql":"SELECT '\\377'::\"char\"","shape":"SELECT '\\377'::\"char\";"}
+{"sql":"SELECT 'a'::\"char\"::text","shape":"SELECT 'a'::\"char\"::text;"}
+{"sql":"SELECT '\\377'::\"char\"::text","shape":"SELECT '\\377'::\"char\"::text;"}
+{"sql":"SELECT '\\000'::\"char\"::text","shape":"SELECT '\\000'::\"char\"::text;"}
+{"sql":"SELECT 'a'::text::\"char\"","shape":"SELECT 'a'::text::\"char\";"}
+{"sql":"SELECT '\\377'::text::\"char\"","shape":"SELECT '\\377'::text::\"char\";"}
+{"sql":"SELECT ''::text::\"char\"","shape":"SELECT ''::text::\"char\";"}

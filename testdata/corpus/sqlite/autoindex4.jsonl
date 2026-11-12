@@ -1,0 +1,20 @@
+{"sql":"INSERT INTO t1 VALUES(123,'abc'),(234,'def'),(234,'ghi'),(345,'jkl')"}
+{"sql":"INSERT INTO t2 VALUES(987,'zyx'),(654,'wvu'),(987,'rqp')"}
+{"sql":"SELECT *, '|' FROM t1, t2 WHERE a=234 AND x=987 ORDER BY +b"}
+{"sql":"SELECT *, '|' FROM t1, t2 WHERE a=234 AND x=555"}
+{"sql":"SELECT *, '|' FROM t1 LEFT JOIN t2 ON a=234 AND x=555"}
+{"sql":"SELECT t1.*, t2.*, '|' FROM t2 RIGHT JOIN t1 ON a=234 AND x=555"}
+{"sql":"SELECT *, '|' FROM t1 LEFT JOIN t2 ON x=555 WHERE a=234"}
+{"sql":"SELECT t1.*, t2.*, '|' FROM t2 RIGHT JOIN t1 ON x=555 WHERE a=234"}
+{"sql":"SELECT *, '|' FROM t1 LEFT JOIN t2 WHERE a=234 AND x=555"}
+{"sql":"SELECT t1.*, t2.*, '|' FROM t2 RIGHT JOIN t1 WHERE a=234 AND x=555"}
+{"sql":"INSERT INTO t3 VALUES(123,654),(555,444),(234,987)"}
+{"sql":"SELECT (SELECT count(*) FROM t1, t2 WHERE a=e AND x=f), e, f, '|'\n    FROM t3\n   ORDER BY rowid"}
+{"sql":"CREATE TABLE A(Name text)"}
+{"sql":"CREATE TABLE Items(ItemName text , Name text)"}
+{"sql":"INSERT INTO Items VALUES('Item1','Parent')"}
+{"sql":"INSERT INTO Items VALUES('Item2','Parent')"}
+{"sql":"CREATE TABLE B(Name text)"}
+{"sql":"SELECT Items.ItemName\n    FROM Items\n      LEFT JOIN A ON (A.Name = Items.ItemName and Items.ItemName = 'dummy')\n      LEFT JOIN B ON (B.Name = Items.ItemName)\n    WHERE Items.Name = 'Parent'\n    ORDER BY Items.ItemName"}
+{"sql":"SELECT Items.ItemName\n    FROM A\n      RIGHT JOIN Items ON (A.Name = Items.ItemName and Items.ItemName = 'dummy')\n      LEFT JOIN B ON (B.Name = Items.ItemName)\n    WHERE Items.Name = 'Parent'\n    ORDER BY Items.ItemName"}
+{"sql":"CREATE INDEX Items_x1 ON Items(ItemName,Name) WHERE ItemName = 'dummy'"}

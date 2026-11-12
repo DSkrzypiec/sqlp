@@ -1,0 +1,128 @@
+{"sql":"SELECT *, '|' FROM generate_series WHERE start=1 AND stop=9 AND step=2"}
+{"sql":"PRAGMA table_xinfo(generate_series)"}
+{"sql":"SELECT *, '|' FROM generate_series(0) LIMIT 5"}
+{"sql":"SELECT *, '|' FROM generate_series LIMIT 5"}
+{"sql":"SELECT *, '|' FROM generate_series(value) LIMIT 5"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING generate_series"}
+{"sql":"SELECT * FROM generate_series(1,9,2)"}
+{"sql":"SELECT * FROM generate_series(1,9)"}
+{"sql":"SELECT * FROM generate_series(1,10) WHERE step=3"}
+{"sql":"SELECT * FROM generate_series(1,9,2,11)"}
+{"sql":"SELECT * FROM generate_series(0,32,5) ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, * FROM generate_series(0,32,5) ORDER BY value DESC"}
+{"sql":"SELECT rowid, * FROM generate_series(0,32,5) ORDER BY +value DESC"}
+{"sql":"CREATE VIEW v1(a,b) AS VALUES(1,2),(3,4)"}
+{"sql":"SELECT * FROM v1(55)"}
+{"sql":"SELECT * FROM v1()"}
+{"sql":"CREATE VIEW v2(x) AS SELECT value FROM generate_series(1,5)"}
+{"sql":"SELECT * FROM v2(55)"}
+{"sql":"SELECT * FROM v2()"}
+{"sql":"CREATE TABLE t0(x)"}
+{"sql":"INSERT INTO t0(x) VALUES(123),(456),(789)"}
+{"sql":"SELECT * FROM t0 ORDER BY x"}
+{"sql":"SELECT * FROM t0(55) ORDER BY x"}
+{"sql":"WITH w0 AS (SELECT * FROM t0)\n  INSERT INTO t0(x) SELECT * FROM w0()"}
+{"sql":"INSERT INTO t1(x) VALUES(2),(3)"}
+{"sql":"SELECT *, '|' FROM t1, generate_series(1,x) ORDER BY 1, 2"}
+{"sql":"SELECT *, '|' FROM (SELECT x FROM t1) AS y, generate_series(1,y.x)\n  ORDER BY 1, 2"}
+{"sql":"SELECT * FROM generate_series(0) LIMIT 5"}
+{"sql":"SELECT DISTINCT value FROM generate_series(1,x), t1 ORDER BY 1"}
+{"sql":"SELECT value FROM generate_series(1,10) ORDER BY value"}
+{"sql":"SELECT value FROM generate_series(1,10) ORDER BY +value"}
+{"sql":"SELECT value FROM generate_series(1,10) ORDER BY value, stop"}
+{"sql":"SELECT value FROM generate_series(1,10) ORDER BY stop, value"}
+{"sql":"WITH t1(a) AS (\n    SELECT value FROM generate_series(0,10,2)\n    UNION ALL\n    SELECT value FROM generate_series(9,18,3)\n  )\n  SELECT * FROM t1 ORDER BY a"}
+{"sql":"SELECT * FROM main.generate_series(1,4)"}
+{"sql":"SELECT * FROM temp.generate_series(1,4)"}
+{"sql":"CREATE TABLE aux1.t1(a,b,c)"}
+{"sql":"SELECT * FROM aux1.generate_series(1,4)"}
+{"sql":"SELECT * FROM (generate_series(1,5,2)) AS x LIMIT 10"}
+{"sql":"SELECT value\n    FROM generate_series(60,73,6)\n   WHERE value=66"}
+{"sql":"SELECT value\n    FROM generate_series(73,60,-6)\n   WHERE value=67"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value<5.5"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value<5.0"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value<=5.5"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value<=5.0"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value>5.5"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value>5.0"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value>=5.5"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value>=5.0"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value<5.5"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value<5.0"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value<=5.5"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value<=5.0"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value>5.5"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value>5.0"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value>=5.5"}
+{"sql":"SELECT value FROM generate_series(10,1,-1) WHERE value>=5.0"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value==5.5"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value==5.0"}
+{"sql":"SELECT * FROM generate_series WHERE start IN (1,7) AND stop=20 AND step=10\n  ORDER BY +1"}
+{"sql":"CREATE TABLE t600(a INTEGER PRIMARY KEY, b TEXT)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n    INSERT INTO t600(a,b) SELECT x, printf('(%03d)',x) FROM c"}
+{"sql":"SELECT b FROM t600 WHERE a IN generate_series(2,52,10)"}
+{"sql":"ALTER TABLE generate_series ADD COLUMN col2"}
+{"sql":"ALTER TABLE generate_series RENAME TO flubber"}
+{"sql":"ALTER TABLE generate_series RENAME  start TO flubber"}
+{"sql":"ALTER TABLE generate_series DROP COLUMN start"}
+{"sql":"ALTER TABLE pragma_compile_options ADD COLUMN col2"}
+{"sql":"ALTER TABLE pragma_compile_options RENAME TO flubber"}
+{"sql":"ALTER TABLE pragma_compile_options RENAME  start TO flubber"}
+{"sql":"ALTER TABLE pragma_compile_options DROP COLUMN start"}
+{"sql":"SELECT * FROM (\n    SELECT * FROM generate_series(1,10)\n    UNION ALL\n    SELECT * FROM generate_series(101,104)\n  ) LIMIT 10 OFFSET 5"}
+{"sql":"SELECT * FROM (\n    SELECT * FROM generate_series(1,10)\n    UNION ALL\n    SELECT * FROM generate_series(101,104)\n  ) LIMIT -1 OFFSET 5"}
+{"sql":"SELECT * FROM (\n    SELECT * FROM generate_series(1,10)\n    UNION ALL\n    SELECT * FROM generate_series(101,104)\n  ) LIMIT -1 OFFSET 0"}
+{"sql":"SELECT * FROM generate_series(9223372036854775807,\n                                -9223372036854775808,\n                                -9223372036854775808)"}
+{"sql":"SELECT * FROM generate_series(9223372036854775807,\n                                -9223372036854775808,\n                                -9223372036854775808)\n   LIMIT 100 OFFSET 1"}
+{"sql":"SELECT * FROM generate_series(9223372036854775807,\n                                -9223372036854775808,\n                                -9223372036854775808)\n   LIMIT 100 OFFSET 2"}
+{"sql":"SELECT * FROM generate_series(9223372036854775807,\n                                -9223372036854775808,\n                                -9223372036854775808)\n   LIMIT 100 OFFSET 9223372036854775807"}
+{"sql":"SELECT * FROM generate_series(1,11,2)"}
+{"sql":"SELECT * FROM generate_series(1,11,2) LIMIT 100 OFFSET 4"}
+{"sql":"SELECT * FROM generate_series(1,11,2) LIMIT 100 OFFSET 5"}
+{"sql":"SELECT * FROM generate_series(1,11,2) LIMIT 100 OFFSET 6"}
+{"sql":"SELECT * FROM generate_series(1,11,2) LIMIT 100 OFFSET 7"}
+{"sql":"SELECT * FROM generate_series(1,11,2) LIMIT 100 OFFSET 9223372036854775807"}
+{"sql":"SELECT * FROM generate_series(1,11,1) LIMIT 100 OFFSET 10"}
+{"sql":"SELECT * FROM generate_series(11,1,-1) LIMIT 100 OFFSET 10"}
+{"sql":"SELECT * FROM generate_series(11,1,-1) LIMIT 100 OFFSET 9223372036854775807"}
+{"sql":"SELECT * FROM generate_series(1,11,1) LIMIT 3 OFFSET 3"}
+{"sql":"select 1 as c_0\n    from        \n    generate_series(1, 1) as ref_3\n    where (ref_3.value) in (select 1)"}
+{"sql":"CREATE TABLE t1(value INT)"}
+{"sql":"INSERT INTO t1 VALUES (1),(2),(3)"}
+{"sql":"SELECT t1.value, t2.value\n    FROM t1 RIGHT JOIN generate_series(1,3,1) AS t2 USING(value)"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854775808, 9223372036854775807, 2)\n   WHERE value BETWEEN 1 AND 5"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854775808, 9223372036854775807, 2)\n   WHERE value BETWEEN 0 AND 6"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854775808, 9223372036854775807, 2)\n   WHERE value BETWEEN 0.5 AND 6.25"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854775808, 9223372036854775807, 2)\n   WHERE value BETWEEN 9223372036854775803 AND 9223372036854775807"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854775808, 9223372036854775807, 2)\n   WHERE value BETWEEN 9223372036854775803 AND 9223372036854775807\n   ORDER BY value DESC"}
+{"sql":"SELECT value FROM generate_series(0) LIMIT 5"}
+{"sql":"SELECT value FROM generate_series(5) LIMIT 5"}
+{"sql":"SELECT value FROM generate_series(0) WHERE stop=6"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE step IS NULL"}
+{"sql":"SELECT value FROM generate_series(0xfffffffd)"}
+{"sql":"SELECT value FROM generate_series(4,3,1)"}
+{"sql":"SELECT value FROM generate_series(3,4,-1)"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value=9.2234e18"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value=-9.2234e18"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value>9223372036854775807"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value>9223372036854775806"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value>=9223372036854775807"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value<-9223372036854775808"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value<=-9223372036854775808"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value<-9223372036854775807"}
+{"sql":"SELECT value FROM generate_series(-9223372036854775808,+9223372036854775807)\n   WHERE value BETWEEN 4 AND 1"}
+{"sql":"SELECT value FROM generate_series(100,0,-10)\n   WHERE value BETWEEN 33 AND 66"}
+{"sql":"SELECT value FROM generate_series(100,0,-10)\n   WHERE value BETWEEN 33 AND 60"}
+{"sql":"SELECT value FROM generate_series(100,0,-10)\n   WHERE value BETWEEN 33 AND 59"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854760000,-9223372036854775808,-10000)"}
+{"sql":"SELECT value\n    FROM generate_series(-9223372036854760000,-9223372036854775808,-10000)\n   WHERE value < -9223372036854770001"}
+{"sql":"SELECT value\n    FROM generate_series(9223372036854760000,9223372036854775807,10000)"}
+{"sql":"SELECT value\n    FROM generate_series(9223372036854760000,9223372036854775807,10000)\n   WHERE value > 9223372036854770001"}
+{"sql":"SELECT value FROM generate_series(100,0,-10)\n   WHERE value BETWEEN 33 AND 38"}
+{"sql":"SELECT value FROM generate_series(0,100,+10)\n   WHERE value BETWEEN 33 AND 38"}
+{"sql":"SELECT * FROM generate_series(0,-9223372036854775808,-9223372036854775808)"}
+{"sql":"SELECT * FROM generate_series(0,-9223372036854775808,-9223372036854775808)\n  LIMIT 1 OFFSET 0"}
+{"sql":"SELECT * FROM generate_series(0,-9223372036854775808,-9223372036854775808)\n   ORDER BY value ASC"}
+{"sql":"SELECT * FROM generate_series(0,-9223372036854775808,-9223372036854775808)\n   ORDER BY value ASC LIMIT 10 OFFSET 1"}
+{"sql":"SELECT * FROM generate_series(0,-9223372036854775808,-9223372036854775808)\n   ORDER BY value ASC LIMIT 10 OFFSET 40000000"}
+{"sql":"SELECT * FROM generate_series(0,0,0)"}

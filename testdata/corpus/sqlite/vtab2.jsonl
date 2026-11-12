@@ -1,0 +1,19 @@
+{"sql":"CREATE VIRTUAL TABLE schema USING schema"}
+{"sql":"SELECT * FROM schema"}
+{"sql":"SELECT length(tablename) FROM schema GROUP by tablename"}
+{"sql":"SELECT tablename FROM schema GROUP by length(tablename)"}
+{"sql":"SELECT length(tablename) FROM schema GROUP by length(tablename)"}
+{"sql":"CREATE VIRTUAL TABLE vars USING tclvar"}
+{"sql":"SELECT name, arrayname, value FROM vars WHERE name='abc'"}
+{"sql":"SELECT name, arrayname, value FROM vars WHERE name='A'"}
+{"sql":"SELECT name, value FROM vars\n      WHERE name MATCH 'tcl_*' AND arrayname = '' \n      ORDER BY name"}
+{"sql":"SELECT * FROM schema WHERE dflt_value IS NULL LIMIT 1"}
+{"sql":"SELECT *, b.rowid\n      FROM schema a LEFT JOIN schema b ON a.dflt_value=b.dflt_value\n     WHERE a.rowid=1"}
+{"sql":"SELECT *, b.rowid\n      FROM schema a LEFT JOIN schema b ON a.dflt_value IS b.dflt_value\n                                      AND a.dflt_value IS NOT NULL\n     WHERE a.rowid=1"}
+{"sql":"CREATE TABLE fkey(\n      to_tbl,\n      to_col\n    )"}
+{"sql":"INSERT INTO \"fkey\" VALUES('t1',NULL)"}
+{"sql":"CREATE VIRTUAL TABLE v_col USING schema"}
+{"sql":"SELECT name FROM v_col WHERE tablename = 't1' AND pk"}
+{"sql":"UPDATE fkey \n    SET to_col = (SELECT name FROM v_col WHERE tablename = 't1' AND pk)"}
+{"sql":"SELECT * FROM fkey"}
+{"sql":"PRAGMA encoding='UTF16'"}

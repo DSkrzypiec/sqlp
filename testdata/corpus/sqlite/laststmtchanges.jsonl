@@ -1,0 +1,32 @@
+{"sql":"create table t0 (x)"}
+{"sql":"insert into t0 values (1)"}
+{"sql":"insert into t0 values (2)"}
+{"sql":"select changes(), total_changes()"}
+{"sql":"update t0 set x=3 where x=1"}
+{"sql":"select changes()"}
+{"sql":"update t0 set x=3 where x=4"}
+{"sql":"update t0 set x=x+changes() where x=3"}
+{"sql":"select count() from t0 where x=8"}
+{"sql":"update t0 set x=77 where x=88"}
+{"sql":"delete from t0 where x=2"}
+{"sql":"create table t2 (k integer primary key, v1, v2)"}
+{"sql":"create trigger r1 after insert on t1 for each row begin\n            insert into t2 values (NULL, changes(), NULL);\n            update t0 set x=x;\n            update t2 set v2=changes();\n        end"}
+{"sql":"select v1 from t2"}
+{"sql":"select v2 from t2"}
+{"sql":"create trigger r1 after update on t1 for each row begin\n            insert into t2 values (NULL, changes(), NULL);\n            delete from t0 where oid=1 or oid=2;\n            update t2 set v2=changes();\n        end"}
+{"sql":"update t1 set k=k"}
+{"sql":"create trigger r1 before delete on t1 for each row begin\n            insert into t2 values (NULL, changes(), NULL);\n            insert into t0 values (5);\n            update t2 set v2=changes();\n        end"}
+{"sql":"delete from t1"}
+{"sql":"drop table t0"}
+{"sql":"create temp table t0(x)"}
+{"sql":"create temp table n1 (k integer primary key, n)"}
+{"sql":"create temp table n2 (k integer primary key, n)"}
+{"sql":"create temp trigger r1 instead of insert on v1 for each row begin\n            insert into n1 values (NULL, changes());\n            update t0 set x=x*10 where x=1;\n            insert into n1 values (NULL, changes());\n            insert into t1 values (NEW.k);\n            insert into n1 values (NULL, changes());\n            update t0 set x=x*10 where x=0;\n            insert into v2 values (100+NEW.k);\n            insert into n1 values (NULL, changes());\n        end"}
+{"sql":"create temp trigger r2 instead of insert on v2 for each row begin\n            insert into n2 values (NULL, changes());\n            insert into t2 values (1000+NEW.k);\n            insert into n2 values (NULL, changes());\n            update t0 set x=x*100 where x=0;\n            insert into n2 values (NULL, changes());\n            delete from t0 where x=2;\n            insert into n2 values (NULL, changes());\n        end"}
+{"sql":"delete from t1 where k=88"}
+{"sql":"select n from n1"}
+{"sql":"select n from n2"}
+{"sql":"SELECT changes()"}
+{"sql":"DELETE FROM t3 WHERE a IS NOT NULL"}
+{"sql":"CREATE INDEX t3_i1 ON t3(a)"}
+{"sql":"SELECT total_changes()"}

@@ -1,0 +1,1 @@
+{"sql":"SELECT optimize(t4) FROM t4 LIMIT 1"}

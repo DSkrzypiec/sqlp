@@ -1,0 +1,358 @@
+{"sql":"create table idxpart (a int, b int, c text) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b int, c text) PARTITION BY RANGE (a);"}
+{"sql":"create index idxpart_idx on idxpart (a)","shape":"CREATE INDEX idxpart_idx ON idxpart (a);"}
+{"sql":"select relhassubclass from pg_class where relname = 'idxpart_idx'","shape":"SELECT relhassubclass FROM pg_class WHERE relname = 'idxpart_idx';"}
+{"sql":"select indexdef from pg_indexes where indexname like 'idxpart_idx%'","shape":"SELECT indexdef FROM pg_indexes WHERE indexname LIKE 'idxpart_idx%';"}
+{"sql":"drop index idxpart_idx","shape":"DROP INDEX idxpart_idx;"}
+{"sql":"create table idxpart1 partition of idxpart for values from (0) to (10)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (0) TO (10);"}
+{"sql":"create table idxpart2 partition of idxpart for values from (10) to (100)\n\tpartition by range (b)","shape":"CREATE TABLE idxpart2 PARTITION OF idxpart FOR VALUES FROM (10) TO (100) PARTITION BY RANGE (b);"}
+{"sql":"create table idxpart21 partition of idxpart2 for values from (0) to (100)","shape":"CREATE TABLE idxpart21 PARTITION OF idxpart2 FOR VALUES FROM (0) TO (100);"}
+{"sql":"create index idxpart_idx on only idxpart(a)","shape":"CREATE INDEX idxpart_idx ON ONLY idxpart (a);"}
+{"sql":"create index on idxpart (a)","shape":"CREATE INDEX ON idxpart (a);"}
+{"sql":"select relname, relkind, relhassubclass, inhparent::regclass\n    from pg_class left join pg_index ix on (indexrelid = oid)\n\tleft join pg_inherits on (ix.indexrelid = inhrelid)\n\twhere relname like 'idxpart%' order by relname","shape":"SELECT relname, relkind, relhassubclass, inhparent::regclass FROM (pg_class LEFT JOIN pg_index AS ix ON (indexrelid = oid)) LEFT JOIN pg_inherits ON (ix.indexrelid = inhrelid) WHERE relname LIKE 'idxpart%' ORDER BY relname;"}
+{"sql":"drop table idxpart","shape":"DROP TABLE idxpart;"}
+{"sql":"create index concurrently on idxpart (a)","shape":"CREATE INDEX CONCURRENTLY ON idxpart (a);"}
+{"sql":"CREATE TABLE idxpart (col1 INT) PARTITION BY RANGE (col1)","shape":"CREATE TABLE idxpart (col1 INT) PARTITION BY RANGE (col1);"}
+{"sql":"CREATE INDEX ON idxpart (col1)","shape":"CREATE INDEX ON idxpart (col1);"}
+{"sql":"CREATE TABLE idxpart_two (col2 INT)","shape":"CREATE TABLE idxpart_two (col2 INT);"}
+{"sql":"SELECT col2 FROM idxpart_two fk LEFT OUTER JOIN idxpart pk ON (col1 = col2)","shape":"SELECT col2 FROM idxpart_two AS fk LEFT JOIN idxpart AS pk ON (col1 = col2);"}
+{"sql":"DROP table idxpart, idxpart_two","shape":"DROP TABLE idxpart, idxpart_two;"}
+{"sql":"CREATE TABLE idxpart (a INT, b TEXT, c INT) PARTITION BY RANGE(a)","shape":"CREATE TABLE idxpart (a INT, b TEXT, c INT) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (MINVALUE) TO (MAXVALUE)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (MINVALUE) TO (MAXVALUE);"}
+{"sql":"CREATE INDEX partidx_abc_idx ON idxpart (a, b, c)","shape":"CREATE INDEX partidx_abc_idx ON idxpart (a, b, c);"}
+{"sql":"INSERT INTO idxpart (a, b, c) SELECT i, i, i FROM generate_series(1, 50) i","shape":"INSERT INTO idxpart (a, b, c) SELECT i, i, i FROM generate_series(1, 50) AS i;"}
+{"sql":"ALTER TABLE idxpart ALTER COLUMN c TYPE numeric","shape":"ALTER TABLE idxpart ALTER COLUMN c SET DATA TYPE numeric;"}
+{"sql":"DROP TABLE idxpart","shape":"DROP TABLE idxpart;"}
+{"sql":"create index idxparti on idxpart (a)","shape":"CREATE INDEX idxparti ON idxpart (a);"}
+{"sql":"create index idxparti2 on idxpart (b, c)","shape":"CREATE INDEX idxparti2 ON idxpart (b, c);"}
+{"sql":"create table idxpart1 (like idxpart)","shape":"CREATE TABLE idxpart1 (LIKE idxpart);"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from (0) to (10)"}
+{"sql":"create index idxpart_c on only idxpart (c)","shape":"CREATE INDEX idxpart_c ON ONLY idxpart (c);"}
+{"sql":"create index idxpart1_c on idxpart1 (c)","shape":"CREATE INDEX idxpart1_c ON idxpart1 (c);"}
+{"sql":"alter table idxpart_c attach partition idxpart1_c for values from (10) to (20)"}
+{"sql":"alter index idxpart_c attach partition idxpart1_c"}
+{"sql":"select relname, relpartbound from pg_class\n  where relname in ('idxpart_c', 'idxpart1_c')\n  order by relname","shape":"SELECT relname, relpartbound FROM pg_class WHERE relname IN ('idxpart_c', 'idxpart1_c') ORDER BY relname;"}
+{"sql":"alter table idxpart_c detach partition idxpart1_c"}
+{"sql":"create table idxpart (a int, b int) partition by range (a, b)","shape":"CREATE TABLE idxpart (a int, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table idxpart1 partition of idxpart for values from (0, 0) to (10, 10)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (0, 0) TO (10, 10);"}
+{"sql":"create index on idxpart1 (a, b)","shape":"CREATE INDEX ON idxpart1 (a, b);"}
+{"sql":"create index on idxpart (a, b)","shape":"CREATE INDEX ON idxpart (a, b);"}
+{"sql":"create table idxpart (a int) partition by range (a)","shape":"CREATE TABLE idxpart (a int) PARTITION BY RANGE (a);"}
+{"sql":"drop index idxpart1_a_idx","shape":"DROP INDEX idxpart1_a_idx;"}
+{"sql":"drop index concurrently idxpart_a_idx","shape":"DROP INDEX CONCURRENTLY idxpart_a_idx;"}
+{"sql":"drop index idxpart_a_idx","shape":"DROP INDEX idxpart_a_idx;"}
+{"sql":"select relname, relkind from pg_class\n  where relname like 'idxpart%' order by relname","shape":"SELECT relname, relkind FROM pg_class WHERE relname LIKE 'idxpart%' ORDER BY relname;"}
+{"sql":"drop table idxpart1","shape":"DROP TABLE idxpart1;"}
+{"sql":"create temp table idxpart_temp (a int) partition by range (a)","shape":"CREATE TEMPORARY TABLE idxpart_temp (a int) PARTITION BY RANGE (a);"}
+{"sql":"create index on idxpart_temp(a)","shape":"CREATE INDEX ON idxpart_temp (a);"}
+{"sql":"create temp table idxpart1_temp partition of idxpart_temp\n  for values from (0) to (10)","shape":"CREATE TEMPORARY TABLE idxpart1_temp PARTITION OF idxpart_temp FOR VALUES FROM (0) TO (10);"}
+{"sql":"drop index idxpart1_temp_a_idx","shape":"DROP INDEX idxpart1_temp_a_idx;"}
+{"sql":"drop index concurrently idxpart_temp_a_idx","shape":"DROP INDEX CONCURRENTLY idxpart_temp_a_idx;"}
+{"sql":"select relname, relkind from pg_class\n  where relname like 'idxpart_temp%' order by relname","shape":"SELECT relname, relkind FROM pg_class WHERE relname LIKE 'idxpart_temp%' ORDER BY relname;"}
+{"sql":"drop table idxpart_temp","shape":"DROP TABLE idxpart_temp;"}
+{"sql":"create index idxpart_a_b_idx on only idxpart (a, b)","shape":"CREATE INDEX idxpart_a_b_idx ON ONLY idxpart (a, b);"}
+{"sql":"create index idxpart1_a_b_idx on idxpart1 (a, b)","shape":"CREATE INDEX idxpart1_a_b_idx ON idxpart1 (a, b);"}
+{"sql":"create index idxpart1_tst1 on idxpart1 (b, a)","shape":"CREATE INDEX idxpart1_tst1 ON idxpart1 (b, a);"}
+{"sql":"create index idxpart1_tst2 on idxpart1 using hash (a)","shape":"CREATE INDEX idxpart1_tst2 ON idxpart1 USING hash (a);"}
+{"sql":"create index idxpart1_tst3 on idxpart1 (a, b) where a > 10","shape":"CREATE INDEX idxpart1_tst3 ON idxpart1 (a, b) WHERE a > 10;"}
+{"sql":"alter index idxpart attach partition idxpart1"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart_a_b_idx"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1_b_idx"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1_tst1"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1_tst2"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1_tst3"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1_a_b_idx"}
+{"sql":"create index idxpart1_2_a_b on idxpart1 (a, b)","shape":"CREATE INDEX idxpart1_2_a_b ON idxpart1 (a, b);"}
+{"sql":"alter index idxpart_a_b_idx attach partition idxpart1_2_a_b"}
+{"sql":"select indexrelid::regclass, indrelid::regclass\n  from pg_index where indexrelid::regclass::text like 'idxpart%'","shape":"SELECT indexrelid::regclass, indrelid::regclass FROM pg_index WHERE indexrelid::regclass::text LIKE 'idxpart%';"}
+{"sql":"create table idxpart (a int, b int) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart1 (a int, b int)","shape":"CREATE TABLE idxpart1 (a int, b int);"}
+{"sql":"create index on idxpart1 using hash (a)","shape":"CREATE INDEX ON idxpart1 USING hash (a);"}
+{"sql":"create index on idxpart1 (a) where b > 1","shape":"CREATE INDEX ON idxpart1 (a) WHERE b > 1;"}
+{"sql":"create index on idxpart1 ((a + 0))","shape":"CREATE INDEX ON idxpart1 ((a + 0));"}
+{"sql":"create index on idxpart1 (a, a)","shape":"CREATE INDEX ON idxpart1 (a, a);"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from (0) to (1000)"}
+{"sql":"create table idxpart1 partition of idxpart for values from (0) to (100)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (0) TO (100);"}
+{"sql":"create table idxpart2 partition of idxpart for values from (100) to (1000)\n  partition by range (a)","shape":"CREATE TABLE idxpart2 PARTITION OF idxpart FOR VALUES FROM (100) TO (1000) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart21 partition of idxpart2 for values from (100) to (200)","shape":"CREATE TABLE idxpart21 PARTITION OF idxpart2 FOR VALUES FROM (100) TO (200);"}
+{"sql":"create table idxpart22 partition of idxpart2 for values from (200) to (300)","shape":"CREATE TABLE idxpart22 PARTITION OF idxpart2 FOR VALUES FROM (200) TO (300);"}
+{"sql":"create index on idxpart22 (a)","shape":"CREATE INDEX ON idxpart22 (a);"}
+{"sql":"create index on only idxpart2 (a)","shape":"CREATE INDEX ON ONLY idxpart2 (a);"}
+{"sql":"select indexrelid::regclass, indrelid::regclass, inhparent::regclass\n  from pg_index idx left join pg_inherits inh on (idx.indexrelid = inh.inhrelid)\nwhere indexrelid::regclass::text like 'idxpart%'\n  order by indexrelid::regclass::text collate \"C\"","shape":"SELECT indexrelid::regclass, indrelid::regclass, inhparent::regclass FROM pg_index AS idx LEFT JOIN pg_inherits AS inh ON (idx.indexrelid = inh.inhrelid) WHERE indexrelid::regclass::text LIKE 'idxpart%' ORDER BY indexrelid::regclass::text COLLATE \"C\";"}
+{"sql":"alter index idxpart2_a_idx attach partition idxpart22_a_idx"}
+{"sql":"create index on idxpart21 (a)","shape":"CREATE INDEX ON idxpart21 (a);"}
+{"sql":"alter index idxpart2_a_idx attach partition idxpart21_a_idx"}
+{"sql":"create table idxpart (a int, b int, c text, d bool) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b int, c text, d bool) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart1 (like idxpart including indexes)","shape":"CREATE TABLE idxpart1 (LIKE idxpart INCLUDING INDEXES);"}
+{"sql":"select relname, relkind, inhparent::regclass\n    from pg_class left join pg_index ix on (indexrelid = oid)\n\tleft join pg_inherits on (ix.indexrelid = inhrelid)\n\twhere relname like 'idxpart%' order by relname","shape":"SELECT relname, relkind, inhparent::regclass FROM (pg_class LEFT JOIN pg_index AS ix ON (indexrelid = oid)) LEFT JOIN pg_inherits ON (ix.indexrelid = inhrelid) WHERE relname LIKE 'idxpart%' ORDER BY relname;"}
+{"sql":"create index on idxpart1 ((a+b)) where d = true","shape":"CREATE INDEX ON idxpart1 ((a + b)) WHERE d = TRUE;"}
+{"sql":"create index idxparti3 on idxpart ((a+b)) where d = true","shape":"CREATE INDEX idxparti3 ON idxpart ((a + b)) WHERE d = TRUE;"}
+{"sql":"create table idxpart1 partition of idxpart for values from (1) to (1000) partition by range (a)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (1) TO (1000) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart11 partition of idxpart1 for values from (1) to (100)","shape":"CREATE TABLE idxpart11 PARTITION OF idxpart1 FOR VALUES FROM (1) TO (100);"}
+{"sql":"create index on only idxpart1 (a)","shape":"CREATE INDEX ON ONLY idxpart1 (a);"}
+{"sql":"create index on only idxpart (a)","shape":"CREATE INDEX ON ONLY idxpart (a);"}
+{"sql":"select relname, indisvalid from pg_class join pg_index on indexrelid = oid\n   where relname like 'idxpart%' order by relname","shape":"SELECT relname, indisvalid FROM pg_class JOIN pg_index ON indexrelid = oid WHERE relname LIKE 'idxpart%' ORDER BY relname;"}
+{"sql":"alter index idxpart_a_idx attach partition idxpart1_a_idx"}
+{"sql":"create index on idxpart11 (a)","shape":"CREATE INDEX ON idxpart11 (a);"}
+{"sql":"alter index idxpart1_a_idx attach partition idxpart11_a_idx"}
+{"sql":"create index on idxpart1 (a)","shape":"CREATE INDEX ON idxpart1 (a);"}
+{"sql":"create table idxpart2 (like idxpart)","shape":"CREATE TABLE idxpart2 (LIKE idxpart);"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from (0000) to (1000)"}
+{"sql":"alter table idxpart attach partition idxpart2 for values from (1000) to (2000)"}
+{"sql":"create table idxpart3 partition of idxpart for values from (2000) to (3000)","shape":"CREATE TABLE idxpart3 PARTITION OF idxpart FOR VALUES FROM (2000) TO (3000);"}
+{"sql":"select relname, relkind from pg_class where relname like 'idxpart%' order by relname","shape":"SELECT relname, relkind FROM pg_class WHERE relname LIKE 'idxpart%' ORDER BY relname;"}
+{"sql":"alter table idxpart detach partition idxpart1"}
+{"sql":"alter table idxpart detach partition idxpart2"}
+{"sql":"alter table idxpart detach partition idxpart3"}
+{"sql":"drop index idxpart2_a_idx","shape":"DROP INDEX idxpart2_a_idx;"}
+{"sql":"drop index idxpart3_a_idx","shape":"DROP INDEX idxpart3_a_idx;"}
+{"sql":"drop table idxpart, idxpart1, idxpart2, idxpart3","shape":"DROP TABLE idxpart, idxpart1, idxpart2, idxpart3;"}
+{"sql":"create table idxpart (a int, b int, c int) partition by range(a)","shape":"CREATE TABLE idxpart (a int, b int, c int) PARTITION BY RANGE (a);"}
+{"sql":"create index on idxpart(c)","shape":"CREATE INDEX ON idxpart (c);"}
+{"sql":"create table idxpart1 partition of idxpart for values from (0) to (250)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (0) TO (250);"}
+{"sql":"create table idxpart2 partition of idxpart for values from (250) to (500)","shape":"CREATE TABLE idxpart2 PARTITION OF idxpart FOR VALUES FROM (250) TO (500);"}
+{"sql":"alter table idxpart2 drop column c","shape":"ALTER TABLE idxpart2 DROP COLUMN c;"}
+{"sql":"drop table idxpart, idxpart2","shape":"DROP TABLE idxpart, idxpart2;"}
+{"sql":"create index on idxpart1 ((a + b))","shape":"CREATE INDEX ON idxpart1 ((a + b));"}
+{"sql":"create index on idxpart ((a + b))","shape":"CREATE INDEX ON idxpart ((a + b));"}
+{"sql":"select relname as child, inhparent::regclass as parent, pg_get_indexdef as childdef\n  from pg_class join pg_inherits on inhrelid = oid,\n  lateral pg_get_indexdef(pg_class.oid)\n  where relkind in ('i', 'I') and relname like 'idxpart%' order by relname","shape":"SELECT relname AS child, inhparent::regclass AS parent, pg_get_indexdef AS childdef FROM pg_class JOIN pg_inherits ON inhrelid = oid, LATERAL pg_get_indexdef(pg_class.oid) WHERE (relkind IN ('i', 'I')) AND (relname LIKE 'idxpart%') ORDER BY relname;"}
+{"sql":"create table idxpart (a text) partition by range (a)","shape":"CREATE TABLE idxpart (a text) PARTITION BY RANGE (a);"}
+{"sql":"create index on idxpart2 (a collate \"POSIX\")","shape":"CREATE INDEX ON idxpart2 (a COLLATE \"POSIX\");"}
+{"sql":"create index on idxpart2 (a)","shape":"CREATE INDEX ON idxpart2 (a);"}
+{"sql":"create index on idxpart2 (a collate \"C\")","shape":"CREATE INDEX ON idxpart2 (a COLLATE \"C\");"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from ('aaa') to ('bbb')"}
+{"sql":"alter table idxpart attach partition idxpart2 for values from ('bbb') to ('ccc')"}
+{"sql":"create table idxpart3 partition of idxpart for values from ('ccc') to ('ddd')","shape":"CREATE TABLE idxpart3 PARTITION OF idxpart FOR VALUES FROM ('ccc') TO ('ddd');"}
+{"sql":"create index on idxpart (a collate \"C\")","shape":"CREATE INDEX ON idxpart (a COLLATE \"C\");"}
+{"sql":"create table idxpart4 partition of idxpart for values from ('ddd') to ('eee')","shape":"CREATE TABLE idxpart4 PARTITION OF idxpart FOR VALUES FROM ('ddd') TO ('eee');"}
+{"sql":"select relname as child, inhparent::regclass as parent, pg_get_indexdef as childdef\n  from pg_class left join pg_inherits on inhrelid = oid,\n  lateral pg_get_indexdef(pg_class.oid)\n  where relkind in ('i', 'I') and relname like 'idxpart%' order by relname","shape":"SELECT relname AS child, inhparent::regclass AS parent, pg_get_indexdef AS childdef FROM pg_class LEFT JOIN pg_inherits ON inhrelid = oid, LATERAL pg_get_indexdef(pg_class.oid) WHERE (relkind IN ('i', 'I')) AND (relname LIKE 'idxpart%') ORDER BY relname;"}
+{"sql":"create index on idxpart (a text_pattern_ops)","shape":"CREATE INDEX ON idxpart (a text_pattern_ops);"}
+{"sql":"create index on only idxpart (a text_pattern_ops)","shape":"CREATE INDEX ON ONLY idxpart (a text_pattern_ops);"}
+{"sql":"alter index idxpart_a_idx attach partition idxpart2_a_idx"}
+{"sql":"create table idxpart (col1 int, a int, col2 int, b int) partition by range (a)","shape":"CREATE TABLE idxpart (col1 int, a int, col2 int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart1 (b int, col1 int, col2 int, col3 int, a int)","shape":"CREATE TABLE idxpart1 (b int, col1 int, col2 int, col3 int, a int);"}
+{"sql":"alter table idxpart drop column col1, drop column col2","shape":"ALTER TABLE idxpart DROP COLUMN col1, DROP COLUMN col2;"}
+{"sql":"alter table idxpart1 drop column col1, drop column col2, drop column col3","shape":"ALTER TABLE idxpart1 DROP COLUMN col1, DROP COLUMN col2, DROP COLUMN col3;"}
+{"sql":"create index idxpart_1_idx on only idxpart (b, a)","shape":"CREATE INDEX idxpart_1_idx ON ONLY idxpart (b, a);"}
+{"sql":"create index idxpart1_1_idx on idxpart1 (b, a)","shape":"CREATE INDEX idxpart1_1_idx ON idxpart1 (b, a);"}
+{"sql":"create index idxpart1_1b_idx on idxpart1 (b)","shape":"CREATE INDEX idxpart1_1b_idx ON idxpart1 (b);"}
+{"sql":"create index idxpart_2_idx on only idxpart ((b + a)) where a > 1","shape":"CREATE INDEX idxpart_2_idx ON ONLY idxpart ((b + a)) WHERE a > 1;"}
+{"sql":"create index idxpart1_2_idx on idxpart1 ((b + a)) where a > 1","shape":"CREATE INDEX idxpart1_2_idx ON idxpart1 ((b + a)) WHERE a > 1;"}
+{"sql":"create index idxpart1_2b_idx on idxpart1 ((a + b)) where a > 1","shape":"CREATE INDEX idxpart1_2b_idx ON idxpart1 ((a + b)) WHERE a > 1;"}
+{"sql":"create index idxpart1_2c_idx on idxpart1 ((b + a)) where b > 1","shape":"CREATE INDEX idxpart1_2c_idx ON idxpart1 ((b + a)) WHERE b > 1;"}
+{"sql":"alter index idxpart_1_idx attach partition idxpart1_1b_idx"}
+{"sql":"alter index idxpart_1_idx attach partition idxpart1_1_idx"}
+{"sql":"alter index idxpart_2_idx attach partition idxpart1_2b_idx"}
+{"sql":"alter index idxpart_2_idx attach partition idxpart1_2c_idx"}
+{"sql":"alter index idxpart_2_idx attach partition idxpart1_2_idx"}
+{"sql":"create index idxparti2 on idxpart (c, b)","shape":"CREATE INDEX idxparti2 ON idxpart (c, b);"}
+{"sql":"create table idxpart1 (c text, a int, b int)","shape":"CREATE TABLE idxpart1 (c text, a int, b int);"}
+{"sql":"create table idxpart2 (c text, a int, b int)","shape":"CREATE TABLE idxpart2 (c text, a int, b int);"}
+{"sql":"create index on idxpart2 (c, b)","shape":"CREATE INDEX ON idxpart2 (c, b);"}
+{"sql":"alter table idxpart attach partition idxpart2 for values from (10) to (20)"}
+{"sql":"select c.relname, pg_get_indexdef(indexrelid)\n  from pg_class c join pg_index i on c.oid = i.indexrelid\n  where indrelid::regclass::text like 'idxpart%'\n  order by indexrelid::regclass::text collate \"C\"","shape":"SELECT c.relname, pg_get_indexdef(indexrelid) FROM pg_class AS c JOIN pg_index AS i ON c.oid = i.indexrelid WHERE indrelid::regclass::text LIKE 'idxpart%' ORDER BY indexrelid::regclass::text COLLATE \"C\";"}
+{"sql":"create table idxpart (col1 int, col2 int, a int, b int) partition by range (a)","shape":"CREATE TABLE idxpart (col1 int, col2 int, a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart1 (col2 int, b int, col1 int, a int)","shape":"CREATE TABLE idxpart1 (col2 int, b int, col1 int, a int);"}
+{"sql":"create table idxpart2 (col1 int, col2 int, b int, a int)","shape":"CREATE TABLE idxpart2 (col1 int, col2 int, b int, a int);"}
+{"sql":"alter table idxpart1 drop column col1, drop column col2","shape":"ALTER TABLE idxpart1 DROP COLUMN col1, DROP COLUMN col2;"}
+{"sql":"alter table idxpart2 drop column col1, drop column col2","shape":"ALTER TABLE idxpart2 DROP COLUMN col1, DROP COLUMN col2;"}
+{"sql":"create index on idxpart2 (abs(b))","shape":"CREATE INDEX ON idxpart2 (abs(b));"}
+{"sql":"alter table idxpart attach partition idxpart2 for values from (0) to (1)"}
+{"sql":"create index on idxpart (abs(b))","shape":"CREATE INDEX ON idxpart (abs(b));"}
+{"sql":"create index on idxpart ((b + 1))","shape":"CREATE INDEX ON idxpart ((b + 1));"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from (1) to (2)"}
+{"sql":"create table idxpart (col1 int, a int, col3 int, b int) partition by range (a)","shape":"CREATE TABLE idxpart (col1 int, a int, col3 int, b int) PARTITION BY RANGE (a);"}
+{"sql":"alter table idxpart drop column col1, drop column col3","shape":"ALTER TABLE idxpart DROP COLUMN col1, DROP COLUMN col3;"}
+{"sql":"create table idxpart1 (col1 int, col2 int, col3 int, col4 int, b int, a int)","shape":"CREATE TABLE idxpart1 (col1 int, col2 int, col3 int, col4 int, b int, a int);"}
+{"sql":"alter table idxpart1 drop column col1, drop column col2, drop column col3, drop column col4","shape":"ALTER TABLE idxpart1 DROP COLUMN col1, DROP COLUMN col2, DROP COLUMN col3, DROP COLUMN col4;"}
+{"sql":"create index on idxpart2 (a) where b > 1000","shape":"CREATE INDEX ON idxpart2 (a) WHERE b > 1000;"}
+{"sql":"create index on idxpart (a) where b > 1000","shape":"CREATE INDEX ON idxpart (a) WHERE b > 1000;"}
+{"sql":"create table idxpart1 (drop_1 int, drop_2 int, col_keep int, drop_3 int)","shape":"CREATE TABLE idxpart1 (drop_1 int, drop_2 int, col_keep int, drop_3 int);"}
+{"sql":"alter table idxpart1 drop column drop_1","shape":"ALTER TABLE idxpart1 DROP COLUMN drop_1;"}
+{"sql":"alter table idxpart1 drop column drop_2","shape":"ALTER TABLE idxpart1 DROP COLUMN drop_2;"}
+{"sql":"alter table idxpart1 drop column drop_3","shape":"ALTER TABLE idxpart1 DROP COLUMN drop_3;"}
+{"sql":"create index on idxpart1 (col_keep)","shape":"CREATE INDEX ON idxpart1 (col_keep);"}
+{"sql":"create table idxpart (col_keep int) partition by range (col_keep)","shape":"CREATE TABLE idxpart (col_keep int) PARTITION BY RANGE (col_keep);"}
+{"sql":"create index on idxpart (col_keep)","shape":"CREATE INDEX ON idxpart (col_keep);"}
+{"sql":"select attrelid::regclass, attname, attnum from pg_attribute\n  where attrelid::regclass::text like 'idxpart%' and attnum > 0\n  order by attrelid::regclass, attnum","shape":"SELECT attrelid::regclass, attname, attnum FROM pg_attribute WHERE (attrelid::regclass::text LIKE 'idxpart%') AND (attnum > 0) ORDER BY attrelid::regclass, attnum;"}
+{"sql":"create table idxpart(drop_1 int, drop_2 int, col_keep int, drop_3 int) partition by range (col_keep)","shape":"CREATE TABLE idxpart (drop_1 int, drop_2 int, col_keep int, drop_3 int) PARTITION BY RANGE (col_keep);"}
+{"sql":"alter table idxpart drop column drop_1","shape":"ALTER TABLE idxpart DROP COLUMN drop_1;"}
+{"sql":"alter table idxpart drop column drop_2","shape":"ALTER TABLE idxpart DROP COLUMN drop_2;"}
+{"sql":"alter table idxpart drop column drop_3","shape":"ALTER TABLE idxpart DROP COLUMN drop_3;"}
+{"sql":"create table idxpart1 (col_keep int)","shape":"CREATE TABLE idxpart1 (col_keep int);"}
+{"sql":"create table idxpart (a int primary key, b int) partition by range (a)","shape":"CREATE TABLE idxpart (a int PRIMARY KEY, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table failpart partition of idxpart (b primary key) for values from (0) to (100)","shape":"CREATE TABLE failpart PARTITION OF idxpart (b PRIMARY KEY) FOR VALUES FROM (0) TO (100);"}
+{"sql":"create table idxpart1pk partition of idxpart (a primary key) for values from (0) to (100)","shape":"CREATE TABLE idxpart1pk PARTITION OF idxpart (a PRIMARY KEY) FOR VALUES FROM (0) TO (100);"}
+{"sql":"create table idxpart (a int unique, b int) partition by range (a, b)","shape":"CREATE TABLE idxpart (a int UNIQUE, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table idxpart (a int, b int unique) partition by range (a, b)","shape":"CREATE TABLE idxpart (a int, b int UNIQUE) PARTITION BY RANGE (a, b);"}
+{"sql":"create table idxpart (a int primary key, b int) partition by range (b, a)","shape":"CREATE TABLE idxpart (a int PRIMARY KEY, b int) PARTITION BY RANGE (b, a);"}
+{"sql":"create table idxpart (a int, b int primary key) partition by range (b, a)","shape":"CREATE TABLE idxpart (a int, b int PRIMARY KEY) PARTITION BY RANGE (b, a);"}
+{"sql":"create table idxpart (a int, b int, c text, primary key  (a, b, c)) partition by range (b, c, a)","shape":"CREATE TABLE idxpart (a int, b int, c text, PRIMARY KEY (a, b, c)) PARTITION BY RANGE (b, c, a);"}
+{"sql":"create table idxpart (a int, exclude (a with = )) partition by range (a)","shape":"CREATE TABLE idxpart (a int, EXCLUDE (a WITH =)) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart (a int primary key, b int) partition by range ((b + a))","shape":"CREATE TABLE idxpart (a int PRIMARY KEY, b int) PARTITION BY RANGE ((b + a));"}
+{"sql":"create table idxpart (a int unique, b int) partition by range ((b + a))","shape":"CREATE TABLE idxpart (a int UNIQUE, b int) PARTITION BY RANGE ((b + a));"}
+{"sql":"create table idxpart (a int, b int, c text) partition by range (a, b)","shape":"CREATE TABLE idxpart (a int, b int, c text) PARTITION BY RANGE (a, b);"}
+{"sql":"alter table idxpart add primary key (a)","shape":"ALTER TABLE idxpart ADD PRIMARY KEY (a);"}
+{"sql":"alter table idxpart add primary key (a, b)","shape":"ALTER TABLE idxpart ADD PRIMARY KEY (a, b);"}
+{"sql":"create table idxpart1 partition of idxpart for values from (0, 0) to (1000, 1000)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (0, 0) TO (1000, 1000);"}
+{"sql":"alter table idxpart add unique (a)","shape":"ALTER TABLE idxpart ADD UNIQUE (a);"}
+{"sql":"alter table idxpart add unique (b, a)","shape":"ALTER TABLE idxpart ADD UNIQUE (b, a);"}
+{"sql":"alter table idxpart add exclude (a with =)","shape":"ALTER TABLE idxpart ADD EXCLUDE (a WITH =);"}
+{"sql":"create table idxpart (a int, b int, primary key (a, b)) partition by range (a, b)","shape":"CREATE TABLE idxpart (a int, b int, PRIMARY KEY (a, b)) PARTITION BY RANGE (a, b);"}
+{"sql":"create table idxpart1 partition of idxpart for values from (1, 1) to (10, 10)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (1, 1) TO (10, 10);"}
+{"sql":"create table idxpart2 partition of idxpart for values from (10, 10) to (20, 20)\n  partition by range (b)","shape":"CREATE TABLE idxpart2 PARTITION OF idxpart FOR VALUES FROM (10, 10) TO (20, 20) PARTITION BY RANGE (b);"}
+{"sql":"create table idxpart21 partition of idxpart2 for values from (10) to (15)","shape":"CREATE TABLE idxpart21 PARTITION OF idxpart2 FOR VALUES FROM (10) TO (15);"}
+{"sql":"create table idxpart22 partition of idxpart2 for values from (15) to (20)","shape":"CREATE TABLE idxpart22 PARTITION OF idxpart2 FOR VALUES FROM (15) TO (20);"}
+{"sql":"create table idxpart3 (b int not null, a int not null)","shape":"CREATE TABLE idxpart3 (b int NOT NULL, a int NOT NULL);"}
+{"sql":"alter table idxpart attach partition idxpart3 for values from (20, 20) to (30, 30)"}
+{"sql":"select conname, contype, conrelid::regclass, conindid::regclass, conkey\n  from pg_constraint where conrelid::regclass::text like 'idxpart%'\n  order by conname","shape":"SELECT conname, contype, conrelid::regclass, conindid::regclass, conkey FROM pg_constraint WHERE conrelid::regclass::text LIKE 'idxpart%' ORDER BY conname;"}
+{"sql":"create table idxpart (a int, b int, primary key (a)) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b int, PRIMARY KEY (a)) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart2 partition of idxpart\nfor values from (0) to (1000) partition by range (b)","shape":"CREATE TABLE idxpart2 PARTITION OF idxpart FOR VALUES FROM (0) TO (1000) PARTITION BY RANGE (b);"}
+{"sql":"create table idxpart (a int unique, b int) partition by range (a)","shape":"CREATE TABLE idxpart (a int UNIQUE, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart1 (a int not null, b int, unique (a, b))\n  partition by range (a, b)","shape":"CREATE TABLE idxpart1 (a int NOT NULL, b int, UNIQUE (a, b)) PARTITION BY RANGE (a, b);"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from (1) to (1000)"}
+{"sql":"DROP TABLE idxpart, idxpart1","shape":"DROP TABLE idxpart, idxpart1;"}
+{"sql":"create table idxpart (a int, b int, primary key (a, b)) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b int, PRIMARY KEY (a, b)) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart2 partition of idxpart for values from (0) to (1000) partition by range (b)","shape":"CREATE TABLE idxpart2 PARTITION OF idxpart FOR VALUES FROM (0) TO (1000) PARTITION BY RANGE (b);"}
+{"sql":"create table idxpart21 partition of idxpart2 for values from (0) to (1000)","shape":"CREATE TABLE idxpart21 PARTITION OF idxpart2 FOR VALUES FROM (0) TO (1000);"}
+{"sql":"create table idxpart (i int) partition by hash (i)","shape":"CREATE TABLE idxpart (i int) PARTITION BY HASH (i);"}
+{"sql":"create table idxpart0 partition of idxpart (i) for values with (modulus 2, remainder 0)","shape":"CREATE TABLE idxpart0 PARTITION OF idxpart (i) FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"create table idxpart1 partition of idxpart (i) for values with (modulus 2, remainder 1)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart (i) FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"alter table idxpart0 add primary key(i)","shape":"ALTER TABLE idxpart0 ADD PRIMARY KEY (i);"}
+{"sql":"alter table idxpart add primary key(i)","shape":"ALTER TABLE idxpart ADD PRIMARY KEY (i);"}
+{"sql":"select indrelid::regclass, indexrelid::regclass, inhparent::regclass, indisvalid,\n  conname, conislocal, coninhcount, connoinherit, convalidated\n  from pg_index idx left join pg_inherits inh on (idx.indexrelid = inh.inhrelid)\n  left join pg_constraint con on (idx.indexrelid = con.conindid)\n  where indrelid::regclass::text like 'idxpart%'\n  order by indexrelid::regclass::text collate \"C\"","shape":"SELECT indrelid::regclass, indexrelid::regclass, inhparent::regclass, indisvalid, conname, conislocal, coninhcount, connoinherit, convalidated FROM (pg_index AS idx LEFT JOIN pg_inherits AS inh ON (idx.indexrelid = inh.inhrelid)) LEFT JOIN pg_constraint AS con ON (idx.indexrelid = con.conindid) WHERE indrelid::regclass::text LIKE 'idxpart%' ORDER BY indexrelid::regclass::text COLLATE \"C\";"}
+{"sql":"drop index idxpart0_pkey","shape":"DROP INDEX idxpart0_pkey;"}
+{"sql":"drop index idxpart1_pkey","shape":"DROP INDEX idxpart1_pkey;"}
+{"sql":"alter table idxpart0 drop constraint idxpart0_pkey","shape":"ALTER TABLE idxpart0 DROP CONSTRAINT idxpart0_pkey;"}
+{"sql":"alter table idxpart1 drop constraint idxpart1_pkey","shape":"ALTER TABLE idxpart1 DROP CONSTRAINT idxpart1_pkey;"}
+{"sql":"alter table idxpart drop constraint idxpart_pkey","shape":"ALTER TABLE idxpart DROP CONSTRAINT idxpart_pkey;"}
+{"sql":"CREATE TABLE idxpart (c1 INT PRIMARY KEY, c2 INT, c3 VARCHAR(10)) PARTITION BY RANGE(c1)","shape":"CREATE TABLE idxpart (c1 INT PRIMARY KEY, c2 INT, c3 VARCHAR(10)) PARTITION BY RANGE (c1);"}
+{"sql":"CREATE TABLE idxpart1 (LIKE idxpart)","shape":"CREATE TABLE idxpart1 (LIKE idxpart);"}
+{"sql":"ALTER TABLE idxpart1 ADD PRIMARY KEY (c1, c2)","shape":"ALTER TABLE idxpart1 ADD PRIMARY KEY (c1, c2);"}
+{"sql":"ALTER TABLE idxpart ATTACH PARTITION idxpart1 FOR VALUES FROM (100) TO (200)"}
+{"sql":"create table idxpart1 (a int not null, b int) partition by range (a)","shape":"CREATE TABLE idxpart1 (a int NOT NULL, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart11 (a int not null, b int primary key)","shape":"CREATE TABLE idxpart11 (a int NOT NULL, b int PRIMARY KEY);"}
+{"sql":"alter table idxpart1 attach partition idxpart11 for values from (0) to (1000)"}
+{"sql":"alter table idxpart attach partition idxpart1 for values from (0) to (10000)"}
+{"sql":"drop table idxpart, idxpart1, idxpart11","shape":"DROP TABLE idxpart, idxpart1, idxpart11;"}
+{"sql":"create table idxpart0 (like idxpart)","shape":"CREATE TABLE idxpart0 (LIKE idxpart);"}
+{"sql":"alter table idxpart0 add primary key (a)","shape":"ALTER TABLE idxpart0 ADD PRIMARY KEY (a);"}
+{"sql":"alter table idxpart attach partition idxpart0 for values from (0) to (1000)"}
+{"sql":"alter table only idxpart add primary key (a)","shape":"ALTER TABLE ONLY idxpart ADD PRIMARY KEY (a);"}
+{"sql":"alter index idxpart_pkey attach partition idxpart0_pkey"}
+{"sql":"alter table idxpart0 add unique (a)","shape":"ALTER TABLE idxpart0 ADD UNIQUE (a);"}
+{"sql":"alter table idxpart attach partition idxpart0 default"}
+{"sql":"alter table idxpart0 alter column a set not null","shape":"ALTER TABLE idxpart0 ALTER COLUMN a SET NOT NULL;"}
+{"sql":"alter table idxpart0 alter column a drop not null","shape":"ALTER TABLE idxpart0 ALTER COLUMN a DROP NOT NULL;"}
+{"sql":"create table idxpart1 (a int not null, b int)","shape":"CREATE TABLE idxpart1 (a int NOT NULL, b int);"}
+{"sql":"create unique index on idxpart1 (a)","shape":"CREATE UNIQUE INDEX ON idxpart1 (a);"}
+{"sql":"alter index idxpart_pkey attach partition idxpart1_a_idx"}
+{"sql":"create table idxpart (a int, b text, primary key (a, b)) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b text, PRIMARY KEY (a, b)) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart1 partition of idxpart for values from (0) to (100000)","shape":"CREATE TABLE idxpart1 PARTITION OF idxpart FOR VALUES FROM (0) TO (100000);"}
+{"sql":"create table idxpart2 (c int, like idxpart)","shape":"CREATE TABLE idxpart2 (c int, LIKE idxpart);"}
+{"sql":"insert into idxpart2 (c, a, b) values (42, 572814, 'inserted first')","shape":"INSERT INTO idxpart2 (c, a, b) VALUES (42, 572814, 'inserted first');"}
+{"sql":"create unique index on idxpart (a)","shape":"CREATE UNIQUE INDEX ON idxpart (a);"}
+{"sql":"alter table idxpart attach partition idxpart2 for values from (100000) to (1000000)"}
+{"sql":"insert into idxpart values (0, 'zero'), (42, 'life'), (2^16, 'sixteen')","shape":"INSERT INTO idxpart VALUES (0, 'zero'), (42, 'life'), (2 ^ 16, 'sixteen');"}
+{"sql":"insert into idxpart select 2^g, format('two to power of %s', g) from generate_series(15, 17) g","shape":"INSERT INTO idxpart SELECT 2 ^ g, format('two to power of %s', g) FROM generate_series(15, 17) AS g;"}
+{"sql":"insert into idxpart values (16, 'sixteen')","shape":"INSERT INTO idxpart VALUES (16, 'sixteen');"}
+{"sql":"insert into idxpart (b, a) values ('one', 142857), ('two', 285714)","shape":"INSERT INTO idxpart (b, a) VALUES ('one', 142857), ('two', 285714);"}
+{"sql":"insert into idxpart select a * 2, b || b from idxpart where a between 2^16 and 2^19","shape":"INSERT INTO idxpart SELECT a * 2, b || b FROM idxpart WHERE a BETWEEN (2 ^ 16) AND (2 ^ 19);"}
+{"sql":"insert into idxpart values (572814, 'five')","shape":"INSERT INTO idxpart VALUES (572814, 'five');"}
+{"sql":"insert into idxpart values (857142, 'six')","shape":"INSERT INTO idxpart VALUES (857142, 'six');"}
+{"sql":"select tableoid::regclass, * from idxpart order by a","shape":"SELECT tableoid::regclass, * FROM idxpart ORDER BY a;"}
+{"sql":"create table idxpart (a int, b text, c int[]) partition by range (a)","shape":"CREATE TABLE idxpart (a int, b text, c int[]) PARTITION BY RANGE (a);"}
+{"sql":"create index idxpart_brin on idxpart using brin(b)","shape":"CREATE INDEX idxpart_brin ON idxpart USING brin (b);"}
+{"sql":"explain (costs off) select * from idxpart where b = 'abcd'","shape":"EXPLAIN (COSTS off) SELECT * FROM idxpart WHERE b = 'abcd';"}
+{"sql":"drop index idxpart_brin","shape":"DROP INDEX idxpart_brin;"}
+{"sql":"create index idxpart_spgist on idxpart using spgist(b)","shape":"CREATE INDEX idxpart_spgist ON idxpart USING spgist (b);"}
+{"sql":"drop index idxpart_spgist","shape":"DROP INDEX idxpart_spgist;"}
+{"sql":"create index idxpart_gin on idxpart using gin(c)","shape":"CREATE INDEX idxpart_gin ON idxpart USING gin (c);"}
+{"sql":"explain (costs off) select * from idxpart where c @> array[42]","shape":"EXPLAIN (COSTS off) SELECT * FROM idxpart WHERE c @> ARRAY[42];"}
+{"sql":"drop index idxpart_gin","shape":"DROP INDEX idxpart_gin;"}
+{"sql":"create table idxpart_another (a int, b int, primary key (a, b)) partition by range (a)","shape":"CREATE TABLE idxpart_another (a int, b int, PRIMARY KEY (a, b)) PARTITION BY RANGE (a);"}
+{"sql":"create table idxpart_another_1 partition of idxpart_another for values from (0) to (100)","shape":"CREATE TABLE idxpart_another_1 PARTITION OF idxpart_another FOR VALUES FROM (0) TO (100);"}
+{"sql":"create table idxpart3 (c int, b int, a int) partition by range (a)","shape":"CREATE TABLE idxpart3 (c int, b int, a int) PARTITION BY RANGE (a);"}
+{"sql":"alter table idxpart3 drop column b, drop column c","shape":"ALTER TABLE idxpart3 DROP COLUMN b, DROP COLUMN c;"}
+{"sql":"create table idxpart31 partition of idxpart3 for values from (1000) to (1200)","shape":"CREATE TABLE idxpart31 PARTITION OF idxpart3 FOR VALUES FROM (1000) TO (1200);"}
+{"sql":"create table idxpart32 partition of idxpart3 for values from (1200) to (1400)","shape":"CREATE TABLE idxpart32 PARTITION OF idxpart3 FOR VALUES FROM (1200) TO (1400);"}
+{"sql":"alter table idxpart attach partition idxpart3 for values from (1000) to (2000)"}
+{"sql":"create schema regress_indexing","shape":"CREATE SCHEMA regress_indexing;"}
+{"sql":"set search_path to regress_indexing","shape":"SET search_path TO regress_indexing;"}
+{"sql":"create table pk (a int primary key) partition by range (a)","shape":"CREATE TABLE pk (a int PRIMARY KEY) PARTITION BY RANGE (a);"}
+{"sql":"create table pk1 partition of pk for values from (0) to (1000)","shape":"CREATE TABLE pk1 PARTITION OF pk FOR VALUES FROM (0) TO (1000);"}
+{"sql":"create table pk2 (b int, a int)","shape":"CREATE TABLE pk2 (b int, a int);"}
+{"sql":"alter table pk2 drop column b","shape":"ALTER TABLE pk2 DROP COLUMN b;"}
+{"sql":"alter table pk2 alter a set not null","shape":"ALTER TABLE pk2 ALTER COLUMN a SET NOT NULL;"}
+{"sql":"alter table pk attach partition pk2 for values from (1000) to (2000)"}
+{"sql":"create table pk3 partition of pk for values from (2000) to (3000)","shape":"CREATE TABLE pk3 PARTITION OF pk FOR VALUES FROM (2000) TO (3000);"}
+{"sql":"create table pk4 (like pk)","shape":"CREATE TABLE pk4 (LIKE pk);"}
+{"sql":"alter table pk attach partition pk4 for values from (3000) to (4000)"}
+{"sql":"create table pk5 (like pk) partition by range (a)","shape":"CREATE TABLE pk5 (LIKE pk) PARTITION BY RANGE (a);"}
+{"sql":"create table pk51 partition of pk5 for values from (4000) to (4500)","shape":"CREATE TABLE pk51 PARTITION OF pk5 FOR VALUES FROM (4000) TO (4500);"}
+{"sql":"create table pk52 partition of pk5 for values from (4500) to (5000)","shape":"CREATE TABLE pk52 PARTITION OF pk5 FOR VALUES FROM (4500) TO (5000);"}
+{"sql":"alter table pk attach partition pk5 for values from (4000) to (5000)"}
+{"sql":"create table covidxpart (a int, b int) partition by list (a)","shape":"CREATE TABLE covidxpart (a int, b int) PARTITION BY LIST (a);"}
+{"sql":"create unique index on covidxpart (a) include (b)","shape":"CREATE UNIQUE INDEX ON covidxpart (a) INCLUDE (b);"}
+{"sql":"create table covidxpart1 partition of covidxpart for values in (1)","shape":"CREATE TABLE covidxpart1 PARTITION OF covidxpart FOR VALUES IN (1);"}
+{"sql":"create table covidxpart2 partition of covidxpart for values in (2)","shape":"CREATE TABLE covidxpart2 PARTITION OF covidxpart FOR VALUES IN (2);"}
+{"sql":"insert into covidxpart values (1, 1)","shape":"INSERT INTO covidxpart VALUES (1, 1);"}
+{"sql":"create table covidxpart3 (b int, c int, a int)","shape":"CREATE TABLE covidxpart3 (b int, c int, a int);"}
+{"sql":"alter table covidxpart3 drop c","shape":"ALTER TABLE covidxpart3 DROP COLUMN c;"}
+{"sql":"alter table covidxpart attach partition covidxpart3 for values in (3)"}
+{"sql":"insert into covidxpart values (3, 1)","shape":"INSERT INTO covidxpart VALUES (3, 1);"}
+{"sql":"create table covidxpart4 (b int, a int)","shape":"CREATE TABLE covidxpart4 (b int, a int);"}
+{"sql":"create unique index on covidxpart4 (a) include (b)","shape":"CREATE UNIQUE INDEX ON covidxpart4 (a) INCLUDE (b);"}
+{"sql":"create unique index on covidxpart4 (a)","shape":"CREATE UNIQUE INDEX ON covidxpart4 (a);"}
+{"sql":"alter table covidxpart attach partition covidxpart4 for values in (4)"}
+{"sql":"insert into covidxpart values (4, 1)","shape":"INSERT INTO covidxpart VALUES (4, 1);"}
+{"sql":"create unique index on covidxpart (b) include (a)","shape":"CREATE UNIQUE INDEX ON covidxpart (b) INCLUDE (a);"}
+{"sql":"create table parted_pk_detach_test (a int primary key) partition by list (a)","shape":"CREATE TABLE parted_pk_detach_test (a int PRIMARY KEY) PARTITION BY LIST (a);"}
+{"sql":"create table parted_pk_detach_test1 partition of parted_pk_detach_test for values in (1)","shape":"CREATE TABLE parted_pk_detach_test1 PARTITION OF parted_pk_detach_test FOR VALUES IN (1);"}
+{"sql":"alter table parted_pk_detach_test1 drop constraint parted_pk_detach_test1_pkey","shape":"ALTER TABLE parted_pk_detach_test1 DROP CONSTRAINT parted_pk_detach_test1_pkey;"}
+{"sql":"alter table parted_pk_detach_test detach partition parted_pk_detach_test1"}
+{"sql":"drop table parted_pk_detach_test, parted_pk_detach_test1","shape":"DROP TABLE parted_pk_detach_test, parted_pk_detach_test1;"}
+{"sql":"create table parted_uniq_detach_test (a int unique) partition by list (a)","shape":"CREATE TABLE parted_uniq_detach_test (a int UNIQUE) PARTITION BY LIST (a);"}
+{"sql":"create table parted_uniq_detach_test1 partition of parted_uniq_detach_test for values in (1)","shape":"CREATE TABLE parted_uniq_detach_test1 PARTITION OF parted_uniq_detach_test FOR VALUES IN (1);"}
+{"sql":"alter table parted_uniq_detach_test1 drop constraint parted_uniq_detach_test1_a_key","shape":"ALTER TABLE parted_uniq_detach_test1 DROP CONSTRAINT parted_uniq_detach_test1_a_key;"}
+{"sql":"alter table parted_uniq_detach_test detach partition parted_uniq_detach_test1"}
+{"sql":"drop table parted_uniq_detach_test, parted_uniq_detach_test1","shape":"DROP TABLE parted_uniq_detach_test, parted_uniq_detach_test1;"}
+{"sql":"create table parted_index_col_drop(a int, b int, c int)\n  partition by list (a)","shape":"CREATE TABLE parted_index_col_drop (a int, b int, c int) PARTITION BY LIST (a);"}
+{"sql":"create table parted_index_col_drop1 partition of parted_index_col_drop\n  for values in (1) partition by list (a)","shape":"CREATE TABLE parted_index_col_drop1 PARTITION OF parted_index_col_drop FOR VALUES IN (1) PARTITION BY LIST (a);"}
+{"sql":"create table parted_index_col_drop2 partition of parted_index_col_drop\n  for values in (2) partition by list (a)","shape":"CREATE TABLE parted_index_col_drop2 PARTITION OF parted_index_col_drop FOR VALUES IN (2) PARTITION BY LIST (a);"}
+{"sql":"create table parted_index_col_drop11 partition of parted_index_col_drop1\n  for values in (1)","shape":"CREATE TABLE parted_index_col_drop11 PARTITION OF parted_index_col_drop1 FOR VALUES IN (1);"}
+{"sql":"create index on parted_index_col_drop (b)","shape":"CREATE INDEX ON parted_index_col_drop (b);"}
+{"sql":"create index on parted_index_col_drop (c)","shape":"CREATE INDEX ON parted_index_col_drop (c);"}
+{"sql":"create index on parted_index_col_drop (b, c)","shape":"CREATE INDEX ON parted_index_col_drop (b, c);"}
+{"sql":"alter table parted_index_col_drop drop column c","shape":"ALTER TABLE parted_index_col_drop DROP COLUMN c;"}
+{"sql":"drop table parted_index_col_drop","shape":"DROP TABLE parted_index_col_drop;"}
+{"sql":"create table parted_inval_tab (a int) partition by range (a)","shape":"CREATE TABLE parted_inval_tab (a int) PARTITION BY RANGE (a);"}
+{"sql":"create index parted_inval_idx on parted_inval_tab (a)","shape":"CREATE INDEX parted_inval_idx ON parted_inval_tab (a);"}
+{"sql":"create table parted_inval_tab_1 (a int) partition by range (a)","shape":"CREATE TABLE parted_inval_tab_1 (a int) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_inval_tab_1_1 partition of parted_inval_tab_1\n  for values from (0) to (10)","shape":"CREATE TABLE parted_inval_tab_1_1 PARTITION OF parted_inval_tab_1 FOR VALUES FROM (0) TO (10);"}
+{"sql":"create table parted_inval_tab_1_2 partition of parted_inval_tab_1\n  for values from (10) to (20)","shape":"CREATE TABLE parted_inval_tab_1_2 PARTITION OF parted_inval_tab_1 FOR VALUES FROM (10) TO (20);"}
+{"sql":"create index parted_inval_ixd_1 on only parted_inval_tab_1 (a)","shape":"CREATE INDEX parted_inval_ixd_1 ON ONLY parted_inval_tab_1 (a);"}
+{"sql":"alter table parted_inval_tab attach partition parted_inval_tab_1\n  for values from (1) to (100)"}
+{"sql":"select indexrelid::regclass, indisvalid,\n       indrelid::regclass, inhparent::regclass\n  from pg_index idx left join\n       pg_inherits inh on (idx.indexrelid = inh.inhrelid)\n  where indexrelid::regclass::text like 'parted_inval%'\n  order by indexrelid::regclass::text collate \"C\"","shape":"SELECT indexrelid::regclass, indisvalid, indrelid::regclass, inhparent::regclass FROM pg_index AS idx LEFT JOIN pg_inherits AS inh ON (idx.indexrelid = inh.inhrelid) WHERE indexrelid::regclass::text LIKE 'parted_inval%' ORDER BY indexrelid::regclass::text COLLATE \"C\";"}
+{"sql":"drop table parted_inval_tab","shape":"DROP TABLE parted_inval_tab;"}
+{"sql":"create table parted_isvalid_tab (a int, b int) partition by range (a)","shape":"CREATE TABLE parted_isvalid_tab (a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_isvalid_tab_1 partition of parted_isvalid_tab\n  for values from (1) to (10) partition by range (a)","shape":"CREATE TABLE parted_isvalid_tab_1 PARTITION OF parted_isvalid_tab FOR VALUES FROM (1) TO (10) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_isvalid_tab_2 partition of parted_isvalid_tab\n  for values from (10) to (20) partition by range (a)","shape":"CREATE TABLE parted_isvalid_tab_2 PARTITION OF parted_isvalid_tab FOR VALUES FROM (10) TO (20) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_isvalid_tab_11 partition of parted_isvalid_tab_1\n  for values from (1) to (5)","shape":"CREATE TABLE parted_isvalid_tab_11 PARTITION OF parted_isvalid_tab_1 FOR VALUES FROM (1) TO (5);"}
+{"sql":"create table parted_isvalid_tab_12 partition of parted_isvalid_tab_1\n  for values from (5) to (10)","shape":"CREATE TABLE parted_isvalid_tab_12 PARTITION OF parted_isvalid_tab_1 FOR VALUES FROM (5) TO (10);"}
+{"sql":"insert into parted_isvalid_tab_11 values (1, 0)","shape":"INSERT INTO parted_isvalid_tab_11 VALUES (1, 0);"}
+{"sql":"create index concurrently parted_isvalid_idx_11 on parted_isvalid_tab_11 ((a/b))","shape":"CREATE INDEX CONCURRENTLY parted_isvalid_idx_11 ON parted_isvalid_tab_11 ((a / b));"}
+{"sql":"create index parted_isvalid_idx on parted_isvalid_tab ((a/b))","shape":"CREATE INDEX parted_isvalid_idx ON parted_isvalid_tab ((a / b));"}
+{"sql":"select indexrelid::regclass, indisvalid,\n       indrelid::regclass, inhparent::regclass\n  from pg_index idx left join\n       pg_inherits inh on (idx.indexrelid = inh.inhrelid)\n  where indexrelid::regclass::text like 'parted_isvalid%'\n  order by indexrelid::regclass::text collate \"C\"","shape":"SELECT indexrelid::regclass, indisvalid, indrelid::regclass, inhparent::regclass FROM pg_index AS idx LEFT JOIN pg_inherits AS inh ON (idx.indexrelid = inh.inhrelid) WHERE indexrelid::regclass::text LIKE 'parted_isvalid%' ORDER BY indexrelid::regclass::text COLLATE \"C\";"}
+{"sql":"drop table parted_isvalid_tab","shape":"DROP TABLE parted_isvalid_tab;"}
+{"sql":"create table parted_replica_tab (id int not null) partition by range (id)","shape":"CREATE TABLE parted_replica_tab (id int NOT NULL) PARTITION BY RANGE (id);"}
+{"sql":"create table parted_replica_tab_1 partition of parted_replica_tab\n  for values from (1) to (10) partition by range (id)","shape":"CREATE TABLE parted_replica_tab_1 PARTITION OF parted_replica_tab FOR VALUES FROM (1) TO (10) PARTITION BY RANGE (id);"}
+{"sql":"create table parted_replica_tab_11 partition of parted_replica_tab_1\n  for values from (1) to (5)","shape":"CREATE TABLE parted_replica_tab_11 PARTITION OF parted_replica_tab_1 FOR VALUES FROM (1) TO (5);"}
+{"sql":"create unique index parted_replica_idx\n  on only parted_replica_tab using btree (id)","shape":"CREATE UNIQUE INDEX parted_replica_idx ON ONLY parted_replica_tab USING btree (id);"}
+{"sql":"create unique index parted_replica_idx_1\n  on only parted_replica_tab_1 using btree (id)","shape":"CREATE UNIQUE INDEX parted_replica_idx_1 ON ONLY parted_replica_tab_1 USING btree (id);"}
+{"sql":"alter table only parted_replica_tab_1 replica identity\n  using index parted_replica_idx_1"}
+{"sql":"create unique index parted_replica_idx_11 on parted_replica_tab_11 USING btree (id)","shape":"CREATE UNIQUE INDEX parted_replica_idx_11 ON parted_replica_tab_11 USING btree (id);"}
+{"sql":"select indexrelid::regclass, indisvalid, indisreplident,\n       indrelid::regclass, inhparent::regclass\n  from pg_index idx left join\n       pg_inherits inh on (idx.indexrelid = inh.inhrelid)\n  where indexrelid::regclass::text like 'parted_replica%'\n  order by indexrelid::regclass::text collate \"C\"","shape":"SELECT indexrelid::regclass, indisvalid, indisreplident, indrelid::regclass, inhparent::regclass FROM pg_index AS idx LEFT JOIN pg_inherits AS inh ON (idx.indexrelid = inh.inhrelid) WHERE indexrelid::regclass::text LIKE 'parted_replica%' ORDER BY indexrelid::regclass::text COLLATE \"C\";"}
+{"sql":"alter index parted_replica_idx ATTACH PARTITION parted_replica_idx_1"}
+{"sql":"alter index parted_replica_idx_1 ATTACH PARTITION parted_replica_idx_11"}
+{"sql":"drop table parted_replica_tab","shape":"DROP TABLE parted_replica_tab;"}

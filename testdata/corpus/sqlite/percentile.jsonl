@@ -1,0 +1,72 @@
+{"sql":"INSERT INTO t1 VALUES(1),(4),(6),(7),(8),(9),(11),(11),(11)"}
+{"sql":"SELECT percentile(x,0) FROM t1"}
+{"sql":"SELECT median(x) FROM t1"}
+{"sql":"SELECT median() WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT median(DISTINCT x) FROM t1"}
+{"sql":"SELECT percentile(DISTINCT 50) WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"INSERT INTO t1 VALUES(NULL),(NULL)"}
+{"sql":"SELECT round(percentile(x, 15+0.000001*rowid),1) FROM t1"}
+{"sql":"SELECT round(percentile_cont(x,(15+0.000001*rowid)*0.01),1) FROM t1"}
+{"sql":"SELECT percentile_disc(x, (15+0.000001*rowid)*0.01) FROM t1"}
+{"sql":"SELECT percentile(x, 15+0.1*rowid) FROM t1"}
+{"sql":"SELECT percentile_cont(x, (15+0.1*rowid)*0.01) FROM t1"}
+{"sql":"SELECT percentile_disc(x, (15+0.1*rowid)*0.01) FROM t1"}
+{"sql":"INSERT INTO t2 SELECT x+0.0 FROM t1 ORDER BY random()"}
+{"sql":"SELECT median(x) FROM t2"}
+{"sql":"SELECT median() WITHIN GROUP (ORDER BY x) FROM t2","reject":true}
+{"sql":"SELECT percentile(x,0,1) FROM t1"}
+{"sql":"SELECT percentile_cont(x,0,1) FROM t1"}
+{"sql":"SELECT percentile_disc(x,0,1) FROM t1"}
+{"sql":"SELECT median(x,0) FROM t1"}
+{"sql":"SELECT percentile(0,1) WITHIN GROUP(ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT percentile_cont(0,1)WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT percentile_disc(0,1)WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT median(x) WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT percentile(x) FROM t1"}
+{"sql":"SELECT percentile_cont(x) FROM t1"}
+{"sql":"SELECT percentile_disc(x) FROM t1"}
+{"sql":"SELECT median() FROM t1"}
+{"sql":"SELECT percentile() WITHIN GROUP(ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT percentile_cont()WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT percentile_disc()WITHIN GROUP (ORDER BY x) FROM t1","reject":true}
+{"sql":"SELECT percentile(x,null) FROM t1"}
+{"sql":"SELECT percentile(x,'fifty') FROM t1"}
+{"sql":"SELECT percentile(x,x'3530') FROM t1"}
+{"sql":"SELECT percentile(x,-0.0000001) FROM t1"}
+{"sql":"SELECT percentile(x,100.0000001) FROM t1"}
+{"sql":"SELECT percentile_cont(x,1.0000001) FROM t1"}
+{"sql":"SELECT percentile_disc(x,1.0000001) FROM t1"}
+{"sql":"UPDATE t1 SET x='50' WHERE x IS NULL"}
+{"sql":"SELECT percentile(x, 50) FROM t1"}
+{"sql":"SELECT percentile_cont(x, 0.50) FROM t1"}
+{"sql":"SELECT percentile_disc(x, 0.50) FROM t1"}
+{"sql":"UPDATE t1 SET x=x'3530' WHERE x IS NULL"}
+{"sql":"UPDATE t1 SET x=NULL"}
+{"sql":"SELECT ifnull(percentile(x, 50),'NULL') FROM t1"}
+{"sql":"UPDATE t1 SET x=12345 WHERE rowid=5"}
+{"sql":"SELECT percentile(x, 0), percentile(x, 50), percentile(x,100) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x+0.0 FROM t2"}
+{"sql":"UPDATE t1 SET x=1.0e300*1.0e300 WHERE rowid=5"}
+{"sql":"SELECT percentile(x,50) from t1"}
+{"sql":"SELECT percentile_cont(x,0.50) from t1"}
+{"sql":"SELECT percentile_disc(x,0.50) from t1"}
+{"sql":"SELECT median(x) from t1"}
+{"sql":"SELECT percentile(50) WITHIN GROUP (ORDER BY x) from t1","reject":true}
+{"sql":"SELECT percentile_cont(0.50) WITHIN GROUP (ORDER BY x) from t1","reject":true}
+{"sql":"SELECT percentile_disc(0.50) WITHIN GROUP(ORDER BY X) from t1","reject":true}
+{"sql":"SELECT median() WITHIN GROUP (ORDER BY x) from t1","reject":true}
+{"sql":"UPDATE t1 SET x=-1.0e300*1.0e300 WHERE rowid=5"}
+{"sql":"INSERT INTO t3 SELECT value-1 FROM nums WHERE value BETWEEN 1 AND 500000"}
+{"sql":"INSERT INTO t3 SELECT value*10 FROM nums\n                      WHERE value BETWEEN 500000 AND 999999"}
+{"sql":"INSERT INTO t1 VALUES (1, 'A', 'one',   8.4),\n                        (2, 'B', 'two',   7.1),\n                        (3, 'C', 'three', 5.9),\n                        (4, 'D', 'one',  11.0),\n                        (5, 'E', 'two',  12.5),\n                        (6, 'F', 'three', 0.0),\n                        (7, 'G', 'one',   2.7)"}
+{"sql":"1  A  one    8.4   A.D       9.7   \n    4  D  one    11.0  A.D.G     8.4   \n    7  G  one    2.7   D.G.C     5.9   \n    3  C  three  5.9   G.C.F     2.7   \n    6  F  three  0.0   C.F.B     5.9   \n    2  B  two    7.1   F.B.E     7.1   \n    5  E  two    12.5  B.E       9.8","reject":true}
+{"sql":"1  A  one    8.4   A.D            9.7   \n    4  D  one    11.0  A.D.G          8.4   \n    7  G  one    2.7   A.D.G.C        7.15  \n    3  C  three  5.9   A.D.G.C.F      5.9   \n    6  F  three  0.0   A.D.G.C.F.B    6.5   \n    2  B  two    7.1   A.D.G.C.F.B.E  7.1   \n    5  E  two    12.5  A.D.G.C.F.B.E  7.1","reject":true}
+{"sql":"1  A  one    8.4   A.D.G.C.F.B.E  7.1   \n    4  D  one    11.0  A.D.G.C.F.B.E  7.1   \n    7  G  one    2.7   D.G.C.F.B.E    6.5   \n    3  C  three  5.9   G.C.F.B.E      5.9   \n    6  F  three  0.0   C.F.B.E        6.5   \n    2  B  two    7.1   F.B.E          7.1   \n    5  E  two    12.5  B.E            9.8","reject":true}
+{"sql":"CREATE TABLE products(\n    vendorId INT,\n    productId INTEGER PRIMARY KEY,\n    productName REAL,\n    price REAL\n  )"}
+{"sql":"INSERT INTO products VALUES\n    (1001, 17,  'Left-handed screwdriver', 25.99),\n    (1001, 49,  'Right-handed screwdriver', 25.99),\n    (1001, 216, 'Long weight (blue)', 14.75),\n    (1001, 31,  'Long weight (green)', 11.99),\n    (1002, 37,  'Sledge hammer', 33.49),\n    (1003, 7,   'Chainsaw', 245.00),\n    (1003, 8,   'Straw dog box', 55.99),\n    (1003, 12,  'Hammock', 11.01),\n    (1004, 113, 'Teapot', 12.45),\n    (1004, 117, 'Bottomless coffee mug', 9.99)"}
+{"sql":"SELECT VendorId, ProductId, /* ProductName,*/ Price,\n         avg(price) OVER (PARTITION BY vendorId) AS \"Average\",\n         median(price) OVER (PARTITION BY vendorId) AS \"Median\"\n    FROM products\n   ORDER BY vendorId, productId"}
+{"sql":"SELECT vendorId, median(price) FROM products\n   GROUP BY 1 ORDER BY 1"}
+{"sql":"CREATE TABLE user(name TEXT, class TEXT, cost REAL)"}
+{"sql":"INSERT INTO user VALUES\n    ('Alice', 'Y',  3578.27),\n    ('Bob',   'X',  3399.99),\n    ('Cindy', 'Z',  699.10),\n    ('Dave',  'Y',  3078.27),\n    ('Emma',  'Z',  2319.99),\n    ('Fred',  'Y',  539.99),\n    ('Gina',  'X',  2320.49),\n    ('Hank',  'W',  24.99),\n    ('Irma',  'W',  24.99),\n    ('Jake',  'X',  2234.99),\n    ('Kim',   'Y',  4319.99),\n    ('Liam',  'X',  4968.59),\n    ('Mia',   'W',  59.53),\n    ('Nate',  'W',  23.50)"}
+{"sql":"SELECT name, class, cost,\n    percentile(cost,   0) OVER w1 AS 'P0',\n    percentile(cost,  25) OVER w1 AS 'P1',\n    percentile(cost,  50) OVER w1 AS 'P2',\n    percentile(cost,  75) OVER w1 AS 'P3',\n    percentile(cost, 100) OVER w1 AS 'P4'\n  FROM user\n  WINDOW w1 AS (PARTITION BY class)\n  ORDER BY class, cost"}
+{"sql":"WITH RECURSIVE c(n) AS (VALUES(1) UNION ALL SELECT n+1 FROM c WHERE n<12)\n  SELECT median(iif(n%2,0.1,1.0)) FROM c"}

@@ -1,0 +1,2 @@
+{"sql":"CREATE TEMP TABLE tt(a, b, c)"}
+{"sql":"INSERT INTO tt VALUES(1, 2, 3)"}

@@ -1,0 +1,462 @@
+{"sql":"create function check_estimated_rows(text) returns table (estimated int, actual int)\nlanguage plpgsql as\n$$\ndeclare\n    ln text;\n    tmp text[];\n    first_row bool := true;\nbegin\n    for ln in\n        execute format('explain analyze %s', $1)\n    loop\n        if first_row then\n            first_row := false;\n            tmp := regexp_match(ln, 'rows=(\\d*) .* rows=(\\d*)');\n            return query select tmp[1]::int, tmp[2]::int;\n        end if;\n    end loop;\nend;\n$$","shape":"CREATE FUNCTION check_estimated_rows(text) RETURNS TABLE (estimated int, actual int) LANGUAGE plpgsql AS '\ndeclare\n    ln text;\n    tmp text[];\n    first_row bool := true;\nbegin\n    for ln in\n        execute format(''explain analyze %s'', $1)\n    loop\n        if first_row then\n            first_row := false;\n            tmp := regexp_match(ln, ''rows=(\\d*) .* rows=(\\d*)'');\n            return query select tmp[1]::int, tmp[2]::int;\n        end if;\n    end loop;\nend;\n';"}
+{"sql":"CREATE TABLE ext_stats_test (x text, y int, z int)","shape":"CREATE TABLE ext_stats_test (x text, y int, z int);"}
+{"sql":"CREATE STATISTICS tst","reject":true}
+{"sql":"CREATE STATISTICS tst ON a, b","reject":true}
+{"sql":"CREATE STATISTICS tst FROM sometab","reject":true}
+{"sql":"CREATE STATISTICS tst ON a, b FROM nonexistent"}
+{"sql":"CREATE STATISTICS tst ON a, b FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON x, x, y FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON x, x, y, x, x, y, x, x, y FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON x, x, y, x, x, (x || 'x'), (y + 1), (x || 'x'), (x || 'x'), (y + 1) FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON (x || 'x'), (x || 'x'), (y + 1), (x || 'x'), (x || 'x'), (y + 1), (x || 'x'), (x || 'x'), (y + 1) FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON (x || 'x'), (x || 'x'), y FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst (unrecognized) ON x, y FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON a FROM (VALUES (x)) AS foo"}
+{"sql":"CREATE STATISTICS tst ON a FROM foo NATURAL JOIN bar"}
+{"sql":"CREATE STATISTICS tst ON a FROM (SELECT * FROM ext_stats_test) AS foo"}
+{"sql":"CREATE STATISTICS tst ON a FROM ext_stats_test s TABLESAMPLE system (x)"}
+{"sql":"CREATE STATISTICS tst ON a FROM XMLTABLE('foo' PASSING 'bar' COLUMNS a text)"}
+{"sql":"CREATE FUNCTION tftest(int) returns table(a int, b int) as $$\nSELECT $1, $1+i FROM generate_series(1,5) g(i);\n$$ LANGUAGE sql IMMUTABLE STRICT","shape":"CREATE FUNCTION tftest(int) RETURNS TABLE (a int, b int) AS '\nSELECT $1, $1+i FROM generate_series(1,5) g(i);\n' LANGUAGE sql IMMUTABLE STRICT;"}
+{"sql":"CREATE STATISTICS alt_stat2 ON a FROM tftest(1)"}
+{"sql":"DROP FUNCTION tftest"}
+{"sql":"CREATE STATISTICS tst ON (y) FROM ext_stats_test"}
+{"sql":"CREATE STATISTICS tst ON y + z FROM ext_stats_test","reject":true}
+{"sql":"CREATE STATISTICS tst ON (x, y) FROM ext_stats_test","reject":true}
+{"sql":"DROP TABLE ext_stats_test","shape":"DROP TABLE ext_stats_test;"}
+{"sql":"CREATE TABLE ab1 (a INTEGER, b INTEGER, c INTEGER)","shape":"CREATE TABLE ab1 (a INTEGER, b INTEGER, c INTEGER);"}
+{"sql":"CREATE STATISTICS IF NOT EXISTS ab1_a_b_stats ON a, b FROM ab1"}
+{"sql":"COMMENT ON STATISTICS ab1_a_b_stats IS 'new comment'"}
+{"sql":"CREATE ROLE regress_stats_ext"}
+{"sql":"SET SESSION AUTHORIZATION regress_stats_ext"}
+{"sql":"COMMENT ON STATISTICS ab1_a_b_stats IS 'changed comment'"}
+{"sql":"DROP STATISTICS ab1_a_b_stats"}
+{"sql":"ALTER STATISTICS ab1_a_b_stats RENAME TO ab1_a_b_stats_new"}
+{"sql":"DROP ROLE regress_stats_ext","shape":"DROP ROLE regress_stats_ext;"}
+{"sql":"CREATE STATISTICS pg_temp.stats_ext_temp ON a, b FROM ab1"}
+{"sql":"SELECT regexp_replace(pg_describe_object(tableoid, oid, 0),\n                      'pg_temp_[0-9]*', 'pg_temp_REDACTED') AS descr,\n       pg_statistics_obj_is_visible(oid) AS visible\n  FROM pg_statistic_ext\n WHERE stxname = 'stats_ext_temp'","shape":"SELECT regexp_replace(pg_describe_object(tableoid, oid, 0), 'pg_temp_[0-9]*', 'pg_temp_REDACTED') AS descr, pg_statistics_obj_is_visible(oid) AS visible FROM pg_statistic_ext WHERE stxname = 'stats_ext_temp';"}
+{"sql":"DROP STATISTICS stats_ext_temp"}
+{"sql":"DROP STATISTICS pg_temp.stats_ext_temp"}
+{"sql":"CREATE SCHEMA regress_schema_2","shape":"CREATE SCHEMA regress_schema_2;"}
+{"sql":"CREATE STATISTICS regress_schema_2.ab1_a_b_stats ON a, b FROM ab1"}
+{"sql":"SELECT pg_get_statisticsobjdef(oid) FROM pg_statistic_ext WHERE stxname = 'ab1_a_b_stats'","shape":"SELECT pg_get_statisticsobjdef(oid) FROM pg_statistic_ext WHERE stxname = 'ab1_a_b_stats';"}
+{"sql":"DROP STATISTICS regress_schema_2.ab1_a_b_stats"}
+{"sql":"CREATE STATISTICS ab1_b_c_stats ON b, c FROM ab1"}
+{"sql":"CREATE STATISTICS ab1_a_b_c_stats ON a, b, c FROM ab1"}
+{"sql":"CREATE STATISTICS ab1_b_a_stats ON b, a FROM ab1"}
+{"sql":"ALTER TABLE ab1 DROP COLUMN a","shape":"ALTER TABLE ab1 DROP COLUMN a;"}
+{"sql":"SELECT stxname FROM pg_statistic_ext WHERE stxname LIKE 'ab1%'","shape":"SELECT stxname FROM pg_statistic_ext WHERE stxname LIKE 'ab1%';"}
+{"sql":"DROP TABLE ab1","shape":"DROP TABLE ab1;"}
+{"sql":"CREATE TABLE ab1 (a INTEGER, b INTEGER)","shape":"CREATE TABLE ab1 (a INTEGER, b INTEGER);"}
+{"sql":"ALTER TABLE ab1 ALTER a SET STATISTICS 0"}
+{"sql":"INSERT INTO ab1 SELECT a, a%23 FROM generate_series(1, 1000) a","shape":"INSERT INTO ab1 SELECT a, a % 23 FROM generate_series(1, 1000) AS a;"}
+{"sql":"CREATE STATISTICS ab1_a_b_stats ON a, b FROM ab1"}
+{"sql":"ANALYZE ab1","shape":"ANALYZE ab1;"}
+{"sql":"ALTER TABLE ab1 ALTER a SET STATISTICS -1"}
+{"sql":"ALTER STATISTICS ab1_a_b_stats SET STATISTICS 0"}
+{"sql":"SELECT stxname, stxdndistinct, stxddependencies, stxdmcv, stxdinherit\n  FROM pg_statistic_ext s LEFT JOIN pg_statistic_ext_data d ON (d.stxoid = s.oid)\n WHERE s.stxname = 'ab1_a_b_stats'","shape":"SELECT stxname, stxdndistinct, stxddependencies, stxdmcv, stxdinherit FROM pg_statistic_ext AS s LEFT JOIN pg_statistic_ext_data AS d ON (d.stxoid = s.oid) WHERE s.stxname = 'ab1_a_b_stats';"}
+{"sql":"ALTER STATISTICS ab1_a_b_stats SET STATISTICS -1"}
+{"sql":"ANALYZE ab1 (a)","shape":"ANALYZE ab1 (a);"}
+{"sql":"ALTER STATISTICS IF EXISTS ab1_a_b_stats SET STATISTICS 0"}
+{"sql":"CREATE TABLE ab1c () INHERITS (ab1)","shape":"CREATE TABLE ab1c () INHERITS (ab1);"}
+{"sql":"INSERT INTO ab1 VALUES (1,1)","shape":"INSERT INTO ab1 VALUES (1, 1);"}
+{"sql":"DROP TABLE ab1 CASCADE","shape":"DROP TABLE ab1 CASCADE;"}
+{"sql":"CREATE TABLE stxdinh(a int, b int)","shape":"CREATE TABLE stxdinh (a int, b int);"}
+{"sql":"CREATE TABLE stxdinh1() INHERITS(stxdinh)","shape":"CREATE TABLE stxdinh1 () INHERITS (stxdinh);"}
+{"sql":"CREATE TABLE stxdinh2() INHERITS(stxdinh)","shape":"CREATE TABLE stxdinh2 () INHERITS (stxdinh);"}
+{"sql":"INSERT INTO stxdinh SELECT mod(a,50), mod(a,100) FROM generate_series(0, 1999) a","shape":"INSERT INTO stxdinh SELECT mod(a, 50), mod(a, 100) FROM generate_series(0, 1999) AS a;"}
+{"sql":"INSERT INTO stxdinh1 SELECT mod(a,100), mod(a,100) FROM generate_series(0, 999) a","shape":"INSERT INTO stxdinh1 SELECT mod(a, 100), mod(a, 100) FROM generate_series(0, 999) AS a;"}
+{"sql":"INSERT INTO stxdinh2 SELECT mod(a,100), mod(a,100) FROM generate_series(0, 999) a","shape":"INSERT INTO stxdinh2 SELECT mod(a, 100), mod(a, 100) FROM generate_series(0, 999) AS a;"}
+{"sql":"VACUUM ANALYZE stxdinh, stxdinh1, stxdinh2","shape":"VACUUM ANALYZE stxdinh, stxdinh1, stxdinh2;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT a, b FROM stxdinh* GROUP BY 1, 2')","shape":"SELECT * FROM check_estimated_rows('SELECT a, b FROM stxdinh* GROUP BY 1, 2');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT a, b FROM stxdinh* WHERE a = 0 AND b = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT a, b FROM stxdinh* WHERE a = 0 AND b = 0');"}
+{"sql":"CREATE STATISTICS stxdinh ON a, b FROM stxdinh"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT a, b FROM ONLY stxdinh GROUP BY 1, 2')","shape":"SELECT * FROM check_estimated_rows('SELECT a, b FROM ONLY stxdinh GROUP BY 1, 2');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT a, b FROM ONLY stxdinh WHERE a = 0 AND b = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT a, b FROM ONLY stxdinh WHERE a = 0 AND b = 0');"}
+{"sql":"DROP TABLE stxdinh, stxdinh1, stxdinh2","shape":"DROP TABLE stxdinh, stxdinh1, stxdinh2;"}
+{"sql":"CREATE TABLE stxdinp(i int, a int, b int) PARTITION BY RANGE (i)","shape":"CREATE TABLE stxdinp (i int, a int, b int) PARTITION BY RANGE (i);"}
+{"sql":"CREATE TABLE stxdinp1 PARTITION OF stxdinp FOR VALUES FROM (1) TO (100)","shape":"CREATE TABLE stxdinp1 PARTITION OF stxdinp FOR VALUES FROM (1) TO (100);"}
+{"sql":"INSERT INTO stxdinp SELECT 1, a/100, a/100 FROM generate_series(1, 999) a","shape":"INSERT INTO stxdinp SELECT 1, a / 100, a / 100 FROM generate_series(1, 999) AS a;"}
+{"sql":"CREATE STATISTICS stxdinp ON (a + 1), a, b FROM stxdinp"}
+{"sql":"VACUUM ANALYZE stxdinp","shape":"VACUUM ANALYZE stxdinp;"}
+{"sql":"SELECT 1 FROM pg_statistic_ext WHERE stxrelid = 'stxdinp'::regclass","shape":"SELECT 1 FROM pg_statistic_ext WHERE stxrelid = 'stxdinp'::regclass;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT a, b FROM stxdinp GROUP BY 1, 2')","shape":"SELECT * FROM check_estimated_rows('SELECT a, b FROM stxdinp GROUP BY 1, 2');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT a + 1, b FROM ONLY stxdinp GROUP BY 1, 2')","shape":"SELECT * FROM check_estimated_rows('SELECT a + 1, b FROM ONLY stxdinp GROUP BY 1, 2');"}
+{"sql":"DROP TABLE stxdinp","shape":"DROP TABLE stxdinp;"}
+{"sql":"CREATE TABLE ab1 (a INTEGER, b INTEGER, c TIMESTAMP, d TIMESTAMPTZ)","shape":"CREATE TABLE ab1 (a INTEGER, b INTEGER, c TIMESTAMP, d TIMESTAMPTZ);"}
+{"sql":"CREATE STATISTICS ab1_exprstat_1 ON (a+b) FROM ab1"}
+{"sql":"CREATE STATISTICS ab1_exprstat_2 ON (a+b) FROM ab1"}
+{"sql":"SELECT stxkind FROM pg_statistic_ext WHERE stxname = 'ab1_exprstat_2'","shape":"SELECT stxkind FROM pg_statistic_ext WHERE stxname = 'ab1_exprstat_2';"}
+{"sql":"CREATE STATISTICS ab1_exprstat_3 ON (a+b), a FROM ab1"}
+{"sql":"SELECT stxkind FROM pg_statistic_ext WHERE stxname = 'ab1_exprstat_3'","shape":"SELECT stxkind FROM pg_statistic_ext WHERE stxname = 'ab1_exprstat_3';"}
+{"sql":"CREATE STATISTICS ab1_exprstat_4 ON date_trunc('day', d) FROM ab1"}
+{"sql":"CREATE STATISTICS ab1_exprstat_5 ON date_trunc('day', c) FROM ab1"}
+{"sql":"CREATE STATISTICS ab1_exprstat_6 ON\n  (case a when 1 then true else false end), b FROM ab1"}
+{"sql":"INSERT INTO ab1\nSELECT x / 10, x / 3,\n    '2020-10-01'::timestamp + x * interval '1 day',\n    '2020-10-01'::timestamptz + x * interval '1 day'\nFROM generate_series(1, 100) x","shape":"INSERT INTO ab1 SELECT x / 10, x / 3, '2020-10-01'::timestamp + (x * interval '1 day'), '2020-10-01'::timestamptz + (x * interval '1 day') FROM generate_series(1, 100) AS x;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM ab1 WHERE (case a when 1 then true else false end) AND b=2')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM ab1 WHERE (case a when 1 then true else false end) AND b=2');"}
+{"sql":"CREATE schema tststats","shape":"CREATE SCHEMA tststats;"}
+{"sql":"CREATE TABLE tststats.t (a int, b int, c text)","shape":"CREATE TABLE tststats.t (a int, b int, c text);"}
+{"sql":"CREATE INDEX ti ON tststats.t (a, b)","shape":"CREATE INDEX ti ON tststats.t (a, b);"}
+{"sql":"CREATE SEQUENCE tststats.s","shape":"CREATE SEQUENCE tststats.s;"}
+{"sql":"CREATE VIEW tststats.v AS SELECT * FROM tststats.t","shape":"CREATE VIEW tststats.v AS SELECT * FROM tststats.t;"}
+{"sql":"CREATE MATERIALIZED VIEW tststats.mv AS SELECT * FROM tststats.t","shape":"CREATE MATERIALIZED VIEW tststats.mv AS SELECT * FROM tststats.t;"}
+{"sql":"CREATE TYPE tststats.ty AS (a int, b int, c text)","shape":"CREATE TYPE tststats.ty AS (a int, b int, c text);"}
+{"sql":"CREATE FOREIGN DATA WRAPPER extstats_dummy_fdw"}
+{"sql":"CREATE SERVER extstats_dummy_srv FOREIGN DATA WRAPPER extstats_dummy_fdw"}
+{"sql":"CREATE FOREIGN TABLE tststats.f (a int, b int, c text) SERVER extstats_dummy_srv"}
+{"sql":"CREATE TABLE tststats.pt (a int, b int, c text) PARTITION BY RANGE (a, b)","shape":"CREATE TABLE tststats.pt (a int, b int, c text) PARTITION BY RANGE (a, b);"}
+{"sql":"CREATE TABLE tststats.pt1 PARTITION OF tststats.pt FOR VALUES FROM (-10, -10) TO (10, 10)","shape":"CREATE TABLE tststats.pt1 PARTITION OF tststats.pt FOR VALUES FROM (-10, -10) TO (10, 10);"}
+{"sql":"CREATE STATISTICS tststats.s1 ON a, b FROM tststats.t"}
+{"sql":"CREATE STATISTICS tststats.s2 ON a, b FROM tststats.ti"}
+{"sql":"CREATE STATISTICS tststats.s3 ON a, b FROM tststats.s"}
+{"sql":"CREATE STATISTICS tststats.s4 ON a, b FROM tststats.v"}
+{"sql":"CREATE STATISTICS tststats.s5 ON a, b FROM tststats.mv"}
+{"sql":"CREATE STATISTICS tststats.s6 ON a, b FROM tststats.ty"}
+{"sql":"CREATE STATISTICS tststats.s7 ON a, b FROM tststats.f"}
+{"sql":"CREATE STATISTICS tststats.s8 ON a, b FROM tststats.pt"}
+{"sql":"CREATE STATISTICS tststats.s9 ON a, b FROM tststats.pt1"}
+{"sql":"DO $$\nDECLARE\n\trelname text := reltoastrelid::regclass FROM pg_class WHERE oid = 'tststats.t'::regclass;\nBEGIN\n\tEXECUTE 'CREATE STATISTICS tststats.s10 ON a, b FROM ' || relname;\nEXCEPTION WHEN wrong_object_type THEN\n\tRAISE NOTICE 'stats on toast table not created';\nEND;\n$$","shape":"DO '\nDECLARE\n\trelname text := reltoastrelid::regclass FROM pg_class WHERE oid = ''tststats.t''::regclass;\nBEGIN\n\tEXECUTE ''CREATE STATISTICS tststats.s10 ON a, b FROM '' || relname;\nEXCEPTION WHEN wrong_object_type THEN\n\tRAISE NOTICE ''stats on toast table not created'';\nEND;\n';"}
+{"sql":"DROP SCHEMA tststats CASCADE","shape":"DROP SCHEMA tststats CASCADE;"}
+{"sql":"DROP FOREIGN DATA WRAPPER extstats_dummy_fdw CASCADE"}
+{"sql":"CREATE TABLE ndistinct (\n    filler1 TEXT,\n    filler2 NUMERIC,\n    a INT,\n    b INT,\n    filler3 DATE,\n    c INT,\n    d INT\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE ndistinct (filler1 TEXT, filler2 NUMERIC, a INT, b INT, filler3 DATE, c INT, d INT) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO ndistinct (a, b, c, filler1)\n     SELECT i/100, i/100, i/100, cash_words((i/100)::money)\n       FROM generate_series(1,1000) s(i)","shape":"INSERT INTO ndistinct (a, b, c, filler1) SELECT i / 100, i / 100, i / 100, cash_words((i / 100)::money) FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"ANALYZE ndistinct","shape":"ANALYZE ndistinct;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY b, c')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY b, c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, c')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, c, d')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, c, d');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY b, c, d')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY b, c, d');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, (a+1)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, (a+1)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a+1), (b+100)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a+1), (b+100)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a+1), (b+100), (2*c)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a+1), (b+100), (2*c)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (a+1), (b+100)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (a+1), (b+100)');"}
+{"sql":"CREATE STATISTICS s10 ON a, b, c FROM ndistinct"}
+{"sql":"SELECT s.stxkind, d.stxdndistinct\n  FROM pg_statistic_ext s, pg_statistic_ext_data d\n WHERE s.stxrelid = 'ndistinct'::regclass\n   AND d.stxoid = s.oid","shape":"SELECT s.stxkind, d.stxdndistinct FROM pg_statistic_ext AS s, pg_statistic_ext_data AS d WHERE (s.stxrelid = 'ndistinct'::regclass) AND (d.stxoid = s.oid);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY ctid, a, b')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY ctid, a, b');"}
+{"sql":"TRUNCATE TABLE ndistinct","shape":"TRUNCATE TABLE ndistinct;"}
+{"sql":"INSERT INTO ndistinct (a, b, c, filler1)\n     SELECT mod(i,13), mod(i,17), mod(i,19),\n            cash_words(mod(i,23)::int::money)\n       FROM generate_series(1,1000) s(i)","shape":"INSERT INTO ndistinct (a, b, c, filler1) SELECT mod(i, 13), mod(i, 17), mod(i, 19), cash_words(mod(i, 23)::int::money) FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, d')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, d');"}
+{"sql":"DROP STATISTICS s10"}
+{"sql":"CREATE STATISTICS s10 (ndistinct) ON (a+1), (b+100), (2*c) FROM ndistinct"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (2*c)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (2*c)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, (2*c)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, (2*c)');"}
+{"sql":"CREATE STATISTICS s10 (ndistinct) ON a, b, (2*c) FROM ndistinct"}
+{"sql":"TRUNCATE ndistinct","shape":"TRUNCATE TABLE ndistinct;"}
+{"sql":"INSERT INTO ndistinct (a, b, c, d)\n     SELECT mod(i,3), mod(i,9), mod(i,5), mod(i,20)\n       FROM generate_series(1,1000) s(i)","shape":"INSERT INTO ndistinct (a, b, c, d) SELECT mod(i, 3), mod(i, 9), mod(i, 5), mod(i, 20) FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (b+1)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (b+1)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a*5), b')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a*5), b');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a*5), (b+1)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a*5), (b+1)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a*5), (b+1), c')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY (a*5), (b+1), c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, (c*10)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, b, (c*10)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (b+1), c, (d - 1)')","shape":"SELECT * FROM check_estimated_rows('SELECT COUNT(*) FROM ndistinct GROUP BY a, (b+1), c, (d - 1)');"}
+{"sql":"CREATE STATISTICS s11 (ndistinct) ON a, b FROM ndistinct"}
+{"sql":"CREATE STATISTICS s12 (ndistinct) ON c, d FROM ndistinct"}
+{"sql":"DROP STATISTICS s12"}
+{"sql":"CREATE STATISTICS s12 (ndistinct) ON (c * 10), (d - 1) FROM ndistinct"}
+{"sql":"CREATE STATISTICS s12 (ndistinct) ON c, d, (c * 10), (d - 1) FROM ndistinct"}
+{"sql":"DROP STATISTICS s11"}
+{"sql":"CREATE STATISTICS s11 (ndistinct) ON a, b, (a*5), (b+1) FROM ndistinct"}
+{"sql":"CREATE STATISTICS s12 (ndistinct) ON a, (b+1), (c * 10) FROM ndistinct"}
+{"sql":"CREATE TABLE functional_dependencies (\n    filler1 TEXT,\n    filler2 NUMERIC,\n    a INT,\n    b TEXT,\n    filler3 DATE,\n    c INT,\n    d TEXT\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE functional_dependencies (filler1 TEXT, filler2 NUMERIC, a INT, b TEXT, filler3 DATE, c INT, d TEXT) WITH (autovacuum_enabled = off);"}
+{"sql":"CREATE INDEX fdeps_ab_idx ON functional_dependencies (a, b)","shape":"CREATE INDEX fdeps_ab_idx ON functional_dependencies (a, b);"}
+{"sql":"CREATE INDEX fdeps_abc_idx ON functional_dependencies (a, b, c)","shape":"CREATE INDEX fdeps_abc_idx ON functional_dependencies (a, b, c);"}
+{"sql":"INSERT INTO functional_dependencies (a, b, c, filler1)\n     SELECT mod(i, 5), mod(i, 7), mod(i, 11), i FROM generate_series(1,1000) s(i)","shape":"INSERT INTO functional_dependencies (a, b, c, filler1) SELECT mod(i, 5), mod(i, 7), mod(i, 11), i FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"ANALYZE functional_dependencies","shape":"ANALYZE functional_dependencies;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = 1 AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = 1 AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = 1 AND b = ''1'' AND c = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = 1 AND b = ''1'' AND c = 1');"}
+{"sql":"CREATE STATISTICS func_deps_stat (dependencies) ON a, b, c FROM functional_dependencies"}
+{"sql":"TRUNCATE functional_dependencies","shape":"TRUNCATE TABLE functional_dependencies;"}
+{"sql":"DROP STATISTICS func_deps_stat"}
+{"sql":"INSERT INTO functional_dependencies (a, b, c, filler1)\n     SELECT i, i, i, i FROM generate_series(1,5000) s(i)","shape":"INSERT INTO functional_dependencies (a, b, c, filler1) SELECT i, i, i, i FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE mod(a, 11) = 1 AND mod(b::int, 13) = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE mod(a, 11) = 1 AND mod(b::int, 13) = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE mod(a, 11) = 1 AND mod(b::int, 13) = 1 AND mod(c, 7) = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE mod(a, 11) = 1 AND mod(b::int, 13) = 1 AND mod(c, 7) = 1');"}
+{"sql":"CREATE STATISTICS func_deps_stat (dependencies) ON (mod(a,11)), (mod(b::int, 13)), (mod(c, 7)) FROM functional_dependencies"}
+{"sql":"INSERT INTO functional_dependencies (a, b, c, filler1)\n     SELECT mod(i,100), mod(i,50), mod(i,25), i FROM generate_series(1,5000) s(i)","shape":"INSERT INTO functional_dependencies (a, b, c, filler1) SELECT mod(i, 100), mod(i, 50), mod(i, 25), i FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b IN (''1'', ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b IN (''1'', ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 51, 52) AND b IN (''1'', ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 51, 52) AND b IN (''1'', ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 51, 52) AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 51, 52) AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 26, 51, 76) AND b IN (''1'', ''26'') AND c = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 26, 51, 76) AND b IN (''1'', ''26'') AND c = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 26, 51, 76) AND b IN (''1'', ''26'') AND c IN (1)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 26, 51, 76) AND b IN (''1'', ''26'') AND c IN (1)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 26, 27, 51, 52, 76, 77) AND b IN (''1'', ''2'', ''26'', ''27'') AND c IN (1, 2)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 26, 27, 51, 52, 76, 77) AND b IN (''1'', ''2'', ''26'', ''27'') AND c IN (1, 2)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR a = 51) AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR a = 51) AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR a = 51) AND (b = ''1'' OR b = ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR a = 51) AND (b = ''1'' OR b = ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR a = 2 OR a = 51 OR a = 52) AND (b = ''1'' OR b = ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR a = 2 OR a = 51 OR a = 52) AND (b = ''1'' OR b = ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR b = ''1'') AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a = 1 OR b = ''1'') AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 51]) AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 51]) AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 51]) AND b = ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 51]) AND b = ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 2, 51, 52]) AND b = ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 2, 51, 52]) AND b = ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 26, 51, 76]) AND b = ANY (ARRAY[''1'', ''26'']) AND c = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 26, 51, 76]) AND b = ANY (ARRAY[''1'', ''26'']) AND c = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 26, 51, 76]) AND b = ANY (ARRAY[''1'', ''26'']) AND c = ANY (ARRAY[1])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 26, 51, 76]) AND b = ANY (ARRAY[''1'', ''26'']) AND c = ANY (ARRAY[1])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 2, 26, 27, 51, 52, 76, 77]) AND b = ANY (ARRAY[''1'', ''2'', ''26'', ''27'']) AND c = ANY (ARRAY[1, 2])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a = ANY (ARRAY[1, 2, 26, 27, 51, 52, 76, 77]) AND b = ANY (ARRAY[''1'', ''2'', ''26'', ''27'']) AND c = ANY (ARRAY[1, 2])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a < ANY (ARRAY[1, 51]) AND b > ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a < ANY (ARRAY[1, 51]) AND b > ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a >= ANY (ARRAY[1, 51]) AND b <= ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a >= ANY (ARRAY[1, 51]) AND b <= ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a <= ANY (ARRAY[1, 2, 51, 52]) AND b >= ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a <= ANY (ARRAY[1, 2, 51, 52]) AND b >= ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b = ALL (ARRAY[''1''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b = ALL (ARRAY[''1''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b = ALL (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 51) AND b = ALL (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 51, 52) AND b = ALL (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE a IN (1, 2, 51, 52) AND b = ALL (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT dependencies FROM pg_stats_ext WHERE statistics_name = 'func_deps_stat'","shape":"SELECT dependencies FROM pg_stats_ext WHERE statistics_name = 'func_deps_stat';"}
+{"sql":"ALTER TABLE functional_dependencies ALTER COLUMN c TYPE numeric","shape":"ALTER TABLE functional_dependencies ALTER COLUMN c SET DATA TYPE numeric;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = 2 AND upper(b) = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = 2 AND upper(b) = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = 2 AND upper(b) = ''1'' AND (c + 1) = 2')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = 2 AND upper(b) = ''1'' AND (c + 1) = 2');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) IN (''1'', ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) IN (''1'', ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 102, 104) AND upper(b) IN (''1'', ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 102, 104) AND upper(b) IN (''1'', ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 102, 104) AND upper(b) = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 102, 104) AND upper(b) = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 52, 102, 152) AND upper(b) IN (''1'', ''26'') AND (c + 1) = 2')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 52, 102, 152) AND upper(b) IN (''1'', ''26'') AND (c + 1) = 2');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 52, 102, 152) AND upper(b) IN (''1'', ''26'') AND (c + 1) IN (2)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 52, 102, 152) AND upper(b) IN (''1'', ''26'') AND (c + 1) IN (2)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 52, 54, 102, 104, 152, 154) AND upper(b) IN (''1'', ''2'', ''26'', ''27'') AND (c + 1) IN (2, 3)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 52, 54, 102, 104, 152, 154) AND upper(b) IN (''1'', ''2'', ''26'', ''27'') AND (c + 1) IN (2, 3)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR (a * 2) = 102) AND upper(b) = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR (a * 2) = 102) AND upper(b) = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR (a * 2) = 102) AND (upper(b) = ''1'' OR upper(b) = ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR (a * 2) = 102) AND (upper(b) = ''1'' OR upper(b) = ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR (a * 2) = 4 OR (a * 2) = 102 OR (a * 2) = 104) AND (upper(b) = ''1'' OR upper(b) = ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR (a * 2) = 4 OR (a * 2) = 102 OR (a * 2) = 104) AND (upper(b) = ''1'' OR upper(b) = ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR upper(b) = ''1'') AND upper(b) = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE ((a * 2) = 2 OR upper(b) = ''1'') AND upper(b) = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 102]) AND upper(b) = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 102]) AND upper(b) = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 102]) AND upper(b) = ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 102]) AND upper(b) = ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 4, 102, 104]) AND upper(b) = ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 4, 102, 104]) AND upper(b) = ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 52, 102, 152]) AND upper(b) = ANY (ARRAY[''1'', ''26'']) AND (c + 1) = 2')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 52, 102, 152]) AND upper(b) = ANY (ARRAY[''1'', ''26'']) AND (c + 1) = 2');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 52, 102, 152]) AND upper(b) = ANY (ARRAY[''1'', ''26'']) AND (c + 1) = ANY (ARRAY[2])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 52, 102, 152]) AND upper(b) = ANY (ARRAY[''1'', ''26'']) AND (c + 1) = ANY (ARRAY[2])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 4, 52, 54, 102, 104, 152, 154]) AND upper(b) = ANY (ARRAY[''1'', ''2'', ''26'', ''27'']) AND (c + 1) = ANY (ARRAY[2, 3])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) = ANY (ARRAY[2, 4, 52, 54, 102, 104, 152, 154]) AND upper(b) = ANY (ARRAY[''1'', ''2'', ''26'', ''27'']) AND (c + 1) = ANY (ARRAY[2, 3])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) < ANY (ARRAY[2, 102]) AND upper(b) > ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) < ANY (ARRAY[2, 102]) AND upper(b) > ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) >= ANY (ARRAY[2, 102]) AND upper(b) <= ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) >= ANY (ARRAY[2, 102]) AND upper(b) <= ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) <= ANY (ARRAY[2, 4, 102, 104]) AND upper(b) >= ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) <= ANY (ARRAY[2, 4, 102, 104]) AND upper(b) >= ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) = ALL (ARRAY[''1''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) = ALL (ARRAY[''1''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) = ALL (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 102) AND upper(b) = ALL (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 102, 104) AND upper(b) = ALL (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies WHERE (a * 2) IN (2, 4, 102, 104) AND upper(b) = ALL (ARRAY[''1'', ''2''])');"}
+{"sql":"CREATE STATISTICS func_deps_stat (dependencies) ON (a * 2), upper(b), (c + 1) FROM functional_dependencies"}
+{"sql":"CREATE TABLE functional_dependencies_multi (\n\ta INTEGER,\n\tb INTEGER,\n\tc INTEGER,\n\td INTEGER\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE functional_dependencies_multi (a INTEGER, b INTEGER, c INTEGER, d INTEGER) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO functional_dependencies_multi (a, b, c, d)\n    SELECT\n         mod(i,7),\n         mod(i,7),\n         mod(i,11),\n         mod(i,11)\n    FROM generate_series(1,5000) s(i)","shape":"INSERT INTO functional_dependencies_multi (a, b, c, d) SELECT mod(i, 7), mod(i, 7), mod(i, 11), mod(i, 11) FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"ANALYZE functional_dependencies_multi","shape":"ANALYZE functional_dependencies_multi;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE a = 0 AND b = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE a = 0 AND b = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE 0 = a AND 0 = b')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE 0 = a AND 0 = b');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE c = 0 AND d = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE c = 0 AND d = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE a = 0 AND b = 0 AND c = 0 AND d = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE a = 0 AND b = 0 AND c = 0 AND d = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE 0 = a AND b = 0 AND 0 = c AND d = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM functional_dependencies_multi WHERE 0 = a AND b = 0 AND 0 = c AND d = 0');"}
+{"sql":"CREATE STATISTICS functional_dependencies_multi_1 (dependencies) ON a, b FROM functional_dependencies_multi"}
+{"sql":"CREATE STATISTICS functional_dependencies_multi_2 (dependencies) ON c, d FROM functional_dependencies_multi"}
+{"sql":"DROP TABLE functional_dependencies_multi","shape":"DROP TABLE functional_dependencies_multi;"}
+{"sql":"CREATE TABLE mcv_lists (\n    filler1 TEXT,\n    filler2 NUMERIC,\n    a INT,\n    b VARCHAR,\n    filler3 DATE,\n    c INT,\n    d TEXT,\n    ia INT[]\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE mcv_lists (filler1 TEXT, filler2 NUMERIC, a INT, b VARCHAR, filler3 DATE, c INT, d TEXT, ia INT[]) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO mcv_lists (a, b, c, filler1)\n     SELECT mod(i,37), mod(i,41), mod(i,43), mod(i,47) FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists (a, b, c, filler1) SELECT mod(i, 37), mod(i, 41), mod(i, 43), mod(i, 47) FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"ANALYZE mcv_lists","shape":"ANALYZE mcv_lists;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 AND b = ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 AND b = ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 AND b = ''1'' AND c = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 AND b = ''1'' AND c = 1');"}
+{"sql":"CREATE STATISTICS mcv_lists_stats (mcv) ON a, b, c FROM mcv_lists"}
+{"sql":"TRUNCATE mcv_lists","shape":"TRUNCATE TABLE mcv_lists;"}
+{"sql":"DROP STATISTICS mcv_lists_stats"}
+{"sql":"INSERT INTO mcv_lists (a, b, c, filler1)\n     SELECT i, i, i, i FROM generate_series(1,1000) s(i)","shape":"INSERT INTO mcv_lists (a, b, c, filler1) SELECT i, i, i, i FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,7) = 1 AND mod(b::int,11) = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,7) = 1 AND mod(b::int,11) = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,7) = 1 AND mod(b::int,11) = 1 AND mod(c,13) = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,7) = 1 AND mod(b::int,11) = 1 AND mod(c,13) = 1');"}
+{"sql":"CREATE STATISTICS mcv_lists_stats (mcv) ON (mod(a,7)), (mod(b::int,11)), (mod(c,13)) FROM mcv_lists"}
+{"sql":"INSERT INTO mcv_lists (a, b, c, ia, filler1)\n     SELECT mod(i,100), mod(i,50), mod(i,25), array[mod(i,25)], i\n       FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists (a, b, c, ia, filler1) SELECT mod(i, 100), mod(i, 50), mod(i, 25), ARRAY[mod(i, 25)], i FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 = a AND ''1'' = b')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 = a AND ''1'' = b');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < 1 AND b < ''1''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < 1 AND b < ''1''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 > a AND ''1'' > b')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 > a AND ''1'' > b');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= 0 AND b <= ''0''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= 0 AND b <= ''0''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 0 >= a AND ''0'' >= b')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 0 >= a AND ''0'' >= b');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < 5 AND b < ''1'' AND c < 5')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < 5 AND b < ''1'' AND c < 5');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < 5 AND ''1'' > b AND 5 > c')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < 5 AND ''1'' > b AND 5 > c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= 4 AND b <= ''0'' AND c <= 4')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= 4 AND b <= ''0'' AND c <= 4');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 4 >= a AND ''0'' >= b AND 4 >= c')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 4 >= a AND ''0'' >= b AND 4 >= c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 OR b = ''1'' OR c = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 OR b = ''1'' OR c = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 OR b = ''1'' OR c = 1 OR d IS NOT NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 OR b = ''1'' OR c = 1 OR d IS NOT NULL');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IN (1, 2, 51, 52) AND b IN ( ''1'', ''2'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IN (1, 2, 51, 52) AND b IN ( ''1'', ''2'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IN (1, 2, 51, 52, NULL) AND b IN ( ''1'', ''2'', NULL)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IN (1, 2, 51, 52, NULL) AND b IN ( ''1'', ''2'', NULL)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = ANY (ARRAY[1, 2, 51, 52]) AND b = ANY (ARRAY[''1'', ''2''])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = ANY (ARRAY[1, 2, 51, 52]) AND b = ANY (ARRAY[''1'', ''2''])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = ANY (ARRAY[NULL, 1, 2, 51, 52]) AND b = ANY (ARRAY[''1'', ''2'', NULL])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = ANY (ARRAY[NULL, 1, 2, 51, 52]) AND b = ANY (ARRAY[''1'', ''2'', NULL])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= ANY (ARRAY[1, 2, 3]) AND b IN (''1'', ''2'', ''3'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= ANY (ARRAY[1, 2, 3]) AND b IN (''1'', ''2'', ''3'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= ANY (ARRAY[1, NULL, 2, 3]) AND b IN (''1'', ''2'', NULL, ''3'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a <= ANY (ARRAY[1, NULL, 2, 3]) AND b IN (''1'', ''2'', NULL, ''3'')');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND c > ANY (ARRAY[1, 2, 3])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND c > ANY (ARRAY[1, 2, 3])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND c > ANY (ARRAY[1, 2, 3, NULL])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND c > ANY (ARRAY[1, 2, 3, NULL])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND b IN (''1'', ''2'', ''3'') AND c > ANY (ARRAY[1, 2, 3])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND b IN (''1'', ''2'', ''3'') AND c > ANY (ARRAY[1, 2, 3])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND b IN (''1'', ''2'', NULL, ''3'') AND c > ANY (ARRAY[1, 2, NULL, 3])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a < ALL (ARRAY[4, 5]) AND b IN (''1'', ''2'', NULL, ''3'') AND c > ANY (ARRAY[1, 2, NULL, 3])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = ANY (ARRAY[4,5]) AND 4 = ANY(ia)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = ANY (ARRAY[4,5]) AND 4 = ANY(ia)');"}
+{"sql":"CREATE STATISTICS mcv_lists_stats (mcv) ON a, b, c, ia FROM mcv_lists"}
+{"sql":"ALTER TABLE mcv_lists ALTER COLUMN d TYPE VARCHAR(64)","shape":"ALTER TABLE mcv_lists ALTER COLUMN d SET DATA TYPE VARCHAR(64);"}
+{"sql":"SELECT d.stxdmcv IS NOT NULL\n  FROM pg_statistic_ext s, pg_statistic_ext_data d\n WHERE s.stxname = 'mcv_lists_stats'\n   AND d.stxoid = s.oid","shape":"SELECT d.stxdmcv IS NOT NULL FROM pg_statistic_ext AS s, pg_statistic_ext_data AS d WHERE (s.stxname = 'mcv_lists_stats') AND (d.stxoid = s.oid);"}
+{"sql":"ALTER TABLE mcv_lists ALTER COLUMN c TYPE numeric","shape":"ALTER TABLE mcv_lists ALTER COLUMN c SET DATA TYPE numeric;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 AND mod(b::int,10) = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 AND mod(b::int,10) = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 = mod(a,20) AND 1 = mod(b::int,10)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 = mod(a,20) AND 1 = mod(b::int,10)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) < 1 AND mod(b::int,10) < 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) < 1 AND mod(b::int,10) < 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 > mod(a,20) AND 1 > mod(b::int,10)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE 1 > mod(a,20) AND 1 > mod(b::int,10)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 AND mod(b::int,10) = 1 AND mod(c,5) = 1')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 AND mod(b::int,10) = 1 AND mod(c,5) = 1');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 OR mod(b::int,10) = 1 OR mod(c,25) = 1 OR d IS NOT NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 OR mod(b::int,10) = 1 OR mod(c,25) = 1 OR d IS NOT NULL');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) IN (1, 2, 51, 52, NULL) AND mod(b::int,10) IN ( 1, 2, NULL)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) IN (1, 2, 51, 52, NULL) AND mod(b::int,10) IN ( 1, 2, NULL)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = ANY (ARRAY[1, 2, 51, 52]) AND mod(b::int,10) = ANY (ARRAY[1, 2])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = ANY (ARRAY[1, 2, 51, 52]) AND mod(b::int,10) = ANY (ARRAY[1, 2])');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) <= ANY (ARRAY[1, NULL, 2, 3]) AND mod(b::int,10) IN (1, 2, NULL, 3)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) <= ANY (ARRAY[1, NULL, 2, 3]) AND mod(b::int,10) IN (1, 2, NULL, 3)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) < ALL (ARRAY[4, 5]) AND mod(b::int,10) IN (1, 2, 3) AND mod(c,5) > ANY (ARRAY[1, 2, 3])')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) < ALL (ARRAY[4, 5]) AND mod(b::int,10) IN (1, 2, 3) AND mod(c,5) > ANY (ARRAY[1, 2, 3])');"}
+{"sql":"CREATE STATISTICS mcv_lists_stats_1 ON (mod(a,20)) FROM mcv_lists"}
+{"sql":"CREATE STATISTICS mcv_lists_stats_2 ON (mod(b::int,10)) FROM mcv_lists"}
+{"sql":"CREATE STATISTICS mcv_lists_stats_3 ON (mod(c,5)) FROM mcv_lists"}
+{"sql":"DROP STATISTICS mcv_lists_stats_1"}
+{"sql":"DROP STATISTICS mcv_lists_stats_2"}
+{"sql":"DROP STATISTICS mcv_lists_stats_3"}
+{"sql":"CREATE STATISTICS mcv_lists_stats (mcv) ON (mod(a,20)), (mod(b::int,10)), (mod(c,5)) FROM mcv_lists"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 OR mod(b::int,10) = 1 OR mod(c,5) = 1 OR d IS NOT NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE mod(a,20) = 1 OR mod(b::int,10) = 1 OR mod(c,5) = 1 OR d IS NOT NULL');"}
+{"sql":"INSERT INTO mcv_lists (a, b, c, filler1)\n     SELECT\n         (CASE WHEN mod(i,100) = 1 THEN NULL ELSE mod(i,100) END),\n         (CASE WHEN mod(i,50) = 1  THEN NULL ELSE mod(i,50) END),\n         (CASE WHEN mod(i,25) = 1  THEN NULL ELSE mod(i,25) END),\n         i\n     FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists (a, b, c, filler1) SELECT (CASE WHEN mod(i, 100) = 1 THEN NULL ELSE mod(i, 100) END), (CASE WHEN mod(i, 50) = 1 THEN NULL ELSE mod(i, 50) END), (CASE WHEN mod(i, 25) = 1 THEN NULL ELSE mod(i, 25) END), i FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND b IS NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND b IS NULL');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND b IS NULL AND c IS NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND b IS NULL AND c IS NULL');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND b IS NOT NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND b IS NOT NULL');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NOT NULL AND b IS NULL AND c IS NOT NULL')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NOT NULL AND b IS NULL AND c IS NOT NULL');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IN (0, 1) AND b IN (''0'', ''1'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IN (0, 1) AND b IN (''0'', ''1'')');"}
+{"sql":"INSERT INTO mcv_lists (a, b, c) SELECT 1, 2, 3 FROM generate_series(1,1000) s(i)","shape":"INSERT INTO mcv_lists (a, b, c) SELECT 1, 2, 3 FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"SELECT m.*\n  FROM pg_statistic_ext s, pg_statistic_ext_data d,\n       pg_mcv_list_items(d.stxdmcv) m\n WHERE s.stxname = 'mcv_lists_stats'\n   AND d.stxoid = s.oid","shape":"SELECT m.* FROM pg_statistic_ext AS s, pg_statistic_ext_data AS d, pg_mcv_list_items(d.stxdmcv) AS m WHERE (s.stxname = 'mcv_lists_stats') AND (d.stxoid = s.oid);"}
+{"sql":"INSERT INTO mcv_lists (a, b, c, d)\n     SELECT\n         NULL, -- always NULL\n         (CASE WHEN mod(i,2) = 0 THEN NULL ELSE 'x' END),\n         (CASE WHEN mod(i,2) = 0 THEN NULL ELSE 0 END),\n         (CASE WHEN mod(i,2) = 0 THEN NULL ELSE 'x' END)\n     FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists (a, b, c, d) SELECT NULL, (CASE WHEN mod(i, 2) = 0 THEN NULL ELSE 'x' END), (CASE WHEN mod(i, 2) = 0 THEN NULL ELSE 0 END), (CASE WHEN mod(i, 2) = 0 THEN NULL ELSE 'x' END) FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE b = ''x'' OR d = ''x''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE b = ''x'' OR d = ''x''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 OR b = ''x'' OR d = ''x''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a = 1 OR b = ''x'' OR d = ''x''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND (b = ''x'' OR d = ''x'')')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists WHERE a IS NULL AND (b = ''x'' OR d = ''x'')');"}
+{"sql":"CREATE STATISTICS mcv_lists_stats (mcv) ON a, b, d FROM mcv_lists"}
+{"sql":"CREATE TABLE mcv_lists_uuid (\n    a UUID,\n    b UUID,\n    c UUID\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE mcv_lists_uuid (a UUID, b UUID, c UUID) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO mcv_lists_uuid (a, b, c)\n     SELECT\n         fipshash(mod(i,100)::text)::uuid,\n         fipshash(mod(i,50)::text)::uuid,\n         fipshash(mod(i,25)::text)::uuid\n     FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists_uuid (a, b, c) SELECT fipshash(mod(i, 100)::text)::uuid, fipshash(mod(i, 50)::text)::uuid, fipshash(mod(i, 25)::text)::uuid FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"ANALYZE mcv_lists_uuid","shape":"ANALYZE mcv_lists_uuid;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_uuid WHERE a = ''e7f6c011-776e-8db7-cd33-0b54174fd76f'' AND b = ''e7f6c011-776e-8db7-cd33-0b54174fd76f''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_uuid WHERE a = ''e7f6c011-776e-8db7-cd33-0b54174fd76f'' AND b = ''e7f6c011-776e-8db7-cd33-0b54174fd76f''');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_uuid WHERE a = ''e7f6c011-776e-8db7-cd33-0b54174fd76f'' AND b = ''e7f6c011-776e-8db7-cd33-0b54174fd76f'' AND c = ''e7f6c011-776e-8db7-cd33-0b54174fd76f''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_uuid WHERE a = ''e7f6c011-776e-8db7-cd33-0b54174fd76f'' AND b = ''e7f6c011-776e-8db7-cd33-0b54174fd76f'' AND c = ''e7f6c011-776e-8db7-cd33-0b54174fd76f''');"}
+{"sql":"CREATE STATISTICS mcv_lists_uuid_stats (mcv) ON a, b, c\n  FROM mcv_lists_uuid"}
+{"sql":"DROP TABLE mcv_lists_uuid","shape":"DROP TABLE mcv_lists_uuid;"}
+{"sql":"CREATE TABLE mcv_lists_arrays (\n    a TEXT[],\n    b NUMERIC[],\n    c INT[]\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE mcv_lists_arrays (a TEXT[], b NUMERIC[], c INT[]) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO mcv_lists_arrays (a, b, c)\n     SELECT\n         ARRAY[fipshash((i/100)::text), fipshash((i/100-1)::text), fipshash((i/100+1)::text)],\n         ARRAY[(i/100-1)::numeric/1000, (i/100)::numeric/1000, (i/100+1)::numeric/1000],\n         ARRAY[(i/100-1), i/100, (i/100+1)]\n     FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists_arrays (a, b, c) SELECT ARRAY[fipshash((i / 100)::text), fipshash(((i / 100) - 1)::text), fipshash(((i / 100) + 1)::text)], ARRAY[((i / 100) - 1)::numeric / 1000, (i / 100)::numeric / 1000, ((i / 100) + 1)::numeric / 1000], ARRAY[((i / 100) - 1), i / 100, ((i / 100) + 1)] FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"CREATE STATISTICS mcv_lists_arrays_stats (mcv) ON a, b, c\n  FROM mcv_lists_arrays"}
+{"sql":"ANALYZE mcv_lists_arrays","shape":"ANALYZE mcv_lists_arrays;"}
+{"sql":"CREATE TABLE mcv_lists_bool (\n    a BOOL,\n    b BOOL,\n    c BOOL\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE mcv_lists_bool (a BOOL, b BOOL, c BOOL) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO mcv_lists_bool (a, b, c)\n     SELECT\n         (mod(i,2) = 0), (mod(i,4) = 0), (mod(i,8) = 0)\n     FROM generate_series(1,10000) s(i)","shape":"INSERT INTO mcv_lists_bool (a, b, c) SELECT (mod(i, 2) = 0), (mod(i, 4) = 0), (mod(i, 8) = 0) FROM generate_series(1, 10000) AS s(i);"}
+{"sql":"ANALYZE mcv_lists_bool","shape":"ANALYZE mcv_lists_bool;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE a AND b AND c')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE a AND b AND c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE NOT a AND b AND c')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE NOT a AND b AND c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE NOT a AND NOT b AND c')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE NOT a AND NOT b AND c');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE NOT a AND b AND NOT c')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_bool WHERE NOT a AND b AND NOT c');"}
+{"sql":"CREATE STATISTICS mcv_lists_bool_stats (mcv) ON a, b, c\n  FROM mcv_lists_bool"}
+{"sql":"CREATE TABLE mcv_lists_partial (\n    a INT,\n    b INT,\n    c INT\n)","shape":"CREATE TABLE mcv_lists_partial (a INT, b INT, c INT);"}
+{"sql":"INSERT INTO mcv_lists_partial (a, b, c)\n     SELECT\n         mod(i,10),\n         mod(i,10),\n         mod(i,10)\n     FROM generate_series(0,999) s(i)","shape":"INSERT INTO mcv_lists_partial (a, b, c) SELECT mod(i, 10), mod(i, 10), mod(i, 10) FROM generate_series(0, 999) AS s(i);"}
+{"sql":"INSERT INTO mcv_lists_partial (a, b, c)\n     SELECT\n         i,\n         i,\n         i\n     FROM generate_series(0,99) s(i)","shape":"INSERT INTO mcv_lists_partial (a, b, c) SELECT i, i, i FROM generate_series(0, 99) AS s(i);"}
+{"sql":"INSERT INTO mcv_lists_partial (a, b, c)\n     SELECT\n         i,\n         i,\n         i\n     FROM generate_series(0,3999) s(i)","shape":"INSERT INTO mcv_lists_partial (a, b, c) SELECT i, i, i FROM generate_series(0, 3999) AS s(i);"}
+{"sql":"ANALYZE mcv_lists_partial","shape":"ANALYZE mcv_lists_partial;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 AND b = 0 AND c = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 AND b = 0 AND c = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 OR b = 0 OR c = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 OR b = 0 OR c = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 10 AND b = 10 AND c = 10')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 10 AND b = 10 AND c = 10');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 10 OR b = 10 OR c = 10')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 10 OR b = 10 OR c = 10');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 AND b = 0 AND c = 10')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 AND b = 0 AND c = 10');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 OR b = 0 OR c = 10')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE a = 0 OR b = 0 OR c = 10');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE (a = 0 AND b = 0 AND c = 0) OR (a = 1 AND b = 1 AND c = 1) OR (a = 2 AND b = 2 AND c = 2)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE (a = 0 AND b = 0 AND c = 0) OR (a = 1 AND b = 1 AND c = 1) OR (a = 2 AND b = 2 AND c = 2)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE (a = 0 AND b = 0) OR (a = 0 AND c = 0) OR (b = 0 AND c = 0)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_partial WHERE (a = 0 AND b = 0) OR (a = 0 AND c = 0) OR (b = 0 AND c = 0)');"}
+{"sql":"CREATE STATISTICS mcv_lists_partial_stats (mcv) ON a, b, c\n  FROM mcv_lists_partial"}
+{"sql":"DROP TABLE mcv_lists_partial","shape":"DROP TABLE mcv_lists_partial;"}
+{"sql":"CREATE TABLE mcv_lists_multi (\n\ta INTEGER,\n\tb INTEGER,\n\tc INTEGER,\n\td INTEGER\n)\nWITH (autovacuum_enabled = off)","shape":"CREATE TABLE mcv_lists_multi (a INTEGER, b INTEGER, c INTEGER, d INTEGER) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO mcv_lists_multi (a, b, c, d)\n    SELECT\n         mod(i,5),\n         mod(i,5),\n         mod(i,7),\n         mod(i,7)\n    FROM generate_series(1,5000) s(i)","shape":"INSERT INTO mcv_lists_multi (a, b, c, d) SELECT mod(i, 5), mod(i, 5), mod(i, 7), mod(i, 7) FROM generate_series(1, 5000) AS s(i);"}
+{"sql":"ANALYZE mcv_lists_multi","shape":"ANALYZE mcv_lists_multi;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE a = 0 AND b = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE a = 0 AND b = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE c = 0 AND d = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE c = 0 AND d = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE b = 0 AND c = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE b = 0 AND c = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE b = 0 OR c = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE b = 0 OR c = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE a = 0 AND b = 0 AND c = 0 AND d = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE a = 0 AND b = 0 AND c = 0 AND d = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE (a = 0 AND b = 0) OR (c = 0 AND d = 0)')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE (a = 0 AND b = 0) OR (c = 0 AND d = 0)');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE a = 0 OR b = 0 OR c = 0 OR d = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM mcv_lists_multi WHERE a = 0 OR b = 0 OR c = 0 OR d = 0');"}
+{"sql":"CREATE STATISTICS mcv_lists_multi_1 (mcv) ON a, b FROM mcv_lists_multi"}
+{"sql":"CREATE STATISTICS mcv_lists_multi_2 (mcv) ON c, d FROM mcv_lists_multi"}
+{"sql":"DROP TABLE mcv_lists_multi","shape":"DROP TABLE mcv_lists_multi;"}
+{"sql":"CREATE TABLE expr_stats (a int, b int, c int)","shape":"CREATE TABLE expr_stats (a int, b int, c int);"}
+{"sql":"INSERT INTO expr_stats SELECT mod(i,10), mod(i,10), mod(i,10) FROM generate_series(1,1000) s(i)","shape":"INSERT INTO expr_stats SELECT mod(i, 10), mod(i, 10), mod(i, 10) FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"ANALYZE expr_stats","shape":"ANALYZE expr_stats;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE (2*a) = 0 AND (3*b) = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE (2*a) = 0 AND (3*b) = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE (a+b) = 0 AND (a-b) = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE (a+b) = 0 AND (a-b) = 0');"}
+{"sql":"CREATE STATISTICS expr_stats_1 (mcv) ON (a+b), (a-b), (2*a), (3*b) FROM expr_stats"}
+{"sql":"DROP STATISTICS expr_stats_1"}
+{"sql":"DROP TABLE expr_stats","shape":"DROP TABLE expr_stats;"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 0 AND (2*a) = 0 AND (3*b) = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 0 AND (2*a) = 0 AND (3*b) = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 3 AND b = 3 AND (a-b) = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 3 AND b = 3 AND (a-b) = 0');"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 0 AND b = 1 AND (a-b) = 0')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 0 AND b = 1 AND (a-b) = 0');"}
+{"sql":"CREATE STATISTICS expr_stats_1 (mcv) ON a, b, (2*a), (3*b), (a+b), (a-b) FROM expr_stats"}
+{"sql":"CREATE TABLE expr_stats (a int, b name, c text)","shape":"CREATE TABLE expr_stats (a int, b name, c text);"}
+{"sql":"INSERT INTO expr_stats SELECT mod(i,10), fipshash(mod(i,10)::text), fipshash(mod(i,10)::text) FROM generate_series(1,1000) s(i)","shape":"INSERT INTO expr_stats SELECT mod(i, 10), fipshash(mod(i, 10)::text), fipshash(mod(i, 10)::text) FROM generate_series(1, 1000) AS s(i);"}
+{"sql":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 0 AND (b || c) <= ''z'' AND (c || b) >= ''0''')","shape":"SELECT * FROM check_estimated_rows('SELECT * FROM expr_stats WHERE a = 0 AND (b || c) <= ''z'' AND (c || b) >= ''0''');"}
+{"sql":"CREATE STATISTICS expr_stats_1 (mcv) ON a, b, (b || c), (c || b) FROM expr_stats"}
+{"sql":"CREATE TABLE expr_stats_incompatible_test (\n    c0 double precision,\n    c1 boolean NOT NULL\n)","shape":"CREATE TABLE expr_stats_incompatible_test (c0 double precision, c1 boolean NOT NULL);"}
+{"sql":"CREATE STATISTICS expr_stat_comp_1 ON c0, c1 FROM expr_stats_incompatible_test"}
+{"sql":"INSERT INTO expr_stats_incompatible_test VALUES (1234,false), (5678,true)","shape":"INSERT INTO expr_stats_incompatible_test VALUES (1234, FALSE), (5678, TRUE);"}
+{"sql":"ANALYZE expr_stats_incompatible_test","shape":"ANALYZE expr_stats_incompatible_test;"}
+{"sql":"SELECT c0 FROM ONLY expr_stats_incompatible_test WHERE\n(\n  upper('x') LIKE ('x'||('[0,1]'::int4range))\n  AND\n  (c0 IN (0, 1) OR c1)\n)","shape":"SELECT c0 FROM ONLY expr_stats_incompatible_test WHERE ((upper('x') LIKE ('x' || ('[0,1]'::int4range))) AND ((c0 IN (0, 1)) OR c1));"}
+{"sql":"DROP TABLE expr_stats_incompatible_test","shape":"DROP TABLE expr_stats_incompatible_test;"}
+{"sql":"CREATE SCHEMA tststats","shape":"CREATE SCHEMA tststats;"}
+{"sql":"CREATE TABLE tststats.priv_test_tbl (\n    a int,\n    b int\n)","shape":"CREATE TABLE tststats.priv_test_tbl (a int, b int);"}
+{"sql":"INSERT INTO tststats.priv_test_tbl\n     SELECT mod(i,5), mod(i,10) FROM generate_series(1,100) s(i)","shape":"INSERT INTO tststats.priv_test_tbl SELECT mod(i, 5), mod(i, 10) FROM generate_series(1, 100) AS s(i);"}
+{"sql":"CREATE STATISTICS tststats.priv_test_stats (mcv) ON a, b\n  FROM tststats.priv_test_tbl"}
+{"sql":"ANALYZE tststats.priv_test_tbl","shape":"ANALYZE tststats.priv_test_tbl;"}
+{"sql":"create table stts_t1 (a int, b int)","shape":"CREATE TABLE stts_t1 (a int, b int);"}
+{"sql":"create statistics (ndistinct) on a, b from stts_t1"}
+{"sql":"create statistics (ndistinct, dependencies) on a, b from stts_t1"}
+{"sql":"create statistics (ndistinct, dependencies, mcv) on a, b from stts_t1"}
+{"sql":"create table stts_t2 (a int, b int, c int)","shape":"CREATE TABLE stts_t2 (a int, b int, c int);"}
+{"sql":"create statistics on b, c from stts_t2"}
+{"sql":"create table stts_t3 (col1 int, col2 int, col3 int)","shape":"CREATE TABLE stts_t3 (col1 int, col2 int, col3 int);"}
+{"sql":"create statistics stts_hoge on col1, col2, col3 from stts_t3"}
+{"sql":"create schema stts_s1","shape":"CREATE SCHEMA stts_s1;"}
+{"sql":"create schema stts_s2","shape":"CREATE SCHEMA stts_s2;"}
+{"sql":"create statistics stts_s1.stts_foo on col1, col2 from stts_t3"}
+{"sql":"create statistics stts_s2.stts_yama (dependencies, mcv) on col1, col3 from stts_t3"}
+{"sql":"insert into stts_t1 select i,i from generate_series(1,100) i","shape":"INSERT INTO stts_t1 SELECT i, i FROM generate_series(1, 100) AS i;"}
+{"sql":"analyze stts_t1","shape":"ANALYZE stts_t1;"}
+{"sql":"set search_path to public, stts_s1, stts_s2, tststats","shape":"SET search_path TO public, stts_s1, stts_s2, tststats;"}
+{"sql":"create statistics (mcv) ON a, b, (a+b), (a-b) FROM stts_t1"}
+{"sql":"create statistics (mcv) ON (a+b), (a-b) FROM stts_t1"}
+{"sql":"drop statistics stts_t1_a_b_expr_expr_stat"}
+{"sql":"drop statistics stts_t1_a_b_expr_expr_stat1"}
+{"sql":"drop statistics stts_t1_expr_expr_stat"}
+{"sql":"set search_path to public, stts_s1","shape":"SET search_path TO public, stts_s1;"}
+{"sql":"create role regress_stats_ext nosuperuser"}
+{"sql":"set role regress_stats_ext"}
+{"sql":"drop table stts_t1, stts_t2, stts_t3","shape":"DROP TABLE stts_t1, stts_t2, stts_t3;"}
+{"sql":"drop schema stts_s1, stts_s2 cascade","shape":"DROP SCHEMA stts_s1, stts_s2 CASCADE;"}
+{"sql":"drop user regress_stats_ext","shape":"DROP USER regress_stats_ext;"}
+{"sql":"CREATE USER regress_stats_user1"}
+{"sql":"GRANT USAGE ON SCHEMA tststats TO regress_stats_user1","shape":"GRANT USAGE ON SCHEMA tststats TO regress_stats_user1;"}
+{"sql":"SET SESSION AUTHORIZATION regress_stats_user1"}
+{"sql":"SELECT * FROM tststats.priv_test_tbl","shape":"SELECT * FROM tststats.priv_test_tbl;"}
+{"sql":"SELECT * FROM tststats.priv_test_tbl\n  WHERE a = 1 and tststats.priv_test_tbl.* > (1, 1) is not null","shape":"SELECT * FROM tststats.priv_test_tbl WHERE (a = 1) AND ((tststats.priv_test_tbl.* > (1, 1)) IS NOT NULL);"}
+{"sql":"CREATE FUNCTION op_leak(int, int) RETURNS bool\n    AS 'BEGIN RAISE NOTICE ''op_leak => %, %'', $1, $2; RETURN $1 < $2; END'\n    LANGUAGE plpgsql","shape":"CREATE FUNCTION op_leak(int, int) RETURNS bool AS 'BEGIN RAISE NOTICE ''op_leak => %, %'', $1, $2; RETURN $1 < $2; END' LANGUAGE plpgsql;"}
+{"sql":"CREATE OPERATOR <<< (procedure = op_leak, leftarg = int, rightarg = int,\n                     restrict = scalarltsel)"}
+{"sql":"CREATE FUNCTION op_leak(record, record) RETURNS bool\n    AS 'BEGIN RAISE NOTICE ''op_leak => %, %'', $1, $2; RETURN $1 < $2; END'\n    LANGUAGE plpgsql","shape":"CREATE FUNCTION op_leak(record, record) RETURNS bool AS 'BEGIN RAISE NOTICE ''op_leak => %, %'', $1, $2; RETURN $1 < $2; END' LANGUAGE plpgsql;"}
+{"sql":"CREATE OPERATOR <<< (procedure = op_leak, leftarg = record, rightarg = record,\n                     restrict = scalarltsel)"}
+{"sql":"SELECT * FROM tststats.priv_test_tbl WHERE a <<< 0 AND b <<< 0","shape":"SELECT * FROM tststats.priv_test_tbl WHERE (a <<< 0) AND (b <<< 0);"}
+{"sql":"SELECT * FROM tststats.priv_test_tbl t\n WHERE a <<< 0 AND (b <<< 0 OR t.* <<< (1, 1) IS NOT NULL)","shape":"SELECT * FROM tststats.priv_test_tbl AS t WHERE (a <<< 0) AND ((b <<< 0) OR ((t.* <<< (1, 1)) IS NOT NULL));"}
+{"sql":"DELETE FROM tststats.priv_test_tbl WHERE a <<< 0 AND b <<< 0","shape":"DELETE FROM tststats.priv_test_tbl WHERE (a <<< 0) AND (b <<< 0);"}
+{"sql":"CREATE VIEW tststats.priv_test_view WITH (security_barrier=true)\n    AS SELECT * FROM tststats.priv_test_tbl WHERE false","shape":"CREATE VIEW tststats.priv_test_view WITH (security_barrier = TRUE) AS SELECT * FROM tststats.priv_test_tbl WHERE FALSE;"}
+{"sql":"GRANT SELECT, DELETE ON tststats.priv_test_view TO regress_stats_user1","shape":"GRANT SELECT, DELETE ON tststats.priv_test_view TO regress_stats_user1;"}
+{"sql":"SELECT * FROM tststats.priv_test_view WHERE a <<< 0 AND b <<< 0","shape":"SELECT * FROM tststats.priv_test_view WHERE (a <<< 0) AND (b <<< 0);"}
+{"sql":"SELECT * FROM tststats.priv_test_view t\n WHERE a <<< 0 AND (b <<< 0 OR t.* <<< (1, 1) IS NOT NULL)","shape":"SELECT * FROM tststats.priv_test_view AS t WHERE (a <<< 0) AND ((b <<< 0) OR ((t.* <<< (1, 1)) IS NOT NULL));"}
+{"sql":"DELETE FROM tststats.priv_test_view WHERE a <<< 0 AND b <<< 0","shape":"DELETE FROM tststats.priv_test_view WHERE (a <<< 0) AND (b <<< 0);"}
+{"sql":"ALTER TABLE tststats.priv_test_tbl ENABLE ROW LEVEL SECURITY"}
+{"sql":"CREATE POLICY priv_test_tbl_pol ON tststats.priv_test_tbl USING (2 * a < 0)"}
+{"sql":"GRANT SELECT, DELETE ON tststats.priv_test_tbl TO regress_stats_user1","shape":"GRANT SELECT, DELETE ON tststats.priv_test_tbl TO regress_stats_user1;"}
+{"sql":"CREATE TABLE tststats.priv_test_parent_tbl (a int, b int)","shape":"CREATE TABLE tststats.priv_test_parent_tbl (a int, b int);"}
+{"sql":"ALTER TABLE tststats.priv_test_tbl INHERIT tststats.priv_test_parent_tbl"}
+{"sql":"SELECT * FROM tststats.priv_test_parent_tbl WHERE a <<< 0 AND b <<< 0","shape":"SELECT * FROM tststats.priv_test_parent_tbl WHERE (a <<< 0) AND (b <<< 0);"}
+{"sql":"SELECT * FROM tststats.priv_test_parent_tbl t\n WHERE a <<< 0 AND (b <<< 0 OR t.* <<< (1, 1) IS NOT NULL)","shape":"SELECT * FROM tststats.priv_test_parent_tbl AS t WHERE (a <<< 0) AND ((b <<< 0) OR ((t.* <<< (1, 1)) IS NOT NULL));"}
+{"sql":"DELETE FROM tststats.priv_test_parent_tbl WHERE a <<< 0 AND b <<< 0","shape":"DELETE FROM tststats.priv_test_parent_tbl WHERE (a <<< 0) AND (b <<< 0);"}
+{"sql":"ALTER TABLE tststats.priv_test_parent_tbl ENABLE ROW LEVEL SECURITY"}
+{"sql":"CREATE POLICY priv_test_parent_tbl_pol ON tststats.priv_test_parent_tbl USING (2 * a < 0)"}
+{"sql":"GRANT SELECT, DELETE ON tststats.priv_test_parent_tbl TO regress_stats_user1","shape":"GRANT SELECT, DELETE ON tststats.priv_test_parent_tbl TO regress_stats_user1;"}
+{"sql":"CREATE TABLE stats_ext_tbl (id INT PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY, col TEXT)","shape":"CREATE TABLE stats_ext_tbl (id INT PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY, col TEXT);"}
+{"sql":"INSERT INTO stats_ext_tbl (col) VALUES ('secret'), ('secret'), ('very secret')","shape":"INSERT INTO stats_ext_tbl (col) VALUES ('secret'), ('secret'), ('very secret');"}
+{"sql":"CREATE STATISTICS s_col ON id, col FROM stats_ext_tbl"}
+{"sql":"CREATE STATISTICS s_expr ON mod(id, 2), lower(col) FROM stats_ext_tbl"}
+{"sql":"ANALYZE stats_ext_tbl","shape":"ANALYZE stats_ext_tbl;"}
+{"sql":"SELECT statistics_name, most_common_vals FROM pg_stats_ext x\n    WHERE tablename = 'stats_ext_tbl' ORDER BY ROW(x.*)","shape":"SELECT statistics_name, most_common_vals FROM pg_stats_ext AS x WHERE tablename = 'stats_ext_tbl' ORDER BY ROW(x.*);"}
+{"sql":"SELECT statistics_name, most_common_vals FROM pg_stats_ext_exprs x\n    WHERE tablename = 'stats_ext_tbl' ORDER BY ROW(x.*)","shape":"SELECT statistics_name, most_common_vals FROM pg_stats_ext_exprs AS x WHERE tablename = 'stats_ext_tbl' ORDER BY ROW(x.*);"}
+{"sql":"ALTER TABLE stats_ext_tbl OWNER TO regress_stats_user1"}
+{"sql":"CREATE SCHEMA sts_sch1 CREATE TABLE sts_sch1.tbl (a INT, b INT)","shape":"CREATE SCHEMA sts_sch1 CREATE TABLE sts_sch1.tbl (a INT, b INT);"}
+{"sql":"CREATE SCHEMA sts_sch2","shape":"CREATE SCHEMA sts_sch2;"}
+{"sql":"GRANT USAGE ON SCHEMA sts_sch1, sts_sch2 TO regress_stats_user1","shape":"GRANT USAGE ON SCHEMA sts_sch1, sts_sch2 TO regress_stats_user1;"}
+{"sql":"ALTER TABLE sts_sch1.tbl OWNER TO regress_stats_user1"}
+{"sql":"CREATE STATISTICS ON a, b FROM sts_sch1.tbl"}
+{"sql":"CREATE STATISTICS sts_sch2.fail ON a, b FROM sts_sch1.tbl"}
+{"sql":"GRANT CREATE ON SCHEMA sts_sch1 TO regress_stats_user1","shape":"GRANT CREATE ON SCHEMA sts_sch1 TO regress_stats_user1;"}
+{"sql":"REVOKE CREATE ON SCHEMA sts_sch1 FROM regress_stats_user1","shape":"REVOKE CREATE ON SCHEMA sts_sch1 FROM regress_stats_user1;"}
+{"sql":"GRANT CREATE ON SCHEMA sts_sch2 TO regress_stats_user1","shape":"GRANT CREATE ON SCHEMA sts_sch2 TO regress_stats_user1;"}
+{"sql":"CREATE STATISTICS sts_sch2.pass1 ON a, b FROM sts_sch1.tbl"}
+{"sql":"GRANT CREATE ON SCHEMA sts_sch1, sts_sch2 TO regress_stats_user1","shape":"GRANT CREATE ON SCHEMA sts_sch1, sts_sch2 TO regress_stats_user1;"}
+{"sql":"CREATE STATISTICS sts_sch2.pass2 ON a, b FROM sts_sch1.tbl"}
+{"sql":"REVOKE CREATE ON SCHEMA sts_sch1, sts_sch2 FROM regress_stats_user1","shape":"REVOKE CREATE ON SCHEMA sts_sch1, sts_sch2 FROM regress_stats_user1;"}
+{"sql":"ALTER TABLE sts_sch1.tbl ALTER COLUMN a TYPE SMALLINT","shape":"ALTER TABLE sts_sch1.tbl ALTER COLUMN a SET DATA TYPE SMALLINT;"}
+{"sql":"DROP OPERATOR <<< (int, int)"}
+{"sql":"DROP FUNCTION op_leak(int, int)"}
+{"sql":"DROP OPERATOR <<< (record, record)"}
+{"sql":"DROP FUNCTION op_leak(record, record)"}
+{"sql":"DROP TABLE stats_ext_tbl","shape":"DROP TABLE stats_ext_tbl;"}
+{"sql":"DROP SCHEMA sts_sch1, sts_sch2 CASCADE","shape":"DROP SCHEMA sts_sch1, sts_sch2 CASCADE;"}
+{"sql":"DROP USER regress_stats_user1","shape":"DROP USER regress_stats_user1;"}

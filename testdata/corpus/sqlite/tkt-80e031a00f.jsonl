@@ -1,0 +1,120 @@
+{"sql":"SELECT 1 IN ()"}
+{"sql":"SELECT 1 IN (2)"}
+{"sql":"SELECT 1 IN (2,3,4,5,6,7,8,9)"}
+{"sql":"SELECT 1 NOT IN ()"}
+{"sql":"SELECT 1 NOT IN (2)"}
+{"sql":"SELECT 1 NOT IN (2,3,4,5,6,7,8,9)"}
+{"sql":"SELECT null IN ()"}
+{"sql":"SELECT null NOT IN ()"}
+{"sql":"SELECT 1 IN t1"}
+{"sql":"SELECT 1 NOT IN t1"}
+{"sql":"SELECT null IN t1"}
+{"sql":"SELECT null NOT IN t1"}
+{"sql":"CREATE TABLE t2(y INTEGER PRIMARY KEY)"}
+{"sql":"SELECT 1 IN t2"}
+{"sql":"SELECT 1 NOT IN t2"}
+{"sql":"SELECT null IN t2"}
+{"sql":"SELECT null NOT IN t2"}
+{"sql":"CREATE TABLE t3(z INT UNIQUE)"}
+{"sql":"SELECT 1 IN t3"}
+{"sql":"SELECT 1 NOT IN t3"}
+{"sql":"SELECT null IN t3"}
+{"sql":"SELECT null NOT IN t3"}
+{"sql":"SELECT 1 IN (SELECT x+y FROM t1, t2)"}
+{"sql":"SELECT 1 NOT IN (SELECT x+y FROM t1,t2)"}
+{"sql":"SELECT null IN (SELECT x+y FROM t1,t2)"}
+{"sql":"SELECT null NOT IN (SELECT x+y FROM t1,t2)"}
+{"sql":"SELECT 1.23 IN ()"}
+{"sql":"SELECT 1.23 NOT IN ()"}
+{"sql":"SELECT 1.23 IN t1"}
+{"sql":"SELECT 1.23 NOT IN t1"}
+{"sql":"SELECT 'hello' IN ()"}
+{"sql":"SELECT 'hello' NOT IN ()"}
+{"sql":"SELECT 'hello' IN t1"}
+{"sql":"SELECT 'hello' NOT IN t1"}
+{"sql":"SELECT x'303132' IN ()"}
+{"sql":"SELECT x'303132' NOT IN ()"}
+{"sql":"SELECT x'303132' IN t1"}
+{"sql":"SELECT x'303132' NOT IN t1"}
+{"sql":"SELECT 1 IN (2,3,4)"}
+{"sql":"SELECT 1 NOT IN (2,3,4)"}
+{"sql":"SELECT 'a' IN ('b','c','d')"}
+{"sql":"SELECT 'a' NOT IN ('b','c','d')"}
+{"sql":"SELECT 1 IN t4"}
+{"sql":"SELECT 1 NOT IN t4"}
+{"sql":"SELECT 1 IN t5"}
+{"sql":"SELECT 1 NOT IN t5"}
+{"sql":"SELECT 1 IN t6"}
+{"sql":"SELECT 1 NOT IN t6"}
+{"sql":"SELECT 'a' IN t7"}
+{"sql":"SELECT 'a' NOT IN t7"}
+{"sql":"SELECT 'a' IN t8"}
+{"sql":"SELECT 'a' NOT IN t8"}
+{"sql":"SELECT 2 IN (2,3,4,null)"}
+{"sql":"SELECT 3 NOT IN (2,3,4,null)"}
+{"sql":"SELECT 4 IN (2,3,4)"}
+{"sql":"SELECT 2 NOT IN (2,3,4)"}
+{"sql":"SELECT 'b' IN ('b','c','d')"}
+{"sql":"SELECT 'c' NOT IN ('b','c','d')"}
+{"sql":"SELECT 'd' IN ('b','c',null,'d')"}
+{"sql":"SELECT 'b' NOT IN (null,'b','c','d')"}
+{"sql":"SELECT 2 IN t4"}
+{"sql":"SELECT 3 NOT IN t4"}
+{"sql":"SELECT 4 IN t4n"}
+{"sql":"SELECT 2 NOT IN t4n"}
+{"sql":"SELECT 2 IN t5"}
+{"sql":"SELECT 3 NOT IN t5"}
+{"sql":"SELECT 2 IN t6"}
+{"sql":"SELECT 3 NOT IN t6"}
+{"sql":"SELECT 4 IN t6n"}
+{"sql":"SELECT 2 NOT IN t6n"}
+{"sql":"SELECT 'b' IN t7"}
+{"sql":"SELECT 'c' NOT IN t7"}
+{"sql":"SELECT 'c' IN t7n"}
+{"sql":"SELECT 'd' NOT IN t7n"}
+{"sql":"SELECT 'b' IN t8"}
+{"sql":"SELECT 'c' NOT IN t8"}
+{"sql":"SELECT 'c' IN t8n"}
+{"sql":"SELECT 'd' NOT IN t8n"}
+{"sql":"SELECT 'a' IN (NULL,'a')"}
+{"sql":"SELECT 'a' IN (NULL,'b')"}
+{"sql":"SELECT 'a' NOT IN (NULL,'a')"}
+{"sql":"SELECT 'a' NOT IN (NULL,'b')"}
+{"sql":"SELECT 1 IN (2,3,4,null)"}
+{"sql":"SELECT 1 NOT IN (2,3,4,null)"}
+{"sql":"SELECT 'a' IN ('b','c',null,'d')"}
+{"sql":"SELECT 'a' NOT IN (null,'b','c','d')"}
+{"sql":"SELECT 1 IN t4n"}
+{"sql":"SELECT 5 NOT IN t4n"}
+{"sql":"SELECT 6 IN t6n"}
+{"sql":"SELECT 7 NOT IN t6n"}
+{"sql":"SELECT 'a' IN t7n"}
+{"sql":"SELECT 'e' NOT IN t7n"}
+{"sql":"SELECT 'f' IN t8n"}
+{"sql":"SELECT 'g' NOT IN t8n"}
+{"sql":"SELECT null IN (2,3,4,null)"}
+{"sql":"SELECT null NOT IN (2,3,4,null)"}
+{"sql":"SELECT null IN (2,3,4)"}
+{"sql":"SELECT null NOT IN (2,3,4)"}
+{"sql":"SELECT null IN ('b','c','d')"}
+{"sql":"SELECT null NOT IN ('b','c','d')"}
+{"sql":"SELECT null IN ('b','c',null,'d')"}
+{"sql":"SELECT null NOT IN (null,'b','c','d')"}
+{"sql":"SELECT null IN t4"}
+{"sql":"SELECT null NOT IN t4"}
+{"sql":"SELECT null IN t4n"}
+{"sql":"SELECT null NOT IN t4n"}
+{"sql":"SELECT null IN t5"}
+{"sql":"SELECT null NOT IN t5"}
+{"sql":"SELECT null IN t6"}
+{"sql":"SELECT null NOT IN t6"}
+{"sql":"SELECT null IN t6n"}
+{"sql":"SELECT null NOT IN t6n"}
+{"sql":"SELECT null IN t7"}
+{"sql":"SELECT null NOT IN t7"}
+{"sql":"SELECT null IN t7n"}
+{"sql":"SELECT null NOT IN t7n"}
+{"sql":"SELECT null IN t8"}
+{"sql":"SELECT null NOT IN t8"}
+{"sql":"SELECT null IN t8n"}
+{"sql":"SELECT null NOT IN t8n"}

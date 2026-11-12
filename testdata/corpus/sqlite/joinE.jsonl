@@ -1,0 +1,21 @@
+{"sql":"SELECT a, b\n  FROM t1 INNER JOIN t2 ON true\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 INNER JOIN t2 ON true WHERE a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 INNER JOIN t2 ON a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 INNER JOIN t2 ON true WHERE b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 INNER JOIN t2 ON b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 LEFT JOIN t2 ON true\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 LEFT JOIN t2 ON true WHERE a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 LEFT JOIN t2 ON a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 LEFT JOIN t2 ON true WHERE b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 LEFT JOIN t2 ON b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 RIGHT JOIN t2 ON true\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 RIGHT JOIN t2 ON true WHERE a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 RIGHT JOIN t2 ON a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 RIGHT JOIN t2 ON true WHERE b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 RIGHT JOIN t2 ON b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 FULL JOIN t2 ON true\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"SELECT a, b\n  FROM t1 FULL JOIN t2 ON true WHERE a IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"#  SELECT a, b\n#  FROM t1 FULL JOIN t2 ON a IS NULL\n#  ORDER BY coalesce(a,b,3)","reject":true}
+{"sql":"SELECT a, b\n  FROM t1 FULL JOIN t2 ON true WHERE b IS NULL\n  ORDER BY coalesce(a,b,3)"}
+{"sql":"#   SELECT a, b\n#   FROM t1 FULL JOIN t2 ON b IS NULL\n#   ORDER BY coalesce(a,b,3)","reject":true}
+{"sql":"#   SELECT a, b\n#   FROM t1 FULL JOIN t2 ON a IS NULL\n#   ORDER BY coalesce(a,b,3)","reject":true}

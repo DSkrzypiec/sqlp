@@ -1,0 +1,4 @@
+{"sql":"PRAGMA soft_heap_limit"}
+{"sql":"PRAGMA soft_heap_limit=123456"}
+{"sql":"PRAGMA soft_heap_limit(-1)"}
+{"sql":"PRAGMA soft_heap_limit(0)"}

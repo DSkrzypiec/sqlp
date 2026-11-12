@@ -1,0 +1,2 @@
+{"sql":"CREATE TABLE t2(aaa INTTT)"}
+{"sql":"CREATE VIEW v2(xxx , yyy) AS SELECT aaa, aaa+1 FROM t2"}

@@ -1,0 +1,158 @@
+{"sql":"INSERT INTO t1 VALUES('w x', 'x y', 'y z')"}
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts4(content=t1)"}
+{"sql":"PRAGMA table_info(ft1)"}
+{"sql":"SELECT *, rowid FROM ft1"}
+{"sql":"SELECT a, c FROM ft1 WHERE rowid=1"}
+{"sql":"INSERT INTO ft1(ft1) VALUES('rebuild')"}
+{"sql":"SELECT rowid FROM ft1 WHERE ft1 MATCH 'x'"}
+{"sql":"SELECT rowid FROM ft1 WHERE ft1 MATCH 'a'"}
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts4(content=t1, b)"}
+{"sql":"INSERT INTO t2 VALUES('O S W W F U C R Q I C N P Z Y Y E Y Y E')"}
+{"sql":"INSERT INTO t2 VALUES('Y X U V L B E H Y J C Y A I A P V F V K')"}
+{"sql":"INSERT INTO t2 VALUES('P W I N J H I I N I F B K D U Q B Z S F')"}
+{"sql":"INSERT INTO t2 VALUES('N R O R H J R H G M D I U U B O M P A U')"}
+{"sql":"INSERT INTO t2 VALUES('Y O V O G T P N G T N F I V B U M J M G')"}
+{"sql":"INSERT INTO t2 VALUES('J O B N K N E C H Z R K J O U G M K L S')"}
+{"sql":"INSERT INTO t2 VALUES('S Z S R I Q U A P W R X H K C Z U L S P')"}
+{"sql":"INSERT INTO t2 VALUES('J C H N R C K R V N M O F Z M Z A I H W')"}
+{"sql":"INSERT INTO t2 VALUES('O Y G I S J U U W O D Z F J K N R P R L')"}
+{"sql":"INSERT INTO t2 VALUES('B G L K U R U P V X Z I H V R W C Q A S')"}
+{"sql":"INSERT INTO t2 VALUES('T F T J F F Y V F W N X K Q A Y L X W G')"}
+{"sql":"INSERT INTO t2 VALUES('C J U H B Q X L C M M Y E G V F W V Z C')"}
+{"sql":"INSERT INTO t2 VALUES('B W L T F S G X D P H N G M R I O A X I')"}
+{"sql":"INSERT INTO t2 VALUES('N G Y O K Q K Z N M H U J E D H U W R K')"}
+{"sql":"INSERT INTO t2 VALUES('U D T R U Y F J D S J X E H Q G V A S Z')"}
+{"sql":"INSERT INTO t2 VALUES('M I W P J S H R J D Q I C G P C T P H R')"}
+{"sql":"INSERT INTO t2 VALUES('J M N I S L X Q C A B F C B Y D H V R J')"}
+{"sql":"INSERT INTO t2 VALUES('F V Z W J Q L P X Y E W B U Q N H X K T')"}
+{"sql":"INSERT INTO t2 VALUES('R F S R Y O F Q E I E G H C B H R X Y N')"}
+{"sql":"INSERT INTO t2 VALUES('U Q Q Q T E P D M F X P J G H X C Q D L')"}
+{"sql":"CREATE VIRTUAL TABLE ft2 USING fts4(content=t2)"}
+{"sql":"INSERT INTO ft2(ft2) VALUES('rebuild')"}
+{"sql":"DELETE FROM t2 WHERE rowid = 17"}
+{"sql":"UPDATE t2 SET x = 'a b c d e f g h i j' WHERE rowid = 20"}
+{"sql":"CREATE VIRTUAL TABLE ft3 USING fts4(content=t3)"}
+{"sql":"INSERT INTO ft3 VALUES('a b c', 'd e f')"}
+{"sql":"INSERT INTO ft3(docid, x, y) VALUES(21, 'a b c', 'd e f')"}
+{"sql":"SELECT rowid FROM ft3 WHERE ft3 MATCH '\"a b c\"'"}
+{"sql":"DELETE FROM ft3"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(21, 'a b c', 'd e f')"}
+{"sql":"SELECT rowid FROM t3"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(0, 'R T M S M', 'A F O K H')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(1, 'C Z J O X', 'U S Q D K')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(2, 'N G H P O', 'N O P O C')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(3, 'V H S D R', 'K N G E C')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(4, 'J T R V U', 'U X S L C')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(5, 'N A Y N G', 'X D G P Y')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(6, 'I Q I S P', 'D R O Q B')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(7, 'T K T Z J', 'B W D G O')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(8, 'Y K F X T', 'D F G V G')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(9, 'E L E T L', 'P W N F Z')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(10, 'O G J G X', 'G J F E P')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(11, 'O L N N Z', 'K E Z F D')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(12, 'R Z M R J', 'X G I M Z')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(13, 'L X N N X', 'R R N S T')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(14, 'F L B J H', 'K W F L C')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(15, 'P E B M V', 'E A A B U')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(16, 'V E C F P', 'L U T V K')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(17, 'T N O Z N', 'T P Q X N')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(18, 'V W U W R', 'H O A A V')"}
+{"sql":"INSERT INTO ft3(rowid, x, y) VALUES(19, 'A H N L F', 'I G H B O')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(0, 'R T M S M', 'A F O K H')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(1, 'C Z J O X', 'U S Q D K')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(2, 'N G H P O', 'N O P O C')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(3, 'V H S D R', 'K N G E C')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(4, 'J T R V U', 'U X S L C')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(5, 'N A Y N G', 'X D G P Y')"}
+{"sql":"UPDATE ft3 SET x = y, y = x"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(15, 'P E B M V', 'E A A B U')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(16, 'V E C F P', 'L U T V K')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(17, 'T N O Z N', 'T P Q X N')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(18, 'V W U W R', 'H O A A V')"}
+{"sql":"INSERT INTO t3(rowid, x, y) VALUES(19, 'A H N L F', 'I G H B O')"}
+{"sql":"CREATE VIRTUAL TABLE ft4 USING fts4(content=t4)"}
+{"sql":"CREATE VIRTUAL TABLE ft4x USING fts4(x)"}
+{"sql":"INSERT INTO ft4x(ft4x) VALUES('rebuild')"}
+{"sql":"INSERT INTO ft4(ft4) VALUES('rebuild')"}
+{"sql":"SELECT id, quote(value) FROM ft4_stat"}
+{"sql":"SELECT id, quote(value) FROM ft4x_stat"}
+{"sql":"INSERT INTO ft4x VALUES('M G M F T')"}
+{"sql":"INSERT INTO ft4x VALUES('Z Q C A U')"}
+{"sql":"INSERT INTO ft4x VALUES('N L L V')"}
+{"sql":"INSERT INTO ft4x VALUES('T F D X D')"}
+{"sql":"INSERT INTO ft4x VALUES('Z H I S D')"}
+{"sql":"INSERT INTO ft4(rowid, x) SELECT rowid, * FROM ft4x"}
+{"sql":"SELECT docid, quote(size) FROM ft4_docsize"}
+{"sql":"SELECT docid, quote(size) FROM ft4x_docsize"}
+{"sql":"INSERT INTO t4(rowid, x) SELECT rowid, x FROM ft4x"}
+{"sql":"CREATE VIRTUAL TABLE ft5 USING fts4(content=t5)"}
+{"sql":"SELECT name FROM sqlite_master WHERE name LIKE '%t5%'"}
+{"sql":"ALTER TABLE ft5 RENAME TO ft6"}
+{"sql":"SELECT name FROM sqlite_master WHERE name LIKE '%t6%'"}
+{"sql":"INSERT INTO t5 VALUES('a', 'b', 'c', 'd')"}
+{"sql":"INSERT INTO ft6(ft6) VALUES('rebuild')"}
+{"sql":"SELECT rowid FROM ft6 WHERE ft6 MATCH 'b'"}
+{"sql":"CREATE TABLE t5_content(a, b)"}
+{"sql":"DROP TABLE ft5"}
+{"sql":"CREATE VIRTUAL TABLE ft7 USING fts4(content=t7)"}
+{"sql":"CREATE TABLE t7(one, two)"}
+{"sql":"INSERT INTO t7 VALUES('A B', 'B A')"}
+{"sql":"INSERT INTO t7 VALUES('C D', 'A A')"}
+{"sql":"SELECT * FROM ft7"}
+{"sql":"SELECT name FROM sqlite_master WHERE name LIKE '%t7%'"}
+{"sql":"CREATE TABLE t7(x, y)"}
+{"sql":"INSERT INTO ft7(ft7) VALUES('rebuild')"}
+{"sql":"SELECT rowid FROM ft7 WHERE ft7 MATCH '\"A A\"'"}
+{"sql":"CREATE TABLE t7(x)"}
+{"sql":"SELECT * FROM ft7 WHERE ft7 MATCH '\"A A\"'"}
+{"sql":"SELECT rowid, * FROM ft7 WHERE ft7 MATCH '\"A A\"'"}
+{"sql":"CREATE VIRTUAL TABLE ft8 USING fts4(content=nosuchtable, x)"}
+{"sql":"INSERT INTO ft8(docid, x) VALUES(13, 'U O N X G')"}
+{"sql":"INSERT INTO ft8(docid, x) VALUES(14, 'C J J U B')"}
+{"sql":"INSERT INTO ft8(docid, x) VALUES(15, 'N J Y G X')"}
+{"sql":"INSERT INTO ft8(docid, x) VALUES(16, 'R Y D O R')"}
+{"sql":"INSERT INTO ft8(docid, x) VALUES(17, 'I Y T Q O')"}
+{"sql":"SELECT docid FROM ft8 WHERE ft8 MATCH 'N'"}
+{"sql":"CREATE VIRTUAL TABLE ft9 USING fts4(content=, x)"}
+{"sql":"INSERT INTO ft9(docid, x) VALUES(13, 'U O N X G')"}
+{"sql":"INSERT INTO ft9(docid, x) VALUES(14, 'C J J U B')"}
+{"sql":"INSERT INTO ft9(docid, x) VALUES(15, 'N J Y G X')"}
+{"sql":"INSERT INTO ft9(docid, x) VALUES(16, 'R Y D O R')"}
+{"sql":"INSERT INTO ft9(docid, x) VALUES(17, 'I Y T Q O')"}
+{"sql":"SELECT docid FROM ft9 WHERE ft9 MATCH 'N'"}
+{"sql":"SELECT name FROM sqlite_master WHERE name LIKE 'ft9_%'"}
+{"sql":"SELECT * FROM ft9 WHERE ft9 MATCH 'N'"}
+{"sql":"INSERT INTO t10 VALUES(\n      'abasia abasic abask', 'Abassin abastardize abatable')"}
+{"sql":"INSERT INTO t10 VALUES(\n      'abate abatement abater', 'abatis abatised abaton')"}
+{"sql":"INSERT INTO t10 VALUES(\n      'abator abattoir Abatua', 'abature abave abaxial')"}
+{"sql":"CREATE VIRTUAL TABLE ft10 USING fts4(content=t10, prefix=\"2,4\", a, b)"}
+{"sql":"SELECT * FROM ft10 WHERE a MATCH 'ab*'"}
+{"sql":"INSERT INTO ft10(ft10) VALUES('rebuild')"}
+{"sql":"SELECT rowid FROM ft10 WHERE a MATCH 'ab*'"}
+{"sql":"SELECT rowid FROM ft10 WHERE b MATCH 'abav*'"}
+{"sql":"SELECT rowid FROM ft10 WHERE ft10 MATCH 'abas*'"}
+{"sql":"CREATE TABLE tbl1(a, b)"}
+{"sql":"INSERT INTO tbl1 VALUES('a b', 'c d')"}
+{"sql":"INSERT INTO tbl1 VALUES('e f', 'a b')"}
+{"sql":"CREATE VIRTUAL TABLE e1 USING echo(tbl1)"}
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts4(content=e1)"}
+{"sql":"SELECT rowid, * FROM ft1 WHERE ft1 MATCH 'e'"}
+{"sql":"SELECT rowid, * FROM ft1 WHERE ft1 MATCH 'a'"}
+{"sql":"DELETE FROM ft1 WHERE docid=1"}
+{"sql":"CREATE TABLE idx(id INTEGER PRIMARY KEY, path TEXT)"}
+{"sql":"INSERT INTO idx VALUES (1, 't1.txt')"}
+{"sql":"INSERT INTO idx VALUES (2, 't2.txt')"}
+{"sql":"INSERT INTO idx VALUES (3, 't3.txt')"}
+{"sql":"CREATE VIRTUAL TABLE vt USING fs(idx)"}
+{"sql":"SELECT path, data FROM vt"}
+{"sql":"SELECT path, data FROM vt WHERE rowid = 2"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts4(content=vt)"}
+{"sql":"SELECT snippet(ft, '[', ']', '...', -1, 5) FROM ft WHERE ft MATCH 'e'"}
+{"sql":"SELECT snippet(ft, '[', ']', '...', -1, 5) FROM ft WHERE ft MATCH 't'"}
+{"sql":"DELETE FROM ft WHERE docid=2"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING fts4(content=x1)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, content=t1 )"}
+{"sql":"INSERT INTO t1(rowid, a) VALUES(1, 'abc')"}
+{"sql":"SELECT * FROM t1('abc')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, content=t2 )"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(a, content=t1 )"}

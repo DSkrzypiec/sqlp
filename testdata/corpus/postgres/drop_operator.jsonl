@@ -1,0 +1,10 @@
+{"sql":"CREATE OPERATOR === (\n        PROCEDURE = int8eq,\n        LEFTARG = bigint,\n        RIGHTARG = bigint,\n        COMMUTATOR = ===\n)"}
+{"sql":"CREATE OPERATOR !== (\n        PROCEDURE = int8ne,\n        LEFTARG = bigint,\n        RIGHTARG = bigint,\n        NEGATOR = ===,\n        COMMUTATOR = !==\n)"}
+{"sql":"DROP OPERATOR !==(bigint, bigint)"}
+{"sql":"SELECT  ctid, oprcom\nFROM    pg_catalog.pg_operator fk\nWHERE   oprcom != 0 AND\n        NOT EXISTS(SELECT 1 FROM pg_catalog.pg_operator pk WHERE pk.oid = fk.oprcom)","shape":"SELECT ctid, oprcom FROM pg_catalog.pg_operator AS fk WHERE (oprcom != 0) AND (NOT EXISTS (SELECT 1 FROM pg_catalog.pg_operator AS pk WHERE pk.oid = fk.oprcom));"}
+{"sql":"SELECT  ctid, oprnegate\nFROM    pg_catalog.pg_operator fk\nWHERE   oprnegate != 0 AND\n        NOT EXISTS(SELECT 1 FROM pg_catalog.pg_operator pk WHERE pk.oid = fk.oprnegate)","shape":"SELECT ctid, oprnegate FROM pg_catalog.pg_operator AS fk WHERE (oprnegate != 0) AND (NOT EXISTS (SELECT 1 FROM pg_catalog.pg_operator AS pk WHERE pk.oid = fk.oprnegate));"}
+{"sql":"DROP OPERATOR ===(bigint, bigint)"}
+{"sql":"CREATE OPERATOR <| (\n        PROCEDURE = int8lt,\n        LEFTARG = bigint,\n        RIGHTARG = bigint\n)"}
+{"sql":"CREATE OPERATOR |> (\n        PROCEDURE = int8gt,\n        LEFTARG = bigint,\n        RIGHTARG = bigint,\n        NEGATOR = <|,\n        COMMUTATOR = <|\n)"}
+{"sql":"DROP OPERATOR |>(bigint, bigint)"}
+{"sql":"DROP OPERATOR <|(bigint, bigint)"}

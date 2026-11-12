@@ -1,0 +1,62 @@
+{"sql":"SELECT date(now())::text = current_date::text","shape":"SELECT date(now())::text = current_date::text;"}
+{"sql":"SELECT now()::timetz::text = current_time::text","shape":"SELECT now()::timetz::text = current_time::text;"}
+{"sql":"SELECT now()::timetz(4)::text = current_time(4)::text","shape":"SELECT now()::timetz(4)::text = current_time(4)::text;"}
+{"sql":"SELECT now()::time::text = localtime::text","shape":"SELECT now()::time::text = localtime::text;"}
+{"sql":"SELECT now()::time(3)::text = localtime(3)::text","shape":"SELECT now()::time(3)::text = localtime(3)::text;"}
+{"sql":"SELECT current_timestamp = NOW()","shape":"SELECT current_timestamp = NOW();"}
+{"sql":"SELECT length(current_timestamp::text) >= length(current_timestamp(0)::text)","shape":"SELECT length(current_timestamp::text) >= length(current_timestamp(0)::text);"}
+{"sql":"SELECT now()::timestamp::text = localtimestamp::text","shape":"SELECT now()::timestamp::text = localtimestamp::text;"}
+{"sql":"SELECT current_time = current_time(7)","shape":"SELECT current_time = current_time(7);"}
+{"sql":"SELECT current_timestamp = current_timestamp(7)","shape":"SELECT current_timestamp = current_timestamp(7);"}
+{"sql":"SELECT localtime = localtime(7)","shape":"SELECT localtime = localtime(7);"}
+{"sql":"SELECT localtimestamp = localtimestamp(7)","shape":"SELECT localtimestamp = localtimestamp(7);"}
+{"sql":"SELECT current_catalog = current_database()","shape":"SELECT current_catalog = current_database();"}
+{"sql":"SELECT current_schema","shape":"SELECT current_schema;"}
+{"sql":"SET search_path = 'notme'","shape":"SET search_path TO 'notme';"}
+{"sql":"SET search_path = 'pg_catalog'","shape":"SET search_path TO 'pg_catalog';"}
+{"sql":"create table numeric_tbl (f1 numeric(18,3), f2 numeric)","shape":"CREATE TABLE numeric_tbl (f1 numeric(18, 3), f2 numeric);"}
+{"sql":"create view numeric_view as\n  select\n    f1, f1::numeric(16,4) as f1164, f1::numeric as f1n,\n    f2, f2::numeric(16,4) as f2164, f2::numeric as f2n\n  from numeric_tbl","shape":"CREATE VIEW numeric_view AS SELECT f1, f1::numeric(16, 4) AS f1164, f1::numeric AS f1n, f2, f2::numeric(16, 4) AS f2164, f2::numeric AS f2n FROM numeric_tbl;"}
+{"sql":"explain (verbose, costs off) select * from numeric_view","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM numeric_view;"}
+{"sql":"create table bpchar_tbl (f1 character(16) unique, f2 bpchar)","shape":"CREATE TABLE bpchar_tbl (f1 character(16) UNIQUE, f2 bpchar);"}
+{"sql":"create view bpchar_view as\n  select\n    f1, f1::character(14) as f114, f1::bpchar as f1n,\n    f2, f2::character(14) as f214, f2::bpchar as f2n\n  from bpchar_tbl","shape":"CREATE VIEW bpchar_view AS SELECT f1, f1::character(14) AS f114, f1::bpchar AS f1n, f2, f2::character(14) AS f214, f2::bpchar AS f2n FROM bpchar_tbl;"}
+{"sql":"explain (verbose, costs off) select * from bpchar_view\n  where f1::bpchar = 'foo'","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM bpchar_view WHERE f1::bpchar = 'foo';"}
+{"sql":"explain (verbose, costs off)\nselect random() IN (1, 4, 8.0)","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT random() IN (1, 4, 8.0);"}
+{"sql":"explain (verbose, costs off)\nselect random()::int IN (1, 4, 8.0)","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT random()::int IN (1, 4, 8.0);"}
+{"sql":"select '(0,0)'::point in ('(0,0,0,0)'::box, point(0,0))","shape":"SELECT '(0,0)'::point IN ('(0,0,0,0)'::box, point(0, 0));"}
+{"sql":"create function return_int_input(int) returns int as $$\nbegin\n\treturn $1;\nend;\n$$ language plpgsql stable","shape":"CREATE FUNCTION return_int_input(int) RETURNS int AS '\nbegin\n\treturn $1;\nend;\n' LANGUAGE plpgsql STABLE;"}
+{"sql":"create function return_text_input(text) returns text as $$\nbegin\n\treturn $1;\nend;\n$$ language plpgsql stable","shape":"CREATE FUNCTION return_text_input(text) RETURNS text AS '\nbegin\n\treturn $1;\nend;\n' LANGUAGE plpgsql STABLE;"}
+{"sql":"select return_int_input(1) in (10, 9, 2, 8, 3, 7, 4, 6, 5, 1)","shape":"SELECT return_int_input(1) IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 1);"}
+{"sql":"select return_int_input(1) in (10, 9, 2, 8, 3, 7, 4, 6, 5, null)","shape":"SELECT return_int_input(1) IN (10, 9, 2, 8, 3, 7, 4, 6, 5, NULL);"}
+{"sql":"select return_int_input(1) in (null, null, null, null, null, null, null, null, null, null, null)","shape":"SELECT return_int_input(1) IN (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);"}
+{"sql":"select return_int_input(1) in (10, 9, 2, 8, 3, 7, 4, 6, 5, 1, null)","shape":"SELECT return_int_input(1) IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 1, NULL);"}
+{"sql":"select return_int_input(null::int) in (10, 9, 2, 8, 3, 7, 4, 6, 5, 1)","shape":"SELECT return_int_input(NULL::int) IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 1);"}
+{"sql":"select return_int_input(null::int) in (10, 9, 2, 8, 3, 7, 4, 6, 5, null)","shape":"SELECT return_int_input(NULL::int) IN (10, 9, 2, 8, 3, 7, 4, 6, 5, NULL);"}
+{"sql":"select return_text_input('a') in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')","shape":"SELECT return_text_input('a') IN ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j');"}
+{"sql":"select return_int_input(1) not in (10, 9, 2, 8, 3, 7, 4, 6, 5, 1)","shape":"SELECT return_int_input(1) NOT IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 1);"}
+{"sql":"select return_int_input(1) not in (10, 9, 2, 8, 3, 7, 4, 6, 5, 0)","shape":"SELECT return_int_input(1) NOT IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 0);"}
+{"sql":"select return_int_input(1) not in (10, 9, 2, 8, 3, 7, 4, 6, 5, 2, null)","shape":"SELECT return_int_input(1) NOT IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 2, NULL);"}
+{"sql":"select return_int_input(1) not in (10, 9, 2, 8, 3, 7, 4, 6, 5, 1, null)","shape":"SELECT return_int_input(1) NOT IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 1, NULL);"}
+{"sql":"select return_int_input(1) not in (null, null, null, null, null, null, null, null, null, null, null)","shape":"SELECT return_int_input(1) NOT IN (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);"}
+{"sql":"select return_int_input(null::int) not in (10, 9, 2, 8, 3, 7, 4, 6, 5, 1)","shape":"SELECT return_int_input(NULL::int) NOT IN (10, 9, 2, 8, 3, 7, 4, 6, 5, 1);"}
+{"sql":"select return_int_input(null::int) not in (10, 9, 2, 8, 3, 7, 4, 6, 5, null)","shape":"SELECT return_int_input(NULL::int) NOT IN (10, 9, 2, 8, 3, 7, 4, 6, 5, NULL);"}
+{"sql":"select return_text_input('a') not in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j')","shape":"SELECT return_text_input('a') NOT IN ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j');"}
+{"sql":"create type myint","shape":"CREATE TYPE myint;"}
+{"sql":"create function myintin(cstring) returns myint strict immutable language\n  internal as 'int4in'","shape":"CREATE FUNCTION myintin(cstring) RETURNS myint STRICT IMMUTABLE LANGUAGE internal AS 'int4in';"}
+{"sql":"create function myintout(myint) returns cstring strict immutable language\n  internal as 'int4out'","shape":"CREATE FUNCTION myintout(myint) RETURNS cstring STRICT IMMUTABLE LANGUAGE internal AS 'int4out';"}
+{"sql":"create function myinthash(myint) returns integer strict immutable language\n  internal as 'hashint4'","shape":"CREATE FUNCTION myinthash(myint) RETURNS integer STRICT IMMUTABLE LANGUAGE internal AS 'hashint4';"}
+{"sql":"create type myint (input = myintin, output = myintout, like = int4)"}
+{"sql":"create cast (int4 as myint) without function"}
+{"sql":"create cast (myint as int4) without function"}
+{"sql":"create function myinteq(myint, myint) returns bool as $$\nbegin\n  if $1 is null and $2 is null then\n    return true;\n  else\n    return $1::int = $2::int;\n  end if;\nend;\n$$ language plpgsql immutable","shape":"CREATE FUNCTION myinteq(myint, myint) RETURNS bool AS '\nbegin\n  if $1 is null and $2 is null then\n    return true;\n  else\n    return $1::int = $2::int;\n  end if;\nend;\n' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"create function myintne(myint, myint) returns bool as $$\nbegin\n  return not myinteq($1, $2);\nend;\n$$ language plpgsql immutable","shape":"CREATE FUNCTION myintne(myint, myint) RETURNS bool AS '\nbegin\n  return not myinteq($1, $2);\nend;\n' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"create operator = (\n  leftarg    = myint,\n  rightarg   = myint,\n  commutator = =,\n  negator    = <>,\n  procedure  = myinteq,\n  restrict   = eqsel,\n  join       = eqjoinsel,\n  merges\n)"}
+{"sql":"create operator <> (\n  leftarg    = myint,\n  rightarg   = myint,\n  commutator = <>,\n  negator    = =,\n  procedure  = myintne,\n  restrict   = eqsel,\n  join       = eqjoinsel,\n  merges\n)"}
+{"sql":"create operator class myint_ops\ndefault for type myint using hash as\n  operator    1   =  (myint, myint),\n  function    1   myinthash(myint)"}
+{"sql":"create table inttest (a myint)","shape":"CREATE TABLE inttest (a myint);"}
+{"sql":"insert into inttest values(1::myint),(null)","shape":"INSERT INTO inttest VALUES (1::myint), (NULL);"}
+{"sql":"select * from inttest where a in (1::myint,2::myint,3::myint,4::myint,5::myint,6::myint,7::myint,8::myint,9::myint, null)","shape":"SELECT * FROM inttest WHERE a IN (1::myint, 2::myint, 3::myint, 4::myint, 5::myint, 6::myint, 7::myint, 8::myint, 9::myint, NULL);"}
+{"sql":"select * from inttest where a not in (1::myint,2::myint,3::myint,4::myint,5::myint,6::myint,7::myint,8::myint,9::myint, null)","shape":"SELECT * FROM inttest WHERE a NOT IN (1::myint, 2::myint, 3::myint, 4::myint, 5::myint, 6::myint, 7::myint, 8::myint, 9::myint, NULL);"}
+{"sql":"select * from inttest where a not in (0::myint,2::myint,3::myint,4::myint,5::myint,6::myint,7::myint,8::myint,9::myint, null)","shape":"SELECT * FROM inttest WHERE a NOT IN (0::myint, 2::myint, 3::myint, 4::myint, 5::myint, 6::myint, 7::myint, 8::myint, 9::myint, NULL);"}
+{"sql":"select * from inttest where a in (1::myint,2::myint,3::myint,4::myint,5::myint, null)","shape":"SELECT * FROM inttest WHERE a IN (1::myint, 2::myint, 3::myint, 4::myint, 5::myint, NULL);"}
+{"sql":"select * from inttest where a not in (1::myint,2::myint,3::myint,4::myint,5::myint, null)","shape":"SELECT * FROM inttest WHERE a NOT IN (1::myint, 2::myint, 3::myint, 4::myint, 5::myint, NULL);"}
+{"sql":"select * from inttest where a not in (0::myint,2::myint,3::myint,4::myint,5::myint, null)","shape":"SELECT * FROM inttest WHERE a NOT IN (0::myint, 2::myint, 3::myint, 4::myint, 5::myint, NULL);"}

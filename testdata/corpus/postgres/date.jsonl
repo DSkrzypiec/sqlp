@@ -1,0 +1,179 @@
+{"sql":"CREATE TABLE DATE_TBL (f1 date)","shape":"CREATE TABLE DATE_TBL (f1 date);"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1957-04-09')","shape":"INSERT INTO DATE_TBL VALUES ('1957-04-09');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1957-06-13')","shape":"INSERT INTO DATE_TBL VALUES ('1957-06-13');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1996-02-28')","shape":"INSERT INTO DATE_TBL VALUES ('1996-02-28');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1996-02-29')","shape":"INSERT INTO DATE_TBL VALUES ('1996-02-29');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1996-03-01')","shape":"INSERT INTO DATE_TBL VALUES ('1996-03-01');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1996-03-02')","shape":"INSERT INTO DATE_TBL VALUES ('1996-03-02');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1997-02-28')","shape":"INSERT INTO DATE_TBL VALUES ('1997-02-28');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1997-02-29')","shape":"INSERT INTO DATE_TBL VALUES ('1997-02-29');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1997-03-01')","shape":"INSERT INTO DATE_TBL VALUES ('1997-03-01');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('1997-03-02')","shape":"INSERT INTO DATE_TBL VALUES ('1997-03-02');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2000-04-01')","shape":"INSERT INTO DATE_TBL VALUES ('2000-04-01');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2000-04-02')","shape":"INSERT INTO DATE_TBL VALUES ('2000-04-02');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2000-04-03')","shape":"INSERT INTO DATE_TBL VALUES ('2000-04-03');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2038-04-08')","shape":"INSERT INTO DATE_TBL VALUES ('2038-04-08');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2039-04-09')","shape":"INSERT INTO DATE_TBL VALUES ('2039-04-09');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2040-04-10')","shape":"INSERT INTO DATE_TBL VALUES ('2040-04-10');"}
+{"sql":"INSERT INTO DATE_TBL VALUES ('2040-04-10 BC')","shape":"INSERT INTO DATE_TBL VALUES ('2040-04-10 BC');"}
+{"sql":"SELECT f1 FROM DATE_TBL","shape":"SELECT f1 FROM DATE_TBL;"}
+{"sql":"SELECT f1 FROM DATE_TBL WHERE f1 < '2000-01-01'","shape":"SELECT f1 FROM DATE_TBL WHERE f1 < '2000-01-01';"}
+{"sql":"SELECT f1 FROM DATE_TBL\n  WHERE f1 BETWEEN '2000-01-01' AND '2001-01-01'","shape":"SELECT f1 FROM DATE_TBL WHERE f1 BETWEEN '2000-01-01' AND '2001-01-01';"}
+{"sql":"SET datestyle TO ymd","shape":"SET datestyle TO ymd;"}
+{"sql":"SELECT date 'January 8, 1999'","shape":"SELECT date 'January 8, 1999';"}
+{"sql":"SELECT date '1999-01-08'","shape":"SELECT date '1999-01-08';"}
+{"sql":"SELECT date '1999-01-18'","shape":"SELECT date '1999-01-18';"}
+{"sql":"SELECT date '1/8/1999'","shape":"SELECT date '1/8/1999';"}
+{"sql":"SELECT date '1/18/1999'","shape":"SELECT date '1/18/1999';"}
+{"sql":"SELECT date '18/1/1999'","shape":"SELECT date '18/1/1999';"}
+{"sql":"SELECT date '01/02/03'","shape":"SELECT date '01/02/03';"}
+{"sql":"SELECT date '19990108'","shape":"SELECT date '19990108';"}
+{"sql":"SELECT date '990108'","shape":"SELECT date '990108';"}
+{"sql":"SELECT date '1999.008'","shape":"SELECT date '1999.008';"}
+{"sql":"SELECT date 'J2451187'","shape":"SELECT date 'J2451187';"}
+{"sql":"SELECT date 'January 8, 99 BC'","shape":"SELECT date 'January 8, 99 BC';"}
+{"sql":"SELECT date '99-Jan-08'","shape":"SELECT date '99-Jan-08';"}
+{"sql":"SELECT date '1999-Jan-08'","shape":"SELECT date '1999-Jan-08';"}
+{"sql":"SELECT date '08-Jan-99'","shape":"SELECT date '08-Jan-99';"}
+{"sql":"SELECT date '08-Jan-1999'","shape":"SELECT date '08-Jan-1999';"}
+{"sql":"SELECT date 'Jan-08-99'","shape":"SELECT date 'Jan-08-99';"}
+{"sql":"SELECT date 'Jan-08-1999'","shape":"SELECT date 'Jan-08-1999';"}
+{"sql":"SELECT date '99-08-Jan'","shape":"SELECT date '99-08-Jan';"}
+{"sql":"SELECT date '1999-08-Jan'","shape":"SELECT date '1999-08-Jan';"}
+{"sql":"SELECT date '99 Jan 08'","shape":"SELECT date '99 Jan 08';"}
+{"sql":"SELECT date '1999 Jan 08'","shape":"SELECT date '1999 Jan 08';"}
+{"sql":"SELECT date '08 Jan 99'","shape":"SELECT date '08 Jan 99';"}
+{"sql":"SELECT date '08 Jan 1999'","shape":"SELECT date '08 Jan 1999';"}
+{"sql":"SELECT date 'Jan 08 99'","shape":"SELECT date 'Jan 08 99';"}
+{"sql":"SELECT date 'Jan 08 1999'","shape":"SELECT date 'Jan 08 1999';"}
+{"sql":"SELECT date '99 08 Jan'","shape":"SELECT date '99 08 Jan';"}
+{"sql":"SELECT date '1999 08 Jan'","shape":"SELECT date '1999 08 Jan';"}
+{"sql":"SELECT date '99-01-08'","shape":"SELECT date '99-01-08';"}
+{"sql":"SELECT date '08-01-99'","shape":"SELECT date '08-01-99';"}
+{"sql":"SELECT date '08-01-1999'","shape":"SELECT date '08-01-1999';"}
+{"sql":"SELECT date '01-08-99'","shape":"SELECT date '01-08-99';"}
+{"sql":"SELECT date '01-08-1999'","shape":"SELECT date '01-08-1999';"}
+{"sql":"SELECT date '99-08-01'","shape":"SELECT date '99-08-01';"}
+{"sql":"SELECT date '1999-08-01'","shape":"SELECT date '1999-08-01';"}
+{"sql":"SELECT date '99 01 08'","shape":"SELECT date '99 01 08';"}
+{"sql":"SELECT date '1999 01 08'","shape":"SELECT date '1999 01 08';"}
+{"sql":"SELECT date '08 01 99'","shape":"SELECT date '08 01 99';"}
+{"sql":"SELECT date '08 01 1999'","shape":"SELECT date '08 01 1999';"}
+{"sql":"SELECT date '01 08 99'","shape":"SELECT date '01 08 99';"}
+{"sql":"SELECT date '01 08 1999'","shape":"SELECT date '01 08 1999';"}
+{"sql":"SELECT date '99 08 01'","shape":"SELECT date '99 08 01';"}
+{"sql":"SELECT date '1999 08 01'","shape":"SELECT date '1999 08 01';"}
+{"sql":"SET datestyle TO dmy","shape":"SET datestyle TO dmy;"}
+{"sql":"SET datestyle TO mdy","shape":"SET datestyle TO mdy;"}
+{"sql":"SELECT date '4714-11-24 BC'","shape":"SELECT date '4714-11-24 BC';"}
+{"sql":"SELECT date '4714-11-23 BC'","shape":"SELECT date '4714-11-23 BC';"}
+{"sql":"SELECT date '5874897-12-31'","shape":"SELECT date '5874897-12-31';"}
+{"sql":"SELECT date '5874898-01-01'","shape":"SELECT date '5874898-01-01';"}
+{"sql":"SELECT pg_input_is_valid('now', 'date')","shape":"SELECT pg_input_is_valid('now', 'date');"}
+{"sql":"SELECT pg_input_is_valid('garbage', 'date')","shape":"SELECT pg_input_is_valid('garbage', 'date');"}
+{"sql":"SELECT pg_input_is_valid('6874898-01-01', 'date')","shape":"SELECT pg_input_is_valid('6874898-01-01', 'date');"}
+{"sql":"SELECT * FROM pg_input_error_info('garbage', 'date')","shape":"SELECT * FROM pg_input_error_info('garbage', 'date');"}
+{"sql":"SELECT * FROM pg_input_error_info('6874898-01-01', 'date')","shape":"SELECT * FROM pg_input_error_info('6874898-01-01', 'date');"}
+{"sql":"SELECT f1 - date '2000-01-01' AS \"Days From 2K\" FROM DATE_TBL","shape":"SELECT f1 - date '2000-01-01' AS \"Days From 2K\" FROM DATE_TBL;"}
+{"sql":"SELECT f1 - date 'epoch' AS \"Days From Epoch\" FROM DATE_TBL","shape":"SELECT f1 - date 'epoch' AS \"Days From Epoch\" FROM DATE_TBL;"}
+{"sql":"SELECT date 'yesterday' - date 'today' AS \"One day\"","shape":"SELECT date 'yesterday' - date 'today' AS \"One day\";"}
+{"sql":"SELECT date 'today' - date 'tomorrow' AS \"One day\"","shape":"SELECT date 'today' - date 'tomorrow' AS \"One day\";"}
+{"sql":"SELECT date 'yesterday' - date 'tomorrow' AS \"Two days\"","shape":"SELECT date 'yesterday' - date 'tomorrow' AS \"Two days\";"}
+{"sql":"SELECT date 'tomorrow' - date 'today' AS \"One day\"","shape":"SELECT date 'tomorrow' - date 'today' AS \"One day\";"}
+{"sql":"SELECT date 'today' - date 'yesterday' AS \"One day\"","shape":"SELECT date 'today' - date 'yesterday' AS \"One day\";"}
+{"sql":"SELECT date 'tomorrow' - date 'yesterday' AS \"Two days\"","shape":"SELECT date 'tomorrow' - date 'yesterday' AS \"Two days\";"}
+{"sql":"SELECT f1 as \"date\",\n    date_part('year', f1) AS year,\n    date_part('month', f1) AS month,\n    date_part('day', f1) AS day,\n    date_part('quarter', f1) AS quarter,\n    date_part('decade', f1) AS decade,\n    date_part('century', f1) AS century,\n    date_part('millennium', f1) AS millennium,\n    date_part('isoyear', f1) AS isoyear,\n    date_part('week', f1) AS week,\n    date_part('dow', f1) AS dow,\n    date_part('isodow', f1) AS isodow,\n    date_part('doy', f1) AS doy,\n    date_part('julian', f1) AS julian,\n    date_part('epoch', f1) AS epoch\n    FROM date_tbl","shape":"SELECT f1 AS \"date\", date_part('year', f1) AS year, date_part('month', f1) AS month, date_part('day', f1) AS day, date_part('quarter', f1) AS quarter, date_part('decade', f1) AS decade, date_part('century', f1) AS century, date_part('millennium', f1) AS millennium, date_part('isoyear', f1) AS isoyear, date_part('week', f1) AS week, date_part('dow', f1) AS dow, date_part('isodow', f1) AS isodow, date_part('doy', f1) AS doy, date_part('julian', f1) AS julian, date_part('epoch', f1) AS epoch FROM date_tbl;"}
+{"sql":"SELECT EXTRACT(EPOCH FROM DATE        '1970-01-01')","shape":"SELECT EXTRACT(EPOCH FROM DATE '1970-01-01');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '0101-12-31 BC')","shape":"SELECT EXTRACT(CENTURY FROM DATE '0101-12-31 BC');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '0100-12-31 BC')","shape":"SELECT EXTRACT(CENTURY FROM DATE '0100-12-31 BC');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '0001-12-31 BC')","shape":"SELECT EXTRACT(CENTURY FROM DATE '0001-12-31 BC');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '0001-01-01')","shape":"SELECT EXTRACT(CENTURY FROM DATE '0001-01-01');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '0001-01-01 AD')","shape":"SELECT EXTRACT(CENTURY FROM DATE '0001-01-01 AD');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '1900-12-31')","shape":"SELECT EXTRACT(CENTURY FROM DATE '1900-12-31');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '1901-01-01')","shape":"SELECT EXTRACT(CENTURY FROM DATE '1901-01-01');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '2000-12-31')","shape":"SELECT EXTRACT(CENTURY FROM DATE '2000-12-31');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM DATE '2001-01-01')","shape":"SELECT EXTRACT(CENTURY FROM DATE '2001-01-01');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM CURRENT_DATE)>=21 AS True","shape":"SELECT EXTRACT(CENTURY FROM CURRENT_DATE) >= 21 AS True;"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE '0001-12-31 BC')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '0001-12-31 BC');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE '0001-01-01 AD')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '0001-01-01 AD');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE '1000-12-31')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '1000-12-31');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE '1001-01-01')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '1001-01-01');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE '2000-12-31')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '2000-12-31');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE '2001-01-01')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '2001-01-01');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM CURRENT_DATE)","shape":"SELECT EXTRACT(MILLENNIUM FROM CURRENT_DATE);"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '1994-12-25')","shape":"SELECT EXTRACT(DECADE FROM DATE '1994-12-25');"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '0010-01-01')","shape":"SELECT EXTRACT(DECADE FROM DATE '0010-01-01');"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '0009-12-31')","shape":"SELECT EXTRACT(DECADE FROM DATE '0009-12-31');"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '0001-01-01 BC')","shape":"SELECT EXTRACT(DECADE FROM DATE '0001-01-01 BC');"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '0002-12-31 BC')","shape":"SELECT EXTRACT(DECADE FROM DATE '0002-12-31 BC');"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '0011-01-01 BC')","shape":"SELECT EXTRACT(DECADE FROM DATE '0011-01-01 BC');"}
+{"sql":"SELECT EXTRACT(DECADE FROM DATE '0012-12-31 BC')","shape":"SELECT EXTRACT(DECADE FROM DATE '0012-12-31 BC');"}
+{"sql":"SELECT EXTRACT(MICROSECONDS  FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(MICROSECONDS FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(MILLISECONDS  FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(MILLISECONDS FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(SECOND        FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(SECOND FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(MINUTE        FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(MINUTE FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(HOUR          FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(HOUR FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(DAY           FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(DAY FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(MONTH         FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(MONTH FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(YEAR          FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(YEAR FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(YEAR          FROM DATE '2020-08-11 BC')","shape":"SELECT EXTRACT(YEAR FROM DATE '2020-08-11 BC');"}
+{"sql":"SELECT EXTRACT(DECADE        FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(DECADE FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(CENTURY       FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(CENTURY FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM    FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(ISOYEAR       FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(ISOYEAR FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(ISOYEAR       FROM DATE '2020-08-11 BC')","shape":"SELECT EXTRACT(ISOYEAR FROM DATE '2020-08-11 BC');"}
+{"sql":"SELECT EXTRACT(QUARTER       FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(QUARTER FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(WEEK          FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(WEEK FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(DOW           FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(DOW FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(DOW           FROM DATE '2020-08-16')","shape":"SELECT EXTRACT(DOW FROM DATE '2020-08-16');"}
+{"sql":"SELECT EXTRACT(ISODOW        FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(ISODOW FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(ISODOW        FROM DATE '2020-08-16')","shape":"SELECT EXTRACT(ISODOW FROM DATE '2020-08-16');"}
+{"sql":"SELECT EXTRACT(DOY           FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(DOY FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(TIMEZONE      FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(TIMEZONE FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(TIMEZONE_M    FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(TIMEZONE_M FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(TIMEZONE_H    FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(TIMEZONE_H FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(EPOCH         FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(EPOCH FROM DATE '2020-08-11');"}
+{"sql":"SELECT EXTRACT(JULIAN        FROM DATE '2020-08-11')","shape":"SELECT EXTRACT(JULIAN FROM DATE '2020-08-11');"}
+{"sql":"SELECT DATE_TRUNC('MILLENNIUM', TIMESTAMP '1970-03-20 04:30:00.00000')","shape":"SELECT DATE_TRUNC('MILLENNIUM', TIMESTAMP '1970-03-20 04:30:00.00000');"}
+{"sql":"SELECT DATE_TRUNC('MILLENNIUM', DATE '1970-03-20')","shape":"SELECT DATE_TRUNC('MILLENNIUM', DATE '1970-03-20');"}
+{"sql":"SELECT DATE_TRUNC('CENTURY', TIMESTAMP '1970-03-20 04:30:00.00000')","shape":"SELECT DATE_TRUNC('CENTURY', TIMESTAMP '1970-03-20 04:30:00.00000');"}
+{"sql":"SELECT DATE_TRUNC('CENTURY', DATE '1970-03-20')","shape":"SELECT DATE_TRUNC('CENTURY', DATE '1970-03-20');"}
+{"sql":"SELECT DATE_TRUNC('CENTURY', DATE '2004-08-10')","shape":"SELECT DATE_TRUNC('CENTURY', DATE '2004-08-10');"}
+{"sql":"SELECT DATE_TRUNC('CENTURY', DATE '0002-02-04')","shape":"SELECT DATE_TRUNC('CENTURY', DATE '0002-02-04');"}
+{"sql":"SELECT DATE_TRUNC('CENTURY', DATE '0055-08-10 BC')","shape":"SELECT DATE_TRUNC('CENTURY', DATE '0055-08-10 BC');"}
+{"sql":"SELECT DATE_TRUNC('DECADE', DATE '1993-12-25')","shape":"SELECT DATE_TRUNC('DECADE', DATE '1993-12-25');"}
+{"sql":"SELECT DATE_TRUNC('DECADE', DATE '0004-12-25')","shape":"SELECT DATE_TRUNC('DECADE', DATE '0004-12-25');"}
+{"sql":"SELECT DATE_TRUNC('DECADE', DATE '0002-12-31 BC')","shape":"SELECT DATE_TRUNC('DECADE', DATE '0002-12-31 BC');"}
+{"sql":"select 'infinity'::date, '-infinity'::date","shape":"SELECT 'infinity'::date, '-infinity'::date;"}
+{"sql":"select 'infinity'::date > 'today'::date as t","shape":"SELECT 'infinity'::date > 'today'::date AS t;"}
+{"sql":"select '-infinity'::date < 'today'::date as t","shape":"SELECT '-infinity'::date < 'today'::date AS t;"}
+{"sql":"select isfinite('infinity'::date), isfinite('-infinity'::date), isfinite('today'::date)","shape":"SELECT isfinite('infinity'::date), isfinite('-infinity'::date), isfinite('today'::date);"}
+{"sql":"select 'infinity'::date = '+infinity'::date as t","shape":"SELECT 'infinity'::date = '+infinity'::date AS t;"}
+{"sql":"SELECT EXTRACT(DAY FROM DATE 'infinity')","shape":"SELECT EXTRACT(DAY FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(DAY FROM DATE '-infinity')","shape":"SELECT EXTRACT(DAY FROM DATE '-infinity');"}
+{"sql":"SELECT EXTRACT(DAY           FROM DATE 'infinity')","shape":"SELECT EXTRACT(DAY FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(MONTH         FROM DATE 'infinity')","shape":"SELECT EXTRACT(MONTH FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(QUARTER       FROM DATE 'infinity')","shape":"SELECT EXTRACT(QUARTER FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(WEEK          FROM DATE 'infinity')","shape":"SELECT EXTRACT(WEEK FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(DOW           FROM DATE 'infinity')","shape":"SELECT EXTRACT(DOW FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(ISODOW        FROM DATE 'infinity')","shape":"SELECT EXTRACT(ISODOW FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(DOY           FROM DATE 'infinity')","shape":"SELECT EXTRACT(DOY FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(EPOCH FROM DATE 'infinity')","shape":"SELECT EXTRACT(EPOCH FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(EPOCH FROM DATE '-infinity')","shape":"SELECT EXTRACT(EPOCH FROM DATE '-infinity');"}
+{"sql":"SELECT EXTRACT(YEAR       FROM DATE 'infinity')","shape":"SELECT EXTRACT(YEAR FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(DECADE     FROM DATE 'infinity')","shape":"SELECT EXTRACT(DECADE FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(CENTURY    FROM DATE 'infinity')","shape":"SELECT EXTRACT(CENTURY FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(MILLENNIUM FROM DATE 'infinity')","shape":"SELECT EXTRACT(MILLENNIUM FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(JULIAN     FROM DATE 'infinity')","shape":"SELECT EXTRACT(JULIAN FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(ISOYEAR    FROM DATE 'infinity')","shape":"SELECT EXTRACT(ISOYEAR FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(EPOCH      FROM DATE 'infinity')","shape":"SELECT EXTRACT(EPOCH FROM DATE 'infinity');"}
+{"sql":"SELECT EXTRACT(MICROSEC  FROM DATE 'infinity')","shape":"SELECT EXTRACT(MICROSEC FROM DATE 'infinity');"}
+{"sql":"select make_date(2013, 7, 15)","shape":"SELECT make_date(2013, 7, 15);"}
+{"sql":"select make_date(-44, 3, 15)","shape":"SELECT make_date(-44, 3, 15);"}
+{"sql":"select make_time(8, 20, 0.0)","shape":"SELECT make_time(8, 20, 0.0);"}
+{"sql":"select make_date(0, 7, 15)","shape":"SELECT make_date(0, 7, 15);"}
+{"sql":"select make_date(2013, 2, 30)","shape":"SELECT make_date(2013, 2, 30);"}
+{"sql":"select make_date(2013, 13, 1)","shape":"SELECT make_date(2013, 13, 1);"}
+{"sql":"select make_date(2013, 11, -1)","shape":"SELECT make_date(2013, 11, -1);"}
+{"sql":"select make_time(10, 55, 100.1)","shape":"SELECT make_time(10, 55, 100.1);"}
+{"sql":"select make_time(24, 0, 2.1)","shape":"SELECT make_time(24, 0, 2.1);"}

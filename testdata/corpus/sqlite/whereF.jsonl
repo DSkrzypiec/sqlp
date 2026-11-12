@@ -1,0 +1,31 @@
+{"sql":"CREATE UNIQUE INDEX i2 ON t2(d)"}
+{"sql":"CREATE UNIQUE INDEX i2 ON t1(b)"}
+{"sql":"CREATE UNIQUE INDEX i3 ON t2(d)"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(a, b)"}
+{"sql":"CREATE TABLE t4(a,b,c,d,e, PRIMARY KEY(a,b,c))"}
+{"sql":"CREATE INDEX t4adc ON t4(a,d,c)"}
+{"sql":"CREATE UNIQUE INDEX t4aebc ON t4(a,e,b,c)"}
+{"sql":"EXPLAIN QUERY PLAN SELECT rowid FROM t4 WHERE a=? AND b=?"}
+{"sql":"CREATE TABLE t1(f1)"}
+{"sql":"CREATE TABLE t2(f2)"}
+{"sql":"CREATE INDEX t2f ON t2(f2)"}
+{"sql":"WITH w(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM w WHERE i<1000\n  )\n  INSERT INTO t2 SELECT -1 FROM w"}
+{"sql":"SELECT count(*) FROM t1, t2 WHERE t2.rowid = +t1.rowid"}
+{"sql":"SELECT count(*) FROM t1, t2 WHERE (\n    t2.rowid = +t1.rowid OR t2.f2 = t1.f1\n  )"}
+{"sql":"SELECT count(*) FROM t1, t2 WHERE (\n    t2.rowid = +t1.rowid OR (t2.f2 = t1.f1 AND t1.f1!=-1)\n  )"}
+{"sql":"SELECT * FROM t6 WHERE 1 IN (SELECT value FROM json_each(x))"}
+{"sql":"SELECT * FROM t6\n     WHERE (EXISTS (SELECT 1 FROM json_each(t6.c) AS x WHERE x.value=1))"}
+{"sql":"DROP TABLE IF EXISTS cd"}
+{"sql":"CREATE TABLE cd ( cdid INTEGER PRIMARY KEY NOT NULL, genreid integer )"}
+{"sql":"CREATE INDEX cd_idx_genreid ON cd (genreid)"}
+{"sql":"INSERT INTO cd  ( cdid, genreid ) VALUES\n                     ( 1,    1 ),\n                     ( 2, NULL ),\n                     ( 3, NULL ),\n                     ( 4, NULL ),\n                     ( 5, NULL )"}
+{"sql":"SELECT cdid\n    FROM cd me\n  WHERE 2 > (\n    SELECT COUNT( * )\n      FROM cd rownum__emulation\n    WHERE\n      (\n        me.genreid IS NOT NULL\n          AND\n        rownum__emulation.genreid IS NULL\n      )\n        OR\n      (\n        me.genreid IS NOT NULL\n          AND\n        rownum__emulation.genreid IS NOT NULL\n          AND\n        rownum__emulation.genreid < me.genreid\n      )\n        OR\n      (\n        ( me.genreid = rownum__emulation.genreid OR ( me.genreid IS NULL\n  AND rownum__emulation.genreid IS NULL ) )\n          AND\n        rownum__emulation.cdid > me.cdid\n      )\n  )"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,1)"}
+{"sql":"CREATE TABLE t2(aa INTEGER PRIMARY KEY, bb)"}
+{"sql":"INSERT INTO t2(aa,bb) VALUES(1,1),(2,NULL),(3,NULL)"}
+{"sql":"SELECT (\n    SELECT COUNT(*) FROM t2\n     WHERE ( t1.b IS NOT NULL AND t2.bb IS NULL )\n        OR ( t2.bb < t1.b )\n        OR ( t1.b IS t2.bb AND t2.aa > t1.a )\n    )\n    FROM t1"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,'abcxyz')"}
+{"sql":"CREATE TABLE t2(aa INTEGER PRIMARY KEY, bb TEXT)"}
+{"sql":"INSERT INTO t2(aa,bb) VALUES(1,'abc'),(2,'wxyz'),(3,'xyz')"}
+{"sql":"CREATE INDEX t2bb ON t2(bb)"}
+{"sql":"EXPLAIN SELECT (\n    SELECT COUNT(*) FROM t2\n     WHERE ( t1.b GLOB 'a*z' AND t2.bb='xyz' )\n        OR ( t2.bb = t1.b )\n        OR ( t2.aa = t1.a )\n    )\n    FROM t1"}

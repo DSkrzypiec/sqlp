@@ -1,0 +1,40 @@
+{"sql":"pragma recursive_triggers = off"}
+{"sql":"CREATE TABLE aux.t3(e, f)"}
+{"sql":"SELECT * FROM sqlite_master WHERE name = 't3'"}
+{"sql":"SELECT * FROM aux.sqlite_master WHERE name = 't3'"}
+{"sql":"INSERT INTO t3 VALUES(1, 2)"}
+{"sql":"CREATE INDEX aux.i1 on t3(e)"}
+{"sql":"SELECT * FROM sqlite_master WHERE name = 'i1'"}
+{"sql":"SELECT * FROM aux.sqlite_master WHERE name = 'i1'"}
+{"sql":"DROP INDEX aux.i1"}
+{"sql":"DROP INDEX i1"}
+{"sql":"SELECT name FROM aux.sqlite_master"}
+{"sql":"CREATE VIEW aux.v1 AS SELECT * FROM t3"}
+{"sql":"SELECT * FROM aux.sqlite_master WHERE name = 'v1'"}
+{"sql":"INSERT INTO aux.t3 VALUES('hello', 'world')"}
+{"sql":"DROP VIEW aux.v1"}
+{"sql":"CREATE TRIGGER aux.tr1 AFTER INSERT ON t3 BEGIN\n      INSERT INTO t3 VALUES(new.e*2, new.f*2);\n    END"}
+{"sql":"INSERT INTO t3 VALUES(10, 20)"}
+{"sql":"SELECT * FROM aux.sqlite_master WHERE name = 'tr1'"}
+{"sql":"DROP TRIGGER aux.tr1"}
+{"sql":"CREATE TABLE main.t4(a, b, c)"}
+{"sql":"CREATE TABLE aux.t4(a, b, c)"}
+{"sql":"CREATE TEMP TRIGGER tst_trigger BEFORE INSERT ON aux.t4 BEGIN \n        SELECT 'hello world';\n      END"}
+{"sql":"SELECT count(*) FROM temp.sqlite_master"}
+{"sql":"DROP TABLE main.t4"}
+{"sql":"SELECT count(*) FROM sqlite_temp_master"}
+{"sql":"DROP TABLE aux.t4"}
+{"sql":"INSERT INTO aux.sqlite_master VALUES(1, 2, 3, 4, 5)"}
+{"sql":"ATTACH DATABASE '/nodir/nofile.x' AS notadb"}
+{"sql":"ATTACH DATABASE ':memory:' AS notadb"}
+{"sql":"DETACH DATABASE notadb"}
+{"sql":"create temp table dummy(dummy)"}
+{"sql":"ATTACH DATABASE ? AS ?"}
+{"sql":"DETACH ?"}
+{"sql":"ATTACH DATABASE '' AS ''"}
+{"sql":"DETACH ''"}
+{"sql":"ATTACH DATABASE '' AS ?"}
+{"sql":"ATTACH DATABASE '' AS NULL"}
+{"sql":"DETACH NULL"}
+{"sql":"ATTACH null AS null"}
+{"sql":"ATTACH '' AS ''"}

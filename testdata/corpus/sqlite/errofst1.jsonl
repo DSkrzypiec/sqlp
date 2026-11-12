@@ -1,0 +1,2 @@
+{"sql":"CREATE TABLE t1 as select 1 as aa"}
+{"sql":"CREATE VIEW t2 AS\n     WITH t3 AS (SELECT 1 FROM t1 AS bb, t1 AS cc WHERE cc.aa <= sts.aa)\n     SELECT 1 FROM t3 AS dd"}

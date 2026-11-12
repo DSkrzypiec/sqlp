@@ -1,0 +1,6 @@
+{"sql":"SELECT 'abc' FROM ( SELECT 'xyz' FROM t1 WHERE (SELECT 1) )"}
+{"sql":"SELECT instr(x'', x'')"}
+{"sql":"SELECT instr(x'12345678', x'')"}
+{"sql":"SELECT instr(x'', x'1234')"}
+{"sql":"SELECT instr (x'00', zeroblob(1))"}
+{"sql":"SELECT instr (zeroblob(1), x'00')"}

@@ -1,0 +1,34 @@
+{"sql":"PRAGMA page_size=4096"}
+{"sql":"PRAGMA journal_mode=WAL"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n      INSERT INTO t1(a,b) SELECT x, printf('%d-x%.*c',x,x,'x') FROM c"}
+{"sql":"SELECT pgno, quote(substr(data,1,5)) FROM sqlite_dbpage('main') ORDER BY pgno"}
+{"sql":"SELECT pgno, quote(substr(data,1,5)) FROM sqlite_dbpage WHERE pgno=2"}
+{"sql":"SELECT pgno, quote(substr(data,1,5)) FROM sqlite_dbpage WHERE pgno=4"}
+{"sql":"SELECT pgno, quote(substr(data,1,5)) FROM sqlite_dbpage WHERE pgno=5"}
+{"sql":"SELECT pgno, quote(substr(data,1,5)) FROM sqlite_dbpage WHERE pgno=0"}
+{"sql":"PRAGMA aux1.page_size=4096"}
+{"sql":"CREATE TABLE aux1.t2(a,b,c)"}
+{"sql":"INSERT INTO t2 VALUES(11,12,13)"}
+{"sql":"SELECT pgno, quote(substr(data,1,5)) FROM sqlite_dbpage('aux1')"}
+{"sql":"CREATE TABLE aux1.x3(x,y,z)"}
+{"sql":"INSERT INTO x3(x,y,z) VALUES(1,'main',1),(2,'aux1',1)"}
+{"sql":"SELECT pgno, schema, substr(data,1,6)\n    FROM sqlite_dbpage, x3\n   WHERE sqlite_dbpage.schema=x3.y AND sqlite_dbpage.pgno=x3.z\n   ORDER BY x3.x"}
+{"sql":"CREATE TEMP TABLE saved_content(x)"}
+{"sql":"INSERT INTO saved_content(x) SELECT data FROM sqlite_dbpage WHERE pgno=4"}
+{"sql":"UPDATE sqlite_dbpage SET data=zeroblob(4096) WHERE pgno=4"}
+{"sql":"UPDATE sqlite_dbpage SET data=(SELECT x FROM saved_content) WHERE pgno=4"}
+{"sql":"DELETE FROM saved_content"}
+{"sql":"INSERT INTO saved_content(x) \n     SELECT data FROM sqlite_dbpage WHERE schema='aux1' AND pgno=2"}
+{"sql":"UPDATE sqlite_dbpage SET data=zeroblob(4096) WHERE pgno=2 AND schema='aux1'"}
+{"sql":"PRAGMA aux1.integrity_check"}
+{"sql":"UPDATE sqlite_dbpage SET data=(SELECT x FROM saved_content)\n   WHERE pgno=2 AND schema='aux1'"}
+{"sql":"SELECT * FROM sqlite_temp_schema, sqlite_dbpage"}
+{"sql":"CREATE VIRTUAL TABLE aux1.t1 USING sqlite_dbpage"}
+{"sql":"INSERT INTO t1 VALUES(17, NULL)"}
+{"sql":"INSERT INTO x1 VALUES( hex(randomblob(2000)) )"}
+{"sql":"INSERT INTO t1 VALUES(1234)"}
+{"sql":"CREATE TABLE aux.x1(z)"}
+{"sql":"INSERT INTO t1 VALUES( hex(randomblob(1000)) )"}
+{"sql":"SAVEPOINT abc"}
+{"sql":"INSERT INTO sqlite_dbpage VALUES(2, NULL)"}
+{"sql":"ROLLBACK TO abc"}

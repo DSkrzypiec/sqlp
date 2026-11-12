@@ -1,0 +1,118 @@
+{"sql":"CREATE TABLE t0(c0 AS(TYPEOF(c1)), c1)"}
+{"sql":"INSERT INTO t0(c1) VALUES(0)"}
+{"sql":"CREATE TABLE t1(x AS (typeof(y)), y)"}
+{"sql":"INSERT INTO t1 SELECT * FROM t0"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES(1,'abcdef',5.5),(3,'cantaloupe',NULL)"}
+{"sql":"SELECT w, x, y, '|' FROM t1 ORDER BY a"}
+{"sql":"SELECT w, x, y, '|' FROM t1 ORDER BY w"}
+{"sql":"SELECT a FROM t1 WHERE w=30"}
+{"sql":"SELECT a FROM t1 WHERE x='real'"}
+{"sql":"SELECT a FROM t1 WHERE y LIKE '%tal%' OR x='real' ORDER BY b"}
+{"sql":"CREATE INDEX t1w ON t1(w)"}
+{"sql":"SELECT a FROM t1 WHERE w=10"}
+{"sql":"CREATE INDEX t1x ON t1(x) WHERE w BETWEEN 20 AND 40"}
+{"sql":"SELECT a FROM t1 WHERE x='null' AND w BETWEEN 20 AND 40"}
+{"sql":"UPDATE t1 SET a=a+100 WHERE w<20"}
+{"sql":"SELECT a, w, '|' FROM t1 ORDER BY w"}
+{"sql":"INSERT INTO t1 VALUES(4,'jambalaya','Chef John'),(15,87719874135,0)"}
+{"sql":"CREATE TABLE t0(c0 PRIMARY KEY, c1, c2 AS (c0+c1-c3) REFERENCES t0, c3)"}
+{"sql":"INSERT INTO t0 VALUES (0, 0, 0), (11, 5, 5)"}
+{"sql":"UPDATE t0 SET c1 = c0, c3 = c0"}
+{"sql":"SELECT *, '|' FROM t0 ORDER BY +c0"}
+{"sql":"UPDATE t0 SET c1 = c0, c3 = c0+1"}
+{"sql":"CREATE TABLE t0 (\n    c0,\n    c1 a UNIQUE AS (1),\n    c2,\n    c3 REFERENCES t0(c1)\n  )"}
+{"sql":"INSERT INTO t0(c0,c2,c3) VALUES(0,0,1)"}
+{"sql":"REPLACE INTO t0(c0,c2,c3) VALUES(0,0,0),(0,0,0)"}
+{"sql":"CREATE TABLE t1(\n    gcb AS (b*1),\n    a INTEGER PRIMARY KEY,\n    gcc AS (c+0),\n    b UNIQUE,\n    gca AS (1*a+0),\n    c UNIQUE\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(4,5,6)"}
+{"sql":"INSERT INTO t1 VALUES(7,8,9)"}
+{"sql":"CREATE TABLE t1a(\n    gcx AS (x+0) REFERENCES t1(a) ON DELETE CASCADE,\n    id,\n    x,\n    gcid AS (1*id)\n  )"}
+{"sql":"INSERT INTO t1a VALUES(1, 1)"}
+{"sql":"INSERT INTO t1a VALUES(2, 4)"}
+{"sql":"INSERT INTO t1a VALUES(3, 7)"}
+{"sql":"DELETE FROM t1 WHERE b=5"}
+{"sql":"SELECT id,x,'|' FROM t1a ORDER BY id"}
+{"sql":"CREATE TABLE t0(c0 NOT NULL AS(c1), c1)"}
+{"sql":"REPLACE INTO t0(c1) VALUES(NULL)"}
+{"sql":"CREATE TABLE t0 (c0 GENERATED ALWAYS AS (1), c1 UNIQUE, c2 UNIQUE)"}
+{"sql":"INSERT INTO t0(c1) VALUES (1)"}
+{"sql":"SELECT quote(0 = t0.c2 OR t0.c1 BETWEEN t0.c2 AND 1) FROM t0"}
+{"sql":"CREATE TABLE t0(c0 NOT NULL DEFAULT 'xyz', c1 AS(c0) NOT NULL)"}
+{"sql":"REPLACE INTO t0(c0) VALUES(NULL)"}
+{"sql":"CREATE TABLE t0(c0 NOT NULL DEFAULT 'xyz', c1 AS(c0) STORED NOT NULL)"}
+{"sql":"CREATE TABLE t1(\n   a NOT NULL DEFAULT 'aaa',\n   b AS(c) NOT NULL,\n   c NOT NULL DEFAULT 'ccc')"}
+{"sql":"REPLACE INTO t1(a,c) VALUES(NULL,NULL)"}
+{"sql":"CREATE TABLE t1(\n   a NOT NULL DEFAULT 'aaa',\n   b AS(c) STORED NOT NULL,\n   c NOT NULL DEFAULT 'ccc')"}
+{"sql":"CREATE TABLE t2(\n   a NOT NULL DEFAULT 'aaa',\n   b AS(a) NOT NULL,\n   c NOT NULL DEFAULT 'ccc')"}
+{"sql":"REPLACE INTO t2(a,c) VALUES(NULL,NULL)"}
+{"sql":"CREATE TABLE t2(\n   a NOT NULL DEFAULT 'aaa',\n   b AS(a) STORED NOT NULL,\n   c NOT NULL DEFAULT 'ccc')"}
+{"sql":"CREATE TABLE t3(a NOT NULL DEFAULT 123, b AS(a) UNIQUE)"}
+{"sql":"REPLACE INTO t3 VALUES(NULL)"}
+{"sql":"SELECT * FROM t3 WHERE b=123"}
+{"sql":"CREATE TABLE t4(a NOT NULL DEFAULT 123, b AS(a*10+4) STORED UNIQUE)"}
+{"sql":"REPLACE INTO t4 VALUES(NULL)"}
+{"sql":"SELECT * FROM t4 WHERE b=1234"}
+{"sql":"CREATE TABLE t0(\n    c0 AS (('a', 9) < ('b', c1)),\n    c1 AS (1),\n    c2 CHECK (1 = c1)\n  )"}
+{"sql":"INSERT INTO t0 VALUES (0),(99)"}
+{"sql":"CREATE TABLE t0(\n    c0,\n    c1 AS(c0 + c2),\n    c2 AS(c1) CHECK(c2)\n  )"}
+{"sql":"UPDATE t0 SET c0 = NULL"}
+{"sql":"CREATE TABLE t1(aa , bb AS (17) UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(17)"}
+{"sql":"CREATE TABLE t2(cc)"}
+{"sql":"INSERT INTO t2 VALUES(41)"}
+{"sql":"SELECT * FROM t2 JOIN t1 WHERE t1.bb=t1.aa AND t1.bb=17"}
+{"sql":"CREATE TABLE t3(aa INT PRIMARY KEY, bb UNIQUE AS(aa))"}
+{"sql":"SELECT 100, * FROM t3"}
+{"sql":"DELETE FROM t3 WHERE (SELECT bb FROM t3)"}
+{"sql":"SELECT 200, * FROM t3"}
+{"sql":"CREATE TABLE t1(aa,bb)"}
+{"sql":"CREATE TABLE IF NOT EXISTS t1(aa, bb AS (aa+1))"}
+{"sql":"CREATE TABLE t0(\n    c0,\n    c1 INTEGER PRIMARY KEY,\n    c2 BLOB UNIQUE DEFAULT x'00',\n    c3 BLOB GENERATED ALWAYS AS (1), \n    FOREIGN KEY(c1) REFERENCES t0(c2)\n  )"}
+{"sql":"INSERT OR REPLACE INTO t0(c0, c1) VALUES (2, 1), (1, 0)"}
+{"sql":"CREATE TABLE t0(\n    c0,\n    c1 INTEGER PRIMARY KEY,\n    c3 BLOB GENERATED ALWAYS AS (1), \n    c2 BLOB UNIQUE DEFAULT x'00',\n    FOREIGN KEY(c1) REFERENCES t0(c2)\n  )"}
+{"sql":"CREATE TABLE t0(\n    c0,\n    c3 BLOB GENERATED ALWAYS AS (1), \n    c1 INTEGER PRIMARY KEY,\n    c2 BLOB UNIQUE DEFAULT x'00',\n    FOREIGN KEY(c1) REFERENCES t0(c2)\n  )"}
+{"sql":"CREATE TABLE t0(\n    c3 BLOB GENERATED ALWAYS AS (1), \n    c0,\n    c1 INTEGER PRIMARY KEY,\n    c2 BLOB UNIQUE DEFAULT x'00',\n    FOREIGN KEY(c1) REFERENCES t0(c2)\n  )"}
+{"sql":"CREATE TABLE t0 (c0, c1 NOT NULL AS (c0==0))"}
+{"sql":"CREATE TABLE t1(x, y AS(x+1))"}
+{"sql":"SELECT y FROM t1 JOIN t1 USING (y,y)"}
+{"sql":"SELECT 123 FROM t1 JOIN t1 USING (x)"}
+{"sql":"SELECT 456 FROM t1 JOIN t1 USING (x,x)"}
+{"sql":"CREATE TABLE t0(c0 AS(1 >= 1), c1 UNIQUE AS(TYPEOF(c0)), c2)"}
+{"sql":"INSERT INTO t0 VALUES(0)"}
+{"sql":"INSERT INTO t0 VALUES(2)"}
+{"sql":"REPLACE INTO t1 VALUES(9)"}
+{"sql":"CREATE TABLE t1(c1, c2 AS(1))"}
+{"sql":"SELECT c0, c1, c2 FROM t0 LEFT JOIN t1"}
+{"sql":"CREATE TABLE t1(c1, c2 AS (c1 ISNULL))"}
+{"sql":"INSERT INTO t1(c1) VALUES(1),(NULL)"}
+{"sql":"SELECT c0, c1, c2 FROM t0 LEFT JOIN t1 ON c0=c1"}
+{"sql":"CREATE TABLE t0(c0 REAL AS(1) UNIQUE, c1 INT)"}
+{"sql":"INSERT INTO t0 VALUES('')"}
+{"sql":"SELECT quote(c0), quote(c1) from t0"}
+{"sql":"SELECT *, (1 BETWEEN CAST(t0.c0 AS TEXT) AND t0.c0) FROM t0"}
+{"sql":"SELECT * FROM t0 WHERE (1 BETWEEN CAST(t0.c0 AS TEXT) AND t0.c0)"}
+{"sql":"CREATE TABLE t1(a TEXT AS(b) COLLATE nocase, b TEXT, c INT, d DEFAULT 1)"}
+{"sql":"INSERT INTO t1(b,c) VALUES('abc',11),('DEF',22),('ghi',33)"}
+{"sql":"SELECT a FROM t1 WHERE b='DEF' AND a='def'"}
+{"sql":"CREATE INDEX t1bca ON t1(b,c,a)"}
+{"sql":"CREATE TABLE t0(c0 UNIQUE AS(0), c1, c2)"}
+{"sql":"UPDATE t0 SET c1=0, c2=0 WHERE c0>=0"}
+{"sql":"CREATE TABLE t0(\n    c0 INT AS(2) UNIQUE,\n    c1 TEXT UNIQUE,\n    FOREIGN KEY(c0) REFERENCES t0(c1)\n  )"}
+{"sql":"INSERT INTO t0(c1) VALUES(0.16334143182538696), (0)"}
+{"sql":"CREATE TEMPORARY TABLE tab (\n    prim DATE PRIMARY KEY,\n    a INTEGER,\n    comp INTEGER AS (a),\n    b INTEGER,\n    x INTEGER\n  )"}
+{"sql":"INSERT INTO tab (prim, a, b) VALUES ('2001-01-01', 0, 0)"}
+{"sql":"SELECT * FROM tab"}
+{"sql":"INSERT INTO tab (prim, b)\n  VALUES ('2001-01-01',5)\n      ON CONFLICT(prim) DO UPDATE SET  b=excluded.b"}
+{"sql":"CREATE TABLE t1(\n      a integer primary key,\n      b int generated always as (a+5),\n      c text    GENERATED   ALWAYS as (printf('%08x',a)),\n      d Generated\n        Always\n        AS ('xyzzy'),\n      e int                         Always default(5)\n    )"}
+{"sql":"INSERT INTO t1(a) VALUES(5)"}
+{"sql":"SELECT name, type FROM pragma_table_xinfo('t1')"}
+{"sql":"CREATE TABLE t0(a PRIMARY KEY,b TEXT AS ('2') UNIQUE)"}
+{"sql":"INSERT INTO t0(a) VALUES(2)"}
+{"sql":"SELECT * FROM t0 AS x JOIN t0 AS y\n   WHERE x.b='2'\n     AND (y.a=2 OR (x.b LIKE '2*' AND y.a=x.b))"}
+{"sql":"CREATE TABLE t1(\n    x,\n    a INT AS (x) VIRTUAL,\n    b BLOB AS (x) VIRTUAL\n  )"}
+{"sql":"CREATE INDEX x2 ON t1(a)"}
+{"sql":"INSERT INTO t1(x) VALUES(NULL),('1'),('xyz'),(2),(3.5)"}
+{"sql":"SELECT quote(a) FROM t1 INDEXED BY x2"}
+{"sql":"EXPLAIN SELECT a FROM t1 INDEXED BY x2"}
+{"sql":"EXPLAIN SELECT b FROM t1 INDEXED BY x2"}
+{"sql":"CREATE TABLE v0(c1 INT, c2 AS (RAISE(IGNORE)))"}

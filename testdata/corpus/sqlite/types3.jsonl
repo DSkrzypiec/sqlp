@@ -1,0 +1,8 @@
+{"sql":"SELECT typeof(:V)"}
+{"sql":"CREATE TABLE t1(x TEXT PRIMARY KEY)"}
+{"sql":"SELECT * FROM t1 WHERE NOT x=upper(1)"}
+{"sql":"SELECT * FROM t1 WHERE NOT x=add_text_type(1)"}
+{"sql":"SELECT * FROM t1 WHERE NOT x=add_int_type('1')"}
+{"sql":"INSERT INTO t1 VALUES(1.25)"}
+{"sql":"SELECT * FROM t1 WHERE NOT x=add_real_type('1.25')"}
+{"sql":"SELECT * FROM t1 WHERE NOT x=add_text_type(1.25)"}

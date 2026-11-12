@@ -1,0 +1,8 @@
+{"sql":"INSERT INTO t2 VALUES('a b c')"}
+{"sql":"SELECT offsets(t2) FROM t2 WHERE t2 MATCH 'a AND d OR b' ORDER BY docid ASC"}
+{"sql":"SELECT snippet(t2,'[',']') FROM t2 WHERE t2 MATCH 'a AND d OR b' \n    ORDER BY docid ASC"}
+{"sql":"INSERT INTO t2 VALUES('a c d')"}
+{"sql":"SELECT snippet(t2,'[',']') FROM t2 WHERE t2 MATCH 'a AND d OR b'\n    ORDER BY docid ASC"}
+{"sql":"INSERT INTO t3 VALUES('a c d')"}
+{"sql":"SELECT offsets(t3) FROM t3 WHERE t3 MATCH 'a AND d OR b' ORDER BY docid DESC"}
+{"sql":"SELECT snippet(t3,'[',']') FROM t3 WHERE t3 MATCH 'a AND d OR b'\n      ORDER BY docid DESC"}

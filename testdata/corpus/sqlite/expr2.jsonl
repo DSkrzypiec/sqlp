@@ -1,0 +1,7 @@
+{"sql":"INSERT INTO t0(c0) VALUES ('val')"}
+{"sql":"SELECT * FROM t0 WHERE (\n      ( (0 IS NOT FALSE) OR NOT (0 IS FALSE OR (t0.c0 = 1)) ) IS 0\n  )"}
+{"sql":"SELECT \n      ( (0 IS NOT FALSE) OR NOT (0 IS FALSE OR (t0.c0 = 1)) ) IS 0\n  FROM t0"}
+{"sql":"SELECT \n      ( (0 IS NOT FALSE) OR NOT (0 IS 0 OR (t0.c0 = 1)) ) IS 0\n  FROM t0"}
+{"sql":"SELECT ( (0 IS NOT FALSE) OR NOT (0 IS FALSE OR (t0.c0 = 1)) ) FROM t0"}
+{"sql":"SELECT (0 IS NOT FALSE) FROM t0"}
+{"sql":"SELECT NOT (0 IS FALSE OR (t0.c0 = 1)) FROM t0"}

@@ -1,0 +1,403 @@
+{"sql":"SELECT a FROM t GROUP BY a","shape":"SELECT a FROM t GROUP BY a;"}
+{"sql":"SELECT a, b FROM t GROUP BY a, b","shape":"SELECT a, b FROM t GROUP BY a, b;"}
+{"sql":"SELECT a + 1 FROM t GROUP BY a + 1","shape":"SELECT a + 1 FROM t GROUP BY a + 1;"}
+{"sql":"SELECT a FROM t GROUP BY 1","shape":"SELECT a FROM t GROUP BY 1;"}
+{"sql":"SELECT a, b FROM t GROUP BY 1, 2","shape":"SELECT a, b FROM t GROUP BY 1, 2;"}
+{"sql":"SELECT a AS x FROM t GROUP BY x","shape":"SELECT a AS x FROM t GROUP BY x;"}
+{"sql":"SELECT a, COUNT(*) FROM t GROUP BY a","shape":"SELECT a, COUNT(*) FROM t GROUP BY a;"}
+{"sql":"SELECT a, COUNT(*) FROM t GROUP BY a ORDER BY a","shape":"SELECT a, COUNT(*) FROM t GROUP BY a ORDER BY a;"}
+{"sql":"SELECT a, COUNT(*) FROM t GROUP BY a ORDER BY COUNT(*) DESC","shape":"SELECT a, COUNT(*) FROM t GROUP BY a ORDER BY COUNT(*) DESC;"}
+{"sql":"SELECT a, COUNT(*) FROM t WHERE b > 0 GROUP BY a","shape":"SELECT a, COUNT(*) FROM t WHERE b > 0 GROUP BY a;"}
+{"sql":"SELECT a, COUNT(*) FROM t WHERE b > 0 GROUP BY a HAVING COUNT(*) > 1 ORDER BY a LIMIT 5","shape":"SELECT a, COUNT(*) FROM t WHERE b > 0 GROUP BY a HAVING COUNT(*) > 1 ORDER BY a LIMIT 5;"}
+{"sql":"SELECT a FROM t GROUP BY (a)","shape":"SELECT a FROM t GROUP BY (a);"}
+{"sql":"SELECT a FROM t GROUP BY (a), (b)","shape":"SELECT a FROM t GROUP BY (a), (b);"}
+{"sql":"SELECT a FROM t GROUP BY (a, b)","shape":"SELECT a FROM t GROUP BY (a, b);"}
+{"sql":"SELECT a FROM t GROUP BY a, (b, c)","shape":"SELECT a FROM t GROUP BY a, (b, c);"}
+{"sql":"SELECT a FROM t GROUP BY CASE WHEN a = 1 THEN 1 ELSE 2 END","shape":"SELECT a FROM t GROUP BY CASE WHEN a = 1 THEN 1 ELSE 2 END;"}
+{"sql":"SELECT a FROM t GROUP BY f(a)","shape":"SELECT a FROM t GROUP BY f(a);"}
+{"sql":"SELECT a FROM t GROUP BY ALL a","shape":"SELECT a FROM t GROUP BY ALL a;"}
+{"sql":"SELECT a FROM t GROUP BY DISTINCT a","shape":"SELECT a FROM t GROUP BY DISTINCT a;"}
+{"sql":"SELECT a FROM t GROUP BY ()","shape":"SELECT a FROM t GROUP BY ();"}
+{"sql":"SELECT a FROM t GROUP BY a, ()","shape":"SELECT a FROM t GROUP BY a, ();"}
+{"sql":"SELECT a, b FROM t GROUP BY ROLLUP (a, b)","shape":"SELECT a, b FROM t GROUP BY ROLLUP (a, b);"}
+{"sql":"SELECT a, b FROM t GROUP BY CUBE (a, b)","shape":"SELECT a, b FROM t GROUP BY CUBE (a, b);"}
+{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS ((a), (b))","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS ((a), (b));"}
+{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS ((a, b), (a), ())","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS ((a, b), (a), ());"}
+{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (a, b)","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (a, b);"}
+{"sql":"SELECT a, b, c FROM t GROUP BY a, ROLLUP (b, c)","shape":"SELECT a, b, c FROM t GROUP BY a, ROLLUP (b, c);"}
+{"sql":"SELECT a, b, c FROM t GROUP BY ROLLUP (a), CUBE (b), c","shape":"SELECT a, b, c FROM t GROUP BY ROLLUP (a), CUBE (b), c;"}
+{"sql":"SELECT a, b FROM t GROUP BY ROLLUP ((a, b))","shape":"SELECT a, b FROM t GROUP BY ROLLUP ((a, b));"}
+{"sql":"SELECT a, b FROM t GROUP BY CUBE ((a, b), c)","shape":"SELECT a, b FROM t GROUP BY CUBE ((a, b), c);"}
+{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (ROLLUP (a, b))","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (ROLLUP (a, b));"}
+{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (CUBE (a), ROLLUP (b), ())","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (CUBE (a), ROLLUP (b), ());"}
+{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)))","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)));"}
+{"sql":"SELECT a, b FROM t GROUP BY DISTINCT ROLLUP (a, b)","shape":"SELECT a, b FROM t GROUP BY DISTINCT ROLLUP (a, b);"}
+{"sql":"SELECT a, GROUPING(a) FROM t GROUP BY ROLLUP (a)","shape":"SELECT a, GROUPING(a) FROM t GROUP BY ROLLUP (a);"}
+{"sql":"SELECT a, GROUPING(a, b) FROM t GROUP BY a, b","shape":"SELECT a, GROUPING(a, b) FROM t GROUP BY a, b;"}
+{"sql":"SELECT a FROM t HAVING COUNT(*) > 1","shape":"SELECT a FROM t HAVING COUNT(*) > 1;"}
+{"sql":"SELECT COUNT(*) FROM t HAVING COUNT(*) > 1","shape":"SELECT COUNT(*) FROM t HAVING COUNT(*) > 1;"}
+{"sql":"SELECT 1 HAVING 1 = 1","shape":"SELECT 1 HAVING 1 = 1;"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a > 1","shape":"SELECT a FROM t GROUP BY a HAVING a > 1;"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a > 1 AND COUNT(*) > 2 OR SUM(b) < 3","shape":"SELECT a FROM t GROUP BY a HAVING ((a > 1) AND (COUNT(*) > 2)) OR (SUM(b) < 3);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING NOT COUNT(*) = 1","shape":"SELECT a FROM t GROUP BY a HAVING NOT (COUNT(*) = 1);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING (COUNT(*) > 1)","shape":"SELECT a FROM t GROUP BY a HAVING (COUNT(*) > 1);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT(DISTINCT b) > 1","shape":"SELECT a FROM t GROUP BY a HAVING COUNT(DISTINCT b) > 1;"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING SUM(b) BETWEEN 1 AND 2","shape":"SELECT a FROM t GROUP BY a HAVING SUM(b) BETWEEN 1 AND 2;"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING MAX(b) IN (1, 2)","shape":"SELECT a FROM t GROUP BY a HAVING MAX(b) IN (1, 2);"}
+{"sql":"SELECT SUM(a ORDER BY b) FROM t","shape":"SELECT SUM(a ORDER BY b) FROM t;"}
+{"sql":"SELECT ARRAY_AGG(a ORDER BY b DESC, c) FROM t","shape":"SELECT ARRAY_AGG(a ORDER BY b DESC, c) FROM t;"}
+{"sql":"SELECT GROUP_CONCAT(name, ',') FROM t","shape":"SELECT GROUP_CONCAT(name, ',') FROM t;"}
+{"sql":"SELECT GROUP_CONCAT(name, ',' ORDER BY name) FROM t","shape":"SELECT GROUP_CONCAT(name, ',' ORDER BY name) FROM t;"}
+{"sql":"SELECT COUNT(*) FILTER (WHERE a > 1) FROM t","shape":"SELECT COUNT(*) FILTER (WHERE a > 1) FROM t;"}
+{"sql":"SELECT SUM(a) FILTER (WHERE a > 1), SUM(b) FILTER (WHERE b > 1) FROM t","shape":"SELECT SUM(a) FILTER (WHERE a > 1), SUM(b) FILTER (WHERE b > 1) FROM t;"}
+{"sql":"SELECT a, COUNT(*) FILTER (WHERE b > 1) FROM t GROUP BY a","shape":"SELECT a, COUNT(*) FILTER (WHERE b > 1) FROM t GROUP BY a;"}
+{"sql":"SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY a) FROM t","shape":"SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY a) FROM t;"}
+{"sql":"SELECT MODE() WITHIN GROUP (ORDER BY a) FROM t","shape":"SELECT MODE() WITHIN GROUP (ORDER BY a) FROM t;"}
+{"sql":"SELECT a FROM t GROUP","reject":true}
+{"sql":"SELECT a FROM t GROUP BY","reject":true}
+{"sql":"SELECT a FROM t GROUP a","reject":true}
+{"sql":"SELECT a FROM t BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a,","reject":true}
+{"sql":"SELECT a FROM t GROUP BY , a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING","reject":true}
+{"sql":"SELECT a FROM t HAVING","reject":true}
+{"sql":"SELECT a FROM t HAVING a GROUP BY a HAVING b","reject":true}
+{"sql":"SELECT a FROM t HAVING a GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t WHERE GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a GROUP BY b","reject":true}
+{"sql":"SELECT a FROM t GROUP BY ROLLUP","shape":"SELECT a FROM t GROUP BY ROLLUP;"}
+{"sql":"SELECT a FROM t GROUP BY ROLLUP ()","reject":true}
+{"sql":"SELECT a FROM t GROUP BY CUBE","shape":"SELECT a FROM t GROUP BY CUBE;"}
+{"sql":"SELECT a FROM t GROUP BY GROUPING SETS","reject":true}
+{"sql":"SELECT a FROM t GROUP BY GROUPING SETS ()","reject":true}
+{"sql":"SELECT a FROM t GROUP BY GROUPING (a)","shape":"SELECT a FROM t GROUP BY GROUPING(a);"}
+{"sql":"SELECT a FROM t GROUP BY GROUPING SETS ((a)","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a ROLLUP (b)","reject":true}
+{"sql":"SELECT COUNT(*) FILTER FROM t","reject":true}
+{"sql":"SELECT COUNT(*) FILTER () FROM t","reject":true}
+{"sql":"SELECT COUNT(*) FILTER (a > 1) FROM t","reject":true}
+{"sql":"SELECT COUNT(*) FILTER (WHERE) FROM t","reject":true}
+{"sql":"SELECT SUM(a ORDER BY) FROM t","reject":true}
+{"sql":"SELECT SUM(ORDER BY a) FROM t","reject":true}
+{"sql":"SELECT MODE() WITHIN (ORDER BY a) FROM t","reject":true}
+{"sql":"SELECT MODE() WITHIN GROUP (a) FROM t","reject":true}
+{"sql":"SELECT MODE() WITHIN GROUP () FROM t","reject":true}
+{"sql":"SELECT a FROM t GROUP BY ORDER","reject":true}
+{"sql":"SELECT SELECT a FROM t GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP GROUP BY a","reject":true}
+{"sql":"SELECT a , b FROM t BY GROUP a , b","reject":true}
+{"sql":"a SELECT , b FROM t GROUP BY a , b","reject":true}
+{"sql":"a , b FROM t GROUP BY a , b","reject":true}
+{"sql":"SELECT a , b FROM t ) BY a , b","reject":true}
+{"sql":"SELECT a + 1 FROM t GROUP BY + a 1","reject":true}
+{"sql":"SELECT a + 1 FROM t GROUP BY a , 1","shape":"SELECT a + 1 FROM t GROUP BY a, 1;"}
+{"sql":"SELECT a FROM FROM t GROUP BY 1","reject":true}
+{"sql":"SELECT a FROM a GROUP BY 1","shape":"SELECT a FROM a GROUP BY 1;"}
+{"sql":"SELECT a FROM GROUP BY 1","reject":true}
+{"sql":"SELECT BY , b FROM t GROUP BY 1 , 2","shape":"SELECT BY, b FROM t GROUP BY 1, 2;"}
+{"sql":"SELECT a , b FROM FROM t GROUP BY 1 , 2","reject":true}
+{"sql":"SELECT a , b FROM t BY GROUP 1 , 2","reject":true}
+{"sql":"a SELECT AS x FROM t GROUP BY x","reject":true}
+{"sql":"SELECT GROUP AS x FROM t GROUP BY x","reject":true}
+{"sql":"SELECT SELECT a AS x FROM t GROUP BY x","reject":true}
+{"sql":"SELECT , COUNT ( * ) FROM t GROUP BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * COUNT FROM t GROUP BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t GROUP BY a","shape":"SELECT a, COUNT(*) FROM t GROUP BY a;"}
+{"sql":"SELECT a , COUNT ( * ) FROM t BY a","reject":true}
+{"sql":"SELECT , COUNT ( * ) FROM t GROUP BY a ORDER BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t GROUP BY ORDER a BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM GROUP t BY a ORDER BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t GROUP BY a ORDER a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) t FROM GROUP BY a ORDER BY COUNT ( * ) DESC","reject":true}
+{"sql":"SELECT a COUNT , ( * ) FROM t GROUP BY a ORDER BY COUNT ( * ) DESC","reject":true}
+{"sql":"SELECT a , COUNT ( * COUNT FROM t GROUP BY a ORDER BY COUNT ( * ) DESC","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t GROUP BY a ORDER BY COUNT ( * ) DESC","shape":"SELECT a, COUNT(*) FROM t GROUP BY a ORDER BY COUNT(*) DESC;"}
+{"sql":"SELECT a a , COUNT ( * ) FROM t WHERE b > 0 GROUP BY a","shape":"SELECT a AS a, COUNT(*) FROM t WHERE b > 0 GROUP BY a;"}
+{"sql":"SELECT a , COUNT ( * ) FROM t ',' b > 0 GROUP BY a","reject":true}
+{"sql":"SELECT a , FROM ( * ) FROM t WHERE b > 0 GROUP BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t WHERE b > 0 GROUP a","reject":true}
+{"sql":"SELECT a , COUNT ( * a FROM t WHERE b > 0 GROUP BY a HAVING COUNT ( * ) > 1 ORDER BY a LIMIT 5","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t WHERE b 0 GROUP BY a HAVING COUNT ( * ) > 1 ORDER BY a LIMIT 5","reject":true}
+{"sql":"SELECT a , COUNT ( * ) FROM t WHERE b > 0 GROUP BY a HAVING COUNT ( * ) > 1 ORDER BY a LIMIT 5 5","reject":true}
+{"sql":"SELECT a , , COUNT ( * ) FROM t WHERE b > 0 GROUP BY a HAVING COUNT ( * ) > 1 ORDER BY a LIMIT 5","reject":true}
+{"sql":"SELECT a FROM t ) BY ( a )","reject":true}
+{"sql":"SELECT a FROM t GROUP ( BY a )","reject":true}
+{"sql":"SELECT a a FROM t GROUP BY ( a )","shape":"SELECT a AS a FROM t GROUP BY (a);"}
+{"sql":"SELECT a FROM GROUP BY ( a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY ( a ) , ( ( b )","reject":true}
+{"sql":"SELECT FROM a t GROUP BY ( a ) , ( b )","shape":"SELECT FROM a AS t GROUP BY (a), (b);"}
+{"sql":"SELECT a FROM t GROUP BY ( a ) , ( b ) )","reject":true}
+{"sql":"SELECT a FROM t t GROUP BY ( a ) , ( b )","shape":"SELECT a FROM t AS t GROUP BY (a), (b);"}
+{"sql":"SELECT a FROM t GROUP BY a ( , b )","reject":true}
+{"sql":"SELECT a FROM GROUP t BY ( a , b )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY ( t , b )","shape":"SELECT a FROM t GROUP BY (t, b);"}
+{"sql":"SELECT a FROM t GROUP BY ( a , , b )","reject":true}
+{"sql":"SELECT a FROM a GROUP BY a , ( b , c )","shape":"SELECT a FROM a GROUP BY a, (b, c);"}
+{"sql":"SELECT a END t GROUP BY a , ( b , c )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a , ( b , c ORDER","reject":true}
+{"sql":"SELECT a t FROM GROUP BY a , ( b , c )","reject":true}
+{"sql":"( a FROM t GROUP BY CASE WHEN a = 1 THEN 1 ELSE 2 END","reject":true}
+{"sql":"SELECT a FROM GROUP BY CASE WHEN a = 1 THEN 1 ELSE 2 END","reject":true}
+{"sql":"SELECT a FROM t GROUP BY CASE WHEN a = 1 THEN ELSE 2 END","reject":true}
+{"sql":"SELECT a FROM t GROUP BY CASE WHEN a = 1 THEN 1 ELSE 2","reject":true}
+{"sql":"SELECT a FROM t GROUP BY 1 ( a )","reject":true}
+{"sql":"a a FROM t GROUP BY f ( a )","reject":true}
+{"sql":"SELECT a FROM t GROUP GROUP BY f ( a )","reject":true}
+{"sql":"SELECT a FROM t t GROUP BY f ( a )","shape":"SELECT a FROM t AS t GROUP BY f(a);"}
+{"sql":"SELECT a t FROM GROUP BY ALL a","reject":true}
+{"sql":"SELECT a SELECT t GROUP BY ALL a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY c a","reject":true}
+{"sql":"b a FROM t GROUP BY DISTINCT a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a DISTINCT","reject":true}
+{"sql":"SELECT a FROM t GROUP BY DISTINCT","reject":true}
+{"sql":"a SELECT FROM t GROUP BY DISTINCT a","reject":true}
+{"sql":"SELECT , FROM t GROUP BY ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY ( )","shape":"SELECT a FROM t GROUP BY ();"}
+{"sql":"SELECT FROM t GROUP BY ( )","shape":"SELECT FROM t GROUP BY ();"}
+{"sql":"SELECT a FROM t GROUP BY (","reject":true}
+{"sql":"SELECT a FROM GROUP t BY a , ( )","reject":true}
+{"sql":"SELECT a FROM t SELECT BY a , ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP a BY , ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a , (","reject":true}
+{"sql":"SELECT a b FROM t GROUP BY ROLLUP ( a , b )","shape":"SELECT a AS b FROM t GROUP BY ROLLUP (a, b);"}
+{"sql":"SELECT a , b FROM t GROUP BY ROLLUP ( a b , )","reject":true}
+{"sql":"SELECT a , b FROM t BY ROLLUP ( a , b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY ROLLUP ( a b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY CUBE ( a , , b )","reject":true}
+{"sql":"a , b FROM t GROUP BY CUBE ( a , b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY CUBE a ( , b )","reject":true}
+{"sql":"SELECT a , b FROM GROUP BY CUBE ( a , b )","reject":true}
+{"sql":"SELECT a GROUP b FROM t GROUP BY GROUPING SETS ( ( a ) , ( b ) )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( ( a ) , ( ) b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( ( a ) , ( b ) )","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS ((a), (b));"}
+{"sql":"SELECT a , b FROM GROUP BY GROUPING SETS ( ( a ) , ( b ) )","reject":true}
+{"sql":"SELECT a , b b FROM t GROUP BY GROUPING SETS ( ( a , b ) , ( a ) , ( ) )","shape":"SELECT a, b AS b FROM t GROUP BY GROUPING SETS ((a, b), (a), ());"}
+{"sql":"SELECT a , b FROM ) GROUP BY GROUPING SETS ( ( a , b ) , ( a ) , ( ) )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING ( SETS ( a , b ) , ( a ) , ( ) )","reject":true}
+{"sql":"SELECT a , b t FROM GROUP BY GROUPING SETS ( ( a , b ) , ( a ) , ( ) )","reject":true}
+{"sql":"SELECT a b FROM t GROUP BY GROUPING SETS ( a , b )","shape":"SELECT a AS b FROM t GROUP BY GROUPING SETS (a, b);"}
+{"sql":"SELECT a , b FROM GROUP t BY GROUPING SETS ( a , b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS SETS ( a , b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS a , b )","reject":true}
+{"sql":"SELECT a , b , c FROM t GROUP BY a ROLLUP , ( b , c )","reject":true}
+{"sql":"SELECT a , b , c t GROUP BY a , ROLLUP ( b , c )","shape":"SELECT a, b, c AS t GROUP BY a, ROLLUP (b, c);"}
+{"sql":"SELECT a , b , c FROM t GROUP BY a , ROLLUP ( b , , c )","reject":true}
+{"sql":"SELECT a , b , FROM t GROUP BY a , ROLLUP ( b , c )","reject":true}
+{"sql":"SELECT a b b , c FROM t GROUP BY ROLLUP ( a ) , CUBE ( b ) , c","reject":true}
+{"sql":"SELECT a , b , c FROM t GROUP BY ROLLUP ROLLUP ( a ) , CUBE ( b ) , c","reject":true}
+{"sql":"SELECT a , b , c FROM t GROUP BY ROLLUP ( a ) , CUBE ( b ) , , c","reject":true}
+{"sql":"SELECT a , b , c FROM t GROUP BY ROLLUP a a ) , CUBE ( b ) , c","reject":true}
+{"sql":"SELECT a , b FROM t BY ROLLUP ( ( a , b ) )","reject":true}
+{"sql":"a , b FROM t GROUP BY ROLLUP ( ( a , b ) )","reject":true}
+{"sql":"SELECT a , b FROM a GROUP BY ROLLUP ( ( a , b ) )","shape":"SELECT a, b FROM a GROUP BY ROLLUP ((a, b));"}
+{"sql":"SELECT a , b FROM GROUP t BY CUBE ( ( a , b ) , c )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY CUBE CUBE ( ( a , b ) , c )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY CUBE ( ( a , b , c )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY ( ( a , b ) , c )","shape":"SELECT a, b FROM t GROUP BY ((a, b), c);"}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( ROLLUP ( a , b b )","reject":true}
+{"sql":"SELECT a , FROM t GROUP BY GROUPING SETS ( ROLLUP ( a , b ) )","reject":true}
+{"sql":"SELECT a , FROM b t GROUP BY GROUPING SETS ( ROLLUP ( a , b ) )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( ROLLUP ( a b ) )","reject":true}
+{"sql":"SELECT a , b t FROM GROUP BY GROUPING SETS ( CUBE ( a ) , ROLLUP ( b ) , ( ) )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( CUBE ( a ) , ROLLUP ( b ) ) , ( ) )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY BY GROUPING SETS ( CUBE ( a ) , ROLLUP ( b ) , ( ) )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS a CUBE ( a ) , ROLLUP ( b ) , ( ) )","reject":true}
+{"sql":"COUNT a , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( b ) ) )","reject":true}
+{"sql":"SELECT t , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( b ) ) )","shape":"SELECT t, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)));"}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( b ) ) )","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)));"}
+{"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( a ) ) )","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (a)));"}
+{"sql":"SELECT a , FROM t GROUP BY DISTINCT ROLLUP ( a , b )","reject":true}
+{"sql":"SELECT a , b FROM t GROUP BY ROLLUP DISTINCT ( a , b )","reject":true}
+{"sql":"SELECT a , b a t GROUP BY DISTINCT ROLLUP ( a , b )","reject":true}
+{"sql":"SELECT a a , b FROM t GROUP BY DISTINCT ROLLUP ( a , b )","shape":"SELECT a AS a, b FROM t GROUP BY DISTINCT ROLLUP (a, b);"}
+{"sql":"SELECT a , GROUPING ( a ) FROM t GROUP BY ) ( a )","reject":true}
+{"sql":"SELECT a , ( ( a ) FROM t GROUP BY ROLLUP ( a )","reject":true}
+{"sql":"SELECT a , ( a ) FROM t GROUP BY ROLLUP ( a )","shape":"SELECT a, (a) FROM t GROUP BY ROLLUP (a);"}
+{"sql":"SELECT a , , GROUPING ( a ) FROM t GROUP BY ROLLUP ( a )","reject":true}
+{"sql":"SELECT a , GROUPING ( a , b ) FROM t GROUP BY a ) b","reject":true}
+{"sql":"SELECT a ) GROUPING ( a , b ) FROM t GROUP BY a , b","reject":true}
+{"sql":"SELECT a , GROUPING ( a , b ) FROM t GROUP a BY , b","reject":true}
+{"sql":"SELECT a , GROUPING ( , b ) FROM t GROUP BY a , b","reject":true}
+{"sql":"SELECT a FROM t SELECT COUNT ( * ) > 1","reject":true}
+{"sql":"SELECT a FROM FROM t HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"SELECT a FROM t HAVING COUNT ( * ) > 1","shape":"SELECT a FROM t HAVING COUNT(*) > 1;"}
+{"sql":"a FROM t HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"SELECT COUNT ( * * ) FROM t HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"SELECT COUNT * ( ) FROM t HAVING COUNT ( * ) > 1","reject":true}
+{"sql":"SELECT COUNT ( * ) FROM t HAVING COUNT ( * GROUP > 1","reject":true}
+{"sql":"SELECT COUNT ( * ) FROM t HAVING ( * ) > 1","reject":true}
+{"sql":"SELECT 1 HAVING 1 1 = 1","reject":true}
+{"sql":"SELECT 1 HAVING HAVING 1 = 1","reject":true}
+{"sql":"1 HAVING 1 = 1","reject":true}
+{"sql":"SELECT 1 HAVING = 1","reject":true}
+{"sql":"SELECT a FROM FROM t GROUP BY a HAVING a > 1","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a 1 >","reject":true}
+{"sql":"SELECT a a FROM t GROUP BY a HAVING a > 1","shape":"SELECT a AS a FROM t GROUP BY a HAVING a > 1;"}
+{"sql":"SELECT a t GROUP BY a HAVING a > 1","shape":"SELECT a AS t GROUP BY a HAVING a > 1;"}
+{"sql":"SELECT a FROM t GROUP BY a a HAVING a > 1 AND COUNT ( * ) > 2 OR SUM ( b ) < 3","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING > 1 AND COUNT ( * ) > 2 OR SUM ( b ) < 3","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a > 1 AND COUNT ( * ) > a OR SUM ( b ) < 3","shape":"SELECT a FROM t GROUP BY a HAVING ((a > 1) AND (COUNT(*) > a)) OR (SUM(b) < 3);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a > 1 AND COUNT ( * ) > 2 OR SUM ( b ) 3","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING NOT COUNT ( * ) 1 =","reject":true}
+{"sql":"SELECT a t GROUP BY a HAVING NOT COUNT ( * ) = 1","shape":"SELECT a AS t GROUP BY a HAVING NOT (COUNT(*) = 1);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING NOT NOT COUNT ( * ) = 1","shape":"SELECT a FROM t GROUP BY a HAVING NOT (NOT (COUNT(*) = 1));"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING NOT COUNT ( ) * = 1","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING ( COUNT * ) > 1 )","reject":true}
+{"sql":"SELECT a FROM GROUP BY a HAVING ( COUNT ( * ) > 1 )","reject":true}
+{"sql":"SELECT a FROM t GROUP a BY HAVING ( COUNT ( * ) > 1 )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY BY HAVING ( COUNT ( * ) > 1 )","shape":"SELECT a FROM t GROUP BY BY HAVING (COUNT(*) > 1);"}
+{"sql":"SELECT t FROM t GROUP BY a HAVING COUNT ( DISTINCT b ) > 1","shape":"SELECT t FROM t GROUP BY a HAVING COUNT(DISTINCT b) > 1;"}
+{"sql":"SELECT a FROM t GROUP GROUP BY a HAVING COUNT ( DISTINCT b ) > 1","reject":true}
+{"sql":"SELECT a FROM GROUP t BY a HAVING COUNT ( DISTINCT b ) > 1","reject":true}
+{"sql":"SELECT a a FROM t GROUP BY a HAVING COUNT ( DISTINCT b ) > 1","shape":"SELECT a AS a FROM t GROUP BY a HAVING COUNT(DISTINCT b) > 1;"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING SUM ( b b ) BETWEEN 1 AND 2","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING SUM ( b ) BETWEEN 1 2 AND","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a SUM ( b ) BETWEEN 1 AND 2","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING SUM ( b ) 1 AND 2","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING MAX ( b ) IN ( 1 , 2 a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING MAX ( ( b ) IN ( 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING MAX ( b ) IN ( SELECT , 2 )","reject":true}
+{"sql":"SELECT a FROM t GROUP a BY HAVING MAX ( b ) IN ( 1 , 2 )","reject":true}
+{"sql":"SELECT SUM ( a ORDER a b ) FROM t","reject":true}
+{"sql":"SELECT FILTER ( a ORDER BY b ) FROM t","shape":"SELECT FILTER(a ORDER BY b) FROM t;"}
+{"sql":"SELECT SUM ( a ORDER BY b ) FROM a","shape":"SELECT SUM(a ORDER BY b) FROM a;"}
+{"sql":"SELECT SUM a ORDER BY b ) FROM t","reject":true}
+{"sql":"SELECT ARRAY_AGG ( a ORDER BY b DESC , c c ) FROM t","reject":true}
+{"sql":"SELECT ARRAY_AGG ( a ORDER BY b DESC , c ) FROM t t","shape":"SELECT ARRAY_AGG(a ORDER BY b DESC, c) FROM t AS t;"}
+{"sql":"SELECT ARRAY_AGG ( SELECT ORDER BY b DESC , c ) FROM t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( name , ',' FROM ) t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( name , ',' ORDER FROM t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( name name , ',' ) FROM t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( name , ',' ) FROM t","shape":"SELECT GROUP_CONCAT(name, ',') FROM t;"}
+{"sql":"SELECT GROUP_CONCAT a name , ',' ORDER BY name ) FROM t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( , name ',' ORDER BY name ) FROM t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( name , ',' ',' ORDER BY name ) FROM t","reject":true}
+{"sql":"SELECT GROUP_CONCAT ( name , ',' ORDER BY name GROUP FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a > ) 1 FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( a WHERE > 1 ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ( ) FILTER ( WHERE a > 1 ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ( * ) FILTER ( WHERE a > 1 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER FILTER ( WHERE a > 1 ) , SUM ( b ) FILTER ( WHERE b > 1 ) FROM t","reject":true}
+{"sql":"SELECT ( a ) FILTER ( WHERE a > 1 ) , SUM ( b ) FILTER ( WHERE b > 1 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER WHERE ( a > 1 ) , SUM ( b ) FILTER ( WHERE b > 1 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER ( WHERE a > 1 ) , ( b ) FILTER ( WHERE b > 1 ) FROM t","reject":true}
+{"sql":"SELECT a , COUNT ( * ) ( WHERE b > 1 ) FROM t GROUP BY a","reject":true}
+{"sql":"SELECT a , , ( * ) FILTER ( WHERE b > 1 ) FROM t GROUP BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * ) ) FILTER ( WHERE b > 1 ) FROM t GROUP BY a","reject":true}
+{"sql":"SELECT a , COUNT ( * , FILTER ( WHERE b > 1 ) FROM t GROUP BY a","reject":true}
+{"sql":"SELECT PERCENTILE_CONT ( ( 0.5 ) WITHIN GROUP ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT PERCENTILE_CONT ( 0.5 ) WITHIN GROUP ( ORDER BY a ) FROM t","shape":"SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY a) FROM t;"}
+{"sql":"SELECT PERCENTILE_CONT ( 0.5 ) WITHIN GROUP ( ORDER BY a FROM t","reject":true}
+{"sql":"SELECT PERCENTILE_CONT ( 0.5 0.5 ) WITHIN GROUP ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( b BY a ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( ORDER BY a ) t FROM","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( ORDER BY a ) FROM","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( ORDER a BY ) FROM t","reject":true}
+{"sql":"SELECT a FROM t t GROUP","reject":true}
+{"sql":"SELECT FROM a t GROUP","reject":true}
+{"sql":"SELECT a FROM GROUP t BY","reject":true}
+{"sql":"SELECT a FROM t BY","shape":"SELECT a FROM t AS BY;"}
+{"sql":"t a FROM t GROUP a","reject":true}
+{"sql":"SELECT SELECT a FROM t GROUP a","reject":true}
+{"sql":"SELECT a FROM t a GROUP","reject":true}
+{"sql":"SELECT ( FROM t GROUP a","reject":true}
+{"sql":"SELECT a a FROM t BY a","reject":true}
+{"sql":"SELECT a FROM t a","shape":"SELECT a FROM t AS a;"}
+{"sql":"SELECT a FROM t > a","reject":true}
+{"sql":"a FROM t GROUP BY a ,","reject":true}
+{"sql":"SELECT a FROM t GROUP 0 a ,","reject":true}
+{"sql":"a SELECT FROM t GROUP BY a ,","reject":true}
+{"sql":"SELECT FROM t GROUP BY a ,","reject":true}
+{"sql":"SELECT a FROM t BY GROUP , a","reject":true}
+{"sql":"SELECT a FROM t GROUP a , a","reject":true}
+{"sql":"SELECT a FROM t 1 BY , a","reject":true}
+{"sql":"SELECT a FROM t t GROUP BY , a","reject":true}
+{"sql":"a SELECT FROM t GROUP BY a HAVING","reject":true}
+{"sql":"SELECT a a FROM t GROUP BY a HAVING","reject":true}
+{"sql":"SELECT a FROM t GROUP BY BY a HAVING","reject":true}
+{"sql":"SELECT SELECT a FROM t GROUP BY a HAVING","reject":true}
+{"sql":"SELECT a FROM t t HAVING","reject":true}
+{"sql":"( a FROM t HAVING","reject":true}
+{"sql":"SELECT a t FROM HAVING","reject":true}
+{"sql":"SELECT a FROM HAVING t a GROUP BY a HAVING b","reject":true}
+{"sql":"SELECT a FROM t HAVING a GROUP BY a b","reject":true}
+{"sql":"SELECT a a t HAVING a GROUP BY a HAVING b","reject":true}
+{"sql":"SELECT FROM t HAVING a GROUP BY a","reject":true}
+{"sql":"SELECT a FROM HAVING t a GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t HAVING a a GROUP BY a","reject":true}
+{"sql":"SELECT a t FROM HAVING a GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a WHERE = a 1","reject":true}
+{"sql":"SELECT a t GROUP BY a WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a WHERE = 1","reject":true}
+{"sql":"SELECT a FROM t GROUP BY WHERE a = 1","reject":true}
+{"sql":"SELECT a a t WHERE GROUP BY a","reject":true}
+{"sql":"SELECT a a FROM t WHERE GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t WHERE GROUP GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t WHERE GROUP BY BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a a GROUP BY b","reject":true}
+{"sql":"a SELECT FROM t GROUP BY a GROUP BY b","reject":true}
+{"sql":"SELECT a FROM t GROUP BY BY a GROUP BY b","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a GROUP b BY","reject":true}
+{"sql":"a a FROM t GROUP BY ROLLUP","reject":true}
+{"sql":"SELECT a t GROUP BY ROLLUP","shape":"SELECT a AS t GROUP BY ROLLUP;"}
+{"sql":"SELECT a a FROM t GROUP BY ROLLUP","shape":"SELECT a AS a FROM t GROUP BY ROLLUP;"}
+{"sql":"COUNT a FROM t GROUP BY ROLLUP","reject":true}
+{"sql":"SELECT a FROM FROM t GROUP BY ROLLUP ( )","reject":true}
+{"sql":"SELECT a FROM t BY ROLLUP ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY ROLLUP ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY t ( )","shape":"SELECT a FROM t GROUP BY t();"}
+{"sql":"SELECT a t GROUP BY CUBE","shape":"SELECT a AS t GROUP BY CUBE;"}
+{"sql":"SELECT a FROM GROUP t BY CUBE","reject":true}
+{"sql":"SELECT a t FROM GROUP BY GROUPING SETS","reject":true}
+{"sql":"SELECT FROM a t GROUP BY GROUPING SETS","reject":true}
+{"sql":"SELECT a FROM t BY GROUP GROUPING SETS","reject":true}
+{"sql":"SELECT a FROM GROUP t BY GROUPING SETS ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY GROUPING SETS ( ( )","reject":true}
+{"sql":"SELECT a FROM GROUP BY GROUPING SETS ( )","reject":true}
+{"sql":"SELECT FROM a t GROUP BY GROUPING ( a )","shape":"SELECT FROM a AS t GROUP BY GROUPING(a);"}
+{"sql":"SELECT a FROM t GROUP BY GROUPING ( ALL )","reject":true}
+{"sql":"SELECT a FROM FROM t GROUP BY GROUPING ( a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY GROUPING a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY GROUPING SETS ( ( ( )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY GROUPING SETS ( OR a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a ROLLUP ( b )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a ROLLUP ( ( b )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a ROLLUP ( b ) )","reject":true}
+{"sql":"SELECT a FROM t a BY a ROLLUP ( b )","reject":true}
+{"sql":"SELECT COUNT ( * ) ) FROM t","reject":true}
+{"sql":"SELECT COUNT t * ) FILTER FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER FROM WHERE","reject":true}
+{"sql":"SELECT COUNT ( * COUNT FILTER FROM t","reject":true}
+{"sql":"SELECT ( * ) FILTER ( ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( ) FROM FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER b ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) > ( ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER FILTER ( a > 1 ) FROM t","reject":true}
+{"sql":"a COUNT ( * ) FILTER ( a > 1 ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ) * FILTER ( a > 1 ) FROM t","shape":"SELECT COUNT() * FILTER(a > 1) FROM t;"}
+{"sql":"SELECT COUNT ( * FILTER ( a > 1 ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * FILTER ( WHERE ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( , ) FILTER ( WHERE ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) ( WHERE ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * a FILTER ( WHERE ) FROM t","reject":true}
+{"sql":"SELECT SELECT SUM ( a ORDER BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ORDER BY ) FROM t t","reject":true}
+{"sql":"SELECT SUM a ORDER BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a , BY ) FROM t","shape":"SELECT SUM(a, BY) FROM t;"}
+{"sql":"SELECT SUM ( ORDER BY a FROM t","reject":true}
+{"sql":"SELECT SUM ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ORDER BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ORDER ( BY a ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN ( ORDER BY a ) FROM t t","reject":true}
+{"sql":"SELECT MODE ( ) ( WITHIN ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN ( ORDER BY ( ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN ( ORDER BY a ) t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP GROUP ( a ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( a ) FROM","reject":true}
+{"sql":"MODE ( ) WITHIN GROUP ( a ) FROM t","reject":true}
+{"sql":"SELECT MODE t ) WITHIN GROUP ( a ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) 1 GROUP ( ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( ) t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN WITHIN GROUP ( ) FROM t","reject":true}
+{"sql":"SELECT MODE ( ) WITHIN GROUP ( ) c t","reject":true}

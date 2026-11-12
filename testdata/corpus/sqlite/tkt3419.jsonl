@@ -1,0 +1,20 @@
+{"sql":"create table a(id integer primary key)"}
+{"sql":"create table b(id integer primary key, a_id integer)"}
+{"sql":"create table c(id integer primary key, b_id integer)"}
+{"sql":"insert into a values (2)"}
+{"sql":"insert into b values (3, 1)"}
+{"sql":"insert into b values (4, 1)"}
+{"sql":"insert into b values (5, 1)"}
+{"sql":"insert into b values (6, 1)"}
+{"sql":"insert into b values (9, 2)"}
+{"sql":"insert into c values (4, 3)"}
+{"sql":"insert into c values (5, 5)"}
+{"sql":"insert into c values (6, 4)"}
+{"sql":"insert into c values (7, 6)"}
+{"sql":"insert into c values (8, 9)"}
+{"sql":"select * FROM a, b, c WHERE a.id=2 AND b.a_id = a.id AND b.id=c.b_id"}
+{"sql":"select * FROM a, c, b WHERE a.id=2 AND b.a_id = a.id AND b.id=c.b_id"}
+{"sql":"select * FROM b, a, c WHERE a.id=2 AND b.a_id = a.id AND b.id=c.b_id"}
+{"sql":"select * FROM b, c, a WHERE a.id=2 AND b.a_id = a.id AND b.id=c.b_id"}
+{"sql":"select * FROM c, a, b WHERE a.id=2 AND b.a_id = a.id AND b.id=c.b_id"}
+{"sql":"select * FROM c, b, a WHERE a.id=2 AND b.a_id = a.id AND b.id=c.b_id"}

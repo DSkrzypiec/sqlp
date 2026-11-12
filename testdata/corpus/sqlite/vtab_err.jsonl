@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE r(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE VIRTUAL TABLE e USING echo(r)"}
+{"sql":"CREATE TABLE xyz(x)"}
+{"sql":"SELECT a FROM e"}

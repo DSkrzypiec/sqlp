@@ -1,0 +1,27 @@
+{"sql":"SELECT randomblob(2147483647)"}
+{"sql":"SELECT zeroblob(2147483647)"}
+{"sql":"SELECT zeroblob(-1)"}
+{"sql":"INSERT INTO t4 SELECT 2+x FROM t4"}
+{"sql":"SELECT group_concat(hex(randomblob(20000))) FROM t4"}
+{"sql":"PRAGMA max_page_count = 1000"}
+{"sql":"CREATE TABLE trig (a INTEGER, b INTEGER)"}
+{"sql":"CREATE TRIGGER update_b BEFORE UPDATE ON trig\n      FOR EACH ROW BEGIN\n        INSERT INTO trig VALUES (65, 'update_b');\n      END"}
+{"sql":"CREATE TRIGGER update_a AFTER UPDATE ON trig\n      FOR EACH ROW BEGIN\n        INSERT INTO trig VALUES (65, 'update_a');\n      END"}
+{"sql":"CREATE TRIGGER insert_b BEFORE INSERT ON trig\n      FOR EACH ROW BEGIN\n        UPDATE trig SET a = 1;\n      END"}
+{"sql":"CREATE TRIGGER insert_a AFTER INSERT ON trig\n      FOR EACH ROW BEGIN\n        UPDATE trig SET a = 1;\n      END"}
+{"sql":"INSERT INTO trig VALUES (1,1)"}
+{"sql":"SELECT COUNT(*) FROM trig"}
+{"sql":"INSERT INTO trig VALUES (1,10)"}
+{"sql":"PRAGMA max_page_count = 1000000"}
+{"sql":"INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc"}
+{"sql":"INSERT INTO abc SELECT a, b, c FROM abc"}
+{"sql":"INSERT INTO abc SELECT b, a, c FROM abc"}
+{"sql":"INSERT INTO abc SELECT c, b, a FROM abc"}
+{"sql":"DROP VIEW IF EXISTS v1"}
+{"sql":"CREATE TABLE v0(a)"}
+{"sql":"INSERT INTO v0 VALUES(1)"}
+{"sql":"SELECT a FROM v199"}
+{"sql":"SELECT *,*,*,*,*,*,*,* FROM (\n  SELECT *,*,*,*,*,*,*,* FROM (\n  SELECT *,*,*,*,*,*,*,* FROM (\n  SELECT *,*,*,*,*,*,*,* FROM (\n  SELECT *,*,*,*,*,*,*,* FROM (\n    SELECT 1,2,3,4,5,6,7,8,9,10\n  )\n  ))))"}
+{"sql":"CREATE TABLE b1(x)"}
+{"sql":"INSERT INTO b1 VALUES(1), (2), (3), (4), (5), (6), (7), (8), (9), (10), (11)"}
+{"sql":"INSERT INTO b1 VALUES(1), (2), (3), (4), (5), (6), (7), (8), (9), (10)\n    UNION VALUES(11)"}

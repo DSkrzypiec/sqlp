@@ -1,0 +1,9 @@
+{"sql":"CREATE TABLE delete_test (\n    id SERIAL PRIMARY KEY,\n    a INT,\n    b text\n)","shape":"CREATE TABLE delete_test (id SERIAL PRIMARY KEY, a INT, b text);"}
+{"sql":"INSERT INTO delete_test (a) VALUES (10)","shape":"INSERT INTO delete_test (a) VALUES (10);"}
+{"sql":"INSERT INTO delete_test (a, b) VALUES (50, repeat('x', 10000))","shape":"INSERT INTO delete_test (a, b) VALUES (50, repeat('x', 10000));"}
+{"sql":"INSERT INTO delete_test (a) VALUES (100)","shape":"INSERT INTO delete_test (a) VALUES (100);"}
+{"sql":"DELETE FROM delete_test AS dt WHERE dt.a > 75","shape":"DELETE FROM delete_test AS dt WHERE dt.a > 75;"}
+{"sql":"DELETE FROM delete_test dt WHERE delete_test.a > 25","shape":"DELETE FROM delete_test AS dt WHERE delete_test.a > 25;"}
+{"sql":"SELECT id, a, char_length(b) FROM delete_test","shape":"SELECT id, a, char_length(b) FROM delete_test;"}
+{"sql":"DELETE FROM delete_test WHERE a > 25","shape":"DELETE FROM delete_test WHERE a > 25;"}
+{"sql":"DROP TABLE delete_test","shape":"DROP TABLE delete_test;"}

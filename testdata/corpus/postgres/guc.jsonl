@@ -1,0 +1,100 @@
+{"sql":"SHOW datestyle","shape":"SHOW datestyle;"}
+{"sql":"SET vacuum_cost_delay TO 40","shape":"SET vacuum_cost_delay TO 40;"}
+{"sql":"SET datestyle = 'ISO, YMD'","shape":"SET datestyle TO 'ISO, YMD';"}
+{"sql":"SHOW vacuum_cost_delay","shape":"SHOW vacuum_cost_delay;"}
+{"sql":"SELECT '2006-08-13 12:34:56'::timestamptz","shape":"SELECT '2006-08-13 12:34:56'::timestamptz;"}
+{"sql":"SET LOCAL vacuum_cost_delay TO 50","shape":"SET LOCAL vacuum_cost_delay TO 50;"}
+{"sql":"SET LOCAL datestyle = 'SQL'","shape":"SET LOCAL datestyle TO 'SQL';"}
+{"sql":"SET vacuum_cost_delay TO 60","shape":"SET vacuum_cost_delay TO 60;"}
+{"sql":"SET datestyle = 'German'","shape":"SET datestyle TO 'German';"}
+{"sql":"SET vacuum_cost_delay TO 70","shape":"SET vacuum_cost_delay TO 70;"}
+{"sql":"SET datestyle = 'MDY'","shape":"SET datestyle TO 'MDY';"}
+{"sql":"SAVEPOINT first_sp","shape":"SAVEPOINT first_sp;"}
+{"sql":"SET vacuum_cost_delay TO 80.1","shape":"SET vacuum_cost_delay TO 80.1;"}
+{"sql":"SET datestyle = 'German, DMY'","shape":"SET datestyle TO 'German, DMY';"}
+{"sql":"ROLLBACK TO first_sp","shape":"ROLLBACK TO SAVEPOINT first_sp;"}
+{"sql":"SAVEPOINT second_sp","shape":"SAVEPOINT second_sp;"}
+{"sql":"SET vacuum_cost_delay TO '900us'","shape":"SET vacuum_cost_delay TO '900us';"}
+{"sql":"SET datestyle = 'SQL, YMD'","shape":"SET datestyle TO 'SQL, YMD';"}
+{"sql":"SAVEPOINT third_sp","shape":"SAVEPOINT third_sp;"}
+{"sql":"SET vacuum_cost_delay TO 100","shape":"SET vacuum_cost_delay TO 100;"}
+{"sql":"SET datestyle = 'Postgres, MDY'","shape":"SET datestyle TO 'Postgres, MDY';"}
+{"sql":"ROLLBACK TO third_sp","shape":"ROLLBACK TO SAVEPOINT third_sp;"}
+{"sql":"ROLLBACK TO second_sp","shape":"ROLLBACK TO SAVEPOINT second_sp;"}
+{"sql":"SAVEPOINT sp","shape":"SAVEPOINT sp;"}
+{"sql":"SET LOCAL vacuum_cost_delay TO 30","shape":"SET LOCAL vacuum_cost_delay TO 30;"}
+{"sql":"SET LOCAL datestyle = 'Postgres, MDY'","shape":"SET LOCAL datestyle TO 'Postgres, MDY';"}
+{"sql":"ROLLBACK TO sp","shape":"ROLLBACK TO SAVEPOINT sp;"}
+{"sql":"RELEASE SAVEPOINT sp","shape":"RELEASE SAVEPOINT sp;"}
+{"sql":"SET datestyle = 'ISO, DMY'","shape":"SET datestyle TO 'ISO, DMY';"}
+{"sql":"SET datestyle = iso, ymd","shape":"SET datestyle TO iso, ymd;"}
+{"sql":"SET seq_page_cost TO 'NaN'","shape":"SET seq_page_cost TO 'NaN';"}
+{"sql":"SET vacuum_cost_delay TO '10s'","shape":"SET vacuum_cost_delay TO '10s';"}
+{"sql":"SET no_such_variable TO 42","shape":"SET no_such_variable TO 42;"}
+{"sql":"SHOW custom.my_guc","shape":"SHOW custom.my_guc;"}
+{"sql":"SET custom.my_guc = 42","shape":"SET custom.my_guc TO 42;"}
+{"sql":"RESET custom.my_guc","shape":"RESET custom.my_guc;"}
+{"sql":"SET custom.my.qualified.guc = 'foo'","shape":"SET custom.my.qualified.guc TO 'foo';"}
+{"sql":"SHOW custom.my.qualified.guc","shape":"SHOW custom.my.qualified.guc;"}
+{"sql":"SET custom.\"bad-guc\" = 42","shape":"SET custom.\"bad-guc\" TO 42;"}
+{"sql":"SHOW custom.\"bad-guc\"","shape":"SHOW custom.\"bad-guc\";"}
+{"sql":"SET special.\"weird name\" = 'foo'","shape":"SET special.\"weird name\" TO 'foo';"}
+{"sql":"SHOW special.\"weird name\"","shape":"SHOW special.\"weird name\";"}
+{"sql":"SET plpgsql.extra_foo_warnings = true","shape":"SET plpgsql.extra_foo_warnings TO TRUE;"}
+{"sql":"LOAD 'plpgsql'","shape":"LOAD 'plpgsql';"}
+{"sql":"SHOW plpgsql.extra_foo_warnings","shape":"SHOW plpgsql.extra_foo_warnings;"}
+{"sql":"CREATE TEMP TABLE reset_test ( data text ) ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE reset_test (data text) ON COMMIT DELETE ROWS;"}
+{"sql":"SELECT relname FROM pg_class WHERE relname = 'reset_test'","shape":"SELECT relname FROM pg_class WHERE relname = 'reset_test';"}
+{"sql":"DISCARD TEMP","shape":"DISCARD TEMP;"}
+{"sql":"DECLARE foo CURSOR WITH HOLD FOR SELECT 1","shape":"DECLARE foo CURSOR WITH HOLD FOR SELECT 1;"}
+{"sql":"PREPARE foo AS SELECT 1","shape":"PREPARE foo AS SELECT 1;"}
+{"sql":"LISTEN foo_event","shape":"LISTEN foo_event;"}
+{"sql":"SET vacuum_cost_delay = 13","shape":"SET vacuum_cost_delay TO 13;"}
+{"sql":"CREATE TEMP TABLE tmp_foo (data text) ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE tmp_foo (data text) ON COMMIT DELETE ROWS;"}
+{"sql":"CREATE ROLE regress_guc_user"}
+{"sql":"SET SESSION AUTHORIZATION regress_guc_user"}
+{"sql":"SELECT pg_listening_channels()","shape":"SELECT pg_listening_channels();"}
+{"sql":"SELECT name FROM pg_prepared_statements","shape":"SELECT name FROM pg_prepared_statements;"}
+{"sql":"SELECT name FROM pg_cursors","shape":"SELECT name FROM pg_cursors;"}
+{"sql":"SELECT relname from pg_class where relname = 'tmp_foo'","shape":"SELECT relname FROM pg_class WHERE relname = 'tmp_foo';"}
+{"sql":"SELECT current_user = 'regress_guc_user'","shape":"SELECT current_user = 'regress_guc_user';"}
+{"sql":"DISCARD ALL","shape":"DISCARD ALL;"}
+{"sql":"DROP ROLE regress_guc_user","shape":"DROP ROLE regress_guc_user;"}
+{"sql":"set search_path = foo, public, not_there_initially","shape":"SET search_path TO foo, public, not_there_initially;"}
+{"sql":"select current_schemas(false)","shape":"SELECT current_schemas(FALSE);"}
+{"sql":"create schema not_there_initially","shape":"CREATE SCHEMA not_there_initially;"}
+{"sql":"drop schema not_there_initially","shape":"DROP SCHEMA not_there_initially;"}
+{"sql":"reset search_path","shape":"RESET search_path;"}
+{"sql":"set work_mem = '3MB'","shape":"SET work_mem TO '3MB';"}
+{"sql":"create function report_guc(text) returns text as\n$$ select current_setting($1) $$ language sql\nset work_mem = '1MB'","shape":"CREATE FUNCTION report_guc(text) RETURNS text AS ' select current_setting($1) ' LANGUAGE sql SET work_mem TO '1MB';"}
+{"sql":"select report_guc('work_mem'), current_setting('work_mem')","shape":"SELECT report_guc('work_mem'), current_setting('work_mem');"}
+{"sql":"alter function report_guc(text) set work_mem = '2MB'"}
+{"sql":"alter function report_guc(text) reset all"}
+{"sql":"create or replace function myfunc(int) returns text as $$\nbegin\n  set local work_mem = '2MB';\n  return current_setting('work_mem');\nend $$\nlanguage plpgsql\nset work_mem = '1MB'","shape":"CREATE OR REPLACE FUNCTION myfunc(int) RETURNS text AS '\nbegin\n  set local work_mem = ''2MB'';\n  return current_setting(''work_mem'');\nend ' LANGUAGE plpgsql SET work_mem TO '1MB';"}
+{"sql":"select myfunc(0), current_setting('work_mem')","shape":"SELECT myfunc(0), current_setting('work_mem');"}
+{"sql":"alter function myfunc(int) reset all"}
+{"sql":"create or replace function myfunc(int) returns text as $$\nbegin\n  set work_mem = '2MB';\n  return current_setting('work_mem');\nend $$\nlanguage plpgsql\nset work_mem = '1MB'","shape":"CREATE OR REPLACE FUNCTION myfunc(int) RETURNS text AS '\nbegin\n  set work_mem = ''2MB'';\n  return current_setting(''work_mem'');\nend ' LANGUAGE plpgsql SET work_mem TO '1MB';"}
+{"sql":"create or replace function myfunc(int) returns text as $$\nbegin\n  set work_mem = '2MB';\n  perform 1/$1;\n  return current_setting('work_mem');\nend $$\nlanguage plpgsql\nset work_mem = '1MB'","shape":"CREATE OR REPLACE FUNCTION myfunc(int) RETURNS text AS '\nbegin\n  set work_mem = ''2MB'';\n  perform 1/$1;\n  return current_setting(''work_mem'');\nend ' LANGUAGE plpgsql SET work_mem TO '1MB';"}
+{"sql":"select myfunc(0)","shape":"SELECT myfunc(0);"}
+{"sql":"select current_setting('work_mem')","shape":"SELECT current_setting('work_mem');"}
+{"sql":"select myfunc(1), current_setting('work_mem')","shape":"SELECT myfunc(1), current_setting('work_mem');"}
+{"sql":"select current_setting('nosuch.setting')","shape":"SELECT current_setting('nosuch.setting');"}
+{"sql":"select current_setting('nosuch.setting', false)","shape":"SELECT current_setting('nosuch.setting', FALSE);"}
+{"sql":"select current_setting('nosuch.setting', true) is null","shape":"SELECT current_setting('nosuch.setting', TRUE) IS NULL;"}
+{"sql":"set nosuch.setting = 'nada'","shape":"SET nosuch.setting TO 'nada';"}
+{"sql":"select current_setting('nosuch.setting', true)","shape":"SELECT current_setting('nosuch.setting', TRUE);"}
+{"sql":"create function func_with_bad_set() returns int as $$ select 1 $$\nlanguage sql\nset default_text_search_config = no_such_config","shape":"CREATE FUNCTION func_with_bad_set() RETURNS int AS ' select 1 ' LANGUAGE sql SET default_text_search_config TO no_such_config;"}
+{"sql":"set check_function_bodies = off","shape":"SET check_function_bodies TO off;"}
+{"sql":"select func_with_bad_set()","shape":"SELECT func_with_bad_set();"}
+{"sql":"reset check_function_bodies","shape":"RESET check_function_bodies;"}
+{"sql":"set default_with_oids to f","shape":"SET default_with_oids TO f;"}
+{"sql":"set default_with_oids to t","shape":"SET default_with_oids TO t;"}
+{"sql":"SELECT pg_settings_get_flags(NULL)","shape":"SELECT pg_settings_get_flags(NULL);"}
+{"sql":"SELECT pg_settings_get_flags('does_not_exist')","shape":"SELECT pg_settings_get_flags('does_not_exist');"}
+{"sql":"CREATE TABLE tab_settings_flags AS SELECT name, category,\n    'EXPLAIN'          = ANY(flags) AS explain,\n    'NO_RESET'         = ANY(flags) AS no_reset,\n    'NO_RESET_ALL'     = ANY(flags) AS no_reset_all,\n    'NOT_IN_SAMPLE'    = ANY(flags) AS not_in_sample,\n    'RUNTIME_COMPUTED' = ANY(flags) AS runtime_computed\n  FROM pg_show_all_settings() AS psas,\n    pg_settings_get_flags(psas.name) AS flags","shape":"CREATE TABLE tab_settings_flags AS SELECT name, category, 'EXPLAIN' = ANY (flags) AS explain, 'NO_RESET' = ANY (flags) AS no_reset, 'NO_RESET_ALL' = ANY (flags) AS no_reset_all, 'NOT_IN_SAMPLE' = ANY (flags) AS not_in_sample, 'RUNTIME_COMPUTED' = ANY (flags) AS runtime_computed FROM pg_show_all_settings() AS psas, pg_settings_get_flags(psas.name) AS flags;"}
+{"sql":"SELECT name FROM tab_settings_flags\n  WHERE category = 'Developer Options' AND NOT not_in_sample\n  ORDER BY 1","shape":"SELECT name FROM tab_settings_flags WHERE (category = 'Developer Options') AND (NOT not_in_sample) ORDER BY 1;"}
+{"sql":"SELECT name FROM tab_settings_flags\n  WHERE category ~ '^Query Tuning' AND NOT explain\n  ORDER BY 1","shape":"SELECT name FROM tab_settings_flags WHERE (category ~ '^Query Tuning') AND (NOT explain) ORDER BY 1;"}
+{"sql":"SELECT name FROM tab_settings_flags\n  WHERE NOT category = 'Preset Options' AND runtime_computed\n  ORDER BY 1","shape":"SELECT name FROM tab_settings_flags WHERE (NOT (category = 'Preset Options')) AND runtime_computed ORDER BY 1;"}
+{"sql":"SELECT name FROM tab_settings_flags\n  WHERE category = 'Preset Options' AND NOT not_in_sample\n  ORDER BY 1","shape":"SELECT name FROM tab_settings_flags WHERE (category = 'Preset Options') AND (NOT not_in_sample) ORDER BY 1;"}
+{"sql":"SELECT name FROM tab_settings_flags\n  WHERE no_reset AND NOT no_reset_all\n  ORDER BY 1","shape":"SELECT name FROM tab_settings_flags WHERE no_reset AND (NOT no_reset_all) ORDER BY 1;"}
+{"sql":"DROP TABLE tab_settings_flags","shape":"DROP TABLE tab_settings_flags;"}

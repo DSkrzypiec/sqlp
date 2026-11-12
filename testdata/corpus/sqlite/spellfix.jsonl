@@ -1,0 +1,62 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING spellfix1"}
+{"sql":"SELECT next_char('re','vocab','w')"}
+{"sql":"SELECT next_char('re','(SELECT w AS x FROM vocab)','x')"}
+{"sql":"SELECT next_char('r','vocab','w')"}
+{"sql":"SELECT next_char('','vocab','w')"}
+{"sql":"SELECT next_char('','xyzzy','a')"}
+{"sql":"CREATE TABLE vocab2(w TEXT)"}
+{"sql":"CREATE INDEX vocab2w ON vocab2(w COLLATE nocase)"}
+{"sql":"INSERT INTO vocab2 VALUES('abc'), ('ABD'), ('aBe'), ('AbF')"}
+{"sql":"SELECT next_char('ab', 'vocab2', 'w', null, 'nocase')"}
+{"sql":"SELECT next_char('ab','vocab2','w',null,null)"}
+{"sql":"SELECT next_char('AB','vocab2','w',null,'NOCASE')"}
+{"sql":"SELECT next_char('ab','vocab2','w',null,'binary')"}
+{"sql":"SELECT rowid FROM t1 WHERE word='rabbit'"}
+{"sql":"UPDATE t1 SET rowid=2000 WHERE word='rabbit'"}
+{"sql":"INSERT INTO t1(rowid, word) VALUES(3000,'melody')"}
+{"sql":"SELECT rowid, word, matchlen FROM t1 WHERE word MATCH 'melotti'\n   ORDER BY score LIMIT 3"}
+{"sql":"INSERT INTO t1(rowid, word) VALUES(3000,'garden')"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING spellfix1"}
+{"sql":"INSERT INTO t2 (word, soundslike) VALUES('school', 'skuul')"}
+{"sql":"INSERT INTO t2 (word, soundslike) VALUES('psalm', 'sarm')"}
+{"sql":"SELECT word, matchlen FROM t2 WHERE word MATCH 'sar*' LIMIT 5"}
+{"sql":"SELECT word, matchlen FROM t2 WHERE word MATCH 'skol*' LIMIT 5"}
+{"sql":"CREATE TABLE costs(iLang, cFrom, cTo, iCost)"}
+{"sql":"INSERT INTO costs VALUES(0, 'a', 'e', 1)"}
+{"sql":"INSERT INTO costs VALUES(0, 'e', 'i', 1)"}
+{"sql":"INSERT INTO costs VALUES(0, 'i', 'o', 1)"}
+{"sql":"INSERT INTO costs VALUES(0, 'o', 'u', 1)"}
+{"sql":"INSERT INTO costs VALUES(0, 'u', 'a', 1)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING spellfix1(edit_cost_table=costs)"}
+{"sql":"INSERT INTO t3(command) VALUES('edit_cost_table=NULL')"}
+{"sql":"CREATE TABLE costs2(iLang, cFrom, cTo, iCost)"}
+{"sql":"INSERT INTO costs2 VALUES(0, 'a', 'o', 1)"}
+{"sql":"INSERT INTO costs2 VALUES(0, 'e', 'o', 4)"}
+{"sql":"INSERT INTO costs2 VALUES(0, 'i', 'o', 8)"}
+{"sql":"INSERT INTO costs2 VALUES(0, 'u', 'o', 16)"}
+{"sql":"INSERT INTO t3(command) VALUES('edit_cost_table=\"costs2\"')"}
+{"sql":"SELECT word FROM t3 WHERE rowid = 10"}
+{"sql":"SELECT word, distance FROM t3 WHERE rowid = 10"}
+{"sql":"SELECT word, distance FROM t3 WHERE rowid = 10 AND word MATCH 'kiiner'"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING spellfix1"}
+{"sql":"INSERT INTO t4(rowid, word) VALUES(1, 'Archilles')"}
+{"sql":"INSERT INTO t4(rowid, word) VALUES(2, 'Pluto')"}
+{"sql":"INSERT INTO t4(rowid, word) VALUES(3, 'Atrides')"}
+{"sql":"INSERT OR REPLACE INTO t4(rowid, word) VALUES(2, 'Apollo')"}
+{"sql":"SELECT rowid, word FROM t4"}
+{"sql":"INSERT OR ABORT INTO t4(rowid, word) VALUES(1, 'Leto')"}
+{"sql":"INSERT OR ROLLBACK INTO t4(rowid, word) VALUES(3, 'Zeus')"}
+{"sql":"INSERT OR FAIL INTO t4(rowid, word) VALUES(3, 'Zeus')"}
+{"sql":"INSERT OR IGNORE INTO t4(rowid, word) VALUES(3, 'Zeus')"}
+{"sql":"UPDATE OR REPLACE t4 SET rowid=3 WHERE rowid=1"}
+{"sql":"UPDATE OR ABORT t4 SET rowid=3 WHERE rowid=2"}
+{"sql":"UPDATE OR ROLLBACK t4 SET rowid=3 WHERE rowid=2"}
+{"sql":"UPDATE OR FAIL t4 SET rowid=3 WHERE rowid=2"}
+{"sql":"UPDATE OR IGNORE t4 SET rowid=3 WHERE rowid=2"}
+{"sql":"INSERT INTO t4(rowid, word) VALUES(10, 'Agamemnon')"}
+{"sql":"INSERT INTO t4(rowid, word) VALUES(20, 'Patroclus')"}
+{"sql":"INSERT INTO t4(rowid, word) VALUES(30, 'Chryses')"}
+{"sql":"CREATE TABLE t5(i, w)"}
+{"sql":"INSERT INTO t5 VALUES(5,  'Poseidon')"}
+{"sql":"INSERT INTO t5 VALUES(20, 'Chronos')"}
+{"sql":"INSERT INTO t5 VALUES(30, 'Hera')"}

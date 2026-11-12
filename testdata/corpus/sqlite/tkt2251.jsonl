@@ -1,0 +1,8 @@
+{"sql":"ALTER TABLE t1 ADD COLUMN b REAL DEFAULT 4.0"}
+{"sql":"SELECT avg(b), typeof(avg(b)) FROM t1"}
+{"sql":"SELECT sum(b), typeof(sum(b)) FROM t1"}
+{"sql":"SELECT a, sum(b), typeof(sum(b)) FROM t1 GROUP BY a ORDER BY a"}
+{"sql":"SELECT b, typeof(b) FROM t1 WHERE a=3"}
+{"sql":"CREATE INDEX t1i1 ON t1(a,b)"}
+{"sql":"SELECT y, typeof(y) FROM t2 WHERE x=3"}
+{"sql":"SELECT b, typeof(b) FROM t3 WHERE a=3"}

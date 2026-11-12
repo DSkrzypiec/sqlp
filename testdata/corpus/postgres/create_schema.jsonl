@@ -1,0 +1,23 @@
+{"sql":"CREATE ROLE regress_create_schema_role SUPERUSER"}
+{"sql":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role\n  CREATE SEQUENCE schema_not_existing.seq","shape":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role CREATE SEQUENCE schema_not_existing.seq;"}
+{"sql":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role\n  CREATE TABLE schema_not_existing.tab (id int)","shape":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role CREATE TABLE schema_not_existing.tab (id int);"}
+{"sql":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role\n  CREATE VIEW schema_not_existing.view AS SELECT 1","shape":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role CREATE VIEW schema_not_existing.view AS SELECT 1;"}
+{"sql":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role\n  CREATE INDEX ON schema_not_existing.tab (id)","shape":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role CREATE INDEX ON schema_not_existing.tab (id);"}
+{"sql":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role\n  CREATE TRIGGER schema_trig BEFORE INSERT ON schema_not_existing.tab\n  EXECUTE FUNCTION schema_trig.no_func()","shape":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role CREATE TRIGGER schema_trig BEFORE INSERT ON schema_not_existing.tab EXECUTE FUNCTION schema_trig.no_func();"}
+{"sql":"SET ROLE regress_create_schema_role"}
+{"sql":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE\n  CREATE SEQUENCE schema_not_existing.seq","shape":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE CREATE SEQUENCE schema_not_existing.seq;"}
+{"sql":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE\n  CREATE TABLE schema_not_existing.tab (id int)","shape":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE CREATE TABLE schema_not_existing.tab (id int);"}
+{"sql":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE\n  CREATE VIEW schema_not_existing.view AS SELECT 1","shape":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE CREATE VIEW schema_not_existing.view AS SELECT 1;"}
+{"sql":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE\n  CREATE INDEX ON schema_not_existing.tab (id)","shape":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE CREATE INDEX ON schema_not_existing.tab (id);"}
+{"sql":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE\n  CREATE TRIGGER schema_trig BEFORE INSERT ON schema_not_existing.tab\n  EXECUTE FUNCTION schema_trig.no_func()","shape":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE CREATE TRIGGER schema_trig BEFORE INSERT ON schema_not_existing.tab EXECUTE FUNCTION schema_trig.no_func();"}
+{"sql":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE\n  CREATE SEQUENCE schema_not_existing.seq","shape":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE CREATE SEQUENCE schema_not_existing.seq;"}
+{"sql":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE\n  CREATE TABLE schema_not_existing.tab (id int)","shape":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE CREATE TABLE schema_not_existing.tab (id int);"}
+{"sql":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE\n  CREATE VIEW schema_not_existing.view AS SELECT 1","shape":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE CREATE VIEW schema_not_existing.view AS SELECT 1;"}
+{"sql":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE\n  CREATE INDEX ON schema_not_existing.tab (id)","shape":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE CREATE INDEX ON schema_not_existing.tab (id);"}
+{"sql":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE\n  CREATE TRIGGER schema_trig BEFORE INSERT ON schema_not_existing.tab\n  EXECUTE FUNCTION schema_trig.no_func()","shape":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE CREATE TRIGGER schema_trig BEFORE INSERT ON schema_not_existing.tab EXECUTE FUNCTION schema_trig.no_func();"}
+{"sql":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role\n  CREATE TABLE regress_create_schema_role.tab (id int)","shape":"CREATE SCHEMA AUTHORIZATION regress_create_schema_role CREATE TABLE regress_create_schema_role.tab (id int);"}
+{"sql":"DROP SCHEMA regress_create_schema_role CASCADE","shape":"DROP SCHEMA regress_create_schema_role CASCADE;"}
+{"sql":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE\n  CREATE TABLE regress_create_schema_role.tab (id int)","shape":"CREATE SCHEMA AUTHORIZATION CURRENT_ROLE CREATE TABLE regress_create_schema_role.tab (id int);"}
+{"sql":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE\n  CREATE TABLE regress_schema_1.tab (id int)","shape":"CREATE SCHEMA regress_schema_1 AUTHORIZATION CURRENT_ROLE CREATE TABLE regress_schema_1.tab (id int);"}
+{"sql":"DROP SCHEMA regress_schema_1 CASCADE","shape":"DROP SCHEMA regress_schema_1 CASCADE;"}
+{"sql":"DROP ROLE regress_create_schema_role","shape":"DROP ROLE regress_create_schema_role;"}

@@ -1,0 +1,151 @@
+{"sql":"CREATE TABLE mvtest_t (id int NOT NULL PRIMARY KEY, type text NOT NULL, amt numeric NOT NULL)","shape":"CREATE TABLE mvtest_t (id int NOT NULL PRIMARY KEY, type text NOT NULL, amt numeric NOT NULL);"}
+{"sql":"INSERT INTO mvtest_t VALUES\n  (1, 'x', 2),\n  (2, 'x', 3),\n  (3, 'y', 5),\n  (4, 'y', 7),\n  (5, 'z', 11)","shape":"INSERT INTO mvtest_t VALUES (1, 'x', 2), (2, 'x', 3), (3, 'y', 5), (4, 'y', 7), (5, 'z', 11);"}
+{"sql":"CREATE VIEW mvtest_tv AS SELECT type, sum(amt) AS totamt FROM mvtest_t GROUP BY type","shape":"CREATE VIEW mvtest_tv AS SELECT type, sum(amt) AS totamt FROM mvtest_t GROUP BY type;"}
+{"sql":"SELECT * FROM mvtest_tv ORDER BY type","shape":"SELECT * FROM mvtest_tv ORDER BY type;"}
+{"sql":"EXPLAIN (costs off)\n  CREATE MATERIALIZED VIEW mvtest_tm AS SELECT type, sum(amt) AS totamt FROM mvtest_t GROUP BY type WITH NO DATA","shape":"EXPLAIN (COSTS off) CREATE MATERIALIZED VIEW mvtest_tm AS SELECT type, sum(amt) AS totamt FROM mvtest_t GROUP BY type WITH NO DATA;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_tm AS SELECT type, sum(amt) AS totamt FROM mvtest_t GROUP BY type WITH NO DATA","shape":"CREATE MATERIALIZED VIEW mvtest_tm AS SELECT type, sum(amt) AS totamt FROM mvtest_t GROUP BY type WITH NO DATA;"}
+{"sql":"SELECT relispopulated FROM pg_class WHERE oid = 'mvtest_tm'::regclass","shape":"SELECT relispopulated FROM pg_class WHERE oid = 'mvtest_tm'::regclass;"}
+{"sql":"SELECT * FROM mvtest_tm ORDER BY type","shape":"SELECT * FROM mvtest_tm ORDER BY type;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_tm","shape":"REFRESH MATERIALIZED VIEW mvtest_tm;"}
+{"sql":"CREATE UNIQUE INDEX mvtest_tm_type ON mvtest_tm (type)","shape":"CREATE UNIQUE INDEX mvtest_tm_type ON mvtest_tm (type);"}
+{"sql":"EXPLAIN (costs off)\n  CREATE MATERIALIZED VIEW mvtest_tvm AS SELECT * FROM mvtest_tv ORDER BY type","shape":"EXPLAIN (COSTS off) CREATE MATERIALIZED VIEW mvtest_tvm AS SELECT * FROM mvtest_tv ORDER BY type;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_tvm AS SELECT * FROM mvtest_tv ORDER BY type","shape":"CREATE MATERIALIZED VIEW mvtest_tvm AS SELECT * FROM mvtest_tv ORDER BY type;"}
+{"sql":"SELECT * FROM mvtest_tvm","shape":"SELECT * FROM mvtest_tvm;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_tmm AS SELECT sum(totamt) AS grandtot FROM mvtest_tm","shape":"CREATE MATERIALIZED VIEW mvtest_tmm AS SELECT sum(totamt) AS grandtot FROM mvtest_tm;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_tvmm AS SELECT sum(totamt) AS grandtot FROM mvtest_tvm","shape":"CREATE MATERIALIZED VIEW mvtest_tvmm AS SELECT sum(totamt) AS grandtot FROM mvtest_tvm;"}
+{"sql":"CREATE UNIQUE INDEX mvtest_tvmm_expr ON mvtest_tvmm ((grandtot > 0))","shape":"CREATE UNIQUE INDEX mvtest_tvmm_expr ON mvtest_tvmm ((grandtot > 0));"}
+{"sql":"CREATE UNIQUE INDEX mvtest_tvmm_pred ON mvtest_tvmm (grandtot) WHERE grandtot < 0","shape":"CREATE UNIQUE INDEX mvtest_tvmm_pred ON mvtest_tvmm (grandtot) WHERE grandtot < 0;"}
+{"sql":"CREATE VIEW mvtest_tvv AS SELECT sum(totamt) AS grandtot FROM mvtest_tv","shape":"CREATE VIEW mvtest_tvv AS SELECT sum(totamt) AS grandtot FROM mvtest_tv;"}
+{"sql":"EXPLAIN (costs off)\n  CREATE MATERIALIZED VIEW mvtest_tvvm AS SELECT * FROM mvtest_tvv","shape":"EXPLAIN (COSTS off) CREATE MATERIALIZED VIEW mvtest_tvvm AS SELECT * FROM mvtest_tvv;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_tvvm AS SELECT * FROM mvtest_tvv","shape":"CREATE MATERIALIZED VIEW mvtest_tvvm AS SELECT * FROM mvtest_tvv;"}
+{"sql":"CREATE VIEW mvtest_tvvmv AS SELECT * FROM mvtest_tvvm","shape":"CREATE VIEW mvtest_tvvmv AS SELECT * FROM mvtest_tvvm;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_bb AS SELECT * FROM mvtest_tvvmv","shape":"CREATE MATERIALIZED VIEW mvtest_bb AS SELECT * FROM mvtest_tvvmv;"}
+{"sql":"CREATE INDEX mvtest_aa ON mvtest_bb (grandtot)","shape":"CREATE INDEX mvtest_aa ON mvtest_bb (grandtot);"}
+{"sql":"CREATE SCHEMA mvtest_mvschema","shape":"CREATE SCHEMA mvtest_mvschema;"}
+{"sql":"ALTER MATERIALIZED VIEW mvtest_tvm SET SCHEMA mvtest_mvschema"}
+{"sql":"SET search_path = mvtest_mvschema, public","shape":"SET search_path TO mvtest_mvschema, public;"}
+{"sql":"INSERT INTO mvtest_t VALUES (6, 'z', 13)","shape":"INSERT INTO mvtest_t VALUES (6, 'z', 13);"}
+{"sql":"SELECT * FROM mvtest_tvm ORDER BY type","shape":"SELECT * FROM mvtest_tvm ORDER BY type;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_tm","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_tm;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_tvm","shape":"REFRESH MATERIALIZED VIEW mvtest_tvm;"}
+{"sql":"EXPLAIN (costs off)\n  SELECT * FROM mvtest_tmm","shape":"EXPLAIN (COSTS off) SELECT * FROM mvtest_tmm;"}
+{"sql":"EXPLAIN (costs off)\n  SELECT * FROM mvtest_tvmm","shape":"EXPLAIN (COSTS off) SELECT * FROM mvtest_tvmm;"}
+{"sql":"EXPLAIN (costs off)\n  SELECT * FROM mvtest_tvvm","shape":"EXPLAIN (COSTS off) SELECT * FROM mvtest_tvvm;"}
+{"sql":"SELECT * FROM mvtest_tmm","shape":"SELECT * FROM mvtest_tmm;"}
+{"sql":"SELECT * FROM mvtest_tvmm","shape":"SELECT * FROM mvtest_tvmm;"}
+{"sql":"SELECT * FROM mvtest_tvvm","shape":"SELECT * FROM mvtest_tvvm;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_tmm","shape":"REFRESH MATERIALIZED VIEW mvtest_tmm;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_tvmm","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_tvmm;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_tvmm","shape":"REFRESH MATERIALIZED VIEW mvtest_tvmm;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_tvvm","shape":"REFRESH MATERIALIZED VIEW mvtest_tvvm;"}
+{"sql":"DROP MATERIALIZED VIEW IF EXISTS no_such_mv","shape":"DROP MATERIALIZED VIEW IF EXISTS no_such_mv;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_tvmm WITH NO DATA","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_tvmm WITH NO DATA;"}
+{"sql":"SELECT * FROM mvtest_tvvm FOR SHARE","shape":"SELECT * FROM mvtest_tvvm FOR SHARE;"}
+{"sql":"SELECT type, m.totamt AS mtot, v.totamt AS vtot FROM mvtest_tm m LEFT JOIN mvtest_tv v USING (type) ORDER BY type","shape":"SELECT type, m.totamt AS mtot, v.totamt AS vtot FROM mvtest_tm AS m LEFT JOIN mvtest_tv AS v USING (type) ORDER BY type;"}
+{"sql":"DROP TABLE mvtest_t","shape":"DROP TABLE mvtest_t;"}
+{"sql":"DROP TABLE mvtest_t CASCADE","shape":"DROP TABLE mvtest_t CASCADE;"}
+{"sql":"CREATE VIEW mvtest_vt1 AS SELECT 1 moo","shape":"CREATE VIEW mvtest_vt1 AS SELECT 1 AS moo;"}
+{"sql":"CREATE VIEW mvtest_vt2 AS SELECT moo, 2*moo FROM mvtest_vt1 UNION ALL SELECT moo, 3*moo FROM mvtest_vt1","shape":"CREATE VIEW mvtest_vt2 AS SELECT moo, 2 * moo FROM mvtest_vt1 UNION ALL SELECT moo, 3 * moo FROM mvtest_vt1;"}
+{"sql":"CREATE MATERIALIZED VIEW mv_test2 AS SELECT moo, 2*moo FROM mvtest_vt2 UNION ALL SELECT moo, 3*moo FROM mvtest_vt2","shape":"CREATE MATERIALIZED VIEW mv_test2 AS SELECT moo, 2 * moo FROM mvtest_vt2 UNION ALL SELECT moo, 3 * moo FROM mvtest_vt2;"}
+{"sql":"CREATE MATERIALIZED VIEW mv_test3 AS SELECT * FROM mv_test2 WHERE moo = 12345","shape":"CREATE MATERIALIZED VIEW mv_test3 AS SELECT * FROM mv_test2 WHERE moo = 12345;"}
+{"sql":"SELECT relispopulated FROM pg_class WHERE oid = 'mv_test3'::regclass","shape":"SELECT relispopulated FROM pg_class WHERE oid = 'mv_test3'::regclass;"}
+{"sql":"DROP VIEW mvtest_vt1 CASCADE","shape":"DROP VIEW mvtest_vt1 CASCADE;"}
+{"sql":"CREATE TABLE mvtest_foo(a, b) AS VALUES(1, 10)","shape":"CREATE TABLE mvtest_foo (a, b) AS VALUES (1, 10);"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv AS SELECT * FROM mvtest_foo","shape":"CREATE MATERIALIZED VIEW mvtest_mv AS SELECT * FROM mvtest_foo;"}
+{"sql":"CREATE UNIQUE INDEX ON mvtest_mv(a)","shape":"CREATE UNIQUE INDEX ON mvtest_mv (a);"}
+{"sql":"INSERT INTO mvtest_foo SELECT * FROM mvtest_foo","shape":"INSERT INTO mvtest_foo SELECT * FROM mvtest_foo;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_mv","shape":"REFRESH MATERIALIZED VIEW mvtest_mv;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_mv","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_mv;"}
+{"sql":"DROP TABLE mvtest_foo CASCADE","shape":"DROP TABLE mvtest_foo CASCADE;"}
+{"sql":"CREATE TABLE mvtest_foo(a, b, c) AS VALUES(1, 2, 3)","shape":"CREATE TABLE mvtest_foo (a, b, c) AS VALUES (1, 2, 3);"}
+{"sql":"CREATE UNIQUE INDEX ON mvtest_mv (a)","shape":"CREATE UNIQUE INDEX ON mvtest_mv (a);"}
+{"sql":"CREATE UNIQUE INDEX ON mvtest_mv (b)","shape":"CREATE UNIQUE INDEX ON mvtest_mv (b);"}
+{"sql":"CREATE UNIQUE INDEX on mvtest_mv (c)","shape":"CREATE UNIQUE INDEX ON mvtest_mv (c);"}
+{"sql":"INSERT INTO mvtest_foo VALUES(2, 3, 4)","shape":"INSERT INTO mvtest_foo VALUES (2, 3, 4);"}
+{"sql":"INSERT INTO mvtest_foo VALUES(3, 4, 5)","shape":"INSERT INTO mvtest_foo VALUES (3, 4, 5);"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv1 AS SELECT 1 AS col1 WITH NO DATA","shape":"CREATE MATERIALIZED VIEW mvtest_mv1 AS SELECT 1 AS col1 WITH NO DATA;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv2 AS SELECT * FROM mvtest_mv1\n  WHERE col1 = (SELECT LEAST(col1) FROM mvtest_mv1) WITH NO DATA","shape":"CREATE MATERIALIZED VIEW mvtest_mv2 AS SELECT * FROM mvtest_mv1 WHERE col1 = (SELECT LEAST(col1) FROM mvtest_mv1) WITH NO DATA;"}
+{"sql":"DROP MATERIALIZED VIEW mvtest_mv1 CASCADE","shape":"DROP MATERIALIZED VIEW mvtest_mv1 CASCADE;"}
+{"sql":"CREATE TABLE mvtest_boxes (id serial primary key, b box)","shape":"CREATE TABLE mvtest_boxes (id serial PRIMARY KEY, b box);"}
+{"sql":"INSERT INTO mvtest_boxes (b) VALUES\n  ('(32,32),(31,31)'),\n  ('(2.0000004,2.0000004),(1,1)'),\n  ('(1.9999996,1.9999996),(1,1)')","shape":"INSERT INTO mvtest_boxes (b) VALUES ('(32,32),(31,31)'), ('(2.0000004,2.0000004),(1,1)'), ('(1.9999996,1.9999996),(1,1)');"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_boxmv AS SELECT * FROM mvtest_boxes","shape":"CREATE MATERIALIZED VIEW mvtest_boxmv AS SELECT * FROM mvtest_boxes;"}
+{"sql":"CREATE UNIQUE INDEX mvtest_boxmv_id ON mvtest_boxmv (id)","shape":"CREATE UNIQUE INDEX mvtest_boxmv_id ON mvtest_boxmv (id);"}
+{"sql":"UPDATE mvtest_boxes SET b = '(2,2),(1,1)' WHERE id = 2","shape":"UPDATE mvtest_boxes SET b = '(2,2),(1,1)' WHERE id = 2;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_boxmv","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_boxmv;"}
+{"sql":"SELECT * FROM mvtest_boxmv ORDER BY id","shape":"SELECT * FROM mvtest_boxmv ORDER BY id;"}
+{"sql":"DROP TABLE mvtest_boxes CASCADE","shape":"DROP TABLE mvtest_boxes CASCADE;"}
+{"sql":"CREATE TABLE mvtest_v (i int, j int)","shape":"CREATE TABLE mvtest_v (i int, j int);"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v (ii, jj, kk) AS SELECT i, j FROM mvtest_v","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v (ii, jj, kk) AS SELECT i, j FROM mvtest_v;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v (ii, jj) AS SELECT i, j FROM mvtest_v","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v (ii, jj) AS SELECT i, j FROM mvtest_v;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v_2 (ii) AS SELECT i, j FROM mvtest_v","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v_2 (ii) AS SELECT i, j FROM mvtest_v;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v_3 (ii, jj, kk) AS SELECT i, j FROM mvtest_v WITH NO DATA","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v_3 (ii, jj, kk) AS SELECT i, j FROM mvtest_v WITH NO DATA;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v_3 (ii, jj) AS SELECT i, j FROM mvtest_v WITH NO DATA","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v_3 (ii, jj) AS SELECT i, j FROM mvtest_v WITH NO DATA;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v_4 (ii) AS SELECT i, j FROM mvtest_v WITH NO DATA","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v_4 (ii) AS SELECT i, j FROM mvtest_v WITH NO DATA;"}
+{"sql":"ALTER TABLE mvtest_v RENAME COLUMN i TO x","shape":"ALTER TABLE mvtest_v RENAME COLUMN i TO x;"}
+{"sql":"INSERT INTO mvtest_v values (1, 2)","shape":"INSERT INTO mvtest_v VALUES (1, 2);"}
+{"sql":"CREATE UNIQUE INDEX mvtest_mv_v_ii ON mvtest_mv_v (ii)","shape":"CREATE UNIQUE INDEX mvtest_mv_v_ii ON mvtest_mv_v (ii);"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_mv_v","shape":"REFRESH MATERIALIZED VIEW mvtest_mv_v;"}
+{"sql":"UPDATE mvtest_v SET j = 3 WHERE x = 1","shape":"UPDATE mvtest_v SET j = 3 WHERE x = 1;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_mv_v","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_mv_v;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_mv_v_2","shape":"REFRESH MATERIALIZED VIEW mvtest_mv_v_2;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_mv_v_3","shape":"REFRESH MATERIALIZED VIEW mvtest_mv_v_3;"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_mv_v_4","shape":"REFRESH MATERIALIZED VIEW mvtest_mv_v_4;"}
+{"sql":"SELECT * FROM mvtest_v","shape":"SELECT * FROM mvtest_v;"}
+{"sql":"SELECT * FROM mvtest_mv_v","shape":"SELECT * FROM mvtest_mv_v;"}
+{"sql":"SELECT * FROM mvtest_mv_v_2","shape":"SELECT * FROM mvtest_mv_v_2;"}
+{"sql":"SELECT * FROM mvtest_mv_v_3","shape":"SELECT * FROM mvtest_mv_v_3;"}
+{"sql":"SELECT * FROM mvtest_mv_v_4","shape":"SELECT * FROM mvtest_mv_v_4;"}
+{"sql":"DROP TABLE mvtest_v CASCADE","shape":"DROP TABLE mvtest_v CASCADE;"}
+{"sql":"CREATE MATERIALIZED VIEW mv_unspecified_types AS\n  SELECT 42 as i, 42.5 as num, 'foo' as u, 'foo'::unknown as u2, null as n","shape":"CREATE MATERIALIZED VIEW mv_unspecified_types AS SELECT 42 AS i, 42.5 AS num, 'foo' AS u, 'foo'::unknown AS u2, NULL AS n;"}
+{"sql":"SELECT * FROM mv_unspecified_types","shape":"SELECT * FROM mv_unspecified_types;"}
+{"sql":"DROP MATERIALIZED VIEW mv_unspecified_types","shape":"DROP MATERIALIZED VIEW mv_unspecified_types;"}
+{"sql":"create materialized view mvtest_error as select 1/0 as x","shape":"CREATE MATERIALIZED VIEW mvtest_error AS SELECT 1 / 0 AS x;"}
+{"sql":"create materialized view mvtest_error as select 1/0 as x with no data","shape":"CREATE MATERIALIZED VIEW mvtest_error AS SELECT 1 / 0 AS x WITH NO DATA;"}
+{"sql":"refresh materialized view mvtest_error","shape":"REFRESH MATERIALIZED VIEW mvtest_error;"}
+{"sql":"drop materialized view mvtest_error","shape":"DROP MATERIALIZED VIEW mvtest_error;"}
+{"sql":"CREATE TABLE mvtest_v AS SELECT generate_series(1,10) AS a","shape":"CREATE TABLE mvtest_v AS SELECT generate_series(1, 10) AS a;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_v AS SELECT a FROM mvtest_v WHERE a <= 5","shape":"CREATE MATERIALIZED VIEW mvtest_mv_v AS SELECT a FROM mvtest_v WHERE a <= 5;"}
+{"sql":"DELETE FROM mvtest_v WHERE EXISTS ( SELECT * FROM mvtest_mv_v WHERE mvtest_mv_v.a = mvtest_v.a )","shape":"DELETE FROM mvtest_v WHERE EXISTS (SELECT * FROM mvtest_mv_v WHERE mvtest_mv_v.a = mvtest_v.a);"}
+{"sql":"CREATE ROLE regress_user_mvtest"}
+{"sql":"SET ROLE regress_user_mvtest"}
+{"sql":"CREATE TABLE mvtest_foo_data AS SELECT i,\n  i+1 AS tid,\n  fipshash(random()::text) AS mv,\n  fipshash(random()::text) AS newdata,\n  fipshash(random()::text) AS newdata2,\n  fipshash(random()::text) AS diff\n  FROM generate_series(1, 10) i","shape":"CREATE TABLE mvtest_foo_data AS SELECT i, i + 1 AS tid, fipshash(random()::text) AS mv, fipshash(random()::text) AS newdata, fipshash(random()::text) AS newdata2, fipshash(random()::text) AS diff FROM generate_series(1, 10) AS i;"}
+{"sql":"CREATE MATERIALIZED VIEW mvtest_mv_foo AS SELECT * FROM mvtest_foo_data","shape":"CREATE MATERIALIZED VIEW mvtest_mv_foo AS SELECT * FROM mvtest_foo_data;"}
+{"sql":"CREATE MATERIALIZED VIEW IF NOT EXISTS mvtest_mv_foo AS SELECT * FROM mvtest_foo_data","shape":"CREATE MATERIALIZED VIEW IF NOT EXISTS mvtest_mv_foo AS SELECT * FROM mvtest_foo_data;"}
+{"sql":"CREATE UNIQUE INDEX ON mvtest_mv_foo (i)","shape":"CREATE UNIQUE INDEX ON mvtest_mv_foo (i);"}
+{"sql":"REFRESH MATERIALIZED VIEW mvtest_mv_foo","shape":"REFRESH MATERIALIZED VIEW mvtest_mv_foo;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_mv_foo","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY mvtest_mv_foo;"}
+{"sql":"DROP OWNED BY regress_user_mvtest CASCADE"}
+{"sql":"DROP ROLE regress_user_mvtest","shape":"DROP ROLE regress_user_mvtest;"}
+{"sql":"CREATE OR REPLACE FUNCTION mvtest_drop_the_index()\n  RETURNS bool AS $$\nBEGIN\n  EXECUTE 'DROP INDEX IF EXISTS mvtest_drop_idx';\n  RETURN true;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION mvtest_drop_the_index() RETURNS bool AS '\nBEGIN\n  EXECUTE ''DROP INDEX IF EXISTS mvtest_drop_idx'';\n  RETURN true;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE MATERIALIZED VIEW drop_idx_matview AS\n  SELECT 1 as i WHERE mvtest_drop_the_index()","shape":"CREATE MATERIALIZED VIEW drop_idx_matview AS SELECT 1 AS i WHERE mvtest_drop_the_index();"}
+{"sql":"CREATE UNIQUE INDEX mvtest_drop_idx ON drop_idx_matview (i)","shape":"CREATE UNIQUE INDEX mvtest_drop_idx ON drop_idx_matview (i);"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY drop_idx_matview","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY drop_idx_matview;"}
+{"sql":"DROP MATERIALIZED VIEW drop_idx_matview","shape":"DROP MATERIALIZED VIEW drop_idx_matview;"}
+{"sql":"CREATE FUNCTION mvtest_func()\n  RETURNS void AS $$\nBEGIN\n  CREATE MATERIALIZED VIEW mvtest1 AS SELECT 1 AS x;\n  CREATE MATERIALIZED VIEW mvtest2 AS SELECT 1 AS x WITH NO DATA;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION mvtest_func() RETURNS void AS '\nBEGIN\n  CREATE MATERIALIZED VIEW mvtest1 AS SELECT 1 AS x;\n  CREATE MATERIALIZED VIEW mvtest2 AS SELECT 1 AS x WITH NO DATA;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"SELECT mvtest_func()","shape":"SELECT mvtest_func();"}
+{"sql":"SELECT * FROM mvtest1","shape":"SELECT * FROM mvtest1;"}
+{"sql":"SELECT * FROM mvtest2","shape":"SELECT * FROM mvtest2;"}
+{"sql":"CREATE SCHEMA matview_schema","shape":"CREATE SCHEMA matview_schema;"}
+{"sql":"CREATE USER regress_matview_user"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE regress_matview_user\n  REVOKE INSERT ON TABLES FROM regress_matview_user"}
+{"sql":"GRANT ALL ON SCHEMA matview_schema TO public","shape":"GRANT ALL PRIVILEGES ON SCHEMA matview_schema TO PUBLIC;"}
+{"sql":"SET SESSION AUTHORIZATION regress_matview_user"}
+{"sql":"CREATE MATERIALIZED VIEW matview_schema.mv_withdata1 (a) AS\n  SELECT generate_series(1, 10) WITH DATA","shape":"CREATE MATERIALIZED VIEW matview_schema.mv_withdata1 (a) AS SELECT generate_series(1, 10) WITH DATA;"}
+{"sql":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF)\n  CREATE MATERIALIZED VIEW matview_schema.mv_withdata2 (a) AS\n  SELECT generate_series(1, 10) WITH DATA","shape":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF) CREATE MATERIALIZED VIEW matview_schema.mv_withdata2 (a) AS SELECT generate_series(1, 10) WITH DATA;"}
+{"sql":"REFRESH MATERIALIZED VIEW matview_schema.mv_withdata2","shape":"REFRESH MATERIALIZED VIEW matview_schema.mv_withdata2;"}
+{"sql":"CREATE MATERIALIZED VIEW matview_schema.mv_nodata1 (a) AS\n  SELECT generate_series(1, 10) WITH NO DATA","shape":"CREATE MATERIALIZED VIEW matview_schema.mv_nodata1 (a) AS SELECT generate_series(1, 10) WITH NO DATA;"}
+{"sql":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF)\n  CREATE MATERIALIZED VIEW matview_schema.mv_nodata2 (a) AS\n  SELECT generate_series(1, 10) WITH NO DATA","shape":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF) CREATE MATERIALIZED VIEW matview_schema.mv_nodata2 (a) AS SELECT generate_series(1, 10) WITH NO DATA;"}
+{"sql":"REFRESH MATERIALIZED VIEW matview_schema.mv_nodata2","shape":"REFRESH MATERIALIZED VIEW matview_schema.mv_nodata2;"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE regress_matview_user\n  GRANT INSERT ON TABLES TO regress_matview_user"}
+{"sql":"DROP SCHEMA matview_schema CASCADE","shape":"DROP SCHEMA matview_schema CASCADE;"}
+{"sql":"DROP USER regress_matview_user","shape":"DROP USER regress_matview_user;"}
+{"sql":"CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1","shape":"CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1;"}
+{"sql":"CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1 / 0","shape":"CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1 / 0;"}
+{"sql":"CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS\n  SELECT 1 / 0","shape":"CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS SELECT 1 / 0;"}
+{"sql":"CREATE MATERIALIZED VIEW matview_ine_tab AS\n  SELECT 1 / 0 WITH NO DATA","shape":"CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1 / 0 WITH NO DATA;"}
+{"sql":"CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS\n  SELECT 1 / 0 WITH NO DATA","shape":"CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS SELECT 1 / 0 WITH NO DATA;"}
+{"sql":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF)\n  CREATE MATERIALIZED VIEW matview_ine_tab AS\n    SELECT 1 / 0","shape":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF) CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1 / 0;"}
+{"sql":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF)\n  CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS\n    SELECT 1 / 0","shape":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF) CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS SELECT 1 / 0;"}
+{"sql":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF)\n  CREATE MATERIALIZED VIEW matview_ine_tab AS\n    SELECT 1 / 0 WITH NO DATA","shape":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF) CREATE MATERIALIZED VIEW matview_ine_tab AS SELECT 1 / 0 WITH NO DATA;"}
+{"sql":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF)\n  CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS\n    SELECT 1 / 0 WITH NO DATA","shape":"EXPLAIN (ANALYZE, COSTS OFF, SUMMARY OFF, TIMING OFF) CREATE MATERIALIZED VIEW IF NOT EXISTS matview_ine_tab AS SELECT 1 / 0 WITH NO DATA;"}
+{"sql":"DROP MATERIALIZED VIEW matview_ine_tab","shape":"DROP MATERIALIZED VIEW matview_ine_tab;"}

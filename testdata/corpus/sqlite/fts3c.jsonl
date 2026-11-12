@@ -1,0 +1,2 @@
+{"sql":"SELECT level, idx FROM t1_segdir ORDER BY level, idx"}
+{"sql":"SELECT OFFSETS(t1) FROM t1\n     WHERE t1 MATCH 'this OR that OR was OR a OR is OR test' ORDER BY docid"}

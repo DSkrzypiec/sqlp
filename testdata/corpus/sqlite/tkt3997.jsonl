@@ -1,0 +1,10 @@
+{"sql":"create table mytext(name BLOB)"}
+{"sql":"INSERT INTO mytext VALUES('abc')"}
+{"sql":"INSERT INTO mytext VALUES('acd')"}
+{"sql":"INSERT INTO mytext VALUES('afe')"}
+{"sql":"SELECT name \n    FROM mytext \n    ORDER BY name COLLATE reverse"}
+{"sql":"SELECT name \n    FROM (SELECT name FROM mytext)  \n    ORDER BY name COLLATE reverse"}
+{"sql":"CREATE TABLE mytext2(name COLLATE reverse)"}
+{"sql":"INSERT INTO mytext2 SELECT name FROM mytext"}
+{"sql":"SELECT name \n    FROM (SELECT name FROM mytext2)  \n    ORDER BY name"}
+{"sql":"SELECT name \n    FROM (SELECT name FROM mytext2)\n    ORDER BY name COLLATE usual"}

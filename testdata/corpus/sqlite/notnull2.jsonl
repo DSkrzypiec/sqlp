@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t2(c, d NOT NULL)"}
+{"sql":"WITH x(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<1000\n  )\n  INSERT INTO t1 SELECT i, i FROM x"}
+{"sql":"CREATE TABLE T1(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE T3(k, v)"}
+{"sql":"SELECT * FROM (SELECT a, b FROM t1) LEFT JOIN t3 ON a IS NULL"}
+{"sql":"CREATE TABLE t0(c0 PRIMARY KEY)"}
+{"sql":"SELECT * FROM t0 WHERE ((c0 NOT NULL) AND 1) OR (c0 == NULL)"}
+{"sql":"SELECT *, '/'\n  FROM (\n      SELECT NULL val FROM (SELECT 1)\n      UNION ALL\n      SELECT 'missing' FROM (SELECT 1)\n  ) a\n  LEFT JOIN (SELECT 1)\n      ON a.val IS NULL"}
+{"sql":"SELECT * FROM (SELECT 3 AS c FROM t1) AS t3 LEFT JOIN t2 ON c IS NULL"}
+{"sql":"CREATE TABLE t1(a INT NOT NULL)"}
+{"sql":"SELECT a IS NULL, a IS NOT NULL, count(*) FROM t1"}

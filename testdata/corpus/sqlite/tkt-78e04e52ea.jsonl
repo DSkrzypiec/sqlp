@@ -1,0 +1,10 @@
+{"sql":"CREATE TABLE \"\"(\"\" UNIQUE, x CHAR(100))"}
+{"sql":"INSERT INTO \"\"(\"\") VALUES(1)"}
+{"sql":"SELECT * FROM \"\", t2"}
+{"sql":"PRAGMA table_info(\"\")"}
+{"sql":"CREATE INDEX i1 ON \"\"(\"\" COLLATE nocase)"}
+{"sql":"DROP TABLE \"\""}
+{"sql":"CREATE INDEX \"\" ON t2(x)"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t2 WHERE x=5"}
+{"sql":"DROP INDEX \"\""}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t2 WHERE x=2"}

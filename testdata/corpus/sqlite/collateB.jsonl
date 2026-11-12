@@ -1,0 +1,20 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE t2(b INTEGER PRIMARY KEY, x1 INT COLLATE NOCASE)"}
+{"sql":"CREATE TABLE t3(x2 INT)"}
+{"sql":"SELECT * FROM t3, t2, t1 WHERE x2=b AND x1=a AND a=1"}
+{"sql":"INSERT INTO t1(a) VALUES(1),(2),(3)"}
+{"sql":"INSERT INTO t2(b,x1) VALUES(11,1),(22,2),(33,3)"}
+{"sql":"INSERT INTO t3(x2) VALUES(11),(22),(33)"}
+{"sql":"SELECT *,'|' FROM t3, t2, t1 WHERE x2=b AND x1=a AND a=1"}
+{"sql":"SELECT *,'|' FROM t3, t1, t2 WHERE x2=b AND x1=a AND a=1"}
+{"sql":"SELECT *,'|' FROM t2, t3, t1 WHERE x2=b AND x1=a AND a=1"}
+{"sql":"SELECT *,'|' FROM t2, t1, t3 WHERE x2=b AND x1=a AND a=1"}
+{"sql":"SELECT *,'|' FROM t1, t2, t3 WHERE x2=b AND x1=a AND a=1"}
+{"sql":"SELECT *,'|' FROM t3, t2, t1 WHERE b=x2 AND a=x1 AND 1=a"}
+{"sql":"SELECT *,'|' FROM t3, t1, t2 WHERE b=x2 AND a=x1 AND 1=a"}
+{"sql":"SELECT *,'|' FROM t2, t3, t1 WHERE b=x2 AND a=x1 AND 1=a"}
+{"sql":"SELECT *,'|' FROM t2, t1, t3 WHERE b=x2 AND a=x1 AND 1=a"}
+{"sql":"SELECT *,'|' FROM t1, t2, t3 WHERE b=x2 AND a=x1 AND 1=a"}
+{"sql":"CREATE TABLE t4(a COLLATE binary)"}
+{"sql":"CREATE INDEX i4 ON t4(a)"}
+{"sql":"INSERT INTO t4 VALUES('one'), ('two'), ('three')"}

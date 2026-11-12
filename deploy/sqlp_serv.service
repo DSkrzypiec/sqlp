@@ -1,0 +1,43 @@
+[Unit]
+Description=sqlp web UI (sqlp.dskrzypiec.dev)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/opt/sqlp_serv/sqlp_serv -addr 127.0.0.1:9393 -db /var/lib/sqlp_serv/runs.db
+Restart=on-failure
+RestartSec=2s
+
+# A public service that only parses text: run it as a throwaway user with no
+# access to anything else on the machine. Logs go to the journal:
+#   journalctl -u sqlp_serv -f
+DynamicUser=yes
+# The run log, the one place it may write (deploy/README.md). With DynamicUser
+# it is kept in /var/lib/private/sqlp_serv, which only root can read.
+StateDirectory=sqlp_serv
+StateDirectoryMode=0700
+CapabilityBoundingSet=
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+MemoryMax=512M
+TasksMax=128
+# One core at most, so the other sites on the machine keep theirs.
+CPUQuota=100%
+
+[Install]
+WantedBy=multi-user.target

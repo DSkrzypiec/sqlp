@@ -1,0 +1,3 @@
+{"sql":"CREATE TABLE t1(a REAL)"}
+{"sql":"INSERT INTO t1 VALUES(42.0)"}
+{"sql":"UPDATE t1 SET a=43"}

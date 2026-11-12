@@ -1,0 +1,7 @@
+{"sql":"PRAGMA auto_vacuum=OFF"}
+{"sql":"PRAGMA journal_mode=DELETE"}
+{"sql":"INSERT INTO t1 VALUES('x', 'y')"}
+{"sql":"INSERT INTO t2 VALUES('i', 'j')"}
+{"sql":"PRAGMA cache_size = 1"}
+{"sql":"SELECT * FROM t1 UNION SELECT * FROM t2"}
+{"sql":"PRAGMA cache_size = 0"}

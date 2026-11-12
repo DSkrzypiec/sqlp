@@ -1,0 +1,357 @@
+{"sql":"create domain domaindroptest int4","shape":"CREATE DOMAIN domaindroptest AS int4;"}
+{"sql":"comment on domain domaindroptest is 'About to drop this..'","shape":"COMMENT ON DOMAIN domaindroptest IS 'About to drop this..';"}
+{"sql":"create domain dependenttypetest domaindroptest","shape":"CREATE DOMAIN dependenttypetest AS domaindroptest;"}
+{"sql":"drop domain domaindroptest","shape":"DROP DOMAIN domaindroptest;"}
+{"sql":"drop domain domaindroptest cascade","shape":"DROP DOMAIN domaindroptest CASCADE;"}
+{"sql":"create domain domainvarchar varchar(5)","shape":"CREATE DOMAIN domainvarchar AS varchar(5);"}
+{"sql":"create domain domainnumeric numeric(8,2)","shape":"CREATE DOMAIN domainnumeric AS numeric(8, 2);"}
+{"sql":"create domain domainint4 int4","shape":"CREATE DOMAIN domainint4 AS int4;"}
+{"sql":"create domain domaintext text","shape":"CREATE DOMAIN domaintext AS text;"}
+{"sql":"SELECT cast('123456' as domainvarchar)","shape":"SELECT CAST('123456' AS domainvarchar);"}
+{"sql":"SELECT cast('12345' as domainvarchar)","shape":"SELECT CAST('12345' AS domainvarchar);"}
+{"sql":"create table basictest\n           ( testint4 domainint4\n           , testtext domaintext\n           , testvarchar domainvarchar\n           , testnumeric domainnumeric\n           )","shape":"CREATE TABLE basictest (testint4 domainint4, testtext domaintext, testvarchar domainvarchar, testnumeric domainnumeric);"}
+{"sql":"INSERT INTO basictest values ('88', 'haha', 'short', '123.12')","shape":"INSERT INTO basictest VALUES ('88', 'haha', 'short', '123.12');"}
+{"sql":"INSERT INTO basictest values ('88', 'haha', 'short text', '123.12')","shape":"INSERT INTO basictest VALUES ('88', 'haha', 'short text', '123.12');"}
+{"sql":"INSERT INTO basictest values ('88', 'haha', 'short', '123.1212')","shape":"INSERT INTO basictest VALUES ('88', 'haha', 'short', '123.1212');"}
+{"sql":"COPY basictest (testvarchar) FROM stdin","shape":"COPY basictest (testvarchar) FROM STDIN;"}
+{"sql":"select * from basictest","shape":"SELECT * FROM basictest;"}
+{"sql":"select testtext || testvarchar as concat, testnumeric + 42 as sum\nfrom basictest","shape":"SELECT testtext || testvarchar AS concat, testnumeric + 42 AS sum FROM basictest;"}
+{"sql":"select pg_typeof(coalesce(4::domainint4, 7))","shape":"SELECT pg_typeof(coalesce(4::domainint4, 7));"}
+{"sql":"select pg_typeof(coalesce(4::domainint4, 7::domainint4))","shape":"SELECT pg_typeof(coalesce(4::domainint4, 7::domainint4));"}
+{"sql":"drop table basictest","shape":"DROP TABLE basictest;"}
+{"sql":"drop domain domainvarchar restrict","shape":"DROP DOMAIN domainvarchar RESTRICT;"}
+{"sql":"drop domain domainnumeric restrict","shape":"DROP DOMAIN domainnumeric RESTRICT;"}
+{"sql":"drop domain domainint4 restrict","shape":"DROP DOMAIN domainint4 RESTRICT;"}
+{"sql":"drop domain domaintext","shape":"DROP DOMAIN domaintext;"}
+{"sql":"create domain positiveint int4 check(value > 0)","shape":"CREATE DOMAIN positiveint AS int4 CHECK (value > 0);"}
+{"sql":"create domain weirdfloat float8 check((1 / value) < 10)","shape":"CREATE DOMAIN weirdfloat AS float8 CHECK ((1 / value) < 10);"}
+{"sql":"select pg_input_is_valid('1', 'positiveint')","shape":"SELECT pg_input_is_valid('1', 'positiveint');"}
+{"sql":"select pg_input_is_valid('junk', 'positiveint')","shape":"SELECT pg_input_is_valid('junk', 'positiveint');"}
+{"sql":"select pg_input_is_valid('-1', 'positiveint')","shape":"SELECT pg_input_is_valid('-1', 'positiveint');"}
+{"sql":"select * from pg_input_error_info('junk', 'positiveint')","shape":"SELECT * FROM pg_input_error_info('junk', 'positiveint');"}
+{"sql":"select * from pg_input_error_info('-1', 'positiveint')","shape":"SELECT * FROM pg_input_error_info('-1', 'positiveint');"}
+{"sql":"select * from pg_input_error_info('junk', 'weirdfloat')","shape":"SELECT * FROM pg_input_error_info('junk', 'weirdfloat');"}
+{"sql":"select * from pg_input_error_info('0.01', 'weirdfloat')","shape":"SELECT * FROM pg_input_error_info('0.01', 'weirdfloat');"}
+{"sql":"select * from pg_input_error_info('0', 'weirdfloat')","shape":"SELECT * FROM pg_input_error_info('0', 'weirdfloat');"}
+{"sql":"drop domain positiveint","shape":"DROP DOMAIN positiveint;"}
+{"sql":"drop domain weirdfloat","shape":"DROP DOMAIN weirdfloat;"}
+{"sql":"create domain domainint4arr int4[1]","shape":"CREATE DOMAIN domainint4arr AS int4[1];"}
+{"sql":"create domain domainchar4arr varchar(4)[2][3]","shape":"CREATE DOMAIN domainchar4arr AS varchar(4)[2][3];"}
+{"sql":"create table domarrtest\n           ( testint4arr domainint4arr\n           , testchar4arr domainchar4arr\n            )","shape":"CREATE TABLE domarrtest (testint4arr domainint4arr, testchar4arr domainchar4arr);"}
+{"sql":"INSERT INTO domarrtest values ('{2,2}', '{{\"a\",\"b\"},{\"c\",\"d\"}}')","shape":"INSERT INTO domarrtest VALUES ('{2,2}', '{{\"a\",\"b\"},{\"c\",\"d\"}}');"}
+{"sql":"INSERT INTO domarrtest values ('{{2,2},{2,2}}', '{{\"a\",\"b\"}}')","shape":"INSERT INTO domarrtest VALUES ('{{2,2},{2,2}}', '{{\"a\",\"b\"}}');"}
+{"sql":"INSERT INTO domarrtest values ('{2,2}', '{{\"a\",\"b\"},{\"c\",\"d\"},{\"e\",\"f\"}}')","shape":"INSERT INTO domarrtest VALUES ('{2,2}', '{{\"a\",\"b\"},{\"c\",\"d\"},{\"e\",\"f\"}}');"}
+{"sql":"INSERT INTO domarrtest values ('{2,2}', '{{\"a\"},{\"c\"}}')","shape":"INSERT INTO domarrtest VALUES ('{2,2}', '{{\"a\"},{\"c\"}}');"}
+{"sql":"INSERT INTO domarrtest values (NULL, '{{\"a\",\"b\",\"c\"},{\"d\",\"e\",\"f\"}}')","shape":"INSERT INTO domarrtest VALUES (NULL, '{{\"a\",\"b\",\"c\"},{\"d\",\"e\",\"f\"}}');"}
+{"sql":"INSERT INTO domarrtest values (NULL, '{{\"toolong\",\"b\",\"c\"},{\"d\",\"e\",\"f\"}}')","shape":"INSERT INTO domarrtest VALUES (NULL, '{{\"toolong\",\"b\",\"c\"},{\"d\",\"e\",\"f\"}}');"}
+{"sql":"INSERT INTO domarrtest (testint4arr[1], testint4arr[3]) values (11,22)","shape":"INSERT INTO domarrtest (testint4arr[1], testint4arr[3]) VALUES (11, 22);"}
+{"sql":"select * from domarrtest","shape":"SELECT * FROM domarrtest;"}
+{"sql":"select testint4arr[1], testchar4arr[2:2] from domarrtest","shape":"SELECT testint4arr[1], testchar4arr[2:2] FROM domarrtest;"}
+{"sql":"select array_dims(testint4arr), array_dims(testchar4arr) from domarrtest","shape":"SELECT array_dims(testint4arr), array_dims(testchar4arr) FROM domarrtest;"}
+{"sql":"COPY domarrtest FROM stdin","shape":"COPY domarrtest FROM STDIN;"}
+{"sql":"update domarrtest set\n  testint4arr[1] = testint4arr[1] + 1,\n  testint4arr[3] = testint4arr[3] - 1\nwhere testchar4arr is null","shape":"UPDATE domarrtest SET testint4arr[1] = testint4arr[1] + 1, testint4arr[3] = testint4arr[3] - 1 WHERE testchar4arr IS NULL;"}
+{"sql":"select * from domarrtest where testchar4arr is null","shape":"SELECT * FROM domarrtest WHERE testchar4arr IS NULL;"}
+{"sql":"drop table domarrtest","shape":"DROP TABLE domarrtest;"}
+{"sql":"drop domain domainint4arr restrict","shape":"DROP DOMAIN domainint4arr RESTRICT;"}
+{"sql":"drop domain domainchar4arr restrict","shape":"DROP DOMAIN domainchar4arr RESTRICT;"}
+{"sql":"create domain dia as int[]","shape":"CREATE DOMAIN dia AS int[];"}
+{"sql":"select '{1,2,3}'::dia","shape":"SELECT '{1,2,3}'::dia;"}
+{"sql":"select array_dims('{1,2,3}'::dia)","shape":"SELECT array_dims('{1,2,3}'::dia);"}
+{"sql":"select pg_typeof('{1,2,3}'::dia)","shape":"SELECT pg_typeof('{1,2,3}'::dia);"}
+{"sql":"select pg_typeof('{1,2,3}'::dia || 42)","shape":"SELECT pg_typeof('{1,2,3}'::dia || 42);"}
+{"sql":"drop domain dia","shape":"DROP DOMAIN dia;"}
+{"sql":"create type comptype as (r float8, i float8)","shape":"CREATE TYPE comptype AS (r float8, i float8);"}
+{"sql":"create domain dcomptype as comptype","shape":"CREATE DOMAIN dcomptype AS comptype;"}
+{"sql":"create table dcomptable (d1 dcomptype unique)","shape":"CREATE TABLE dcomptable (d1 dcomptype UNIQUE);"}
+{"sql":"insert into dcomptable values (row(1,2)::dcomptype)","shape":"INSERT INTO dcomptable VALUES (ROW(1, 2)::dcomptype);"}
+{"sql":"insert into dcomptable values (row(3,4)::comptype)","shape":"INSERT INTO dcomptable VALUES (ROW(3, 4)::comptype);"}
+{"sql":"insert into dcomptable (d1.r) values(11)","shape":"INSERT INTO dcomptable (d1.r) VALUES (11);"}
+{"sql":"select * from dcomptable","shape":"SELECT * FROM dcomptable;"}
+{"sql":"select (d1).r, (d1).i, (d1).* from dcomptable","shape":"SELECT (d1).r, (d1).i, (d1).* FROM dcomptable;"}
+{"sql":"update dcomptable set d1.r = (d1).r + 1 where (d1).i > 0","shape":"UPDATE dcomptable SET d1.r = (d1).r + 1 WHERE (d1).i > 0;"}
+{"sql":"alter domain dcomptype add constraint c1 check ((value).r <= (value).i)"}
+{"sql":"alter domain dcomptype add constraint c2 check ((value).r > (value).i)"}
+{"sql":"select row(2,1)::dcomptype","shape":"SELECT ROW(2, 1)::dcomptype;"}
+{"sql":"insert into dcomptable values (row(1,2)::comptype)","shape":"INSERT INTO dcomptable VALUES (ROW(1, 2)::comptype);"}
+{"sql":"insert into dcomptable values (row(2,1)::comptype)","shape":"INSERT INTO dcomptable VALUES (ROW(2, 1)::comptype);"}
+{"sql":"insert into dcomptable (d1.r) values(99)","shape":"INSERT INTO dcomptable (d1.r) VALUES (99);"}
+{"sql":"insert into dcomptable (d1.r, d1.i) values(99, 100)","shape":"INSERT INTO dcomptable (d1.r, d1.i) VALUES (99, 100);"}
+{"sql":"insert into dcomptable (d1.r, d1.i) values(100, 99)","shape":"INSERT INTO dcomptable (d1.r, d1.i) VALUES (100, 99);"}
+{"sql":"update dcomptable set d1.r = (d1).r - 1, d1.i = (d1).i + 1 where (d1).i > 0","shape":"UPDATE dcomptable SET d1.r = (d1).r - 1, d1.i = (d1).i + 1 WHERE (d1).i > 0;"}
+{"sql":"explain (verbose, costs off)\n  update dcomptable set d1.r = (d1).r - 1, d1.i = (d1).i + 1 where (d1).i > 0","shape":"EXPLAIN (VERBOSE, COSTS off) UPDATE dcomptable SET d1.r = (d1).r - 1, d1.i = (d1).i + 1 WHERE (d1).i > 0;"}
+{"sql":"create rule silly as on delete to dcomptable do instead\n  update dcomptable set d1.r = (d1).r - 1, d1.i = (d1).i + 1 where (d1).i > 0"}
+{"sql":"create function makedcomp(r float8, i float8) returns dcomptype\nas 'select row(r, i)' language sql","shape":"CREATE FUNCTION makedcomp(r float8, i float8) RETURNS dcomptype AS 'select row(r, i)' LANGUAGE sql;"}
+{"sql":"select makedcomp(1,2)","shape":"SELECT makedcomp(1, 2);"}
+{"sql":"select makedcomp(2,1)","shape":"SELECT makedcomp(2, 1);"}
+{"sql":"select * from makedcomp(1,2) m","shape":"SELECT * FROM makedcomp(1, 2) AS m;"}
+{"sql":"select m, m is not null from makedcomp(1,2) m","shape":"SELECT m, m IS NOT NULL FROM makedcomp(1, 2) AS m;"}
+{"sql":"drop function makedcomp(float8, float8)"}
+{"sql":"drop table dcomptable","shape":"DROP TABLE dcomptable;"}
+{"sql":"drop type comptype cascade","shape":"DROP TYPE comptype CASCADE;"}
+{"sql":"alter domain dcomptype add constraint c1 check ((value).r > 0)"}
+{"sql":"comment on constraint c1 on domain dcomptype is 'random commentary'","shape":"COMMENT ON CONSTRAINT c1 ON DOMAIN dcomptype IS 'random commentary';"}
+{"sql":"select row(0,1)::dcomptype","shape":"SELECT ROW(0, 1)::dcomptype;"}
+{"sql":"alter type comptype alter attribute r type varchar"}
+{"sql":"alter type comptype alter attribute r type bigint"}
+{"sql":"alter type comptype drop attribute r"}
+{"sql":"alter type comptype drop attribute i"}
+{"sql":"select conname, obj_description(oid, 'pg_constraint') from pg_constraint\n  where contypid = 'dcomptype'::regtype","shape":"SELECT conname, obj_description(oid, 'pg_constraint') FROM pg_constraint WHERE contypid = 'dcomptype'::regtype;"}
+{"sql":"create domain dcomptypea as comptype[]","shape":"CREATE DOMAIN dcomptypea AS comptype[];"}
+{"sql":"create table dcomptable (d1 dcomptypea unique)","shape":"CREATE TABLE dcomptable (d1 dcomptypea UNIQUE);"}
+{"sql":"insert into dcomptable values (array[row(1,2)]::dcomptypea)","shape":"INSERT INTO dcomptable VALUES (ARRAY[ROW(1, 2)]::dcomptypea);"}
+{"sql":"insert into dcomptable values (array[row(3,4), row(5,6)]::comptype[])","shape":"INSERT INTO dcomptable VALUES (ARRAY[ROW(3, 4), ROW(5, 6)]::comptype[]);"}
+{"sql":"insert into dcomptable values (array[row(7,8)::comptype, row(9,10)::comptype])","shape":"INSERT INTO dcomptable VALUES (ARRAY[ROW(7, 8)::comptype, ROW(9, 10)::comptype]);"}
+{"sql":"insert into dcomptable (d1[1]) values(row(9,10))","shape":"INSERT INTO dcomptable (d1[1]) VALUES (ROW(9, 10));"}
+{"sql":"insert into dcomptable (d1[1].r) values(11)","shape":"INSERT INTO dcomptable (d1[1].r) VALUES (11);"}
+{"sql":"select d1[2], d1[1].r, d1[1].i from dcomptable","shape":"SELECT d1[2], d1[1].r, d1[1].i FROM dcomptable;"}
+{"sql":"update dcomptable set d1[2] = row(d1[2].i, d1[2].r)","shape":"UPDATE dcomptable SET d1[2] = ROW(d1[2].i, d1[2].r);"}
+{"sql":"update dcomptable set d1[1].r = d1[1].r + 1 where d1[1].i > 0","shape":"UPDATE dcomptable SET d1[1].r = d1[1].r + 1 WHERE d1[1].i > 0;"}
+{"sql":"alter domain dcomptypea add constraint c1 check (value[1].r <= value[1].i)"}
+{"sql":"alter domain dcomptypea add constraint c2 check (value[1].r > value[1].i)"}
+{"sql":"select array[row(2,1)]::dcomptypea","shape":"SELECT ARRAY[ROW(2, 1)]::dcomptypea;"}
+{"sql":"insert into dcomptable values (array[row(1,2)]::comptype[])","shape":"INSERT INTO dcomptable VALUES (ARRAY[ROW(1, 2)]::comptype[]);"}
+{"sql":"insert into dcomptable values (array[row(2,1)]::comptype[])","shape":"INSERT INTO dcomptable VALUES (ARRAY[ROW(2, 1)]::comptype[]);"}
+{"sql":"insert into dcomptable (d1[1].r) values(99)","shape":"INSERT INTO dcomptable (d1[1].r) VALUES (99);"}
+{"sql":"insert into dcomptable (d1[1].r, d1[1].i) values(99, 100)","shape":"INSERT INTO dcomptable (d1[1].r, d1[1].i) VALUES (99, 100);"}
+{"sql":"insert into dcomptable (d1[1].r, d1[1].i) values(100, 99)","shape":"INSERT INTO dcomptable (d1[1].r, d1[1].i) VALUES (100, 99);"}
+{"sql":"update dcomptable set d1[1].r = d1[1].r - 1, d1[1].i = d1[1].i + 1\n  where d1[1].i > 0","shape":"UPDATE dcomptable SET d1[1].r = d1[1].r - 1, d1[1].i = d1[1].i + 1 WHERE d1[1].i > 0;"}
+{"sql":"explain (verbose, costs off)\n  update dcomptable set d1[1].r = d1[1].r - 1, d1[1].i = d1[1].i + 1\n    where d1[1].i > 0","shape":"EXPLAIN (VERBOSE, COSTS off) UPDATE dcomptable SET d1[1].r = d1[1].r - 1, d1[1].i = d1[1].i + 1 WHERE d1[1].i > 0;"}
+{"sql":"create rule silly as on delete to dcomptable do instead\n  update dcomptable set d1[1].r = d1[1].r - 1, d1[1].i = d1[1].i + 1\n    where d1[1].i > 0"}
+{"sql":"create domain posint as int check (value > 0)","shape":"CREATE DOMAIN posint AS int CHECK (value > 0);"}
+{"sql":"create table pitable (f1 posint[])","shape":"CREATE TABLE pitable (f1 posint[]);"}
+{"sql":"insert into pitable values(array[42])","shape":"INSERT INTO pitable VALUES (ARRAY[42]);"}
+{"sql":"insert into pitable values(array[-1])","shape":"INSERT INTO pitable VALUES (ARRAY[-1]);"}
+{"sql":"insert into pitable values('{0}')","shape":"INSERT INTO pitable VALUES ('{0}');"}
+{"sql":"update pitable set f1[1] = f1[1] + 1","shape":"UPDATE pitable SET f1[1] = f1[1] + 1;"}
+{"sql":"update pitable set f1[1] = 0","shape":"UPDATE pitable SET f1[1] = 0;"}
+{"sql":"select * from pitable","shape":"SELECT * FROM pitable;"}
+{"sql":"drop table pitable","shape":"DROP TABLE pitable;"}
+{"sql":"create domain vc4 as varchar(4)","shape":"CREATE DOMAIN vc4 AS varchar(4);"}
+{"sql":"create table vc4table (f1 vc4[])","shape":"CREATE TABLE vc4table (f1 vc4[]);"}
+{"sql":"insert into vc4table values(array['too long'])","shape":"INSERT INTO vc4table VALUES (ARRAY['too long']);"}
+{"sql":"insert into vc4table values(array['too long']::vc4[])","shape":"INSERT INTO vc4table VALUES (ARRAY['too long']::vc4[]);"}
+{"sql":"select * from vc4table","shape":"SELECT * FROM vc4table;"}
+{"sql":"drop table vc4table","shape":"DROP TABLE vc4table;"}
+{"sql":"drop type vc4","shape":"DROP TYPE vc4;"}
+{"sql":"create domain dposinta as posint[]","shape":"CREATE DOMAIN dposinta AS posint[];"}
+{"sql":"create table dposintatable (f1 dposinta[])","shape":"CREATE TABLE dposintatable (f1 dposinta[]);"}
+{"sql":"insert into dposintatable values(array[array[42]])","shape":"INSERT INTO dposintatable VALUES (ARRAY[ARRAY[42]]);"}
+{"sql":"insert into dposintatable values(array[array[42]::posint[]])","shape":"INSERT INTO dposintatable VALUES (ARRAY[ARRAY[42]::posint[]]);"}
+{"sql":"insert into dposintatable values(array[array[42]::dposinta])","shape":"INSERT INTO dposintatable VALUES (ARRAY[ARRAY[42]::dposinta]);"}
+{"sql":"select f1, f1[1], (f1[1])[1] from dposintatable","shape":"SELECT f1, f1[1], (f1[1])[1] FROM dposintatable;"}
+{"sql":"select pg_typeof(f1) from dposintatable","shape":"SELECT pg_typeof(f1) FROM dposintatable;"}
+{"sql":"select pg_typeof(f1[1]) from dposintatable","shape":"SELECT pg_typeof(f1[1]) FROM dposintatable;"}
+{"sql":"select pg_typeof(f1[1][1]) from dposintatable","shape":"SELECT pg_typeof(f1[1][1]) FROM dposintatable;"}
+{"sql":"select pg_typeof((f1[1])[1]) from dposintatable","shape":"SELECT pg_typeof((f1[1])[1]) FROM dposintatable;"}
+{"sql":"update dposintatable set f1[2] = array[99]","shape":"UPDATE dposintatable SET f1[2] = ARRAY[99];"}
+{"sql":"select f1, f1[1], (f1[2])[1] from dposintatable","shape":"SELECT f1, f1[1], (f1[2])[1] FROM dposintatable;"}
+{"sql":"update dposintatable set f1[2][1] = array[97]","shape":"UPDATE dposintatable SET f1[2][1] = ARRAY[97];"}
+{"sql":"update dposintatable set (f1[2])[1] = array[98]","reject":true}
+{"sql":"drop table dposintatable","shape":"DROP TABLE dposintatable;"}
+{"sql":"drop domain posint cascade","shape":"DROP DOMAIN posint CASCADE;"}
+{"sql":"create type comptype as (cf1 int, cf2 int)","shape":"CREATE TYPE comptype AS (cf1 int, cf2 int);"}
+{"sql":"create domain dcomptype as comptype check ((value).cf1 > 0)","shape":"CREATE DOMAIN dcomptype AS comptype CHECK ((value).cf1 > 0);"}
+{"sql":"create table dcomptable (f1 dcomptype[])","shape":"CREATE TABLE dcomptable (f1 dcomptype[]);"}
+{"sql":"insert into dcomptable values (null)","shape":"INSERT INTO dcomptable VALUES (NULL);"}
+{"sql":"update dcomptable set f1[1].cf2 = 5","shape":"UPDATE dcomptable SET f1[1].cf2 = 5;"}
+{"sql":"table dcomptable","shape":"TABLE dcomptable;"}
+{"sql":"update dcomptable set f1[1].cf1 = -1","shape":"UPDATE dcomptable SET f1[1].cf1 = -1;"}
+{"sql":"update dcomptable set f1[1].cf1 = 1","shape":"UPDATE dcomptable SET f1[1].cf1 = 1;"}
+{"sql":"alter domain dcomptype drop constraint dcomptype_check"}
+{"sql":"create domain dnotnull varchar(15) NOT NULL","shape":"CREATE DOMAIN dnotnull AS varchar(15) NOT NULL;"}
+{"sql":"create domain dnull    varchar(15)","shape":"CREATE DOMAIN dnull AS varchar(15);"}
+{"sql":"create domain dcheck   varchar(15) NOT NULL CHECK (VALUE = 'a' OR VALUE = 'c' OR VALUE = 'd')","shape":"CREATE DOMAIN dcheck AS varchar(15) NOT NULL CHECK (((VALUE = 'a') OR (VALUE = 'c')) OR (VALUE = 'd'));"}
+{"sql":"create table nulltest\n           ( col1 dnotnull\n           , col2 dnotnull NULL  -- NOT NULL in the domain cannot be overridden\n           , col3 dnull    NOT NULL\n           , col4 dnull\n           , col5 dcheck CHECK (col5 IN ('c', 'd'))\n           )","shape":"CREATE TABLE nulltest (col1 dnotnull, col2 dnotnull NULL, col3 dnull NOT NULL, col4 dnull, col5 dcheck CHECK (col5 IN ('c', 'd')));"}
+{"sql":"INSERT INTO nulltest DEFAULT VALUES","shape":"INSERT INTO nulltest DEFAULT VALUES;"}
+{"sql":"INSERT INTO nulltest values ('a', 'b', 'c', 'd', 'c')","shape":"INSERT INTO nulltest VALUES ('a', 'b', 'c', 'd', 'c');"}
+{"sql":"insert into nulltest values ('a', 'b', 'c', 'd', NULL)","shape":"INSERT INTO nulltest VALUES ('a', 'b', 'c', 'd', NULL);"}
+{"sql":"insert into nulltest values ('a', 'b', 'c', 'd', 'a')","shape":"INSERT INTO nulltest VALUES ('a', 'b', 'c', 'd', 'a');"}
+{"sql":"INSERT INTO nulltest values (NULL, 'b', 'c', 'd', 'd')","shape":"INSERT INTO nulltest VALUES (NULL, 'b', 'c', 'd', 'd');"}
+{"sql":"INSERT INTO nulltest values ('a', NULL, 'c', 'd', 'c')","shape":"INSERT INTO nulltest VALUES ('a', NULL, 'c', 'd', 'c');"}
+{"sql":"INSERT INTO nulltest values ('a', 'b', NULL, 'd', 'c')","shape":"INSERT INTO nulltest VALUES ('a', 'b', NULL, 'd', 'c');"}
+{"sql":"INSERT INTO nulltest values ('a', 'b', 'c', NULL, 'd')","shape":"INSERT INTO nulltest VALUES ('a', 'b', 'c', NULL, 'd');"}
+{"sql":"COPY nulltest FROM stdin","shape":"COPY nulltest FROM STDIN;"}
+{"sql":"select * from nulltest","shape":"SELECT * FROM nulltest;"}
+{"sql":"SELECT cast('1' as dnotnull)","shape":"SELECT CAST('1' AS dnotnull);"}
+{"sql":"SELECT cast(NULL as dnotnull)","shape":"SELECT CAST(NULL AS dnotnull);"}
+{"sql":"SELECT cast(cast(NULL as dnull) as dnotnull)","shape":"SELECT CAST(CAST(NULL AS dnull) AS dnotnull);"}
+{"sql":"SELECT cast(col4 as dnotnull) from nulltest","shape":"SELECT CAST(col4 AS dnotnull) FROM nulltest;"}
+{"sql":"drop table nulltest","shape":"DROP TABLE nulltest;"}
+{"sql":"drop domain dnotnull restrict","shape":"DROP DOMAIN dnotnull RESTRICT;"}
+{"sql":"drop domain dnull restrict","shape":"DROP DOMAIN dnull RESTRICT;"}
+{"sql":"drop domain dcheck restrict","shape":"DROP DOMAIN dcheck RESTRICT;"}
+{"sql":"create domain ddef1 int4 DEFAULT 3","shape":"CREATE DOMAIN ddef1 AS int4 DEFAULT 3;"}
+{"sql":"create domain ddef2 oid DEFAULT '12'","shape":"CREATE DOMAIN ddef2 AS oid DEFAULT '12';"}
+{"sql":"create domain ddef3 text DEFAULT 5","shape":"CREATE DOMAIN ddef3 AS text DEFAULT 5;"}
+{"sql":"create sequence ddef4_seq","shape":"CREATE SEQUENCE ddef4_seq;"}
+{"sql":"create domain ddef4 int4 DEFAULT nextval('ddef4_seq')","shape":"CREATE DOMAIN ddef4 AS int4 DEFAULT nextval('ddef4_seq');"}
+{"sql":"create domain ddef5 numeric(8,2) NOT NULL DEFAULT '12.12'","shape":"CREATE DOMAIN ddef5 AS numeric(8, 2) NOT NULL DEFAULT '12.12';"}
+{"sql":"create table defaulttest\n            ( col1 ddef1\n            , col2 ddef2\n            , col3 ddef3\n            , col4 ddef4 PRIMARY KEY\n            , col5 ddef1 NOT NULL DEFAULT NULL\n            , col6 ddef2 DEFAULT '88'\n            , col7 ddef4 DEFAULT 8000\n            , col8 ddef5\n            )","shape":"CREATE TABLE defaulttest (col1 ddef1, col2 ddef2, col3 ddef3, col4 ddef4 PRIMARY KEY, col5 ddef1 NOT NULL DEFAULT NULL, col6 ddef2 DEFAULT '88', col7 ddef4 DEFAULT 8000, col8 ddef5);"}
+{"sql":"insert into defaulttest(col4) values(0)","shape":"INSERT INTO defaulttest (col4) VALUES (0);"}
+{"sql":"alter table defaulttest alter column col5 drop default","shape":"ALTER TABLE defaulttest ALTER COLUMN col5 DROP DEFAULT;"}
+{"sql":"insert into defaulttest default values","shape":"INSERT INTO defaulttest DEFAULT VALUES;"}
+{"sql":"alter table defaulttest alter column col5 set default null","shape":"ALTER TABLE defaulttest ALTER COLUMN col5 SET DEFAULT NULL;"}
+{"sql":"COPY defaulttest(col5) FROM stdin","shape":"COPY defaulttest (col5) FROM STDIN;"}
+{"sql":"select * from defaulttest","shape":"SELECT * FROM defaulttest;"}
+{"sql":"drop table defaulttest cascade","shape":"DROP TABLE defaulttest CASCADE;"}
+{"sql":"create domain dnotnulltest integer","shape":"CREATE DOMAIN dnotnulltest AS integer;"}
+{"sql":"create table domnotnull\n( col1 dnotnulltest\n, col2 dnotnulltest\n)","shape":"CREATE TABLE domnotnull (col1 dnotnulltest, col2 dnotnulltest);"}
+{"sql":"insert into domnotnull default values","shape":"INSERT INTO domnotnull DEFAULT VALUES;"}
+{"sql":"alter domain dnotnulltest set not null"}
+{"sql":"update domnotnull set col1 = 5","shape":"UPDATE domnotnull SET col1 = 5;"}
+{"sql":"update domnotnull set col2 = 6","shape":"UPDATE domnotnull SET col2 = 6;"}
+{"sql":"update domnotnull set col1 = null","shape":"UPDATE domnotnull SET col1 = NULL;"}
+{"sql":"alter domain dnotnulltest drop not null"}
+{"sql":"drop domain dnotnulltest cascade","shape":"DROP DOMAIN dnotnulltest CASCADE;"}
+{"sql":"create table domdeftest (col1 ddef1)","shape":"CREATE TABLE domdeftest (col1 ddef1);"}
+{"sql":"insert into domdeftest default values","shape":"INSERT INTO domdeftest DEFAULT VALUES;"}
+{"sql":"select * from domdeftest","shape":"SELECT * FROM domdeftest;"}
+{"sql":"alter domain ddef1 set default '42'"}
+{"sql":"alter domain ddef1 drop default"}
+{"sql":"drop table domdeftest","shape":"DROP TABLE domdeftest;"}
+{"sql":"create domain con as integer","shape":"CREATE DOMAIN con AS integer;"}
+{"sql":"create table domcontest (col1 con)","shape":"CREATE TABLE domcontest (col1 con);"}
+{"sql":"insert into domcontest values (1)","shape":"INSERT INTO domcontest VALUES (1);"}
+{"sql":"insert into domcontest values (2)","shape":"INSERT INTO domcontest VALUES (2);"}
+{"sql":"alter domain con add constraint t check (VALUE < 1)"}
+{"sql":"alter domain con add constraint t check (VALUE < 34)"}
+{"sql":"alter domain con add check (VALUE > 0)"}
+{"sql":"insert into domcontest values (-5)","shape":"INSERT INTO domcontest VALUES (-5);"}
+{"sql":"insert into domcontest values (42)","shape":"INSERT INTO domcontest VALUES (42);"}
+{"sql":"insert into domcontest values (5)","shape":"INSERT INTO domcontest VALUES (5);"}
+{"sql":"alter domain con drop constraint t"}
+{"sql":"alter domain con drop constraint nonexistent"}
+{"sql":"alter domain con drop constraint if exists nonexistent"}
+{"sql":"create domain things AS INT","shape":"CREATE DOMAIN things AS INT;"}
+{"sql":"CREATE TABLE thethings (stuff things)","shape":"CREATE TABLE thethings (stuff things);"}
+{"sql":"INSERT INTO thethings (stuff) VALUES (55)","shape":"INSERT INTO thethings (stuff) VALUES (55);"}
+{"sql":"ALTER DOMAIN things ADD CONSTRAINT meow CHECK (VALUE < 11)"}
+{"sql":"ALTER DOMAIN things ADD CONSTRAINT meow CHECK (VALUE < 11) NOT VALID"}
+{"sql":"ALTER DOMAIN things VALIDATE CONSTRAINT meow"}
+{"sql":"UPDATE thethings SET stuff = 10","shape":"UPDATE thethings SET stuff = 10;"}
+{"sql":"create table domtab (col1 integer)","shape":"CREATE TABLE domtab (col1 integer);"}
+{"sql":"create domain dom as integer","shape":"CREATE DOMAIN dom AS integer;"}
+{"sql":"create view domview as select cast(col1 as dom) from domtab","shape":"CREATE VIEW domview AS SELECT CAST(col1 AS dom) FROM domtab;"}
+{"sql":"insert into domtab (col1) values (null)","shape":"INSERT INTO domtab (col1) VALUES (NULL);"}
+{"sql":"insert into domtab (col1) values (5)","shape":"INSERT INTO domtab (col1) VALUES (5);"}
+{"sql":"select * from domview","shape":"SELECT * FROM domview;"}
+{"sql":"alter domain dom set not null"}
+{"sql":"alter domain dom drop not null"}
+{"sql":"alter domain dom add constraint domchkgt6 check(value > 6)"}
+{"sql":"alter domain dom drop constraint domchkgt6 restrict"}
+{"sql":"drop domain ddef1 restrict","shape":"DROP DOMAIN ddef1 RESTRICT;"}
+{"sql":"drop domain ddef2 restrict","shape":"DROP DOMAIN ddef2 RESTRICT;"}
+{"sql":"drop domain ddef3 restrict","shape":"DROP DOMAIN ddef3 RESTRICT;"}
+{"sql":"drop domain ddef4 restrict","shape":"DROP DOMAIN ddef4 RESTRICT;"}
+{"sql":"drop domain ddef5 restrict","shape":"DROP DOMAIN ddef5 RESTRICT;"}
+{"sql":"drop sequence ddef4_seq","shape":"DROP SEQUENCE ddef4_seq;"}
+{"sql":"create domain vchar4 varchar(4)","shape":"CREATE DOMAIN vchar4 AS varchar(4);"}
+{"sql":"create domain dinter vchar4 check (substring(VALUE, 1, 1) = 'x')","shape":"CREATE DOMAIN dinter AS vchar4 CHECK (substring(VALUE, 1, 1) = 'x');"}
+{"sql":"create domain dtop dinter check (substring(VALUE, 2, 1) = '1')","shape":"CREATE DOMAIN dtop AS dinter CHECK (substring(VALUE, 2, 1) = '1');"}
+{"sql":"select 'x123'::dtop","shape":"SELECT 'x123'::dtop;"}
+{"sql":"select 'x1234'::dtop","shape":"SELECT 'x1234'::dtop;"}
+{"sql":"select 'y1234'::dtop","shape":"SELECT 'y1234'::dtop;"}
+{"sql":"select 'y123'::dtop","shape":"SELECT 'y123'::dtop;"}
+{"sql":"select 'yz23'::dtop","shape":"SELECT 'yz23'::dtop;"}
+{"sql":"select 'xz23'::dtop","shape":"SELECT 'xz23'::dtop;"}
+{"sql":"create temp table dtest(f1 dtop)","shape":"CREATE TEMPORARY TABLE dtest (f1 dtop);"}
+{"sql":"insert into dtest values('x123')","shape":"INSERT INTO dtest VALUES ('x123');"}
+{"sql":"insert into dtest values('x1234')","shape":"INSERT INTO dtest VALUES ('x1234');"}
+{"sql":"insert into dtest values('y1234')","shape":"INSERT INTO dtest VALUES ('y1234');"}
+{"sql":"insert into dtest values('y123')","shape":"INSERT INTO dtest VALUES ('y123');"}
+{"sql":"insert into dtest values('yz23')","shape":"INSERT INTO dtest VALUES ('yz23');"}
+{"sql":"insert into dtest values('xz23')","shape":"INSERT INTO dtest VALUES ('xz23');"}
+{"sql":"drop table dtest","shape":"DROP TABLE dtest;"}
+{"sql":"drop domain vchar4 cascade","shape":"DROP DOMAIN vchar4 CASCADE;"}
+{"sql":"create domain str_domain as text not null","shape":"CREATE DOMAIN str_domain AS text NOT NULL;"}
+{"sql":"create table domain_test (a int, b int)","shape":"CREATE TABLE domain_test (a int, b int);"}
+{"sql":"insert into domain_test values (1, 2)","shape":"INSERT INTO domain_test VALUES (1, 2);"}
+{"sql":"alter table domain_test add column c str_domain","shape":"ALTER TABLE domain_test ADD COLUMN c str_domain;"}
+{"sql":"create domain str_domain2 as text check (value <> 'foo') default 'foo'","shape":"CREATE DOMAIN str_domain2 AS text CHECK (value <> 'foo') DEFAULT 'foo';"}
+{"sql":"alter table domain_test add column d str_domain2","shape":"ALTER TABLE domain_test ADD COLUMN d str_domain2;"}
+{"sql":"create domain pos_int as int4 check (value > 0) not null","shape":"CREATE DOMAIN pos_int AS int4 CHECK (value > 0) NOT NULL;"}
+{"sql":"prepare s1 as select $1::pos_int = 10 as \"is_ten\"","shape":"PREPARE s1 AS SELECT $1::pos_int = 10 AS \"is_ten\";"}
+{"sql":"execute s1(10)","shape":"EXECUTE s1(10);"}
+{"sql":"execute s1(0)","shape":"EXECUTE s1(0);"}
+{"sql":"execute s1(NULL)","shape":"EXECUTE s1(NULL);"}
+{"sql":"create function doubledecrement(p1 pos_int) returns pos_int as $$\ndeclare v pos_int;\nbegin\n    return p1;\nend$$ language plpgsql","shape":"CREATE FUNCTION doubledecrement(p1 pos_int) RETURNS pos_int AS '\ndeclare v pos_int;\nbegin\n    return p1;\nend' LANGUAGE plpgsql;"}
+{"sql":"select doubledecrement(3)","shape":"SELECT doubledecrement(3);"}
+{"sql":"create or replace function doubledecrement(p1 pos_int) returns pos_int as $$\ndeclare v pos_int := 0;\nbegin\n    return p1;\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION doubledecrement(p1 pos_int) RETURNS pos_int AS '\ndeclare v pos_int := 0;\nbegin\n    return p1;\nend' LANGUAGE plpgsql;"}
+{"sql":"create or replace function doubledecrement(p1 pos_int) returns pos_int as $$\ndeclare v pos_int := 1;\nbegin\n    v := p1 - 1;\n    return v - 1;\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION doubledecrement(p1 pos_int) RETURNS pos_int AS '\ndeclare v pos_int := 1;\nbegin\n    v := p1 - 1;\n    return v - 1;\nend' LANGUAGE plpgsql;"}
+{"sql":"select doubledecrement(null)","shape":"SELECT doubledecrement(NULL);"}
+{"sql":"select doubledecrement(0)","shape":"SELECT doubledecrement(0);"}
+{"sql":"select doubledecrement(1)","shape":"SELECT doubledecrement(1);"}
+{"sql":"select doubledecrement(2)","shape":"SELECT doubledecrement(2);"}
+{"sql":"create domain posint as int4","shape":"CREATE DOMAIN posint AS int4;"}
+{"sql":"create type ddtest1 as (f1 posint)","shape":"CREATE TYPE ddtest1 AS (f1 posint);"}
+{"sql":"create table ddtest2(f1 ddtest1)","shape":"CREATE TABLE ddtest2 (f1 ddtest1);"}
+{"sql":"insert into ddtest2 values(row(-1))","shape":"INSERT INTO ddtest2 VALUES (ROW(-1));"}
+{"sql":"alter domain posint add constraint c1 check(value >= 0)"}
+{"sql":"drop table ddtest2","shape":"DROP TABLE ddtest2;"}
+{"sql":"create table ddtest2(f1 ddtest1[])","shape":"CREATE TABLE ddtest2 (f1 ddtest1[]);"}
+{"sql":"insert into ddtest2 values('{(-1)}')","shape":"INSERT INTO ddtest2 VALUES ('{(-1)}');"}
+{"sql":"create domain ddtest1d as ddtest1","shape":"CREATE DOMAIN ddtest1d AS ddtest1;"}
+{"sql":"create table ddtest2(f1 ddtest1d)","shape":"CREATE TABLE ddtest2 (f1 ddtest1d);"}
+{"sql":"insert into ddtest2 values('(-1)')","shape":"INSERT INTO ddtest2 VALUES ('(-1)');"}
+{"sql":"drop domain ddtest1d","shape":"DROP DOMAIN ddtest1d;"}
+{"sql":"create domain ddtest1d as ddtest1[]","shape":"CREATE DOMAIN ddtest1d AS ddtest1[];"}
+{"sql":"create type rposint as range (subtype = posint)"}
+{"sql":"create table ddtest2(f1 rposint)","shape":"CREATE TABLE ddtest2 (f1 rposint);"}
+{"sql":"insert into ddtest2 values('(-1,3]')","shape":"INSERT INTO ddtest2 VALUES ('(-1,3]');"}
+{"sql":"drop type rposint","shape":"DROP TYPE rposint;"}
+{"sql":"create domain posint2 as posint check (value % 2 = 0)","shape":"CREATE DOMAIN posint2 AS posint CHECK ((value % 2) = 0);"}
+{"sql":"create table ddtest2(f1 posint2)","shape":"CREATE TABLE ddtest2 (f1 posint2);"}
+{"sql":"insert into ddtest2 values(11)","shape":"INSERT INTO ddtest2 VALUES (11);"}
+{"sql":"insert into ddtest2 values(-2)","shape":"INSERT INTO ddtest2 VALUES (-2);"}
+{"sql":"insert into ddtest2 values(2)","shape":"INSERT INTO ddtest2 VALUES (2);"}
+{"sql":"alter domain posint add constraint c2 check(value >= 10)"}
+{"sql":"alter domain posint add constraint c2 check(value > 0)"}
+{"sql":"drop type ddtest1","shape":"DROP TYPE ddtest1;"}
+{"sql":"create or replace function array_elem_check(numeric) returns numeric as $$\ndeclare\n  x numeric(4,2)[1];\nbegin\n  x[1] := $1;\n  return x[1];\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION array_elem_check(numeric) RETURNS numeric AS '\ndeclare\n  x numeric(4,2)[1];\nbegin\n  x[1] := $1;\n  return x[1];\nend' LANGUAGE plpgsql;"}
+{"sql":"select array_elem_check(121.00)","shape":"SELECT array_elem_check(121.00);"}
+{"sql":"select array_elem_check(1.23456)","shape":"SELECT array_elem_check(1.23456);"}
+{"sql":"create domain mynums as numeric(4,2)[1]","shape":"CREATE DOMAIN mynums AS numeric(4, 2)[1];"}
+{"sql":"create or replace function array_elem_check(numeric) returns numeric as $$\ndeclare\n  x mynums;\nbegin\n  x[1] := $1;\n  return x[1];\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION array_elem_check(numeric) RETURNS numeric AS '\ndeclare\n  x mynums;\nbegin\n  x[1] := $1;\n  return x[1];\nend' LANGUAGE plpgsql;"}
+{"sql":"create domain mynums2 as mynums","shape":"CREATE DOMAIN mynums2 AS mynums;"}
+{"sql":"create or replace function array_elem_check(numeric) returns numeric as $$\ndeclare\n  x mynums2;\nbegin\n  x[1] := $1;\n  return x[1];\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION array_elem_check(numeric) RETURNS numeric AS '\ndeclare\n  x mynums2;\nbegin\n  x[1] := $1;\n  return x[1];\nend' LANGUAGE plpgsql;"}
+{"sql":"drop function array_elem_check(numeric)"}
+{"sql":"create domain orderedpair as int[2] check (value[1] < value[2])","shape":"CREATE DOMAIN orderedpair AS int[2] CHECK (value[1] < value[2]);"}
+{"sql":"select array[1,2]::orderedpair","shape":"SELECT ARRAY[1, 2]::orderedpair;"}
+{"sql":"select array[2,1]::orderedpair","shape":"SELECT ARRAY[2, 1]::orderedpair;"}
+{"sql":"create temp table op (f1 orderedpair)","shape":"CREATE TEMPORARY TABLE op (f1 orderedpair);"}
+{"sql":"insert into op values (array[1,2])","shape":"INSERT INTO op VALUES (ARRAY[1, 2]);"}
+{"sql":"insert into op values (array[2,1])","shape":"INSERT INTO op VALUES (ARRAY[2, 1]);"}
+{"sql":"update op set f1[2] = 3","shape":"UPDATE op SET f1[2] = 3;"}
+{"sql":"update op set f1[2] = 0","shape":"UPDATE op SET f1[2] = 0;"}
+{"sql":"select * from op","shape":"SELECT * FROM op;"}
+{"sql":"create or replace function array_elem_check(int) returns int as $$\ndeclare\n  x orderedpair := '{1,2}';\nbegin\n  x[2] := $1;\n  return x[2];\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION array_elem_check(int) RETURNS int AS '\ndeclare\n  x orderedpair := ''{1,2}'';\nbegin\n  x[2] := $1;\n  return x[2];\nend' LANGUAGE plpgsql;"}
+{"sql":"select array_elem_check(3)","shape":"SELECT array_elem_check(3);"}
+{"sql":"select array_elem_check(-1)","shape":"SELECT array_elem_check(-1);"}
+{"sql":"drop function array_elem_check(int)"}
+{"sql":"create domain di as int","shape":"CREATE DOMAIN di AS int;"}
+{"sql":"create function dom_check(int) returns di as $$\ndeclare d di;\nbegin\n  d := $1::di;\n  return d;\nend\n$$ language plpgsql immutable","shape":"CREATE FUNCTION dom_check(int) RETURNS di AS '\ndeclare d di;\nbegin\n  d := $1::di;\n  return d;\nend\n' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"select dom_check(0)","shape":"SELECT dom_check(0);"}
+{"sql":"alter domain di add constraint pos check (value > 0)"}
+{"sql":"alter domain di drop constraint pos"}
+{"sql":"create or replace function dom_check(int) returns di as $$\ndeclare d di;\nbegin\n  d := $1;\n  return d;\nend\n$$ language plpgsql immutable","shape":"CREATE OR REPLACE FUNCTION dom_check(int) RETURNS di AS '\ndeclare d di;\nbegin\n  d := $1;\n  return d;\nend\n' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"drop function dom_check(int)"}
+{"sql":"drop domain di","shape":"DROP DOMAIN di;"}
+{"sql":"create function sql_is_distinct_from(anyelement, anyelement)\nreturns boolean language sql\nas 'select $1 is distinct from $2 limit 1'","shape":"CREATE FUNCTION sql_is_distinct_from(anyelement, anyelement) RETURNS boolean LANGUAGE sql AS 'select $1 is distinct from $2 limit 1';"}
+{"sql":"create domain inotnull int\n  check (sql_is_distinct_from(value, null))","shape":"CREATE DOMAIN inotnull AS int CHECK (sql_is_distinct_from(value, NULL));"}
+{"sql":"select 1::inotnull","shape":"SELECT 1::inotnull;"}
+{"sql":"select null::inotnull","shape":"SELECT NULL::inotnull;"}
+{"sql":"create table dom_table (x inotnull)","shape":"CREATE TABLE dom_table (x inotnull);"}
+{"sql":"insert into dom_table values ('1')","shape":"INSERT INTO dom_table VALUES ('1');"}
+{"sql":"insert into dom_table values (1)","shape":"INSERT INTO dom_table VALUES (1);"}
+{"sql":"insert into dom_table values (null)","shape":"INSERT INTO dom_table VALUES (NULL);"}
+{"sql":"drop table dom_table","shape":"DROP TABLE dom_table;"}
+{"sql":"drop domain inotnull","shape":"DROP DOMAIN inotnull;"}
+{"sql":"drop function sql_is_distinct_from(anyelement, anyelement)"}
+{"sql":"create domain testdomain1 as int","shape":"CREATE DOMAIN testdomain1 AS int;"}
+{"sql":"alter domain testdomain1 rename to testdomain2"}
+{"sql":"alter type testdomain2 rename to testdomain3"}
+{"sql":"drop domain testdomain3","shape":"DROP DOMAIN testdomain3;"}
+{"sql":"create domain testdomain1 as int constraint unsigned check (value > 0)","shape":"CREATE DOMAIN testdomain1 AS int CONSTRAINT unsigned CHECK (value > 0);"}
+{"sql":"alter domain testdomain1 rename constraint unsigned to unsigned_foo"}
+{"sql":"alter domain testdomain1 drop constraint unsigned_foo"}
+{"sql":"drop domain testdomain1","shape":"DROP DOMAIN testdomain1;"}

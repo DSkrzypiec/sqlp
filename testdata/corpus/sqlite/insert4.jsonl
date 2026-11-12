@@ -1,0 +1,69 @@
+{"sql":"CREATE TABLE t1(a int, b int, check(b>a))"}
+{"sql":"CREATE TABLE t2(x int, y int)"}
+{"sql":"CREATE VIEW v2 AS SELECT y, x FROM t2"}
+{"sql":"CREATE TABLE t3(a int, b int)"}
+{"sql":"INSERT INTO t2 VALUES(9,1)"}
+{"sql":"INSERT INTO t1 SELECT 4, 8"}
+{"sql":"INSERT INTO t1 SELECT * FROM v2"}
+{"sql":"INSERT INTO t2 SELECT y, x FROM t2"}
+{"sql":"INSERT INTO t3 SELECT * FROM t2 LIMIT 1"}
+{"sql":"INSERT INTO t1 SELECT * FROM t2 LIMIT 1"}
+{"sql":"INSERT INTO t3 SELECT DISTINCT * FROM t2"}
+{"sql":"INSERT INTO t1 SELECT DISTINCT * FROM t2"}
+{"sql":"INSERT INTO dest SELECT * FROM src"}
+{"sql":"SELECT * FROM dest"}
+{"sql":"DROP TABLE dest"}
+{"sql":"DROP TABLE src"}
+{"sql":"CREATE TABLE t4(a, b, UNIQUE(a,b))"}
+{"sql":"INSERT INTO t4 VALUES(NULL,0)"}
+{"sql":"INSERT INTO t2 SELECT a, b FROM nosuchtable"}
+{"sql":"INSERT INTO t4 SELECT * FROM t5"}
+{"sql":"CREATE INDEX t2_i2 ON t2(x, y COLLATE nocase)"}
+{"sql":"CREATE INDEX t2_i1 ON t2(x ASC, y DESC)"}
+{"sql":"CREATE INDEX t3_i1 ON t3(a, b)"}
+{"sql":"DROP INDEX t2_i2"}
+{"sql":"DROP INDEX t2_i1"}
+{"sql":"CREATE INDEX t2_i1 ON t2(x ASC, y ASC)"}
+{"sql":"CREATE INDEX t2_i1 ON t2(x ASC, y COLLATE RTRIM)"}
+{"sql":"CREATE TABLE t6a(x CHECK( x<>'abc' ))"}
+{"sql":"INSERT INTO t6a VALUES('ABC')"}
+{"sql":"SELECT * FROM t6a"}
+{"sql":"CREATE TABLE t6b(x CHECK( x<>'abc' COLLATE nocase ))"}
+{"sql":"INSERT INTO t6b SELECT * FROM t6a"}
+{"sql":"DROP TABLE t6b"}
+{"sql":"CREATE TABLE t6b(x CHECK( x COLLATE nocase <>'abc' ))"}
+{"sql":"CREATE TABLE t7a(x INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t7a VALUES(123)"}
+{"sql":"CREATE TABLE t7b(y INTEGER REFERENCES t7a)"}
+{"sql":"CREATE TABLE t7c(z INT)"}
+{"sql":"INSERT INTO t7c VALUES(234)"}
+{"sql":"INSERT INTO t7b SELECT * FROM t7c"}
+{"sql":"SELECT * FROM t7b"}
+{"sql":"DELETE FROM t7b"}
+{"sql":"DELETE FROM t7c"}
+{"sql":"INSERT INTO t7c VALUES(123)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT REPLACE, b)"}
+{"sql":"CREATE TABLE t2(x INTEGER PRIMARY KEY ON CONFLICT REPLACE, y)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT IGNORE, b)"}
+{"sql":"CREATE TABLE t2(x INTEGER PRIMARY KEY ON CONFLICT IGNORE, y)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT FAIL, b)"}
+{"sql":"CREATE TABLE t2(x INTEGER PRIMARY KEY ON CONFLICT FAIL, y)"}
+{"sql":"INSERT INTO t2 VALUES(-99,100)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT ABORT, b)"}
+{"sql":"CREATE TABLE t2(x INTEGER PRIMARY KEY ON CONFLICT ABORT, y)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT ROLLBACK, b)"}
+{"sql":"CREATE TABLE t2(x INTEGER PRIMARY KEY ON CONFLICT ROLLBACK, y)"}
+{"sql":"INSERT INTO t1(x) VALUES(5 COLLATE xyzzy) UNION SELECT 0"}
+{"sql":"CREATE TABLE t8(\n    rid INTEGER,\n    pid INTEGER,\n    mid INTEGER,\n    px INTEGER DEFAULT(0) CHECK(px IN(0, 1))\n  )"}
+{"sql":"CREATE TEMP TABLE x(\n    rid INTEGER,\n    pid INTEGER,\n    mid INTEGER,\n    px INTEGER DEFAULT(0) CHECK(px IN(0, 1))\n  )"}
+{"sql":"INSERT INTO x SELECT * FROM t8"}
+{"sql":"INSERT INTO x     SELECT * FROM t8"}
+{"sql":"INSERT INTO x     SELECT * FROM t8  RETURNING *"}
+{"sql":"CREATE INDEX t9a ON t9(a)"}
+{"sql":"CREATE INDEX t9b ON t9(b) WHERE c=0"}
+{"sql":"INSERT INTO t9 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO t9 VALUES(2, 2, 2)"}
+{"sql":"INSERT INTO t9 VALUES(3, 3, 3)"}
+{"sql":"CREATE INDEX t10a ON t10(a)"}
+{"sql":"CREATE INDEX t10b ON t10(b) WHERE c=0"}
+{"sql":"INSERT INTO t10 SELECT * FROM t9"}

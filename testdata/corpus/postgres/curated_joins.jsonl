@@ -1,0 +1,363 @@
+{"sql":"SELECT * FROM t JOIN u ON t.a = u.a","shape":"SELECT * FROM t JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t INNER JOIN u ON t.a = u.a","shape":"SELECT * FROM t JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t LEFT JOIN u ON t.a = u.a","shape":"SELECT * FROM t LEFT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t LEFT OUTER JOIN u ON t.a = u.a","shape":"SELECT * FROM t LEFT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t RIGHT JOIN u ON t.a = u.a","shape":"SELECT * FROM t RIGHT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t RIGHT OUTER JOIN u ON t.a = u.a","shape":"SELECT * FROM t RIGHT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t FULL JOIN u ON t.a = u.a","shape":"SELECT * FROM t FULL JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t FULL OUTER JOIN u ON t.a = u.a","shape":"SELECT * FROM t FULL JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t CROSS JOIN u","shape":"SELECT * FROM t CROSS JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL JOIN u","shape":"SELECT * FROM t NATURAL JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL INNER JOIN u","shape":"SELECT * FROM t NATURAL JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL LEFT JOIN u","shape":"SELECT * FROM t NATURAL LEFT JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL RIGHT JOIN u","shape":"SELECT * FROM t NATURAL RIGHT JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL FULL JOIN u","shape":"SELECT * FROM t NATURAL FULL JOIN u;"}
+{"sql":"SELECT * FROM t JOIN u USING (a)","shape":"SELECT * FROM t JOIN u USING (a);"}
+{"sql":"SELECT * FROM t JOIN u USING (a, b)","shape":"SELECT * FROM t JOIN u USING (a, b);"}
+{"sql":"SELECT * FROM t LEFT JOIN u USING (a)","shape":"SELECT * FROM t LEFT JOIN u USING (a);"}
+{"sql":"SELECT * FROM a JOIN b ON a.id = b.id JOIN c ON b.id = c.id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id;"}
+{"sql":"SELECT * FROM a JOIN b ON a.id = b.id LEFT JOIN c ON b.id = c.id RIGHT JOIN d ON c.id = d.id","shape":"SELECT * FROM ((a JOIN b ON a.id = b.id) LEFT JOIN c ON b.id = c.id) RIGHT JOIN d ON c.id = d.id;"}
+{"sql":"SELECT * FROM a LEFT JOIN b ON a.id = b.id LEFT JOIN c ON a.id = c.id LEFT JOIN d ON a.id = d.id","shape":"SELECT * FROM ((a LEFT JOIN b ON a.id = b.id) LEFT JOIN c ON a.id = c.id) LEFT JOIN d ON a.id = d.id;"}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b.id = c.id ON a.id = b.id","shape":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b.id = c.id ON a.id = b.id","shape":"SELECT * FROM a LEFT JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON c.id = d.id ON b.id = c.id ON a.id = b.id","shape":"SELECT * FROM a JOIN (b LEFT JOIN (c JOIN d ON c.id = d.id) ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM (a JOIN b ON a.id = b.id)","shape":"SELECT * FROM (a JOIN b ON a.id = b.id);"}
+{"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id;"}
+{"sql":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id","shape":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN (c JOIN d ON c.id = d.id) ON b.id = c.id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN (c JOIN d ON c.id = d.id) ON b.id = c.id;"}
+{"sql":"SELECT * FROM ((a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id) JOIN d ON c.id = d.id","shape":"SELECT * FROM ((a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id) JOIN d ON c.id = d.id;"}
+{"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) AS x","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) AS x;"}
+{"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) AS x (p, q)","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) AS x(p, q);"}
+{"sql":"SELECT * FROM a CROSS JOIN b CROSS JOIN c","shape":"SELECT * FROM (a CROSS JOIN b) CROSS JOIN c;"}
+{"sql":"SELECT * FROM a CROSS JOIN b JOIN c ON b.id = c.id","shape":"SELECT * FROM (a CROSS JOIN b) JOIN c ON b.id = c.id;"}
+{"sql":"SELECT * FROM a NATURAL JOIN b NATURAL JOIN c","shape":"SELECT * FROM (a NATURAL JOIN b) NATURAL JOIN c;"}
+{"sql":"SELECT * FROM a, b JOIN c ON b.id = c.id","shape":"SELECT * FROM a, b JOIN c ON b.id = c.id;"}
+{"sql":"SELECT * FROM a JOIN b ON a.id = b.id, c","shape":"SELECT * FROM a JOIN b ON a.id = b.id, c;"}
+{"sql":"SELECT * FROM a, b CROSS JOIN c, d","shape":"SELECT * FROM a, b CROSS JOIN c, d;"}
+{"sql":"SELECT * FROM t AS x JOIN t AS y ON x.a = y.a","shape":"SELECT * FROM t AS x JOIN t AS y ON x.a = y.a;"}
+{"sql":"SELECT * FROM t x JOIN u y ON x.a = y.a","shape":"SELECT * FROM t AS x JOIN u AS y ON x.a = y.a;"}
+{"sql":"SELECT * FROM t JOIN (SELECT a FROM u) AS x ON t.a = x.a","shape":"SELECT * FROM t JOIN (SELECT a FROM u) AS x ON t.a = x.a;"}
+{"sql":"SELECT * FROM (SELECT a FROM t) AS x JOIN (SELECT a FROM u) AS y ON x.a = y.a","shape":"SELECT * FROM (SELECT a FROM t) AS x JOIN (SELECT a FROM u) AS y ON x.a = y.a;"}
+{"sql":"SELECT * FROM t LEFT JOIN (SELECT a FROM u) AS x ON t.a = x.a","shape":"SELECT * FROM t LEFT JOIN (SELECT a FROM u) AS x ON t.a = x.a;"}
+{"sql":"SELECT * FROM t JOIN u ON t.a = u.a AND t.b > u.b","shape":"SELECT * FROM t JOIN u ON (t.a = u.a) AND (t.b > u.b);"}
+{"sql":"SELECT * FROM t JOIN u ON t.a = u.a OR t.b = u.b","shape":"SELECT * FROM t JOIN u ON (t.a = u.a) OR (t.b = u.b);"}
+{"sql":"SELECT * FROM t JOIN u ON (t.a = u.a)","shape":"SELECT * FROM t JOIN u ON (t.a = u.a);"}
+{"sql":"SELECT * FROM t JOIN u ON t.a IN (SELECT id FROM c)","shape":"SELECT * FROM t JOIN u ON t.a IN (SELECT id FROM c);"}
+{"sql":"SELECT * FROM t JOIN u ON EXISTS (SELECT 1 FROM c WHERE c.id = t.a)","shape":"SELECT * FROM t JOIN u ON EXISTS (SELECT 1 FROM c WHERE c.id = t.a);"}
+{"sql":"SELECT * FROM t JOIN u ON t.a BETWEEN u.a AND u.b","shape":"SELECT * FROM t JOIN u ON t.a BETWEEN u.a AND u.b;"}
+{"sql":"SELECT * FROM t JOIN u ON true","shape":"SELECT * FROM t JOIN u ON TRUE;"}
+{"sql":"SELECT * FROM t JOIN f(1) AS x ON t.a = x.a","shape":"SELECT * FROM t JOIN f(1) AS x ON t.a = x.a;"}
+{"sql":"SELECT * FROM t CROSS JOIN LATERAL f(t.a) AS x","shape":"SELECT * FROM t CROSS JOIN LATERAL f(t.a) AS x;"}
+{"sql":"SELECT * FROM t JOIN u USING (a) AS x","shape":"SELECT * FROM t JOIN u USING (a) AS x;"}
+{"sql":"SELECT * FROM t JOIN u","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN u","reject":true}
+{"sql":"SELECT * FROM t INNER JOIN u","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING ()","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING (a","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING (a,)","reject":true}
+{"sql":"SELECT * FROM t JOIN ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM JOIN u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t LEFT u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t OUTER JOIN u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t LEFT RIGHT JOIN u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t INNER LEFT JOIN u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u USING (a)","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN u ON t.a = u.a","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN u USING (a)","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t.a = u.a ON t.b = u.b","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING (a) ON t.b = u.b","reject":true}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b.id = c.id","reject":true}
+{"sql":"SELECT * FROM (a JOIN b)","reject":true}
+{"sql":"SELECT * FROM (a JOIN b ON a.id = b.id","reject":true}
+{"sql":"SELECT * FROM a JOIN (b JOIN c) ON a.id = b.id","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . u","shape":"SELECT * FROM t JOIN u ON t.a = u.u;"}
+{"sql":"SELECT * FROM t JOIN u ON t t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u a","reject":true}
+{"sql":"* SELECT FROM t INNER JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT FROM * t INNER JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t INNER JOIN u ON t . a = u .","reject":true}
+{"sql":"SELECT * FROM t INNER JOIN u ON t . a = u . JOIN","shape":"SELECT * FROM t JOIN u ON t.a = u.JOIN;"}
+{"sql":"SELECT * t FROM LEFT JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT u JOIN ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN u ON . t a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN u ON t . a = d . a","shape":"SELECT * FROM t LEFT JOIN u ON t.a = d.a;"}
+{"sql":"SELECT * FROM t LEFT OUTER JOIN u t ON . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT OUTER JOIN u u ON t . a = u . a","shape":"SELECT * FROM t LEFT JOIN u AS u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t LEFT OUTER JOIN u FROM t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN u ON t . a = u . a","shape":"SELECT * FROM t LEFT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t RIGHT JOIN u ON t . a = b . a","shape":"SELECT * FROM t RIGHT JOIN u ON t.a = b.a;"}
+{"sql":"SELECT * FROM t RIGHT JOIN u u ON t . a = u . a","shape":"SELECT * FROM t RIGHT JOIN u AS u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t RIGHT JOIN u ON t . = a u . a","reject":true}
+{"sql":"SELECT * FROM t t RIGHT JOIN u ON t . a = u . a","shape":"SELECT * FROM t AS t RIGHT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM RIGHT t OUTER JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t . OUTER JOIN u ON t . a = u . a","shape":"SELECT * FROM t.OUTER JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t RIGHT OUTER OUTER JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t RIGHT b JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t FULL JOIN u ON t . = u . a","reject":true}
+{"sql":"SELECT * FROM SELECT FULL JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t FULL JOIN u ON t . a u = . a","reject":true}
+{"sql":"* FROM t FULL JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t FULL OUTER JOIN u ON t a = u . a","reject":true}
+{"sql":"SELECT * FROM t FULL OUTER JOIN u ON . t a = u . a","reject":true}
+{"sql":"SELECT * FROM t FULL OUTER JOIN u ON t . a = u . a","shape":"SELECT * FROM t FULL JOIN u ON t.a = u.a;"}
+{"sql":"SELECT * FROM t FULL OUTER JOIN u ON t . = u . a","reject":true}
+{"sql":"SELECT FROM * t CROSS JOIN u","reject":true}
+{"sql":"SELECT * FROM CROSS t JOIN u","reject":true}
+{"sql":"JOIN * FROM t CROSS JOIN u","reject":true}
+{"sql":"SELECT * FROM t CROSS * u","reject":true}
+{"sql":"SELECT SELECT * FROM t NATURAL JOIN u","reject":true}
+{"sql":"SELECT * FROM t NATURAL . u","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN a","shape":"SELECT * FROM t NATURAL JOIN a;"}
+{"sql":"SELECT * FROM t NATURAL JOIN","reject":true}
+{"sql":"SELECT * id t NATURAL INNER JOIN u","reject":true}
+{"sql":"SELECT * FROM t NATURAL INNER JOIN","reject":true}
+{"sql":"SELECT * FROM t t NATURAL INNER JOIN u","shape":"SELECT * FROM t AS t NATURAL JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL INNER JOIN JOIN u","reject":true}
+{"sql":"SELECT * FROM t NATURAL LEFT JOIN .","reject":true}
+{"sql":"SELECT * FROM FROM t NATURAL LEFT JOIN u","reject":true}
+{"sql":"SELECT * FROM t NATURAL LEFT u","reject":true}
+{"sql":"SELECT * FROM FROM t NATURAL RIGHT JOIN u","reject":true}
+{"sql":"SELECT SELECT * FROM t NATURAL RIGHT JOIN u","reject":true}
+{"sql":"SELECT * FROM t t NATURAL RIGHT JOIN u","shape":"SELECT * FROM t AS t NATURAL RIGHT JOIN u;"}
+{"sql":"SELECT * FROM t NATURAL FULL u JOIN","reject":true}
+{"sql":"SELECT * FROM t NATURAL x JOIN u","reject":true}
+{"sql":"SELECT * FROM t NATURAL FULL JOIN JOIN u","reject":true}
+{"sql":"SELECT * FROM t JOIN u SELECT ( a )","reject":true}
+{"sql":"SELECT * f t JOIN u USING ( a )","reject":true}
+{"sql":"q * FROM t JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING ( ) a","reject":true}
+{"sql":"NATURAL * FROM t JOIN u USING ( a , b )","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING ( a , b","reject":true}
+{"sql":"SELECT * FROM t u USING ( a , b )","reject":true}
+{"sql":"SELECT * FROM t SELECT JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN JOIN USING ( a )","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN u USING ( a a )","reject":true}
+{"sql":"SELECT * * FROM t LEFT JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id JOIN c ON b id . = c . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id JOIN c ON b . id = c . id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id;"}
+{"sql":"SELECT * FROM a JOIN b ON a . id b = . id JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b JOIN a . id = b . id JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id LEFT JOIN c ON b . id = c . a RIGHT JOIN d ON c . id = d . id","shape":"SELECT * FROM ((a JOIN b ON a.id = b.id) LEFT JOIN c ON b.id = c.a) RIGHT JOIN d ON c.id = d.id;"}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id LEFT JOIN c ON b . id = c . id RIGHT JOIN d ON c id . = d . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id LEFT JOIN c ON b . id = c . id RIGHT JOIN d ON c . id = d .","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a id . = b . id LEFT JOIN c ON b . id = c . id RIGHT JOIN d ON c . id = d . id","reject":true}
+{"sql":"SELECT * FROM a LEFT JOIN b ON a . id = b . id LEFT JOIN c ON a . id = c . id LEFT JOIN SELECT ON a . id = d . id","reject":true}
+{"sql":"SELECT * FROM a LEFT JOIN b ON a . id = b . id LEFT JOIN c ON a . id = c . id LEFT JOIN d ON a . id = d id .","reject":true}
+{"sql":"SELECT * FROM a LEFT JOIN b ON a . id = b . id LEFT JOIN c ON a . id = c id LEFT JOIN d ON a . id = d . id","reject":true}
+{"sql":"SELECT * FROM a LEFT JOIN b ON a . id = b . id LEFT JOIN c ON a . id = c . id LEFT JOIN d ON a . id = d .","reject":true}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . ON id a . id = b . id","reject":true}
+{"sql":"= * FROM a JOIN b JOIN c ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN JOIN b c ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN JOIN c ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b . id = c . id ON a . id = b id","reject":true}
+{"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b . id = c . id ON a . = id b . id","reject":true}
+{"sql":"* FROM a LEFT JOIN b JOIN c ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . id ON a . id = b . id","shape":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON ON c . id = d . id ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON c . id = d . id ON b id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b LEFT JOIN c d JOIN ON c . id = d . id ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON . id = d . id ON b . id = c . id ON a . id = b . id","reject":true}
+{"sql":". * FROM ( a JOIN b ON a . id = b . id )","reject":true}
+{"sql":"* SELECT FROM ( a JOIN b ON a . id = b . id )","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = , . id )","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b id )","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . id ) JOIN c c ON b . id = c . id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c AS c ON b.id = c.id;"}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id u b . id ) JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . id ) JOIN c ON b . id = . c id","reject":true}
+{"sql":"SELECT * FROM ( JOIN a b ON a . id = b . id ) JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * a JOIN ( b JOIN c ON b . id = c . id ) ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN ( b JOIN c ON . b id = c . id ) ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN ( b JOIN c ON b . id = c . id ) ON a . id = b b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN ( JOIN c ON b . id = c . id ) ON a . id = b . id","reject":true}
+{"sql":"SELECT FROM * ( a JOIN b ON a . id = b . id ) JOIN ( c JOIN d ON c . id = d . id ) ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . ) JOIN ( c JOIN d ON c . id = d . id ) ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . id ) ) JOIN ( c JOIN d ON c . id = d . id ) ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . id ) JOIN ( c JOIN d ON c id = d . id ) ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM ( ( a JOIN b ON a . id = b . id ) JOIN c ON c . id = c . id ) JOIN d ON c . id = d . id","shape":"SELECT * FROM ((a JOIN b ON a.id = b.id) JOIN c ON c.id = c.id) JOIN d ON c.id = d.id;"}
+{"sql":"SELECT * FROM ( ( ( a JOIN b ON a . id = b . id ) JOIN c ON b . id = c . id ) JOIN d ON c . id = d . id","reject":true}
+{"sql":"SELECT * FROM ( ( . JOIN b ON a . id = b . id ) JOIN c ON b . id = c . id ) JOIN d ON c . id = d . id","reject":true}
+{"sql":"SELECT * ( a JOIN b ON a . id = b . id ) AS x","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON . id = b . id ) AS x","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = . id ) AS x","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b a id ) AS x","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . id ) x AS ( p , q )","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . id = b . id ) AS AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id ) AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON a . = b . id ) AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM a id JOIN b CROSS JOIN c","reject":true}
+{"sql":"SELECT * FROM a CROSS JOIN b JOIN c","reject":true}
+{"sql":"SELECT * FROM CROSS a JOIN b CROSS JOIN c","reject":true}
+{"sql":"SELECT * FROM a CROSS JOIN b CROSS c","reject":true}
+{"sql":"* SELECT FROM a CROSS JOIN b JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a CROSS JOIN b JOIN c ON b . id = = c . id","reject":true}
+{"sql":"SELECT * * FROM a CROSS JOIN b JOIN c ON b . id = c . id","reject":true}
+{"sql":"ON * FROM a CROSS JOIN b JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a NATURAL JOIN b NATURAL JOIN *","reject":true}
+{"sql":"SELECT * FROM a NATURAL a b NATURAL JOIN c","reject":true}
+{"sql":"SELECT * FROM NATURAL a JOIN b NATURAL JOIN c","reject":true}
+{"sql":"* FROM a , b JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a , JOIN b c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a , b JOIN c ON b . id SELECT c . id","reject":true}
+{"sql":"SELECT * FROM a , b JOIN c ON b . . id = c . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = b . id ( c","reject":true}
+{"sql":"SELECT * u a JOIN b ON a . id = b . id , c","reject":true}
+{"sql":"SELECT * FROM a JOIN b ON a . id = . id , c","reject":true}
+{"sql":"SELECT * FROM a a JOIN b ON a . id = b . id , c","shape":"SELECT * FROM a AS a JOIN b ON a.id = b.id, c;"}
+{"sql":"SELECT * FROM a , b CROSS JOIN c JOIN d","reject":true}
+{"sql":"SELECT * FROM a , b CROSS JOIN c , )","reject":true}
+{"sql":"SELECT * FROM a , b CROSS JOIN , c d","reject":true}
+{"sql":"SELECT * FROM a , b JOIN c , d","reject":true}
+{"sql":"SELECT * FROM t AS x JOIN t AS y ON x u a = y . a","reject":true}
+{"sql":"SELECT * FROM t AS AS x JOIN t AS y ON x . a = y . a","reject":true}
+{"sql":"SELECT * FROM t AS x JOIN t AS y ON x . a = y ) a","reject":true}
+{"sql":"SELECT FROM t AS x JOIN t AS y ON x . a = y . a","shape":"SELECT FROM t AS x JOIN t AS y ON x.a = y.a;"}
+{"sql":"SELECT * FROM t x JOIN u y y ON x . a = y . a","reject":true}
+{"sql":"SELECT * FROM t x JOIN u y ON x a . = y . a","reject":true}
+{"sql":"SELECT * FROM t x JOIN u y ON t . a = y . a","shape":"SELECT * FROM t AS x JOIN u AS y ON t.a = y.a;"}
+{"sql":"* FROM t x JOIN u y ON x . a = y . a","reject":true}
+{"sql":"SELECT * FROM t t JOIN ( SELECT a FROM u ) AS x ON t . a = x . a","shape":"SELECT * FROM t AS t JOIN (SELECT a FROM u) AS x ON t.a = x.a;"}
+{"sql":"SELECT * FROM FROM t JOIN ( SELECT a FROM u ) AS x ON t . a = x . a","reject":true}
+{"sql":"SELECT * FROM t JOIN ( SELECT a FROM u ) AS x ON t . a = . a","reject":true}
+{"sql":"SELECT * FROM t JOIN ( SELECT a FROM u ) AS x ON t a = x . a","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t ) AS x JOIN ( SELECT a FROM u ) AS y ON x . a = y . . a","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t ) AS x JOIN ( SELECT a FROM u ) AS ON y x . a = y . a","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t ) AS x JOIN ( SELECT a FROM u ) AS y y ON x . a = y . a","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t ) AS x JOIN SELECT a FROM u ) AS y ON x . a = y . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN ( SELECT a FROM FROM u ) AS x ON t . a = x . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN ( SELECT a FROM u ) AS x ON t a = x . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN ( SELECT a FROM u ) AS x . t . a = x . a","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN ( SELECT a FROM u ) AS ON t . a = x . a","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a AND . t b > u . b","reject":true}
+{"sql":"SELECT * FROM JOIN u ON t . a = u . a AND t . b > u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . . a AND t . b > u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN ON u t . a = u . a AND t . b > u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t a = u . a OR t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a OR t . = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . = a u . a OR t . b = u . b","reject":true}
+{"sql":"SELECT * u t JOIN u ON t . a = u . a OR t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON ( t . a = u . a )","shape":"SELECT * FROM t JOIN u ON (t.a = u.a);"}
+{"sql":"SELECT * FROM t JOIN u ON ( t . a = u u . a )","reject":true}
+{"sql":"SELECT FROM * t JOIN u ON ( t . a = u . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . . a IN ( SELECT id FROM c )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a ( IN SELECT id FROM c )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a IN ( id FROM c )","reject":true}
+{"sql":"SELECT * FROM t JOIN u t . a IN ( SELECT id FROM c )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON EXISTS ( SELECT 1 FROM c WHERE c . id a t . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON EXISTS ( SELECT 1 FROM c WHERE c . id = = t . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON EXISTS ( SELECT 1 FROM c WHERE c . id = t . u )","shape":"SELECT * FROM t JOIN u ON EXISTS (SELECT 1 FROM c WHERE c.id = t.u);"}
+{"sql":"SELECT * FROM t JOIN u ON EXISTS ( SELECT 1 FROM c WHERE c . id t = . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a BETWEEN u . a AND u . b","shape":"SELECT * FROM t JOIN u ON t.a BETWEEN u.a AND u.b;"}
+{"sql":"SELECT ON FROM t JOIN u ON t . a BETWEEN u . a AND u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a BETWEEN u . a AND u b","reject":true}
+{"sql":"SELECT * FROM t t JOIN u ON true","shape":"SELECT * FROM t AS t JOIN u ON TRUE;"}
+{"sql":"SELECT * FROM t JOIN u ON ON true","reject":true}
+{"sql":"SELECT . FROM t JOIN u ON true","reject":true}
+{"sql":"SELECT * FROM t JOIN JOIN u ON true","reject":true}
+{"sql":"SELECT * FROM t JOIN f ( 1 AS ) x ON t . a = x . a","reject":true}
+{"sql":"SELECT * FROM t JOIN f ( 1 ) AS x ON t . a = x id a","reject":true}
+{"sql":"SELECT * FROM t JOIN f ( 1 ) AS x ON t . . a = x . a","reject":true}
+{"sql":"SELECT * t FROM JOIN f ( 1 ) AS x ON t . a = x . a","reject":true}
+{"sql":"SELECT * FROM t CROSS id LATERAL f ( t . a ) AS x","reject":true}
+{"sql":"SELECT * FROM CROSS t JOIN LATERAL f ( t . a ) AS x","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN LATERAL f ( t . a ) AS x x","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN LATERAL f ( t . a ) AS x","shape":"SELECT * FROM t CROSS JOIN LATERAL f(t.a) AS x;"}
+{"sql":"SELECT * FROM t JOIN u USING ( a ) x AS","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING a ( ) AS x","reject":true}
+{"sql":"SELECT * FROM t JOIN ) USING ( a ) AS x","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING USING ( a ) AS x","reject":true}
+{"sql":"SELECT * * FROM t JOIN u","reject":true}
+{"sql":"SELECT * FROM JOIN u","reject":true}
+{"sql":"SELECT * t FROM JOIN u","reject":true}
+{"sql":"SELECT * FROM LEFT JOIN u","reject":true}
+{"sql":"SELECT * SELECT t LEFT JOIN u","reject":true}
+{"sql":"SELECT * FROM t t LEFT JOIN u","reject":true}
+{"sql":"SELECT * FROM t . JOIN u","shape":"SELECT * FROM t.JOIN AS u;"}
+{"sql":"SELECT * FROM FROM t INNER JOIN u","reject":true}
+{"sql":"SELECT * FROM LEFT INNER JOIN u","reject":true}
+{"sql":"SELECT * FROM t t INNER JOIN u","reject":true}
+{"sql":"SELECT * FROM t JOIN x ON","reject":true}
+{"sql":"SELECT * FROM t u JOIN ON","reject":true}
+{"sql":"SELECT * t JOIN u ON","reject":true}
+{"sql":"SELECT FROM * t JOIN u ON","reject":true}
+{"sql":"SELECT FROM * t JOIN u USING","reject":true}
+{"sql":"SELECT * FROM t JOIN u u USING","reject":true}
+{"sql":"SELECT * FROM t JOIN USING u","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING ( )","reject":true}
+{"sql":"* SELECT FROM t JOIN u USING ( )","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING (","reject":true}
+{"sql":"SELECT * FROM t u USING ( )","reject":true}
+{"sql":"SELECT * FROM t JOIN u SELECT ( a","reject":true}
+{"sql":"SELECT SELECT * FROM t JOIN u USING ( a","reject":true}
+{"sql":"SELECT * FROM t u JOIN USING ( a","reject":true}
+{"sql":"SELECT . FROM t JOIN u USING ( a","reject":true}
+{"sql":"SELECT * FROM t t JOIN u USING ( a , )","reject":true}
+{"sql":"SELECT * FROM t u USING ( a , )","reject":true}
+{"sql":"SELECT * = t JOIN u USING ( a , )","reject":true}
+{"sql":"SELECT * FROM . JOIN u USING ( a , )","reject":true}
+{"sql":"SELECT * FROM t JOIN ON t . = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN ON t . a = u ON a","reject":true}
+{"sql":"SELECT * FROM t JOIN ON t a . = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN ON t . a u . a","reject":true}
+{"sql":"SELECT FROM * JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM JOIN u ON t . a u u . a","reject":true}
+{"sql":"SELECT * FROM JOIN t ON t . a = u . a","reject":true}
+{"sql":"SELECT * * FROM JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT u t ON . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT u ON t . a a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT u ON t t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT u ON ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t OUTER JOIN u ON t a . = u . a","reject":true}
+{"sql":"SELECT * FROM t OUTER JOIN u ON t . a = u . . a","reject":true}
+{"sql":"SELECT * FROM t OUTER JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t OUTER JOIN u t ON . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT RIGHT JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT RIGHT JOIN u ON a . a = u . a","reject":true}
+{"sql":"SELECT * FROM t LEFT RIGHT JOIN u ON t . a = u .","reject":true}
+{"sql":"SELECT * FROM t . RIGHT JOIN u ON t . a = u . a","shape":"SELECT * FROM t.RIGHT JOIN u ON t.a = u.a;"}
+{"sql":"SELECT FROM t INNER LEFT JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t INNER LEFT JOIN u ON t . a = u a .","reject":true}
+{"sql":"SELECT * FROM t INNER LEFT JOIN JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t INNER LEFT JOIN u ON t a . = u . a","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u ON t . = a u . a","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u ON . a = u . a","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u ON t . a u . a","reject":true}
+{"sql":"SELECT * FROM t NATURAL u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u USING id a )","reject":true}
+{"sql":"SELECT SELECT * FROM t NATURAL JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM t NATURAL JOIN u u USING ( a )","reject":true}
+{"sql":"SELECT * * FROM t CROSS JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t CROSS u JOIN ON t . a = u . a","reject":true}
+{"sql":"SELECT SELECT * FROM t CROSS JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN u ON . t a = u . a","reject":true}
+{"sql":"SELECT * FROM * CROSS JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN u ( a )","shape":"SELECT * FROM t CROSS JOIN u(a);"}
+{"sql":"SELECT * FROM t CROSS JOIN u u USING ( a )","reject":true}
+{"sql":"SELECT * FROM . CROSS JOIN u USING ( a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a a = u . a ON t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u t . a = u . a ON t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u a . ON t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a RIGHT t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING ( a ) ON t . b = u b .","reject":true}
+{"sql":"SELECT * FROM t JOIN u USING ( a ) t . b = u . b","reject":true}
+{"sql":"SELECT * FROM t JOIN u ( USING a ) ON t . b = u . b","reject":true}
+{"sql":"SELECT * FROM JOIN u USING ( a ) ON t . b = u . b","reject":true}
+{"sql":"SELECT * a FROM JOIN b JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON . b id = c . id","reject":true}
+{"sql":"SELECT * FROM a b JOIN JOIN c ON b . id = c . id","reject":true}
+{"sql":"SELECT * FROM ( a b JOIN )","reject":true}
+{"sql":"SELECT * FROM FROM ( a JOIN b )","reject":true}
+{"sql":"SELECT * FROM ( a b )","reject":true}
+{"sql":"SELECT FROM * ( a JOIN b ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON FROM . id = b . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b ON ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a u ( b JOIN c ) ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN ( b JOIN c JOIN ON a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN ( b JOIN c ) a . id = b . id","reject":true}
+{"sql":"SELECT * FROM a JOIN ( b JOIN c ) ON a . id = b id","reject":true}

@@ -1,0 +1,32 @@
+{"sql":"create table copydml_test (id serial, t text)","shape":"CREATE TABLE copydml_test (id serial, t text);"}
+{"sql":"insert into copydml_test (t) values ('a')","shape":"INSERT INTO copydml_test (t) VALUES ('a');"}
+{"sql":"insert into copydml_test (t) values ('b')","shape":"INSERT INTO copydml_test (t) VALUES ('b');"}
+{"sql":"insert into copydml_test (t) values ('c')","shape":"INSERT INTO copydml_test (t) VALUES ('c');"}
+{"sql":"insert into copydml_test (t) values ('d')","shape":"INSERT INTO copydml_test (t) VALUES ('d');"}
+{"sql":"insert into copydml_test (t) values ('e')","shape":"INSERT INTO copydml_test (t) VALUES ('e');"}
+{"sql":"copy (insert into copydml_test (t) values ('f') returning id) to stdout","shape":"COPY (INSERT INTO copydml_test (t) VALUES ('f') RETURNING id) TO STDOUT;"}
+{"sql":"copy (update copydml_test set t = 'g' where t = 'f' returning id) to stdout","shape":"COPY (UPDATE copydml_test SET t = 'g' WHERE t = 'f' RETURNING id) TO STDOUT;"}
+{"sql":"copy (delete from copydml_test where t = 'g' returning id) to stdout","shape":"COPY (DELETE FROM copydml_test WHERE t = 'g' RETURNING id) TO STDOUT;"}
+{"sql":"copy (insert into copydml_test default values) to stdout","shape":"COPY (INSERT INTO copydml_test DEFAULT VALUES) TO STDOUT;"}
+{"sql":"copy (update copydml_test set t = 'g') to stdout","shape":"COPY (UPDATE copydml_test SET t = 'g') TO STDOUT;"}
+{"sql":"copy (delete from copydml_test) to stdout","shape":"COPY (DELETE FROM copydml_test) TO STDOUT;"}
+{"sql":"create rule qqq as on insert to copydml_test do instead nothing"}
+{"sql":"drop rule qqq on copydml_test"}
+{"sql":"create rule qqq as on insert to copydml_test do also delete from copydml_test"}
+{"sql":"create rule qqq as on insert to copydml_test do instead (delete from copydml_test; delete from copydml_test)"}
+{"sql":"create rule qqq as on insert to copydml_test where new.t <> 'f' do instead delete from copydml_test"}
+{"sql":"create rule qqq as on update to copydml_test do instead nothing"}
+{"sql":"copy (update copydml_test set t = 'f') to stdout","shape":"COPY (UPDATE copydml_test SET t = 'f') TO STDOUT;"}
+{"sql":"create rule qqq as on update to copydml_test do also delete from copydml_test"}
+{"sql":"create rule qqq as on update to copydml_test do instead (delete from copydml_test; delete from copydml_test)"}
+{"sql":"create rule qqq as on update to copydml_test where new.t <> 'f' do instead delete from copydml_test"}
+{"sql":"create rule qqq as on delete to copydml_test do instead nothing"}
+{"sql":"create rule qqq as on delete to copydml_test do also insert into copydml_test default values"}
+{"sql":"create rule qqq as on delete to copydml_test do instead (insert into copydml_test default values; insert into copydml_test default values)"}
+{"sql":"create rule qqq as on delete to copydml_test where old.t <> 'f' do instead insert into copydml_test default values"}
+{"sql":"create rule qqq as on insert to copydml_test do instead notify copydml_test"}
+{"sql":"create function qqq_trig() returns trigger as $$\nbegin\nif tg_op in ('INSERT', 'UPDATE') then\n    raise notice '% % %', tg_when, tg_op, new.id;\n    return new;\nelse\n    raise notice '% % %', tg_when, tg_op, old.id;\n    return old;\nend if;\nend\n$$ language plpgsql","shape":"CREATE FUNCTION qqq_trig() RETURNS trigger AS '\nbegin\nif tg_op in (''INSERT'', ''UPDATE'') then\n    raise notice ''% % %'', tg_when, tg_op, new.id;\n    return new;\nelse\n    raise notice ''% % %'', tg_when, tg_op, old.id;\n    return old;\nend if;\nend\n' LANGUAGE plpgsql;"}
+{"sql":"create trigger qqqbef before insert or update or delete on copydml_test\n    for each row execute procedure qqq_trig()","shape":"CREATE TRIGGER qqqbef BEFORE INSERT OR UPDATE OR DELETE ON copydml_test FOR EACH ROW EXECUTE FUNCTION qqq_trig();"}
+{"sql":"create trigger qqqaf after insert or update or delete on copydml_test\n    for each row execute procedure qqq_trig()","shape":"CREATE TRIGGER qqqaf AFTER INSERT OR UPDATE OR DELETE ON copydml_test FOR EACH ROW EXECUTE FUNCTION qqq_trig();"}
+{"sql":"drop table copydml_test","shape":"DROP TABLE copydml_test;"}
+{"sql":"drop function qqq_trig()"}

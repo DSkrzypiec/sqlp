@@ -1,0 +1,13 @@
+{"sql":"INSERT INTO t2 SELECT a+5, f1(b) FROM t1"}
+{"sql":"DELETE FROM t2 WHERE a > 5"}
+{"sql":"pragma count_changes=0"}
+{"sql":"SELECT sql(1, 'DELETE FROM t2 WHERE a = '||a ) FROM t2 WHERE a>5"}
+{"sql":"SELECT a from t2"}
+{"sql":"INSERT INTO t2 SELECT a+5, sql(a==3,\n        'INSERT INTO t2 SELECT a+10, f2(b) FROM t1'\n    ) FROM t1"}
+{"sql":"INSERT INTO t2 SELECT a+5, sql(a==3,\n        'INSERT INTO t2 SELECT a+10, b FROM t1'\n    ) FROM t1"}
+{"sql":"SELECT a FROM t2 ORDER BY a+0"}
+{"sql":"INSERT INTO t2 SELECT a+5, b FROM t1"}
+{"sql":"INSERT INTO t2 SELECT a+15, b FROM t1"}
+{"sql":"INSERT INTO t2 SELECT a+25, b FROM t1"}
+{"sql":"SELECT a FROM t2 WHERE (a%5)==0 ORDER BY a+0"}
+{"sql":"SELECT \n        (SELECT sum(a) FROM t2)==(SELECT sum(a*5-10) FROM t2 WHERE (a%5)==0)"}

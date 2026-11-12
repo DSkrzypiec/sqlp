@@ -1,0 +1,27 @@
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<100000 )\n  INSERT INTO t1 SELECT randomblob(100), randomblob(100) FROM X"}
+{"sql":"PRAGMA temp.integrity_check"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<1000 )\n  INSERT INTO t1 SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"UPDATE t1 SET b=randomblob(100) WHERE (rowid%10)==0"}
+{"sql":"UPDATE t1 SET b=randomblob(100) WHERE (rowid%10)==1"}
+{"sql":"UPDATE t1 SET b=randomblob(100) WHERE (rowid%10)==2"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<10 )\n  INSERT INTO t1 SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"UPDATE t1 SET b=randomblob(100)"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<500 )\n  INSERT INTO t2 SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"UPDATE t1 SET a=2"}
+{"sql":"UPDATE t2 SET a=randomblob(100)"}
+{"sql":"UPDATE t1 SET x='two'"}
+{"sql":"PRAGMA auto_vacuum=INCREMENTAL"}
+{"sql":"INSERT INTO t1 SELECT x FROM t1"}
+{"sql":"PRAGMA incremental_vacuum(4)"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<20 )\n  INSERT INTO t2 SELECT randomblob(100), randomblob(100) FROM x ORDER BY 1, 2"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<100 )\n    INSERT INTO t1 SELECT randomblob(100), randomblob(100) FROM x ORDER BY 1, 2"}
+{"sql":"CREATE INDEX i1 ON tx(a)"}
+{"sql":"CREATE INDEX i2 ON tx(b)"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<1000 )\n      INSERT INTO tx SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"DELETE FROM tx WHERE (random()%3)==0"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<400 )\n          INSERT INTO tx SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<500 )\n        INSERT INTO tx SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"PRAGMA cache_size = 50"}
+{"sql":"CREATE TABLE t1(a, b, PRIMARY KEY(a)) WITHOUT ROWID"}
+{"sql":"WITH x(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<500 )\n      INSERT INTO t1 SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"PRAGMA mmap_size = 512000"}

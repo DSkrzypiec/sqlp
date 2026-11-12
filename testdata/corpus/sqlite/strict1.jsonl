@@ -1,0 +1,56 @@
+{"sql":"CREATE TABLE t1(a) STRICT"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY) STRICT, WITHOUT ROWID"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY) WITHOUT ROWID, STRICT"}
+{"sql":"CREATE TABLE t1(a BANJO PRIMARY KEY) WITHOUT ROWID, STRICT"}
+{"sql":"CREATE TABLE t1(a TEXT PRIMARY KEY, b INT, c INTEGER, d REAL, e BLOB, f DATE) strict"}
+{"sql":"CREATE TABLE t1(a TEXT PRIMARY KEY, b INT, c INTEGER, d REAL, e BLOB, f TEXT(50)) WITHOUT ROWID, STRICT"}
+{"sql":"CREATE TABLE t1(\n    a INT,\n    b INTEGER,\n    c BLOB,\n    d TEXT,\n    e REAL\n  ) STRICT"}
+{"sql":"SELECT strict FROM pragma_table_list('t1')"}
+{"sql":"INSERT INTO t1(b) VALUES('xyz')"}
+{"sql":"INSERT INTO t1(c) VALUES('xyz')"}
+{"sql":"INSERT INTO t1(d) VALUES(x'3142536475')"}
+{"sql":"INSERT INTO t1(e) VALUES('xyz')"}
+{"sql":"INSERT INTO t1(a, b) VALUES(1,2),('3','4'),(5.0, 6.0),(null,null)"}
+{"sql":"INSERT INTO t1(a) VALUES(1.2)"}
+{"sql":"INSERT INTO t1(a) VALUES(x'313233')"}
+{"sql":"INSERT INTO t1(b) VALUES(1.2)"}
+{"sql":"INSERT INTO t1(b) VALUES(x'313233')"}
+{"sql":"INSERT INTO t1(c) VALUES(x'313233'), (NULL)"}
+{"sql":"SELECT typeof(c), c FROM t1"}
+{"sql":"INSERT INTO t1(c) VALUES('456')"}
+{"sql":"INSERT INTO t1(d) VALUES('xyz'),(4),(5.5),(NULL)"}
+{"sql":"SELECT typeof(d), d FROM t1"}
+{"sql":"INSERT INTO t1(d) VALUES(x'4567')"}
+{"sql":"INSERT INTO t1(e) VALUES(1),(2.5),('3'),('4.5'),(6.0),(NULL)"}
+{"sql":"SELECT typeof(e), e FROM t1"}
+{"sql":"INSERT INTO t1(e) VALUES(x'3456')"}
+{"sql":"CREATE TABLE t4(\n      a INT AS (b*2) VIRTUAL,\n      b INT AS (c*2) STORED,\n      c INT PRIMARY KEY\n    ) STRICT"}
+{"sql":"INSERT INTO t4(c) VALUES(1)"}
+{"sql":"ALTER TABLE t4 ADD COLUMN d VARCHAR"}
+{"sql":"ALTER TABLE t4 ADD COLUMN d"}
+{"sql":"CREATE TABLE csv_import_table (\n    \"debit\" TEXT,\n    \"credit\" TEXT\n  )"}
+{"sql":"INSERT INTO csv_import_table VALUES ('', '250.00')"}
+{"sql":"CREATE TABLE IF NOT EXISTS transactions (\n      debit REAL,\n      credit REAL,\n      amount REAL GENERATED ALWAYS AS (ifnull(credit, 0.0) - ifnull(debit, 0.0))\n  ) STRICT"}
+{"sql":"INSERT INTO transactions\n  SELECT\n      nullif(debit, '') AS debit,\n      nullif(credit, '') AS credit\n  FROM csv_import_table"}
+{"sql":"SELECT * FROM transactions"}
+{"sql":"CREATE TABLE t1(x REAL, y REAL AS (x)) STRICT"}
+{"sql":"INSERT INTO t1 VALUES(5),(4611686018427387904)"}
+{"sql":"CREATE TABLE strict (\n    k INTEGER PRIMARY KEY,\n    c1 REAL AS(if(k=11,1.5, k=12,2, k=13,'x', k=14,x'34', 0.0))   STORED,\n    c2 INT  AS(if(k=21,1.5, k=22,2, k=23,'x', k=24,x'34', 0))     STORED,\n    c3 TEXT AS(if(k=31,1.5, k=32,2, k=33,'x', k=34,x'34', 'x'))   STORED,\n    c4 BLOB AS(if(k=41,1.5, k=42,2, k=43,'x', k=44,x'34', x'00')) STORED,\n    c5 ANY  AS(if(k=51,1.5, k=52,2, k=53,'x', k=54,x'34', 0))     STORED\n  ) STRICT"}
+{"sql":"INSERT INTO strict(k) VALUES(11)"}
+{"sql":"INSERT INTO strict(k) VALUES(12)"}
+{"sql":"INSERT INTO strict(k) VALUES(22)"}
+{"sql":"INSERT INTO strict(k) VALUES(31)"}
+{"sql":"INSERT INTO strict(k) VALUES(32)"}
+{"sql":"INSERT INTO strict(k) VALUES(33)"}
+{"sql":"INSERT INTO strict(k) VALUES(44)"}
+{"sql":"INSERT INTO strict(k) VALUES(13)"}
+{"sql":"INSERT INTO strict(k) VALUES(14)"}
+{"sql":"INSERT INTO strict(k) VALUES(21)"}
+{"sql":"INSERT INTO strict(k) VALUES(23)"}
+{"sql":"INSERT INTO strict(k) VALUES(24)"}
+{"sql":"INSERT INTO strict(k) VALUES(34)"}
+{"sql":"INSERT INTO strict(k) VALUES(41)"}
+{"sql":"INSERT INTO strict(k) VALUES(42)"}
+{"sql":"INSERT INTO strict(k) VALUES(43)"}
+{"sql":"DROP TABLE strict"}
+{"sql":"CREATE TABLE strict (\n    k INTEGER PRIMARY KEY,\n    c1 REAL AS(if(k=11,1.5, k=12,2, k=13,'x', k=14,x'34', 0.0))   VIRTUAL,\n    c2 INT  AS(if(k=21,1.5, k=22,2, k=23,'x', k=24,x'34', 0))     VIRTUAL,\n    c3 TEXT AS(if(k=31,1.5, k=32,2, k=33,'x', k=34,x'34', 'x'))   VIRTUAL,\n    c4 BLOB AS(if(k=41,1.5, k=42,2, k=43,'x', k=44,x'34', x'00')) VIRTUAL,\n    c5 ANY  AS(if(k=51,1.5, k=52,2, k=53,'x', k=54,x'34', 0))     VIRTUAL\n  ) STRICT"}

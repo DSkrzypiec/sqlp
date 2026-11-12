@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES ('a')"}
+{"sql":"INSERT INTO t1 VALUES ('A')"}
+{"sql":"SELECT count(CASE WHEN x='a' THEN 1 END),\n           count(CASE WHEN x='A' THEN 1 END)\n      FROM t1"}

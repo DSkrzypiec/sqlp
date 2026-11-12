@@ -1,0 +1,17 @@
+{"sql":"INSERT INTO t1 VALUES(randomblob(202))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(202) FROM t1"}
+{"sql":"CREATE TABLE t1(t,u,v,w,x,y,z)"}
+{"sql":"INSERT INTO t1 VALUES(\n      randomblob(30), randomblob(30), randomblob(30), randomblob(30),\n      randomblob(30), randomblob(30), randomblob(30)\n    )"}
+{"sql":"INSERT INTO t1 SELECT \n      randomblob(30), randomblob(30), randomblob(30), randomblob(30),\n      randomblob(30), randomblob(30), randomblob(30) FROM t1"}
+{"sql":"CREATE INDEX i1 ON t1(t,u,v,w,x,y,z)"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(11000))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11001) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11002) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11003) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11004) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11005) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11006) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11007) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11008) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT randomblob(11009) FROM t1"}
+{"sql":"CREATE TABLE reallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallylongname(a PRIMARY KEY) WITHOUT ROWID"}

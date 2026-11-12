@@ -1,0 +1,54 @@
+{"sql":"UPDATE onek\n   SET unique1 = onek.unique1 + 1","shape":"UPDATE onek SET unique1 = onek.unique1 + 1;"}
+{"sql":"UPDATE onek\n   SET unique1 = onek.unique1 - 1","shape":"UPDATE onek SET unique1 = onek.unique1 - 1;"}
+{"sql":"SELECT two, stringu1, ten, string4\n   INTO TABLE tmp\n   FROM onek","shape":"SELECT two, stringu1, ten, string4 INTO tmp FROM onek;"}
+{"sql":"UPDATE tmp\n   SET stringu1 = reverse_name(onek.stringu1)\n   FROM onek\n   WHERE onek.stringu1 = 'JBAAAA' and\n\t  onek.stringu1 = tmp.stringu1","shape":"UPDATE tmp SET stringu1 = reverse_name(onek.stringu1) FROM onek WHERE (onek.stringu1 = 'JBAAAA') AND (onek.stringu1 = tmp.stringu1);"}
+{"sql":"UPDATE tmp\n   SET stringu1 = reverse_name(onek2.stringu1)\n   FROM onek2\n   WHERE onek2.stringu1 = 'JCAAAA' and\n\t  onek2.stringu1 = tmp.stringu1","shape":"UPDATE tmp SET stringu1 = reverse_name(onek2.stringu1) FROM onek2 WHERE (onek2.stringu1 = 'JCAAAA') AND (onek2.stringu1 = tmp.stringu1);"}
+{"sql":"CREATE TEMP TABLE onek_copy (LIKE onek)","shape":"CREATE TEMPORARY TABLE onek_copy (LIKE onek);"}
+{"sql":"SELECT * FROM onek EXCEPT ALL SELECT * FROM onek_copy","shape":"SELECT * FROM onek EXCEPT ALL SELECT * FROM onek_copy;"}
+{"sql":"SELECT * FROM onek_copy EXCEPT ALL SELECT * FROM onek","shape":"SELECT * FROM onek_copy EXCEPT ALL SELECT * FROM onek;"}
+{"sql":"CREATE TEMP TABLE stud_emp_copy (LIKE stud_emp)","shape":"CREATE TEMPORARY TABLE stud_emp_copy (LIKE stud_emp);"}
+{"sql":"SELECT * FROM stud_emp_copy","shape":"SELECT * FROM stud_emp_copy;"}
+{"sql":"CREATE TABLE hobbies_r (\n\tname\t\ttext,\n\tperson \t\ttext\n)","shape":"CREATE TABLE hobbies_r (name text, person text);"}
+{"sql":"CREATE TABLE equipment_r (\n\tname \t\ttext,\n\thobby\t\ttext\n)","shape":"CREATE TABLE equipment_r (name text, hobby text);"}
+{"sql":"INSERT INTO hobbies_r (name, person)\n   SELECT 'posthacking', p.name\n   FROM person* p\n   WHERE p.name = 'mike' or p.name = 'jeff'","shape":"INSERT INTO hobbies_r (name, person) SELECT 'posthacking', p.name FROM person AS p WHERE (p.name = 'mike') OR (p.name = 'jeff');"}
+{"sql":"INSERT INTO hobbies_r (name, person)\n   SELECT 'basketball', p.name\n   FROM person p\n   WHERE p.name = 'joe' or p.name = 'sally'","shape":"INSERT INTO hobbies_r (name, person) SELECT 'basketball', p.name FROM person AS p WHERE (p.name = 'joe') OR (p.name = 'sally');"}
+{"sql":"INSERT INTO hobbies_r (name) VALUES ('skywalking')","shape":"INSERT INTO hobbies_r (name) VALUES ('skywalking');"}
+{"sql":"INSERT INTO equipment_r (name, hobby) VALUES ('advil', 'posthacking')","shape":"INSERT INTO equipment_r (name, hobby) VALUES ('advil', 'posthacking');"}
+{"sql":"INSERT INTO equipment_r (name, hobby) VALUES ('peet''s coffee', 'posthacking')","shape":"INSERT INTO equipment_r (name, hobby) VALUES ('peet''s coffee', 'posthacking');"}
+{"sql":"INSERT INTO equipment_r (name, hobby) VALUES ('hightops', 'basketball')","shape":"INSERT INTO equipment_r (name, hobby) VALUES ('hightops', 'basketball');"}
+{"sql":"INSERT INTO equipment_r (name, hobby) VALUES ('guts', 'skywalking')","shape":"INSERT INTO equipment_r (name, hobby) VALUES ('guts', 'skywalking');"}
+{"sql":"CREATE FUNCTION hobbies(person)\n   RETURNS setof hobbies_r\n   AS 'select * from hobbies_r where person = $1.name'\n   LANGUAGE SQL","shape":"CREATE FUNCTION hobbies(person) RETURNS SETOF hobbies_r AS 'select * from hobbies_r where person = $1.name' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION hobby_construct(text, text)\n   RETURNS hobbies_r\n   AS 'select $1 as name, $2 as hobby'\n   LANGUAGE SQL","shape":"CREATE FUNCTION hobby_construct(text, text) RETURNS hobbies_r AS 'select $1 as name, $2 as hobby' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION hobby_construct_named(name text, hobby text)\n   RETURNS hobbies_r\n   AS 'select name, hobby'\n   LANGUAGE SQL","shape":"CREATE FUNCTION hobby_construct_named(name text, hobby text) RETURNS hobbies_r AS 'select name, hobby' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION hobbies_by_name(hobbies_r.name%TYPE)\n   RETURNS hobbies_r.person%TYPE\n   AS 'select person from hobbies_r where name = $1'\n   LANGUAGE SQL","shape":"CREATE FUNCTION hobbies_by_name(hobbies_r.name%TYPE) RETURNS hobbies_r.person%TYPE AS 'select person from hobbies_r where name = $1' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment(hobbies_r)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where hobby = $1.name'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment(hobbies_r) RETURNS SETOF equipment_r AS 'select * from equipment_r where hobby = $1.name' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment_named(hobby hobbies_r)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where equipment_r.hobby = equipment_named.hobby.name'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment_named(hobby hobbies_r) RETURNS SETOF equipment_r AS 'select * from equipment_r where equipment_r.hobby = equipment_named.hobby.name' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment_named_ambiguous_1a(hobby hobbies_r)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where hobby = equipment_named_ambiguous_1a.hobby.name'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment_named_ambiguous_1a(hobby hobbies_r) RETURNS SETOF equipment_r AS 'select * from equipment_r where hobby = equipment_named_ambiguous_1a.hobby.name' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment_named_ambiguous_1b(hobby hobbies_r)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where equipment_r.hobby = hobby.name'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment_named_ambiguous_1b(hobby hobbies_r) RETURNS SETOF equipment_r AS 'select * from equipment_r where equipment_r.hobby = hobby.name' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment_named_ambiguous_1c(hobby hobbies_r)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where hobby = hobby.name'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment_named_ambiguous_1c(hobby hobbies_r) RETURNS SETOF equipment_r AS 'select * from equipment_r where hobby = hobby.name' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment_named_ambiguous_2a(hobby text)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where hobby = equipment_named_ambiguous_2a.hobby'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment_named_ambiguous_2a(hobby text) RETURNS SETOF equipment_r AS 'select * from equipment_r where hobby = equipment_named_ambiguous_2a.hobby' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION equipment_named_ambiguous_2b(hobby text)\n   RETURNS setof equipment_r\n   AS 'select * from equipment_r where equipment_r.hobby = hobby'\n   LANGUAGE SQL","shape":"CREATE FUNCTION equipment_named_ambiguous_2b(hobby text) RETURNS SETOF equipment_r AS 'select * from equipment_r where equipment_r.hobby = hobby' LANGUAGE SQL;"}
+{"sql":"SELECT p.name, name(p.hobbies) FROM ONLY person p","shape":"SELECT p.name, name(p.hobbies) FROM ONLY person AS p;"}
+{"sql":"SELECT p.name, name(p.hobbies) FROM person* p","shape":"SELECT p.name, name(p.hobbies) FROM person AS p;"}
+{"sql":"SELECT DISTINCT hobbies_r.name, name(hobbies_r.equipment) FROM hobbies_r\n  ORDER BY 1,2","shape":"SELECT DISTINCT hobbies_r.name, name(hobbies_r.equipment) FROM hobbies_r ORDER BY 1, 2;"}
+{"sql":"SELECT hobbies_r.name, (hobbies_r.equipment).name FROM hobbies_r","shape":"SELECT hobbies_r.name, (hobbies_r.equipment).name FROM hobbies_r;"}
+{"sql":"SELECT p.name, name(p.hobbies), name(equipment(p.hobbies)) FROM ONLY person p","shape":"SELECT p.name, name(p.hobbies), name(equipment(p.hobbies)) FROM ONLY person AS p;"}
+{"sql":"SELECT p.name, name(p.hobbies), name(equipment(p.hobbies)) FROM person* p","shape":"SELECT p.name, name(p.hobbies), name(equipment(p.hobbies)) FROM person AS p;"}
+{"sql":"SELECT name(equipment(p.hobbies)), p.name, name(p.hobbies) FROM ONLY person p","shape":"SELECT name(equipment(p.hobbies)), p.name, name(p.hobbies) FROM ONLY person AS p;"}
+{"sql":"SELECT (p.hobbies).equipment.name, p.name, name(p.hobbies) FROM person* p","shape":"SELECT (p.hobbies).equipment.name, p.name, name(p.hobbies) FROM person AS p;"}
+{"sql":"SELECT (p.hobbies).equipment.name, name(p.hobbies), p.name FROM ONLY person p","shape":"SELECT (p.hobbies).equipment.name, name(p.hobbies), p.name FROM ONLY person AS p;"}
+{"sql":"SELECT name(equipment(p.hobbies)), name(p.hobbies), p.name FROM person* p","shape":"SELECT name(equipment(p.hobbies)), name(p.hobbies), p.name FROM person AS p;"}
+{"sql":"SELECT name(equipment(hobby_construct(text 'skywalking', text 'mer')))","shape":"SELECT name(equipment(hobby_construct(text 'skywalking', text 'mer')));"}
+{"sql":"SELECT name(equipment(hobby_construct_named(text 'skywalking', text 'mer')))","shape":"SELECT name(equipment(hobby_construct_named(text 'skywalking', text 'mer')));"}
+{"sql":"SELECT name(equipment_named(hobby_construct_named(text 'skywalking', text 'mer')))","shape":"SELECT name(equipment_named(hobby_construct_named(text 'skywalking', text 'mer')));"}
+{"sql":"SELECT name(equipment_named_ambiguous_1a(hobby_construct_named(text 'skywalking', text 'mer')))","shape":"SELECT name(equipment_named_ambiguous_1a(hobby_construct_named(text 'skywalking', text 'mer')));"}
+{"sql":"SELECT name(equipment_named_ambiguous_1b(hobby_construct_named(text 'skywalking', text 'mer')))","shape":"SELECT name(equipment_named_ambiguous_1b(hobby_construct_named(text 'skywalking', text 'mer')));"}
+{"sql":"SELECT name(equipment_named_ambiguous_1c(hobby_construct_named(text 'skywalking', text 'mer')))","shape":"SELECT name(equipment_named_ambiguous_1c(hobby_construct_named(text 'skywalking', text 'mer')));"}
+{"sql":"SELECT name(equipment_named_ambiguous_2a(text 'skywalking'))","shape":"SELECT name(equipment_named_ambiguous_2a(text 'skywalking'));"}
+{"sql":"SELECT name(equipment_named_ambiguous_2b(text 'skywalking'))","shape":"SELECT name(equipment_named_ambiguous_2b(text 'skywalking'));"}
+{"sql":"SELECT hobbies_by_name('basketball')","shape":"SELECT hobbies_by_name('basketball');"}
+{"sql":"SELECT name, overpaid(emp.*) FROM emp","shape":"SELECT name, overpaid(emp.*) FROM emp;"}
+{"sql":"SELECT * FROM equipment(ROW('skywalking', 'mer'))","shape":"SELECT * FROM equipment(ROW('skywalking', 'mer'));"}
+{"sql":"SELECT name(equipment(ROW('skywalking', 'mer')))","shape":"SELECT name(equipment(ROW('skywalking', 'mer')));"}
+{"sql":"SELECT *, name(equipment(h.*)) FROM hobbies_r h","shape":"SELECT *, name(equipment(h.*)) FROM hobbies_r AS h;"}
+{"sql":"SELECT *, (equipment(CAST((h.*) AS hobbies_r))).name FROM hobbies_r h","shape":"SELECT *, (equipment(CAST((h.*) AS hobbies_r))).name FROM hobbies_r AS h;"}

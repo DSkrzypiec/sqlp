@@ -1,0 +1,6 @@
+{"sql":"PRAGMA journal_mode = truncate"}
+{"sql":"CREATE TABLE t2(a UNIQUE, b UNIQUE)"}
+{"sql":"INSERT INTO t2 VALUES(a_string(200), a_string(300))"}
+{"sql":"INSERT INTO t2 SELECT a_string(200), a_string(300) FROM t2"}
+{"sql":"INSERT INTO t2 SELECT randomblob(200), randomblob(300) FROM t2"}
+{"sql":"INSERT INTO t1 VALUES(3.14159)"}

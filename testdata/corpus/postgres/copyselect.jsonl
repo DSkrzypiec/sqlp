@@ -1,0 +1,21 @@
+{"sql":"create table test1 (id serial, t text)","shape":"CREATE TABLE test1 (id serial, t text);"}
+{"sql":"insert into test1 (t) values ('a')","shape":"INSERT INTO test1 (t) VALUES ('a');"}
+{"sql":"insert into test1 (t) values ('b')","shape":"INSERT INTO test1 (t) VALUES ('b');"}
+{"sql":"insert into test1 (t) values ('c')","shape":"INSERT INTO test1 (t) VALUES ('c');"}
+{"sql":"insert into test1 (t) values ('d')","shape":"INSERT INTO test1 (t) VALUES ('d');"}
+{"sql":"insert into test1 (t) values ('e')","shape":"INSERT INTO test1 (t) VALUES ('e');"}
+{"sql":"create table test2 (id serial, t text)","shape":"CREATE TABLE test2 (id serial, t text);"}
+{"sql":"insert into test2 (t) values ('A')","shape":"INSERT INTO test2 (t) VALUES ('A');"}
+{"sql":"insert into test2 (t) values ('B')","shape":"INSERT INTO test2 (t) VALUES ('B');"}
+{"sql":"insert into test2 (t) values ('C')","shape":"INSERT INTO test2 (t) VALUES ('C');"}
+{"sql":"insert into test2 (t) values ('D')","shape":"INSERT INTO test2 (t) VALUES ('D');"}
+{"sql":"insert into test2 (t) values ('E')","shape":"INSERT INTO test2 (t) VALUES ('E');"}
+{"sql":"create view v_test1\nas select 'v_'||t from test1","shape":"CREATE VIEW v_test1 AS SELECT 'v_' || t FROM test1;"}
+{"sql":"copy test1 to stdout","shape":"COPY test1 TO STDOUT;"}
+{"sql":"copy v_test1 to stdout","shape":"COPY v_test1 TO STDOUT;"}
+{"sql":"copy (select t from test1 where id=1) to stdout","shape":"COPY (SELECT t FROM test1 WHERE id = 1) TO STDOUT;"}
+{"sql":"copy (select t from test1 where id=3 for update) to stdout","shape":"COPY (SELECT t FROM test1 WHERE id = 3 FOR UPDATE) TO STDOUT;"}
+{"sql":"copy (select t into temp test3 from test1 where id=3) to stdout","shape":"COPY (SELECT t INTO TEMPORARY test3 FROM test1 WHERE id = 3) TO STDOUT;"}
+{"sql":"copy (select * from test1) from stdin","reject":true}
+{"sql":"2\nselect * from test3","reject":true}
+{"sql":"drop table test3","shape":"DROP TABLE test3;"}

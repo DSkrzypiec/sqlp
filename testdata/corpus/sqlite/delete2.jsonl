@@ -1,0 +1,8 @@
+{"sql":"CREATE TABLE q(s string, id string, constraint pk_q primary key(id))"}
+{"sql":"INSERT INTO q(s,id) VALUES('hello','id.1')"}
+{"sql":"INSERT INTO q(s,id) VALUES('goodbye','id.2')"}
+{"sql":"INSERT INTO q(s,id) VALUES('again','id.3')"}
+{"sql":"SELECT * FROM q"}
+{"sql":"SELECT * FROM q WHERE id='id.1'"}
+{"sql":"DELETE FROM q WHERE rowid=1"}
+{"sql":"INSERT INTO t2 VALUES(5, 6)"}

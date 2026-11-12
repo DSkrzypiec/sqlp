@@ -1,0 +1,26 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3"}
+{"sql":"INSERT INTO t1 VALUES('hello')"}
+{"sql":"INSERT INTO t1 VALUES('world')"}
+{"sql":"INSERT INTO t1(t1) VALUES('nodesize=24')"}
+{"sql":"UPDATE t1_segdir SET root = X'FFFFFFFFFFFFFFFF'"}
+{"sql":"UPDATE t1_stat SET value = X'0000'"}
+{"sql":"SELECT matchinfo(t1, 'nxa') FROM t1 WHERE t1 MATCH 't*'"}
+{"sql":"UPDATE t1_stat SET value = NULL"}
+{"sql":"CREATE VIRTUAL TABLE f using fts3(a,b)"}
+{"sql":"CREATE TABLE f_stat(id INTEGER PRIMARY KEY, value BLOB)"}
+{"sql":"INSERT INTO f_segdir VALUES (2000, 0,0,0, '16', '')"}
+{"sql":"INSERT INTO f_segdir VALUES (1999, 0,0,0, '0 18',\n                               x'000131030102000103323334050101010200')"}
+{"sql":"INSERT INTO f_segments (blockid) values (16)"}
+{"sql":"INSERT INTO f_segments values (0, x'')"}
+{"sql":"INSERT INTO f_stat VALUES (1,x'cf0f01')"}
+{"sql":"INSERT INTO f(f) VALUES ('merge=1')"}
+{"sql":"CREATE VIRTUAL TABLE f USING fts3(a,b)"}
+{"sql":"INSERT INTO f_segdir VALUES (0,0,1,0,'0 0',x'01010101020101')"}
+{"sql":"SELECT  matchinfo( f , 'pcx')  FROM f WHERE b MATCH x'c533'"}
+{"sql":"CREATE VIRTUAL TABLE f USING fts3(a)"}
+{"sql":"INSERT INTO f(f) VALUES('nodesize=24')"}
+{"sql":"INSERT INTO f VALUES('abcdefghijklmnopqrstuvwxyz0123456789')"}
+{"sql":"INSERT INTO f VALUES('abcdefghijklmnopqrstuvwxyz012345678X')"}
+{"sql":"SELECT count(*) FROM f_segments"}
+{"sql":"UPDATE f_segments SET block = (\n    SELECT block FROM f_segments WHERE blockid=1\n  ) WHERE blockid=2"}
+{"sql":"INSERT INTO f(f) VALUES('merge=2,2')"}

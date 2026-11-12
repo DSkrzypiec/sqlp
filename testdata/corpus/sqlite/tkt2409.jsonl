@@ -1,0 +1,3 @@
+{"sql":"CREATE TABLE t1(x TEXT UNIQUE NOT NULL, y BLOB)"}
+{"sql":"PRAGMA cache_size=20"}
+{"sql":"CREATE TABLE t1 (x TEXT UNIQUE NOT NULL)"}

@@ -1,0 +1,194 @@
+{"sql":"CREATE TABLE vactst (i INT)","shape":"CREATE TABLE vactst (i INT);"}
+{"sql":"INSERT INTO vactst VALUES (1)","shape":"INSERT INTO vactst VALUES (1);"}
+{"sql":"INSERT INTO vactst SELECT * FROM vactst","shape":"INSERT INTO vactst SELECT * FROM vactst;"}
+{"sql":"INSERT INTO vactst VALUES (0)","shape":"INSERT INTO vactst VALUES (0);"}
+{"sql":"SELECT count(*) FROM vactst","shape":"SELECT count(*) FROM vactst;"}
+{"sql":"DELETE FROM vactst WHERE i != 0","shape":"DELETE FROM vactst WHERE i != 0;"}
+{"sql":"SELECT * FROM vactst","shape":"SELECT * FROM vactst;"}
+{"sql":"VACUUM FULL vactst","shape":"VACUUM FULL vactst;"}
+{"sql":"UPDATE vactst SET i = i + 1","shape":"UPDATE vactst SET i = i + 1;"}
+{"sql":"VACUUM (FULL) vactst","shape":"VACUUM (FULL) vactst;"}
+{"sql":"DELETE FROM vactst","shape":"DELETE FROM vactst;"}
+{"sql":"VACUUM (FULL, FREEZE) vactst","shape":"VACUUM (FULL, FREEZE) vactst;"}
+{"sql":"VACUUM (ANALYZE, FULL) vactst","shape":"VACUUM (ANALYZE, FULL) vactst;"}
+{"sql":"CREATE TABLE vaccluster (i INT PRIMARY KEY)","shape":"CREATE TABLE vaccluster (i INT PRIMARY KEY);"}
+{"sql":"ALTER TABLE vaccluster CLUSTER ON vaccluster_pkey"}
+{"sql":"CLUSTER vaccluster"}
+{"sql":"CREATE FUNCTION do_analyze() RETURNS VOID VOLATILE LANGUAGE SQL\n\tAS 'ANALYZE pg_am'","shape":"CREATE FUNCTION do_analyze() RETURNS VOID VOLATILE LANGUAGE SQL AS 'ANALYZE pg_am';"}
+{"sql":"CREATE FUNCTION wrap_do_analyze(c INT) RETURNS INT IMMUTABLE LANGUAGE SQL\n\tAS 'SELECT $1 FROM do_analyze()'","shape":"CREATE FUNCTION wrap_do_analyze(c INT) RETURNS INT IMMUTABLE LANGUAGE SQL AS 'SELECT $1 FROM do_analyze()';"}
+{"sql":"CREATE INDEX ON vaccluster(wrap_do_analyze(i))","shape":"CREATE INDEX ON vaccluster (wrap_do_analyze(i));"}
+{"sql":"INSERT INTO vaccluster VALUES (1), (2)","shape":"INSERT INTO vaccluster VALUES (1), (2);"}
+{"sql":"ANALYZE vaccluster","shape":"ANALYZE vaccluster;"}
+{"sql":"INSERT INTO vactst SELECT generate_series(1, 300)","shape":"INSERT INTO vactst SELECT generate_series(1, 300);"}
+{"sql":"DELETE FROM vactst WHERE i % 7 = 0","shape":"DELETE FROM vactst WHERE (i % 7) = 0;"}
+{"sql":"INSERT INTO vactst SELECT generate_series(301, 400)","shape":"INSERT INTO vactst SELECT generate_series(301, 400);"}
+{"sql":"DELETE FROM vactst WHERE i % 5 <> 0","shape":"DELETE FROM vactst WHERE (i % 5) <> 0;"}
+{"sql":"ANALYZE vactst","shape":"ANALYZE vactst;"}
+{"sql":"CREATE TABLE past_inh_parent ()","shape":"CREATE TABLE past_inh_parent ();"}
+{"sql":"CREATE TABLE past_inh_child () INHERITS (past_inh_parent)","shape":"CREATE TABLE past_inh_child () INHERITS (past_inh_parent);"}
+{"sql":"INSERT INTO past_inh_child DEFAULT VALUES","shape":"INSERT INTO past_inh_child DEFAULT VALUES;"}
+{"sql":"ANALYZE past_inh_parent","shape":"ANALYZE past_inh_parent;"}
+{"sql":"SELECT reltuples, relhassubclass\n  FROM pg_class WHERE oid = 'past_inh_parent'::regclass","shape":"SELECT reltuples, relhassubclass FROM pg_class WHERE oid = 'past_inh_parent'::regclass;"}
+{"sql":"DROP TABLE past_inh_child","shape":"DROP TABLE past_inh_child;"}
+{"sql":"CREATE TABLE past_parted (i int) PARTITION BY LIST(i)","shape":"CREATE TABLE past_parted (i int) PARTITION BY LIST (i);"}
+{"sql":"CREATE TABLE past_part PARTITION OF past_parted FOR VALUES IN (1)","shape":"CREATE TABLE past_part PARTITION OF past_parted FOR VALUES IN (1);"}
+{"sql":"INSERT INTO past_parted VALUES (1),(1)","shape":"INSERT INTO past_parted VALUES (1), (1);"}
+{"sql":"ANALYZE past_parted","shape":"ANALYZE past_parted;"}
+{"sql":"DROP TABLE past_part","shape":"DROP TABLE past_part;"}
+{"sql":"SELECT reltuples, relhassubclass\n  FROM pg_class WHERE oid = 'past_parted'::regclass","shape":"SELECT reltuples, relhassubclass FROM pg_class WHERE oid = 'past_parted'::regclass;"}
+{"sql":"VACUUM FULL pg_am","shape":"VACUUM FULL pg_am;"}
+{"sql":"VACUUM FULL pg_class","shape":"VACUUM FULL pg_class;"}
+{"sql":"VACUUM FULL pg_database","shape":"VACUUM FULL pg_database;"}
+{"sql":"VACUUM FULL vaccluster","shape":"VACUUM FULL vaccluster;"}
+{"sql":"VACUUM (DISABLE_PAGE_SKIPPING) vaccluster","shape":"VACUUM (DISABLE_PAGE_SKIPPING) vaccluster;"}
+{"sql":"CREATE TABLE pvactst (i INT, a INT[], p POINT) with (autovacuum_enabled = off)","shape":"CREATE TABLE pvactst (i INT, a INT[], p POINT) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO pvactst SELECT i, array[1,2,3], point(i, i+1) FROM generate_series(1,1000) i","shape":"INSERT INTO pvactst SELECT i, ARRAY[1, 2, 3], point(i, i + 1) FROM generate_series(1, 1000) AS i;"}
+{"sql":"CREATE INDEX btree_pvactst ON pvactst USING btree (i)","shape":"CREATE INDEX btree_pvactst ON pvactst USING btree (i);"}
+{"sql":"CREATE INDEX hash_pvactst ON pvactst USING hash (i)","shape":"CREATE INDEX hash_pvactst ON pvactst USING hash (i);"}
+{"sql":"CREATE INDEX brin_pvactst ON pvactst USING brin (i)","shape":"CREATE INDEX brin_pvactst ON pvactst USING brin (i);"}
+{"sql":"CREATE INDEX gin_pvactst ON pvactst USING gin (a)","shape":"CREATE INDEX gin_pvactst ON pvactst USING gin (a);"}
+{"sql":"CREATE INDEX gist_pvactst ON pvactst USING gist (p)","shape":"CREATE INDEX gist_pvactst ON pvactst USING gist (p);"}
+{"sql":"CREATE INDEX spgist_pvactst ON pvactst USING spgist (p)","shape":"CREATE INDEX spgist_pvactst ON pvactst USING spgist (p);"}
+{"sql":"SET min_parallel_index_scan_size to 0","shape":"SET min_parallel_index_scan_size TO 0;"}
+{"sql":"VACUUM (PARALLEL 2) pvactst","shape":"VACUUM (PARALLEL 2) pvactst;"}
+{"sql":"UPDATE pvactst SET i = i WHERE i < 1000","shape":"UPDATE pvactst SET i = i WHERE i < 1000;"}
+{"sql":"VACUUM (PARALLEL 0) pvactst","shape":"VACUUM (PARALLEL 0) pvactst;"}
+{"sql":"VACUUM (PARALLEL -1) pvactst","shape":"VACUUM (PARALLEL -1) pvactst;"}
+{"sql":"VACUUM (PARALLEL 2, INDEX_CLEANUP FALSE) pvactst","shape":"VACUUM (PARALLEL 2, INDEX_CLEANUP FALSE) pvactst;"}
+{"sql":"VACUUM (PARALLEL 2, FULL TRUE) pvactst","shape":"VACUUM (PARALLEL 2, FULL TRUE) pvactst;"}
+{"sql":"VACUUM (PARALLEL) pvactst","shape":"VACUUM (PARALLEL) pvactst;"}
+{"sql":"CREATE TEMPORARY TABLE tmp (a int PRIMARY KEY)","shape":"CREATE TEMPORARY TABLE tmp (a int PRIMARY KEY);"}
+{"sql":"CREATE INDEX tmp_idx1 ON tmp (a)","shape":"CREATE INDEX tmp_idx1 ON tmp (a);"}
+{"sql":"VACUUM (PARALLEL 1, FULL FALSE) tmp","shape":"VACUUM (PARALLEL 1, FULL FALSE) tmp;"}
+{"sql":"VACUUM (PARALLEL 0, FULL TRUE) tmp","shape":"VACUUM (PARALLEL 0, FULL TRUE) tmp;"}
+{"sql":"RESET min_parallel_index_scan_size","shape":"RESET min_parallel_index_scan_size;"}
+{"sql":"DROP TABLE pvactst","shape":"DROP TABLE pvactst;"}
+{"sql":"CREATE TABLE no_index_cleanup (i INT PRIMARY KEY, t TEXT)","shape":"CREATE TABLE no_index_cleanup (i INT PRIMARY KEY, t TEXT);"}
+{"sql":"CREATE INDEX no_index_cleanup_idx ON no_index_cleanup(t)","shape":"CREATE INDEX no_index_cleanup_idx ON no_index_cleanup (t);"}
+{"sql":"ALTER TABLE no_index_cleanup ALTER COLUMN t SET STORAGE EXTERNAL"}
+{"sql":"INSERT INTO no_index_cleanup(i, t) VALUES (generate_series(1,30),\n    repeat('1234567890',269))","shape":"INSERT INTO no_index_cleanup (i, t) VALUES (generate_series(1, 30), repeat('1234567890', 269));"}
+{"sql":"VACUUM (INDEX_CLEANUP TRUE, FULL TRUE) no_index_cleanup","shape":"VACUUM (INDEX_CLEANUP TRUE, FULL TRUE) no_index_cleanup;"}
+{"sql":"VACUUM (FULL TRUE) no_index_cleanup","shape":"VACUUM (FULL TRUE) no_index_cleanup;"}
+{"sql":"ALTER TABLE no_index_cleanup SET (vacuum_index_cleanup = false)"}
+{"sql":"DELETE FROM no_index_cleanup WHERE i < 15","shape":"DELETE FROM no_index_cleanup WHERE i < 15;"}
+{"sql":"VACUUM no_index_cleanup","shape":"VACUUM no_index_cleanup;"}
+{"sql":"ALTER TABLE no_index_cleanup SET (vacuum_index_cleanup = true)"}
+{"sql":"ALTER TABLE no_index_cleanup SET (vacuum_index_cleanup = auto)"}
+{"sql":"INSERT INTO no_index_cleanup(i, t) VALUES (generate_series(31,60),\n    repeat('1234567890',269))","shape":"INSERT INTO no_index_cleanup (i, t) VALUES (generate_series(31, 60), repeat('1234567890', 269));"}
+{"sql":"DELETE FROM no_index_cleanup WHERE i < 45","shape":"DELETE FROM no_index_cleanup WHERE i < 45;"}
+{"sql":"ALTER TABLE no_index_cleanup SET (vacuum_index_cleanup = off,\n    toast.vacuum_index_cleanup = yes)"}
+{"sql":"ALTER TABLE no_index_cleanup SET (vacuum_index_cleanup = true,\n    toast.vacuum_index_cleanup = false)"}
+{"sql":"VACUUM (INDEX_CLEANUP FALSE) vaccluster","shape":"VACUUM (INDEX_CLEANUP FALSE) vaccluster;"}
+{"sql":"VACUUM (INDEX_CLEANUP AUTO) vactst","shape":"VACUUM (INDEX_CLEANUP AUTO) vactst;"}
+{"sql":"VACUUM (INDEX_CLEANUP FALSE, FREEZE TRUE) vaccluster","shape":"VACUUM (INDEX_CLEANUP FALSE, FREEZE TRUE) vaccluster;"}
+{"sql":"CREATE TEMP TABLE vac_truncate_test(i INT NOT NULL, j text)\n\tWITH (vacuum_truncate=true, autovacuum_enabled=false)","shape":"CREATE TEMPORARY TABLE vac_truncate_test (i INT NOT NULL, j text) WITH (vacuum_truncate = TRUE, autovacuum_enabled = FALSE);"}
+{"sql":"INSERT INTO vac_truncate_test VALUES (1, NULL), (NULL, NULL)","shape":"INSERT INTO vac_truncate_test VALUES (1, NULL), (NULL, NULL);"}
+{"sql":"VACUUM (TRUNCATE FALSE, DISABLE_PAGE_SKIPPING) vac_truncate_test","shape":"VACUUM (TRUNCATE FALSE, DISABLE_PAGE_SKIPPING) vac_truncate_test;"}
+{"sql":"SELECT pg_relation_size('vac_truncate_test') > 0","shape":"SELECT pg_relation_size('vac_truncate_test') > 0;"}
+{"sql":"VACUUM (DISABLE_PAGE_SKIPPING) vac_truncate_test","shape":"VACUUM (DISABLE_PAGE_SKIPPING) vac_truncate_test;"}
+{"sql":"SELECT pg_relation_size('vac_truncate_test') = 0","shape":"SELECT pg_relation_size('vac_truncate_test') = 0;"}
+{"sql":"VACUUM (TRUNCATE FALSE, FULL TRUE) vac_truncate_test","shape":"VACUUM (TRUNCATE FALSE, FULL TRUE) vac_truncate_test;"}
+{"sql":"DROP TABLE vac_truncate_test","shape":"DROP TABLE vac_truncate_test;"}
+{"sql":"CREATE TABLE vacparted (a int, b char) PARTITION BY LIST (a)","shape":"CREATE TABLE vacparted (a int, b char) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE vacparted1 PARTITION OF vacparted FOR VALUES IN (1)","shape":"CREATE TABLE vacparted1 PARTITION OF vacparted FOR VALUES IN (1);"}
+{"sql":"INSERT INTO vacparted VALUES (1, 'a')","shape":"INSERT INTO vacparted VALUES (1, 'a');"}
+{"sql":"UPDATE vacparted SET b = 'b'","shape":"UPDATE vacparted SET b = 'b';"}
+{"sql":"VACUUM (ANALYZE) vacparted","shape":"VACUUM (ANALYZE) vacparted;"}
+{"sql":"VACUUM (FULL) vacparted","shape":"VACUUM (FULL) vacparted;"}
+{"sql":"VACUUM (FREEZE) vacparted","shape":"VACUUM (FREEZE) vacparted;"}
+{"sql":"VACUUM ANALYZE vacparted(a,b,a)","shape":"VACUUM ANALYZE vacparted (a, b, a);"}
+{"sql":"ANALYZE vacparted(a,b,b)","shape":"ANALYZE vacparted (a, b, b);"}
+{"sql":"CREATE TABLE vacparted_i (a int primary key, b varchar(100))\n  PARTITION BY HASH (a)","shape":"CREATE TABLE vacparted_i (a int PRIMARY KEY, b varchar(100)) PARTITION BY HASH (a);"}
+{"sql":"CREATE TABLE vacparted_i1 PARTITION OF vacparted_i\n  FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE vacparted_i1 PARTITION OF vacparted_i FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE vacparted_i2 PARTITION OF vacparted_i\n  FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE vacparted_i2 PARTITION OF vacparted_i FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO vacparted_i SELECT i, 'test_'|| i from generate_series(1,10) i","shape":"INSERT INTO vacparted_i SELECT i, 'test_' || i FROM generate_series(1, 10) AS i;"}
+{"sql":"VACUUM (ANALYZE) vacparted_i","shape":"VACUUM (ANALYZE) vacparted_i;"}
+{"sql":"VACUUM (FULL) vacparted_i","shape":"VACUUM (FULL) vacparted_i;"}
+{"sql":"VACUUM (FREEZE) vacparted_i","shape":"VACUUM (FREEZE) vacparted_i;"}
+{"sql":"SELECT relname, relhasindex FROM pg_class\n  WHERE relname LIKE 'vacparted_i%' AND relkind IN ('p','r')\n  ORDER BY relname","shape":"SELECT relname, relhasindex FROM pg_class WHERE (relname LIKE 'vacparted_i%') AND (relkind IN ('p', 'r')) ORDER BY relname;"}
+{"sql":"DROP TABLE vacparted_i","shape":"DROP TABLE vacparted_i;"}
+{"sql":"VACUUM vaccluster, vactst","shape":"VACUUM vaccluster, vactst;"}
+{"sql":"VACUUM vacparted, does_not_exist","shape":"VACUUM vacparted, does_not_exist;"}
+{"sql":"VACUUM (FREEZE) vacparted, vaccluster, vactst","shape":"VACUUM (FREEZE) vacparted, vaccluster, vactst;"}
+{"sql":"VACUUM (FREEZE) does_not_exist, vaccluster","shape":"VACUUM (FREEZE) does_not_exist, vaccluster;"}
+{"sql":"VACUUM ANALYZE vactst, vacparted (a)","shape":"VACUUM ANALYZE vactst, vacparted (a);"}
+{"sql":"VACUUM ANALYZE vactst (does_not_exist), vacparted (b)","shape":"VACUUM ANALYZE vactst (does_not_exist), vacparted (b);"}
+{"sql":"VACUUM FULL vacparted, vactst","shape":"VACUUM FULL vacparted, vactst;"}
+{"sql":"VACUUM FULL vactst, vacparted (a, b), vaccluster (i)","shape":"VACUUM FULL vactst, vacparted (a, b), vaccluster (i);"}
+{"sql":"ANALYZE vactst, vacparted","shape":"ANALYZE vactst, vacparted;"}
+{"sql":"ANALYZE vacparted (b), vactst","shape":"ANALYZE vacparted (b), vactst;"}
+{"sql":"ANALYZE vactst, does_not_exist, vacparted","shape":"ANALYZE vactst, does_not_exist, vacparted;"}
+{"sql":"ANALYZE vactst (i), vacparted (does_not_exist)","shape":"ANALYZE vactst (i), vacparted (does_not_exist);"}
+{"sql":"ANALYZE vactst, vactst","shape":"ANALYZE vactst, vactst;"}
+{"sql":"ANALYZE (VERBOSE) does_not_exist","shape":"ANALYZE (VERBOSE) does_not_exist;"}
+{"sql":"ANALYZE (nonexistent-arg) does_not_exist","reject":true}
+{"sql":"ANALYZE (nonexistentarg) does_not_exit","shape":"ANALYZE (NONEXISTENTARG) does_not_exit;"}
+{"sql":"SET client_min_messages TO 'ERROR'","shape":"SET client_min_messages TO 'ERROR';"}
+{"sql":"ANALYZE (SKIP_LOCKED, VERBOSE) does_not_exist","shape":"ANALYZE (SKIP_LOCKED, VERBOSE) does_not_exist;"}
+{"sql":"ANALYZE (VERBOSE, SKIP_LOCKED) does_not_exist","shape":"ANALYZE (VERBOSE, SKIP_LOCKED) does_not_exist;"}
+{"sql":"VACUUM (SKIP_LOCKED) vactst","shape":"VACUUM (SKIP_LOCKED) vactst;"}
+{"sql":"VACUUM (SKIP_LOCKED, FULL) vactst","shape":"VACUUM (SKIP_LOCKED, FULL) vactst;"}
+{"sql":"ANALYZE (SKIP_LOCKED) vactst","shape":"ANALYZE (SKIP_LOCKED) vactst;"}
+{"sql":"SET default_transaction_isolation = serializable","shape":"SET default_transaction_isolation TO serializable;"}
+{"sql":"VACUUM vactst","shape":"VACUUM vactst;"}
+{"sql":"CREATE TABLE vac_option_tab (a INT, t TEXT)","shape":"CREATE TABLE vac_option_tab (a INT, t TEXT);"}
+{"sql":"INSERT INTO vac_option_tab SELECT a, 't' || a FROM generate_series(1, 10) AS a","shape":"INSERT INTO vac_option_tab SELECT a, 't' || a FROM generate_series(1, 10) AS a;"}
+{"sql":"ALTER TABLE vac_option_tab ALTER COLUMN t SET STORAGE EXTERNAL"}
+{"sql":"CREATE VIEW vac_option_tab_counts AS\n  SELECT CASE WHEN c.relname IS NULL\n    THEN 'main' ELSE 'toast' END as rel,\n  s.vacuum_count\n  FROM pg_stat_all_tables s\n  LEFT JOIN pg_class c ON s.relid = c.reltoastrelid\n  WHERE c.relname = 'vac_option_tab' OR s.relname = 'vac_option_tab'\n  ORDER BY rel","shape":"CREATE VIEW vac_option_tab_counts AS SELECT CASE WHEN c.relname IS NULL THEN 'main' ELSE 'toast' END AS rel, s.vacuum_count FROM pg_stat_all_tables AS s LEFT JOIN pg_class AS c ON s.relid = c.reltoastrelid WHERE (c.relname = 'vac_option_tab') OR (s.relname = 'vac_option_tab') ORDER BY rel;"}
+{"sql":"VACUUM (PROCESS_TOAST TRUE) vac_option_tab","shape":"VACUUM (PROCESS_TOAST TRUE) vac_option_tab;"}
+{"sql":"SELECT * FROM vac_option_tab_counts","shape":"SELECT * FROM vac_option_tab_counts;"}
+{"sql":"VACUUM (PROCESS_TOAST FALSE) vac_option_tab","shape":"VACUUM (PROCESS_TOAST FALSE) vac_option_tab;"}
+{"sql":"VACUUM (PROCESS_TOAST FALSE, FULL) vac_option_tab","shape":"VACUUM (PROCESS_TOAST FALSE, FULL) vac_option_tab;"}
+{"sql":"VACUUM (PROCESS_MAIN FALSE) vac_option_tab","shape":"VACUUM (PROCESS_MAIN FALSE) vac_option_tab;"}
+{"sql":"VACUUM (PROCESS_MAIN FALSE, PROCESS_TOAST FALSE) vac_option_tab","shape":"VACUUM (PROCESS_MAIN FALSE, PROCESS_TOAST FALSE) vac_option_tab;"}
+{"sql":"SELECT relfilenode AS main_filenode FROM pg_class\n  WHERE relname = 'vac_option_tab'","shape":"SELECT relfilenode AS main_filenode FROM pg_class WHERE relname = 'vac_option_tab';"}
+{"sql":"SELECT t.relfilenode AS toast_filenode FROM pg_class c, pg_class t\n  WHERE c.reltoastrelid = t.oid AND c.relname = 'vac_option_tab'","shape":"SELECT t.relfilenode AS toast_filenode FROM pg_class AS c, pg_class AS t WHERE (c.reltoastrelid = t.oid) AND (c.relname = 'vac_option_tab');"}
+{"sql":"VACUUM (PROCESS_MAIN FALSE, FULL) vac_option_tab","shape":"VACUUM (PROCESS_MAIN FALSE, FULL) vac_option_tab;"}
+{"sql":"VACUUM (BUFFER_USAGE_LIMIT '512 kB') vac_option_tab","shape":"VACUUM (BUFFER_USAGE_LIMIT '512 kB') vac_option_tab;"}
+{"sql":"ANALYZE (BUFFER_USAGE_LIMIT '512 kB') vac_option_tab","shape":"ANALYZE (BUFFER_USAGE_LIMIT '512 kB') vac_option_tab;"}
+{"sql":"VACUUM (BUFFER_USAGE_LIMIT 0) vac_option_tab","shape":"VACUUM (BUFFER_USAGE_LIMIT 0) vac_option_tab;"}
+{"sql":"ANALYZE (BUFFER_USAGE_LIMIT 0) vac_option_tab","shape":"ANALYZE (BUFFER_USAGE_LIMIT 0) vac_option_tab;"}
+{"sql":"VACUUM (BUFFER_USAGE_LIMIT 16777220) vac_option_tab","shape":"VACUUM (BUFFER_USAGE_LIMIT 16777220) vac_option_tab;"}
+{"sql":"VACUUM (BUFFER_USAGE_LIMIT 120) vac_option_tab","shape":"VACUUM (BUFFER_USAGE_LIMIT 120) vac_option_tab;"}
+{"sql":"VACUUM (BUFFER_USAGE_LIMIT 10000000000) vac_option_tab","shape":"VACUUM (BUFFER_USAGE_LIMIT 10000000000) vac_option_tab;"}
+{"sql":"VACUUM (BUFFER_USAGE_LIMIT '512 kB', FULL) vac_option_tab","shape":"VACUUM (BUFFER_USAGE_LIMIT '512 kB', FULL) vac_option_tab;"}
+{"sql":"VACUUM (SKIP_DATABASE_STATS) vactst","shape":"VACUUM (SKIP_DATABASE_STATS) vactst;"}
+{"sql":"VACUUM (ONLY_DATABASE_STATS)","shape":"VACUUM (ONLY_DATABASE_STATS);"}
+{"sql":"VACUUM (ONLY_DATABASE_STATS) vactst","shape":"VACUUM (ONLY_DATABASE_STATS) vactst;"}
+{"sql":"DROP VIEW vac_option_tab_counts","shape":"DROP VIEW vac_option_tab_counts;"}
+{"sql":"DROP TABLE vac_option_tab","shape":"DROP TABLE vac_option_tab;"}
+{"sql":"DROP TABLE vaccluster","shape":"DROP TABLE vaccluster;"}
+{"sql":"DROP TABLE vactst","shape":"DROP TABLE vactst;"}
+{"sql":"DROP TABLE vacparted","shape":"DROP TABLE vacparted;"}
+{"sql":"DROP TABLE no_index_cleanup","shape":"DROP TABLE no_index_cleanup;"}
+{"sql":"CREATE TABLE vacowned (a int)","shape":"CREATE TABLE vacowned (a int);"}
+{"sql":"CREATE TABLE vacowned_parted (a int) PARTITION BY LIST (a)","shape":"CREATE TABLE vacowned_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE vacowned_part1 PARTITION OF vacowned_parted FOR VALUES IN (1)","shape":"CREATE TABLE vacowned_part1 PARTITION OF vacowned_parted FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE vacowned_part2 PARTITION OF vacowned_parted FOR VALUES IN (2)","shape":"CREATE TABLE vacowned_part2 PARTITION OF vacowned_parted FOR VALUES IN (2);"}
+{"sql":"CREATE ROLE regress_vacuum"}
+{"sql":"SET ROLE regress_vacuum"}
+{"sql":"VACUUM vacowned","shape":"VACUUM vacowned;"}
+{"sql":"ANALYZE vacowned","shape":"ANALYZE vacowned;"}
+{"sql":"VACUUM (ANALYZE) vacowned","shape":"VACUUM (ANALYZE) vacowned;"}
+{"sql":"VACUUM pg_catalog.pg_class","shape":"VACUUM pg_catalog.pg_class;"}
+{"sql":"ANALYZE pg_catalog.pg_class","shape":"ANALYZE pg_catalog.pg_class;"}
+{"sql":"VACUUM (ANALYZE) pg_catalog.pg_class","shape":"VACUUM (ANALYZE) pg_catalog.pg_class;"}
+{"sql":"VACUUM pg_catalog.pg_authid","shape":"VACUUM pg_catalog.pg_authid;"}
+{"sql":"ANALYZE pg_catalog.pg_authid","shape":"ANALYZE pg_catalog.pg_authid;"}
+{"sql":"VACUUM (ANALYZE) pg_catalog.pg_authid","shape":"VACUUM (ANALYZE) pg_catalog.pg_authid;"}
+{"sql":"VACUUM vacowned_parted","shape":"VACUUM vacowned_parted;"}
+{"sql":"VACUUM vacowned_part1","shape":"VACUUM vacowned_part1;"}
+{"sql":"VACUUM vacowned_part2","shape":"VACUUM vacowned_part2;"}
+{"sql":"ANALYZE vacowned_parted","shape":"ANALYZE vacowned_parted;"}
+{"sql":"ANALYZE vacowned_part1","shape":"ANALYZE vacowned_part1;"}
+{"sql":"ANALYZE vacowned_part2","shape":"ANALYZE vacowned_part2;"}
+{"sql":"VACUUM (ANALYZE) vacowned_parted","shape":"VACUUM (ANALYZE) vacowned_parted;"}
+{"sql":"VACUUM (ANALYZE) vacowned_part1","shape":"VACUUM (ANALYZE) vacowned_part1;"}
+{"sql":"VACUUM (ANALYZE) vacowned_part2","shape":"VACUUM (ANALYZE) vacowned_part2;"}
+{"sql":"ALTER TABLE vacowned_parted OWNER TO regress_vacuum"}
+{"sql":"ALTER TABLE vacowned_part1 OWNER TO regress_vacuum"}
+{"sql":"ALTER TABLE vacowned_parted OWNER TO CURRENT_USER"}
+{"sql":"ALTER TABLE vacowned_part1 OWNER TO CURRENT_USER"}
+{"sql":"DROP TABLE vacowned","shape":"DROP TABLE vacowned;"}
+{"sql":"DROP TABLE vacowned_parted","shape":"DROP TABLE vacowned_parted;"}
+{"sql":"DROP ROLE regress_vacuum","shape":"DROP ROLE regress_vacuum;"}

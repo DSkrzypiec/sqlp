@@ -1,0 +1,223 @@
+{"sql":"create type complex as (r float8, i float8)","shape":"CREATE TYPE complex AS (r float8, i float8);"}
+{"sql":"create temp table fullname (first text, last text)","shape":"CREATE TEMPORARY TABLE fullname (first text, last text);"}
+{"sql":"create type quad as (c1 complex, c2 complex)","shape":"CREATE TYPE quad AS (c1 complex, c2 complex);"}
+{"sql":"select (1.1,2.2)::complex, row((3.3,4.4),(5.5,null))::quad","shape":"SELECT (1.1, 2.2)::complex, ROW((3.3, 4.4), (5.5, NULL))::quad;"}
+{"sql":"select row('Joe', 'Blow')::fullname, '(Joe,Blow)'::fullname","shape":"SELECT ROW('Joe', 'Blow')::fullname, '(Joe,Blow)'::fullname;"}
+{"sql":"select '(Joe,von Blow)'::fullname, '(Joe,d''Blow)'::fullname","shape":"SELECT '(Joe,von Blow)'::fullname, '(Joe,d''Blow)'::fullname;"}
+{"sql":"select '(Joe,\"von\"\"Blow\")'::fullname, E'(Joe,d\\\\\\\\Blow)'::fullname","shape":"SELECT '(Joe,\"von\"\"Blow\")'::fullname, E'(Joe,d\\\\\\\\Blow)'::fullname;"}
+{"sql":"select '(Joe,\"Blow,Jr\")'::fullname","shape":"SELECT '(Joe,\"Blow,Jr\")'::fullname;"}
+{"sql":"select '(Joe,)'::fullname","shape":"SELECT '(Joe,)'::fullname;"}
+{"sql":"select '(Joe)'::fullname","shape":"SELECT '(Joe)'::fullname;"}
+{"sql":"select '(Joe,,)'::fullname","shape":"SELECT '(Joe,,)'::fullname;"}
+{"sql":"select '[]'::fullname","shape":"SELECT '[]'::fullname;"}
+{"sql":"select ' (Joe,Blow)  '::fullname","shape":"SELECT ' (Joe,Blow)  '::fullname;"}
+{"sql":"select '(Joe,Blow) /'::fullname","shape":"SELECT '(Joe,Blow) /'::fullname;"}
+{"sql":"SELECT pg_input_is_valid('(1,2)', 'complex')","shape":"SELECT pg_input_is_valid('(1,2)', 'complex');"}
+{"sql":"SELECT pg_input_is_valid('(1,2', 'complex')","shape":"SELECT pg_input_is_valid('(1,2', 'complex');"}
+{"sql":"SELECT pg_input_is_valid('(1,zed)', 'complex')","shape":"SELECT pg_input_is_valid('(1,zed)', 'complex');"}
+{"sql":"SELECT * FROM pg_input_error_info('(1,zed)', 'complex')","shape":"SELECT * FROM pg_input_error_info('(1,zed)', 'complex');"}
+{"sql":"SELECT * FROM pg_input_error_info('(1,1e400)', 'complex')","shape":"SELECT * FROM pg_input_error_info('(1,1e400)', 'complex');"}
+{"sql":"create temp table quadtable(f1 int, q quad)","shape":"CREATE TEMPORARY TABLE quadtable (f1 int, q quad);"}
+{"sql":"insert into quadtable values (1, ((3.3,4.4),(5.5,6.6)))","shape":"INSERT INTO quadtable VALUES (1, ((3.3, 4.4), (5.5, 6.6)));"}
+{"sql":"insert into quadtable values (2, ((null,4.4),(5.5,6.6)))","shape":"INSERT INTO quadtable VALUES (2, ((NULL, 4.4), (5.5, 6.6)));"}
+{"sql":"select * from quadtable","shape":"SELECT * FROM quadtable;"}
+{"sql":"select f1, q.c1 from quadtable","shape":"SELECT f1, q.c1 FROM quadtable;"}
+{"sql":"select f1, (q).c1, (qq.q).c1.i from quadtable qq","shape":"SELECT f1, (q).c1, (qq.q).c1.i FROM quadtable AS qq;"}
+{"sql":"create temp table people (fn fullname, bd date)","shape":"CREATE TEMPORARY TABLE people (fn fullname, bd date);"}
+{"sql":"insert into people values ('(Joe,Blow)', '1984-01-10')","shape":"INSERT INTO people VALUES ('(Joe,Blow)', '1984-01-10');"}
+{"sql":"select * from people","shape":"SELECT * FROM people;"}
+{"sql":"alter table fullname add column suffix text default ''","shape":"ALTER TABLE fullname ADD COLUMN suffix text DEFAULT '';"}
+{"sql":"alter table fullname add column suffix text default null","shape":"ALTER TABLE fullname ADD COLUMN suffix text DEFAULT NULL;"}
+{"sql":"update people set fn.suffix = 'Jr'","shape":"UPDATE people SET fn.suffix = 'Jr';"}
+{"sql":"insert into quadtable (f1, q.c1.r, q.c2.i) values(44,55,66)","shape":"INSERT INTO quadtable (f1, q.c1.r, q.c2.i) VALUES (44, 55, 66);"}
+{"sql":"update quadtable set q.c1.r = 12 where f1 = 2","shape":"UPDATE quadtable SET q.c1.r = 12 WHERE f1 = 2;"}
+{"sql":"update quadtable set q.c1 = 12","shape":"UPDATE quadtable SET q.c1 = 12;"}
+{"sql":"create temp table pp (f1 text)","shape":"CREATE TEMPORARY TABLE pp (f1 text);"}
+{"sql":"insert into pp values (repeat('abcdefghijkl', 100000))","shape":"INSERT INTO pp VALUES (repeat('abcdefghijkl', 100000));"}
+{"sql":"insert into people select ('Jim', f1, null)::fullname, current_date from pp","shape":"INSERT INTO people SELECT ('Jim', f1, NULL)::fullname, current_date FROM pp;"}
+{"sql":"select (fn).first, substr((fn).last, 1, 20), length((fn).last) from people","shape":"SELECT (fn).first, substr((fn).last, 1, 20), length((fn).last) FROM people;"}
+{"sql":"update people set fn.first = 'Jack'","shape":"UPDATE people SET fn.first = 'Jack';"}
+{"sql":"select ROW(1,2) < ROW(1,3) as true","shape":"SELECT ROW(1, 2) < ROW(1, 3) AS true;"}
+{"sql":"select ROW(1,2) < ROW(1,1) as false","shape":"SELECT ROW(1, 2) < ROW(1, 1) AS false;"}
+{"sql":"select ROW(1,2) < ROW(1,NULL) as null","shape":"SELECT ROW(1, 2) < ROW(1, NULL) AS null;"}
+{"sql":"select ROW(1,2,3) < ROW(1,3,NULL) as true","shape":"SELECT ROW(1, 2, 3) < ROW(1, 3, NULL) AS true;"}
+{"sql":"select ROW(11,'ABC') < ROW(11,'DEF') as true","shape":"SELECT ROW(11, 'ABC') < ROW(11, 'DEF') AS true;"}
+{"sql":"select ROW(11,'ABC') > ROW(11,'DEF') as false","shape":"SELECT ROW(11, 'ABC') > ROW(11, 'DEF') AS false;"}
+{"sql":"select ROW(12,'ABC') > ROW(11,'DEF') as true","shape":"SELECT ROW(12, 'ABC') > ROW(11, 'DEF') AS true;"}
+{"sql":"select ROW(1,2,3) < ROW(1,NULL,4) as null","shape":"SELECT ROW(1, 2, 3) < ROW(1, NULL, 4) AS null;"}
+{"sql":"select ROW(1,2,3) = ROW(1,NULL,4) as false","shape":"SELECT ROW(1, 2, 3) = ROW(1, NULL, 4) AS false;"}
+{"sql":"select ROW(1,2,3) <> ROW(1,NULL,4) as true","shape":"SELECT ROW(1, 2, 3) <> ROW(1, NULL, 4) AS true;"}
+{"sql":"select ROW('ABC','DEF') ~<=~ ROW('DEF','ABC') as true","shape":"SELECT ROW('ABC', 'DEF') ~<=~ ROW('DEF', 'ABC') AS true;"}
+{"sql":"select ROW('ABC','DEF') ~>=~ ROW('DEF','ABC') as false","shape":"SELECT ROW('ABC', 'DEF') ~>=~ ROW('DEF', 'ABC') AS false;"}
+{"sql":"select ROW('ABC','DEF') ~~ ROW('DEF','ABC') as fail","shape":"SELECT ROW('ABC', 'DEF') ~~ ROW('DEF', 'ABC') AS fail;"}
+{"sql":"select ROW(1,2) = ROW(1,2::int8)","shape":"SELECT ROW(1, 2) = ROW(1, 2::int8);"}
+{"sql":"select ROW(1,2) in (ROW(3,4), ROW(1,2))","shape":"SELECT ROW(1, 2) IN (ROW(3, 4), ROW(1, 2));"}
+{"sql":"select ROW(1,2) in (ROW(3,4), ROW(1,2::int8))","shape":"SELECT ROW(1, 2) IN (ROW(3, 4), ROW(1, 2::int8));"}
+{"sql":"select unique1, unique2 from tenk1\nwhere (unique1, unique2) < any (select ten, ten from tenk1 where hundred < 3)\n      and unique1 <= 20\norder by 1","shape":"SELECT unique1, unique2 FROM tenk1 WHERE ((unique1, unique2) < ANY (SELECT ten, ten FROM tenk1 WHERE hundred < 3)) AND (unique1 <= 20) ORDER BY 1;"}
+{"sql":"explain (costs off)\nselect thousand, tenthous from tenk1\nwhere (thousand, tenthous) >= (997, 5000)\norder by thousand, tenthous","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous FROM tenk1 WHERE (thousand, tenthous) >= (997, 5000) ORDER BY thousand, tenthous;"}
+{"sql":"select thousand, tenthous from tenk1\nwhere (thousand, tenthous) >= (997, 5000)\norder by thousand, tenthous","shape":"SELECT thousand, tenthous FROM tenk1 WHERE (thousand, tenthous) >= (997, 5000) ORDER BY thousand, tenthous;"}
+{"sql":"explain (costs off)\nselect thousand, tenthous, four from tenk1\nwhere (thousand, tenthous, four) > (998, 5000, 3)\norder by thousand, tenthous","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous, four FROM tenk1 WHERE (thousand, tenthous, four) > (998, 5000, 3) ORDER BY thousand, tenthous;"}
+{"sql":"select thousand, tenthous, four from tenk1\nwhere (thousand, tenthous, four) > (998, 5000, 3)\norder by thousand, tenthous","shape":"SELECT thousand, tenthous, four FROM tenk1 WHERE (thousand, tenthous, four) > (998, 5000, 3) ORDER BY thousand, tenthous;"}
+{"sql":"explain (costs off)\nselect thousand, tenthous from tenk1\nwhere (998, 5000) < (thousand, tenthous)\norder by thousand, tenthous","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous FROM tenk1 WHERE (998, 5000) < (thousand, tenthous) ORDER BY thousand, tenthous;"}
+{"sql":"select thousand, tenthous from tenk1\nwhere (998, 5000) < (thousand, tenthous)\norder by thousand, tenthous","shape":"SELECT thousand, tenthous FROM tenk1 WHERE (998, 5000) < (thousand, tenthous) ORDER BY thousand, tenthous;"}
+{"sql":"explain (costs off)\nselect thousand, hundred from tenk1\nwhere (998, 5000) < (thousand, hundred)\norder by thousand, hundred","shape":"EXPLAIN (COSTS off) SELECT thousand, hundred FROM tenk1 WHERE (998, 5000) < (thousand, hundred) ORDER BY thousand, hundred;"}
+{"sql":"select thousand, hundred from tenk1\nwhere (998, 5000) < (thousand, hundred)\norder by thousand, hundred","shape":"SELECT thousand, hundred FROM tenk1 WHERE (998, 5000) < (thousand, hundred) ORDER BY thousand, hundred;"}
+{"sql":"create temp table test_table (a text, b text)","shape":"CREATE TEMPORARY TABLE test_table (a text, b text);"}
+{"sql":"insert into test_table values ('a', 'b')","shape":"INSERT INTO test_table VALUES ('a', 'b');"}
+{"sql":"insert into test_table select 'a', null from generate_series(1,1000)","shape":"INSERT INTO test_table SELECT 'a', NULL FROM generate_series(1, 1000);"}
+{"sql":"insert into test_table values ('b', 'a')","shape":"INSERT INTO test_table VALUES ('b', 'a');"}
+{"sql":"create index on test_table (a,b)","shape":"CREATE INDEX ON test_table (a, b);"}
+{"sql":"explain (costs off)\nselect a,b from test_table where (a,b) > ('a','a') order by a,b","shape":"EXPLAIN (COSTS off) SELECT a, b FROM test_table WHERE (a, b) > ('a', 'a') ORDER BY a, b;"}
+{"sql":"select a,b from test_table where (a,b) > ('a','a') order by a,b","shape":"SELECT a, b FROM test_table WHERE (a, b) > ('a', 'a') ORDER BY a, b;"}
+{"sql":"select * from int8_tbl i8 where i8 in (row(123,456))","shape":"SELECT * FROM int8_tbl AS i8 WHERE i8 IN (ROW(123, 456));"}
+{"sql":"explain (costs off)\nselect * from int8_tbl i8\nwhere i8 in (row(123,456)::int8_tbl, '(4567890123456789,123)')","shape":"EXPLAIN (COSTS off) SELECT * FROM int8_tbl AS i8 WHERE i8 IN (ROW(123, 456)::int8_tbl, '(4567890123456789,123)');"}
+{"sql":"select * from int8_tbl i8\nwhere i8 in (row(123,456)::int8_tbl, '(4567890123456789,123)')","shape":"SELECT * FROM int8_tbl AS i8 WHERE i8 IN (ROW(123, 456)::int8_tbl, '(4567890123456789,123)');"}
+{"sql":"select (row(1, 2.0)).f1","shape":"SELECT (ROW(1, 2.0)).f1;"}
+{"sql":"select (row(1, 2.0)).f2","shape":"SELECT (ROW(1, 2.0)).f2;"}
+{"sql":"select (row(1, 2.0)).nosuch","shape":"SELECT (ROW(1, 2.0)).nosuch;"}
+{"sql":"select (row(1, 2.0)).*","shape":"SELECT (ROW(1, 2.0)).*;"}
+{"sql":"select (r).f1 from (select row(1, 2.0) as r) ss","shape":"SELECT (r).f1 FROM (SELECT ROW(1, 2.0) AS r) AS ss;"}
+{"sql":"select (r).f3 from (select row(1, 2.0) as r) ss","shape":"SELECT (r).f3 FROM (SELECT ROW(1, 2.0) AS r) AS ss;"}
+{"sql":"select (r).* from (select row(1, 2.0) as r) ss","shape":"SELECT (r).* FROM (SELECT ROW(1, 2.0) AS r) AS ss;"}
+{"sql":"select ROW()","shape":"SELECT ROW();"}
+{"sql":"select ROW() IS NULL","shape":"SELECT ROW() IS NULL;"}
+{"sql":"select ROW() = ROW()","shape":"SELECT ROW() = ROW();"}
+{"sql":"select array[ row(1,2), row(3,4), row(5,6) ]","shape":"SELECT ARRAY[ROW(1, 2), ROW(3, 4), ROW(5, 6)];"}
+{"sql":"select row(1,1.1) = any (array[ row(7,7.7), row(1,1.1), row(0,0.0) ])","shape":"SELECT ROW(1, 1.1) = ANY (ARRAY[ROW(7, 7.7), ROW(1, 1.1), ROW(0, 0.0)]);"}
+{"sql":"select row(1,1.1) = any (array[ row(7,7.7), row(1,1.0), row(0,0.0) ])","shape":"SELECT ROW(1, 1.1) = ANY (ARRAY[ROW(7, 7.7), ROW(1, 1.0), ROW(0, 0.0)]);"}
+{"sql":"create type cantcompare as (p point, r float8)","shape":"CREATE TYPE cantcompare AS (p point, r float8);"}
+{"sql":"create temp table cc (f1 cantcompare)","shape":"CREATE TEMPORARY TABLE cc (f1 cantcompare);"}
+{"sql":"insert into cc values('(\"(1,2)\",3)')","shape":"INSERT INTO cc VALUES ('(\"(1,2)\",3)');"}
+{"sql":"insert into cc values('(\"(4,5)\",6)')","shape":"INSERT INTO cc VALUES ('(\"(4,5)\",6)');"}
+{"sql":"select * from cc order by f1","shape":"SELECT * FROM cc ORDER BY f1;"}
+{"sql":"create type testtype1 as (a int, b int)","shape":"CREATE TYPE testtype1 AS (a int, b int);"}
+{"sql":"select row(1, 2)::testtype1 < row(1, 3)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 < ROW(1, 3)::testtype1;"}
+{"sql":"select row(1, 2)::testtype1 <= row(1, 3)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 <= ROW(1, 3)::testtype1;"}
+{"sql":"select row(1, 2)::testtype1 = row(1, 2)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 = ROW(1, 2)::testtype1;"}
+{"sql":"select row(1, 2)::testtype1 <> row(1, 3)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 <> ROW(1, 3)::testtype1;"}
+{"sql":"select row(1, 3)::testtype1 >= row(1, 2)::testtype1","shape":"SELECT ROW(1, 3)::testtype1 >= ROW(1, 2)::testtype1;"}
+{"sql":"select row(1, 3)::testtype1 > row(1, 2)::testtype1","shape":"SELECT ROW(1, 3)::testtype1 > ROW(1, 2)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 < row(1, -3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 < ROW(1, -3)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 <= row(1, -3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 <= ROW(1, -3)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 = row(1, -3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 = ROW(1, -3)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 <> row(1, -2)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 <> ROW(1, -2)::testtype1;"}
+{"sql":"select row(1, -3)::testtype1 >= row(1, -2)::testtype1","shape":"SELECT ROW(1, -3)::testtype1 >= ROW(1, -2)::testtype1;"}
+{"sql":"select row(1, -3)::testtype1 > row(1, -2)::testtype1","shape":"SELECT ROW(1, -3)::testtype1 > ROW(1, -2)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 < row(1, 3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 < ROW(1, 3)::testtype1;"}
+{"sql":"create type testtype3 as (a int, b text)","shape":"CREATE TYPE testtype3 AS (a int, b text);"}
+{"sql":"select row(1, 2)::testtype1 < row(1, 'abc')::testtype3","shape":"SELECT ROW(1, 2)::testtype1 < ROW(1, 'abc')::testtype3;"}
+{"sql":"select row(1, 2)::testtype1 <> row(1, 'abc')::testtype3","shape":"SELECT ROW(1, 2)::testtype1 <> ROW(1, 'abc')::testtype3;"}
+{"sql":"create type testtype5 as (a int)","shape":"CREATE TYPE testtype5 AS (a int);"}
+{"sql":"select row(1, 2)::testtype1 < row(1)::testtype5","shape":"SELECT ROW(1, 2)::testtype1 < ROW(1)::testtype5;"}
+{"sql":"select row(1, 2)::testtype1 <> row(1)::testtype5","shape":"SELECT ROW(1, 2)::testtype1 <> ROW(1)::testtype5;"}
+{"sql":"create type testtype6 as (a int, b point)","shape":"CREATE TYPE testtype6 AS (a int, b point);"}
+{"sql":"select row(1, '(1,2)')::testtype6 < row(1, '(1,3)')::testtype6","shape":"SELECT ROW(1, '(1,2)')::testtype6 < ROW(1, '(1,3)')::testtype6;"}
+{"sql":"select row(1, '(1,2)')::testtype6 <> row(1, '(1,3)')::testtype6","shape":"SELECT ROW(1, '(1,2)')::testtype6 <> ROW(1, '(1,3)')::testtype6;"}
+{"sql":"drop type testtype1, testtype3, testtype5, testtype6","shape":"DROP TYPE testtype1, testtype3, testtype5, testtype6;"}
+{"sql":"select row(1, 2)::testtype1 *< row(1, 3)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 *< ROW(1, 3)::testtype1;"}
+{"sql":"select row(1, 2)::testtype1 *<= row(1, 3)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 *<= ROW(1, 3)::testtype1;"}
+{"sql":"select row(1, 2)::testtype1 *= row(1, 2)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 *= ROW(1, 2)::testtype1;"}
+{"sql":"select row(1, 2)::testtype1 *<> row(1, 3)::testtype1","shape":"SELECT ROW(1, 2)::testtype1 *<> ROW(1, 3)::testtype1;"}
+{"sql":"select row(1, 3)::testtype1 *>= row(1, 2)::testtype1","shape":"SELECT ROW(1, 3)::testtype1 *>= ROW(1, 2)::testtype1;"}
+{"sql":"select row(1, 3)::testtype1 *> row(1, 2)::testtype1","shape":"SELECT ROW(1, 3)::testtype1 *> ROW(1, 2)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 *< row(1, -3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 *< ROW(1, -3)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 *<= row(1, -3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 *<= ROW(1, -3)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 *= row(1, -3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 *= ROW(1, -3)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 *<> row(1, -2)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 *<> ROW(1, -2)::testtype1;"}
+{"sql":"select row(1, -3)::testtype1 *>= row(1, -2)::testtype1","shape":"SELECT ROW(1, -3)::testtype1 *>= ROW(1, -2)::testtype1;"}
+{"sql":"select row(1, -3)::testtype1 *> row(1, -2)::testtype1","shape":"SELECT ROW(1, -3)::testtype1 *> ROW(1, -2)::testtype1;"}
+{"sql":"select row(1, -2)::testtype1 *< row(1, 3)::testtype1","shape":"SELECT ROW(1, -2)::testtype1 *< ROW(1, 3)::testtype1;"}
+{"sql":"create type testtype2 as (a smallint, b bool)","shape":"CREATE TYPE testtype2 AS (a smallint, b bool);"}
+{"sql":"select row(1, true)::testtype2 *< row(2, true)::testtype2","shape":"SELECT ROW(1, TRUE)::testtype2 *< ROW(2, TRUE)::testtype2;"}
+{"sql":"select row(-2, true)::testtype2 *< row(-1, true)::testtype2","shape":"SELECT ROW(-2, TRUE)::testtype2 *< ROW(-1, TRUE)::testtype2;"}
+{"sql":"select row(0, false)::testtype2 *< row(0, true)::testtype2","shape":"SELECT ROW(0, FALSE)::testtype2 *< ROW(0, TRUE)::testtype2;"}
+{"sql":"select row(0, false)::testtype2 *<> row(0, true)::testtype2","shape":"SELECT ROW(0, FALSE)::testtype2 *<> ROW(0, TRUE)::testtype2;"}
+{"sql":"select row(1, 'abc')::testtype3 *< row(1, 'abd')::testtype3","shape":"SELECT ROW(1, 'abc')::testtype3 *< ROW(1, 'abd')::testtype3;"}
+{"sql":"select row(1, 'abc')::testtype3 *< row(1, 'abcd')::testtype3","shape":"SELECT ROW(1, 'abc')::testtype3 *< ROW(1, 'abcd')::testtype3;"}
+{"sql":"select row(1, 'abc')::testtype3 *> row(1, 'abd')::testtype3","shape":"SELECT ROW(1, 'abc')::testtype3 *> ROW(1, 'abd')::testtype3;"}
+{"sql":"select row(1, 'abc')::testtype3 *<> row(1, 'abd')::testtype3","shape":"SELECT ROW(1, 'abc')::testtype3 *<> ROW(1, 'abd')::testtype3;"}
+{"sql":"create type testtype4 as (a int, b point)","shape":"CREATE TYPE testtype4 AS (a int, b point);"}
+{"sql":"select row(1, '(1,2)')::testtype4 *< row(1, '(1,3)')::testtype4","shape":"SELECT ROW(1, '(1,2)')::testtype4 *< ROW(1, '(1,3)')::testtype4;"}
+{"sql":"select row(1, '(1,2)')::testtype4 *<> row(1, '(1,3)')::testtype4","shape":"SELECT ROW(1, '(1,2)')::testtype4 *<> ROW(1, '(1,3)')::testtype4;"}
+{"sql":"select row(1, 2)::testtype1 *< row(1, 'abc')::testtype3","shape":"SELECT ROW(1, 2)::testtype1 *< ROW(1, 'abc')::testtype3;"}
+{"sql":"select row(1, 2)::testtype1 *<> row(1, 'abc')::testtype3","shape":"SELECT ROW(1, 2)::testtype1 *<> ROW(1, 'abc')::testtype3;"}
+{"sql":"select row(1, 2)::testtype1 *< row(1)::testtype5","shape":"SELECT ROW(1, 2)::testtype1 *< ROW(1)::testtype5;"}
+{"sql":"select row(1, 2)::testtype1 *<> row(1)::testtype5","shape":"SELECT ROW(1, 2)::testtype1 *<> ROW(1)::testtype5;"}
+{"sql":"select row(1, '(1,2)')::testtype6 *< row(1, '(1,3)')::testtype6","shape":"SELECT ROW(1, '(1,2)')::testtype6 *< ROW(1, '(1,3)')::testtype6;"}
+{"sql":"select row(1, '(1,2)')::testtype6 *>= row(1, '(1,3)')::testtype6","shape":"SELECT ROW(1, '(1,2)')::testtype6 *>= ROW(1, '(1,3)')::testtype6;"}
+{"sql":"select row(1, '(1,2)')::testtype6 *<> row(1, '(1,3)')::testtype6","shape":"SELECT ROW(1, '(1,2)')::testtype6 *<> ROW(1, '(1,3)')::testtype6;"}
+{"sql":"select q.a, q.b = row(2), q.c = array[row(3)], q.d = row(row(4)) from\n    unnest(array[row(1, row(2), array[row(3)], row(row(4))),\n                 row(2, row(3), array[row(4)], row(row(5)))])\n      as q(a int, b record, c record[], d record)","shape":"SELECT q.a, q.b = ROW(2), q.c = ARRAY[ROW(3)], q.d = ROW(ROW(4)) FROM unnest(ARRAY[ROW(1, ROW(2), ARRAY[ROW(3)], ROW(ROW(4))), ROW(2, ROW(3), ARRAY[ROW(4)], ROW(ROW(5)))]) AS q(a int, b record, c record[], d record);"}
+{"sql":"drop type testtype1, testtype2, testtype3, testtype4, testtype5, testtype6","shape":"DROP TYPE testtype1, testtype2, testtype3, testtype4, testtype5, testtype6;"}
+{"sql":"CREATE TABLE price (\n    id SERIAL PRIMARY KEY,\n    active BOOLEAN NOT NULL,\n    price NUMERIC\n)","shape":"CREATE TABLE price (id SERIAL PRIMARY KEY, active BOOLEAN NOT NULL, price NUMERIC);"}
+{"sql":"CREATE TYPE price_input AS (\n    id INTEGER,\n    price NUMERIC\n)","shape":"CREATE TYPE price_input AS (id INTEGER, price NUMERIC);"}
+{"sql":"CREATE TYPE price_key AS (\n    id INTEGER\n)","shape":"CREATE TYPE price_key AS (id INTEGER);"}
+{"sql":"CREATE FUNCTION price_key_from_table(price) RETURNS price_key AS $$\n    SELECT $1.id\n$$ LANGUAGE SQL","shape":"CREATE FUNCTION price_key_from_table(price) RETURNS price_key AS '\n    SELECT $1.id\n' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION price_key_from_input(price_input) RETURNS price_key AS $$\n    SELECT $1.id\n$$ LANGUAGE SQL","shape":"CREATE FUNCTION price_key_from_input(price_input) RETURNS price_key AS '\n    SELECT $1.id\n' LANGUAGE SQL;"}
+{"sql":"insert into price values (1,false,42), (10,false,100), (11,true,17.99)","shape":"INSERT INTO price VALUES (1, FALSE, 42), (10, FALSE, 100), (11, TRUE, 17.99);"}
+{"sql":"UPDATE price\n    SET active = true, price = input_prices.price\n    FROM unnest(ARRAY[(10, 123.00), (11, 99.99)]::price_input[]) input_prices\n    WHERE price_key_from_table(price.*) = price_key_from_input(input_prices.*)","shape":"UPDATE price SET active = TRUE, price = input_prices.price FROM unnest(ARRAY[(10, 123.00), (11, 99.99)]::price_input[]) AS input_prices WHERE price_key_from_table(price.*) = price_key_from_input(input_prices.*);"}
+{"sql":"select * from price","shape":"SELECT * FROM price;"}
+{"sql":"create temp table compos (f1 int, f2 text)","shape":"CREATE TEMPORARY TABLE compos (f1 int, f2 text);"}
+{"sql":"create function fcompos1(v compos) returns void as $$\ninsert into compos values (v);  -- fail\n$$ language sql","shape":"CREATE FUNCTION fcompos1(v compos) RETURNS void AS '\ninsert into compos values (v);  -- fail\n' LANGUAGE sql;"}
+{"sql":"create function fcompos1(v compos) returns void as $$\ninsert into compos values (v.*);\n$$ language sql","shape":"CREATE FUNCTION fcompos1(v compos) RETURNS void AS '\ninsert into compos values (v.*);\n' LANGUAGE sql;"}
+{"sql":"create function fcompos2(v compos) returns void as $$\nselect fcompos1(v);\n$$ language sql","shape":"CREATE FUNCTION fcompos2(v compos) RETURNS void AS '\nselect fcompos1(v);\n' LANGUAGE sql;"}
+{"sql":"create function fcompos3(v compos) returns void as $$\nselect fcompos1(fcompos3.v.*);\n$$ language sql","shape":"CREATE FUNCTION fcompos3(v compos) RETURNS void AS '\nselect fcompos1(fcompos3.v.*);\n' LANGUAGE sql;"}
+{"sql":"select fcompos1(row(1,'one'))","shape":"SELECT fcompos1(ROW(1, 'one'));"}
+{"sql":"select fcompos2(row(2,'two'))","shape":"SELECT fcompos2(ROW(2, 'two'));"}
+{"sql":"select fcompos3(row(3,'three'))","shape":"SELECT fcompos3(ROW(3, 'three'));"}
+{"sql":"select * from compos","shape":"SELECT * FROM compos;"}
+{"sql":"select cast (fullname as text) from fullname","shape":"SELECT CAST(fullname AS text) FROM fullname;"}
+{"sql":"select fullname::text from fullname","shape":"SELECT fullname::text FROM fullname;"}
+{"sql":"select text(fullname) from fullname","shape":"SELECT text(fullname) FROM fullname;"}
+{"sql":"select fullname.text from fullname","shape":"SELECT fullname.text FROM fullname;"}
+{"sql":"select cast (row('Jim', 'Beam') as text)","shape":"SELECT CAST(ROW('Jim', 'Beam') AS text);"}
+{"sql":"select (row('Jim', 'Beam'))::text","shape":"SELECT (ROW('Jim', 'Beam'))::text;"}
+{"sql":"select text(row('Jim', 'Beam'))","shape":"SELECT text(ROW('Jim', 'Beam'));"}
+{"sql":"select (row('Jim', 'Beam')).text","shape":"SELECT (ROW('Jim', 'Beam')).text;"}
+{"sql":"insert into fullname values ('Joe', 'Blow')","shape":"INSERT INTO fullname VALUES ('Joe', 'Blow');"}
+{"sql":"select f.last from fullname f","shape":"SELECT f.last FROM fullname AS f;"}
+{"sql":"select last(f) from fullname f","shape":"SELECT last(f) FROM fullname AS f;"}
+{"sql":"create function longname(fullname) returns text language sql\nas $$select $1.first || ' ' || $1.last$$","shape":"CREATE FUNCTION longname(fullname) RETURNS text LANGUAGE sql AS 'select $1.first || '' '' || $1.last';"}
+{"sql":"select f.longname from fullname f","shape":"SELECT f.longname FROM fullname AS f;"}
+{"sql":"select longname(f) from fullname f","shape":"SELECT longname(f) FROM fullname AS f;"}
+{"sql":"alter table fullname add column longname text","shape":"ALTER TABLE fullname ADD COLUMN longname text;"}
+{"sql":"select row_to_json(i) from int8_tbl i","shape":"SELECT row_to_json(i) FROM int8_tbl AS i;"}
+{"sql":"select row_to_json(i) from int8_tbl i(x,y)","shape":"SELECT row_to_json(i) FROM int8_tbl AS i(x, y);"}
+{"sql":"select row_to_json(ss) from\n  (select q1, q2 from int8_tbl) as ss","shape":"SELECT row_to_json(ss) FROM (SELECT q1, q2 FROM int8_tbl) AS ss;"}
+{"sql":"select row_to_json(ss) from\n  (select q1, q2 from int8_tbl offset 0) as ss","shape":"SELECT row_to_json(ss) FROM (SELECT q1, q2 FROM int8_tbl OFFSET 0) AS ss;"}
+{"sql":"select row_to_json(ss) from\n  (select q1 as a, q2 as b from int8_tbl) as ss","shape":"SELECT row_to_json(ss) FROM (SELECT q1 AS a, q2 AS b FROM int8_tbl) AS ss;"}
+{"sql":"select row_to_json(ss) from\n  (select q1 as a, q2 as b from int8_tbl offset 0) as ss","shape":"SELECT row_to_json(ss) FROM (SELECT q1 AS a, q2 AS b FROM int8_tbl OFFSET 0) AS ss;"}
+{"sql":"select row_to_json(ss) from\n  (select q1 as a, q2 as b from int8_tbl) as ss(x,y)","shape":"SELECT row_to_json(ss) FROM (SELECT q1 AS a, q2 AS b FROM int8_tbl) AS ss(x, y);"}
+{"sql":"select row_to_json(ss) from\n  (select q1 as a, q2 as b from int8_tbl offset 0) as ss(x,y)","shape":"SELECT row_to_json(ss) FROM (SELECT q1 AS a, q2 AS b FROM int8_tbl OFFSET 0) AS ss(x, y);"}
+{"sql":"explain (costs off)\nselect row_to_json(q) from\n  (select thousand, tenthous from tenk1\n   where thousand = 42 and tenthous < 2000 offset 0) q","shape":"EXPLAIN (COSTS off) SELECT row_to_json(q) FROM (SELECT thousand, tenthous FROM tenk1 WHERE (thousand = 42) AND (tenthous < 2000) OFFSET 0) AS q;"}
+{"sql":"select row_to_json(q) from\n  (select thousand, tenthous from tenk1\n   where thousand = 42 and tenthous < 2000 offset 0) q","shape":"SELECT row_to_json(q) FROM (SELECT thousand, tenthous FROM tenk1 WHERE (thousand = 42) AND (tenthous < 2000) OFFSET 0) AS q;"}
+{"sql":"select row_to_json(q) from\n  (select thousand as x, tenthous as y from tenk1\n   where thousand = 42 and tenthous < 2000 offset 0) q","shape":"SELECT row_to_json(q) FROM (SELECT thousand AS x, tenthous AS y FROM tenk1 WHERE (thousand = 42) AND (tenthous < 2000) OFFSET 0) AS q;"}
+{"sql":"select row_to_json(q) from\n  (select thousand as x, tenthous as y from tenk1\n   where thousand = 42 and tenthous < 2000 offset 0) q(a,b)","shape":"SELECT row_to_json(q) FROM (SELECT thousand AS x, tenthous AS y FROM tenk1 WHERE (thousand = 42) AND (tenthous < 2000) OFFSET 0) AS q(a, b);"}
+{"sql":"create temp table tt1 as select * from int8_tbl limit 2","shape":"CREATE TEMPORARY TABLE tt1 AS SELECT * FROM int8_tbl LIMIT 2;"}
+{"sql":"create temp table tt2 () inherits(tt1)","shape":"CREATE TEMPORARY TABLE tt2 () INHERITS (tt1);"}
+{"sql":"insert into tt2 values(0,0)","shape":"INSERT INTO tt2 VALUES (0, 0);"}
+{"sql":"select row_to_json(r) from (select q2,q1 from tt1 offset 0) r","shape":"SELECT row_to_json(r) FROM (SELECT q2, q1 FROM tt1 OFFSET 0) AS r;"}
+{"sql":"create temp table tt3 () inherits(tt2)","shape":"CREATE TEMPORARY TABLE tt3 () INHERITS (tt2);"}
+{"sql":"insert into tt3 values(33,44)","shape":"INSERT INTO tt3 VALUES (33, 44);"}
+{"sql":"select row_to_json(tt3::tt2::tt1) from tt3","shape":"SELECT row_to_json(tt3::tt2::tt1) FROM tt3;"}
+{"sql":"explain (verbose, costs off)\nselect r, r is null as isnull, r is not null as isnotnull\nfrom (values (1,row(1,2)), (1,row(null,null)), (1,null),\n             (null,row(1,2)), (null,row(null,null)), (null,null) ) r(a,b)","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT r, r IS NULL AS isnull, r IS NOT NULL AS isnotnull FROM (VALUES (1, ROW(1, 2)), (1, ROW(NULL, NULL)), (1, NULL), (NULL, ROW(1, 2)), (NULL, ROW(NULL, NULL)), (NULL, NULL)) AS r(a, b);"}
+{"sql":"select r, r is null as isnull, r is not null as isnotnull\nfrom (values (1,row(1,2)), (1,row(null,null)), (1,null),\n             (null,row(1,2)), (null,row(null,null)), (null,null) ) r(a,b)","shape":"SELECT r, r IS NULL AS isnull, r IS NOT NULL AS isnotnull FROM (VALUES (1, ROW(1, 2)), (1, ROW(NULL, NULL)), (1, NULL), (NULL, ROW(1, 2)), (NULL, ROW(NULL, NULL)), (NULL, NULL)) AS r(a, b);"}
+{"sql":"explain (verbose, costs off)\nwith r(a,b) as materialized\n  (values (1,row(1,2)), (1,row(null,null)), (1,null),\n          (null,row(1,2)), (null,row(null,null)), (null,null) )\nselect r, r is null as isnull, r is not null as isnotnull from r","shape":"EXPLAIN (VERBOSE, COSTS off) WITH r(a, b) AS MATERIALIZED (VALUES (1, ROW(1, 2)), (1, ROW(NULL, NULL)), (1, NULL), (NULL, ROW(1, 2)), (NULL, ROW(NULL, NULL)), (NULL, NULL)) SELECT r, r IS NULL AS isnull, r IS NOT NULL AS isnotnull FROM r;"}
+{"sql":"with r(a,b) as materialized\n  (values (1,row(1,2)), (1,row(null,null)), (1,null),\n          (null,row(1,2)), (null,row(null,null)), (null,null) )\nselect r, r is null as isnull, r is not null as isnotnull from r","shape":"WITH r(a, b) AS MATERIALIZED (VALUES (1, ROW(1, 2)), (1, ROW(NULL, NULL)), (1, NULL), (NULL, ROW(1, 2)), (NULL, ROW(NULL, NULL)), (NULL, NULL)) SELECT r, r IS NULL AS isnull, r IS NOT NULL AS isnotnull FROM r;"}
+{"sql":"explain (verbose, costs off)\nwith cte(c) as materialized (select row(1, 2)),\n     cte2(c) as (select * from cte)\nselect * from cte2 as t\nwhere (select * from (select c as c1) s\n       where (select (c1).f1 > 0)) is not null","shape":"EXPLAIN (VERBOSE, COSTS off) WITH cte(c) AS MATERIALIZED (SELECT ROW(1, 2)), cte2(c) AS (SELECT * FROM cte) SELECT * FROM cte2 AS t WHERE (SELECT * FROM (SELECT c AS c1) AS s WHERE (SELECT (c1).f1 > 0)) IS NOT NULL;"}
+{"sql":"with cte(c) as materialized (select row(1, 2)),\n     cte2(c) as (select * from cte)\nselect * from cte2 as t\nwhere (select * from (select c as c1) s\n       where (select (c1).f1 > 0)) is not null","shape":"WITH cte(c) AS MATERIALIZED (SELECT ROW(1, 2)), cte2(c) AS (SELECT * FROM cte) SELECT * FROM cte2 AS t WHERE (SELECT * FROM (SELECT c AS c1) AS s WHERE (SELECT (c1).f1 > 0)) IS NOT NULL;"}
+{"sql":"create view composite_v as\nwith cte(c) as materialized (select row(1, 2)),\n     cte2(c) as (select * from cte)\nselect 1 as one from cte2 as t\nwhere (select * from (select c as c1) s\n       where (select (c1).f1 > 0)) is not null","shape":"CREATE VIEW composite_v AS WITH cte(c) AS MATERIALIZED (SELECT ROW(1, 2)), cte2(c) AS (SELECT * FROM cte) SELECT 1 AS one FROM cte2 AS t WHERE (SELECT * FROM (SELECT c AS c1) AS s WHERE (SELECT (c1).f1 > 0)) IS NOT NULL;"}
+{"sql":"select pg_get_viewdef('composite_v', true)","shape":"SELECT pg_get_viewdef('composite_v', TRUE);"}
+{"sql":"drop view composite_v","shape":"DROP VIEW composite_v;"}
+{"sql":"explain (verbose, costs off)\nselect (ss.a).x, (ss.a).n from\n  (select information_schema._pg_expandarray(array[1,2]) AS a) ss","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT (ss.a).x, (ss.a).n FROM (SELECT information_schema._pg_expandarray(ARRAY[1, 2]) AS a) AS ss;"}
+{"sql":"explain (verbose, costs off)\nselect (ss.a).x, (ss.a).n from\n  (select information_schema._pg_expandarray(array[1,2]) AS a) ss\nwhere false","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT (ss.a).x, (ss.a).n FROM (SELECT information_schema._pg_expandarray(ARRAY[1, 2]) AS a) AS ss WHERE FALSE;"}
+{"sql":"explain (verbose, costs off)\nwith cte(c) as materialized (select row(1, 2)),\n     cte2(c) as (select * from cte)\nselect (c).f1 from cte2 as t","shape":"EXPLAIN (VERBOSE, COSTS off) WITH cte(c) AS MATERIALIZED (SELECT ROW(1, 2)), cte2(c) AS (SELECT * FROM cte) SELECT (c).f1 FROM cte2 AS t;"}
+{"sql":"explain (verbose, costs off)\nwith cte(c) as materialized (select row(1, 2)),\n     cte2(c) as (select * from cte)\nselect (c).f1 from cte2 as t\nwhere false","shape":"EXPLAIN (VERBOSE, COSTS off) WITH cte(c) AS MATERIALIZED (SELECT ROW(1, 2)), cte2(c) AS (SELECT * FROM cte) SELECT (c).f1 FROM cte2 AS t WHERE FALSE;"}
+{"sql":"CREATE TABLE compositetable(a text, b text)","shape":"CREATE TABLE compositetable (a text, b text);"}
+{"sql":"INSERT INTO compositetable(a, b) VALUES('fa', 'fb')","shape":"INSERT INTO compositetable (a, b) VALUES ('fa', 'fb');"}
+{"sql":"SELECT d.a FROM (SELECT compositetable AS d FROM compositetable) s","shape":"SELECT d.a FROM (SELECT compositetable AS d FROM compositetable) AS s;"}
+{"sql":"SELECT (d).a, (d).b FROM (SELECT compositetable AS d FROM compositetable) s","shape":"SELECT (d).a, (d).b FROM (SELECT compositetable AS d FROM compositetable) AS s;"}
+{"sql":"SELECT (d).ctid FROM (SELECT compositetable AS d FROM compositetable) s","shape":"SELECT (d).ctid FROM (SELECT compositetable AS d FROM compositetable) AS s;"}
+{"sql":"SELECT (NULL::compositetable).nonexistent","shape":"SELECT (NULL::compositetable).nonexistent;"}
+{"sql":"SELECT (NULL::compositetable).a","shape":"SELECT (NULL::compositetable).a;"}
+{"sql":"SELECT (NULL::compositetable).oid","shape":"SELECT (NULL::compositetable).oid;"}
+{"sql":"DROP TABLE compositetable","shape":"DROP TABLE compositetable;"}

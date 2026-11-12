@@ -1,0 +1,6 @@
+{"sql":"INSERT INTO t2 VALUES(randomblob(200))"}
+{"sql":"INSERT INTO t2 SELECT randomblob(200) FROM t2"}
+{"sql":"CREATE TABLE t2(x PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"INSERT INTO t2 VALUES(randomblob(100))"}
+{"sql":"CREATE TABLE t2(c INTEGER PRAGMA KEY, d)"}
+{"sql":"INSERT INTO t2 VALUES(1, randomblob(1100))"}

@@ -1,0 +1,9 @@
+{"sql":"CREATE INDEX t1i1 ON t1(x DESC)"}
+{"sql":"SELECT max(rowid) FROM t4 UNION SELECT max(rowid) FROM t5"}
+{"sql":"CREATE INDEX i6 ON t6(x DESC)"}
+{"sql":"INSERT INTO t11(a,b,c) VALUES(1,10,5),(2,8,11),(3,1,4),(4,20,1),(5,16,4)"}
+{"sql":"CREATE INDEX t11bc ON t11(b+c)"}
+{"sql":"SELECT max(b+c) FROM t11"}
+{"sql":"SELECT a, max(b+c) FROM t11"}
+{"sql":"SELECT a, min(b+c) FROM t11"}
+{"sql":"INSERT INTO t11(a,b,c) VALUES(6,NULL,0),(7,0,NULL)"}

@@ -1,0 +1,22 @@
+{"sql":"CREATE TABLE log(x, a, b)"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM tbl"}
+{"sql":"CREATE INDEX i1 ON tbl(a)"}
+{"sql":"CREATE TRIGGER t1 AFTER INSERT ON tbl BEGIN\n    INSERT INTO log VALUES('after insert', new.a, new.b);\n  END"}
+{"sql":"CREATE TRIGGER v1 AFTER UPDATE ON tbl BEGIN\n    INSERT INTO log VALUES('after update', new.a, new.b);\n  END"}
+{"sql":"CREATE TRIGGER i1 AFTER DELETE ON tbl BEGIN\n    INSERT INTO log VALUES('after delete', old.a, old.b);\n  END"}
+{"sql":"UPDATE tbl SET b=a+b, a=a+1"}
+{"sql":"DELETE FROM tbl"}
+{"sql":"SELECT x, a, b FROM log"}
+{"sql":"CREATE TRIGGER t1 AFTER INSERT ON tbl BEGIN\n      INSERT INTO log VALUES('after insert', new.a, new.b);\n    END"}
+{"sql":"CREATE TRIGGER i1 AFTER DELETE ON tbl BEGIN\n      INSERT INTO log VALUES('after delete', old.a, old.b);\n    END"}
+{"sql":"INSERT INTO tbl VALUES('a', 'b')"}
+{"sql":"INSERT INTO tbl VALUES('c', 'd')"}
+{"sql":"CREATE TEMP TRIGGER x1 AFTER UPDATE ON tbl BEGIN\n      INSERT INTO log VALUES('after update', new.a, new.b);\n    END"}
+{"sql":"CREATE TEMP TABLE x1(x)"}
+{"sql":"INSERT INTO x1 VALUES(123)"}
+{"sql":"select sql from temp.sqlite_master WHERE type='table'"}
+{"sql":"ALTER TABLE tbl RENAME TO tbl2"}
+{"sql":"select sql from sqlite_temp_master WHERE type='table'"}
+{"sql":"INSERT INTO tbl2 VALUES('e', 'f')"}
+{"sql":"UPDATE tbl2 SET a='g', b='h'"}
+{"sql":"INSERT INTO x1 VALUES(456)"}

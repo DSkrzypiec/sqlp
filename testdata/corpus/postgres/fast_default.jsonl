@@ -1,0 +1,175 @@
+{"sql":"SET search_path = fast_default","shape":"SET search_path TO fast_default;"}
+{"sql":"CREATE SCHEMA fast_default","shape":"CREATE SCHEMA fast_default;"}
+{"sql":"CREATE TABLE m(id OID)","shape":"CREATE TABLE m (id OID);"}
+{"sql":"INSERT INTO m VALUES (NULL::OID)","shape":"INSERT INTO m VALUES (NULL::OID);"}
+{"sql":"CREATE FUNCTION set(tabname name) RETURNS VOID\nAS $$\nBEGIN\n  UPDATE m\n  SET id = (SELECT c.relfilenode\n            FROM pg_class AS c, pg_namespace AS s\n            WHERE c.relname = tabname\n                AND c.relnamespace = s.oid\n                AND s.nspname = 'fast_default');\nEND;\n$$ LANGUAGE 'plpgsql'","shape":"CREATE FUNCTION set(tabname name) RETURNS VOID AS '\nBEGIN\n  UPDATE m\n  SET id = (SELECT c.relfilenode\n            FROM pg_class AS c, pg_namespace AS s\n            WHERE c.relname = tabname\n                AND c.relnamespace = s.oid\n                AND s.nspname = ''fast_default'');\nEND;\n' LANGUAGE 'plpgsql';"}
+{"sql":"CREATE FUNCTION comp() RETURNS TEXT\nAS $$\nBEGIN\n  RETURN (SELECT CASE\n               WHEN m.id = c.relfilenode THEN 'Unchanged'\n               ELSE 'Rewritten'\n               END\n           FROM m, pg_class AS c, pg_namespace AS s\n           WHERE c.relname = 't'\n               AND c.relnamespace = s.oid\n               AND s.nspname = 'fast_default');\nEND;\n$$ LANGUAGE 'plpgsql'","shape":"CREATE FUNCTION comp() RETURNS TEXT AS '\nBEGIN\n  RETURN (SELECT CASE\n               WHEN m.id = c.relfilenode THEN ''Unchanged''\n               ELSE ''Rewritten''\n               END\n           FROM m, pg_class AS c, pg_namespace AS s\n           WHERE c.relname = ''t''\n               AND c.relnamespace = s.oid\n               AND s.nspname = ''fast_default'');\nEND;\n' LANGUAGE 'plpgsql';"}
+{"sql":"CREATE FUNCTION log_rewrite() RETURNS event_trigger\nLANGUAGE plpgsql as\n$func$\n\ndeclare\n   this_schema text;\nbegin\n    select into this_schema relnamespace::regnamespace::text\n    from pg_class\n    where oid = pg_event_trigger_table_rewrite_oid();\n    if this_schema = 'fast_default'\n    then\n        RAISE NOTICE 'rewriting table % for reason %',\n          pg_event_trigger_table_rewrite_oid()::regclass,\n          pg_event_trigger_table_rewrite_reason();\n    end if;\nend;\n$func$","shape":"CREATE FUNCTION log_rewrite() RETURNS event_trigger LANGUAGE plpgsql AS '\n\ndeclare\n   this_schema text;\nbegin\n    select into this_schema relnamespace::regnamespace::text\n    from pg_class\n    where oid = pg_event_trigger_table_rewrite_oid();\n    if this_schema = ''fast_default''\n    then\n        RAISE NOTICE ''rewriting table % for reason %'',\n          pg_event_trigger_table_rewrite_oid()::regclass,\n          pg_event_trigger_table_rewrite_reason();\n    end if;\nend;\n';"}
+{"sql":"CREATE TABLE has_volatile AS\nSELECT * FROM generate_series(1,10) id","shape":"CREATE TABLE has_volatile AS SELECT * FROM generate_series(1, 10) AS id;"}
+{"sql":"CREATE EVENT TRIGGER has_volatile_rewrite\n                  ON table_rewrite\n   EXECUTE PROCEDURE log_rewrite()"}
+{"sql":"ALTER TABLE has_volatile ADD col1 int","shape":"ALTER TABLE has_volatile ADD COLUMN col1 int;"}
+{"sql":"ALTER TABLE has_volatile ADD col2 int DEFAULT 1","shape":"ALTER TABLE has_volatile ADD COLUMN col2 int DEFAULT 1;"}
+{"sql":"ALTER TABLE has_volatile ADD col3 timestamptz DEFAULT current_timestamp","shape":"ALTER TABLE has_volatile ADD COLUMN col3 timestamptz DEFAULT current_timestamp;"}
+{"sql":"ALTER TABLE has_volatile ADD col4 int DEFAULT (random() * 10000)::int","shape":"ALTER TABLE has_volatile ADD COLUMN col4 int DEFAULT (random() * 10000)::int;"}
+{"sql":"CREATE TABLE T(pk INT NOT NULL PRIMARY KEY, c_int INT DEFAULT 1)","shape":"CREATE TABLE T (pk INT NOT NULL PRIMARY KEY, c_int INT DEFAULT 1);"}
+{"sql":"SELECT set('t')","shape":"SELECT set('t');"}
+{"sql":"INSERT INTO T VALUES (1), (2)","shape":"INSERT INTO T VALUES (1), (2);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_bpchar BPCHAR(5) DEFAULT 'hello',\n              ALTER COLUMN c_int SET DEFAULT 2","shape":"ALTER TABLE T ADD COLUMN c_bpchar BPCHAR(5) DEFAULT 'hello', ALTER COLUMN c_int SET DEFAULT 2;"}
+{"sql":"INSERT INTO T VALUES (3), (4)","shape":"INSERT INTO T VALUES (3), (4);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_text TEXT  DEFAULT 'world',\n              ALTER COLUMN c_bpchar SET DEFAULT 'dog'","shape":"ALTER TABLE T ADD COLUMN c_text TEXT DEFAULT 'world', ALTER COLUMN c_bpchar SET DEFAULT 'dog';"}
+{"sql":"INSERT INTO T VALUES (5), (6)","shape":"INSERT INTO T VALUES (5), (6);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_date DATE DEFAULT '2016-06-02',\n              ALTER COLUMN c_text SET DEFAULT 'cat'","shape":"ALTER TABLE T ADD COLUMN c_date DATE DEFAULT '2016-06-02', ALTER COLUMN c_text SET DEFAULT 'cat';"}
+{"sql":"INSERT INTO T VALUES (7), (8)","shape":"INSERT INTO T VALUES (7), (8);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_timestamp TIMESTAMP DEFAULT '2016-09-01 12:00:00',\n              ADD COLUMN c_timestamp_null TIMESTAMP,\n              ALTER COLUMN c_date SET DEFAULT '2010-01-01'","shape":"ALTER TABLE T ADD COLUMN c_timestamp TIMESTAMP DEFAULT '2016-09-01 12:00:00', ADD COLUMN c_timestamp_null TIMESTAMP, ALTER COLUMN c_date SET DEFAULT '2010-01-01';"}
+{"sql":"INSERT INTO T VALUES (9), (10)","shape":"INSERT INTO T VALUES (9), (10);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_array TEXT[]\n                  DEFAULT '{\"This\", \"is\", \"the\", \"real\", \"world\"}',\n              ALTER COLUMN c_timestamp SET DEFAULT '1970-12-31 11:12:13',\n              ALTER COLUMN c_timestamp_null SET DEFAULT '2016-09-29 12:00:00'","shape":"ALTER TABLE T ADD COLUMN c_array TEXT[] DEFAULT '{\"This\", \"is\", \"the\", \"real\", \"world\"}', ALTER COLUMN c_timestamp SET DEFAULT '1970-12-31 11:12:13', ALTER COLUMN c_timestamp_null SET DEFAULT '2016-09-29 12:00:00';"}
+{"sql":"INSERT INTO T VALUES (11), (12)","shape":"INSERT INTO T VALUES (11), (12);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_small SMALLINT DEFAULT -5,\n              ADD COLUMN c_small_null SMALLINT,\n              ALTER COLUMN c_array\n                  SET DEFAULT '{\"This\", \"is\", \"no\", \"fantasy\"}'","shape":"ALTER TABLE T ADD COLUMN c_small SMALLINT DEFAULT -5, ADD COLUMN c_small_null SMALLINT, ALTER COLUMN c_array SET DEFAULT '{\"This\", \"is\", \"no\", \"fantasy\"}';"}
+{"sql":"INSERT INTO T VALUES (13), (14)","shape":"INSERT INTO T VALUES (13), (14);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_big BIGINT DEFAULT 180000000000018,\n              ALTER COLUMN c_small SET DEFAULT 9,\n              ALTER COLUMN c_small_null SET DEFAULT 13","shape":"ALTER TABLE T ADD COLUMN c_big BIGINT DEFAULT 180000000000018, ALTER COLUMN c_small SET DEFAULT 9, ALTER COLUMN c_small_null SET DEFAULT 13;"}
+{"sql":"INSERT INTO T VALUES (15), (16)","shape":"INSERT INTO T VALUES (15), (16);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_num NUMERIC DEFAULT 1.00000000001,\n              ALTER COLUMN c_big SET DEFAULT -9999999999999999","shape":"ALTER TABLE T ADD COLUMN c_num NUMERIC DEFAULT 1.00000000001, ALTER COLUMN c_big SET DEFAULT -9999999999999999;"}
+{"sql":"INSERT INTO T VALUES (17), (18)","shape":"INSERT INTO T VALUES (17), (18);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_time TIME DEFAULT '12:00:00',\n              ALTER COLUMN c_num SET DEFAULT 2.000000000000002","shape":"ALTER TABLE T ADD COLUMN c_time TIME DEFAULT '12:00:00', ALTER COLUMN c_num SET DEFAULT 2.000000000000002;"}
+{"sql":"INSERT INTO T VALUES (19), (20)","shape":"INSERT INTO T VALUES (19), (20);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_interval INTERVAL DEFAULT '1 day',\n              ALTER COLUMN c_time SET DEFAULT '23:59:59'","shape":"ALTER TABLE T ADD COLUMN c_interval INTERVAL DEFAULT '1 day', ALTER COLUMN c_time SET DEFAULT '23:59:59';"}
+{"sql":"INSERT INTO T VALUES (21), (22)","shape":"INSERT INTO T VALUES (21), (22);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_hugetext TEXT DEFAULT repeat('abcdefg',1000),\n              ALTER COLUMN c_interval SET DEFAULT '3 hours'","shape":"ALTER TABLE T ADD COLUMN c_hugetext TEXT DEFAULT repeat('abcdefg', 1000), ALTER COLUMN c_interval SET DEFAULT '3 hours';"}
+{"sql":"INSERT INTO T VALUES (23), (24)","shape":"INSERT INTO T VALUES (23), (24);"}
+{"sql":"ALTER TABLE T ALTER COLUMN c_interval DROP DEFAULT,\n              ALTER COLUMN c_hugetext SET DEFAULT repeat('poiuyt', 1000)","shape":"ALTER TABLE T ALTER COLUMN c_interval DROP DEFAULT, ALTER COLUMN c_hugetext SET DEFAULT repeat('poiuyt', 1000);"}
+{"sql":"INSERT INTO T VALUES (25), (26)","shape":"INSERT INTO T VALUES (25), (26);"}
+{"sql":"ALTER TABLE T ALTER COLUMN c_bpchar    DROP DEFAULT,\n              ALTER COLUMN c_date      DROP DEFAULT,\n              ALTER COLUMN c_text      DROP DEFAULT,\n              ALTER COLUMN c_timestamp DROP DEFAULT,\n              ALTER COLUMN c_array     DROP DEFAULT,\n              ALTER COLUMN c_small     DROP DEFAULT,\n              ALTER COLUMN c_big       DROP DEFAULT,\n              ALTER COLUMN c_num       DROP DEFAULT,\n              ALTER COLUMN c_time      DROP DEFAULT,\n              ALTER COLUMN c_hugetext  DROP DEFAULT","shape":"ALTER TABLE T ALTER COLUMN c_bpchar DROP DEFAULT, ALTER COLUMN c_date DROP DEFAULT, ALTER COLUMN c_text DROP DEFAULT, ALTER COLUMN c_timestamp DROP DEFAULT, ALTER COLUMN c_array DROP DEFAULT, ALTER COLUMN c_small DROP DEFAULT, ALTER COLUMN c_big DROP DEFAULT, ALTER COLUMN c_num DROP DEFAULT, ALTER COLUMN c_time DROP DEFAULT, ALTER COLUMN c_hugetext DROP DEFAULT;"}
+{"sql":"INSERT INTO T VALUES (27), (28)","shape":"INSERT INTO T VALUES (27), (28);"}
+{"sql":"SELECT pk, c_int, c_bpchar, c_text, c_date, c_timestamp,\n       c_timestamp_null, c_array, c_small, c_small_null,\n       c_big, c_num, c_time, c_interval,\n       c_hugetext = repeat('abcdefg',1000) as c_hugetext_origdef,\n       c_hugetext = repeat('poiuyt', 1000) as c_hugetext_newdef\nFROM T ORDER BY pk","shape":"SELECT pk, c_int, c_bpchar, c_text, c_date, c_timestamp, c_timestamp_null, c_array, c_small, c_small_null, c_big, c_num, c_time, c_interval, c_hugetext = repeat('abcdefg', 1000) AS c_hugetext_origdef, c_hugetext = repeat('poiuyt', 1000) AS c_hugetext_newdef FROM T ORDER BY pk;"}
+{"sql":"SELECT comp()","shape":"SELECT comp();"}
+{"sql":"DROP TABLE T","shape":"DROP TABLE T;"}
+{"sql":"CREATE OR REPLACE FUNCTION foo(a INT) RETURNS TEXT AS $$\nDECLARE res TEXT := '';\n        i INT;\nBEGIN\n  i := 0;\n  WHILE (i < a) LOOP\n    res := res || chr(ascii('a') + i);\n    i := i + 1;\n  END LOOP;\n  RETURN res;\nEND; $$ LANGUAGE PLPGSQL STABLE","shape":"CREATE OR REPLACE FUNCTION foo(a INT) RETURNS TEXT AS '\nDECLARE res TEXT := '''';\n        i INT;\nBEGIN\n  i := 0;\n  WHILE (i < a) LOOP\n    res := res || chr(ascii(''a'') + i);\n    i := i + 1;\n  END LOOP;\n  RETURN res;\nEND; ' LANGUAGE PLPGSQL STABLE;"}
+{"sql":"CREATE TABLE T(pk INT NOT NULL PRIMARY KEY, c_int INT DEFAULT LENGTH(foo(6)))","shape":"CREATE TABLE T (pk INT NOT NULL PRIMARY KEY, c_int INT DEFAULT LENGTH(foo(6)));"}
+{"sql":"ALTER TABLE T ADD COLUMN c_bpchar BPCHAR(5) DEFAULT foo(4),\n              ALTER COLUMN c_int SET DEFAULT LENGTH(foo(8))","shape":"ALTER TABLE T ADD COLUMN c_bpchar BPCHAR(5) DEFAULT foo(4), ALTER COLUMN c_int SET DEFAULT LENGTH(foo(8));"}
+{"sql":"ALTER TABLE T ADD COLUMN c_text TEXT  DEFAULT foo(6),\n              ALTER COLUMN c_bpchar SET DEFAULT foo(3)","shape":"ALTER TABLE T ADD COLUMN c_text TEXT DEFAULT foo(6), ALTER COLUMN c_bpchar SET DEFAULT foo(3);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_date DATE\n                  DEFAULT '2016-06-02'::DATE  + LENGTH(foo(10)),\n              ALTER COLUMN c_text SET DEFAULT foo(12)","shape":"ALTER TABLE T ADD COLUMN c_date DATE DEFAULT '2016-06-02'::DATE + LENGTH(foo(10)), ALTER COLUMN c_text SET DEFAULT foo(12);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_timestamp TIMESTAMP\n                  DEFAULT '2016-09-01'::DATE + LENGTH(foo(10)),\n              ALTER COLUMN c_date\n                  SET DEFAULT '2010-01-01'::DATE - LENGTH(foo(4))","shape":"ALTER TABLE T ADD COLUMN c_timestamp TIMESTAMP DEFAULT '2016-09-01'::DATE + LENGTH(foo(10)), ALTER COLUMN c_date SET DEFAULT '2010-01-01'::DATE - LENGTH(foo(4));"}
+{"sql":"ALTER TABLE T ADD COLUMN c_array TEXT[]\n                  DEFAULT ('{\"This\", \"is\", \"' || foo(4) ||\n                           '\",\"the\", \"real\", \"world\"}')::TEXT[],\n              ALTER COLUMN c_timestamp\n                  SET DEFAULT '1970-12-31'::DATE + LENGTH(foo(30))","shape":"ALTER TABLE T ADD COLUMN c_array TEXT[] DEFAULT (('{\"This\", \"is\", \"' || foo(4)) || '\",\"the\", \"real\", \"world\"}')::TEXT[], ALTER COLUMN c_timestamp SET DEFAULT '1970-12-31'::DATE + LENGTH(foo(30));"}
+{"sql":"ALTER TABLE T ALTER COLUMN c_int DROP DEFAULT,\n              ALTER COLUMN c_array\n                  SET DEFAULT ('{\"This\", \"is\", \"' || foo(1) ||\n                               '\", \"fantasy\"}')::text[]","shape":"ALTER TABLE T ALTER COLUMN c_int DROP DEFAULT, ALTER COLUMN c_array SET DEFAULT (('{\"This\", \"is\", \"' || foo(1)) || '\", \"fantasy\"}')::text[];"}
+{"sql":"ALTER TABLE T ALTER COLUMN c_bpchar    DROP DEFAULT,\n              ALTER COLUMN c_date      DROP DEFAULT,\n              ALTER COLUMN c_text      DROP DEFAULT,\n              ALTER COLUMN c_timestamp DROP DEFAULT,\n              ALTER COLUMN c_array     DROP DEFAULT","shape":"ALTER TABLE T ALTER COLUMN c_bpchar DROP DEFAULT, ALTER COLUMN c_date DROP DEFAULT, ALTER COLUMN c_text DROP DEFAULT, ALTER COLUMN c_timestamp DROP DEFAULT, ALTER COLUMN c_array DROP DEFAULT;"}
+{"sql":"SELECT * FROM T","shape":"SELECT * FROM T;"}
+{"sql":"CREATE DOMAIN domain1 AS int DEFAULT 11","shape":"CREATE DOMAIN domain1 AS int DEFAULT 11;"}
+{"sql":"CREATE DOMAIN domain2 AS int DEFAULT 10 + (random() * 10)::int","shape":"CREATE DOMAIN domain2 AS int DEFAULT 10 + (random() * 10)::int;"}
+{"sql":"CREATE DOMAIN domain3 AS text DEFAULT foo(4)","shape":"CREATE DOMAIN domain3 AS text DEFAULT foo(4);"}
+{"sql":"CREATE DOMAIN domain4 AS text[]\n  DEFAULT ('{\"This\", \"is\", \"' || foo(4) || '\",\"the\", \"real\", \"world\"}')::TEXT[]","shape":"CREATE DOMAIN domain4 AS text[] DEFAULT (('{\"This\", \"is\", \"' || foo(4)) || '\",\"the\", \"real\", \"world\"}')::TEXT[];"}
+{"sql":"CREATE TABLE t2 (a domain1)","shape":"CREATE TABLE t2 (a domain1);"}
+{"sql":"INSERT INTO t2 VALUES (1),(2)","shape":"INSERT INTO t2 VALUES (1), (2);"}
+{"sql":"ALTER TABLE t2 ADD COLUMN b domain1 default 3","shape":"ALTER TABLE t2 ADD COLUMN b domain1 DEFAULT 3;"}
+{"sql":"SELECT attnum, attname, atthasmissing, atthasdef, attmissingval\nFROM pg_attribute\nWHERE attnum > 0 AND attrelid = 't2'::regclass\nORDER BY attnum","shape":"SELECT attnum, attname, atthasmissing, atthasdef, attmissingval FROM pg_attribute WHERE (attnum > 0) AND (attrelid = 't2'::regclass) ORDER BY attnum;"}
+{"sql":"ALTER TABLE t2 ADD COLUMN c domain3 default left(random()::text,3)","shape":"ALTER TABLE t2 ADD COLUMN c domain3 DEFAULT left(random()::text, 3);"}
+{"sql":"ALTER TABLE t2 ADD COLUMN d domain4","shape":"ALTER TABLE t2 ADD COLUMN d domain4;"}
+{"sql":"ALTER TABLE t2 ADD COLUMN e domain2","shape":"ALTER TABLE t2 ADD COLUMN e domain2;"}
+{"sql":"SELECT a, b, length(c) = 3 as c_ok, d, e >= 10 as e_ok FROM t2","shape":"SELECT a, b, length(c) = 3 AS c_ok, d, e >= 10 AS e_ok FROM t2;"}
+{"sql":"DROP TABLE t2","shape":"DROP TABLE t2;"}
+{"sql":"DROP DOMAIN domain1","shape":"DROP DOMAIN domain1;"}
+{"sql":"DROP DOMAIN domain2","shape":"DROP DOMAIN domain2;"}
+{"sql":"DROP DOMAIN domain3","shape":"DROP DOMAIN domain3;"}
+{"sql":"DROP DOMAIN domain4","shape":"DROP DOMAIN domain4;"}
+{"sql":"DROP FUNCTION foo(INT)"}
+{"sql":"CREATE TABLE T(pk INT NOT NULL PRIMARY KEY)","shape":"CREATE TABLE T (pk INT NOT NULL PRIMARY KEY);"}
+{"sql":"INSERT INTO T VALUES (1)","shape":"INSERT INTO T VALUES (1);"}
+{"sql":"ALTER TABLE T ADD COLUMN c1 TIMESTAMP DEFAULT now()","shape":"ALTER TABLE T ADD COLUMN c1 TIMESTAMP DEFAULT now();"}
+{"sql":"ALTER TABLE T ADD COLUMN c2 TIMESTAMP DEFAULT clock_timestamp()","shape":"ALTER TABLE T ADD COLUMN c2 TIMESTAMP DEFAULT clock_timestamp();"}
+{"sql":"CREATE FUNCTION foolme(timestamptz DEFAULT clock_timestamp())\n  RETURNS timestamptz\n  IMMUTABLE AS 'select $1' LANGUAGE sql","shape":"CREATE FUNCTION foolme(timestamptz DEFAULT clock_timestamp()) RETURNS timestamptz IMMUTABLE AS 'select $1' LANGUAGE sql;"}
+{"sql":"ALTER TABLE T ADD COLUMN c3 timestamptz DEFAULT foolme()","shape":"ALTER TABLE T ADD COLUMN c3 timestamptz DEFAULT foolme();"}
+{"sql":"SELECT attname, atthasmissing, attmissingval FROM pg_attribute\n  WHERE attrelid = 't'::regclass AND attnum > 0\n  ORDER BY attnum","shape":"SELECT attname, atthasmissing, attmissingval FROM pg_attribute WHERE (attrelid = 't'::regclass) AND (attnum > 0) ORDER BY attnum;"}
+{"sql":"DROP FUNCTION foolme(timestamptz)"}
+{"sql":"CREATE TABLE T (pk INT NOT NULL PRIMARY KEY)","shape":"CREATE TABLE T (pk INT NOT NULL PRIMARY KEY);"}
+{"sql":"INSERT INTO T SELECT * FROM generate_series(1, 10) a","shape":"INSERT INTO T SELECT * FROM generate_series(1, 10) AS a;"}
+{"sql":"ALTER TABLE T ADD COLUMN c_bigint BIGINT NOT NULL DEFAULT -1","shape":"ALTER TABLE T ADD COLUMN c_bigint BIGINT NOT NULL DEFAULT -1;"}
+{"sql":"INSERT INTO T SELECT b, b - 10 FROM generate_series(11, 20) a(b)","shape":"INSERT INTO T SELECT b, b - 10 FROM generate_series(11, 20) AS a(b);"}
+{"sql":"ALTER TABLE T ADD COLUMN c_text TEXT DEFAULT 'hello'","shape":"ALTER TABLE T ADD COLUMN c_text TEXT DEFAULT 'hello';"}
+{"sql":"INSERT INTO T SELECT b, b - 10, (b + 10)::text FROM generate_series(21, 30) a(b)","shape":"INSERT INTO T SELECT b, b - 10, (b + 10)::text FROM generate_series(21, 30) AS a(b);"}
+{"sql":"SELECT c_bigint, c_text FROM T WHERE c_bigint = -1 LIMIT 1","shape":"SELECT c_bigint, c_text FROM T WHERE c_bigint = (-1) LIMIT 1;"}
+{"sql":"EXPLAIN (VERBOSE TRUE, COSTS FALSE)\nSELECT c_bigint, c_text FROM T WHERE c_bigint = -1 LIMIT 1","shape":"EXPLAIN (VERBOSE TRUE, COSTS FALSE) SELECT c_bigint, c_text FROM T WHERE c_bigint = (-1) LIMIT 1;"}
+{"sql":"SELECT c_bigint, c_text FROM T WHERE c_text = 'hello' LIMIT 1","shape":"SELECT c_bigint, c_text FROM T WHERE c_text = 'hello' LIMIT 1;"}
+{"sql":"EXPLAIN (VERBOSE TRUE, COSTS FALSE) SELECT c_bigint, c_text FROM T WHERE c_text = 'hello' LIMIT 1","shape":"EXPLAIN (VERBOSE TRUE, COSTS FALSE) SELECT c_bigint, c_text FROM T WHERE c_text = 'hello' LIMIT 1;"}
+{"sql":"SELECT COALESCE(c_bigint, pk), COALESCE(c_text, pk::text)\nFROM T\nORDER BY pk LIMIT 10","shape":"SELECT COALESCE(c_bigint, pk), COALESCE(c_text, pk::text) FROM T ORDER BY pk LIMIT 10;"}
+{"sql":"SELECT SUM(c_bigint), MAX(c_text COLLATE \"C\" ), MIN(c_text COLLATE \"C\") FROM T","shape":"SELECT SUM(c_bigint), MAX(c_text COLLATE \"C\"), MIN(c_text COLLATE \"C\") FROM T;"}
+{"sql":"SELECT * FROM T ORDER BY c_bigint, c_text, pk LIMIT 10","shape":"SELECT * FROM T ORDER BY c_bigint, c_text, pk LIMIT 10;"}
+{"sql":"EXPLAIN (VERBOSE TRUE, COSTS FALSE)\nSELECT * FROM T ORDER BY c_bigint, c_text, pk LIMIT 10","shape":"EXPLAIN (VERBOSE TRUE, COSTS FALSE) SELECT * FROM T ORDER BY c_bigint, c_text, pk LIMIT 10;"}
+{"sql":"SELECT * FROM T WHERE c_bigint > -1 ORDER BY c_bigint, c_text, pk LIMIT 10","shape":"SELECT * FROM T WHERE c_bigint > (-1) ORDER BY c_bigint, c_text, pk LIMIT 10;"}
+{"sql":"EXPLAIN (VERBOSE TRUE, COSTS FALSE)\nSELECT * FROM T WHERE c_bigint > -1 ORDER BY c_bigint, c_text, pk LIMIT 10","shape":"EXPLAIN (VERBOSE TRUE, COSTS FALSE) SELECT * FROM T WHERE c_bigint > (-1) ORDER BY c_bigint, c_text, pk LIMIT 10;"}
+{"sql":"DELETE FROM T WHERE pk BETWEEN 10 AND 20 RETURNING *","shape":"DELETE FROM T WHERE pk BETWEEN 10 AND 20 RETURNING *;"}
+{"sql":"EXPLAIN (VERBOSE TRUE, COSTS FALSE)\nDELETE FROM T WHERE pk BETWEEN 10 AND 20 RETURNING *","shape":"EXPLAIN (VERBOSE TRUE, COSTS FALSE) DELETE FROM T WHERE pk BETWEEN 10 AND 20 RETURNING *;"}
+{"sql":"UPDATE T SET c_text = '\"' || c_text || '\"'  WHERE pk < 10","shape":"UPDATE T SET c_text = ('\"' || c_text) || '\"' WHERE pk < 10;"}
+{"sql":"SELECT * FROM T WHERE c_text LIKE '\"%\"' ORDER BY PK","shape":"SELECT * FROM T WHERE c_text LIKE '\"%\"' ORDER BY PK;"}
+{"sql":"ALTER TABLE T ADD COLUMN c_int INT NOT NULL DEFAULT -1","shape":"ALTER TABLE T ADD COLUMN c_int INT NOT NULL DEFAULT -1;"}
+{"sql":"ALTER TABLE T ADD COLUMN c_text TEXT DEFAULT 'Hello'","shape":"ALTER TABLE T ADD COLUMN c_text TEXT DEFAULT 'Hello';"}
+{"sql":"ALTER TABLE T ALTER COLUMN c_text SET DEFAULT 'world',\n              ALTER COLUMN c_int  SET DEFAULT 1","shape":"ALTER TABLE T ALTER COLUMN c_text SET DEFAULT 'world', ALTER COLUMN c_int SET DEFAULT 1;"}
+{"sql":"SELECT * FROM T ORDER BY pk","shape":"SELECT * FROM T ORDER BY pk;"}
+{"sql":"CREATE INDEX i ON T(c_int, c_text)","shape":"CREATE INDEX i ON T (c_int, c_text);"}
+{"sql":"SELECT c_text FROM T WHERE c_int = -1","shape":"SELECT c_text FROM T WHERE c_int = (-1);"}
+{"sql":"CREATE TABLE t1 AS\nSELECT 1::int AS a , 2::int AS b\nFROM generate_series(1,20) q","shape":"CREATE TABLE t1 AS SELECT 1::int AS a, 2::int AS b FROM generate_series(1, 20) AS q;"}
+{"sql":"ALTER TABLE t1 ADD COLUMN c text","shape":"ALTER TABLE t1 ADD COLUMN c text;"}
+{"sql":"SELECT a,\n       stddev(cast((SELECT sum(1) FROM generate_series(1,20) x) AS float4))\n          OVER (PARTITION BY a,b,c ORDER BY b)\n       AS z\nFROM t1","shape":"SELECT a, stddev(CAST((SELECT sum(1) FROM generate_series(1, 20) AS x) AS float4)) OVER (PARTITION BY a, b, c ORDER BY b) AS z FROM t1;"}
+{"sql":"CREATE FUNCTION test_trigger()\nRETURNS trigger\nLANGUAGE plpgsql\nAS $$\n\nbegin\n    raise notice 'old tuple: %', to_json(OLD)::text;\n    if TG_OP = 'DELETE'\n    then\n       return OLD;\n    else\n       return NEW;\n    end if;\nend;\n\n$$","shape":"CREATE FUNCTION test_trigger() RETURNS trigger LANGUAGE plpgsql AS '\n\nbegin\n    raise notice ''old tuple: %'', to_json(OLD)::text;\n    if TG_OP = ''DELETE''\n    then\n       return OLD;\n    else\n       return NEW;\n    end if;\nend;\n\n';"}
+{"sql":"CREATE TABLE t (id serial PRIMARY KEY, a int, b int, c int)","shape":"CREATE TABLE t (id serial PRIMARY KEY, a int, b int, c int);"}
+{"sql":"INSERT INTO t (a,b,c) VALUES (1,2,3)","shape":"INSERT INTO t (a, b, c) VALUES (1, 2, 3);"}
+{"sql":"ALTER TABLE t ADD COLUMN x int NOT NULL DEFAULT 4","shape":"ALTER TABLE t ADD COLUMN x int NOT NULL DEFAULT 4;"}
+{"sql":"ALTER TABLE t ADD COLUMN y int NOT NULL DEFAULT 5","shape":"ALTER TABLE t ADD COLUMN y int NOT NULL DEFAULT 5;"}
+{"sql":"CREATE TRIGGER a BEFORE UPDATE ON t FOR EACH ROW EXECUTE PROCEDURE test_trigger()","shape":"CREATE TRIGGER a BEFORE UPDATE ON t FOR EACH ROW EXECUTE FUNCTION test_trigger();"}
+{"sql":"SELECT * FROM t","shape":"SELECT * FROM t;"}
+{"sql":"UPDATE t SET y = 2","shape":"UPDATE t SET y = 2;"}
+{"sql":"DROP TABLE t","shape":"DROP TABLE t;"}
+{"sql":"ALTER TABLE t ADD COLUMN y int","shape":"ALTER TABLE t ADD COLUMN y int;"}
+{"sql":"ALTER TABLE t ADD COLUMN x int","shape":"ALTER TABLE t ADD COLUMN x int;"}
+{"sql":"INSERT INTO t (a,b,c) VALUES (1,2,NULL)","shape":"INSERT INTO t (a, b, c) VALUES (1, 2, NULL);"}
+{"sql":"CREATE TABLE leader (a int PRIMARY KEY, b int)","shape":"CREATE TABLE leader (a int PRIMARY KEY, b int);"}
+{"sql":"CREATE TABLE follower (a int REFERENCES leader ON DELETE CASCADE, b int)","shape":"CREATE TABLE follower (a int REFERENCES leader ON DELETE CASCADE, b int);"}
+{"sql":"INSERT INTO leader VALUES (1, 1), (2, 2)","shape":"INSERT INTO leader VALUES (1, 1), (2, 2);"}
+{"sql":"ALTER TABLE leader ADD c int","shape":"ALTER TABLE leader ADD COLUMN c int;"}
+{"sql":"ALTER TABLE leader DROP c","shape":"ALTER TABLE leader DROP COLUMN c;"}
+{"sql":"DELETE FROM leader","shape":"DELETE FROM leader;"}
+{"sql":"CREATE TABLE vtype( a integer)","shape":"CREATE TABLE vtype (a integer);"}
+{"sql":"INSERT INTO vtype VALUES (1)","shape":"INSERT INTO vtype VALUES (1);"}
+{"sql":"ALTER TABLE vtype ADD COLUMN b DOUBLE PRECISION DEFAULT 0.2","shape":"ALTER TABLE vtype ADD COLUMN b DOUBLE PRECISION DEFAULT 0.2;"}
+{"sql":"ALTER TABLE vtype ADD COLUMN c BOOLEAN DEFAULT true","shape":"ALTER TABLE vtype ADD COLUMN c BOOLEAN DEFAULT TRUE;"}
+{"sql":"SELECT * FROM vtype","shape":"SELECT * FROM vtype;"}
+{"sql":"ALTER TABLE vtype\n      ALTER b TYPE text USING b::text,\n      ALTER c TYPE text USING c::text","shape":"ALTER TABLE vtype ALTER COLUMN b SET DATA TYPE text USING b::text, ALTER COLUMN c SET DATA TYPE text USING c::text;"}
+{"sql":"CREATE TABLE vtype2 (a int)","shape":"CREATE TABLE vtype2 (a int);"}
+{"sql":"INSERT INTO vtype2 VALUES (1)","shape":"INSERT INTO vtype2 VALUES (1);"}
+{"sql":"ALTER TABLE vtype2 ADD COLUMN b varchar(10) DEFAULT 'xxx'","shape":"ALTER TABLE vtype2 ADD COLUMN b varchar(10) DEFAULT 'xxx';"}
+{"sql":"ALTER TABLE vtype2 ALTER COLUMN b SET DEFAULT 'yyy'","shape":"ALTER TABLE vtype2 ALTER COLUMN b SET DEFAULT 'yyy';"}
+{"sql":"INSERT INTO vtype2 VALUES (2)","shape":"INSERT INTO vtype2 VALUES (2);"}
+{"sql":"ALTER TABLE vtype2 ALTER COLUMN b TYPE varchar(20) USING b::varchar(20)","shape":"ALTER TABLE vtype2 ALTER COLUMN b SET DATA TYPE varchar(20) USING b::varchar(20);"}
+{"sql":"SELECT * FROM vtype2","shape":"SELECT * FROM vtype2;"}
+{"sql":"CREATE TABLE t()","shape":"CREATE TABLE t ();"}
+{"sql":"INSERT INTO t DEFAULT VALUES","shape":"INSERT INTO t DEFAULT VALUES;"}
+{"sql":"ALTER TABLE t ADD COLUMN a int DEFAULT 1","shape":"ALTER TABLE t ADD COLUMN a int DEFAULT 1;"}
+{"sql":"CREATE INDEX ON t(a)","shape":"CREATE INDEX ON t (a);"}
+{"sql":"UPDATE t SET a = NULL","shape":"UPDATE t SET a = NULL;"}
+{"sql":"SET LOCAL enable_seqscan = true","shape":"SET LOCAL enable_seqscan TO TRUE;"}
+{"sql":"SELECT * FROM t WHERE a IS NULL","shape":"SELECT * FROM t WHERE a IS NULL;"}
+{"sql":"CREATE FOREIGN DATA WRAPPER dummy"}
+{"sql":"CREATE SERVER s0 FOREIGN DATA WRAPPER dummy"}
+{"sql":"CREATE FOREIGN TABLE ft1 (c1 integer NOT NULL) SERVER s0"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c8 integer DEFAULT 0"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 TYPE char(10)"}
+{"sql":"SELECT count(*)\n  FROM pg_attribute\n  WHERE attrelid = 'ft1'::regclass AND\n    (attmissingval IS NOT NULL OR atthasmissing)","shape":"SELECT count(*) FROM pg_attribute WHERE (attrelid = 'ft1'::regclass) AND ((attmissingval IS NOT NULL) OR atthasmissing);"}
+{"sql":"DROP FOREIGN TABLE ft1"}
+{"sql":"DROP SERVER s0"}
+{"sql":"DROP FOREIGN DATA WRAPPER dummy"}
+{"sql":"DROP TABLE vtype","shape":"DROP TABLE vtype;"}
+{"sql":"DROP TABLE vtype2","shape":"DROP TABLE vtype2;"}
+{"sql":"DROP TABLE follower","shape":"DROP TABLE follower;"}
+{"sql":"DROP TABLE leader","shape":"DROP TABLE leader;"}
+{"sql":"DROP FUNCTION test_trigger()"}
+{"sql":"DROP TABLE t1","shape":"DROP TABLE t1;"}
+{"sql":"DROP FUNCTION set(name)"}
+{"sql":"DROP FUNCTION comp()"}
+{"sql":"DROP TABLE m","shape":"DROP TABLE m;"}
+{"sql":"DROP TABLE has_volatile","shape":"DROP TABLE has_volatile;"}
+{"sql":"DROP EVENT TRIGGER has_volatile_rewrite"}
+{"sql":"DROP FUNCTION log_rewrite"}
+{"sql":"DROP SCHEMA fast_default","shape":"DROP SCHEMA fast_default;"}
+{"sql":"set search_path = public","shape":"SET search_path TO public;"}
+{"sql":"create table has_fast_default(f1 int)","shape":"CREATE TABLE has_fast_default (f1 int);"}
+{"sql":"insert into has_fast_default values(1)","shape":"INSERT INTO has_fast_default VALUES (1);"}
+{"sql":"alter table has_fast_default add column f2 int default 42","shape":"ALTER TABLE has_fast_default ADD COLUMN f2 int DEFAULT 42;"}
+{"sql":"table has_fast_default","shape":"TABLE has_fast_default;"}

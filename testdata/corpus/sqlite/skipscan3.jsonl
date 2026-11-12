@@ -1,0 +1,12 @@
+{"sql":"CREATE TABLE t1(a,b,c,d,PRIMARY KEY(a,b,c))"}
+{"sql":"WITH RECURSIVE\n    c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<1000)\n  INSERT INTO t1(a,b,c,d)\n    SELECT 1, 1, x, printf('x%04d',x) FROM c"}
+{"sql":"EXPLAIN QUERY PLAN SELECT d FROM t1 WHERE +a=1 AND c=32"}
+{"sql":"SELECT d FROM t1 WHERE +a=1 AND c=32"}
+{"sql":"EXPLAIN QUERY PLAN SELECT d FROM t1 WHERE a=1 AND c=32"}
+{"sql":"SELECT d FROM t1 WHERE a=1 AND c=32"}
+{"sql":"CREATE TABLE t2(a,b,c,d,PRIMARY KEY(a,b,c)) WITHOUT ROWID"}
+{"sql":"WITH RECURSIVE\n    c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<1000)\n  INSERT INTO t2(a,b,c,d)\n    SELECT 1, 1, x, printf('x%04d',x) FROM c"}
+{"sql":"EXPLAIN QUERY PLAN SELECT d FROM t2 WHERE +a=1 AND c=32"}
+{"sql":"SELECT d FROM t2 WHERE +a=1 AND c=32"}
+{"sql":"EXPLAIN QUERY PLAN SELECT d FROM t2 WHERE a=1 AND c=32"}
+{"sql":"SELECT d FROM t2 WHERE a=1 AND c=32"}

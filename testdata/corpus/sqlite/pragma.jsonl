@@ -1,0 +1,193 @@
+{"sql":"PRAGMA default_cache_size"}
+{"sql":"PRAGMA synchronous=OFF"}
+{"sql":"PRAGMA cache_size=1234"}
+{"sql":"PRAGMA cache_size=-4321"}
+{"sql":"PRAGMA synchronous=ON"}
+{"sql":"PRAGMA default_cache_size=-123"}
+{"sql":"PRAGMA synchronous=EXTRA"}
+{"sql":"PRAGMA synchronous=0"}
+{"sql":"PRAGMA synchronous=2"}
+{"sql":"PRAGMA synchronous=4"}
+{"sql":"PRAGMA synchronous=3"}
+{"sql":"PRAGMA synchronous=8"}
+{"sql":"PRAGMA synchronous=10"}
+{"sql":"PRAGMA default_cache_size = 0"}
+{"sql":"PRAGMA default_cache_size = -500"}
+{"sql":"PRAGMA default_cache_size = 500"}
+{"sql":"PRAGMA vdbe_listing=YES"}
+{"sql":"PRAGMA vdbe_listing"}
+{"sql":"PRAGMA vdbe_listing=NO"}
+{"sql":"PRAGMA parser_trace=ON"}
+{"sql":"PRAGMA parser_trace=OFF"}
+{"sql":"PRAGMA bogus = -1234"}
+{"sql":"pragma aux.synchronous"}
+{"sql":"pragma aux.synchronous = OFF"}
+{"sql":"pragma synchronous"}
+{"sql":"pragma aux.synchronous = ON"}
+{"sql":"INSERT INTO t2 VALUES(11,2,3)"}
+{"sql":"INSERT INTO t2 VALUES(22,3,4)"}
+{"sql":"SELECT rowid, * from t2"}
+{"sql":"PRAGMA integrity_check=1"}
+{"sql":"ATTACH DATABASE 'test.db' AS t2"}
+{"sql":"PRAGMA integrity_check=4"}
+{"sql":"PRAGMA integrity_check='4'"}
+{"sql":"PRAGMA integrity_check=xyz"}
+{"sql":"PRAGMA integrity_check=t2"}
+{"sql":"PRAGMA integrity_check=sqlite_schema"}
+{"sql":"PRAGMA integrity_check=0"}
+{"sql":"DETACH t2"}
+{"sql":"REINDEX t2"}
+{"sql":"PRAGMA QUICK_CHECK"}
+{"sql":"ATTACH 'testerr.db' AS t2"}
+{"sql":"PRAGMA t2.integrity_check=t2"}
+{"sql":"PRAGMA t2.integrity_check=sqlite_schema"}
+{"sql":"PRAGMA integrity_check=5"}
+{"sql":"PRAGMA integrity_check=3"}
+{"sql":"PRAGMA integrity_check(2)"}
+{"sql":"ATTACH 'testerr.db' AS t3"}
+{"sql":"PRAGMA integrity_check(10)"}
+{"sql":"PRAGMA integrity_check=8"}
+{"sql":"INSERT INTO t1 VALUES(1,1),(2,2),(3,3),(2,4),(NULL,5),(NULL,6)"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE UNIQUE INDEX t1a ON t1(a)'\n        WHERE name='t1a'"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE TABLE t1(a NOT NULL,b)'\n        WHERE name='t1'"}
+{"sql":"PRAGMA integrity_check(3)"}
+{"sql":"PRAGMA integrity_check(1)"}
+{"sql":"ALTER TABLE t1 ADD COLUMN b NOT NULL DEFAULT 0.25"}
+{"sql":"PRAGMA integrity_check(t1)"}
+{"sql":"ALTER TABLE t1 ADD COLUMN c CHECK (1)"}
+{"sql":"CREATE TABLE t1(\n    a INTEGER PRIMARY KEY,\n    b TEXT COLLATE nocase,\n    c INT COLLATE nocase,\n    d TEXT\n  )"}
+{"sql":"INSERT INTO t1(a,b,c,d) VALUES\n    (1, 'one','one','one'),\n    (2, 'two','two','two'),\n    (3, 'three','three','three'),\n    (4, 'four','four','four'),\n    (5, 'five','five','five')"}
+{"sql":"CREATE INDEX t1bcd ON t1(b,c,d)"}
+{"sql":"CREATE TABLE t2(\n    a INTEGER PRIMARY KEY,\n    b TEXT COLLATE nocase,\n    c INT COLLATE nocase,\n    d TEXT\n  )"}
+{"sql":"INSERT INTO t2(a,b,c,d) VALUES\n    (1, 'one','one','one'),\n    (2, 'two','two','TWO'),\n    (3, 'three','THREE','three'),\n    (4, 'FOUR','four','four'),\n    (5, 'FIVE','FIVE','five')"}
+{"sql":"CREATE INDEX t2bcd ON t2(b,c,d)"}
+{"sql":"CREATE TEMP TABLE saved_schema AS SELECT name, rootpage FROM sqlite_schema"}
+{"sql":"UPDATE sqlite_schema\n     SET rootpage=(SELECT rootpage FROM saved_schema WHERE name='t2bcd')\n   WHERE name='t1bcd'"}
+{"sql":"UPDATE sqlite_schema\n     SET rootpage=(SELECT rootpage FROM saved_schema WHERE name='t1bcd')\n   WHERE name='t2bcd'"}
+{"sql":"PRAGMA Writable_schema=RESET"}
+{"sql":"SELECT integrity_check AS x FROM pragma_integrity_check ORDER BY 1"}
+{"sql":"pragma aux.cache_size"}
+{"sql":"pragma aux.default_cache_size"}
+{"sql":"pragma aux.cache_size = 50"}
+{"sql":"pragma aux.default_cache_size = 456"}
+{"sql":"pragma cache_size"}
+{"sql":"pragma default_cache_size"}
+{"sql":"ATTACH 'test3.db' AS aux"}
+{"sql":"pragma synchronous = OFF"}
+{"sql":"SELECT * FROM sqlite_temp_master"}
+{"sql":"pragma database_list"}
+{"sql":"CREATE TABLE t2(a TYPE_X, b [TYPE_Y], c \"TYPE_Z\")"}
+{"sql":"pragma table_info(t2)"}
+{"sql":"pragma table_info"}
+{"sql":"CREATE TABLE t5(\n      a TEXT DEFAULT CURRENT_TIMESTAMP, \n      b DEFAULT (5+3),\n      c TEXT,\n      d INTEGER DEFAULT NULL,\n      e TEXT DEFAULT '',\n      UNIQUE(b,c,d),\n      PRIMARY KEY(e,b,c)\n    )"}
+{"sql":"PRAGMA table_info(t5)"}
+{"sql":"CREATE TABLE t2_3(a,b INTEGER PRIMARY KEY,c)"}
+{"sql":"pragma table_info(t2_3)"}
+{"sql":"CREATE TABLE t3(a int references t2(b), b UNIQUE)"}
+{"sql":"pragma foreign_key_list(t3)"}
+{"sql":"pragma foreign_key_list"}
+{"sql":"pragma foreign_key_list(t3_bogus)"}
+{"sql":"pragma foreign_key_list(t5)"}
+{"sql":"CREATE TABLE t3(a,b UNIQUE)"}
+{"sql":"CREATE INDEX t3i1 ON t3(a,b)"}
+{"sql":"CREATE INDEX t3i2 ON t3(b,a)"}
+{"sql":"PRAGMA index_info='t3i2'"}
+{"sql":"pragma index_info(t3i1_bogus)"}
+{"sql":"CREATE TABLE trial(col_main)"}
+{"sql":"CREATE TEMP TABLE trial(col_temp)"}
+{"sql":"PRAGMA table_info(trial)"}
+{"sql":"PRAGMA temp.table_info(trial)"}
+{"sql":"PRAGMA main.table_info(trial)"}
+{"sql":"CREATE TABLE test_table(\n      one INT NOT NULL DEFAULT -1, \n      two text,\n      three VARCHAR(45, 65) DEFAULT 'abcde',\n      four REAL DEFAULT X'abcdef',\n      five DEFAULT CURRENT_TIME\n    )"}
+{"sql":"CREATE TABLE t68(a,b,c,PRIMARY KEY(a,b,a,c))"}
+{"sql":"PRAGMA table_info(t68)"}
+{"sql":"pragma index_list(t3_bogus)"}
+{"sql":"pragma encoding=bogus"}
+{"sql":"PRAGMA schema_version = 105"}
+{"sql":"PRAGMA schema_version = 106"}
+{"sql":"INSERT INTO t4 VALUES(1, 2, 3)"}
+{"sql":"PRAGMA schema_version = 108"}
+{"sql":"PRAGMA aux.schema_version = 205"}
+{"sql":"PRAGMA aux.schema_version = 206"}
+{"sql":"PRAGMA user_version = 2"}
+{"sql":"PRAGMA aux.user_version"}
+{"sql":"PRAGMA aux.user_version = 3"}
+{"sql":"PRAGMA main.user_version"}
+{"sql":"PRAGMA aux.user_version = 10"}
+{"sql":"PRAGMA user_version = 11"}
+{"sql":"PRAGMA user_version = -450"}
+{"sql":"PRAGMA application_id"}
+{"sql":"PRAGMA Application_ID(12345)"}
+{"sql":"PRAGMA temp_store"}
+{"sql":"PRAGMA temp_store=file"}
+{"sql":"PRAGMA temp_store=memory"}
+{"sql":"PRAGMA temp_store_directory"}
+{"sql":"PRAGMA temp_store_directory='/NON/EXISTENT/PATH/FOOBAR'"}
+{"sql":"PRAGMA temp_store_directory=''"}
+{"sql":"PRAGMA temp_store=FILE"}
+{"sql":"CREATE TEMP TABLE temp_store_directory_test(a integer)"}
+{"sql":"INSERT INTO temp_store_directory_test values (2)"}
+{"sql":"SELECT * FROM temp_store_directory_test"}
+{"sql":"PRAGMA temp_store = 0"}
+{"sql":"PRAGMA temp_store = 1"}
+{"sql":"PRAGMA temp_store = 2"}
+{"sql":"PRAGMA temp_store = 3"}
+{"sql":"CREATE TEMP TABLE temp_table(t)"}
+{"sql":"INSERT INTO temp_table VALUES('valuable data')"}
+{"sql":"SELECT * FROM temp_table"}
+{"sql":"INSERT INTO temp_table VALUES('valuable data II')"}
+{"sql":"pragma temp_store = 1"}
+{"sql":"DROP TABLE main.t1"}
+{"sql":"CREATE TABLE t1_mirror(a)"}
+{"sql":"CREATE TABLE t1_mirror2(a)"}
+{"sql":"CREATE TRIGGER t1_bi BEFORE INSERT ON t1 BEGIN \n      INSERT INTO t1_mirror VALUES(new.a);\n    END"}
+{"sql":"CREATE TRIGGER t1_ai AFTER INSERT ON t1 BEGIN \n      INSERT INTO t1_mirror2 VALUES(new.a);\n    END"}
+{"sql":"CREATE TRIGGER t1_bu BEFORE UPDATE ON t1 BEGIN \n      UPDATE t1_mirror SET a = new.a WHERE a = old.a;\n    END"}
+{"sql":"CREATE TRIGGER t1_au AFTER UPDATE ON t1 BEGIN \n      UPDATE t1_mirror2 SET a = new.a WHERE a = old.a;\n    END"}
+{"sql":"CREATE TRIGGER t1_bd BEFORE DELETE ON t1 BEGIN \n      DELETE FROM t1_mirror WHERE a = old.a;\n    END"}
+{"sql":"CREATE TRIGGER t1_ad AFTER DELETE ON t1 BEGIN \n      DELETE FROM t1_mirror2 WHERE a = old.a;\n    END"}
+{"sql":"INSERT INTO t1 VALUES(randstr(10,10))"}
+{"sql":"UPDATE t1 SET a = randstr(10,10)"}
+{"sql":"pragma collation_list"}
+{"sql":"PRAGMA temp.table_info('abc')"}
+{"sql":"PRAGMA temp.default_cache_size = 200"}
+{"sql":"PRAGMA temp.default_cache_size"}
+{"sql":"PRAGMA temp.cache_size = 400"}
+{"sql":"PRAGMA temp.cache_size"}
+{"sql":"PRAGMA vdbe_trace=on"}
+{"sql":"PRAGMA vdbe_listing=on"}
+{"sql":"PRAGMA sql_trace=on"}
+{"sql":"INSERT INTO t4(b) VALUES(x'0123456789abcdef0123456789abcdef0123456789')"}
+{"sql":"INSERT INTO t4(b) VALUES(randstr(30,30))"}
+{"sql":"INSERT INTO t4(b) VALUES(1.23456)"}
+{"sql":"INSERT INTO t4(b) VALUES(NULL)"}
+{"sql":"INSERT INTO t4(b) VALUES(0)"}
+{"sql":"INSERT INTO t4(b) SELECT b||b||b||b FROM t4"}
+{"sql":"PRAGMA vdbe_trace=off"}
+{"sql":"PRAGMA vdbe_listing=off"}
+{"sql":"PRAGMA sql_trace=off"}
+{"sql":"pragma auto_vacuum = 0"}
+{"sql":"pragma main.page_count"}
+{"sql":"PRAGMA main.page_count"}
+{"sql":"PRAGMA temp.page_count"}
+{"sql":"pragma PAGE_COUNT"}
+{"sql":"PRAGMA aux.page_count"}
+{"sql":"pragma AUX.PAGE_COUNT"}
+{"sql":"PRAGMA cache_size=59"}
+{"sql":"CREATE TABLE newtable(a, b, c)"}
+{"sql":"PRAGMA lock_proxy_file=\"mylittleproxy\""}
+{"sql":"PRAGMA lock_proxy_file=\"myotherproxy\""}
+{"sql":"PRAGMA lock_proxy_file=\"myoriginalproxy\""}
+{"sql":"PRAGMA lock_proxy_file=\"yetanotherproxy\""}
+{"sql":"create table mine(x)"}
+{"sql":"PRAGMA error"}
+{"sql":"PRAGMA error='This is the error message'"}
+{"sql":"PRAGMA error='7 This is the error message'"}
+{"sql":"PRAGMA error=7"}
+{"sql":"PRAGMA filename"}
+{"sql":"PRAGMA data_store_directory"}
+{"sql":"ATTACH 'testerr.db' AS 'aux'"}
+{"sql":"ATTACH 'test.db' AS 'aux'"}
+{"sql":"CREATE TABLE t1(a INT, b AS (a*2) NOT NULL)"}
+{"sql":"CREATE TEMP TABLE t2(a PRIMARY KEY, b, c UNIQUE) WITHOUT ROWID"}
+{"sql":"CREATE UNIQUE INDEX t2x ON t2(c,b)"}

@@ -1,0 +1,12 @@
+{"sql":"CREATE TABLE t1(\n      id INTEGER PRIMARY KEY,\n      spacer TEXT,\n      a TEXT COLLATE utf16_aligned,\n      b TEXT COLLATE utf16_unaligned\n    )"}
+{"sql":"INSERT INTO t1(a) VALUES(\"abc\")"}
+{"sql":"INSERT INTO t1(a) VALUES(\"defghi\")"}
+{"sql":"INSERT INTO t1(a) VALUES(\"jklmnopqrstuv\")"}
+{"sql":"INSERT INTO t1(a) VALUES(\"wxyz0123456789-\")"}
+{"sql":"UPDATE t1 SET b=a||'-'||a"}
+{"sql":"INSERT INTO t1(a,b) SELECT a||b, b||a FROM t1"}
+{"sql":"INSERT INTO t1(a,b) VALUES('one','two')"}
+{"sql":"INSERT INTO t1(a,b) SELECT a, b FROM t1"}
+{"sql":"UPDATE t1 SET spacer = CASE WHEN rowid&1 THEN 'x' ELSE 'xx' END"}
+{"sql":"CREATE INDEX t1i1 ON t1(spacer, b)"}
+{"sql":"CREATE INDEX t1i2 ON t1(spacer, a)"}

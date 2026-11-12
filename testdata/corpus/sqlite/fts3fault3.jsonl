@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES(' actually other stuff instead')"}
+{"sql":"WITH s(i) AS (\n      SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<50\n  )\n  INSERT INTO t1 SELECT 'abc def ghi jkl mno pqr' FROM s"}
+{"sql":"CREATE TABLE x1(a PRIMARY KEY)"}

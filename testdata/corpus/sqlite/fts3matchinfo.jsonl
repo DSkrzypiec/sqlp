@@ -1,0 +1,83 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(matchinfo=fts3)"}
+{"sql":"SELECT name FROM sqlite_master WHERE type = 'table'"}
+{"sql":"INSERT INTO t1(content) VALUES('I wandered lonely as a cloud')"}
+{"sql":"INSERT INTO t1(content) VALUES('That floats on high o''er vales and hills,')"}
+{"sql":"INSERT INTO t1(content) VALUES('When all at once I saw a crowd,')"}
+{"sql":"INSERT INTO t1(content) VALUES('A host, of golden daffodils,')"}
+{"sql":"SELECT mit(matchinfo(t1)) FROM t1 WHERE t1 MATCH 'I'"}
+{"sql":"SELECT mit(matchinfo(t2)) FROM t2 WHERE t2 MATCH 'I'"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING fts4(matchinfo=fs3)"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING fts4(mtchinfo=fts3)"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING fts4(matchinfo=fts5)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts3(mtchinfo=fts3)"}
+{"sql":"INSERT INTO t3(mtchinfo) VALUES('Beside the lake, beneath the trees')"}
+{"sql":"SELECT mtchinfo FROM t3"}
+{"sql":"CREATE VIRTUAL TABLE xx USING FTS4"}
+{"sql":"SELECT * FROM xx WHERE xx MATCH 'abc'"}
+{"sql":"SELECT * FROM xx WHERE xx MATCH 'a b c'"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4(x, y)"}
+{"sql":"INSERT INTO t4 VALUES('a b c d e', 'f g h i j')"}
+{"sql":"INSERT INTO t4 VALUES('f g h i j', 'a b c d e')"}
+{"sql":"INSERT INTO t5 VALUES('a a a a a')"}
+{"sql":"INSERT INTO t5 VALUES('a b a b a')"}
+{"sql":"INSERT INTO t5 VALUES('c b c b c')"}
+{"sql":"INSERT INTO t5 VALUES('x x x x x')"}
+{"sql":"INSERT INTO t5(t5) VALUES('optimize')"}
+{"sql":"UPDATE t5_segments \n    SET block = zeroblob(length(block)) \n    WHERE length(block)>10000"}
+{"sql":"CREATE VIRTUAL TABLE t6 USING fts4(a, b, c)"}
+{"sql":"INSERT INTO t6 VALUES('a', 'b', 'c')"}
+{"sql":"CREATE VIRTUAL TABLE t7 USING fts3(a, b)"}
+{"sql":"INSERT INTO t7 VALUES('u v w', 'x y z')"}
+{"sql":"CREATE VIRTUAL TABLE t8 USING fts4(a, b, matchinfo=fts3)"}
+{"sql":"INSERT INTO t8 VALUES('u v w', 'x y z')"}
+{"sql":"SELECT matchinfo(t7, 'a') FROM t7 WHERE t7 MATCH 'x y'"}
+{"sql":"SELECT matchinfo(t7, 'l') FROM t7 WHERE t7 MATCH 'x y'"}
+{"sql":"SELECT matchinfo(t7, 'n') FROM t7 WHERE t7 MATCH 'x y'"}
+{"sql":"SELECT matchinfo(t8, 'l') FROM t8 WHERE t8 MATCH 'x y'"}
+{"sql":"CREATE VIRTUAL TABLE t9 USING fts4"}
+{"sql":"INSERT INTO t9 VALUES(\n    'this record is used to try to dectect corruption'\n  )"}
+{"sql":"SELECT offsets(t9) FROM t9 WHERE t9 MATCH 'to'"}
+{"sql":"UPDATE t9_content SET c0content = 'this record is used to'"}
+{"sql":"CREATE VIRTUAL TABLE t10 USING fts4"}
+{"sql":"INSERT INTO t10 VALUES('first record')"}
+{"sql":"INSERT INTO t10 VALUES('second record')"}
+{"sql":"SELECT typeof(matchinfo(t10)), length(matchinfo(t10)) FROM t10"}
+{"sql":"SELECT typeof(matchinfo(t10)), length(matchinfo(t10)) FROM t10 WHERE docid=1"}
+{"sql":"SELECT typeof(matchinfo(t10)), length(matchinfo(t10)) \n  FROM t10 WHERE t10 MATCH 'record'"}
+{"sql":"CREATE VIRTUAL TABLE t11 USING fts4"}
+{"sql":"INSERT INTO t11(t11) VALUES('nodesize=24')"}
+{"sql":"INSERT INTO t11 VALUES('quitealongstringoftext')"}
+{"sql":"INSERT INTO t11 VALUES('anotherquitealongstringoftext')"}
+{"sql":"INSERT INTO t11 VALUES('athirdlongstringoftext')"}
+{"sql":"INSERT INTO t11 VALUES('andonemoreforgoodluck')"}
+{"sql":"INSERT INTO t11 VALUES('')"}
+{"sql":"INSERT INTO t11(t11) VALUES('optimize')"}
+{"sql":"SELECT mit(matchinfo(t11, 'nxa')) FROM t11 WHERE t11 MATCH 'a*'"}
+{"sql":"UPDATE t11_stat SET value = X'0000'"}
+{"sql":"UPDATE t11_stat SET value = X'00'"}
+{"sql":"UPDATE t11_stat SET value = NULL"}
+{"sql":"CREATE VIRTUAL TABLE t12 USING fts4"}
+{"sql":"INSERT INTO t12 VALUES('a b c d')"}
+{"sql":"SELECT mit(matchinfo(t12, 'x')) FROM t12 WHERE t12 MATCH 'a NEAR/1 d OR a'"}
+{"sql":"INSERT INTO t12 VALUES('a d c d')"}
+{"sql":"INSERT INTO t12 VALUES('a d d a')"}
+{"sql":"CREATE VIRTUAL TABLE ft2 USING fts4"}
+{"sql":"INSERT INTO ft2 VALUES('a b c d e')"}
+{"sql":"INSERT INTO ft2 VALUES('f a b c d')"}
+{"sql":"SELECT snippet(ft2, '[', ']', '', -1, 1) FROM ft2 WHERE ft2 MATCH 'c'"}
+{"sql":"CREATE VIRTUAL TABLE t10 USING fts4(idx, value)"}
+{"sql":"INSERT INTO t10 values (1, 'one'),(2, 'two'),(3, 'three')"}
+{"sql":"SELECT docId, t10.*\n    FROM t10\n    JOIN (SELECT 1 AS idx UNION SELECT 2 UNION SELECT 3) AS x\n   WHERE t10 MATCH x.idx\n     AND matchinfo(t10) not null\n   GROUP BY docId\n   ORDER BY 1"}
+{"sql":"CREATE VIRTUAL TABLE tt USING fts3(x, y)"}
+{"sql":"INSERT INTO tt VALUES('c d a c d d', 'e a g b d a')"}
+{"sql":"INSERT INTO tt VALUES('c c g a e b', 'c g d g e c')"}
+{"sql":"INSERT INTO tt VALUES('b e f d e g', 'b a c b c g')"}
+{"sql":"INSERT INTO tt VALUES('a c f f g d', 'd b f d e g')"}
+{"sql":"INSERT INTO tt VALUES('g a c f c f', 'd g g b c c')"}
+{"sql":"INSERT INTO tt VALUES('g a c e b b', 'd b f b g g')"}
+{"sql":"INSERT INTO tt VALUES('f d a a f c', 'e e a d c f')"}
+{"sql":"INSERT INTO tt VALUES('a c b b g f', 'a b a e d f')"}
+{"sql":"INSERT INTO tt VALUES('b a f e c c', 'f d b b a b')"}
+{"sql":"INSERT INTO tt VALUES('f d c e a c', 'f a f a a f')"}
+{"sql":"INSERT INTO tt (rowid, c4, c45) VALUES(1, 'abc', 'abc')"}
+{"sql":"SELECT mit(matchinfo(tt, 'b')) FROM tt WHERE tt MATCH 'abc'"}

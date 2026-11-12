@@ -1,0 +1,121 @@
+{"sql":"CREATE TABLE truncate_a (col1 integer primary key)","shape":"CREATE TABLE truncate_a (col1 integer PRIMARY KEY);"}
+{"sql":"INSERT INTO truncate_a VALUES (1)","shape":"INSERT INTO truncate_a VALUES (1);"}
+{"sql":"INSERT INTO truncate_a VALUES (2)","shape":"INSERT INTO truncate_a VALUES (2);"}
+{"sql":"SELECT * FROM truncate_a","shape":"SELECT * FROM truncate_a;"}
+{"sql":"TRUNCATE truncate_a","shape":"TRUNCATE TABLE truncate_a;"}
+{"sql":"CREATE TABLE trunc_b (a int REFERENCES truncate_a)","shape":"CREATE TABLE trunc_b (a int REFERENCES truncate_a);"}
+{"sql":"CREATE TABLE trunc_c (a serial PRIMARY KEY)","shape":"CREATE TABLE trunc_c (a serial PRIMARY KEY);"}
+{"sql":"CREATE TABLE trunc_d (a int REFERENCES trunc_c)","shape":"CREATE TABLE trunc_d (a int REFERENCES trunc_c);"}
+{"sql":"CREATE TABLE trunc_e (a int REFERENCES truncate_a, b int REFERENCES trunc_c)","shape":"CREATE TABLE trunc_e (a int REFERENCES truncate_a, b int REFERENCES trunc_c);"}
+{"sql":"TRUNCATE TABLE truncate_a","shape":"TRUNCATE TABLE truncate_a;"}
+{"sql":"TRUNCATE TABLE truncate_a,trunc_b","shape":"TRUNCATE TABLE truncate_a, trunc_b;"}
+{"sql":"TRUNCATE TABLE truncate_a,trunc_b,trunc_e","shape":"TRUNCATE TABLE truncate_a, trunc_b, trunc_e;"}
+{"sql":"TRUNCATE TABLE truncate_a,trunc_e","shape":"TRUNCATE TABLE truncate_a, trunc_e;"}
+{"sql":"TRUNCATE TABLE trunc_c","shape":"TRUNCATE TABLE trunc_c;"}
+{"sql":"TRUNCATE TABLE trunc_c,trunc_d","shape":"TRUNCATE TABLE trunc_c, trunc_d;"}
+{"sql":"TRUNCATE TABLE trunc_c,trunc_d,trunc_e","shape":"TRUNCATE TABLE trunc_c, trunc_d, trunc_e;"}
+{"sql":"TRUNCATE TABLE trunc_c,trunc_d,trunc_e,truncate_a","shape":"TRUNCATE TABLE trunc_c, trunc_d, trunc_e, truncate_a;"}
+{"sql":"TRUNCATE TABLE trunc_c,trunc_d,trunc_e,truncate_a,trunc_b","shape":"TRUNCATE TABLE trunc_c, trunc_d, trunc_e, truncate_a, trunc_b;"}
+{"sql":"TRUNCATE TABLE truncate_a RESTRICT","shape":"TRUNCATE TABLE truncate_a RESTRICT;"}
+{"sql":"TRUNCATE TABLE truncate_a CASCADE","shape":"TRUNCATE TABLE truncate_a CASCADE;"}
+{"sql":"ALTER TABLE truncate_a ADD FOREIGN KEY (col1) REFERENCES trunc_c","shape":"ALTER TABLE truncate_a ADD FOREIGN KEY (col1) REFERENCES trunc_c;"}
+{"sql":"INSERT INTO trunc_c VALUES (1)","shape":"INSERT INTO trunc_c VALUES (1);"}
+{"sql":"INSERT INTO trunc_b VALUES (1)","shape":"INSERT INTO trunc_b VALUES (1);"}
+{"sql":"INSERT INTO trunc_d VALUES (1)","shape":"INSERT INTO trunc_d VALUES (1);"}
+{"sql":"INSERT INTO trunc_e VALUES (1,1)","shape":"INSERT INTO trunc_e VALUES (1, 1);"}
+{"sql":"TRUNCATE TABLE trunc_c,truncate_a","shape":"TRUNCATE TABLE trunc_c, truncate_a;"}
+{"sql":"TRUNCATE TABLE trunc_c,truncate_a,trunc_d","shape":"TRUNCATE TABLE trunc_c, truncate_a, trunc_d;"}
+{"sql":"TRUNCATE TABLE trunc_c,truncate_a,trunc_d,trunc_e","shape":"TRUNCATE TABLE trunc_c, truncate_a, trunc_d, trunc_e;"}
+{"sql":"TRUNCATE TABLE trunc_c,truncate_a,trunc_d,trunc_e,trunc_b","shape":"TRUNCATE TABLE trunc_c, truncate_a, trunc_d, trunc_e, trunc_b;"}
+{"sql":"SELECT * FROM truncate_a\n   UNION ALL\n SELECT * FROM trunc_c\n   UNION ALL\n SELECT * FROM trunc_b\n   UNION ALL\n SELECT * FROM trunc_d","shape":"((SELECT * FROM truncate_a UNION ALL SELECT * FROM trunc_c) UNION ALL SELECT * FROM trunc_b) UNION ALL SELECT * FROM trunc_d;"}
+{"sql":"SELECT * FROM trunc_e","shape":"SELECT * FROM trunc_e;"}
+{"sql":"TRUNCATE TABLE trunc_c CASCADE","shape":"TRUNCATE TABLE trunc_c CASCADE;"}
+{"sql":"DROP TABLE truncate_a,trunc_c,trunc_b,trunc_d,trunc_e CASCADE","shape":"DROP TABLE truncate_a, trunc_c, trunc_b, trunc_d, trunc_e CASCADE;"}
+{"sql":"CREATE TABLE trunc_f (col1 integer primary key)","shape":"CREATE TABLE trunc_f (col1 integer PRIMARY KEY);"}
+{"sql":"INSERT INTO trunc_f VALUES (1)","shape":"INSERT INTO trunc_f VALUES (1);"}
+{"sql":"INSERT INTO trunc_f VALUES (2)","shape":"INSERT INTO trunc_f VALUES (2);"}
+{"sql":"CREATE TABLE trunc_fa (col2a text) INHERITS (trunc_f)","shape":"CREATE TABLE trunc_fa (col2a text) INHERITS (trunc_f);"}
+{"sql":"INSERT INTO trunc_fa VALUES (3, 'three')","shape":"INSERT INTO trunc_fa VALUES (3, 'three');"}
+{"sql":"CREATE TABLE trunc_fb (col2b int) INHERITS (trunc_f)","shape":"CREATE TABLE trunc_fb (col2b int) INHERITS (trunc_f);"}
+{"sql":"INSERT INTO trunc_fb VALUES (4, 444)","shape":"INSERT INTO trunc_fb VALUES (4, 444);"}
+{"sql":"CREATE TABLE trunc_faa (col3 text) INHERITS (trunc_fa)","shape":"CREATE TABLE trunc_faa (col3 text) INHERITS (trunc_fa);"}
+{"sql":"INSERT INTO trunc_faa VALUES (5, 'five', 'FIVE')","shape":"INSERT INTO trunc_faa VALUES (5, 'five', 'FIVE');"}
+{"sql":"SELECT * FROM trunc_f","shape":"SELECT * FROM trunc_f;"}
+{"sql":"TRUNCATE trunc_f","shape":"TRUNCATE TABLE trunc_f;"}
+{"sql":"TRUNCATE ONLY trunc_f","shape":"TRUNCATE TABLE ONLY trunc_f;"}
+{"sql":"SELECT * FROM trunc_fa","shape":"SELECT * FROM trunc_fa;"}
+{"sql":"SELECT * FROM trunc_faa","shape":"SELECT * FROM trunc_faa;"}
+{"sql":"TRUNCATE ONLY trunc_fb, ONLY trunc_fa","shape":"TRUNCATE TABLE ONLY trunc_fb, ONLY trunc_fa;"}
+{"sql":"TRUNCATE ONLY trunc_fb, trunc_fa","shape":"TRUNCATE TABLE ONLY trunc_fb, trunc_fa;"}
+{"sql":"DROP TABLE trunc_f CASCADE","shape":"DROP TABLE trunc_f CASCADE;"}
+{"sql":"CREATE TABLE trunc_trigger_test (f1 int, f2 text, f3 text)","shape":"CREATE TABLE trunc_trigger_test (f1 int, f2 text, f3 text);"}
+{"sql":"CREATE TABLE trunc_trigger_log (tgop text, tglevel text, tgwhen text,\n        tgargv text, tgtable name, rowcount bigint)","shape":"CREATE TABLE trunc_trigger_log (tgop text, tglevel text, tgwhen text, tgargv text, tgtable name, rowcount bigint);"}
+{"sql":"CREATE FUNCTION trunctrigger() RETURNS trigger as $$\ndeclare c bigint;\nbegin\n    execute 'select count(*) from ' || quote_ident(tg_table_name) into c;\n    insert into trunc_trigger_log values\n      (TG_OP, TG_LEVEL, TG_WHEN, TG_ARGV[0], tg_table_name, c);\n    return null;\nend;\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION trunctrigger() RETURNS trigger AS '\ndeclare c bigint;\nbegin\n    execute ''select count(*) from '' || quote_ident(tg_table_name) into c;\n    insert into trunc_trigger_log values\n      (TG_OP, TG_LEVEL, TG_WHEN, TG_ARGV[0], tg_table_name, c);\n    return null;\nend;\n' LANGUAGE plpgsql;"}
+{"sql":"INSERT INTO trunc_trigger_test VALUES(1, 'foo', 'bar'), (2, 'baz', 'quux')","shape":"INSERT INTO trunc_trigger_test VALUES (1, 'foo', 'bar'), (2, 'baz', 'quux');"}
+{"sql":"CREATE TRIGGER t\nBEFORE TRUNCATE ON trunc_trigger_test\nFOR EACH STATEMENT\nEXECUTE PROCEDURE trunctrigger('before trigger truncate')","shape":"CREATE TRIGGER t BEFORE TRUNCATE ON trunc_trigger_test FOR EACH STATEMENT EXECUTE FUNCTION trunctrigger('before trigger truncate');"}
+{"sql":"SELECT count(*) as \"Row count in test table\" FROM trunc_trigger_test","shape":"SELECT count(*) AS \"Row count in test table\" FROM trunc_trigger_test;"}
+{"sql":"SELECT * FROM trunc_trigger_log","shape":"SELECT * FROM trunc_trigger_log;"}
+{"sql":"TRUNCATE trunc_trigger_test","shape":"TRUNCATE TABLE trunc_trigger_test;"}
+{"sql":"DROP TRIGGER t ON trunc_trigger_test","shape":"DROP TRIGGER t ON trunc_trigger_test;"}
+{"sql":"truncate trunc_trigger_log","shape":"TRUNCATE TABLE trunc_trigger_log;"}
+{"sql":"CREATE TRIGGER tt\nAFTER TRUNCATE ON trunc_trigger_test\nFOR EACH STATEMENT\nEXECUTE PROCEDURE trunctrigger('after trigger truncate')","shape":"CREATE TRIGGER tt AFTER TRUNCATE ON trunc_trigger_test FOR EACH STATEMENT EXECUTE FUNCTION trunctrigger('after trigger truncate');"}
+{"sql":"DROP TABLE trunc_trigger_test","shape":"DROP TABLE trunc_trigger_test;"}
+{"sql":"DROP TABLE trunc_trigger_log","shape":"DROP TABLE trunc_trigger_log;"}
+{"sql":"DROP FUNCTION trunctrigger()"}
+{"sql":"CREATE SEQUENCE truncate_a_id1 START WITH 33","shape":"CREATE SEQUENCE truncate_a_id1 START WITH 33;"}
+{"sql":"CREATE TABLE truncate_a (id serial,\n                         id1 integer default nextval('truncate_a_id1'))","shape":"CREATE TABLE truncate_a (id serial, id1 integer DEFAULT nextval('truncate_a_id1'));"}
+{"sql":"ALTER SEQUENCE truncate_a_id1 OWNED BY truncate_a.id1"}
+{"sql":"INSERT INTO truncate_a DEFAULT VALUES","shape":"INSERT INTO truncate_a DEFAULT VALUES;"}
+{"sql":"TRUNCATE truncate_a RESTART IDENTITY","shape":"TRUNCATE TABLE truncate_a RESTART IDENTITY;"}
+{"sql":"CREATE TABLE truncate_b (id int GENERATED ALWAYS AS IDENTITY (START WITH 44))","shape":"CREATE TABLE truncate_b (id int GENERATED ALWAYS AS IDENTITY (START WITH 44));"}
+{"sql":"INSERT INTO truncate_b DEFAULT VALUES","shape":"INSERT INTO truncate_b DEFAULT VALUES;"}
+{"sql":"SELECT * FROM truncate_b","shape":"SELECT * FROM truncate_b;"}
+{"sql":"TRUNCATE truncate_b","shape":"TRUNCATE TABLE truncate_b;"}
+{"sql":"TRUNCATE truncate_b RESTART IDENTITY","shape":"TRUNCATE TABLE truncate_b RESTART IDENTITY;"}
+{"sql":"DROP TABLE truncate_a","shape":"DROP TABLE truncate_a;"}
+{"sql":"SELECT nextval('truncate_a_id1')","shape":"SELECT nextval('truncate_a_id1');"}
+{"sql":"CREATE TABLE truncparted (a int, b char) PARTITION BY LIST (a)","shape":"CREATE TABLE truncparted (a int, b char) PARTITION BY LIST (a);"}
+{"sql":"TRUNCATE ONLY truncparted","shape":"TRUNCATE TABLE ONLY truncparted;"}
+{"sql":"CREATE TABLE truncparted1 PARTITION OF truncparted FOR VALUES IN (1)","shape":"CREATE TABLE truncparted1 PARTITION OF truncparted FOR VALUES IN (1);"}
+{"sql":"INSERT INTO truncparted VALUES (1, 'a')","shape":"INSERT INTO truncparted VALUES (1, 'a');"}
+{"sql":"TRUNCATE truncparted","shape":"TRUNCATE TABLE truncparted;"}
+{"sql":"DROP TABLE truncparted","shape":"DROP TABLE truncparted;"}
+{"sql":"CREATE FUNCTION tp_ins_data() RETURNS void LANGUAGE plpgsql AS $$\n  BEGIN\n\tINSERT INTO truncprim VALUES (1), (100), (150);\n\tINSERT INTO truncpart VALUES (1), (100), (150);\n  END\n$$","shape":"CREATE FUNCTION tp_ins_data() RETURNS void LANGUAGE plpgsql AS '\n  BEGIN\n\tINSERT INTO truncprim VALUES (1), (100), (150);\n\tINSERT INTO truncpart VALUES (1), (100), (150);\n  END\n';"}
+{"sql":"CREATE FUNCTION tp_chk_data(OUT pktb regclass, OUT pkval int, OUT fktb regclass, OUT fkval int)\n  RETURNS SETOF record LANGUAGE plpgsql AS $$\n  BEGIN\n    RETURN QUERY SELECT\n      pk.tableoid::regclass, pk.a, fk.tableoid::regclass, fk.a\n    FROM truncprim pk FULL JOIN truncpart fk USING (a)\n    ORDER BY 2, 4;\n  END\n$$","shape":"CREATE FUNCTION tp_chk_data(OUT pktb regclass, OUT pkval int, OUT fktb regclass, OUT fkval int) RETURNS SETOF record LANGUAGE plpgsql AS '\n  BEGIN\n    RETURN QUERY SELECT\n      pk.tableoid::regclass, pk.a, fk.tableoid::regclass, fk.a\n    FROM truncprim pk FULL JOIN truncpart fk USING (a)\n    ORDER BY 2, 4;\n  END\n';"}
+{"sql":"CREATE TABLE truncprim (a int PRIMARY KEY)","shape":"CREATE TABLE truncprim (a int PRIMARY KEY);"}
+{"sql":"CREATE TABLE truncpart (a int REFERENCES truncprim)\n  PARTITION BY RANGE (a)","shape":"CREATE TABLE truncpart (a int REFERENCES truncprim) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE truncpart_1 PARTITION OF truncpart FOR VALUES FROM (0) TO (100)","shape":"CREATE TABLE truncpart_1 PARTITION OF truncpart FOR VALUES FROM (0) TO (100);"}
+{"sql":"CREATE TABLE truncpart_2 PARTITION OF truncpart FOR VALUES FROM (100) TO (200)\n  PARTITION BY RANGE (a)","shape":"CREATE TABLE truncpart_2 PARTITION OF truncpart FOR VALUES FROM (100) TO (200) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE truncpart_2_1 PARTITION OF truncpart_2 FOR VALUES FROM (100) TO (150)","shape":"CREATE TABLE truncpart_2_1 PARTITION OF truncpart_2 FOR VALUES FROM (100) TO (150);"}
+{"sql":"CREATE TABLE truncpart_2_d PARTITION OF truncpart_2 DEFAULT","shape":"CREATE TABLE truncpart_2_d PARTITION OF truncpart_2 DEFAULT;"}
+{"sql":"TRUNCATE TABLE truncprim","shape":"TRUNCATE TABLE truncprim;"}
+{"sql":"select tp_ins_data()","shape":"SELECT tp_ins_data();"}
+{"sql":"TRUNCATE TABLE truncprim, truncpart","shape":"TRUNCATE TABLE truncprim, truncpart;"}
+{"sql":"select * from tp_chk_data()","shape":"SELECT * FROM tp_chk_data();"}
+{"sql":"TRUNCATE TABLE truncprim CASCADE","shape":"TRUNCATE TABLE truncprim CASCADE;"}
+{"sql":"SELECT * FROM tp_chk_data()","shape":"SELECT * FROM tp_chk_data();"}
+{"sql":"SELECT tp_ins_data()","shape":"SELECT tp_ins_data();"}
+{"sql":"TRUNCATE TABLE truncpart","shape":"TRUNCATE TABLE truncpart;"}
+{"sql":"DROP TABLE truncprim, truncpart","shape":"DROP TABLE truncprim, truncpart;"}
+{"sql":"DROP FUNCTION tp_ins_data(), tp_chk_data()"}
+{"sql":"CREATE TABLE trunc_a (a INT PRIMARY KEY) PARTITION BY RANGE (a)","shape":"CREATE TABLE trunc_a (a INT PRIMARY KEY) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE trunc_a1 PARTITION OF trunc_a FOR VALUES FROM (0) TO (10)","shape":"CREATE TABLE trunc_a1 PARTITION OF trunc_a FOR VALUES FROM (0) TO (10);"}
+{"sql":"CREATE TABLE trunc_a2 PARTITION OF trunc_a FOR VALUES FROM (10) TO (20)\n  PARTITION BY RANGE (a)","shape":"CREATE TABLE trunc_a2 PARTITION OF trunc_a FOR VALUES FROM (10) TO (20) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE trunc_a21 PARTITION OF trunc_a2 FOR VALUES FROM (10) TO (12)","shape":"CREATE TABLE trunc_a21 PARTITION OF trunc_a2 FOR VALUES FROM (10) TO (12);"}
+{"sql":"CREATE TABLE trunc_a22 PARTITION OF trunc_a2 FOR VALUES FROM (12) TO (16)","shape":"CREATE TABLE trunc_a22 PARTITION OF trunc_a2 FOR VALUES FROM (12) TO (16);"}
+{"sql":"CREATE TABLE trunc_a2d PARTITION OF trunc_a2 DEFAULT","shape":"CREATE TABLE trunc_a2d PARTITION OF trunc_a2 DEFAULT;"}
+{"sql":"CREATE TABLE trunc_a3 PARTITION OF trunc_a FOR VALUES FROM (20) TO (30)","shape":"CREATE TABLE trunc_a3 PARTITION OF trunc_a FOR VALUES FROM (20) TO (30);"}
+{"sql":"INSERT INTO trunc_a VALUES (0), (5), (10), (15), (20), (25)","shape":"INSERT INTO trunc_a VALUES (0), (5), (10), (15), (20), (25);"}
+{"sql":"CREATE TABLE ref_b (\n    b INT PRIMARY KEY,\n    a INT REFERENCES trunc_a(a) ON DELETE CASCADE\n)","shape":"CREATE TABLE ref_b (b INT PRIMARY KEY, a INT REFERENCES trunc_a (a) ON DELETE CASCADE);"}
+{"sql":"INSERT INTO ref_b VALUES (10, 0), (50, 5), (100, 10), (150, 15)","shape":"INSERT INTO ref_b VALUES (10, 0), (50, 5), (100, 10), (150, 15);"}
+{"sql":"TRUNCATE TABLE trunc_a1 CASCADE","shape":"TRUNCATE TABLE trunc_a1 CASCADE;"}
+{"sql":"SELECT a FROM ref_b","shape":"SELECT a FROM ref_b;"}
+{"sql":"DROP TABLE ref_b","shape":"DROP TABLE ref_b;"}
+{"sql":"CREATE TABLE ref_c (\n    c INT PRIMARY KEY,\n    a INT REFERENCES trunc_a(a) ON DELETE CASCADE\n) PARTITION BY RANGE (c)","shape":"CREATE TABLE ref_c (c INT PRIMARY KEY, a INT REFERENCES trunc_a (a) ON DELETE CASCADE) PARTITION BY RANGE (c);"}
+{"sql":"CREATE TABLE ref_c1 PARTITION OF ref_c FOR VALUES FROM (100) TO (200)","shape":"CREATE TABLE ref_c1 PARTITION OF ref_c FOR VALUES FROM (100) TO (200);"}
+{"sql":"CREATE TABLE ref_c2 PARTITION OF ref_c FOR VALUES FROM (200) TO (300)","shape":"CREATE TABLE ref_c2 PARTITION OF ref_c FOR VALUES FROM (200) TO (300);"}
+{"sql":"INSERT INTO ref_c VALUES (100, 10), (150, 15), (200, 20), (250, 25)","shape":"INSERT INTO ref_c VALUES (100, 10), (150, 15), (200, 20), (250, 25);"}
+{"sql":"TRUNCATE TABLE trunc_a21 CASCADE","shape":"TRUNCATE TABLE trunc_a21 CASCADE;"}
+{"sql":"SELECT a as \"from table ref_c\" FROM ref_c","shape":"SELECT a AS \"from table ref_c\" FROM ref_c;"}
+{"sql":"SELECT a as \"from table trunc_a\" FROM trunc_a ORDER BY a","shape":"SELECT a AS \"from table trunc_a\" FROM trunc_a ORDER BY a;"}
+{"sql":"DROP TABLE trunc_a, ref_c","shape":"DROP TABLE trunc_a, ref_c;"}

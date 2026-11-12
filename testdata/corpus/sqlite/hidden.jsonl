@@ -1,0 +1,40 @@
+{"sql":"CREATE TABLE t1(__hidden__a, b)"}
+{"sql":"INSERT INTO t1(__hidden__a, b) VALUES('x', 'y')"}
+{"sql":"SELECT __hidden__a, * FROM t1"}
+{"sql":"INSERT INTO x1 VALUES(1, 2, 3)"}
+{"sql":"SELECT a, b, __hidden__c FROM v1"}
+{"sql":"CREATE TRIGGER tr1 INSTEAD OF INSERT ON v1 BEGIN\n      INSERT INTO x1 VALUES(new.a, new.b, new.__hidden__c);\n    END"}
+{"sql":"INSERT INTO v1 VALUES(4, 5)"}
+{"sql":"INSERT INTO v1(a, b, __hidden__c) VALUES(7, 8, 9)"}
+{"sql":"CREATE TABLE t4(a, __hidden__b, c)"}
+{"sql":"INSERT INTO t4 SELECT 1, 2"}
+{"sql":"SELECT a, __hidden__b, c FROM t4"}
+{"sql":"CREATE TABLE t5(__hidden__a, b, c)"}
+{"sql":"CREATE TABLE t6(__hidden__a, b, c)"}
+{"sql":"INSERT INTO t6(__hidden__a, b, c) VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO t6(__hidden__a, b, c) VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO t6(__hidden__a, b, c) VALUES(7, 8, 9)"}
+{"sql":"INSERT INTO t5 SELECT * FROM t6"}
+{"sql":"SELECT __hidden__a FROM t5"}
+{"sql":"CREATE TABLE t5a(a, b, __hidden__c)"}
+{"sql":"CREATE TABLE t6a(a, b, __hidden__c)"}
+{"sql":"INSERT INTO t6a(a, b, __hidden__c) VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO t6a(a, b, __hidden__c) VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO t6a(a, b, __hidden__c) VALUES(7, 8, 9)"}
+{"sql":"INSERT INTO t5a SELECT * FROM t6a"}
+{"sql":"SELECT * FROM t5a"}
+{"sql":"SELECT __hidden__c FROM t5a"}
+{"sql":"CREATE TABLE t5b(a, __hidden__b, c)"}
+{"sql":"CREATE TABLE t6b(a, b, __hidden__c)"}
+{"sql":"INSERT INTO t6b(a, b, __hidden__c) VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO t6b(a, b, __hidden__c) VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO t6b(a, b, __hidden__c) VALUES(7, 8, 9)"}
+{"sql":"INSERT INTO t5b SELECT * FROM t6b"}
+{"sql":"SELECT * FROM t5b"}
+{"sql":"SELECT __hidden__b FROM t5b"}
+{"sql":"CREATE TABLE t1(a, __hidden__b, c UNIQUE)"}
+{"sql":"INSERT INTO t1(a, __hidden__b, c) VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO t1(a, __hidden__b, c) VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO t1(a, __hidden__b, c) VALUES(7, 8, 9)"}
+{"sql":"DELETE FROM t1 WHERE __hidden__b = 5"}
+{"sql":"SELECT rowid, a, __hidden__b, c FROM t1"}

@@ -1,0 +1,2 @@
+{"sql":"PRAGMA page_size=2048"}
+{"sql":"CREATE TABLE abc AS SELECT 1 AS a, 2 AS b, 3 AS c"}

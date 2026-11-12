@@ -1,0 +1,541 @@
+{"sql":"select ''::textmultirange","shape":"SELECT ''::textmultirange;"}
+{"sql":"select '{,}'::textmultirange","shape":"SELECT '{,}'::textmultirange;"}
+{"sql":"select '{(,)}.'::textmultirange","shape":"SELECT '{(,)}.'::textmultirange;"}
+{"sql":"select '{[a,c),}'::textmultirange","shape":"SELECT '{[a,c),}'::textmultirange;"}
+{"sql":"select '{,[a,c)}'::textmultirange","shape":"SELECT '{,[a,c)}'::textmultirange;"}
+{"sql":"select '{-[a,z)}'::textmultirange","shape":"SELECT '{-[a,z)}'::textmultirange;"}
+{"sql":"select '{[a,z) - }'::textmultirange","shape":"SELECT '{[a,z) - }'::textmultirange;"}
+{"sql":"select '{(\",a)}'::textmultirange","shape":"SELECT '{(\",a)}'::textmultirange;"}
+{"sql":"select '{(,,a)}'::textmultirange","shape":"SELECT '{(,,a)}'::textmultirange;"}
+{"sql":"select '{(),a)}'::textmultirange","shape":"SELECT '{(),a)}'::textmultirange;"}
+{"sql":"select '{(a,))}'::textmultirange","shape":"SELECT '{(a,))}'::textmultirange;"}
+{"sql":"select '{(],a)}'::textmultirange","shape":"SELECT '{(],a)}'::textmultirange;"}
+{"sql":"select '{(a,])}'::textmultirange","shape":"SELECT '{(a,])}'::textmultirange;"}
+{"sql":"select '{[z,a]}'::textmultirange","shape":"SELECT '{[z,a]}'::textmultirange;"}
+{"sql":"select '{}'::textmultirange","shape":"SELECT '{}'::textmultirange;"}
+{"sql":"select '  {}  '::textmultirange","shape":"SELECT '  {}  '::textmultirange;"}
+{"sql":"select ' { empty, empty }  '::textmultirange","shape":"SELECT ' { empty, empty }  '::textmultirange;"}
+{"sql":"select ' {( \" a \" \" a \", \" z \" \" z \" )  }'::textmultirange","shape":"SELECT ' {( \" a \" \" a \", \" z \" \" z \" )  }'::textmultirange;"}
+{"sql":"select textrange('\\\\\\\\', repeat('a', 200))::textmultirange","shape":"SELECT textrange('\\\\\\\\', repeat('a', 200))::textmultirange;"}
+{"sql":"select '{(,z)}'::textmultirange","shape":"SELECT '{(,z)}'::textmultirange;"}
+{"sql":"select '{(a,)}'::textmultirange","shape":"SELECT '{(a,)}'::textmultirange;"}
+{"sql":"select '{[,z]}'::textmultirange","shape":"SELECT '{[,z]}'::textmultirange;"}
+{"sql":"select '{[a,]}'::textmultirange","shape":"SELECT '{[a,]}'::textmultirange;"}
+{"sql":"select '{(,)}'::textmultirange","shape":"SELECT '{(,)}'::textmultirange;"}
+{"sql":"select '{[ , ]}'::textmultirange","shape":"SELECT '{[ , ]}'::textmultirange;"}
+{"sql":"select '{[\"\",\"\"]}'::textmultirange","shape":"SELECT '{[\"\",\"\"]}'::textmultirange;"}
+{"sql":"select '{[\",\",\",\"]}'::textmultirange","shape":"SELECT '{[\",\",\",\"]}'::textmultirange;"}
+{"sql":"select '{[\"\\\\\",\"\\\\\"]}'::textmultirange","shape":"SELECT '{[\"\\\\\",\"\\\\\"]}'::textmultirange;"}
+{"sql":"select '{[\"\"\"\",\"\\\"\"]}'::textmultirange","shape":"SELECT '{[\"\"\"\",\"\\\"\"]}'::textmultirange;"}
+{"sql":"select '{(\\\\,a)}'::textmultirange","shape":"SELECT '{(\\\\,a)}'::textmultirange;"}
+{"sql":"select '{((,z)}'::textmultirange","shape":"SELECT '{((,z)}'::textmultirange;"}
+{"sql":"select '{([,z)}'::textmultirange","shape":"SELECT '{([,z)}'::textmultirange;"}
+{"sql":"select '{(!,()}'::textmultirange","shape":"SELECT '{(!,()}'::textmultirange;"}
+{"sql":"select '{(!,[)}'::textmultirange","shape":"SELECT '{(!,[)}'::textmultirange;"}
+{"sql":"select '{[a,a]}'::textmultirange","shape":"SELECT '{[a,a]}'::textmultirange;"}
+{"sql":"select '{[a,a],[a,b]}'::textmultirange","shape":"SELECT '{[a,a],[a,b]}'::textmultirange;"}
+{"sql":"select '{[a,b), [b,e]}'::textmultirange","shape":"SELECT '{[a,b), [b,e]}'::textmultirange;"}
+{"sql":"select '{[a,d), [b,f]}'::textmultirange","shape":"SELECT '{[a,d), [b,f]}'::textmultirange;"}
+{"sql":"select '{[a,a],[b,b]}'::textmultirange","shape":"SELECT '{[a,a],[b,b]}'::textmultirange;"}
+{"sql":"select '{[a,a], [b,b]}'::textmultirange","shape":"SELECT '{[a,a], [b,b]}'::textmultirange;"}
+{"sql":"select '{[1,2], [3,4]}'::int4multirange","shape":"SELECT '{[1,2], [3,4]}'::int4multirange;"}
+{"sql":"select '{[a,a], [b,b], [c,c]}'::textmultirange","shape":"SELECT '{[a,a], [b,b], [c,c]}'::textmultirange;"}
+{"sql":"select '{[a,d], [b,e]}'::textmultirange","shape":"SELECT '{[a,d], [b,e]}'::textmultirange;"}
+{"sql":"select '{[a,d), [d,e)}'::textmultirange","shape":"SELECT '{[a,d), [d,e)}'::textmultirange;"}
+{"sql":"select '{[a,a)}'::textmultirange","shape":"SELECT '{[a,a)}'::textmultirange;"}
+{"sql":"select '{(a,a]}'::textmultirange","shape":"SELECT '{(a,a]}'::textmultirange;"}
+{"sql":"select '{(a,a)}'::textmultirange","shape":"SELECT '{(a,a)}'::textmultirange;"}
+{"sql":"select pg_input_is_valid('{[1,2], [4,5]}', 'int4multirange')","shape":"SELECT pg_input_is_valid('{[1,2], [4,5]}', 'int4multirange');"}
+{"sql":"select pg_input_is_valid('{[1,2], [4,5]', 'int4multirange')","shape":"SELECT pg_input_is_valid('{[1,2], [4,5]', 'int4multirange');"}
+{"sql":"select * from pg_input_error_info('{[1,2], [4,5]', 'int4multirange')","shape":"SELECT * FROM pg_input_error_info('{[1,2], [4,5]', 'int4multirange');"}
+{"sql":"select pg_input_is_valid('{[1,2], [4,zed]}', 'int4multirange')","shape":"SELECT pg_input_is_valid('{[1,2], [4,zed]}', 'int4multirange');"}
+{"sql":"select * from pg_input_error_info('{[1,2], [4,zed]}', 'int4multirange')","shape":"SELECT * FROM pg_input_error_info('{[1,2], [4,zed]}', 'int4multirange');"}
+{"sql":"select textmultirange()","shape":"SELECT textmultirange();"}
+{"sql":"select textmultirange(textrange('a', 'c'))","shape":"SELECT textmultirange(textrange('a', 'c'));"}
+{"sql":"select textmultirange(textrange('a', 'c'), textrange('f', 'g'))","shape":"SELECT textmultirange(textrange('a', 'c'), textrange('f', 'g'));"}
+{"sql":"select textmultirange(textrange('\\\\\\\\', repeat('a', 200)), textrange('c', 'd'))","shape":"SELECT textmultirange(textrange('\\\\\\\\', repeat('a', 200)), textrange('c', 'd'));"}
+{"sql":"select 'empty'::int4range::int4multirange","shape":"SELECT 'empty'::int4range::int4multirange;"}
+{"sql":"select int4range(1, 3)::int4multirange","shape":"SELECT int4range(1, 3)::int4multirange;"}
+{"sql":"select int4range(1, null)::int4multirange","shape":"SELECT int4range(1, NULL)::int4multirange;"}
+{"sql":"select int4range(null, null)::int4multirange","shape":"SELECT int4range(NULL, NULL)::int4multirange;"}
+{"sql":"select 'empty'::textrange::textmultirange","shape":"SELECT 'empty'::textrange::textmultirange;"}
+{"sql":"select textrange('a', 'c')::textmultirange","shape":"SELECT textrange('a', 'c')::textmultirange;"}
+{"sql":"select textrange('a', null)::textmultirange","shape":"SELECT textrange('a', NULL)::textmultirange;"}
+{"sql":"select textrange(null, null)::textmultirange","shape":"SELECT textrange(NULL, NULL)::textmultirange;"}
+{"sql":"select unnest(int4multirange(int4range('5', '6'), int4range('1', '2')))","shape":"SELECT unnest(int4multirange(int4range('5', '6'), int4range('1', '2')));"}
+{"sql":"select unnest(textmultirange(textrange('a', 'b'), textrange('d', 'e')))","shape":"SELECT unnest(textmultirange(textrange('a', 'b'), textrange('d', 'e')));"}
+{"sql":"select unnest(textmultirange(textrange('\\\\\\\\', repeat('a', 200)), textrange('c', 'd')))","shape":"SELECT unnest(textmultirange(textrange('\\\\\\\\', repeat('a', 200)), textrange('c', 'd')));"}
+{"sql":"CREATE TABLE nummultirange_test (nmr NUMMULTIRANGE)","shape":"CREATE TABLE nummultirange_test (nmr NUMMULTIRANGE);"}
+{"sql":"CREATE INDEX nummultirange_test_btree ON nummultirange_test(nmr)","shape":"CREATE INDEX nummultirange_test_btree ON nummultirange_test (nmr);"}
+{"sql":"INSERT INTO nummultirange_test VALUES('{}')","shape":"INSERT INTO nummultirange_test VALUES ('{}');"}
+{"sql":"INSERT INTO nummultirange_test VALUES('{[,)}')","shape":"INSERT INTO nummultirange_test VALUES ('{[,)}');"}
+{"sql":"INSERT INTO nummultirange_test VALUES('{[3,]}')","shape":"INSERT INTO nummultirange_test VALUES ('{[3,]}');"}
+{"sql":"INSERT INTO nummultirange_test VALUES('{[,), [3,]}')","shape":"INSERT INTO nummultirange_test VALUES ('{[,), [3,]}');"}
+{"sql":"INSERT INTO nummultirange_test VALUES('{[, 5)}')","shape":"INSERT INTO nummultirange_test VALUES ('{[, 5)}');"}
+{"sql":"INSERT INTO nummultirange_test VALUES(nummultirange())","shape":"INSERT INTO nummultirange_test VALUES (nummultirange());"}
+{"sql":"INSERT INTO nummultirange_test VALUES(nummultirange(variadic '{}'::numrange[]))","shape":"INSERT INTO nummultirange_test VALUES (nummultirange(VARIADIC '{}'::numrange[]));"}
+{"sql":"INSERT INTO nummultirange_test VALUES(nummultirange(numrange(1.1, 2.2)))","shape":"INSERT INTO nummultirange_test VALUES (nummultirange(numrange(1.1, 2.2)));"}
+{"sql":"INSERT INTO nummultirange_test VALUES('{empty}')","shape":"INSERT INTO nummultirange_test VALUES ('{empty}');"}
+{"sql":"INSERT INTO nummultirange_test VALUES(nummultirange(numrange(1.7, 1.7, '[]'), numrange(1.7, 1.9)))","shape":"INSERT INTO nummultirange_test VALUES (nummultirange(numrange(1.7, 1.7, '[]'), numrange(1.7, 1.9)));"}
+{"sql":"INSERT INTO nummultirange_test VALUES(nummultirange(numrange(1.7, 1.7, '[]'), numrange(1.9, 2.1)))","shape":"INSERT INTO nummultirange_test VALUES (nummultirange(numrange(1.7, 1.7, '[]'), numrange(1.9, 2.1)));"}
+{"sql":"SELECT nmr, isempty(nmr), lower(nmr), upper(nmr) FROM nummultirange_test ORDER BY nmr","shape":"SELECT nmr, isempty(nmr), lower(nmr), upper(nmr) FROM nummultirange_test ORDER BY nmr;"}
+{"sql":"SELECT nmr, lower_inc(nmr), lower_inf(nmr), upper_inc(nmr), upper_inf(nmr) FROM nummultirange_test ORDER BY nmr","shape":"SELECT nmr, lower_inc(nmr), lower_inf(nmr), upper_inc(nmr), upper_inf(nmr) FROM nummultirange_test ORDER BY nmr;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr = '{}'","shape":"SELECT * FROM nummultirange_test WHERE nmr = '{}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr = '{(,5)}'","shape":"SELECT * FROM nummultirange_test WHERE nmr = '{(,5)}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr = '{[3,)}'","shape":"SELECT * FROM nummultirange_test WHERE nmr = '{[3,)}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr = '{[1.7,1.7]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr = '{[1.7,1.7]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr = '{[1.7,1.7],[1.9,2.1)}'","shape":"SELECT * FROM nummultirange_test WHERE nmr = '{[1.7,1.7],[1.9,2.1)}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr < '{}'","shape":"SELECT * FROM nummultirange_test WHERE nmr < '{}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr < '{[-1000.0, -1000.0]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr < '{[-1000.0, -1000.0]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr < '{[0.0, 1.0]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr < '{[0.0, 1.0]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr < '{[1000.0, 1001.0]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr < '{[1000.0, 1001.0]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr <= '{}'","shape":"SELECT * FROM nummultirange_test WHERE nmr <= '{}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr <= '{[3,)}'","shape":"SELECT * FROM nummultirange_test WHERE nmr <= '{[3,)}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr >= '{}'","shape":"SELECT * FROM nummultirange_test WHERE nmr >= '{}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr >= '{[3,)}'","shape":"SELECT * FROM nummultirange_test WHERE nmr >= '{[3,)}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr > '{}'","shape":"SELECT * FROM nummultirange_test WHERE nmr > '{}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr > '{[-1000.0, -1000.0]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr > '{[-1000.0, -1000.0]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr > '{[0.0, 1.0]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr > '{[0.0, 1.0]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr > '{[1000.0, 1001.0]}'","shape":"SELECT * FROM nummultirange_test WHERE nmr > '{[1000.0, 1001.0]}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr <> '{}'","shape":"SELECT * FROM nummultirange_test WHERE nmr <> '{}';"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr <> '{(,5)}'","shape":"SELECT * FROM nummultirange_test WHERE nmr <> '{(,5)}';"}
+{"sql":"select nummultirange(numrange(2.0, 1.0))","shape":"SELECT nummultirange(numrange(2.0, 1.0));"}
+{"sql":"select nummultirange(numrange(5.0, 6.0), numrange(1.0, 2.0))","shape":"SELECT nummultirange(numrange(5.0, 6.0), numrange(1.0, 2.0));"}
+{"sql":"analyze nummultirange_test","shape":"ANALYZE nummultirange_test;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE range_overlaps_multirange(numrange(4.0, 4.2), nmr)","shape":"SELECT * FROM nummultirange_test WHERE range_overlaps_multirange(numrange(4.0, 4.2), nmr);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE numrange(4.0, 4.2) && nmr","shape":"SELECT * FROM nummultirange_test WHERE numrange(4.0, 4.2) && nmr;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE multirange_overlaps_range(nmr, numrange(4.0, 4.2))","shape":"SELECT * FROM nummultirange_test WHERE multirange_overlaps_range(nmr, numrange(4.0, 4.2));"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr && numrange(4.0, 4.2)","shape":"SELECT * FROM nummultirange_test WHERE nmr && numrange(4.0, 4.2);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE multirange_overlaps_multirange(nmr, nummultirange(numrange(4.0, 4.2), numrange(6.0, 7.0)))","shape":"SELECT * FROM nummultirange_test WHERE multirange_overlaps_multirange(nmr, nummultirange(numrange(4.0, 4.2), numrange(6.0, 7.0)));"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr && nummultirange(numrange(4.0, 4.2), numrange(6.0, 7.0))","shape":"SELECT * FROM nummultirange_test WHERE nmr && nummultirange(numrange(4.0, 4.2), numrange(6.0, 7.0));"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr && nummultirange(numrange(6.0, 7.0))","shape":"SELECT * FROM nummultirange_test WHERE nmr && nummultirange(numrange(6.0, 7.0));"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr && nummultirange(numrange(6.0, 7.0), numrange(8.0, 9.0))","shape":"SELECT * FROM nummultirange_test WHERE nmr && nummultirange(numrange(6.0, 7.0), numrange(8.0, 9.0));"}
+{"sql":"SELECT * FROM nummultirange_test WHERE multirange_contains_elem(nmr, 4.0)","shape":"SELECT * FROM nummultirange_test WHERE multirange_contains_elem(nmr, 4.0);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr @> 4.0","shape":"SELECT * FROM nummultirange_test WHERE nmr @> 4.0;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE multirange_contains_range(nmr, numrange(4.0, 4.2))","shape":"SELECT * FROM nummultirange_test WHERE multirange_contains_range(nmr, numrange(4.0, 4.2));"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr @> numrange(4.0, 4.2)","shape":"SELECT * FROM nummultirange_test WHERE nmr @> numrange(4.0, 4.2);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE multirange_contains_multirange(nmr, '{[4.0,4.2), [6.0, 8.0)}')","shape":"SELECT * FROM nummultirange_test WHERE multirange_contains_multirange(nmr, '{[4.0,4.2), [6.0, 8.0)}');"}
+{"sql":"SELECT * FROM nummultirange_test WHERE nmr @> '{[4.0,4.2), [6.0, 8.0)}'::nummultirange","shape":"SELECT * FROM nummultirange_test WHERE nmr @> '{[4.0,4.2), [6.0, 8.0)}'::nummultirange;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE elem_contained_by_multirange(4.0, nmr)","shape":"SELECT * FROM nummultirange_test WHERE elem_contained_by_multirange(4.0, nmr);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE 4.0 <@ nmr","shape":"SELECT * FROM nummultirange_test WHERE 4.0 <@ nmr;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE range_contained_by_multirange(numrange(4.0, 4.2), nmr)","shape":"SELECT * FROM nummultirange_test WHERE range_contained_by_multirange(numrange(4.0, 4.2), nmr);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE numrange(4.0, 4.2) <@ nmr","shape":"SELECT * FROM nummultirange_test WHERE numrange(4.0, 4.2) <@ nmr;"}
+{"sql":"SELECT * FROM nummultirange_test WHERE multirange_contained_by_multirange('{[4.0,4.2), [6.0, 8.0)}', nmr)","shape":"SELECT * FROM nummultirange_test WHERE multirange_contained_by_multirange('{[4.0,4.2), [6.0, 8.0)}', nmr);"}
+{"sql":"SELECT * FROM nummultirange_test WHERE '{[4.0,4.2), [6.0, 8.0)}'::nummultirange <@ nmr","shape":"SELECT * FROM nummultirange_test WHERE '{[4.0,4.2), [6.0, 8.0)}'::nummultirange <@ nmr;"}
+{"sql":"SELECT 'empty'::numrange && nummultirange()","shape":"SELECT 'empty'::numrange && nummultirange();"}
+{"sql":"SELECT 'empty'::numrange && nummultirange(numrange(1,2))","shape":"SELECT 'empty'::numrange && nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange() && 'empty'::numrange","shape":"SELECT nummultirange() && 'empty'::numrange;"}
+{"sql":"SELECT nummultirange(numrange(1,2)) && 'empty'::numrange","shape":"SELECT nummultirange(numrange(1, 2)) && 'empty'::numrange;"}
+{"sql":"SELECT nummultirange() && nummultirange()","shape":"SELECT nummultirange() && nummultirange();"}
+{"sql":"SELECT nummultirange() && nummultirange(numrange(1,2))","shape":"SELECT nummultirange() && nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) && nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) && nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(3,4)) && nummultirange(numrange(1,2), numrange(7,8))","shape":"SELECT nummultirange(numrange(3, 4)) && nummultirange(numrange(1, 2), numrange(7, 8));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(7,8)) && nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2), numrange(7, 8)) && nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(3,4)) && nummultirange(numrange(1,2), numrange(3.5,8))","shape":"SELECT nummultirange(numrange(3, 4)) && nummultirange(numrange(1, 2), numrange(3.5, 8));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(3.5,8)) && numrange(3,4)","shape":"SELECT nummultirange(numrange(1, 2), numrange(3.5, 8)) && numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(3.5,8)) && nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2), numrange(3.5, 8)) && nummultirange(numrange(3, 4));"}
+{"sql":"select '{(10,20),(30,40),(50,60)}'::nummultirange && '(42,92)'::numrange","shape":"SELECT '{(10,20),(30,40),(50,60)}'::nummultirange && '(42,92)'::numrange;"}
+{"sql":"SELECT nummultirange() @> nummultirange()","shape":"SELECT nummultirange() @> nummultirange();"}
+{"sql":"SELECT nummultirange() @> 'empty'::numrange","shape":"SELECT nummultirange() @> 'empty'::numrange;"}
+{"sql":"SELECT nummultirange(numrange(null,null)) @> numrange(1,2)","shape":"SELECT nummultirange(numrange(NULL, NULL)) @> numrange(1, 2);"}
+{"sql":"SELECT nummultirange(numrange(null,null)) @> numrange(null,2)","shape":"SELECT nummultirange(numrange(NULL, NULL)) @> numrange(NULL, 2);"}
+{"sql":"SELECT nummultirange(numrange(null,null)) @> numrange(2,null)","shape":"SELECT nummultirange(numrange(NULL, NULL)) @> numrange(2, NULL);"}
+{"sql":"SELECT nummultirange(numrange(null,5)) @> numrange(null,3)","shape":"SELECT nummultirange(numrange(NULL, 5)) @> numrange(NULL, 3);"}
+{"sql":"SELECT nummultirange(numrange(null,5)) @> numrange(null,8)","shape":"SELECT nummultirange(numrange(NULL, 5)) @> numrange(NULL, 8);"}
+{"sql":"SELECT nummultirange(numrange(5,null)) @> numrange(8,null)","shape":"SELECT nummultirange(numrange(5, NULL)) @> numrange(8, NULL);"}
+{"sql":"SELECT nummultirange(numrange(5,null)) @> numrange(3,null)","shape":"SELECT nummultirange(numrange(5, NULL)) @> numrange(3, NULL);"}
+{"sql":"SELECT nummultirange(numrange(1,5)) @> numrange(8,9)","shape":"SELECT nummultirange(numrange(1, 5)) @> numrange(8, 9);"}
+{"sql":"SELECT nummultirange(numrange(1,5)) @> numrange(3,9)","shape":"SELECT nummultirange(numrange(1, 5)) @> numrange(3, 9);"}
+{"sql":"SELECT nummultirange(numrange(1,5)) @> numrange(1,4)","shape":"SELECT nummultirange(numrange(1, 5)) @> numrange(1, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,5)) @> numrange(1,5)","shape":"SELECT nummultirange(numrange(1, 5)) @> numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(-4,-2), numrange(1,5)) @> numrange(1,5)","shape":"SELECT nummultirange(numrange(-4, -2), numrange(1, 5)) @> numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(1,5), numrange(8,9)) @> numrange(1,5)","shape":"SELECT nummultirange(numrange(1, 5), numrange(8, 9)) @> numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(1,5), numrange(8,9)) @> numrange(6,7)","shape":"SELECT nummultirange(numrange(1, 5), numrange(8, 9)) @> numrange(6, 7);"}
+{"sql":"SELECT nummultirange(numrange(1,5), numrange(6,9)) @> numrange(6,7)","shape":"SELECT nummultirange(numrange(1, 5), numrange(6, 9)) @> numrange(6, 7);"}
+{"sql":"SELECT '{[1,5)}'::nummultirange @> '{[1,5)}'","shape":"SELECT '{[1,5)}'::nummultirange @> '{[1,5)}';"}
+{"sql":"SELECT '{[-4,-2), [1,5)}'::nummultirange @> '{[1,5)}'","shape":"SELECT '{[-4,-2), [1,5)}'::nummultirange @> '{[1,5)}';"}
+{"sql":"SELECT '{[1,5), [8,9)}'::nummultirange @> '{[1,5)}'","shape":"SELECT '{[1,5), [8,9)}'::nummultirange @> '{[1,5)}';"}
+{"sql":"SELECT '{[1,5), [8,9)}'::nummultirange @> '{[6,7)}'","shape":"SELECT '{[1,5), [8,9)}'::nummultirange @> '{[6,7)}';"}
+{"sql":"SELECT '{[1,5), [6,9)}'::nummultirange @> '{[6,7)}'","shape":"SELECT '{[1,5), [6,9)}'::nummultirange @> '{[6,7)}';"}
+{"sql":"select '{(10,20),(30,40),(50,60)}'::nummultirange @> '(52,56)'::numrange","shape":"SELECT '{(10,20),(30,40),(50,60)}'::nummultirange @> '(52,56)'::numrange;"}
+{"sql":"SELECT numrange(null,null) @> nummultirange(numrange(1,2))","shape":"SELECT numrange(NULL, NULL) @> nummultirange(numrange(1, 2));"}
+{"sql":"SELECT numrange(null,null) @> nummultirange(numrange(null,2))","shape":"SELECT numrange(NULL, NULL) @> nummultirange(numrange(NULL, 2));"}
+{"sql":"SELECT numrange(null,null) @> nummultirange(numrange(2,null))","shape":"SELECT numrange(NULL, NULL) @> nummultirange(numrange(2, NULL));"}
+{"sql":"SELECT numrange(null,5) @> nummultirange(numrange(null,3))","shape":"SELECT numrange(NULL, 5) @> nummultirange(numrange(NULL, 3));"}
+{"sql":"SELECT numrange(null,5) @> nummultirange(numrange(null,8))","shape":"SELECT numrange(NULL, 5) @> nummultirange(numrange(NULL, 8));"}
+{"sql":"SELECT numrange(5,null) @> nummultirange(numrange(8,null))","shape":"SELECT numrange(5, NULL) @> nummultirange(numrange(8, NULL));"}
+{"sql":"SELECT numrange(5,null) @> nummultirange(numrange(3,null))","shape":"SELECT numrange(5, NULL) @> nummultirange(numrange(3, NULL));"}
+{"sql":"SELECT numrange(1,5) @> nummultirange(numrange(8,9))","shape":"SELECT numrange(1, 5) @> nummultirange(numrange(8, 9));"}
+{"sql":"SELECT numrange(1,5) @> nummultirange(numrange(3,9))","shape":"SELECT numrange(1, 5) @> nummultirange(numrange(3, 9));"}
+{"sql":"SELECT numrange(1,5) @> nummultirange(numrange(1,4))","shape":"SELECT numrange(1, 5) @> nummultirange(numrange(1, 4));"}
+{"sql":"SELECT numrange(1,5) @> nummultirange(numrange(1,5))","shape":"SELECT numrange(1, 5) @> nummultirange(numrange(1, 5));"}
+{"sql":"SELECT numrange(1,9) @> nummultirange(numrange(-4,-2), numrange(1,5))","shape":"SELECT numrange(1, 9) @> nummultirange(numrange(-4, -2), numrange(1, 5));"}
+{"sql":"SELECT numrange(1,9) @> nummultirange(numrange(1,5), numrange(8,9))","shape":"SELECT numrange(1, 9) @> nummultirange(numrange(1, 5), numrange(8, 9));"}
+{"sql":"SELECT numrange(1,9) @> nummultirange(numrange(1,5), numrange(6,9))","shape":"SELECT numrange(1, 9) @> nummultirange(numrange(1, 5), numrange(6, 9));"}
+{"sql":"SELECT numrange(1,9) @> nummultirange(numrange(1,5), numrange(6,10))","shape":"SELECT numrange(1, 9) @> nummultirange(numrange(1, 5), numrange(6, 10));"}
+{"sql":"SELECT '{[1,9)}' @> '{[1,5)}'::nummultirange","shape":"SELECT '{[1,9)}' @> '{[1,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,9)}' @> '{[-4,-2), [1,5)}'::nummultirange","shape":"SELECT '{[1,9)}' @> '{[-4,-2), [1,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,9)}' @> '{[1,5), [8,9)}'::nummultirange","shape":"SELECT '{[1,9)}' @> '{[1,5), [8,9)}'::nummultirange;"}
+{"sql":"SELECT '{[1,9)}' @> '{[1,5), [6,9)}'::nummultirange","shape":"SELECT '{[1,9)}' @> '{[1,5), [6,9)}'::nummultirange;"}
+{"sql":"SELECT '{[1,9)}' @> '{[1,5), [6,10)}'::nummultirange","shape":"SELECT '{[1,9)}' @> '{[1,5), [6,10)}'::nummultirange;"}
+{"sql":"SELECT nummultirange() <@ nummultirange()","shape":"SELECT nummultirange() <@ nummultirange();"}
+{"sql":"SELECT 'empty'::numrange <@ nummultirange()","shape":"SELECT 'empty'::numrange <@ nummultirange();"}
+{"sql":"SELECT numrange(1,2) <@ nummultirange(numrange(null,null))","shape":"SELECT numrange(1, 2) <@ nummultirange(numrange(NULL, NULL));"}
+{"sql":"SELECT numrange(null,2) <@ nummultirange(numrange(null,null))","shape":"SELECT numrange(NULL, 2) <@ nummultirange(numrange(NULL, NULL));"}
+{"sql":"SELECT numrange(2,null) <@ nummultirange(numrange(null,null))","shape":"SELECT numrange(2, NULL) <@ nummultirange(numrange(NULL, NULL));"}
+{"sql":"SELECT numrange(null,3) <@ nummultirange(numrange(null,5))","shape":"SELECT numrange(NULL, 3) <@ nummultirange(numrange(NULL, 5));"}
+{"sql":"SELECT numrange(null,8) <@ nummultirange(numrange(null,5))","shape":"SELECT numrange(NULL, 8) <@ nummultirange(numrange(NULL, 5));"}
+{"sql":"SELECT numrange(8,null) <@ nummultirange(numrange(5,null))","shape":"SELECT numrange(8, NULL) <@ nummultirange(numrange(5, NULL));"}
+{"sql":"SELECT numrange(3,null) <@ nummultirange(numrange(5,null))","shape":"SELECT numrange(3, NULL) <@ nummultirange(numrange(5, NULL));"}
+{"sql":"SELECT numrange(8,9) <@ nummultirange(numrange(1,5))","shape":"SELECT numrange(8, 9) <@ nummultirange(numrange(1, 5));"}
+{"sql":"SELECT numrange(3,9) <@ nummultirange(numrange(1,5))","shape":"SELECT numrange(3, 9) <@ nummultirange(numrange(1, 5));"}
+{"sql":"SELECT numrange(1,4) <@ nummultirange(numrange(1,5))","shape":"SELECT numrange(1, 4) <@ nummultirange(numrange(1, 5));"}
+{"sql":"SELECT numrange(1,5) <@ nummultirange(numrange(1,5))","shape":"SELECT numrange(1, 5) <@ nummultirange(numrange(1, 5));"}
+{"sql":"SELECT numrange(1,5) <@ nummultirange(numrange(-4,-2), numrange(1,5))","shape":"SELECT numrange(1, 5) <@ nummultirange(numrange(-4, -2), numrange(1, 5));"}
+{"sql":"SELECT numrange(1,5) <@ nummultirange(numrange(1,5), numrange(8,9))","shape":"SELECT numrange(1, 5) <@ nummultirange(numrange(1, 5), numrange(8, 9));"}
+{"sql":"SELECT numrange(6,7) <@ nummultirange(numrange(1,5), numrange(8,9))","shape":"SELECT numrange(6, 7) <@ nummultirange(numrange(1, 5), numrange(8, 9));"}
+{"sql":"SELECT numrange(6,7) <@ nummultirange(numrange(1,5), numrange(6,9))","shape":"SELECT numrange(6, 7) <@ nummultirange(numrange(1, 5), numrange(6, 9));"}
+{"sql":"SELECT '{[1,5)}' <@ '{[1,5)}'::nummultirange","shape":"SELECT '{[1,5)}' <@ '{[1,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,5)}' <@ '{[-4,-2), [1,5)}'::nummultirange","shape":"SELECT '{[1,5)}' <@ '{[-4,-2), [1,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,5)}' <@ '{[1,5), [8,9)}'::nummultirange","shape":"SELECT '{[1,5)}' <@ '{[1,5), [8,9)}'::nummultirange;"}
+{"sql":"SELECT '{[6,7)}' <@ '{[1,5), [8,9)}'::nummultirange","shape":"SELECT '{[6,7)}' <@ '{[1,5), [8,9)}'::nummultirange;"}
+{"sql":"SELECT '{[6,7)}' <@ '{[1,5), [6,9)}'::nummultirange","shape":"SELECT '{[6,7)}' <@ '{[1,5), [6,9)}'::nummultirange;"}
+{"sql":"SELECT nummultirange(numrange(1,2)) <@ numrange(null,null)","shape":"SELECT nummultirange(numrange(1, 2)) <@ numrange(NULL, NULL);"}
+{"sql":"SELECT nummultirange(numrange(null,2)) <@ numrange(null,null)","shape":"SELECT nummultirange(numrange(NULL, 2)) <@ numrange(NULL, NULL);"}
+{"sql":"SELECT nummultirange(numrange(2,null)) <@ numrange(null,null)","shape":"SELECT nummultirange(numrange(2, NULL)) <@ numrange(NULL, NULL);"}
+{"sql":"SELECT nummultirange(numrange(null,3)) <@ numrange(null,5)","shape":"SELECT nummultirange(numrange(NULL, 3)) <@ numrange(NULL, 5);"}
+{"sql":"SELECT nummultirange(numrange(null,8)) <@ numrange(null,5)","shape":"SELECT nummultirange(numrange(NULL, 8)) <@ numrange(NULL, 5);"}
+{"sql":"SELECT nummultirange(numrange(8,null)) <@ numrange(5,null)","shape":"SELECT nummultirange(numrange(8, NULL)) <@ numrange(5, NULL);"}
+{"sql":"SELECT nummultirange(numrange(3,null)) <@ numrange(5,null)","shape":"SELECT nummultirange(numrange(3, NULL)) <@ numrange(5, NULL);"}
+{"sql":"SELECT nummultirange(numrange(8,9)) <@ numrange(1,5)","shape":"SELECT nummultirange(numrange(8, 9)) <@ numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(3,9)) <@ numrange(1,5)","shape":"SELECT nummultirange(numrange(3, 9)) <@ numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(1,4)) <@ numrange(1,5)","shape":"SELECT nummultirange(numrange(1, 4)) <@ numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(1,5)) <@ numrange(1,5)","shape":"SELECT nummultirange(numrange(1, 5)) <@ numrange(1, 5);"}
+{"sql":"SELECT nummultirange(numrange(-4,-2), numrange(1,5)) <@ numrange(1,9)","shape":"SELECT nummultirange(numrange(-4, -2), numrange(1, 5)) <@ numrange(1, 9);"}
+{"sql":"SELECT nummultirange(numrange(1,5), numrange(8,9)) <@ numrange(1,9)","shape":"SELECT nummultirange(numrange(1, 5), numrange(8, 9)) <@ numrange(1, 9);"}
+{"sql":"SELECT nummultirange(numrange(1,5), numrange(6,9)) <@ numrange(1,9)","shape":"SELECT nummultirange(numrange(1, 5), numrange(6, 9)) <@ numrange(1, 9);"}
+{"sql":"SELECT nummultirange(numrange(1,5), numrange(6,10)) <@ numrange(1,9)","shape":"SELECT nummultirange(numrange(1, 5), numrange(6, 10)) <@ numrange(1, 9);"}
+{"sql":"SELECT '{[1,5)}'::nummultirange <@ '{[1,9)}'","shape":"SELECT '{[1,5)}'::nummultirange <@ '{[1,9)}';"}
+{"sql":"SELECT '{[-4,-2), [1,5)}'::nummultirange <@ '{[1,9)}'","shape":"SELECT '{[-4,-2), [1,5)}'::nummultirange <@ '{[1,9)}';"}
+{"sql":"SELECT '{[1,5), [8,9)}'::nummultirange <@ '{[1,9)}'","shape":"SELECT '{[1,5), [8,9)}'::nummultirange <@ '{[1,9)}';"}
+{"sql":"SELECT '{[1,5), [6,9)}'::nummultirange <@ '{[1,9)}'","shape":"SELECT '{[1,5), [6,9)}'::nummultirange <@ '{[1,9)}';"}
+{"sql":"SELECT '{[1,5), [6,10)}'::nummultirange <@ '{[1,9)}'","shape":"SELECT '{[1,5), [6,10)}'::nummultirange <@ '{[1,9)}';"}
+{"sql":"SELECT 'empty'::numrange &< nummultirange()","shape":"SELECT 'empty'::numrange &< nummultirange();"}
+{"sql":"SELECT 'empty'::numrange &< nummultirange(numrange(1,2))","shape":"SELECT 'empty'::numrange &< nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange() &< 'empty'::numrange","shape":"SELECT nummultirange() &< 'empty'::numrange;"}
+{"sql":"SELECT nummultirange(numrange(1,2)) &< 'empty'::numrange","shape":"SELECT nummultirange(numrange(1, 2)) &< 'empty'::numrange;"}
+{"sql":"SELECT nummultirange() &< nummultirange()","shape":"SELECT nummultirange() &< nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(1,2)) &< nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) &< nummultirange();"}
+{"sql":"SELECT nummultirange() &< nummultirange(numrange(1,2))","shape":"SELECT nummultirange() &< nummultirange(numrange(1, 2));"}
+{"sql":"SELECT numrange(6,7) &< nummultirange(numrange(3,4))","shape":"SELECT numrange(6, 7) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT numrange(1,2) &< nummultirange(numrange(3,4))","shape":"SELECT numrange(1, 2) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT numrange(1,4) &< nummultirange(numrange(3,4))","shape":"SELECT numrange(1, 4) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT numrange(1,6) &< nummultirange(numrange(3,4))","shape":"SELECT numrange(1, 6) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT numrange(3.5,6) &< nummultirange(numrange(3,4))","shape":"SELECT numrange(3.5, 6) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(6,7)) &< numrange(3,4)","shape":"SELECT nummultirange(numrange(6, 7)) &< numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,2)) &< numrange(3,4)","shape":"SELECT nummultirange(numrange(1, 2)) &< numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,4)) &< numrange(3,4)","shape":"SELECT nummultirange(numrange(1, 4)) &< numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,6)) &< numrange(3,4)","shape":"SELECT nummultirange(numrange(1, 6)) &< numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(3.5,6)) &< numrange(3,4)","shape":"SELECT nummultirange(numrange(3.5, 6)) &< numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(6,7)) &< nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(6, 7)) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) &< nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2)) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,4)) &< nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 4)) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,6)) &< nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 6)) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(3.5,6)) &< nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(3.5, 6)) &< nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange() &> 'empty'::numrange","shape":"SELECT nummultirange() &> 'empty'::numrange;"}
+{"sql":"SELECT nummultirange(numrange(1,2)) &> 'empty'::numrange","shape":"SELECT nummultirange(numrange(1, 2)) &> 'empty'::numrange;"}
+{"sql":"SELECT 'empty'::numrange &> nummultirange()","shape":"SELECT 'empty'::numrange &> nummultirange();"}
+{"sql":"SELECT 'empty'::numrange &> nummultirange(numrange(1,2))","shape":"SELECT 'empty'::numrange &> nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange() &> nummultirange()","shape":"SELECT nummultirange() &> nummultirange();"}
+{"sql":"SELECT nummultirange() &> nummultirange(numrange(1,2))","shape":"SELECT nummultirange() &> nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) &> nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) &> nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> numrange(6,7)","shape":"SELECT nummultirange(numrange(3, 4)) &> numrange(6, 7);"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> numrange(1,2)","shape":"SELECT nummultirange(numrange(3, 4)) &> numrange(1, 2);"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> numrange(1,4)","shape":"SELECT nummultirange(numrange(3, 4)) &> numrange(1, 4);"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> numrange(1,6)","shape":"SELECT nummultirange(numrange(3, 4)) &> numrange(1, 6);"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> numrange(3.5,6)","shape":"SELECT nummultirange(numrange(3, 4)) &> numrange(3.5, 6);"}
+{"sql":"SELECT numrange(3,4) &> nummultirange(numrange(6,7))","shape":"SELECT numrange(3, 4) &> nummultirange(numrange(6, 7));"}
+{"sql":"SELECT numrange(3,4) &> nummultirange(numrange(1,2))","shape":"SELECT numrange(3, 4) &> nummultirange(numrange(1, 2));"}
+{"sql":"SELECT numrange(3,4) &> nummultirange(numrange(1,4))","shape":"SELECT numrange(3, 4) &> nummultirange(numrange(1, 4));"}
+{"sql":"SELECT numrange(3,4) &> nummultirange(numrange(1,6))","shape":"SELECT numrange(3, 4) &> nummultirange(numrange(1, 6));"}
+{"sql":"SELECT numrange(3,4) &> nummultirange(numrange(3.5,6))","shape":"SELECT numrange(3, 4) &> nummultirange(numrange(3.5, 6));"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> nummultirange(numrange(6,7))","shape":"SELECT nummultirange(numrange(3, 4)) &> nummultirange(numrange(6, 7));"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(3, 4)) &> nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> nummultirange(numrange(1,4))","shape":"SELECT nummultirange(numrange(3, 4)) &> nummultirange(numrange(1, 4));"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> nummultirange(numrange(1,6))","shape":"SELECT nummultirange(numrange(3, 4)) &> nummultirange(numrange(1, 6));"}
+{"sql":"SELECT nummultirange(numrange(3,4)) &> nummultirange(numrange(3.5,6))","shape":"SELECT nummultirange(numrange(3, 4)) &> nummultirange(numrange(3.5, 6));"}
+{"sql":"SELECT 'empty'::numrange -|- nummultirange()","shape":"SELECT 'empty'::numrange -|- nummultirange();"}
+{"sql":"SELECT 'empty'::numrange -|- nummultirange(numrange(1,2))","shape":"SELECT 'empty'::numrange -|- nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange() -|- 'empty'::numrange","shape":"SELECT nummultirange() -|- 'empty'::numrange;"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- 'empty'::numrange","shape":"SELECT nummultirange(numrange(1, 2)) -|- 'empty'::numrange;"}
+{"sql":"SELECT nummultirange() -|- nummultirange()","shape":"SELECT nummultirange() -|- nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) -|- nummultirange();"}
+{"sql":"SELECT nummultirange() -|- nummultirange(numrange(1,2))","shape":"SELECT nummultirange() -|- nummultirange(numrange(1, 2));"}
+{"sql":"SELECT numrange(1,2) -|- nummultirange(numrange(2,4))","shape":"SELECT numrange(1, 2) -|- nummultirange(numrange(2, 4));"}
+{"sql":"SELECT numrange(1,2) -|- nummultirange(numrange(3,4))","shape":"SELECT numrange(1, 2) -|- nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- numrange(2,4)","shape":"SELECT nummultirange(numrange(1, 2)) -|- numrange(2, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- numrange(3,4)","shape":"SELECT nummultirange(numrange(1, 2)) -|- numrange(3, 4);"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- nummultirange(numrange(2,4))","shape":"SELECT nummultirange(numrange(1, 2)) -|- nummultirange(numrange(2, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2)) -|- nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(5,6)) -|- nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2), numrange(5, 6)) -|- nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(5,6)) -|- nummultirange(numrange(6,7))","shape":"SELECT nummultirange(numrange(1, 2), numrange(5, 6)) -|- nummultirange(numrange(6, 7));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(5,6)) -|- nummultirange(numrange(8,9))","shape":"SELECT nummultirange(numrange(1, 2), numrange(5, 6)) -|- nummultirange(numrange(8, 9));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) -|- nummultirange(numrange(2,4), numrange(6,7))","shape":"SELECT nummultirange(numrange(1, 2)) -|- nummultirange(numrange(2, 4), numrange(6, 7));"}
+{"sql":"select 'empty'::numrange << nummultirange()","shape":"SELECT 'empty'::numrange << nummultirange();"}
+{"sql":"select numrange(1,2) << nummultirange()","shape":"SELECT numrange(1, 2) << nummultirange();"}
+{"sql":"select numrange(1,2) << nummultirange(numrange(3,4))","shape":"SELECT numrange(1, 2) << nummultirange(numrange(3, 4));"}
+{"sql":"select numrange(1,2) << nummultirange(numrange(0,4))","shape":"SELECT numrange(1, 2) << nummultirange(numrange(0, 4));"}
+{"sql":"select numrange(1,2) << nummultirange(numrange(0,4), numrange(7,8))","shape":"SELECT numrange(1, 2) << nummultirange(numrange(0, 4), numrange(7, 8));"}
+{"sql":"select nummultirange() << 'empty'::numrange","shape":"SELECT nummultirange() << 'empty'::numrange;"}
+{"sql":"select nummultirange() << numrange(1,2)","shape":"SELECT nummultirange() << numrange(1, 2);"}
+{"sql":"select nummultirange(numrange(3,4)) << numrange(3,6)","shape":"SELECT nummultirange(numrange(3, 4)) << numrange(3, 6);"}
+{"sql":"select nummultirange(numrange(0,2)) << numrange(3,6)","shape":"SELECT nummultirange(numrange(0, 2)) << numrange(3, 6);"}
+{"sql":"select nummultirange(numrange(0,2), numrange(7,8)) << numrange(3,6)","shape":"SELECT nummultirange(numrange(0, 2), numrange(7, 8)) << numrange(3, 6);"}
+{"sql":"select nummultirange(numrange(-4,-2), numrange(0,2)) << numrange(3,6)","shape":"SELECT nummultirange(numrange(-4, -2), numrange(0, 2)) << numrange(3, 6);"}
+{"sql":"select nummultirange() << nummultirange()","shape":"SELECT nummultirange() << nummultirange();"}
+{"sql":"select nummultirange() << nummultirange(numrange(1,2))","shape":"SELECT nummultirange() << nummultirange(numrange(1, 2));"}
+{"sql":"select nummultirange(numrange(1,2)) << nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) << nummultirange();"}
+{"sql":"select nummultirange(numrange(1,2)) << nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(1, 2)) << nummultirange(numrange(1, 2));"}
+{"sql":"select nummultirange(numrange(1,2)) << nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2)) << nummultirange(numrange(3, 4));"}
+{"sql":"select nummultirange(numrange(1,2)) << nummultirange(numrange(3,4), numrange(7,8))","shape":"SELECT nummultirange(numrange(1, 2)) << nummultirange(numrange(3, 4), numrange(7, 8));"}
+{"sql":"select nummultirange(numrange(1,2), numrange(4,5)) << nummultirange(numrange(3,4), numrange(7,8))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) << nummultirange(numrange(3, 4), numrange(7, 8));"}
+{"sql":"select nummultirange() >> 'empty'::numrange","shape":"SELECT nummultirange() >> 'empty'::numrange;"}
+{"sql":"select nummultirange() >> numrange(1,2)","shape":"SELECT nummultirange() >> numrange(1, 2);"}
+{"sql":"select nummultirange(numrange(3,4)) >> numrange(1,2)","shape":"SELECT nummultirange(numrange(3, 4)) >> numrange(1, 2);"}
+{"sql":"select nummultirange(numrange(0,4)) >> numrange(1,2)","shape":"SELECT nummultirange(numrange(0, 4)) >> numrange(1, 2);"}
+{"sql":"select nummultirange(numrange(0,4), numrange(7,8)) >> numrange(1,2)","shape":"SELECT nummultirange(numrange(0, 4), numrange(7, 8)) >> numrange(1, 2);"}
+{"sql":"select 'empty'::numrange >> nummultirange()","shape":"SELECT 'empty'::numrange >> nummultirange();"}
+{"sql":"select numrange(1,2) >> nummultirange()","shape":"SELECT numrange(1, 2) >> nummultirange();"}
+{"sql":"select numrange(3,6) >> nummultirange(numrange(3,4))","shape":"SELECT numrange(3, 6) >> nummultirange(numrange(3, 4));"}
+{"sql":"select numrange(3,6) >> nummultirange(numrange(0,2))","shape":"SELECT numrange(3, 6) >> nummultirange(numrange(0, 2));"}
+{"sql":"select numrange(3,6) >> nummultirange(numrange(0,2), numrange(7,8))","shape":"SELECT numrange(3, 6) >> nummultirange(numrange(0, 2), numrange(7, 8));"}
+{"sql":"select numrange(3,6) >> nummultirange(numrange(-4,-2), numrange(0,2))","shape":"SELECT numrange(3, 6) >> nummultirange(numrange(-4, -2), numrange(0, 2));"}
+{"sql":"select nummultirange() >> nummultirange()","shape":"SELECT nummultirange() >> nummultirange();"}
+{"sql":"select nummultirange(numrange(1,2)) >> nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) >> nummultirange();"}
+{"sql":"select nummultirange() >> nummultirange(numrange(1,2))","shape":"SELECT nummultirange() >> nummultirange(numrange(1, 2));"}
+{"sql":"select nummultirange(numrange(1,2)) >> nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(1, 2)) >> nummultirange(numrange(1, 2));"}
+{"sql":"select nummultirange(numrange(3,4)) >> nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(3, 4)) >> nummultirange(numrange(1, 2));"}
+{"sql":"select nummultirange(numrange(3,4), numrange(7,8)) >> nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(3, 4), numrange(7, 8)) >> nummultirange(numrange(1, 2));"}
+{"sql":"select nummultirange(numrange(3,4), numrange(7,8)) >> nummultirange(numrange(1,2), numrange(4,5))","shape":"SELECT nummultirange(numrange(3, 4), numrange(7, 8)) >> nummultirange(numrange(1, 2), numrange(4, 5));"}
+{"sql":"SELECT nummultirange() + nummultirange()","shape":"SELECT nummultirange() + nummultirange();"}
+{"sql":"SELECT nummultirange() + nummultirange(numrange(1,2))","shape":"SELECT nummultirange() + nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) + nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) + nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(1,2)) + nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(1, 2)) + nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) + nummultirange(numrange(2,4))","shape":"SELECT nummultirange(numrange(1, 2)) + nummultirange(numrange(2, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) + nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2)) + nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) + nummultirange(numrange(2,4))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) + nummultirange(numrange(2, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) + nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) + nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) + nummultirange(numrange(0,9))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) + nummultirange(numrange(0, 9));"}
+{"sql":"SELECT range_merge(nummultirange())","shape":"SELECT range_merge(nummultirange());"}
+{"sql":"SELECT range_merge(nummultirange(numrange(1,2)))","shape":"SELECT range_merge(nummultirange(numrange(1, 2)));"}
+{"sql":"SELECT range_merge(nummultirange(numrange(1,2), numrange(7,8)))","shape":"SELECT range_merge(nummultirange(numrange(1, 2), numrange(7, 8)));"}
+{"sql":"SELECT nummultirange() - nummultirange()","shape":"SELECT nummultirange() - nummultirange();"}
+{"sql":"SELECT nummultirange() - nummultirange(numrange(1,2))","shape":"SELECT nummultirange() - nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) - nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) - nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(3,4)) - nummultirange()","shape":"SELECT nummultirange(numrange(1, 2), numrange(3, 4)) - nummultirange();"}
+{"sql":"SELECT nummultirange(numrange(1,2)) - nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(1, 2)) - nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) - nummultirange(numrange(2,4))","shape":"SELECT nummultirange(numrange(1, 2)) - nummultirange(numrange(2, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) - nummultirange(numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 2)) - nummultirange(numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,4)) - nummultirange(numrange(1,2))","shape":"SELECT nummultirange(numrange(1, 4)) - nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,4)) - nummultirange(numrange(2,3))","shape":"SELECT nummultirange(numrange(1, 4)) - nummultirange(numrange(2, 3));"}
+{"sql":"SELECT nummultirange(numrange(1,4)) - nummultirange(numrange(0,8))","shape":"SELECT nummultirange(numrange(1, 4)) - nummultirange(numrange(0, 8));"}
+{"sql":"SELECT nummultirange(numrange(1,4)) - nummultirange(numrange(0,2))","shape":"SELECT nummultirange(numrange(1, 4)) - nummultirange(numrange(0, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,8)) - nummultirange(numrange(0,2), numrange(3,4))","shape":"SELECT nummultirange(numrange(1, 8)) - nummultirange(numrange(0, 2), numrange(3, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,8)) - nummultirange(numrange(2,3), numrange(5,null))","shape":"SELECT nummultirange(numrange(1, 8)) - nummultirange(numrange(2, 3), numrange(5, NULL));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) - nummultirange(numrange(-2,0))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) - nummultirange(numrange(-2, 0));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) - nummultirange(numrange(2,4))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) - nummultirange(numrange(2, 4));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) - nummultirange(numrange(3,5))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) - nummultirange(numrange(3, 5));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) - nummultirange(numrange(0,9))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) - nummultirange(numrange(0, 9));"}
+{"sql":"SELECT nummultirange(numrange(1,3), numrange(4,5)) - nummultirange(numrange(2,9))","shape":"SELECT nummultirange(numrange(1, 3), numrange(4, 5)) - nummultirange(numrange(2, 9));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) - nummultirange(numrange(8,9))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) - nummultirange(numrange(8, 9));"}
+{"sql":"SELECT nummultirange(numrange(1,2), numrange(4,5)) - nummultirange(numrange(-2,0), numrange(8,9))","shape":"SELECT nummultirange(numrange(1, 2), numrange(4, 5)) - nummultirange(numrange(-2, 0), numrange(8, 9));"}
+{"sql":"SELECT nummultirange() * nummultirange()","shape":"SELECT nummultirange() * nummultirange();"}
+{"sql":"SELECT nummultirange() * nummultirange(numrange(1,2))","shape":"SELECT nummultirange() * nummultirange(numrange(1, 2));"}
+{"sql":"SELECT nummultirange(numrange(1,2)) * nummultirange()","shape":"SELECT nummultirange(numrange(1, 2)) * nummultirange();"}
+{"sql":"SELECT '{[1,3)}'::nummultirange * '{[1,5)}'::nummultirange","shape":"SELECT '{[1,3)}'::nummultirange * '{[1,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,3)}'::nummultirange * '{[0,5)}'::nummultirange","shape":"SELECT '{[1,3)}'::nummultirange * '{[0,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,3)}'::nummultirange * '{[0,2)}'::nummultirange","shape":"SELECT '{[1,3)}'::nummultirange * '{[0,2)}'::nummultirange;"}
+{"sql":"SELECT '{[1,3)}'::nummultirange * '{[2,5)}'::nummultirange","shape":"SELECT '{[1,3)}'::nummultirange * '{[2,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,4)}'::nummultirange * '{[2,3)}'::nummultirange","shape":"SELECT '{[1,4)}'::nummultirange * '{[2,3)}'::nummultirange;"}
+{"sql":"SELECT '{[1,4)}'::nummultirange * '{[0,2), [3,5)}'::nummultirange","shape":"SELECT '{[1,4)}'::nummultirange * '{[0,2), [3,5)}'::nummultirange;"}
+{"sql":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[0,8), [9,12)}'::nummultirange","shape":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[0,8), [9,12)}'::nummultirange;"}
+{"sql":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[9,12)}'::nummultirange","shape":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[9,12)}'::nummultirange;"}
+{"sql":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[-5,-4), [5,6), [9,12)}'::nummultirange","shape":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[-5,-4), [5,6), [9,12)}'::nummultirange;"}
+{"sql":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[0,2), [3,8), [9,12)}'::nummultirange","shape":"SELECT '{[1,4), [7,10)}'::nummultirange * '{[0,2), [3,8), [9,12)}'::nummultirange;"}
+{"sql":"create table test_multirange_gist(mr int4multirange)","shape":"CREATE TABLE test_multirange_gist (mr int4multirange);"}
+{"sql":"insert into test_multirange_gist select int4multirange(int4range(g, g+10),int4range(g+20, g+30),int4range(g+40, g+50)) from generate_series(1,2000) g","shape":"INSERT INTO test_multirange_gist SELECT int4multirange(int4range(g, g + 10), int4range(g + 20, g + 30), int4range(g + 40, g + 50)) FROM generate_series(1, 2000) AS g;"}
+{"sql":"insert into test_multirange_gist select '{}'::int4multirange from generate_series(1,500) g","shape":"INSERT INTO test_multirange_gist SELECT '{}'::int4multirange FROM generate_series(1, 500) AS g;"}
+{"sql":"insert into test_multirange_gist select int4multirange(int4range(g, g+10000)) from generate_series(1,1000) g","shape":"INSERT INTO test_multirange_gist SELECT int4multirange(int4range(g, g + 10000)) FROM generate_series(1, 1000) AS g;"}
+{"sql":"insert into test_multirange_gist select int4multirange(int4range(NULL, g*10, '(]'), int4range(g*10, g*20, '(]')) from generate_series(1,100) g","shape":"INSERT INTO test_multirange_gist SELECT int4multirange(int4range(NULL, g * 10, '(]'), int4range(g * 10, g * 20, '(]')) FROM generate_series(1, 100) AS g;"}
+{"sql":"insert into test_multirange_gist select int4multirange(int4range(g*10, g*20, '(]'), int4range(g*20, NULL, '(]')) from generate_series(1,100) g","shape":"INSERT INTO test_multirange_gist SELECT int4multirange(int4range(g * 10, g * 20, '(]'), int4range(g * 20, NULL, '(]')) FROM generate_series(1, 100) AS g;"}
+{"sql":"create index test_mulrirange_gist_idx on test_multirange_gist using gist (mr)","shape":"CREATE INDEX test_mulrirange_gist_idx ON test_multirange_gist USING gist (mr);"}
+{"sql":"analyze test_multirange_gist","shape":"ANALYZE test_multirange_gist;"}
+{"sql":"SET enable_seqscan    = t","shape":"SET enable_seqscan TO t;"}
+{"sql":"SET enable_indexscan  = f","shape":"SET enable_indexscan TO f;"}
+{"sql":"SET enable_bitmapscan = f","shape":"SET enable_bitmapscan TO f;"}
+{"sql":"select count(*) from test_multirange_gist where mr = '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr = '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr @> 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr @> 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr && 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr && 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr <@ 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr <@ 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr << 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr << 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr >> 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr >> 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr &< 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &< 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr &> 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &> 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr -|- 'empty'::int4range","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr -|- 'empty'::int4range;"}
+{"sql":"select count(*) from test_multirange_gist where mr @> '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr @> '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr && '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr && '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr <@ '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr <@ '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr << '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr << '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr >> '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr >> '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr &< '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &< '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr &> '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &> '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr -|- '{}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr -|- '{}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr = int4multirange(int4range(10,20), int4range(30,40), int4range(50,60))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr = int4multirange(int4range(10, 20), int4range(30, 40), int4range(50, 60));"}
+{"sql":"select count(*) from test_multirange_gist where mr @> 10","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr @> 10;"}
+{"sql":"select count(*) from test_multirange_gist where mr @> int4range(10,20)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr @> int4range(10, 20);"}
+{"sql":"select count(*) from test_multirange_gist where mr && int4range(10,20)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr && int4range(10, 20);"}
+{"sql":"select count(*) from test_multirange_gist where mr <@ int4range(10,50)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr <@ int4range(10, 50);"}
+{"sql":"select count(*) from test_multirange_gist where mr << int4range(100,500)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr << int4range(100, 500);"}
+{"sql":"select count(*) from test_multirange_gist where mr >> int4range(100,500)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr >> int4range(100, 500);"}
+{"sql":"select count(*) from test_multirange_gist where mr &< int4range(100,500)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &< int4range(100, 500);"}
+{"sql":"select count(*) from test_multirange_gist where mr &> int4range(100,500)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &> int4range(100, 500);"}
+{"sql":"select count(*) from test_multirange_gist where mr -|- int4range(100,500)","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr -|- int4range(100, 500);"}
+{"sql":"select count(*) from test_multirange_gist where mr @> int4multirange(int4range(10,20), int4range(30,40))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr @> int4multirange(int4range(10, 20), int4range(30, 40));"}
+{"sql":"select count(*) from test_multirange_gist where mr && '{(10,20),(30,40),(50,60)}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr && '{(10,20),(30,40),(50,60)}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr <@ '{(10,30),(40,60),(70,90)}'::int4multirange","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr <@ '{(10,30),(40,60),(70,90)}'::int4multirange;"}
+{"sql":"select count(*) from test_multirange_gist where mr << int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr << int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_multirange_gist where mr >> int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr >> int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_multirange_gist where mr &< int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &< int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_multirange_gist where mr &> int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr &> int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_multirange_gist where mr -|- int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_multirange_gist WHERE mr -|- int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"SET enable_seqscan    = f","shape":"SET enable_seqscan TO f;"}
+{"sql":"SET enable_indexscan  = t","shape":"SET enable_indexscan TO t;"}
+{"sql":"drop table test_multirange_gist","shape":"DROP TABLE test_multirange_gist;"}
+{"sql":"create table reservations ( room_id integer not null, booked_during daterange )","shape":"CREATE TABLE reservations (room_id integer NOT NULL, booked_during daterange);"}
+{"sql":"insert into reservations values\n-- 1: has a meets and a gap\n(1, daterange('2018-07-01', '2018-07-07')),\n(1, daterange('2018-07-07', '2018-07-14')),\n(1, daterange('2018-07-20', '2018-07-22')),\n-- 2: just a single row\n(2, daterange('2018-07-01', '2018-07-03')),\n-- 3: one null range\n(3, NULL),\n-- 4: two null ranges\n(4, NULL),\n(4, NULL),\n-- 5: a null range and a non-null range\n(5, NULL),\n(5, daterange('2018-07-01', '2018-07-03')),\n-- 6: has overlap\n(6, daterange('2018-07-01', '2018-07-07')),\n(6, daterange('2018-07-05', '2018-07-10')),\n-- 7: two ranges that meet: no gap or overlap\n(7, daterange('2018-07-01', '2018-07-07')),\n(7, daterange('2018-07-07', '2018-07-14')),\n-- 8: an empty range\n(8, 'empty'::daterange)","shape":"INSERT INTO reservations VALUES (1, daterange('2018-07-01', '2018-07-07')), (1, daterange('2018-07-07', '2018-07-14')), (1, daterange('2018-07-20', '2018-07-22')), (2, daterange('2018-07-01', '2018-07-03')), (3, NULL), (4, NULL), (4, NULL), (5, NULL), (5, daterange('2018-07-01', '2018-07-03')), (6, daterange('2018-07-01', '2018-07-07')), (6, daterange('2018-07-05', '2018-07-10')), (7, daterange('2018-07-01', '2018-07-07')), (7, daterange('2018-07-07', '2018-07-14')), (8, 'empty'::daterange);"}
+{"sql":"SELECT   room_id, range_agg(booked_during)\nFROM     reservations\nGROUP BY room_id\nORDER BY room_id","shape":"SELECT room_id, range_agg(booked_during) FROM reservations GROUP BY room_id ORDER BY room_id;"}
+{"sql":"SELECT  range_agg(r)\nFROM    (VALUES\n          ('[a,c]'::textrange),\n          ('[b,b]'::textrange),\n          ('[c,f]'::textrange),\n          ('[g,h)'::textrange),\n          ('[h,j)'::textrange)\n        ) t(r)","shape":"SELECT range_agg(r) FROM (VALUES ('[a,c]'::textrange), ('[b,b]'::textrange), ('[c,f]'::textrange), ('[g,h)'::textrange), ('[h,j)'::textrange)) AS t(r);"}
+{"sql":"select range_agg(nmr) from nummultirange_test","shape":"SELECT range_agg(nmr) FROM nummultirange_test;"}
+{"sql":"select range_agg(nmr) from nummultirange_test where false","shape":"SELECT range_agg(nmr) FROM nummultirange_test WHERE FALSE;"}
+{"sql":"select range_agg(null::nummultirange) from nummultirange_test","shape":"SELECT range_agg(NULL::nummultirange) FROM nummultirange_test;"}
+{"sql":"select range_agg(nmr) from (values ('{}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_agg(nmr) from (values ('{}'::nummultirange), ('{}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{}'::nummultirange), ('{}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_agg(nmr) from (values ('{[1,2]}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{[1,2]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_agg(nmr) from (values ('{[1,2], [5,6]}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{[1,2], [5,6]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_agg(nmr) from (values ('{[1,2], [2,3]}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{[1,2], [2,3]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_agg(nmr) from (values ('{[1,2]}'::nummultirange), ('{[5,6]}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{[1,2]}'::nummultirange), ('{[5,6]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_agg(nmr) from (values ('{[1,2]}'::nummultirange), ('{[2,3]}'::nummultirange)) t(nmr)","shape":"SELECT range_agg(nmr) FROM (VALUES ('{[1,2]}'::nummultirange), ('{[2,3]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from nummultirange_test","shape":"SELECT range_intersect_agg(nmr) FROM nummultirange_test;"}
+{"sql":"select range_intersect_agg(nmr) from nummultirange_test where false","shape":"SELECT range_intersect_agg(nmr) FROM nummultirange_test WHERE FALSE;"}
+{"sql":"select range_intersect_agg(null::nummultirange) from nummultirange_test","shape":"SELECT range_intersect_agg(NULL::nummultirange) FROM nummultirange_test;"}
+{"sql":"select range_intersect_agg(nmr) from (values ('{[1,3]}'::nummultirange), ('{[6,12]}'::nummultirange)) t(nmr)","shape":"SELECT range_intersect_agg(nmr) FROM (VALUES ('{[1,3]}'::nummultirange), ('{[6,12]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from (values ('{[1,6]}'::nummultirange), ('{[3,12]}'::nummultirange)) t(nmr)","shape":"SELECT range_intersect_agg(nmr) FROM (VALUES ('{[1,6]}'::nummultirange), ('{[3,12]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from (values ('{[1,6], [10,12]}'::nummultirange), ('{[4,14]}'::nummultirange)) t(nmr)","shape":"SELECT range_intersect_agg(nmr) FROM (VALUES ('{[1,6], [10,12]}'::nummultirange), ('{[4,14]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from (values ('{}'::nummultirange)) t(nmr)","shape":"SELECT range_intersect_agg(nmr) FROM (VALUES ('{}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from (values ('{[1,2]}'::nummultirange)) t(nmr)","shape":"SELECT range_intersect_agg(nmr) FROM (VALUES ('{[1,2]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from (values ('{[1,6], [10,12]}'::nummultirange)) t(nmr)","shape":"SELECT range_intersect_agg(nmr) FROM (VALUES ('{[1,6], [10,12]}'::nummultirange)) AS t(nmr);"}
+{"sql":"select range_intersect_agg(nmr) from nummultirange_test where nmr @> 4.0","shape":"SELECT range_intersect_agg(nmr) FROM nummultirange_test WHERE nmr @> 4.0;"}
+{"sql":"create table nummultirange_test2(nmr nummultirange)","shape":"CREATE TABLE nummultirange_test2 (nmr nummultirange);"}
+{"sql":"create index nummultirange_test2_hash_idx on nummultirange_test2 using hash (nmr)","shape":"CREATE INDEX nummultirange_test2_hash_idx ON nummultirange_test2 USING hash (nmr);"}
+{"sql":"INSERT INTO nummultirange_test2 VALUES('{[, 5)}')","shape":"INSERT INTO nummultirange_test2 VALUES ('{[, 5)}');"}
+{"sql":"INSERT INTO nummultirange_test2 VALUES(nummultirange(numrange(1.1, 2.2)))","shape":"INSERT INTO nummultirange_test2 VALUES (nummultirange(numrange(1.1, 2.2)));"}
+{"sql":"INSERT INTO nummultirange_test2 VALUES(nummultirange(numrange(1.1, 2.2,'()')))","shape":"INSERT INTO nummultirange_test2 VALUES (nummultirange(numrange(1.1, 2.2, '()')));"}
+{"sql":"INSERT INTO nummultirange_test2 VALUES('{}')","shape":"INSERT INTO nummultirange_test2 VALUES ('{}');"}
+{"sql":"select * from nummultirange_test2 where nmr = '{}'","shape":"SELECT * FROM nummultirange_test2 WHERE nmr = '{}';"}
+{"sql":"select * from nummultirange_test2 where nmr = nummultirange(numrange(1.1, 2.2))","shape":"SELECT * FROM nummultirange_test2 WHERE nmr = nummultirange(numrange(1.1, 2.2));"}
+{"sql":"select * from nummultirange_test2 where nmr = nummultirange(numrange(1.1, 2.3))","shape":"SELECT * FROM nummultirange_test2 WHERE nmr = nummultirange(numrange(1.1, 2.3));"}
+{"sql":"set enable_nestloop=t","shape":"SET enable_nestloop TO t;"}
+{"sql":"set enable_hashjoin=f","shape":"SET enable_hashjoin TO f;"}
+{"sql":"set enable_mergejoin=f","shape":"SET enable_mergejoin TO f;"}
+{"sql":"select * from nummultirange_test natural join nummultirange_test2 order by nmr","shape":"SELECT * FROM nummultirange_test NATURAL JOIN nummultirange_test2 ORDER BY nmr;"}
+{"sql":"set enable_nestloop=f","shape":"SET enable_nestloop TO f;"}
+{"sql":"set enable_hashjoin=t","shape":"SET enable_hashjoin TO t;"}
+{"sql":"set enable_mergejoin=t","shape":"SET enable_mergejoin TO t;"}
+{"sql":"set enable_nestloop to default","shape":"SET enable_nestloop TO DEFAULT;"}
+{"sql":"set enable_hashjoin to default","shape":"SET enable_hashjoin TO DEFAULT;"}
+{"sql":"set enable_mergejoin to default","shape":"SET enable_mergejoin TO DEFAULT;"}
+{"sql":"DROP TABLE nummultirange_test2","shape":"DROP TABLE nummultirange_test2;"}
+{"sql":"select '{[123.001, 5.e9)}'::float8multirange @> 888.882::float8","shape":"SELECT '{[123.001, 5.e9)}'::float8multirange @> 888.882::float8;"}
+{"sql":"create table float8multirange_test(f8mr float8multirange, i int)","shape":"CREATE TABLE float8multirange_test (f8mr float8multirange, i int);"}
+{"sql":"insert into float8multirange_test values(float8multirange(float8range(-100.00007, '1.111113e9')), 42)","shape":"INSERT INTO float8multirange_test VALUES (float8multirange(float8range(-100.00007, '1.111113e9')), 42);"}
+{"sql":"select * from float8multirange_test","shape":"SELECT * FROM float8multirange_test;"}
+{"sql":"drop table float8multirange_test","shape":"DROP TABLE float8multirange_test;"}
+{"sql":"create domain mydomain as int4","shape":"CREATE DOMAIN mydomain AS int4;"}
+{"sql":"create type mydomainrange as range(subtype=mydomain)"}
+{"sql":"select '{[4,50)}'::mydomainmultirange @> 7::mydomain","shape":"SELECT '{[4,50)}'::mydomainmultirange @> 7::mydomain;"}
+{"sql":"drop domain mydomain cascade","shape":"DROP DOMAIN mydomain CASCADE;"}
+{"sql":"create domain restrictedmultirange as int4multirange check (upper(value) < 10)","shape":"CREATE DOMAIN restrictedmultirange AS int4multirange CHECK (upper(value) < 10);"}
+{"sql":"select '{[4,5)}'::restrictedmultirange @> 7","shape":"SELECT '{[4,5)}'::restrictedmultirange @> 7;"}
+{"sql":"select '{[4,50)}'::restrictedmultirange @> 7","shape":"SELECT '{[4,50)}'::restrictedmultirange @> 7;"}
+{"sql":"drop domain restrictedmultirange","shape":"DROP DOMAIN restrictedmultirange;"}
+{"sql":"create type intr as range(subtype=int)"}
+{"sql":"select intr_multirange(intr(1,10))","shape":"SELECT intr_multirange(intr(1, 10));"}
+{"sql":"drop type intr","shape":"DROP TYPE intr;"}
+{"sql":"create type intmultirange as (x int, y int)","shape":"CREATE TYPE intmultirange AS (x int, y int);"}
+{"sql":"create type intrange as range(subtype=int)"}
+{"sql":"drop type intmultirange","shape":"DROP TYPE intmultirange;"}
+{"sql":"create type intr_multirange as (x int, y int)","shape":"CREATE TYPE intr_multirange AS (x int, y int);"}
+{"sql":"drop type intr_multirange","shape":"DROP TYPE intr_multirange;"}
+{"sql":"create type textrange1 as range(subtype=text, multirange_type_name=int, collation=\"C\")"}
+{"sql":"create type textrange1 as range(subtype=text, multirange_type_name=multirange_of_text, collation=\"C\")"}
+{"sql":"create type textrange2 as range(subtype=text, multirange_type_name=_textrange1, collation=\"C\")"}
+{"sql":"select multirange_of_text(textrange2('a','Z'))","shape":"SELECT multirange_of_text(textrange2('a', 'Z'));"}
+{"sql":"select multirange_of_text(textrange1('a','Z')) @> 'b'::text","shape":"SELECT multirange_of_text(textrange1('a', 'Z')) @> 'b'::text;"}
+{"sql":"select unnest(multirange_of_text(textrange1('a','b'), textrange1('d','e')))","shape":"SELECT unnest(multirange_of_text(textrange1('a', 'b'), textrange1('d', 'e')));"}
+{"sql":"select _textrange1(textrange2('a','z')) @> 'b'::text","shape":"SELECT _textrange1(textrange2('a', 'z')) @> 'b'::text;"}
+{"sql":"drop type textrange1","shape":"DROP TYPE textrange1;"}
+{"sql":"drop type textrange2","shape":"DROP TYPE textrange2;"}
+{"sql":"create function anyarray_anymultirange_func(a anyarray, r anymultirange)\n  returns anyelement as 'select $1[1] + lower($2);' language sql","shape":"CREATE FUNCTION anyarray_anymultirange_func(a anyarray, r anymultirange) RETURNS anyelement AS 'select $1[1] + lower($2);' LANGUAGE sql;"}
+{"sql":"select anyarray_anymultirange_func(ARRAY[1,2], int4multirange(int4range(10,20)))","shape":"SELECT anyarray_anymultirange_func(ARRAY[1, 2], int4multirange(int4range(10, 20)));"}
+{"sql":"select anyarray_anymultirange_func(ARRAY[1,2], nummultirange(numrange(10,20)))","shape":"SELECT anyarray_anymultirange_func(ARRAY[1, 2], nummultirange(numrange(10, 20)));"}
+{"sql":"drop function anyarray_anymultirange_func(anyarray, anymultirange)"}
+{"sql":"create function bogus_func(anyelement)\n  returns anymultirange as 'select int4multirange(int4range(1,10))' language sql","shape":"CREATE FUNCTION bogus_func(anyelement) RETURNS anymultirange AS 'select int4multirange(int4range(1,10))' LANGUAGE sql;"}
+{"sql":"create function bogus_func(int)\n  returns anymultirange as 'select int4multirange(int4range(1,10))' language sql","shape":"CREATE FUNCTION bogus_func(int) RETURNS anymultirange AS 'select int4multirange(int4range(1,10))' LANGUAGE sql;"}
+{"sql":"create function range_add_bounds(anymultirange)\n  returns anyelement as 'select lower($1) + upper($1)' language sql","shape":"CREATE FUNCTION range_add_bounds(anymultirange) RETURNS anyelement AS 'select lower($1) + upper($1)' LANGUAGE sql;"}
+{"sql":"select range_add_bounds(int4multirange(int4range(1, 17)))","shape":"SELECT range_add_bounds(int4multirange(int4range(1, 17)));"}
+{"sql":"select range_add_bounds(nummultirange(numrange(1.0001, 123.123)))","shape":"SELECT range_add_bounds(nummultirange(numrange(1.0001, 123.123)));"}
+{"sql":"create function multirangetypes_sql(q anymultirange, b anyarray, out c anyelement)\n  as $$ select upper($1) + $2[1] $$\n  language sql","shape":"CREATE FUNCTION multirangetypes_sql(q anymultirange, b anyarray, OUT c anyelement) AS ' select upper($1) + $2[1] ' LANGUAGE sql;"}
+{"sql":"select multirangetypes_sql(int4multirange(int4range(1,10)), ARRAY[2,20])","shape":"SELECT multirangetypes_sql(int4multirange(int4range(1, 10)), ARRAY[2, 20]);"}
+{"sql":"select multirangetypes_sql(nummultirange(numrange(1,10)), ARRAY[2,20])","shape":"SELECT multirangetypes_sql(nummultirange(numrange(1, 10)), ARRAY[2, 20]);"}
+{"sql":"create function anycompatiblearray_anycompatiblemultirange_func(a anycompatiblearray, mr anycompatiblemultirange)\n  returns anycompatible as 'select $1[1] + lower($2);' language sql","shape":"CREATE FUNCTION anycompatiblearray_anycompatiblemultirange_func(a anycompatiblearray, mr anycompatiblemultirange) RETURNS anycompatible AS 'select $1[1] + lower($2);' LANGUAGE sql;"}
+{"sql":"select anycompatiblearray_anycompatiblemultirange_func(ARRAY[1,2], multirange(int4range(10,20)))","shape":"SELECT anycompatiblearray_anycompatiblemultirange_func(ARRAY[1, 2], multirange(int4range(10, 20)));"}
+{"sql":"select anycompatiblearray_anycompatiblemultirange_func(ARRAY[1,2], multirange(numrange(10,20)))","shape":"SELECT anycompatiblearray_anycompatiblemultirange_func(ARRAY[1, 2], multirange(numrange(10, 20)));"}
+{"sql":"select anycompatiblearray_anycompatiblemultirange_func(ARRAY[1.1,2], multirange(int4range(10,20)))","shape":"SELECT anycompatiblearray_anycompatiblemultirange_func(ARRAY[1.1, 2], multirange(int4range(10, 20)));"}
+{"sql":"drop function anycompatiblearray_anycompatiblemultirange_func(anycompatiblearray, anycompatiblemultirange)"}
+{"sql":"create function anycompatiblerange_anycompatiblemultirange_func(r anycompatiblerange, mr anycompatiblemultirange)\n  returns anycompatible as 'select lower($1) + lower($2);' language sql","shape":"CREATE FUNCTION anycompatiblerange_anycompatiblemultirange_func(r anycompatiblerange, mr anycompatiblemultirange) RETURNS anycompatible AS 'select lower($1) + lower($2);' LANGUAGE sql;"}
+{"sql":"select anycompatiblerange_anycompatiblemultirange_func(int4range(1,2), multirange(int4range(10,20)))","shape":"SELECT anycompatiblerange_anycompatiblemultirange_func(int4range(1, 2), multirange(int4range(10, 20)));"}
+{"sql":"select anycompatiblerange_anycompatiblemultirange_func(numrange(1,2), multirange(int4range(10,20)))","shape":"SELECT anycompatiblerange_anycompatiblemultirange_func(numrange(1, 2), multirange(int4range(10, 20)));"}
+{"sql":"drop function anycompatiblerange_anycompatiblemultirange_func(anycompatiblerange, anycompatiblemultirange)"}
+{"sql":"create function bogus_func(anycompatible)\n  returns anycompatiblerange as 'select int4range(1,10)' language sql","shape":"CREATE FUNCTION bogus_func(anycompatible) RETURNS anycompatiblerange AS 'select int4range(1,10)' LANGUAGE sql;"}
+{"sql":"select ARRAY[nummultirange(numrange(1.1, 1.2)), nummultirange(numrange(12.3, 155.5))]","shape":"SELECT ARRAY[nummultirange(numrange(1.1, 1.2)), nummultirange(numrange(12.3, 155.5))];"}
+{"sql":"create table i8mr_array (f1 int, f2 int8multirange[])","shape":"CREATE TABLE i8mr_array (f1 int, f2 int8multirange[]);"}
+{"sql":"insert into i8mr_array values (42, array[int8multirange(int8range(1,10)), int8multirange(int8range(2,20))])","shape":"INSERT INTO i8mr_array VALUES (42, ARRAY[int8multirange(int8range(1, 10)), int8multirange(int8range(2, 20))]);"}
+{"sql":"select * from i8mr_array","shape":"SELECT * FROM i8mr_array;"}
+{"sql":"drop table i8mr_array","shape":"DROP TABLE i8mr_array;"}
+{"sql":"select arraymultirange(arrayrange(ARRAY[1,2], ARRAY[2,1]))","shape":"SELECT arraymultirange(arrayrange(ARRAY[1, 2], ARRAY[2, 1]));"}
+{"sql":"select arraymultirange(arrayrange(ARRAY[2,1], ARRAY[1,2]))","shape":"SELECT arraymultirange(arrayrange(ARRAY[2, 1], ARRAY[1, 2]));"}
+{"sql":"select array[1,1] <@ arraymultirange(arrayrange(array[1,2], array[2,1]))","shape":"SELECT ARRAY[1, 1] <@ arraymultirange(arrayrange(ARRAY[1, 2], ARRAY[2, 1]));"}
+{"sql":"select array[1,3] <@ arraymultirange(arrayrange(array[1,2], array[2,1]))","shape":"SELECT ARRAY[1, 3] <@ arraymultirange(arrayrange(ARRAY[1, 2], ARRAY[2, 1]));"}
+{"sql":"create type two_ints as (a int, b int)","shape":"CREATE TYPE two_ints AS (a int, b int);"}
+{"sql":"create type two_ints_range as range (subtype = two_ints)"}
+{"sql":"select *, row_to_json(upper(t)) as u from\n  (values (two_ints_multirange(two_ints_range(row(1,2), row(3,4)))),\n          (two_ints_multirange(two_ints_range(row(5,6), row(7,8))))) v(t)","shape":"SELECT *, row_to_json(upper(t)) AS u FROM (VALUES (two_ints_multirange(two_ints_range(ROW(1, 2), ROW(3, 4)))), (two_ints_multirange(two_ints_range(ROW(5, 6), ROW(7, 8))))) AS v(t);"}
+{"sql":"drop type two_ints cascade","shape":"DROP TYPE two_ints CASCADE;"}
+{"sql":"set enable_sort = off","shape":"SET enable_sort TO off;"}
+{"sql":"select '{(2,5)}'::cashmultirange except select '{(5,6)}'::cashmultirange","shape":"SELECT '{(2,5)}'::cashmultirange EXCEPT SELECT '{(5,6)}'::cashmultirange;"}
+{"sql":"create function mr_outparam_succeed(i anymultirange, out r anymultirange, out t text)\n  as $$ select $1, 'foo'::text $$ language sql","shape":"CREATE FUNCTION mr_outparam_succeed(i anymultirange, OUT r anymultirange, OUT t text) AS ' select $1, ''foo''::text ' LANGUAGE sql;"}
+{"sql":"select * from mr_outparam_succeed(int4multirange(int4range(1,2)))","shape":"SELECT * FROM mr_outparam_succeed(int4multirange(int4range(1, 2)));"}
+{"sql":"create function mr_outparam_succeed2(i anymultirange, out r anyarray, out t text)\n  as $$ select ARRAY[upper($1)], 'foo'::text $$ language sql","shape":"CREATE FUNCTION mr_outparam_succeed2(i anymultirange, OUT r anyarray, OUT t text) AS ' select ARRAY[upper($1)], ''foo''::text ' LANGUAGE sql;"}
+{"sql":"select * from mr_outparam_succeed2(int4multirange(int4range(1,2)))","shape":"SELECT * FROM mr_outparam_succeed2(int4multirange(int4range(1, 2)));"}
+{"sql":"create function mr_outparam_succeed3(i anymultirange, out r anyrange, out t text)\n  as $$ select range_merge($1), 'foo'::text $$ language sql","shape":"CREATE FUNCTION mr_outparam_succeed3(i anymultirange, OUT r anyrange, OUT t text) AS ' select range_merge($1), ''foo''::text ' LANGUAGE sql;"}
+{"sql":"select * from mr_outparam_succeed3(int4multirange(int4range(1,2)))","shape":"SELECT * FROM mr_outparam_succeed3(int4multirange(int4range(1, 2)));"}
+{"sql":"create function mr_outparam_succeed4(i anyrange, out r anymultirange, out t text)\n  as $$ select multirange($1), 'foo'::text $$ language sql","shape":"CREATE FUNCTION mr_outparam_succeed4(i anyrange, OUT r anymultirange, OUT t text) AS ' select multirange($1), ''foo''::text ' LANGUAGE sql;"}
+{"sql":"select * from mr_outparam_succeed4(int4range(1,2))","shape":"SELECT * FROM mr_outparam_succeed4(int4range(1, 2));"}
+{"sql":"create function mr_inoutparam_succeed(out i anyelement, inout r anymultirange)\n  as $$ select upper($1), $1 $$ language sql","shape":"CREATE FUNCTION mr_inoutparam_succeed(OUT i anyelement, INOUT r anymultirange) AS ' select upper($1), $1 ' LANGUAGE sql;"}
+{"sql":"select * from mr_inoutparam_succeed(int4multirange(int4range(1,2)))","shape":"SELECT * FROM mr_inoutparam_succeed(int4multirange(int4range(1, 2)));"}
+{"sql":"create function mr_table_succeed(i anyelement, r anymultirange) returns table(i anyelement, r anymultirange)\n  as $$ select $1, $2 $$ language sql","shape":"CREATE FUNCTION mr_table_succeed(i anyelement, r anymultirange) RETURNS TABLE (i anyelement, r anymultirange) AS ' select $1, $2 ' LANGUAGE sql;"}
+{"sql":"select * from mr_table_succeed(123, int4multirange(int4range(1,11)))","shape":"SELECT * FROM mr_table_succeed(123, int4multirange(int4range(1, 11)));"}
+{"sql":"create function mr_polymorphic(i anyrange) returns anymultirange\n  as $$ begin return multirange($1); end; $$ language plpgsql","shape":"CREATE FUNCTION mr_polymorphic(i anyrange) RETURNS anymultirange AS ' begin return multirange($1); end; ' LANGUAGE plpgsql;"}
+{"sql":"select mr_polymorphic(int4range(1, 4))","shape":"SELECT mr_polymorphic(int4range(1, 4));"}
+{"sql":"create function mr_outparam_fail(i anyelement, out r anymultirange, out t text)\n  as $$ select '[1,10]', 'foo' $$ language sql","shape":"CREATE FUNCTION mr_outparam_fail(i anyelement, OUT r anymultirange, OUT t text) AS ' select ''[1,10]'', ''foo'' ' LANGUAGE sql;"}
+{"sql":"create function mr_inoutparam_fail(inout i anyelement, out r anymultirange)\n  as $$ select $1, '[1,10]' $$ language sql","shape":"CREATE FUNCTION mr_inoutparam_fail(INOUT i anyelement, OUT r anymultirange) AS ' select $1, ''[1,10]'' ' LANGUAGE sql;"}
+{"sql":"create function mr_table_fail(i anyelement) returns table(i anyelement, r anymultirange)\n  as $$ select $1, '[1,10]' $$ language sql","shape":"CREATE FUNCTION mr_table_fail(i anyelement) RETURNS TABLE (i anyelement, r anymultirange) AS ' select $1, ''[1,10]'' ' LANGUAGE sql;"}

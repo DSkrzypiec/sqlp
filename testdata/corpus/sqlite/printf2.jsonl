@@ -1,0 +1,53 @@
+{"sql":"SELECT quote(format()), quote(format(NULL,1,2,3))"}
+{"sql":"SELECT printf('hello')"}
+{"sql":"SELECT format('%d,%d,%d',55,-11,3421)"}
+{"sql":"SELECT printf('%d,%d,%d',55,'-11',3421)"}
+{"sql":"SELECT format('%d,%d,%d,%d',55,'-11',3421)"}
+{"sql":"SELECT printf('%.2f',3.141592653)"}
+{"sql":"SELECT format('%.*f',2,3.141592653)"}
+{"sql":"SELECT printf('%*.*f',5,2,3.141592653)"}
+{"sql":"SELECT format('%d',314159.2653)"}
+{"sql":"SELECT printf('%lld',314159.2653)"}
+{"sql":"SELECT format('%lld%n',314159.2653,'hi')"}
+{"sql":"SELECT printf('%n',0)"}
+{"sql":"SELECT format('%.*z',5,'abcdefghijklmnop')"}
+{"sql":"SELECT printf('%c','abcdefghijklmnop')"}
+{"sql":"INSERT INTO t1 VALUES(-1,-2,-3)"}
+{"sql":"INSERT INTO t1 VALUES('abc','def','ghi')"}
+{"sql":"INSERT INTO t1 VALUES(1.5,2.25,3.125)"}
+{"sql":"SELECT printf('(%s)-%n-(%s)',a,b,c) FROM t1 ORDER BY rowid"}
+{"sql":"SELECT printf('%s=(%p)',a,a) FROM t1 ORDER BY a"}
+{"sql":"SELECT printf('%s=(%d/%g/%s)',a) FROM t1 ORDER BY a"}
+{"sql":"SELECT printf('|%110.100c|','*')"}
+{"sql":"SELECT printf('|%-110.100c|','*')"}
+{"sql":"SELECT printf('|%9.8c|%-9.8c|','*','*')"}
+{"sql":"SELECT printf('|%8.8c|%-8.8c|','*','*')"}
+{"sql":"SELECT printf('|%7.8c|%-7.8c|','*','*')"}
+{"sql":"SELECT printf('|%,d|%,d|',0,-1)"}
+{"sql":"SELECT printf('|%,d|%,d|',12,-12)"}
+{"sql":"SELECT printf('|%,d|%,d|',123,-123)"}
+{"sql":"SELECT printf('|%,d|%,d|',1234,-1234)"}
+{"sql":"SELECT printf('|%,d|%,d|',12345,-12345)"}
+{"sql":"SELECT printf('|%,d|%,d|',123456,-123456)"}
+{"sql":"SELECT printf('|%,d|%,d|',1234567,-1234567)"}
+{"sql":"SELECT printf('|%,d|%,d|',12345678,-12345678)"}
+{"sql":"SELECT printf('|%,d|%,d|',123456789,-123456789)"}
+{"sql":"SELECT printf('|%,d|%,d|',1234567890,-1234567890)"}
+{"sql":"SELECT printf('(%8c)',char(11106))"}
+{"sql":"SELECT printf('(%-8c)',char(11106))"}
+{"sql":"SELECT printf('(%5.3c)',char(1492))"}
+{"sql":"SELECT printf('(%-5.3c)',char(1492))"}
+{"sql":"SELECT printf('(%3.3c)',char(1492))"}
+{"sql":"SELECT printf('(%-3.3c)',char(1492))"}
+{"sql":"SELECT printf('(%2c)',char(1513))"}
+{"sql":"SELECT printf('(%-2c)',char(1513))"}
+{"sql":"SELECT printf('(%!.3s)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%.6s)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%!5.3s)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%8.6s)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%!-5.3s)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%-8.6s)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%!.3Q)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%.6Q)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%!7.3Q)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}
+{"sql":"SELECT printf('(%10.6Q)','הנה מה־טוב ומה־נעים שבת אחים גם־יחד')"}

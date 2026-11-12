@@ -1,0 +1,168 @@
+{"sql":"VALUES (1)","shape":"VALUES (1);"}
+{"sql":"VALUES (1, 2)","shape":"VALUES (1, 2);"}
+{"sql":"VALUES (1), (2), (3)","shape":"VALUES (1), (2), (3);"}
+{"sql":"VALUES (1, 'a'), (2, 'b')","shape":"VALUES (1, 'a'), (2, 'b');"}
+{"sql":"VALUES (1 + 2, (SELECT 1))","shape":"VALUES (1 + 2, (SELECT 1));"}
+{"sql":"VALUES (NULL)","shape":"VALUES (NULL);"}
+{"sql":"VALUES (DEFAULT)","reject":true}
+{"sql":"VALUES (1) ORDER BY 1","reject":true}
+{"sql":"VALUES (1), (2) ORDER BY 1 DESC LIMIT 1","reject":true}
+{"sql":"VALUES (1), (2) LIMIT 1 OFFSET 1","reject":true}
+{"sql":"(VALUES (1))","reject":true}
+{"sql":"(VALUES (1)) ORDER BY 1","reject":true}
+{"sql":"SELECT * FROM (VALUES (1)) AS x","shape":"SELECT * FROM (VALUES (1)) AS x;"}
+{"sql":"SELECT (VALUES (1))","shape":"SELECT (VALUES (1));"}
+{"sql":"SELECT a FROM t WHERE a = (VALUES (1))","shape":"SELECT a FROM t WHERE a = (VALUES (1));"}
+{"sql":"TABLE t","reject":true}
+{"sql":"TABLE main.t","reject":true}
+{"sql":"TABLE t ORDER BY a","reject":true}
+{"sql":"TABLE t LIMIT 1","reject":true}
+{"sql":"TABLE t ORDER BY a LIMIT 1 OFFSET 1","reject":true}
+{"sql":"(TABLE t)","reject":true}
+{"sql":"SELECT * FROM (TABLE t) AS x","reject":true}
+{"sql":"SELECT (TABLE t)","reject":true}
+{"sql":"WITH x AS (TABLE t) SELECT * FROM x","reject":true}
+{"sql":"VALUES","reject":true}
+{"sql":"VALUES ()","reject":true}
+{"sql":"VALUES (","reject":true}
+{"sql":"VALUES (1","reject":true}
+{"sql":"VALUES 1","reject":true}
+{"sql":"VALUES (1),","reject":true}
+{"sql":"VALUES (1) (2)","reject":true}
+{"sql":"VALUES (1), ()","reject":true}
+{"sql":"VALUES (,)","reject":true}
+{"sql":"TABLE","reject":true}
+{"sql":"TABLE 1","reject":true}
+{"sql":"TABLE t WHERE a = 1","reject":true}
+{"sql":"TABLE t, u","reject":true}
+{"sql":"TABLE (t)","reject":true}
+{"sql":"VALUES ) 1 )","reject":true}
+{"sql":"VALUES ( 1 ) )","reject":true}
+{"sql":"VALUES ( 1 1 )","reject":true}
+{"sql":"( 1 )","reject":true}
+{"sql":"( VALUES 1 , 2 )","reject":true}
+{"sql":"VALUES 1 ( , 2 )","reject":true}
+{"sql":"VALUES ( 1 , 2","reject":true}
+{"sql":"VALUES ( VALUES , 2 )","reject":true}
+{"sql":"VALUES ( 1 ) , 2 ( ) , ( 3 )","reject":true}
+{"sql":"VALUES ( 1 ) , ( 2 ) , ( 3 )","shape":"VALUES (1), (2), (3);"}
+{"sql":"VALUES ( 1 ) , ( 2 ) ( , 3 )","reject":true}
+{"sql":"VALUES ( 1 t , ( 2 ) , ( 3 )","reject":true}
+{"sql":"VALUES ( 1 , ) 'a' , ( 2 , 'b' )","reject":true}
+{"sql":"VALUES ( 1 , , 'a' ) , ( 2 , 'b' )","reject":true}
+{"sql":"VALUES ( 1 , 'a' ) , ( 2 , 'b' )","shape":"VALUES (1, 'a'), (2, 'b');"}
+{"sql":"VALUES ( 1 , 'a' ) , ( 2 'b' )","reject":true}
+{"sql":"VALUES t 1 + 2 , ( SELECT 1 ) )","reject":true}
+{"sql":"VALUES ( 1 + 2 2 , ( SELECT 1 ) )","reject":true}
+{"sql":"VALUES ( 1 + 2 , SELECT ( 1 ) )","reject":true}
+{"sql":"VALUES ( NULL )","shape":"VALUES (NULL);"}
+{"sql":") ( NULL )","reject":true}
+{"sql":"VALUES ( ( NULL )","reject":true}
+{"sql":"VALUES ) NULL )","reject":true}
+{"sql":"VALUES DEFAULT )","reject":true}
+{"sql":"VALUES ( 1 )","shape":"VALUES (1);"}
+{"sql":"VALUES ( DEFAULT )","reject":true}
+{"sql":"VALUES ( 1 ) ORDER 1","reject":true}
+{"sql":"( VALUES 1 ) ORDER BY 1","reject":true}
+{"sql":"VALUES ( 1 ) ORDER 1 BY","reject":true}
+{"sql":"VALUES 1 ) ORDER BY 1","reject":true}
+{"sql":"VALUES ( 1 ) , ( 2 ) BY ORDER 1 DESC LIMIT 1","reject":true}
+{"sql":"VALUES ( 1 , ) ( 2 ) ORDER BY 1 DESC LIMIT 1","reject":true}
+{"sql":"VALUES ( 1 ) , ( 2 VALUES ORDER BY 1 DESC LIMIT 1","reject":true}
+{"sql":"VALUES ( 1 ) , ( 2 ) ORDER BY 1 DESC 1 1","reject":true}
+{"sql":"VALUES ( ( 1 ) , ( 2 ) LIMIT 1 OFFSET 1","reject":true}
+{"sql":"VALUES ( 1 ) , ( 2 ) LIMIT 1 OFFSET 1","reject":true}
+{"sql":"VALUES ( 1 ) , ( 2 ) LIMIT 1 OFFSET VALUES","reject":true}
+{"sql":"VALUES ( ) , ( 2 ) LIMIT 1 OFFSET 1","reject":true}
+{"sql":") VALUES ( 1 ) )","reject":true}
+{"sql":"( ( 1 ) )","reject":true}
+{"sql":"( VALUES ( 1 1 ) )","reject":true}
+{"sql":"( VALUES ( ( 1 ) )","reject":true}
+{"sql":"( VALUES ( 1 ( ) ORDER BY 1","reject":true}
+{"sql":"( VALUES ( 1 ) ORDER ) BY 1","reject":true}
+{"sql":"( VALUES VALUES ( 1 ) ) ORDER BY 1","reject":true}
+{"sql":"( VALUES ( ) ) ORDER BY 1","reject":true}
+{"sql":"SELECT * FROM ( VALUES ( 1 ) ) AS AS x","reject":true}
+{"sql":"SELECT * ( FROM VALUES ( 1 ) ) AS x","reject":true}
+{"sql":"SELECT * FROM ( VALUES ( 1 ) ) AS x x","reject":true}
+{"sql":"SELECT * FROM ( VALUES ( ( 1 ) ) AS x","reject":true}
+{"sql":"( SELECT VALUES ( 1 ) )","reject":true}
+{"sql":"SELECT ( ( VALUES 1 ) )","reject":true}
+{"sql":"SELECT ( VALUES ( 1 ) )","shape":"SELECT (VALUES (1));"}
+{"sql":"SELECT ( VALUES ( 1 ) ) )","reject":true}
+{"sql":"SELECT a FROM ( WHERE a = ( VALUES ( 1 ) )","reject":true}
+{"sql":"SELECT a ( t WHERE a = ( VALUES ( 1 ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ( VALUES ( 1 ) )","shape":"SELECT a FROM t WHERE a = (VALUES (1));"}
+{"sql":"SELECT a t FROM WHERE a = ( VALUES ( 1 ) )","reject":true}
+{"sql":"3 t","reject":true}
+{"sql":"t","reject":true}
+{"sql":"TABLE main TABLE t","reject":true}
+{"sql":"TABLE main . t","reject":true}
+{"sql":"TABLE TABLE main . t","reject":true}
+{"sql":"TABLE main . t t","reject":true}
+{"sql":"t TABLE ORDER BY a","reject":true}
+{"sql":"TABLE t ORDER VALUES a","reject":true}
+{"sql":"TABLE t ORDER a BY","reject":true}
+{"sql":"TABLE t VALUES BY a","reject":true}
+{"sql":"VALUES t LIMIT 1","reject":true}
+{"sql":"TABLE t 1 LIMIT","reject":true}
+{"sql":"TABLE t LIMIT","reject":true}
+{"sql":"t TABLE LIMIT 1","reject":true}
+{"sql":"TABLE t ORDER BY , LIMIT 1 OFFSET 1","reject":true}
+{"sql":"TABLE t ORDER BY a 1 LIMIT OFFSET 1","reject":true}
+{"sql":"t ORDER BY a LIMIT 1 OFFSET 1","reject":true}
+{"sql":"TABLE t ORDER a LIMIT 1 OFFSET 1","reject":true}
+{"sql":"( TABLE t )","reject":true}
+{"sql":"( t TABLE )","reject":true}
+{"sql":"( t )","reject":true}
+{"sql":"SELECT * FROM ( TABLE t AS x","reject":true}
+{"sql":"SELECT * FROM ( TABLE t ) AS x","reject":true}
+{"sql":"SELECT * FROM ( TABLE ) AS x","reject":true}
+{"sql":"* FROM ( TABLE t ) AS x","reject":true}
+{"sql":"SELECT ( ( TABLE t )","reject":true}
+{"sql":"SELECT TABLE t )","reject":true}
+{"sql":"SELECT ( TABLE t )","reject":true}
+{"sql":"SELECT ( t )"}
+{"sql":"WITH x AS ( TABLE t ) ) * FROM x","reject":true}
+{"sql":"x WITH AS ( TABLE t ) SELECT * FROM x","reject":true}
+{"sql":"WITH x AS ( TABLE t ) , * FROM x","reject":true}
+{"sql":"WITH x AS ( t ) SELECT * FROM x","reject":true}
+{"sql":"VALUES VALUES","reject":true}
+{"sql":"VALUES ( )","reject":true}
+{"sql":"VALUES VALUES ( )","reject":true}
+{"sql":"VALUES )","reject":true}
+{"sql":"(","reject":true}
+{"sql":"VALUES ( (","reject":true}
+{"sql":"VALUES ( 1","reject":true}
+{"sql":"VALUES ( ( 1","reject":true}
+{"sql":"VALUES FROM","reject":true}
+{"sql":"VALUES 1 ( ) ,","reject":true}
+{"sql":"VALUES ( 1 ) , ,","reject":true}
+{"sql":"( 1 ) ,","reject":true}
+{"sql":"VALUES ( 1 ,","reject":true}
+{"sql":"VALUES ( 1 FROM ( 2 )","reject":true}
+{"sql":"( 1 ) ( 2 )","reject":true}
+{"sql":"VALUES ( ) 1 ( 2 )","reject":true}
+{"sql":"VALUES ( ) ( 2 )","reject":true}
+{"sql":"VALUES ( 1 , ) ( )","reject":true}
+{"sql":"VALUES ( 1 ) , ( ( )","reject":true}
+{"sql":"VALUES ) 1 ) , ( )","reject":true}
+{"sql":"VALUES FROM , )","reject":true}
+{"sql":"VALUES ( , u","reject":true}
+{"sql":"VALUES , ( )","reject":true}
+{"sql":"VALUES ( , 3","reject":true}
+{"sql":"TABLE TABLE","reject":true}
+{"sql":") 1","reject":true}
+{"sql":"* 1","reject":true}
+{"sql":"TABLE 1 1","reject":true}
+{"sql":"TABLE t WHERE a TABLE 1","reject":true}
+{"sql":"TABLE t ) a = 1","reject":true}
+{"sql":"t TABLE WHERE a = 1","reject":true}
+{"sql":"TABLE WHERE a = 1","reject":true}
+{"sql":"t t , u","reject":true}
+{"sql":"TABLE t , , u","reject":true}
+{"sql":"TABLE t t u","reject":true}
+{"sql":"TABLE , u","reject":true}
+{"sql":"TABLE ( t ) )","reject":true}
+{"sql":"TABLE ( ) t","reject":true}
+{"sql":"TABLE a t )","reject":true}

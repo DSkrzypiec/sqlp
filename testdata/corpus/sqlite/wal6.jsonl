@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES('x', 'x')"}
+{"sql":"INSERT INTO t1 VALUES('y', 'y')"}
+{"sql":"INSERT INTO ab VALUES(3, 4)"}
+{"sql":"PRAGMA wal_checkpoint = passive"}

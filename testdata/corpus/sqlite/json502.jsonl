@@ -1,0 +1,8 @@
+{"sql":"CREATE TABLE t1(x JSON)"}
+{"sql":"INSERT INTO t1(x) VALUES('{a:{b:{c:\"hello\",},},}')"}
+{"sql":"SELECT fullkey FROM t1, json_tree(x)"}
+{"sql":"SELECT json_error_position('{a:null,{\"h\":[1,[1,2,3]],\"j\":\"abc\"}:true}')"}
+{"sql":"SELECT json('{a:null,{\"h\":[1,[1,2,3]],\"j\":\"abc\"}:true}')"}
+{"sql":"SELECT '{\"a\\x62c\":123}' ->> 'abc'"}
+{"sql":"SELECT '{\"abc\":123}' ->> 'a\\x62c'"}
+{"sql":"SELECT json_patch('{\"a\\x62c\":123}','{\"ab\\x63\":456}') ->> 'abc'"}

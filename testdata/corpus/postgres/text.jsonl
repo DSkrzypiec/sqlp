@@ -1,0 +1,73 @@
+{"sql":"SELECT text 'this is a text string' = text 'this is a text string' AS true","shape":"SELECT text 'this is a text string' = text 'this is a text string' AS true;"}
+{"sql":"SELECT text 'this is a text string' = text 'this is a text strin' AS false","shape":"SELECT text 'this is a text string' = text 'this is a text strin' AS false;"}
+{"sql":"SELECT * FROM TEXT_TBL","shape":"SELECT * FROM TEXT_TBL;"}
+{"sql":"select length(42)","shape":"SELECT length(42);"}
+{"sql":"select 'four: '::text || 2+2","shape":"SELECT 'four: '::text || (2 + 2);"}
+{"sql":"select 'four: ' || 2+2","shape":"SELECT 'four: ' || (2 + 2);"}
+{"sql":"select 3 || 4.0","shape":"SELECT 3 || 4.0;"}
+{"sql":"select concat('one')","shape":"SELECT concat('one');"}
+{"sql":"select concat(1,2,3,'hello',true, false, to_date('20100309','YYYYMMDD'))","shape":"SELECT concat(1, 2, 3, 'hello', TRUE, FALSE, to_date('20100309', 'YYYYMMDD'));"}
+{"sql":"select concat_ws('#','one')","shape":"SELECT concat_ws('#', 'one');"}
+{"sql":"select concat_ws('#',1,2,3,'hello',true, false, to_date('20100309','YYYYMMDD'))","shape":"SELECT concat_ws('#', 1, 2, 3, 'hello', TRUE, FALSE, to_date('20100309', 'YYYYMMDD'));"}
+{"sql":"select concat_ws(',',10,20,null,30)","shape":"SELECT concat_ws(',', 10, 20, NULL, 30);"}
+{"sql":"select concat_ws('',10,20,null,30)","shape":"SELECT concat_ws('', 10, 20, NULL, 30);"}
+{"sql":"select concat_ws(NULL,10,20,null,30) is null","shape":"SELECT concat_ws(NULL, 10, 20, NULL, 30) IS NULL;"}
+{"sql":"select reverse('abcde')","shape":"SELECT reverse('abcde');"}
+{"sql":"select i, left('ahoj', i), right('ahoj', i) from generate_series(-5, 5) t(i) order by i","shape":"SELECT i, left('ahoj', i), right('ahoj', i) FROM generate_series(-5, 5) AS t(i) ORDER BY i;"}
+{"sql":"select quote_literal('')","shape":"SELECT quote_literal('');"}
+{"sql":"select quote_literal('abc''')","shape":"SELECT quote_literal('abc''');"}
+{"sql":"select quote_literal(e'\\\\')","shape":"SELECT quote_literal(E'\\\\');"}
+{"sql":"select concat(variadic array[1,2,3])","shape":"SELECT concat(VARIADIC ARRAY[1, 2, 3]);"}
+{"sql":"select concat_ws(',', variadic array[1,2,3])","shape":"SELECT concat_ws(',', VARIADIC ARRAY[1, 2, 3]);"}
+{"sql":"select concat_ws(',', variadic NULL::int[])","shape":"SELECT concat_ws(',', VARIADIC NULL::int[]);"}
+{"sql":"select concat(variadic NULL::int[]) is NULL","shape":"SELECT concat(VARIADIC NULL::int[]) IS NULL;"}
+{"sql":"select concat(variadic '{}'::int[]) = ''","shape":"SELECT concat(VARIADIC '{}'::int[]) = '';"}
+{"sql":"select concat_ws(',', variadic 10)","shape":"SELECT concat_ws(',', VARIADIC 10);"}
+{"sql":"select format(NULL)","shape":"SELECT format(NULL);"}
+{"sql":"select format('Hello')","shape":"SELECT format('Hello');"}
+{"sql":"select format('Hello %s', 'World')","shape":"SELECT format('Hello %s', 'World');"}
+{"sql":"select format('Hello %%')","shape":"SELECT format('Hello %%');"}
+{"sql":"select format('Hello %%%%')","shape":"SELECT format('Hello %%%%');"}
+{"sql":"select format('Hello %s %s', 'World')","shape":"SELECT format('Hello %s %s', 'World');"}
+{"sql":"select format('Hello %s')","shape":"SELECT format('Hello %s');"}
+{"sql":"select format('Hello %x', 20)","shape":"SELECT format('Hello %x', 20);"}
+{"sql":"select format('INSERT INTO %I VALUES(%L,%L)', 'mytab', 10, 'Hello')","shape":"SELECT format('INSERT INTO %I VALUES(%L,%L)', 'mytab', 10, 'Hello');"}
+{"sql":"select format('%s%s%s','Hello', NULL,'World')","shape":"SELECT format('%s%s%s', 'Hello', NULL, 'World');"}
+{"sql":"select format('INSERT INTO %I VALUES(%L,%L)', 'mytab', 10, NULL)","shape":"SELECT format('INSERT INTO %I VALUES(%L,%L)', 'mytab', 10, NULL);"}
+{"sql":"select format('INSERT INTO %I VALUES(%L,%L)', 'mytab', NULL, 'Hello')","shape":"SELECT format('INSERT INTO %I VALUES(%L,%L)', 'mytab', NULL, 'Hello');"}
+{"sql":"select format('INSERT INTO %I VALUES(%L,%L)', NULL, 10, 'Hello')","shape":"SELECT format('INSERT INTO %I VALUES(%L,%L)', NULL, 10, 'Hello');"}
+{"sql":"select format('%1$s %3$s', 1, 2, 3)","shape":"SELECT format('%1$s %3$s', 1, 2, 3);"}
+{"sql":"select format('%1$s %12$s', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)","shape":"SELECT format('%1$s %12$s', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);"}
+{"sql":"select format('%1$s %4$s', 1, 2, 3)","shape":"SELECT format('%1$s %4$s', 1, 2, 3);"}
+{"sql":"select format('%1$s %13$s', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)","shape":"SELECT format('%1$s %13$s', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);"}
+{"sql":"select format('%0$s', 'Hello')","shape":"SELECT format('%0$s', 'Hello');"}
+{"sql":"select format('%*0$s', 'Hello')","shape":"SELECT format('%*0$s', 'Hello');"}
+{"sql":"select format('%1$', 1)","shape":"SELECT format('%1$', 1);"}
+{"sql":"select format('%1$1', 1)","shape":"SELECT format('%1$1', 1);"}
+{"sql":"select format('Hello %s %1$s %s', 'World', 'Hello again')","shape":"SELECT format('Hello %s %1$s %s', 'World', 'Hello again');"}
+{"sql":"select format('Hello %s %s, %2$s %2$s', 'World', 'Hello again')","shape":"SELECT format('Hello %s %s, %2$s %2$s', 'World', 'Hello again');"}
+{"sql":"select format('%s, %s', variadic array['Hello','World'])","shape":"SELECT format('%s, %s', VARIADIC ARRAY['Hello', 'World']);"}
+{"sql":"select format('%s, %s', variadic array[1, 2])","shape":"SELECT format('%s, %s', VARIADIC ARRAY[1, 2]);"}
+{"sql":"select format('%s, %s', variadic array[true, false])","shape":"SELECT format('%s, %s', VARIADIC ARRAY[TRUE, FALSE]);"}
+{"sql":"select format('%s, %s', variadic array[true, false]::text[])","shape":"SELECT format('%s, %s', VARIADIC ARRAY[TRUE, FALSE]::text[]);"}
+{"sql":"select format('%2$s, %1$s', variadic array['first', 'second'])","shape":"SELECT format('%2$s, %1$s', VARIADIC ARRAY['first', 'second']);"}
+{"sql":"select format('%2$s, %1$s', variadic array[1, 2])","shape":"SELECT format('%2$s, %1$s', VARIADIC ARRAY[1, 2]);"}
+{"sql":"select format('Hello', variadic NULL::int[])","shape":"SELECT format('Hello', VARIADIC NULL::int[]);"}
+{"sql":"select format(string_agg('%s',','), variadic array_agg(i))\nfrom generate_series(1,200) g(i)","shape":"SELECT format(string_agg('%s', ','), VARIADIC array_agg(i)) FROM generate_series(1, 200) AS g(i);"}
+{"sql":"select format('>>%10s<<', 'Hello')","shape":"SELECT format('>>%10s<<', 'Hello');"}
+{"sql":"select format('>>%10s<<', NULL)","shape":"SELECT format('>>%10s<<', NULL);"}
+{"sql":"select format('>>%10s<<', '')","shape":"SELECT format('>>%10s<<', '');"}
+{"sql":"select format('>>%-10s<<', '')","shape":"SELECT format('>>%-10s<<', '');"}
+{"sql":"select format('>>%-10s<<', 'Hello')","shape":"SELECT format('>>%-10s<<', 'Hello');"}
+{"sql":"select format('>>%-10s<<', NULL)","shape":"SELECT format('>>%-10s<<', NULL);"}
+{"sql":"select format('>>%1$10s<<', 'Hello')","shape":"SELECT format('>>%1$10s<<', 'Hello');"}
+{"sql":"select format('>>%1$-10I<<', 'Hello')","shape":"SELECT format('>>%1$-10I<<', 'Hello');"}
+{"sql":"select format('>>%2$*1$L<<', 10, 'Hello')","shape":"SELECT format('>>%2$*1$L<<', 10, 'Hello');"}
+{"sql":"select format('>>%2$*1$L<<', 10, NULL)","shape":"SELECT format('>>%2$*1$L<<', 10, NULL);"}
+{"sql":"select format('>>%2$*1$L<<', -10, NULL)","shape":"SELECT format('>>%2$*1$L<<', -10, NULL);"}
+{"sql":"select format('>>%*s<<', 10, 'Hello')","shape":"SELECT format('>>%*s<<', 10, 'Hello');"}
+{"sql":"select format('>>%*1$s<<', 10, 'Hello')","shape":"SELECT format('>>%*1$s<<', 10, 'Hello');"}
+{"sql":"select format('>>%-s<<', 'Hello')","shape":"SELECT format('>>%-s<<', 'Hello');"}
+{"sql":"select format('>>%10L<<', NULL)","shape":"SELECT format('>>%10L<<', NULL);"}
+{"sql":"select format('>>%2$*1$L<<', NULL, 'Hello')","shape":"SELECT format('>>%2$*1$L<<', NULL, 'Hello');"}
+{"sql":"select format('>>%2$*1$L<<', 0, 'Hello')","shape":"SELECT format('>>%2$*1$L<<', 0, 'Hello');"}

@@ -1,0 +1,249 @@
+{"sql":"SELECT 0 < 2 LIKE 1,   (0 < 2) LIKE 1,   0 < (2 LIKE 1)"}
+{"sql":"SELECT 0 LIKE 0 < 2,   (0 LIKE 0) < 2,   0 LIKE (0 < 2)"}
+{"sql":"SELECT 2 LIKE 2 == 1,   (2 LIKE 2) == 1,    2 LIKE (2 == 1)"}
+{"sql":"SELECT 2 == 2 LIKE 1,   (2 == 2) LIKE 1,    2 == (2 LIKE 1)"}
+{"sql":"SELECT 0 < 2 == 1,   (0 < 2) == 1,   0 < (2 == 1)"}
+{"sql":"SELECT 0 == 0 < 2,   (0 == 0) < 2,   0 == (0 < 2)"}
+{"sql":"SELECT -   10"}
+{"sql":"SELECT +   10"}
+{"sql":"SELECT ~   10"}
+{"sql":"SELECT NOT 10"}
+{"sql":"SELECT  72%5"}
+{"sql":"SELECT  72%-5"}
+{"sql":"SELECT -72%-5"}
+{"sql":"SELECT -72%5"}
+{"sql":"SELECT 72.35%5"}
+{"sql":"SELECT NULL IS     NULL"}
+{"sql":"SELECT 'ab' IS     NULL"}
+{"sql":"SELECT NULL IS     'ab'"}
+{"sql":"SELECT 'ab' IS     'ab'"}
+{"sql":"SELECT NULL ==     NULL"}
+{"sql":"SELECT 'ab' ==     NULL"}
+{"sql":"SELECT NULL ==     'ab'"}
+{"sql":"SELECT 'ab' ==     'ab'"}
+{"sql":"SELECT NULL IS NOT NULL"}
+{"sql":"SELECT 'ab' IS NOT NULL"}
+{"sql":"SELECT NULL IS NOT 'ab'"}
+{"sql":"SELECT 'ab' IS NOT 'ab'"}
+{"sql":"SELECT NULL !=     NULL"}
+{"sql":"SELECT 'ab' !=     NULL"}
+{"sql":"SELECT NULL !=     'ab'"}
+{"sql":"SELECT 'ab' !=     'ab'"}
+{"sql":"SELECT  'abcd' < 'bbbb'    COLLATE reverse"}
+{"sql":"SELECT ('abcd' < 'bbbb')   COLLATE reverse"}
+{"sql":"SELECT  'abcd' <= 'bbbb'   COLLATE reverse"}
+{"sql":"SELECT ('abcd' <= 'bbbb')  COLLATE reverse"}
+{"sql":"SELECT  'abcd' > 'bbbb'    COLLATE reverse"}
+{"sql":"SELECT ('abcd' > 'bbbb')   COLLATE reverse"}
+{"sql":"SELECT  'abcd' >= 'bbbb'   COLLATE reverse"}
+{"sql":"SELECT ('abcd' >= 'bbbb')  COLLATE reverse"}
+{"sql":"SELECT  'abcd' =  'ABCD'  COLLATE nocase"}
+{"sql":"SELECT ('abcd' =  'ABCD') COLLATE nocase"}
+{"sql":"SELECT  'abcd' == 'ABCD'  COLLATE nocase"}
+{"sql":"SELECT ('abcd' == 'ABCD') COLLATE nocase"}
+{"sql":"SELECT  'abcd' IS 'ABCD'  COLLATE nocase"}
+{"sql":"SELECT ('abcd' IS 'ABCD') COLLATE nocase"}
+{"sql":"SELECT  'abcd' != 'ABCD'      COLLATE nocase"}
+{"sql":"SELECT ('abcd' != 'ABCD')     COLLATE nocase"}
+{"sql":"SELECT  'abcd' <> 'ABCD'      COLLATE nocase"}
+{"sql":"SELECT ('abcd' <> 'ABCD')     COLLATE nocase"}
+{"sql":"SELECT  'abcd' IS NOT 'ABCD'  COLLATE nocase"}
+{"sql":"SELECT ('abcd' IS NOT 'ABCD') COLLATE nocase"}
+{"sql":"SELECT 'bbb' BETWEEN 'AAA' AND 'CCC' COLLATE nocase"}
+{"sql":"SELECT ('bbb' BETWEEN 'AAA' AND 'CCC') COLLATE nocase"}
+{"sql":"CREATE TABLE t24(a COLLATE NOCASE, b)"}
+{"sql":"INSERT INTO t24 VALUES('aaa', 1)"}
+{"sql":"INSERT INTO t24 VALUES('bbb', 2)"}
+{"sql":"INSERT INTO t24 VALUES('ccc', 3)"}
+{"sql":"SELECT 'BBB' = a FROM t24"}
+{"sql":"SELECT a = 'BBB' FROM t24"}
+{"sql":"SELECT 'BBB' = a COLLATE binary FROM t24"}
+{"sql":"SELECT a COLLATE binary = 'BBB' FROM t24"}
+{"sql":"SELECT typeof(5)"}
+{"sql":"SELECT typeof(5.1)"}
+{"sql":"SELECT typeof('5.1')"}
+{"sql":"SELECT typeof(X'ABCD')"}
+{"sql":"SELECT typeof(3.4e-02)"}
+{"sql":"SELECT typeof(3e+5)"}
+{"sql":"SELECT 3.4e-02"}
+{"sql":"SELECT 3e+4"}
+{"sql":"SELECT 'is not'"}
+{"sql":"SELECT typeof('is not')"}
+{"sql":"SELECT 'isn''t'"}
+{"sql":"SELECT typeof('isn''t')"}
+{"sql":"SELECT typeof(X'0123456789ABCDEF')"}
+{"sql":"SELECT typeof(x'0123456789ABCDEF')"}
+{"sql":"SELECT typeof(X'0123456789abcdef')"}
+{"sql":"SELECT typeof(x'0123456789abcdef')"}
+{"sql":"SELECT typeof(X'53514C697465')"}
+{"sql":"SELECT NULL"}
+{"sql":"too many SQL variables","reject":true}
+{"sql":"SELECT 0, +0, -0"}
+{"sql":"SELECT 1, +1, -1"}
+{"sql":"SELECT 2, +2, -2"}
+{"sql":"SELECT 1.4, +1.4, -1.4"}
+{"sql":"SELECT 1.5e+5, +1.5e+5, -1.5e+5"}
+{"sql":"SELECT 0.0001, +0.0001, -0.0001"}
+{"sql":"SELECT 123.4e05"}
+{"sql":"SELECT 'abcde'"}
+{"sql":"SELECT X'414243'"}
+{"sql":"SELECT CURRENT_TIME"}
+{"sql":"SELECT CURRENT_DATE"}
+{"sql":"SELECT CURRENT_TIMESTAMP"}
+{"sql":"ATTACH 'test.db2' AS dbname"}
+{"sql":"CREATE TABLE dbname.tblname(cname)"}
+{"sql":"SELECT 1 == 10 BETWEEN 0 AND 2"}
+{"sql":"SELECT (1 == 10) BETWEEN 0 AND 2"}
+{"sql":"SELECT 1 == (10 BETWEEN 0 AND 2)"}
+{"sql":"SELECT  6 BETWEEN 4 AND 8 == 1"}
+{"sql":"SELECT (6 BETWEEN 4 AND 8) == 1"}
+{"sql":"SELECT  6 BETWEEN 4 AND (8 == 1)"}
+{"sql":"SELECT  5 BETWEEN 0 AND 0  != 1"}
+{"sql":"SELECT (5 BETWEEN 0 AND 0) != 1"}
+{"sql":"SELECT  5 BETWEEN 0 AND (0 != 1)"}
+{"sql":"SELECT  1 != 0  BETWEEN 0 AND 2"}
+{"sql":"SELECT (1 != 0) BETWEEN 0 AND 2"}
+{"sql":"SELECT  1 != (0 BETWEEN 0 AND 2)"}
+{"sql":"SELECT 1 LIKE 10 BETWEEN 0 AND 2"}
+{"sql":"SELECT (1 LIKE 10) BETWEEN 0 AND 2"}
+{"sql":"SELECT 1 LIKE (10 BETWEEN 0 AND 2)"}
+{"sql":"SELECT  6 BETWEEN 4 AND 8 LIKE 1"}
+{"sql":"SELECT (6 BETWEEN 4 AND 8) LIKE 1"}
+{"sql":"SELECT  6 BETWEEN 4 AND (8 LIKE 1)"}
+{"sql":"SELECT 0 AND 0 BETWEEN 0 AND 1"}
+{"sql":"SELECT 0 AND (0 BETWEEN 0 AND 1)"}
+{"sql":"SELECT (0 AND 0) BETWEEN 0 AND 1"}
+{"sql":"SELECT 0 BETWEEN -1 AND 1 AND 0"}
+{"sql":"SELECT (0 BETWEEN -1 AND 1) AND 0"}
+{"sql":"SELECT 0 BETWEEN -1 AND (1 AND 0)"}
+{"sql":"SELECT 2 < 3 BETWEEN 0 AND 1"}
+{"sql":"SELECT (2 < 3) BETWEEN 0 AND 1"}
+{"sql":"SELECT 2 < (3 BETWEEN 0 AND 1)"}
+{"sql":"SELECT 2 BETWEEN 1 AND 2 < 3"}
+{"sql":"SELECT 2 BETWEEN 1 AND (2 < 3)"}
+{"sql":"SELECT (2 BETWEEN 1 AND 2) < 3"}
+{"sql":"SELECT 'abc%' LIKE 'abcde'"}
+{"sql":"SELECT 'abcde' LIKE 'abc%'"}
+{"sql":"SELECT 'abde'    LIKE 'ab%de'"}
+{"sql":"SELECT 'abXde'   LIKE 'ab%de'"}
+{"sql":"SELECT 'abABCde' LIKE 'ab%de'"}
+{"sql":"SELECT 'abde'    LIKE 'ab_de'"}
+{"sql":"SELECT 'abXde'   LIKE 'ab_de'"}
+{"sql":"SELECT 'abABCde' LIKE 'ab_de'"}
+{"sql":"SELECT 'abc' LIKE 'aBc'"}
+{"sql":"SELECT 'aBc' LIKE 'aBc'"}
+{"sql":"SELECT 'ac'  LIKE 'aBc'"}
+{"sql":"SELECT 'A' LIKE 'a'"}
+{"sql":"SELECT 'A' LIKE 'a' ESCAPE '12'"}
+{"sql":"SELECT 'A' LIKE 'a' ESCAPE ''"}
+{"sql":"SELECT 'A' LIKE 'a' ESCAPE 'x'"}
+{"sql":"SELECT 'abc%'  LIKE 'abcX%' ESCAPE 'X'"}
+{"sql":"SELECT 'abc5'  LIKE 'abcX%' ESCAPE 'X'"}
+{"sql":"SELECT 'abc'   LIKE 'abcX%' ESCAPE 'X'"}
+{"sql":"SELECT 'abcX%' LIKE 'abcX%' ESCAPE 'X'"}
+{"sql":"SELECT 'abc%%' LIKE 'abcX%' ESCAPE 'X'"}
+{"sql":"SELECT 'abc_'  LIKE 'abcX_' ESCAPE 'X'"}
+{"sql":"SELECT 'abc5'  LIKE 'abcX_' ESCAPE 'X'"}
+{"sql":"SELECT 'abc'   LIKE 'abcX_' ESCAPE 'X'"}
+{"sql":"SELECT 'abcX_' LIKE 'abcX_' ESCAPE 'X'"}
+{"sql":"SELECT 'abc__' LIKE 'abcX_' ESCAPE 'X'"}
+{"sql":"SELECT 'abcX'  LIKE 'abcXX' ESCAPE 'X'"}
+{"sql":"SELECT 'abc5'  LIKE 'abcXX' ESCAPE 'X'"}
+{"sql":"SELECT 'abc'   LIKE 'abcXX' ESCAPE 'X'"}
+{"sql":"SELECT 'abcXX' LIKE 'abcXX' ESCAPE 'X'"}
+{"sql":"SELECT 'abc' LIKE 'def'"}
+{"sql":"SELECT 'abc' LIKE 'def' ESCAPE 'X'"}
+{"sql":"SELECT 'abcxyz' LIKE 'ABC%'"}
+{"sql":"SELECT 'abc%xyz' LIKE 'ABC\\%x%' ESCAPE '\\'"}
+{"sql":"PRAGMA case_sensitive_like = 1"}
+{"sql":"SELECT 'abc%xyz' LIKE 'ABC\\%X%' ESCAPE '\\'"}
+{"sql":"SELECT 'ABCxyz' LIKE 'ABC%'"}
+{"sql":"SELECT 'ABC%xyz' LIKE 'ABC\\%x%' ESCAPE '\\'"}
+{"sql":"PRAGMA case_sensitive_like = 0"}
+{"sql":"SELECT 'ABC%xyz' LIKE 'ABC\\%X%' ESCAPE '\\'"}
+{"sql":"SELECT 'abcxyz' GLOB 'abc%'"}
+{"sql":"SELECT 'abcxyz' GLOB 'abc*'"}
+{"sql":"SELECT 'abcxyz' GLOB 'abc___'"}
+{"sql":"SELECT 'abcxyz' GLOB 'abc???'"}
+{"sql":"SELECT 'ABCxyz' GLOB 'abc*'"}
+{"sql":"SELECT 'abcxyz' GLOB 'ABC*'"}
+{"sql":"SELECT 'abcxyz' NOT GLOB 'ABC*'"}
+{"sql":"SELECT 'abcxyz' NOT GLOB 'abc*'"}
+{"sql":"SELECT 'abcxyz' NOT LIKE 'ABC%'"}
+{"sql":"SELECT 'abcxyz' NOT LIKE 'abc%'"}
+{"sql":"SELECT 'abdxyz' NOT LIKE 'abc%'"}
+{"sql":"SELECT 'abcxyz' NOT GLOB NULL"}
+{"sql":"SELECT 'abcxyz' NOT LIKE NULL"}
+{"sql":"SELECT NULL NOT GLOB 'abc*'"}
+{"sql":"SELECT NULL NOT LIKE 'ABC%'"}
+{"sql":"SELECT 'abc' GLOB 'def'"}
+{"sql":"SELECT 'X' NOT GLOB 'Y'"}
+{"sql":"SELECT regexp('abc', 'def')"}
+{"sql":"SELECT 'abc' REGEXP 'def'"}
+{"sql":"SELECT 'X' NOT REGEXP 'Y'"}
+{"sql":"SELECT 'abc' MATCH 'def'"}
+{"sql":"SELECT match('abc', 'def')"}
+{"sql":"SELECT 'X' NOT MATCH 'Y'"}
+{"sql":"SELECT CASE WHEN 1 THEN 'true' WHEN 0 THEN 'false' ELSE 'else' END"}
+{"sql":"SELECT CASE 0 WHEN 1 THEN 'true' WHEN 0 THEN 'false' ELSE 'else' END"}
+{"sql":"SELECT CASE WHEN var('a') THEN 'A' \n              WHEN var('b') THEN 'B' \n              WHEN var('c') THEN 'C' END"}
+{"sql":"SELECT CASE WHEN var('c') THEN 'C' \n              WHEN var('b') THEN 'B' \n              WHEN var('a') THEN 'A' \n              ELSE 'no result'\n  END"}
+{"sql":"SELECT CASE WHEN var('a') THEN 'A' \n              WHEN var('b') THEN 'B' \n              WHEN var('c') THEN 'C' \n              ELSE 'no result'\n  END"}
+{"sql":"SELECT CASE WHEN var('a') THEN 'A' \n              WHEN var('b') THEN 'B' \n              WHEN var('c') THEN 'C'\n              ELSE 'no result'\n  END"}
+{"sql":"SELECT CASE WHEN var('a') THEN 'A' \n              WHEN var('b') THEN 'B' \n              WHEN var('c') THEN 'C'\n  END"}
+{"sql":"SELECT CASE WHEN NULL THEN 'A' WHEN 1 THEN 'B' END, iif(NULL,8,99)"}
+{"sql":"SELECT CASE WHEN NULL THEN 'A' WHEN 1 THEN 'B' END, if(NULL,8,99)"}
+{"sql":"SELECT CASE WHEN 0 THEN 'A' WHEN NULL THEN 'B' ELSE 'C' END, iif(0,8,99)"}
+{"sql":"SELECT CASE WHEN 0 THEN 'A' WHEN NULL THEN 'B' ELSE 'C' END, if(0,8,99)"}
+{"sql":"SELECT CASE var('a') WHEN 1 THEN 'A' WHEN 2 THEN 'B' WHEN 3 THEN 'C' END"}
+{"sql":"SELECT CASE 23 WHEN 1 THEN 'A' WHEN 23 THEN 'B' WHEN 23 THEN 'C' END"}
+{"sql":"SELECT CASE 1 WHEN 1 THEN 'A' WHEN 23 THEN 'B' WHEN 23 THEN 'C' END"}
+{"sql":"SELECT CASE 24 WHEN 1 THEN 'A' WHEN 23 THEN 'B' WHEN 23 THEN 'C' ELSE 'D' END"}
+{"sql":"SELECT CASE 24 WHEN 1 THEN 'A' WHEN 23 THEN 'B' WHEN 23 THEN 'C' END"}
+{"sql":"CREATE TABLE t1(\n    a TEXT     COLLATE NOCASE,\n    b          COLLATE REVERSE,\n    c INTEGER,\n    d BLOB\n  )"}
+{"sql":"INSERT INTO t1 VALUES('abc', 'cba', 55, 34.5)"}
+{"sql":"SELECT CASE a WHEN 'xyz' THEN 'A' WHEN 'AbC' THEN 'B' END FROM t1"}
+{"sql":"SELECT CASE 'AbC' WHEN 'abc' THEN 'A' WHEN a THEN 'B' END FROM t1"}
+{"sql":"SELECT CASE a WHEN b THEN 'A' ELSE 'B' END FROM t1"}
+{"sql":"SELECT CASE b WHEN a THEN 'A' ELSE 'B' END FROM t1"}
+{"sql":"SELECT CASE 55 WHEN '55' THEN 'A' ELSE 'B' END"}
+{"sql":"SELECT CASE c WHEN '55' THEN 'A' ELSE 'B' END FROM t1"}
+{"sql":"SELECT CASE '34.5' WHEN d THEN 'A' ELSE 'B' END FROM t1"}
+{"sql":"SELECT CASE NULL WHEN NULL THEN 'A' ELSE 'B' END"}
+{"sql":"SELECT CASE NULL WHEN 'abc' THEN 'A' WHEN 'def' THEN 'B' END"}
+{"sql":"SELECT CASE NULL WHEN 'abc' THEN 'A' WHEN 'def' THEN 'B' ELSE 'C' END"}
+{"sql":"SELECT CASE WHEN var('a') THEN 'A' \n              WHEN var('b') THEN 'B' \n              WHEN var('c') THEN 'C' \n  END"}
+{"sql":"SELECT CASE '0' WHEN var('a') THEN 'A' \n                  WHEN var('b') THEN 'B' \n                  WHEN var('c') THEN 'C' \n  END"}
+{"sql":"CREATE TABLE t2(x, w1, r1, w2, r2, r3)"}
+{"sql":"INSERT INTO t2 VALUES(1, 1, 'R1', 2, 'R2', 'R3')"}
+{"sql":"INSERT INTO t2 VALUES(2, 1, 'R1', 2, 'R2', 'R3')"}
+{"sql":"INSERT INTO t2 VALUES(3, 1, 'R1', 2, 'R2', 'R3')"}
+{"sql":"SELECT CASE x WHEN w1 THEN r1 WHEN w2 THEN r2 ELSE r3 END FROM t2"}
+{"sql":"SELECT CASE WHEN x=w1 THEN r1 WHEN x=w2 THEN r2 ELSE r3 END FROM t2"}
+{"sql":"SELECT CASE ceval(x) WHEN w1 THEN r1 WHEN w2 THEN r2 ELSE r3 END FROM t2"}
+{"sql":"SELECT CASE \n    WHEN ceval(x)=w1 THEN r1 \n    WHEN ceval(x)=w2 THEN r2 \n    ELSE r3 END \n  FROM t2"}
+{"sql":"CREATE TABLE t3(a TEXT, b REAL, c INTEGER)"}
+{"sql":"INSERT INTO t3 VALUES(X'555655', '1.23abc', 4.5)"}
+{"sql":"SELECT typeof(a), a, typeof(b), b, typeof(c), c FROM t3"}
+{"sql":"SELECT \n    typeof(CAST(X'555655' as TEXT)), CAST(X'555655' as TEXT),\n    typeof(CAST('1.23abc' as REAL)), CAST('1.23abc' as REAL),\n    typeof(CAST(4.5 as INTEGER)), CAST(4.5 as INTEGER)"}
+{"sql":"PRAGMA encoding = 'utf-16be'"}
+{"sql":"WITH t1(x) AS (VALUES\n     ('9000000000000000001'),\n     ('9000000000000000001x'),\n     ('9000000000000000001 '),\n     (' 9000000000000000001 '),\n     (' 9000000000000000001'),\n     (' 9000000000000000001.'),\n     ('9223372036854775807'),\n     ('9223372036854775807 '),\n     ('   9223372036854775807   '),\n     ('9223372036854775808'),\n     ('   9223372036854775808   '),\n     ('9223372036854775807.0'),\n     ('9223372036854775807e+0'),\n     ('-5.0'),\n     ('-5e+0'))\n  SELECT typeof(CAST(x AS NUMERIC)), CAST(x AS NUMERIC)||'' FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 2)"}
+{"sql":"INSERT INTO t1 VALUES(NULL, NULL)"}
+{"sql":"INSERT INTO t2 VALUES('three', NULL)"}
+{"sql":"INSERT INTO t2 VALUES(4, 5.0)"}
+{"sql":"CREATE TABLE t4(x, y)"}
+{"sql":"INSERT INTO t4 VALUES(1, 'one')"}
+{"sql":"INSERT INTO t4 VALUES(2, 'two')"}
+{"sql":"INSERT INTO t4 VALUES(3, 'three')"}
+{"sql":"SELECT CASE WHEN NULL THEN 'true' ELSE 'false' END, iif(NULL,'true','false')"}
+{"sql":"SELECT CASE WHEN 0.0 THEN 'true' ELSE 'false' END, iif(0.0,'true','false')"}
+{"sql":"SELECT CASE WHEN 0 THEN 'true' ELSE 'false' END, iif(0,'true','false')"}
+{"sql":"SELECT CASE WHEN 'engligh' THEN 'true' ELSE 'false' END, iif('engligh','true','false')"}
+{"sql":"SELECT CASE WHEN '0' THEN 'true' ELSE 'false' END, iif('0','true','false')"}
+{"sql":"SELECT CASE WHEN 1 THEN 'true' ELSE 'false' END, iif(1,'true','false')"}
+{"sql":"SELECT CASE WHEN 1 THEN 'true' ELSE 'false' END, if(1,'true')"}
+{"sql":"SELECT CASE WHEN 1.0 THEN 'true' ELSE 'false' END, iif(1.0,'true','false')"}
+{"sql":"SELECT CASE WHEN 0.1 THEN 'true' ELSE 'false' END, iif(0.1,'true','false')"}
+{"sql":"SELECT CASE WHEN -0.1 THEN 'true' ELSE 'false' END, iif(-0.1,'true','false')"}
+{"sql":"SELECT CASE WHEN '1english' THEN 'true' ELSE 'false' END, iif('1engl','true','false')"}

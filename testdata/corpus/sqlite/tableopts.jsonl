@@ -1,0 +1,10 @@
+{"sql":"CREATE TABLE t1(a,b) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY AUTOINCREMENT,b) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a,b) WITHOUT unknown2","reject":true}
+{"sql":"INSERT INTO t1 VALUES(1,2,3),(2,3,4)"}
+{"sql":"SELECT c FROM t1 WHERE a IN (1,2) ORDER BY b"}
+{"sql":"SELECT _rowid_, * FROM t1"}
+{"sql":"SELECT oid, * FROM t1"}
+{"sql":"CREATE TABLE without(x INTEGER PRIMARY KEY, without TEXT)"}
+{"sql":"INSERT INTO without VALUES(1, 'xyzzy'), (2, 'fizzle')"}
+{"sql":"SELECT * FROM without WHERE without='xyzzy'"}

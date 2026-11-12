@@ -1,0 +1,1 @@
+{"sql":"SELECT a, b, 'abc' FROM t1\n      UNION\n      SELECT b, a, 'xyz' FROM t1\n      ORDER BY 2, 3"}

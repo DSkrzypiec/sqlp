@@ -1,0 +1,71 @@
+{"sql":"CREATE TABLE t2(p, q)"}
+{"sql":"INSERT INTO t1 VALUES(111,'one')"}
+{"sql":"INSERT INTO t1 VALUES(222,'two')"}
+{"sql":"INSERT INTO t1 VALUES(333,'three')"}
+{"sql":"INSERT INTO t2 VALUES(1,111)"}
+{"sql":"INSERT INTO t2 VALUES(2,222)"}
+{"sql":"INSERT INTO t2 VALUES(4,444)"}
+{"sql":"CREATE INDEX t2i1 ON t2(p)"}
+{"sql":"INSERT INTO t3 VALUES(999,'nine')"}
+{"sql":"CREATE INDEX t3i1 ON t3(x)"}
+{"sql":"SELECT * FROM t1, t2 LEFT JOIN t3 ON q=x WHERE p=2 AND a=q"}
+{"sql":"CREATE UNIQUE INDEX PKIDXChild1 ON child1 ( child1key )"}
+{"sql":"INSERT INTO parent1(parent1key,child1key,child2key)\n       VALUES ( 1, 'C1.1', 'C2.1' )"}
+{"sql":"INSERT INTO child1 ( child1key, value ) VALUES ( 'C1.1', 'Value for C1.1' )"}
+{"sql":"INSERT INTO child2 ( child2key, value ) VALUES ( 'C2.1', 'Value for C2.1' )"}
+{"sql":"INSERT INTO parent1 ( parent1key, child1key, child2key )\n       VALUES ( 2, 'C1.2', 'C2.2' )"}
+{"sql":"INSERT INTO child2 ( child2key, value ) VALUES ( 'C2.2', 'Value for C2.2' )"}
+{"sql":"INSERT INTO parent1 ( parent1key, child1key, child2key )\n       VALUES ( 3, 'C1.3', 'C2.3' )"}
+{"sql":"INSERT INTO child1 ( child1key, value ) VALUES ( 'C1.3', 'Value for C1.3' )"}
+{"sql":"INSERT INTO child2 ( child2key, value ) VALUES ( 'C2.3', 'Value for C2.3' )"}
+{"sql":"CREATE TABLE tA(apk integer primary key, ax)"}
+{"sql":"CREATE TABLE tB(bpk integer primary key, bx)"}
+{"sql":"CREATE TABLE tC(cpk integer primary key, cx)"}
+{"sql":"CREATE TABLE tD(dpk integer primary key, dx)"}
+{"sql":"CREATE TABLE t301(a INTEGER PRIMARY KEY,b,c)"}
+{"sql":"CREATE INDEX t301c ON t301(c)"}
+{"sql":"INSERT INTO t301 VALUES(1,2,3)"}
+{"sql":"INSERT INTO t301 VALUES(2,2,3)"}
+{"sql":"CREATE TABLE t302(x, y)"}
+{"sql":"INSERT INTO t302 VALUES(4,5)"}
+{"sql":"SELECT * FROM t302, t301 WHERE t302.x=5 AND t301.a=t302.y"}
+{"sql":"SELECT * FROM t301, t302 WHERE t302.x=5 AND t301.a=t302.y"}
+{"sql":"SELECT * FROM t301 WHERE c=3 AND a IS NULL"}
+{"sql":"SELECT * FROM t301 WHERE c=3 AND a IS NOT NULL"}
+{"sql":"CREATE TABLE t400(a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"CREATE TABLE t401(p INTEGER PRIMARY KEY, q, r)"}
+{"sql":"CREATE TABLE t402(x INTEGER PRIMARY KEY, y, z)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t400, t401, t402 WHERE t402.z GLOB 'abc*'"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t400, t401, t402 WHERE t401.r GLOB 'abc*'"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t400, t401, t402 WHERE t400.c GLOB 'abc*'"}
+{"sql":"CREATE TABLE aaa (id INTEGER PRIMARY KEY, type INTEGER,\n                    fk INTEGER DEFAULT NULL, parent INTEGER,\n                    position INTEGER, title LONGVARCHAR,\n                    keyword_id INTEGER, folder_type TEXT,\n                    dateAdded INTEGER, lastModified INTEGER)"}
+{"sql":"CREATE INDEX aaa_111 ON aaa (fk, type)"}
+{"sql":"CREATE INDEX aaa_222 ON aaa (parent, position)"}
+{"sql":"CREATE INDEX aaa_333 ON aaa (fk, lastModified)"}
+{"sql":"CREATE TABLE bbb (id INTEGER PRIMARY KEY, type INTEGER,\n                    fk INTEGER DEFAULT NULL, parent INTEGER,\n                    position INTEGER, title LONGVARCHAR,\n                    keyword_id INTEGER, folder_type TEXT,\n                    dateAdded INTEGER, lastModified INTEGER)"}
+{"sql":"CREATE INDEX bbb_111 ON bbb (fk, type)"}
+{"sql":"CREATE INDEX bbb_222 ON bbb (parent, position)"}
+{"sql":"CREATE INDEX bbb_333 ON bbb (fk, lastModified)"}
+{"sql":"SELECT bbb.title AS tag_title \n     FROM aaa JOIN bbb ON bbb.id = aaa.parent  \n    WHERE aaa.fk = 'constant'\n      AND LENGTH(bbb.title) > 0\n      AND bbb.parent = 4\n    ORDER BY bbb.title COLLATE NOCASE ASC"}
+{"sql":"SELECT bbb.title AS tag_title \n     FROM aaa JOIN aaa AS bbb ON bbb.id = aaa.parent  \n    WHERE aaa.fk = 'constant'\n      AND LENGTH(bbb.title) > 0\n      AND bbb.parent = 4\n    ORDER BY bbb.title COLLATE NOCASE ASC"}
+{"sql":"SELECT bbb.title AS tag_title \n     FROM bbb JOIN aaa ON bbb.id = aaa.parent  \n    WHERE aaa.fk = 'constant'\n      AND LENGTH(bbb.title) > 0\n      AND bbb.parent = 4\n    ORDER BY bbb.title COLLATE NOCASE ASC"}
+{"sql":"SELECT bbb.title AS tag_title \n     FROM aaa AS bbb JOIN aaa ON bbb.id = aaa.parent  \n    WHERE aaa.fk = 'constant'\n      AND LENGTH(bbb.title) > 0\n      AND bbb.parent = 4\n    ORDER BY bbb.title COLLATE NOCASE ASC"}
+{"sql":"CREATE TABLE t71(x1 INTEGER PRIMARY KEY, y1)"}
+{"sql":"CREATE TABLE t72(x2 INTEGER PRIMARY KEY, y2)"}
+{"sql":"CREATE TABLE t73(x3, y3)"}
+{"sql":"CREATE TABLE t74(x4, y4)"}
+{"sql":"INSERT INTO t71 VALUES(123,234)"}
+{"sql":"INSERT INTO t72 VALUES(234,345)"}
+{"sql":"INSERT INTO t73 VALUES(123,234)"}
+{"sql":"INSERT INTO t74 VALUES(234,345)"}
+{"sql":"INSERT INTO t74 VALUES(234,678)"}
+{"sql":"SELECT x1 FROM t71 LEFT JOIN t72 ON x2=y1"}
+{"sql":"SELECT x1 FROM t71 LEFT JOIN t72 ON x2=y1 WHERE y2 IS NULL"}
+{"sql":"SELECT x1 FROM t71 LEFT JOIN t72 ON x2=y1 WHERE y2 IS NOT NULL"}
+{"sql":"SELECT x1 FROM t71 LEFT JOIN t72 ON x2=y1 AND y2 IS NULL"}
+{"sql":"SELECT x1 FROM t71 LEFT JOIN t72 ON x2=y1 AND y2 IS NOT NULL"}
+{"sql":"SELECT x3 FROM t73 LEFT JOIN t72 ON x2=y3"}
+{"sql":"SELECT DISTINCT x3 FROM t73 LEFT JOIN t72 ON x2=y3"}
+{"sql":"SELECT x3 FROM t73 LEFT JOIN t74 ON x4=y3"}
+{"sql":"SELECT DISTINCT x3 FROM t73 LEFT JOIN t74 ON x4=y3"}
+{"sql":"SELECT 1 FROM t1 JOIN t2 ON x=c AND y=d WHERE d>0"}

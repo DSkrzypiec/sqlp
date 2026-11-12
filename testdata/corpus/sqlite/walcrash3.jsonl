@@ -1,0 +1,5 @@
+{"sql":"PRAGMA wal_autocheckpoint = 128"}
+{"sql":"PRAGMA journal_size_limit = 16384"}
+{"sql":"CREATE TABLE t1(a BLOB, b BLOB, UNIQUE(a, b))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(10), randomblob(1000))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(25), randomblob(200))"}

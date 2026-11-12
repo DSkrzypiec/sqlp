@@ -1,0 +1,6 @@
+{"sql":"INSERT INTO t1 VALUES('e', 'f')"}
+{"sql":"PRAGMA aux.journal_mode = delete"}
+{"sql":"INSERT INTO t2 VALUES('def')"}
+{"sql":"INSERT INTO t2 VALUES('ghi')"}
+{"sql":"PRAGMA wal_checkpoint = RESTART"}
+{"sql":"INSERT INTO t2 VALUES('jkl')"}

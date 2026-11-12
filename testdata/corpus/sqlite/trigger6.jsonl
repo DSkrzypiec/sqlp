@@ -1,0 +1,5 @@
+{"sql":"CREATE TRIGGER r1 BEFORE INSERT ON t1 BEGIN\n      INSERT INTO log VALUES(1, new.x, new.y);\n    END"}
+{"sql":"CREATE TRIGGER r2 BEFORE UPDATE ON t1 BEGIN\n      INSERT INTO log VALUES(2, new.x, new.y);\n    END"}
+{"sql":"INSERT INTO t1 VALUES(1,counter())"}
+{"sql":"INSERT INTO t1 VALUES(2,counter(2,3)+4)"}
+{"sql":"UPDATE t1 SET y=counter(5)"}

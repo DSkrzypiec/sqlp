@@ -1,0 +1,1 @@
+{"sql":"SELECT 1 EXCEPT SELECT 2 ORDER BY 1 COLLATE nocase EXCEPT SELECT 3","reject":true}

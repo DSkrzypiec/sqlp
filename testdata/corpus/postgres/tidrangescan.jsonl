@@ -1,0 +1,39 @@
+{"sql":"CREATE TABLE tidrangescan(id integer, data text)","shape":"CREATE TABLE tidrangescan (id integer, data text);"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid < '(1, 0)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid < '(1, 0)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid < '(1, 0)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid < '(1, 0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid > '(9, 0)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid > '(9, 0)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid > '(9, 0)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid > '(9, 0)';"}
+{"sql":"INSERT INTO tidrangescan SELECT i,repeat('x', 100) FROM generate_series(1,200) AS s(i)","shape":"INSERT INTO tidrangescan SELECT i, repeat('x', 100) FROM generate_series(1, 200) AS s(i);"}
+{"sql":"DELETE FROM tidrangescan\nWHERE substring(ctid::text FROM ',(\\d+)\\)')::integer > 10 OR substring(ctid::text FROM '\\((\\d+),')::integer > 2","shape":"DELETE FROM tidrangescan WHERE (SUBSTRING(ctid::text FROM ',(\\d+)\\)')::integer > 10) OR (SUBSTRING(ctid::text FROM '\\((\\d+),')::integer > 2);"}
+{"sql":"VACUUM tidrangescan","shape":"VACUUM tidrangescan;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid < '(1,0)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid <= '(1,5)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid <= '(1,5)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid <= '(1,5)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid <= '(1,5)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid < '(0,0)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid < '(0,0)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid < '(0,0)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid < '(0,0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid > '(2,8)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid > '(2,8)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid > '(2,8)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid > '(2,8)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE '(2,8)' < ctid","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE '(2,8)' < ctid;"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE '(2,8)' < ctid","shape":"SELECT ctid FROM tidrangescan WHERE '(2,8)' < ctid;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid >= '(2,8)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid >= '(2,8)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid >= '(2,8)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid >= '(2,8)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid >= '(100,0)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ctid >= '(100,0)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid >= '(100,0)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid >= '(100,0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE ctid > '(1,4)' AND '(1,7)' >= ctid","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE (ctid > '(1,4)') AND ('(1,7)' >= ctid);"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid > '(1,4)' AND '(1,7)' >= ctid","shape":"SELECT ctid FROM tidrangescan WHERE (ctid > '(1,4)') AND ('(1,7)' >= ctid);"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT ctid FROM tidrangescan WHERE '(1,7)' >= ctid AND ctid > '(1,4)'","shape":"EXPLAIN (COSTS OFF) SELECT ctid FROM tidrangescan WHERE ('(1,7)' >= ctid) AND (ctid > '(1,4)');"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE '(1,7)' >= ctid AND ctid > '(1,4)'","shape":"SELECT ctid FROM tidrangescan WHERE ('(1,7)' >= ctid) AND (ctid > '(1,4)');"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid > '(0,65535)' AND ctid < '(1,0)' LIMIT 1","shape":"SELECT ctid FROM tidrangescan WHERE (ctid > '(0,65535)') AND (ctid < '(1,0)') LIMIT 1;"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid < '(0,0)' LIMIT 1","shape":"SELECT ctid FROM tidrangescan WHERE ctid < '(0,0)' LIMIT 1;"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid > '(4294967295,65535)'","shape":"SELECT ctid FROM tidrangescan WHERE ctid > '(4294967295,65535)';"}
+{"sql":"SELECT ctid FROM tidrangescan WHERE ctid >= (SELECT NULL::tid)","shape":"SELECT ctid FROM tidrangescan WHERE ctid >= (SELECT NULL::tid);"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT t.ctid,t2.c FROM tidrangescan t,\nLATERAL (SELECT count(*) c FROM tidrangescan t2 WHERE t2.ctid <= t.ctid) t2\nWHERE t.ctid < '(1,0)'","shape":"EXPLAIN (COSTS OFF) SELECT t.ctid, t2.c FROM tidrangescan AS t, LATERAL (SELECT count(*) AS c FROM tidrangescan AS t2 WHERE t2.ctid <= t.ctid) AS t2 WHERE t.ctid < '(1,0)';"}
+{"sql":"SELECT t.ctid,t2.c FROM tidrangescan t,\nLATERAL (SELECT count(*) c FROM tidrangescan t2 WHERE t2.ctid <= t.ctid) t2\nWHERE t.ctid < '(1,0)'","shape":"SELECT t.ctid, t2.c FROM tidrangescan AS t, LATERAL (SELECT count(*) AS c FROM tidrangescan AS t2 WHERE t2.ctid <= t.ctid) AS t2 WHERE t.ctid < '(1,0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nDECLARE c SCROLL CURSOR FOR SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)'","shape":"EXPLAIN (COSTS OFF) DECLARE c SCROLL CURSOR FOR SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)';"}
+{"sql":"DECLARE c SCROLL CURSOR FOR SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)'","shape":"DECLARE c SCROLL CURSOR FOR SELECT ctid FROM tidrangescan WHERE ctid < '(1,0)';"}
+{"sql":"FETCH NEXT c","shape":"FETCH NEXT c;"}
+{"sql":"FETCH PRIOR c","shape":"FETCH PRIOR c;"}
+{"sql":"FETCH FIRST c","shape":"FETCH FIRST c;"}
+{"sql":"FETCH LAST c","shape":"FETCH LAST c;"}
+{"sql":"DROP TABLE tidrangescan","shape":"DROP TABLE tidrangescan;"}

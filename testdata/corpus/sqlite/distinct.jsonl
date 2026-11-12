@@ -1,0 +1,48 @@
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(b, c)"}
+{"sql":"CREATE UNIQUE INDEX i2 ON t1(d COLLATE nocase)"}
+{"sql":"CREATE TABLE t2(x INTEGER PRIMARY KEY, y)"}
+{"sql":"CREATE TABLE t3(c1 PRIMARY KEY NOT NULL, c2 NOT NULL)"}
+{"sql":"CREATE INDEX i3 ON t3(c2)"}
+{"sql":"CREATE TABLE t4(a, b NOT NULL, c NOT NULL, d NOT NULL)"}
+{"sql":"CREATE UNIQUE INDEX t4i1 ON t4(b, c)"}
+{"sql":"CREATE UNIQUE INDEX t4i2 ON t4(d COLLATE nocase)"}
+{"sql":"CREATE INDEX i2 ON t1(b COLLATE nocase, c COLLATE nocase)"}
+{"sql":"INSERT INTO t1 VALUES('A', 'B', 'C')"}
+{"sql":"SELECT (SELECT DISTINCT o.a FROM t1 AS i) FROM t1 AS o ORDER BY rowid"}
+{"sql":"CREATE TABLE t1(a INTEGER)"}
+{"sql":"INSERT INTO t2\n    SELECT DISTINCT\n      CASE a WHEN 1 THEN x'0000000000'\n             WHEN 2 THEN zeroblob(5)\n             ELSE 'xyzzy' END\n      FROM t1"}
+{"sql":"SELECT quote(x) FROM t2 ORDER BY 1"}
+{"sql":"INSERT INTO t1(x) VALUES(3),(1),(5),(2),(6),(4),(5),(1),(3)"}
+{"sql":"CREATE INDEX t1x ON t1(x DESC)"}
+{"sql":"SELECT DISTINCT x FROM t1 ORDER BY x ASC"}
+{"sql":"SELECT DISTINCT x FROM t1 ORDER BY x DESC"}
+{"sql":"SELECT DISTINCT x FROM t1 ORDER BY x"}
+{"sql":"DROP INDEX t1x"}
+{"sql":"CREATE INDEX t1x ON t1(x ASC)"}
+{"sql":"CREATE TABLE jjj(x)"}
+{"sql":"SELECT (SELECT 'mmm' UNION SELECT DISTINCT max(name) ORDER BY 1) \n    FROM sqlite_master"}
+{"sql":"CREATE TABLE nnn(x)"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE t5(y)"}
+{"sql":"INSERT INTO t5 VALUES(1), (2), (2)"}
+{"sql":"INSERT INTO t4 VALUES(2)"}
+{"sql":"WITH t2(b) AS (\n    SELECT DISTINCT y FROM t5 ORDER BY y\n  )\n  SELECT * FROM \n    t4 CROSS JOIN t3 CROSS JOIN t1 \n  WHERE (t1.a=t3.a) AND (SELECT count(*) FROM t2 AS y WHERE t4.x!='abc')=t1.a"}
+{"sql":"CREATE TABLE person ( pid INT)"}
+{"sql":"CREATE UNIQUE INDEX idx ON person ( pid ) WHERE pid == 1"}
+{"sql":"INSERT INTO person VALUES (1), (10), (10)"}
+{"sql":"SELECT DISTINCT pid FROM person where pid = 10"}
+{"sql":"INSERT INTO t1 VALUES('a', 'b')"}
+{"sql":"INSERT INTO t1 VALUES('a', 'c')"}
+{"sql":"INSERT INTO t1 VALUES('b', 'a')"}
+{"sql":"INSERT INTO t1 VALUES('b', 'c')"}
+{"sql":"INSERT INTO t1 VALUES('A', 'A')"}
+{"sql":"INSERT INTO t1 VALUES('B', 'B')"}
+{"sql":"DROP INDEX IF EXISTS i1"}
+{"sql":"SELECT DISTINCT a, b FROM t1 ORDER BY a, b"}
+{"sql":"SELECT DISTINCT a COLLATE nocase, b COLLATE nocase FROM t1 \n    ORDER BY a COLLATE nocase, b COLLATE nocase"}
+{"sql":"SELECT  DISTINCT\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1\n  ORDER  BY\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x'"}
+{"sql":"EXPLAIN\n  SELECT  DISTINCT\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1,  1,  1,  1,  1,  1,\n    1,  1,  1,  1,  1\n  ORDER  BY\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x','x','x','x','x','x','x',\n   'x','x','x','x'"}
+{"sql":"EXPLAIN  CREATE  TABLE t2 AS  SELECT  DISTINCT ':memory:', 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 ORDER  BY '%J%j%w%s', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', '%J%j%w%s', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 42e-300, 'unixepoch', 'unixepoch', 'unixepoch' LIMIT 0xda"}
+{"sql":"CREATE  TABLE t0 AS  SELECT  DISTINCT 0xda, 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 0xda-0xda-42e-300, 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0', 'lit0' ORDER  BY '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%Y-%m-%d', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', 'lit0', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', 'auto', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', ':memory:', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', '%%', ''"}
+{"sql":"SELECT count(*) FROM t0"}
+{"sql":"CREATE  TABLE t2 AS  SELECT  DISTINCT ':memory:', 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0.0*7/0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 ORDER  BY '%J%j%w%s', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', '%J%j%w%s', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 'unixepoch', 42e-300, 'unixepoch', 'unixepoch', 'unixepoch' LIMIT 0xda"}

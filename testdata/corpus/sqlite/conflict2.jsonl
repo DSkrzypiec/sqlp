@@ -1,0 +1,15 @@
+{"sql":"CREATE TABLE t1(a, b, c, PRIMARY KEY(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, c, UNIQUE(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a, b, c INTEGER, PRIMARY KEY(c), UNIQUE(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b) without rowid"}
+{"sql":"CREATE TABLE t2(\n      a INTEGER PRIMARY KEY ON CONFLICT IGNORE,\n      b INTEGER UNIQUE ON CONFLICT FAIL,\n      c INTEGER UNIQUE ON CONFLICT REPLACE,\n      d INTEGER UNIQUE ON CONFLICT ABORT,\n      e INTEGER UNIQUE ON CONFLICT ROLLBACK\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE abc(a PRIMARY KEY, b, c) WITHOUT rowid"}
+{"sql":"CREATE TABLE t5(a INTEGER PRIMARY KEY, b text) WITHOUT rowid"}
+{"sql":"CREATE TABLE t13(a PRIMARY KEY CHECK(a!=2)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(\n    x TEXT PRIMARY KEY NOT NULL, \n    y TEXT NOT NULL,\n    z INTEGER\n  )"}
+{"sql":"INSERT INTO t1 VALUES('alpha','beta',1)"}
+{"sql":"CREATE UNIQUE INDEX t1xy ON t1(x,y)"}
+{"sql":"REPLACE INTO t1(x,y,z) VALUES('alpha','gamma',1)"}
+{"sql":"SELECT x,y FROM t1 INDEXED BY t1xy"}
+{"sql":"SELECT x,y,z FROM t1 NOT INDEXED"}
+{"sql":"CREATE TABLE t1(\n    x TEXT PRIMARY KEY NOT NULL, \n    y TEXT NOT NULL,\n    z INTEGER\n  ) WITHOUT ROWID"}

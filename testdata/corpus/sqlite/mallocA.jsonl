@@ -1,0 +1,12 @@
+{"sql":"INSERT INTO t1 VALUES('abc', 'w')"}
+{"sql":"INSERT INTO t1 VALUES('abc', 'x')"}
+{"sql":"INSERT INTO t1 VALUES('abc', 'y')"}
+{"sql":"INSERT INTO t1 VALUES('abc', 'z')"}
+{"sql":"INSERT INTO t1 VALUES('def', 'w')"}
+{"sql":"INSERT INTO t1 VALUES('def', 'x')"}
+{"sql":"INSERT INTO t1 VALUES('def', 'y')"}
+{"sql":"INSERT INTO t1 VALUES('def', 'z')"}
+{"sql":"SELECT rowid FROM t1 WHERE a='abc' AND b='x'"}
+{"sql":"SELECT rowid FROM t1 WHERE a='abc' AND b<'y'"}
+{"sql":"PRAGMA cache_size = 5"}
+{"sql":"WITH r(x,y) AS (\n      SELECT 1, randomblob(100)\n      UNION ALL\n      SELECT x+1, randomblob(100) FROM r\n      LIMIT 1000\n    )\n    SELECT count(x), length(y) FROM r GROUP BY (x%5)"}

@@ -1,0 +1,6 @@
+{"sql":"INSERT INTO t1 (rowid, content) VALUES(1, 'one')"}
+{"sql":"SELECT content FROM t1 WHERE rowid = 1"}
+{"sql":"SELECT content FROM t1 WHERE rowid = 2"}
+{"sql":"SELECT content FROM t1 WHERE rowid = 3"}
+{"sql":"SELECT content FROM t1 WHERE rowid = 4"}
+{"sql":"SELECT content FROM t1 WHERE rowid = 5"}

@@ -1,0 +1,8 @@
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s LIMIT 20\n  )\n  INSERT INTO t1 SELECT randomblob(750) FROM s"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(750))"}
+{"sql":"PRAGMA journal_size_limit = 8000"}
+{"sql":"SELECT hex(randomblob(4000))"}
+{"sql":"WITH s(i) AS (\n        SELECT 1 UNION ALL SELECT i+1 FROM s LIMIT 20\n    )\n    INSERT INTO t1 SELECT randomblob(750) FROM s"}
+{"sql":"WITH s(i) AS (\n      SELECT 1 UNION ALL SELECT i+1 FROM s LIMIT 20\n  )\n  INSERT INTO t1 SELECT randomblob(750) FROM s"}
+{"sql":"WITH s(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM s LIMIT 20 )\n  INSERT INTO t1 SELECT randomblob(75) FROM s"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(75))"}

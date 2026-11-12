@@ -1,0 +1,69 @@
+{"sql":"SELECT '08:00:2b:01:02:03     '::macaddr8","shape":"SELECT '08:00:2b:01:02:03     '::macaddr8;"}
+{"sql":"SELECT '    08:00:2b:01:02:03     '::macaddr8","shape":"SELECT '    08:00:2b:01:02:03     '::macaddr8;"}
+{"sql":"SELECT '    08:00:2b:01:02:03'::macaddr8","shape":"SELECT '    08:00:2b:01:02:03'::macaddr8;"}
+{"sql":"SELECT '08:00:2b:01:02:03:04:05     '::macaddr8","shape":"SELECT '08:00:2b:01:02:03:04:05     '::macaddr8;"}
+{"sql":"SELECT '    08:00:2b:01:02:03:04:05     '::macaddr8","shape":"SELECT '    08:00:2b:01:02:03:04:05     '::macaddr8;"}
+{"sql":"SELECT '    08:00:2b:01:02:03:04:05'::macaddr8","shape":"SELECT '    08:00:2b:01:02:03:04:05'::macaddr8;"}
+{"sql":"SELECT '123    08:00:2b:01:02:03'::macaddr8","shape":"SELECT '123    08:00:2b:01:02:03'::macaddr8;"}
+{"sql":"SELECT '08:00:2b:01:02:03  123'::macaddr8","shape":"SELECT '08:00:2b:01:02:03  123'::macaddr8;"}
+{"sql":"SELECT '123    08:00:2b:01:02:03:04:05'::macaddr8","shape":"SELECT '123    08:00:2b:01:02:03:04:05'::macaddr8;"}
+{"sql":"SELECT '08:00:2b:01:02:03:04:05  123'::macaddr8","shape":"SELECT '08:00:2b:01:02:03:04:05  123'::macaddr8;"}
+{"sql":"SELECT '08:00:2b:01:02:03:04:05:06:07'::macaddr8","shape":"SELECT '08:00:2b:01:02:03:04:05:06:07'::macaddr8;"}
+{"sql":"SELECT '08-00-2b-01-02-03-04-05-06-07'::macaddr8","shape":"SELECT '08-00-2b-01-02-03-04-05-06-07'::macaddr8;"}
+{"sql":"SELECT '08002b:01020304050607'::macaddr8","shape":"SELECT '08002b:01020304050607'::macaddr8;"}
+{"sql":"SELECT '08002b01020304050607'::macaddr8","shape":"SELECT '08002b01020304050607'::macaddr8;"}
+{"sql":"SELECT '0z002b0102030405'::macaddr8","shape":"SELECT '0z002b0102030405'::macaddr8;"}
+{"sql":"SELECT '08002b010203xyza'::macaddr8","shape":"SELECT '08002b010203xyza'::macaddr8;"}
+{"sql":"SELECT '08:00-2b:01:02:03:04:05'::macaddr8","shape":"SELECT '08:00-2b:01:02:03:04:05'::macaddr8;"}
+{"sql":"SELECT '08:00:2b:01.02:03:04:05'::macaddr8","shape":"SELECT '08:00:2b:01.02:03:04:05'::macaddr8;"}
+{"sql":"SELECT macaddr8_set7bit('00:08:2b:01:02:03'::macaddr8)","shape":"SELECT macaddr8_set7bit('00:08:2b:01:02:03'::macaddr8);"}
+{"sql":"CREATE TABLE macaddr8_data (a int, b macaddr8)","shape":"CREATE TABLE macaddr8_data (a int, b macaddr8);"}
+{"sql":"INSERT INTO macaddr8_data VALUES (1, '08:00:2b:01:02:03')","shape":"INSERT INTO macaddr8_data VALUES (1, '08:00:2b:01:02:03');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (2, '08-00-2b-01-02-03')","shape":"INSERT INTO macaddr8_data VALUES (2, '08-00-2b-01-02-03');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (3, '08002b:010203')","shape":"INSERT INTO macaddr8_data VALUES (3, '08002b:010203');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (4, '08002b-010203')","shape":"INSERT INTO macaddr8_data VALUES (4, '08002b-010203');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (5, '0800.2b01.0203')","shape":"INSERT INTO macaddr8_data VALUES (5, '0800.2b01.0203');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (6, '0800-2b01-0203')","shape":"INSERT INTO macaddr8_data VALUES (6, '0800-2b01-0203');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (7, '08002b010203')","shape":"INSERT INTO macaddr8_data VALUES (7, '08002b010203');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (8, '0800:2b01:0203')","shape":"INSERT INTO macaddr8_data VALUES (8, '0800:2b01:0203');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (9, 'not even close')","shape":"INSERT INTO macaddr8_data VALUES (9, 'not even close');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (10, '08:00:2b:01:02:04')","shape":"INSERT INTO macaddr8_data VALUES (10, '08:00:2b:01:02:04');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (11, '08:00:2b:01:02:02')","shape":"INSERT INTO macaddr8_data VALUES (11, '08:00:2b:01:02:02');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (12, '08:00:2a:01:02:03')","shape":"INSERT INTO macaddr8_data VALUES (12, '08:00:2a:01:02:03');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (13, '08:00:2c:01:02:03')","shape":"INSERT INTO macaddr8_data VALUES (13, '08:00:2c:01:02:03');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (14, '08:00:2a:01:02:04')","shape":"INSERT INTO macaddr8_data VALUES (14, '08:00:2a:01:02:04');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (15, '08:00:2b:01:02:03:04:05')","shape":"INSERT INTO macaddr8_data VALUES (15, '08:00:2b:01:02:03:04:05');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (16, '08-00-2b-01-02-03-04-05')","shape":"INSERT INTO macaddr8_data VALUES (16, '08-00-2b-01-02-03-04-05');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (17, '08002b:0102030405')","shape":"INSERT INTO macaddr8_data VALUES (17, '08002b:0102030405');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (18, '08002b-0102030405')","shape":"INSERT INTO macaddr8_data VALUES (18, '08002b-0102030405');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (19, '0800.2b01.0203.0405')","shape":"INSERT INTO macaddr8_data VALUES (19, '0800.2b01.0203.0405');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (20, '08002b01:02030405')","shape":"INSERT INTO macaddr8_data VALUES (20, '08002b01:02030405');"}
+{"sql":"INSERT INTO macaddr8_data VALUES (21, '08002b0102030405')","shape":"INSERT INTO macaddr8_data VALUES (21, '08002b0102030405');"}
+{"sql":"SELECT * FROM macaddr8_data ORDER BY 1","shape":"SELECT * FROM macaddr8_data ORDER BY 1;"}
+{"sql":"CREATE INDEX macaddr8_data_btree ON macaddr8_data USING btree (b)","shape":"CREATE INDEX macaddr8_data_btree ON macaddr8_data USING btree (b);"}
+{"sql":"CREATE INDEX macaddr8_data_hash ON macaddr8_data USING hash (b)","shape":"CREATE INDEX macaddr8_data_hash ON macaddr8_data USING hash (b);"}
+{"sql":"SELECT a, b, trunc(b) FROM macaddr8_data ORDER BY 2, 1","shape":"SELECT a, b, trunc(b) FROM macaddr8_data ORDER BY 2, 1;"}
+{"sql":"SELECT b <  '08:00:2b:01:02:04' FROM macaddr8_data WHERE a = 1","shape":"SELECT b < '08:00:2b:01:02:04' FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b >  '08:00:2b:ff:fe:01:02:04' FROM macaddr8_data WHERE a = 1","shape":"SELECT b > '08:00:2b:ff:fe:01:02:04' FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b >  '08:00:2b:ff:fe:01:02:03' FROM macaddr8_data WHERE a = 1","shape":"SELECT b > '08:00:2b:ff:fe:01:02:03' FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b::macaddr <= '08:00:2b:01:02:04' FROM macaddr8_data WHERE a = 1","shape":"SELECT b::macaddr <= '08:00:2b:01:02:04' FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b::macaddr >= '08:00:2b:01:02:04' FROM macaddr8_data WHERE a = 1","shape":"SELECT b::macaddr >= '08:00:2b:01:02:04' FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b =  '08:00:2b:ff:fe:01:02:03' FROM macaddr8_data WHERE a = 1","shape":"SELECT b = '08:00:2b:ff:fe:01:02:03' FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b::macaddr <> '08:00:2b:01:02:04'::macaddr FROM macaddr8_data WHERE a = 1","shape":"SELECT b::macaddr <> '08:00:2b:01:02:04'::macaddr FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b::macaddr <> '08:00:2b:01:02:03'::macaddr FROM macaddr8_data WHERE a = 1","shape":"SELECT b::macaddr <> '08:00:2b:01:02:03'::macaddr FROM macaddr8_data WHERE a = 1;"}
+{"sql":"SELECT b <  '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15","shape":"SELECT b < '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b >  '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15","shape":"SELECT b > '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b >  '08:00:2b:01:02:03:04:05' FROM macaddr8_data WHERE a = 15","shape":"SELECT b > '08:00:2b:01:02:03:04:05' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b <= '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15","shape":"SELECT b <= '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b >= '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15","shape":"SELECT b >= '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b =  '08:00:2b:01:02:03:04:05' FROM macaddr8_data WHERE a = 15","shape":"SELECT b = '08:00:2b:01:02:03:04:05' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b <> '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15","shape":"SELECT b <> '08:00:2b:01:02:03:04:06' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT b <> '08:00:2b:01:02:03:04:05' FROM macaddr8_data WHERE a = 15","shape":"SELECT b <> '08:00:2b:01:02:03:04:05' FROM macaddr8_data WHERE a = 15;"}
+{"sql":"SELECT ~b                       FROM macaddr8_data","shape":"SELECT ~b FROM macaddr8_data;"}
+{"sql":"SELECT  b & '00:00:00:ff:ff:ff' FROM macaddr8_data","shape":"SELECT b & '00:00:00:ff:ff:ff' FROM macaddr8_data;"}
+{"sql":"SELECT  b | '01:02:03:04:05:06' FROM macaddr8_data","shape":"SELECT b | '01:02:03:04:05:06' FROM macaddr8_data;"}
+{"sql":"DROP TABLE macaddr8_data","shape":"DROP TABLE macaddr8_data;"}
+{"sql":"SELECT pg_input_is_valid('08:00:2b:01:02:03:04:ZZ', 'macaddr8')","shape":"SELECT pg_input_is_valid('08:00:2b:01:02:03:04:ZZ', 'macaddr8');"}
+{"sql":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:03:04:ZZ', 'macaddr8')","shape":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:03:04:ZZ', 'macaddr8');"}
+{"sql":"SELECT pg_input_is_valid('08:00:2b:01:02:03:04:', 'macaddr8')","shape":"SELECT pg_input_is_valid('08:00:2b:01:02:03:04:', 'macaddr8');"}
+{"sql":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:03:04:', 'macaddr8')","shape":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:03:04:', 'macaddr8');"}

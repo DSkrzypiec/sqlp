@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE a(i integer, b blob)"}
+{"sql":"DELETE FROM a WHERE oid"}
+{"sql":"pragma freelist_count"}
+{"sql":"pragma incremental_vacuum(5)"}

@@ -1,0 +1,6 @@
+{"sql":"BEGIN IMMEDIATE"}
+{"sql":"CREATE INDEX i2 ON t2(y)"}
+{"sql":"SELECT * FROM t1 WHERE x=1"}
+{"sql":"SELECT * FROM t2 WHERE y=1"}
+{"sql":"PRAGMA optimize"}
+{"sql":"WITH s(i) AS (\n      SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<1000\n    )\n    INSERT INTO t1 SELECT i FROM s"}

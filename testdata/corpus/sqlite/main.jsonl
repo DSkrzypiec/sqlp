@@ -1,0 +1,38 @@
+{"sql":"SELECT * from T1 where x!!5","reject":true}
+{"sql":"SELECT * from T1 where ^x","reject":true}
+{"sql":"select x'4869'"}
+{"sql":"select cast(3.14e+4 AS integer)"}
+{"sql":"select cast(3.14e+04 AS integer)"}
+{"sql":"select cast(3.14e+004 AS integer)"}
+{"sql":"select cast(3.14e4 AS integer)"}
+{"sql":"select cast(3.14e04 AS integer)"}
+{"sql":"select cast(3.14e004 AS integer)"}
+{"sql":"select cast(3.14E+4 AS integer)"}
+{"sql":"select cast(3.14E+04 AS integer)"}
+{"sql":"select cast(3.14E+004 AS integer)"}
+{"sql":"select cast(3.14E4 AS integer)"}
+{"sql":"select cast(3.14E04 AS integer)"}
+{"sql":"select cast(3.14E004 AS integer)"}
+{"sql":"select cast(3.14e-4 * 1e8 AS integer)"}
+{"sql":"select cast(3.14E-04 * 1E08 AS integer)"}
+{"sql":"select cast(3.14e-004 * 01.0E+8 AS integer)"}
+{"sql":"select 123/*abc"}
+{"sql":"select 123/***abc"}
+{"sql":"select 123/*/*2"}
+{"sql":"select 123/**/*2"}
+{"sql":"select 123/","reject":true}
+{"sql":"select 123--5"}
+{"sql":"create table T1(X REAL)"}
+{"sql":"insert into T1 values(0.5)"}
+{"sql":"insert into T1 values(0.5e2)"}
+{"sql":"insert into T1 values(0.5e-002)"}
+{"sql":"insert into T1 values(5e-002)"}
+{"sql":"insert into T1 values(-5.0e-2)"}
+{"sql":"insert into T1 values(-5.1e-2)"}
+{"sql":"insert into T1 values(0.5E+02)"}
+{"sql":"insert into T1 values(5E+02)"}
+{"sql":"insert into T1 values(5.0E+03)"}
+{"sql":"select x*10 from T1 order by x*5"}
+{"sql":"create bogus","reject":true}
+{"sql":"create","reject":true}
+{"sql":"SELECT 'abc' + #9","reject":true}

@@ -1,0 +1,6 @@
+{"sql":"DROP TABLE IF EXISTS x1_rules"}
+{"sql":"CREATE TABLE x1_rules(ruleset, cFrom, cTo, cost)"}
+{"sql":"SELECT count(*) FROM x1_rules WHERE cTo!=cFrom"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING fuzzer(x1_rules)"}
+{"sql":"SELECT word FROM x1 WHERE word MATCH 'xx' LIMIT 10"}
+{"sql":"SELECT cTo FROM x1_rules WHERE cFrom='xx' \n  ORDER BY cost asc, rowid asc LIMIT 9"}

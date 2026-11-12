@@ -1,0 +1,78 @@
+{"sql":"DROP TABLE temp.prefixes"}
+{"sql":"DROP TABLE temp.terms"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(prefix='1,3,6')"}
+{"sql":"CREATE VIRTUAL TABLE p1 USING fts4term(t1, 1)"}
+{"sql":"CREATE VIRTUAL TABLE p2 USING fts4term(t1, 2)"}
+{"sql":"CREATE VIRTUAL TABLE p3 USING fts4term(t1, 3)"}
+{"sql":"CREATE VIRTUAL TABLE terms USING fts4term(t1)"}
+{"sql":"INSERT INTO t1 VALUES('sqlite mysql firebird')"}
+{"sql":"SELECT term FROM p1"}
+{"sql":"SELECT term FROM p2"}
+{"sql":"SELECT term FROM p3"}
+{"sql":"SELECT term FROM terms"}
+{"sql":"INSERT INTO t1 VALUES('FTS3 and FTS4 are an SQLite virtual table modules')"}
+{"sql":"INSERT INTO t1 VALUES('that allows users to perform full-text searches on')"}
+{"sql":"INSERT INTO t1 VALUES('a set of documents. The most common (and')"}
+{"sql":"INSERT INTO t1 VALUES('effective) way to describe full-text searches is')"}
+{"sql":"INSERT INTO t1 VALUES('\"what Google, Yahoo and Altavista do with')"}
+{"sql":"INSERT INTO t1 VALUES('documents placed on the World Wide Web\". Users')"}
+{"sql":"INSERT INTO t1 VALUES('input a term, or series of terms, perhaps')"}
+{"sql":"INSERT INTO t1 VALUES('connected by a binary operator or grouped together')"}
+{"sql":"INSERT INTO t1 VALUES('into a phrase, and the full-text query system')"}
+{"sql":"INSERT INTO t1 VALUES('finds the set of documents that best matches those')"}
+{"sql":"INSERT INTO t1 VALUES('terms considering the operators and groupings the')"}
+{"sql":"INSERT INTO t1 VALUES('user has specified. This article describes the')"}
+{"sql":"INSERT INTO t1 VALUES('deployment and usage of FTS3 and FTS4.')"}
+{"sql":"INSERT INTO t1 VALUES('FTS1 and FTS2 are obsolete full-text search')"}
+{"sql":"INSERT INTO t1 VALUES('modules for SQLite. There are known issues with')"}
+{"sql":"INSERT INTO t1 VALUES('these older modules and their use should be')"}
+{"sql":"INSERT INTO t1 VALUES('avoided. Portions of the original FTS3 code were')"}
+{"sql":"INSERT INTO t1 VALUES('contributed to the SQLite project by Scott Hess of')"}
+{"sql":"INSERT INTO t1 VALUES('Google. It is now developed and maintained as part')"}
+{"sql":"INSERT INTO t1 VALUES('of SQLite. ')"}
+{"sql":"DELETE FROM t1 WHERE docid%2"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(prefix='1,2,3')"}
+{"sql":"INSERT INTO t2 VALUES('On 12 September the wind direction turned and')"}
+{"sql":"INSERT INTO t2 VALUES('William''s fleet sailed. A storm blew up and the')"}
+{"sql":"INSERT INTO t2 VALUES('fleet was forced to take shelter at')"}
+{"sql":"INSERT INTO t2 VALUES('Saint-Valery-sur-Somme and again wait for the wind')"}
+{"sql":"INSERT INTO t2 VALUES('to change. On 27 September the Norman fleet')"}
+{"sql":"INSERT INTO t2 VALUES('finally set sail, landing in England at Pevensey')"}
+{"sql":"INSERT INTO t2 VALUES('Bay (Sussex) on 28 September. William then moved')"}
+{"sql":"INSERT INTO t2 VALUES('to Hastings, a few miles to the east, where he')"}
+{"sql":"INSERT INTO t2 VALUES('built a prefabricated wooden castle for a base of')"}
+{"sql":"INSERT INTO t2 VALUES('operations. From there, he ravaged the hinterland')"}
+{"sql":"INSERT INTO t2 VALUES('and waited for Harold''s return from the north.')"}
+{"sql":"SELECT optimize(t2) FROM t2 LIMIT 1"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(prefix=\"1,4\")"}
+{"sql":"INSERT INTO t3 VALUES('one two three')"}
+{"sql":"INSERT INTO t3 VALUES('four five six')"}
+{"sql":"INSERT INTO t3 VALUES('seven eight nine')"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'f*'"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'four*'"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 's*'"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'sev*'"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'one*'"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4(prefix=\"abc\")"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4(prefix=\"\")"}
+{"sql":"CREATE VIRTUAL TABLE t5 USING fts4(prefix=\"-1\")"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(prefix=0)"}
+{"sql":"INSERT INTO t1 VALUES('Twas Mulga Bill, from Eaglehawk, ')"}
+{"sql":"INSERT INTO t2 VALUES('Twas Mulga Bill, from Eaglehawk, ')"}
+{"sql":"SELECT md5sum(quote(root)) FROM t1_segdir"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(prefix=\"1,0,2\")"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(prefix=\"1,2\")"}
+{"sql":"INSERT INTO t1 VALUES('that caught the cycling craze;')"}
+{"sql":"INSERT INTO t2 VALUES('that caught the cycling craze;')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(prefix=\"1,3,2\")"}
+{"sql":"INSERT INTO t1 VALUES('He turned away the good old horse')"}
+{"sql":"INSERT INTO t2 VALUES('He turned away the good old horse')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(prefix=\"1,600,2\")"}
+{"sql":"INSERT INTO t1 VALUES('that served him many days;')"}
+{"sql":"INSERT INTO t2 VALUES('that served him many days;')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(prefix=\"2147483647,2147483648,2147483649\")"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(prefix=)"}
+{"sql":"INSERT INTO t1 VALUES('He dressed himself in cycling clothes')"}
+{"sql":"INSERT INTO t2 VALUES('He dressed himself in cycling clothes')"}
+{"sql":"SELECT docid FROM t6 WHERE t6 MATCH 'a*'"}
+{"sql":"SELECT docid FROM t6 WHERE t6 MATCH 'a* b'"}

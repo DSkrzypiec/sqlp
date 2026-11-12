@@ -1,0 +1,53 @@
+{"sql":"CREATE TABLE t3(a, b UNIQUE)"}
+{"sql":"CREATE TABLE t6(x, y)"}
+{"sql":"CREATE TEMP TABLE t4(x, y)"}
+{"sql":"CREATE TEMP TABLE t6(x, y)"}
+{"sql":"CREATE TABLE aux.t5(a, b)"}
+{"sql":"INSERT INTO main.t1 VALUES(1, 'i')"}
+{"sql":"INSERT INTO main.t1 VALUES(2, 'ii')"}
+{"sql":"INSERT INTO main.t1 VALUES(3, 'iii')"}
+{"sql":"INSERT INTO aux.t1 VALUES(1, 'I')"}
+{"sql":"INSERT INTO aux.t1 VALUES(2, 'II')"}
+{"sql":"INSERT INTO aux.t1 VALUES(3, 'III')"}
+{"sql":"DELETE FROM main.t1"}
+{"sql":"INSERT INTO main.t1 VALUES(NULL, '')"}
+{"sql":"INSERT INTO t2(rowid, a, b, c) VALUES(1,  3, 1, 4)"}
+{"sql":"INSERT INTO t2(rowid, a, b, c) VALUES(2,  1, 5, 9)"}
+{"sql":"INSERT INTO t2(rowid, a, b, c) VALUES(3,  2, 6, 5)"}
+{"sql":"INSERT INTO t3 VALUES(1, 'one')"}
+{"sql":"INSERT INTO t3 VALUES(2, 'two')"}
+{"sql":"INSERT INTO t3 VALUES(3, 'three')"}
+{"sql":"INSERT INTO t3 VALUES(4, 'four')"}
+{"sql":"SELECT 'main', tbl_name FROM main.sqlite_master WHERE type = 'table'"}
+{"sql":"SELECT 'temp', tbl_name FROM sqlite_temp_master WHERE type = 'table'"}
+{"sql":"SELECT 'aux', tbl_name FROM aux.sqlite_master WHERE type = 'table'"}
+{"sql":"DELETE FROM main.t6"}
+{"sql":"DELETE FROM temp.t6"}
+{"sql":"INSERT INTO main.t6 VALUES(1, 2)"}
+{"sql":"INSERT INTO temp.t6 VALUES(1, 2)"}
+{"sql":"CREATE TRIGGER temp.tr1 AFTER INSERT ON t4 BEGIN\n    UPDATE t6 SET x=x+1;\n  END"}
+{"sql":"SELECT * FROM main.t6"}
+{"sql":"SELECT * FROM temp.t6"}
+{"sql":"DELETE FROM aux.t1"}
+{"sql":"INSERT INTO main.t1 VALUES(1, 2)"}
+{"sql":"INSERT INTO aux.t1 VALUES(1, 2)"}
+{"sql":"CREATE TRIGGER temp.tr2 AFTER DELETE ON t4 BEGIN\n    UPDATE t1 SET a=a+1;\n  END"}
+{"sql":"DELETE FROM aux.t5"}
+{"sql":"INSERT INTO aux.t5 VALUES(1, 2)"}
+{"sql":"INSERT INTO t4 VALUES('x', 'y')"}
+{"sql":"CREATE TRIGGER temp.tr3 AFTER UPDATE ON t4 BEGIN\n    UPDATE t5 SET a=a+1;\n  END"}
+{"sql":"UPDATE t4 SET x=10"}
+{"sql":"SELECT * FROM aux.t5"}
+{"sql":"CREATE TABLE t7(q, r, s)"}
+{"sql":"INSERT INTO t7 VALUES(1, 'one',   'X')"}
+{"sql":"INSERT INTO t7 VALUES(2, 'two',   'X')"}
+{"sql":"INSERT INTO t7 VALUES(3, 'three', 'X')"}
+{"sql":"INSERT INTO t7 VALUES(4, 'four',  'X')"}
+{"sql":"INSERT INTO t7 VALUES(5, 'five',  'X')"}
+{"sql":"INSERT INTO t7 VALUES(6, 'six',   'X')"}
+{"sql":"INSERT INTO t7 VALUES(7, 'seven', 'X')"}
+{"sql":"INSERT INTO t7 VALUES(8, 'eight', 'X')"}
+{"sql":"INSERT INTO t7 VALUES(9, 'nine',  'X')"}
+{"sql":"INSERT INTO t7 VALUES(10, 'ten',  'X')"}
+{"sql":"CREATE TABLE t8(x)"}
+{"sql":"CREATE TRIGGER tr7 BEFORE UPDATE ON t7 BEGIN\n    INSERT INTO t8 VALUES(old.q);\n  END"}

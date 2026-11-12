@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE Item(\n       a integer PRIMARY KEY NOT NULL ,\n       b double NULL ,\n       c int NOT NULL DEFAULT 0\n    )"}
+{"sql":"CREATE TABLE Undo(UndoAction TEXT)"}
+{"sql":"INSERT INTO Item VALUES (1,38205.60865,340)"}
+{"sql":"CREATE TRIGGER trigItem_UNDO_AD AFTER DELETE ON Item FOR EACH ROW\n    BEGIN\n      INSERT INTO Undo SELECT 'INSERT INTO Item (a,b,c) VALUES ('\n       || coalesce(old.a,'NULL') || ',' || quote(old.b) || ',' || old.c || ');';\n    END"}
+{"sql":"DELETE FROM Item WHERE a = 1"}
+{"sql":"SELECT * FROM Undo"}

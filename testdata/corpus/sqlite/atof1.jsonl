@@ -1,0 +1,9 @@
+{"sql":"PRAGMA encoding = 'UTF16be'"}
+{"sql":"INSERT INTO t1(rowid,a) VALUES (1,x'00'),(2,3)"}
+{"sql":"SELECT substr(a,',') is true FROM t1 ORDER BY rowid"}
+{"sql":"SELECT substr(a,',') is true FROM t1 ORDER BY rowid DESC"}
+{"sql":"SELECT count(*) FROM t1 WHERE substr(a,',')"}
+{"sql":"SELECT randomblob(0) - 1"}
+{"sql":"WITH RECURSIVE bigval(i,vtxt) AS (\n    SELECT 0, '18446744073709550000'\n    UNION ALL\n    SELECT i+1, format('1844674407370955%04d',i+1) FROM bigval\n     WHERE i+1<=9999\n  )\n  SELECT vtxt, CAST(vtxt AS REAL) FROM bigval\n   WHERE CAST(vtxt AS REAL) NOT GLOB '1.8446744073709[56]*'"}
+{"sql":"WITH RECURSIVE bigval(i,vtxt) AS (\n    SELECT 0, '18.446744073709550000'\n    UNION ALL\n    SELECT i+1, format('18.44674407370955%04d',i+1) FROM bigval\n     WHERE i+1<=9999\n  )\n  SELECT vtxt, CAST(vtxt AS REAL) FROM bigval\n   WHERE CAST(vtxt AS REAL) NOT GLOB '18.446744073709*'"}
+{"sql":"WITH RECURSIVE exp(n,v1,v2) AS (\n    SELECT -200, '1.8446744073709550592e-200', '1.8446744073709551609e-200'\n    UNION ALL\n    SELECT n+1, ('1.8446744073709550592e'||n),('1.8446744073709551609e'||n)\n      FROM exp WHERE n<200\n  )\n  SELECT n, v1, v2\n    FROM exp\n   WHERE format('%.10e',CAST(v1 AS REAL)) NOT GLOB '1.8446*'\n      OR format('%.10e',CAST(v2 AS REAL)) NOT GLOB '1.8446*'"}

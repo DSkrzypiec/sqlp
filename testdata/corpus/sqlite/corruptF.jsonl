@@ -1,0 +1,8 @@
+{"sql":"INSERT INTO t1 VALUES(str(1))"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+1) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+2) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+4) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+8) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+16) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+32) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT str(rowid+64) FROM t1"}

@@ -1,0 +1,7 @@
+{"sql":"CREATE TABLE s(i, s)"}
+{"sql":"INSERT INTO s VALUES(1, ',0123456789,')"}
+{"sql":"INSERT INTO s VALUES(2, X'2c303132333435363738392c')"}
+{"sql":"CREATE TABLE e(e)"}
+{"sql":"INSERT INTO e VALUES('v1'), ('v2')"}
+{"sql":"SELECT group_concat(e, (SELECT s FROM s WHERE i=1)) FROM e"}
+{"sql":"SELECT string_agg(e, (SELECT s FROM s WHERE i=2)) FROM e"}

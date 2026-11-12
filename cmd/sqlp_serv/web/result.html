@@ -1,0 +1,139 @@
+{{define "result" -}}
+{{with .Error}}<div class="error-box"><pre>{{.}}</pre></div>{{end}}
+{{range .Notes}}<p class="note">{{.}}</p>{{end}}
+{{range .Statements}}
+<article class="stmt">
+  {{- if $.Multi}}
+  <header class="stmt-head">
+    <span class="badge">Statement {{.Index}}</span><span class="hint">line {{.Line}}</span>
+    <code class="preview">{{.Preview}}</code>
+  </header>
+  {{- end}}
+  {{- with .Err}}
+  <div class="error-box">
+    <p>{{.Message}}</p>
+    {{- if .SourceLine}}
+    <pre class="code">{{.SourceLine}}
+<span class="caret">{{.Caret}}</span></pre>
+    {{- end}}
+  </div>
+  {{- end}}
+  {{- with .Message}}<p class="note">{{.}}</p>{{end}}
+  {{- with .QStruct}}{{template "qstruct" .}}{{end}}
+  {{- with .OutCols}}{{template "outcols" .}}{{end}}
+  {{- with .AST}}{{template "ast" .}}{{end}}
+</article>
+{{end}}
+{{with .Summary}}<p class="summary">{{.}}</p>{{end}}
+{{- end}}
+
+{{define "qstruct" -}}
+<div class="graph-wrap">{{template "svg" .Drawing}}</div>
+<p class="legend">
+  Arrows follow the data: <b>a → b</b> means b reads a.
+  <span class="swatch k-query"></span>query
+  <span class="swatch k-cte"></span>CTE
+  <span class="swatch k-subquery"></span>subquery
+  <span class="swatch k-table"></span>table
+  <span class="swatch k-view"></span>view
+  <span class="swatch k-function"></span>function
+  <span class="swatch k-object"></span>unknown kind
+  <span class="swatch s-not_found"></span>not in catalog
+</p>
+{{- if .Diagnostics}}
+<ul class="diags">{{range .Diagnostics}}<li>{{.}}</li>{{end}}</ul>
+{{- end}}
+{{- if .Objects}}
+<details class="section" open>
+  <summary>Objects read ({{len .Objects}})</summary>
+  <table class="objects">
+    <thead><tr><th>Name</th><th>Kind</th><th>Status</th></tr></thead>
+    <tbody>{{range .Objects}}<tr><td><code>{{.Name}}</code></td><td>{{.Kind}}</td><td>{{.Status}}</td></tr>{{end}}</tbody>
+  </table>
+</details>
+{{- end}}
+<details class="section">
+  <summary>JSON</summary>
+  <pre class="code">{{.JSON}}</pre>
+</details>
+{{- end}}
+
+{{define "outcols" -}}
+<p class="legend">
+  Table and view columns the result is computed from, <span class="use u-select">select</span>, and those the joins match
+  on, <span class="use u-join">join</span>, followed through CTEs and subqueries{{if .Expanded}} and views{{end}}.
+  Columns used only in WHERE, GROUP BY or ORDER BY are left out.
+</p>
+{{- if .Diagnostics}}
+<ul class="diags">{{range .Diagnostics}}<li>{{.}}</li>{{end}}</ul>
+{{- end}}
+{{- if .Columns}}
+<div class="table-wrap">
+  <table class="objects">
+    <thead><tr><th>Object</th><th>Column</th><th>Used in</th><th>Status</th></tr></thead>
+    <tbody>
+    {{- range .Columns}}
+      <tr><td>{{if .Object}}<code>{{.Object}}</code>{{else}}<span class="hint">unknown</span>{{end}}</td>
+        <td>{{if .Star}}<code>*</code> <span class="hint">all columns</span>{{else}}<code>{{.Column}}</code>{{end}}</td>
+        <td>{{range .Clauses}}<span class="use u-{{.}}">{{.}}</span>{{end}}</td>
+        <td{{if .Warn}} class="warn"{{end}}>{{.Status}}</td></tr>
+    {{- end}}
+    </tbody>
+  </table>
+</div>
+{{- else}}
+<p class="note">The query uses no table or view columns.</p>
+{{- end}}
+<details class="section">
+  <summary>JSON</summary>
+  <pre class="code">{{.JSON}}</pre>
+</details>
+{{- end}}
+
+{{define "svg" -}}
+<svg class="graph" width="{{.Width}}" height="{{.Height}}" viewBox="0 0 {{.Width}} {{.Height}}" role="img"
+     aria-label="Query structure graph">
+  <defs>
+    <marker id="{{.ArrowID}}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,1 L10,5 L0,9 z"/>
+    </marker>
+  </defs>
+  {{- range .Edges}}
+  <path class="{{.Class}}" d="{{.Path}}" marker-end="url(#{{$.ArrowID}})"/>
+  {{- end}}
+  {{- range .Boxes}}
+  <g class="{{.Class}}">
+    <title>{{.Title}}</title>
+    <rect x="{{.X}}" y="{{.Y}}" width="{{.W}}" height="{{.H}}" rx="7"/>
+    <text class="label" x="{{.TextX}}" y="{{.LabelY}}">{{.Label}}</text>
+    <text class="sub" x="{{.TextX}}" y="{{.SubY}}">{{.Sub}}</text>
+  </g>
+  {{- end}}
+</svg>
+{{- end}}
+
+{{define "ast" -}}
+<details class="section" open>
+  <summary>Formatted</summary>
+  <pre class="code">{{.Formatted}}</pre>
+</details>
+{{- if .Tree}}
+<div class="tree">{{template "astnode" .Tree}}</div>
+{{- else}}
+<p class="note">The tree has {{.Size}} entries, too many to show: the page shows up to {{.Limit}} per run.</p>
+{{- end}}
+{{- end}}
+
+{{define "astnode" -}}
+{{- if isStruct . -}}
+<details open><summary>{{if and .Field (ne .Field "-")}}<span class="f">{{.Field}}</span>{{end}}<span class="t">{{.Text}}</span></summary>
+{{- range .Children}}{{template "astnode" .}}{{end -}}
+</details>
+{{- else if isList . -}}
+<details open><summary><span class="f">{{.Field}}</span><span class="n">{{len .Children}}</span></summary>
+{{- range .Children}}{{template "astnode" .}}{{end -}}
+</details>
+{{- else -}}
+<div class="leaf">{{if and .Field (ne .Field "-")}}<span class="f">{{.Field}}</span>{{end}}<span class="v">{{.Text}}</span></div>
+{{- end -}}
+{{- end}}

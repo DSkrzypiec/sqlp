@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES(0, 0, zeroblob(676))"}
+{"sql":"INSERT INTO t1 VALUES(1, 1, zeroblob(676))"}
+{"sql":"INSERT INTO t3(a, b) SELECT c, d FROM t4"}

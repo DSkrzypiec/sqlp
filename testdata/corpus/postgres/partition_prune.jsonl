@@ -1,0 +1,627 @@
+{"sql":"set plan_cache_mode = force_generic_plan","shape":"SET plan_cache_mode TO force_generic_plan;"}
+{"sql":"create table lp (a char) partition by list (a)","shape":"CREATE TABLE lp (a char) PARTITION BY LIST (a);"}
+{"sql":"create table lp_default partition of lp default","shape":"CREATE TABLE lp_default PARTITION OF lp DEFAULT;"}
+{"sql":"create table lp_ef partition of lp for values in ('e', 'f')","shape":"CREATE TABLE lp_ef PARTITION OF lp FOR VALUES IN ('e', 'f');"}
+{"sql":"create table lp_ad partition of lp for values in ('a', 'd')","shape":"CREATE TABLE lp_ad PARTITION OF lp FOR VALUES IN ('a', 'd');"}
+{"sql":"create table lp_bc partition of lp for values in ('b', 'c')","shape":"CREATE TABLE lp_bc PARTITION OF lp FOR VALUES IN ('b', 'c');"}
+{"sql":"create table lp_g partition of lp for values in ('g')","shape":"CREATE TABLE lp_g PARTITION OF lp FOR VALUES IN ('g');"}
+{"sql":"create table lp_null partition of lp for values in (null)","shape":"CREATE TABLE lp_null PARTITION OF lp FOR VALUES IN (NULL);"}
+{"sql":"explain (costs off) select * from lp","shape":"EXPLAIN (COSTS off) SELECT * FROM lp;"}
+{"sql":"explain (costs off) select * from lp where a > 'a' and a < 'd'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE (a > 'a') AND (a < 'd');"}
+{"sql":"explain (costs off) select * from lp where a > 'a' and a <= 'd'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE (a > 'a') AND (a <= 'd');"}
+{"sql":"explain (costs off) select * from lp where a = 'a'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE a = 'a';"}
+{"sql":"explain (costs off) select * from lp where 'a' = a","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE 'a' = a;"}
+{"sql":"explain (costs off) select * from lp where a is not null","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE a IS NOT NULL;"}
+{"sql":"explain (costs off) select * from lp where a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE a IS NULL;"}
+{"sql":"explain (costs off) select * from lp where a = 'a' or a = 'c'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE (a = 'a') OR (a = 'c');"}
+{"sql":"explain (costs off) select * from lp where a is not null and (a = 'a' or a = 'c')","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE (a IS NOT NULL) AND ((a = 'a') OR (a = 'c'));"}
+{"sql":"explain (costs off) select * from lp where a <> 'g'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE a <> 'g';"}
+{"sql":"explain (costs off) select * from lp where a <> 'a' and a <> 'd'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE (a <> 'a') AND (a <> 'd');"}
+{"sql":"explain (costs off) select * from lp where a not in ('a', 'd')","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE a NOT IN ('a', 'd');"}
+{"sql":"create table coll_pruning (a text collate \"C\") partition by list (a)","shape":"CREATE TABLE coll_pruning (a text COLLATE \"C\") PARTITION BY LIST (a);"}
+{"sql":"create table coll_pruning_a partition of coll_pruning for values in ('a')","shape":"CREATE TABLE coll_pruning_a PARTITION OF coll_pruning FOR VALUES IN ('a');"}
+{"sql":"create table coll_pruning_b partition of coll_pruning for values in ('b')","shape":"CREATE TABLE coll_pruning_b PARTITION OF coll_pruning FOR VALUES IN ('b');"}
+{"sql":"create table coll_pruning_def partition of coll_pruning default","shape":"CREATE TABLE coll_pruning_def PARTITION OF coll_pruning DEFAULT;"}
+{"sql":"explain (costs off) select * from coll_pruning where a collate \"C\" = 'a' collate \"C\"","shape":"EXPLAIN (COSTS off) SELECT * FROM coll_pruning WHERE (a COLLATE \"C\") = ('a' COLLATE \"C\");"}
+{"sql":"explain (costs off) select * from coll_pruning where a collate \"POSIX\" = 'a' collate \"POSIX\"","shape":"EXPLAIN (COSTS off) SELECT * FROM coll_pruning WHERE (a COLLATE \"POSIX\") = ('a' COLLATE \"POSIX\");"}
+{"sql":"create table rlp (a int, b varchar) partition by range (a)","shape":"CREATE TABLE rlp (a int, b varchar) PARTITION BY RANGE (a);"}
+{"sql":"create table rlp_default partition of rlp default partition by list (a)","shape":"CREATE TABLE rlp_default PARTITION OF rlp DEFAULT PARTITION BY LIST (a);"}
+{"sql":"create table rlp_default_default partition of rlp_default default","shape":"CREATE TABLE rlp_default_default PARTITION OF rlp_default DEFAULT;"}
+{"sql":"create table rlp_default_10 partition of rlp_default for values in (10)","shape":"CREATE TABLE rlp_default_10 PARTITION OF rlp_default FOR VALUES IN (10);"}
+{"sql":"create table rlp_default_30 partition of rlp_default for values in (30)","shape":"CREATE TABLE rlp_default_30 PARTITION OF rlp_default FOR VALUES IN (30);"}
+{"sql":"create table rlp_default_null partition of rlp_default for values in (null)","shape":"CREATE TABLE rlp_default_null PARTITION OF rlp_default FOR VALUES IN (NULL);"}
+{"sql":"create table rlp1 partition of rlp for values from (minvalue) to (1)","shape":"CREATE TABLE rlp1 PARTITION OF rlp FOR VALUES FROM (minvalue) TO (1);"}
+{"sql":"create table rlp2 partition of rlp for values from (1) to (10)","shape":"CREATE TABLE rlp2 PARTITION OF rlp FOR VALUES FROM (1) TO (10);"}
+{"sql":"create table rlp3 (b varchar, a int) partition by list (b varchar_ops)","shape":"CREATE TABLE rlp3 (b varchar, a int) PARTITION BY LIST (b varchar_ops);"}
+{"sql":"create table rlp3_default partition of rlp3 default","shape":"CREATE TABLE rlp3_default PARTITION OF rlp3 DEFAULT;"}
+{"sql":"create table rlp3abcd partition of rlp3 for values in ('ab', 'cd')","shape":"CREATE TABLE rlp3abcd PARTITION OF rlp3 FOR VALUES IN ('ab', 'cd');"}
+{"sql":"create table rlp3efgh partition of rlp3 for values in ('ef', 'gh')","shape":"CREATE TABLE rlp3efgh PARTITION OF rlp3 FOR VALUES IN ('ef', 'gh');"}
+{"sql":"create table rlp3nullxy partition of rlp3 for values in (null, 'xy')","shape":"CREATE TABLE rlp3nullxy PARTITION OF rlp3 FOR VALUES IN (NULL, 'xy');"}
+{"sql":"alter table rlp attach partition rlp3 for values from (15) to (20)"}
+{"sql":"create table rlp4 partition of rlp for values from (20) to (30) partition by range (a)","shape":"CREATE TABLE rlp4 PARTITION OF rlp FOR VALUES FROM (20) TO (30) PARTITION BY RANGE (a);"}
+{"sql":"create table rlp4_default partition of rlp4 default","shape":"CREATE TABLE rlp4_default PARTITION OF rlp4 DEFAULT;"}
+{"sql":"create table rlp4_1 partition of rlp4 for values from (20) to (25)","shape":"CREATE TABLE rlp4_1 PARTITION OF rlp4 FOR VALUES FROM (20) TO (25);"}
+{"sql":"create table rlp4_2 partition of rlp4 for values from (25) to (29)","shape":"CREATE TABLE rlp4_2 PARTITION OF rlp4 FOR VALUES FROM (25) TO (29);"}
+{"sql":"create table rlp5 partition of rlp for values from (31) to (maxvalue) partition by range (a)","shape":"CREATE TABLE rlp5 PARTITION OF rlp FOR VALUES FROM (31) TO (maxvalue) PARTITION BY RANGE (a);"}
+{"sql":"create table rlp5_default partition of rlp5 default","shape":"CREATE TABLE rlp5_default PARTITION OF rlp5 DEFAULT;"}
+{"sql":"create table rlp5_1 partition of rlp5 for values from (31) to (40)","shape":"CREATE TABLE rlp5_1 PARTITION OF rlp5 FOR VALUES FROM (31) TO (40);"}
+{"sql":"explain (costs off) select * from rlp where a < 1","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a < 1;"}
+{"sql":"explain (costs off) select * from rlp where 1 > a","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE 1 > a;"}
+{"sql":"explain (costs off) select * from rlp where a <= 1","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a <= 1;"}
+{"sql":"explain (costs off) select * from rlp where a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a = 1;"}
+{"sql":"explain (costs off) select * from rlp where a = 1::bigint","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a = 1::bigint;"}
+{"sql":"explain (costs off) select * from rlp where a = 1::numeric","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a = 1::numeric;"}
+{"sql":"explain (costs off) select * from rlp where a <= 10","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a <= 10;"}
+{"sql":"explain (costs off) select * from rlp where a > 10","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a > 10;"}
+{"sql":"explain (costs off) select * from rlp where a < 15","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a < 15;"}
+{"sql":"explain (costs off) select * from rlp where a <= 15","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a <= 15;"}
+{"sql":"explain (costs off) select * from rlp where a > 15 and b = 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a > 15) AND (b = 'ab');"}
+{"sql":"explain (costs off) select * from rlp where a = 16","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a = 16;"}
+{"sql":"explain (costs off) select * from rlp where a = 16 and b in ('not', 'in', 'here')","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 16) AND (b IN ('not', 'in', 'here'));"}
+{"sql":"explain (costs off) select * from rlp where a = 16 and b < 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 16) AND (b < 'ab');"}
+{"sql":"explain (costs off) select * from rlp where a = 16 and b <= 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 16) AND (b <= 'ab');"}
+{"sql":"explain (costs off) select * from rlp where a = 16 and b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 16) AND (b IS NULL);"}
+{"sql":"explain (costs off) select * from rlp where a = 16 and b is not null","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 16) AND (b IS NOT NULL);"}
+{"sql":"explain (costs off) select * from rlp where a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a IS NULL;"}
+{"sql":"explain (costs off) select * from rlp where a is not null","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a IS NOT NULL;"}
+{"sql":"explain (costs off) select * from rlp where a > 30","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a > 30;"}
+{"sql":"explain (costs off) select * from rlp where a = 30","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a = 30;"}
+{"sql":"explain (costs off) select * from rlp where a <= 31","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a <= 31;"}
+{"sql":"explain (costs off) select * from rlp where a = 1 or a = 7","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 1) OR (a = 7);"}
+{"sql":"explain (costs off) select * from rlp where a = 1 or b = 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 1) OR (b = 'ab');"}
+{"sql":"explain (costs off) select * from rlp where a > 20 and a < 27","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a > 20) AND (a < 27);"}
+{"sql":"explain (costs off) select * from rlp where a = 29","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a = 29;"}
+{"sql":"explain (costs off) select * from rlp where a >= 29","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE a >= 29;"}
+{"sql":"explain (costs off) select * from rlp where a < 1 or (a > 20 and a < 25)","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a < 1) OR ((a > 20) AND (a < 25));"}
+{"sql":"explain (costs off) select * from rlp where a = 20 or a = 40","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 20) OR (a = 40);"}
+{"sql":"explain (costs off) select * from rlp3 where a = 20","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp3 WHERE a = 20;"}
+{"sql":"explain (costs off) select * from rlp where a > 1 and a = 10","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a > 1) AND (a = 10);"}
+{"sql":"explain (costs off) select * from rlp where a > 1 and a >=15","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a > 1) AND (a >= 15);"}
+{"sql":"explain (costs off) select * from rlp where a = 1 and a = 3","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE (a = 1) AND (a = 3);"}
+{"sql":"explain (costs off) select * from rlp where (a = 1 and a = 3) or (a > 1 and a = 15)","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE ((a = 1) AND (a = 3)) OR ((a > 1) AND (a = 15));"}
+{"sql":"create table mc3p (a int, b int, c int) partition by range (a, abs(b), c)","shape":"CREATE TABLE mc3p (a int, b int, c int) PARTITION BY RANGE (a, abs(b), c);"}
+{"sql":"create table mc3p_default partition of mc3p default","shape":"CREATE TABLE mc3p_default PARTITION OF mc3p DEFAULT;"}
+{"sql":"create table mc3p0 partition of mc3p for values from (minvalue, minvalue, minvalue) to (1, 1, 1)","shape":"CREATE TABLE mc3p0 PARTITION OF mc3p FOR VALUES FROM (minvalue, minvalue, minvalue) TO (1, 1, 1);"}
+{"sql":"create table mc3p1 partition of mc3p for values from (1, 1, 1) to (10, 5, 10)","shape":"CREATE TABLE mc3p1 PARTITION OF mc3p FOR VALUES FROM (1, 1, 1) TO (10, 5, 10);"}
+{"sql":"create table mc3p2 partition of mc3p for values from (10, 5, 10) to (10, 10, 10)","shape":"CREATE TABLE mc3p2 PARTITION OF mc3p FOR VALUES FROM (10, 5, 10) TO (10, 10, 10);"}
+{"sql":"create table mc3p3 partition of mc3p for values from (10, 10, 10) to (10, 10, 20)","shape":"CREATE TABLE mc3p3 PARTITION OF mc3p FOR VALUES FROM (10, 10, 10) TO (10, 10, 20);"}
+{"sql":"create table mc3p4 partition of mc3p for values from (10, 10, 20) to (10, maxvalue, maxvalue)","shape":"CREATE TABLE mc3p4 PARTITION OF mc3p FOR VALUES FROM (10, 10, 20) TO (10, maxvalue, maxvalue);"}
+{"sql":"create table mc3p5 partition of mc3p for values from (11, 1, 1) to (20, 10, 10)","shape":"CREATE TABLE mc3p5 PARTITION OF mc3p FOR VALUES FROM (11, 1, 1) TO (20, 10, 10);"}
+{"sql":"create table mc3p6 partition of mc3p for values from (20, 10, 10) to (20, 20, 20)","shape":"CREATE TABLE mc3p6 PARTITION OF mc3p FOR VALUES FROM (20, 10, 10) TO (20, 20, 20);"}
+{"sql":"create table mc3p7 partition of mc3p for values from (20, 20, 20) to (maxvalue, maxvalue, maxvalue)","shape":"CREATE TABLE mc3p7 PARTITION OF mc3p FOR VALUES FROM (20, 20, 20) TO (maxvalue, maxvalue, maxvalue);"}
+{"sql":"explain (costs off) select * from mc3p where a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE a = 1;"}
+{"sql":"explain (costs off) select * from mc3p where a = 1 and abs(b) < 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE (a = 1) AND (abs(b) < 1);"}
+{"sql":"explain (costs off) select * from mc3p where a = 1 and abs(b) = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE (a = 1) AND (abs(b) = 1);"}
+{"sql":"explain (costs off) select * from mc3p where a = 1 and abs(b) = 1 and c < 8","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((a = 1) AND (abs(b) = 1)) AND (c < 8);"}
+{"sql":"explain (costs off) select * from mc3p where a = 10 and abs(b) between 5 and 35","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE (a = 10) AND (abs(b) BETWEEN 5 AND 35);"}
+{"sql":"explain (costs off) select * from mc3p where a > 10","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE a > 10;"}
+{"sql":"explain (costs off) select * from mc3p where a >= 10","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE a >= 10;"}
+{"sql":"explain (costs off) select * from mc3p where a < 10","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE a < 10;"}
+{"sql":"explain (costs off) select * from mc3p where a <= 10 and abs(b) < 10","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE (a <= 10) AND (abs(b) < 10);"}
+{"sql":"explain (costs off) select * from mc3p where a = 11 and abs(b) = 0","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE (a = 11) AND (abs(b) = 0);"}
+{"sql":"explain (costs off) select * from mc3p where a = 20 and abs(b) = 10 and c = 100","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((a = 20) AND (abs(b) = 10)) AND (c = 100);"}
+{"sql":"explain (costs off) select * from mc3p where a > 20","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE a > 20;"}
+{"sql":"explain (costs off) select * from mc3p where a >= 20","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE a >= 20;"}
+{"sql":"explain (costs off) select * from mc3p where (a = 1 and abs(b) = 1 and c = 1) or (a = 10 and abs(b) = 5 and c = 10) or (a > 11 and a < 20)","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((((a = 1) AND (abs(b) = 1)) AND (c = 1)) OR (((a = 10) AND (abs(b) = 5)) AND (c = 10))) OR ((a > 11) AND (a < 20));"}
+{"sql":"explain (costs off) select * from mc3p where (a = 1 and abs(b) = 1 and c = 1) or (a = 10 and abs(b) = 5 and c = 10) or (a > 11 and a < 20) or a < 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE (((((a = 1) AND (abs(b) = 1)) AND (c = 1)) OR (((a = 10) AND (abs(b) = 5)) AND (c = 10))) OR ((a > 11) AND (a < 20))) OR (a < 1);"}
+{"sql":"explain (costs off) select * from mc3p where (a = 1 and abs(b) = 1 and c = 1) or (a = 10 and abs(b) = 5 and c = 10) or (a > 11 and a < 20) or a < 1 or a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((((((a = 1) AND (abs(b) = 1)) AND (c = 1)) OR (((a = 10) AND (abs(b) = 5)) AND (c = 10))) OR ((a > 11) AND (a < 20))) OR (a < 1)) OR (a = 1);"}
+{"sql":"explain (costs off) select * from mc3p where a = 1 or abs(b) = 1 or c = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((a = 1) OR (abs(b) = 1)) OR (c = 1);"}
+{"sql":"explain (costs off) select * from mc3p where (a = 1 and abs(b) = 1) or (a = 10 and abs(b) = 10)","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((a = 1) AND (abs(b) = 1)) OR ((a = 10) AND (abs(b) = 10));"}
+{"sql":"explain (costs off) select * from mc3p where (a = 1 and abs(b) = 1) or (a = 10 and abs(b) = 9)","shape":"EXPLAIN (COSTS off) SELECT * FROM mc3p WHERE ((a = 1) AND (abs(b) = 1)) OR ((a = 10) AND (abs(b) = 9));"}
+{"sql":"create table mc2p (a int, b int) partition by range (a, b)","shape":"CREATE TABLE mc2p (a int, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table mc2p_default partition of mc2p default","shape":"CREATE TABLE mc2p_default PARTITION OF mc2p DEFAULT;"}
+{"sql":"create table mc2p0 partition of mc2p for values from (minvalue, minvalue) to (1, minvalue)","shape":"CREATE TABLE mc2p0 PARTITION OF mc2p FOR VALUES FROM (minvalue, minvalue) TO (1, minvalue);"}
+{"sql":"create table mc2p1 partition of mc2p for values from (1, minvalue) to (1, 1)","shape":"CREATE TABLE mc2p1 PARTITION OF mc2p FOR VALUES FROM (1, minvalue) TO (1, 1);"}
+{"sql":"create table mc2p2 partition of mc2p for values from (1, 1) to (2, minvalue)","shape":"CREATE TABLE mc2p2 PARTITION OF mc2p FOR VALUES FROM (1, 1) TO (2, minvalue);"}
+{"sql":"create table mc2p3 partition of mc2p for values from (2, minvalue) to (2, 1)","shape":"CREATE TABLE mc2p3 PARTITION OF mc2p FOR VALUES FROM (2, minvalue) TO (2, 1);"}
+{"sql":"create table mc2p4 partition of mc2p for values from (2, 1) to (2, maxvalue)","shape":"CREATE TABLE mc2p4 PARTITION OF mc2p FOR VALUES FROM (2, 1) TO (2, maxvalue);"}
+{"sql":"create table mc2p5 partition of mc2p for values from (2, maxvalue) to (maxvalue, maxvalue)","shape":"CREATE TABLE mc2p5 PARTITION OF mc2p FOR VALUES FROM (2, maxvalue) TO (maxvalue, maxvalue);"}
+{"sql":"explain (costs off) select * from mc2p where a < 2","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE a < 2;"}
+{"sql":"explain (costs off) select * from mc2p where a = 2 and b < 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE (a = 2) AND (b < 1);"}
+{"sql":"explain (costs off) select * from mc2p where a > 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE a > 1;"}
+{"sql":"explain (costs off) select * from mc2p where a = 1 and b > 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE (a = 1) AND (b > 1);"}
+{"sql":"explain (costs off) select * from mc2p where a = 1 and b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE (a = 1) AND (b IS NULL);"}
+{"sql":"explain (costs off) select * from mc2p where a is null and b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE (a IS NULL) AND (b IS NULL);"}
+{"sql":"explain (costs off) select * from mc2p where a is null and b = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE (a IS NULL) AND (b = 1);"}
+{"sql":"explain (costs off) select * from mc2p where a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE a IS NULL;"}
+{"sql":"explain (costs off) select * from mc2p where b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p WHERE b IS NULL;"}
+{"sql":"create table boolpart (a bool) partition by list (a)","shape":"CREATE TABLE boolpart (a bool) PARTITION BY LIST (a);"}
+{"sql":"create table boolpart_default partition of boolpart default","shape":"CREATE TABLE boolpart_default PARTITION OF boolpart DEFAULT;"}
+{"sql":"create table boolpart_t partition of boolpart for values in ('true')","shape":"CREATE TABLE boolpart_t PARTITION OF boolpart FOR VALUES IN ('true');"}
+{"sql":"create table boolpart_f partition of boolpart for values in ('false')","shape":"CREATE TABLE boolpart_f PARTITION OF boolpart FOR VALUES IN ('false');"}
+{"sql":"insert into boolpart values (true), (false), (null)","shape":"INSERT INTO boolpart VALUES (TRUE), (FALSE), (NULL);"}
+{"sql":"explain (costs off) select * from boolpart where a in (true, false)","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE a IN (TRUE, FALSE);"}
+{"sql":"explain (costs off) select * from boolpart where a = false","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE a = FALSE;"}
+{"sql":"explain (costs off) select * from boolpart where not a = false","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE NOT (a = FALSE);"}
+{"sql":"explain (costs off) select * from boolpart where a is true or a is not true","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE (a IS TRUE) OR (a IS NOT TRUE);"}
+{"sql":"explain (costs off) select * from boolpart where a is not true","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE a IS NOT TRUE;"}
+{"sql":"explain (costs off) select * from boolpart where a is not true and a is not false","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE (a IS NOT TRUE) AND (a IS NOT FALSE);"}
+{"sql":"explain (costs off) select * from boolpart where a is unknown","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE a IS UNKNOWN;"}
+{"sql":"explain (costs off) select * from boolpart where a is not unknown","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE a IS NOT UNKNOWN;"}
+{"sql":"select * from boolpart where a in (true, false)","shape":"SELECT * FROM boolpart WHERE a IN (TRUE, FALSE);"}
+{"sql":"select * from boolpart where a = false","shape":"SELECT * FROM boolpart WHERE a = FALSE;"}
+{"sql":"select * from boolpart where not a = false","shape":"SELECT * FROM boolpart WHERE NOT (a = FALSE);"}
+{"sql":"select * from boolpart where a is true or a is not true","shape":"SELECT * FROM boolpart WHERE (a IS TRUE) OR (a IS NOT TRUE);"}
+{"sql":"select * from boolpart where a is not true","shape":"SELECT * FROM boolpart WHERE a IS NOT TRUE;"}
+{"sql":"select * from boolpart where a is not true and a is not false","shape":"SELECT * FROM boolpart WHERE (a IS NOT TRUE) AND (a IS NOT FALSE);"}
+{"sql":"select * from boolpart where a is unknown","shape":"SELECT * FROM boolpart WHERE a IS UNKNOWN;"}
+{"sql":"select * from boolpart where a is not unknown","shape":"SELECT * FROM boolpart WHERE a IS NOT UNKNOWN;"}
+{"sql":"delete from boolpart where a is null","shape":"DELETE FROM boolpart WHERE a IS NULL;"}
+{"sql":"create table boolpart_null partition of boolpart for values in (null)","shape":"CREATE TABLE boolpart_null PARTITION OF boolpart FOR VALUES IN (NULL);"}
+{"sql":"insert into boolpart values(null)","shape":"INSERT INTO boolpart VALUES (NULL);"}
+{"sql":"explain (costs off) select * from boolpart where a is not false","shape":"EXPLAIN (COSTS off) SELECT * FROM boolpart WHERE a IS NOT FALSE;"}
+{"sql":"select * from boolpart where a is not false","shape":"SELECT * FROM boolpart WHERE a IS NOT FALSE;"}
+{"sql":"create table iboolpart (a bool) partition by list ((not a))","shape":"CREATE TABLE iboolpart (a bool) PARTITION BY LIST ((NOT a));"}
+{"sql":"create table iboolpart_default partition of iboolpart default","shape":"CREATE TABLE iboolpart_default PARTITION OF iboolpart DEFAULT;"}
+{"sql":"create table iboolpart_f partition of iboolpart for values in ('true')","shape":"CREATE TABLE iboolpart_f PARTITION OF iboolpart FOR VALUES IN ('true');"}
+{"sql":"create table iboolpart_t partition of iboolpart for values in ('false')","shape":"CREATE TABLE iboolpart_t PARTITION OF iboolpart FOR VALUES IN ('false');"}
+{"sql":"insert into iboolpart values (true), (false), (null)","shape":"INSERT INTO iboolpart VALUES (TRUE), (FALSE), (NULL);"}
+{"sql":"explain (costs off) select * from iboolpart where a in (true, false)","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE a IN (TRUE, FALSE);"}
+{"sql":"explain (costs off) select * from iboolpart where a = false","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE a = FALSE;"}
+{"sql":"explain (costs off) select * from iboolpart where not a = false","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE NOT (a = FALSE);"}
+{"sql":"explain (costs off) select * from iboolpart where a is true or a is not true","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE (a IS TRUE) OR (a IS NOT TRUE);"}
+{"sql":"explain (costs off) select * from iboolpart where a is not true","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE a IS NOT TRUE;"}
+{"sql":"explain (costs off) select * from iboolpart where a is not true and a is not false","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE (a IS NOT TRUE) AND (a IS NOT FALSE);"}
+{"sql":"explain (costs off) select * from iboolpart where a is unknown","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE a IS UNKNOWN;"}
+{"sql":"explain (costs off) select * from iboolpart where a is not unknown","shape":"EXPLAIN (COSTS off) SELECT * FROM iboolpart WHERE a IS NOT UNKNOWN;"}
+{"sql":"select * from iboolpart where a in (true, false)","shape":"SELECT * FROM iboolpart WHERE a IN (TRUE, FALSE);"}
+{"sql":"select * from iboolpart where a = false","shape":"SELECT * FROM iboolpart WHERE a = FALSE;"}
+{"sql":"select * from iboolpart where not a = false","shape":"SELECT * FROM iboolpart WHERE NOT (a = FALSE);"}
+{"sql":"select * from iboolpart where a is true or a is not true","shape":"SELECT * FROM iboolpart WHERE (a IS TRUE) OR (a IS NOT TRUE);"}
+{"sql":"select * from iboolpart where a is not true","shape":"SELECT * FROM iboolpart WHERE a IS NOT TRUE;"}
+{"sql":"select * from iboolpart where a is not true and a is not false","shape":"SELECT * FROM iboolpart WHERE (a IS NOT TRUE) AND (a IS NOT FALSE);"}
+{"sql":"select * from iboolpart where a is unknown","shape":"SELECT * FROM iboolpart WHERE a IS UNKNOWN;"}
+{"sql":"select * from iboolpart where a is not unknown","shape":"SELECT * FROM iboolpart WHERE a IS NOT UNKNOWN;"}
+{"sql":"delete from iboolpart where a is null","shape":"DELETE FROM iboolpart WHERE a IS NULL;"}
+{"sql":"create table iboolpart_null partition of iboolpart for values in (null)","shape":"CREATE TABLE iboolpart_null PARTITION OF iboolpart FOR VALUES IN (NULL);"}
+{"sql":"insert into iboolpart values(null)","shape":"INSERT INTO iboolpart VALUES (NULL);"}
+{"sql":"select * from iboolpart where a is not false","shape":"SELECT * FROM iboolpart WHERE a IS NOT FALSE;"}
+{"sql":"create table boolrangep (a bool, b bool, c int) partition by range (a,b,c)","shape":"CREATE TABLE boolrangep (a bool, b bool, c int) PARTITION BY RANGE (a, b, c);"}
+{"sql":"create table boolrangep_tf partition of boolrangep for values from ('true', 'false', 0) to ('true', 'false', 100)","shape":"CREATE TABLE boolrangep_tf PARTITION OF boolrangep FOR VALUES FROM ('true', 'false', 0) TO ('true', 'false', 100);"}
+{"sql":"create table boolrangep_ft partition of boolrangep for values from ('false', 'true', 0) to ('false', 'true', 100)","shape":"CREATE TABLE boolrangep_ft PARTITION OF boolrangep FOR VALUES FROM ('false', 'true', 0) TO ('false', 'true', 100);"}
+{"sql":"create table boolrangep_ff1 partition of boolrangep for values from ('false', 'false', 0) to ('false', 'false', 50)","shape":"CREATE TABLE boolrangep_ff1 PARTITION OF boolrangep FOR VALUES FROM ('false', 'false', 0) TO ('false', 'false', 50);"}
+{"sql":"create table boolrangep_ff2 partition of boolrangep for values from ('false', 'false', 50) to ('false', 'false', 100)","shape":"CREATE TABLE boolrangep_ff2 PARTITION OF boolrangep FOR VALUES FROM ('false', 'false', 50) TO ('false', 'false', 100);"}
+{"sql":"create table boolrangep_null partition of boolrangep default","shape":"CREATE TABLE boolrangep_null PARTITION OF boolrangep DEFAULT;"}
+{"sql":"explain (costs off)  select * from boolrangep where not a and not b and c = 25","shape":"EXPLAIN (COSTS off) SELECT * FROM boolrangep WHERE ((NOT a) AND (NOT b)) AND (c = 25);"}
+{"sql":"explain (costs off)  select * from boolrangep where a is not true and not b and c = 25","shape":"EXPLAIN (COSTS off) SELECT * FROM boolrangep WHERE ((a IS NOT TRUE) AND (NOT b)) AND (c = 25);"}
+{"sql":"explain (costs off)  select * from boolrangep where a is not false and not b and c = 25","shape":"EXPLAIN (COSTS off) SELECT * FROM boolrangep WHERE ((a IS NOT FALSE) AND (NOT b)) AND (c = 25);"}
+{"sql":"create table coercepart (a varchar) partition by list (a)","shape":"CREATE TABLE coercepart (a varchar) PARTITION BY LIST (a);"}
+{"sql":"create table coercepart_ab partition of coercepart for values in ('ab')","shape":"CREATE TABLE coercepart_ab PARTITION OF coercepart FOR VALUES IN ('ab');"}
+{"sql":"create table coercepart_bc partition of coercepart for values in ('bc')","shape":"CREATE TABLE coercepart_bc PARTITION OF coercepart FOR VALUES IN ('bc');"}
+{"sql":"create table coercepart_cd partition of coercepart for values in ('cd')","shape":"CREATE TABLE coercepart_cd PARTITION OF coercepart FOR VALUES IN ('cd');"}
+{"sql":"explain (costs off) select * from coercepart where a in ('ab', to_char(125, '999'))","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a IN ('ab', to_char(125, '999'));"}
+{"sql":"explain (costs off) select * from coercepart where a ~ any ('{ab}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a ~ ANY ('{ab}');"}
+{"sql":"explain (costs off) select * from coercepart where a !~ all ('{ab}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a !~ ALL ('{ab}');"}
+{"sql":"explain (costs off) select * from coercepart where a ~ any ('{ab,bc}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a ~ ANY ('{ab,bc}');"}
+{"sql":"explain (costs off) select * from coercepart where a !~ all ('{ab,bc}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a !~ ALL ('{ab,bc}');"}
+{"sql":"explain (costs off) select * from coercepart where a = any ('{ab,bc}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ANY ('{ab,bc}');"}
+{"sql":"explain (costs off) select * from coercepart where a = any ('{ab,null}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ANY ('{ab,null}');"}
+{"sql":"explain (costs off) select * from coercepart where a = any (null::text[])","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ANY (NULL::text[]);"}
+{"sql":"explain (costs off) select * from coercepart where a = all ('{ab}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ALL ('{ab}');"}
+{"sql":"explain (costs off) select * from coercepart where a = all ('{ab,bc}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ALL ('{ab,bc}');"}
+{"sql":"explain (costs off) select * from coercepart where a = all ('{ab,null}')","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ALL ('{ab,null}');"}
+{"sql":"explain (costs off) select * from coercepart where a = all (null::text[])","shape":"EXPLAIN (COSTS off) SELECT * FROM coercepart WHERE a = ALL (NULL::text[]);"}
+{"sql":"drop table coercepart","shape":"DROP TABLE coercepart;"}
+{"sql":"CREATE TABLE part (a INT, b INT) PARTITION BY LIST (a)","shape":"CREATE TABLE part (a INT, b INT) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE part_p1 PARTITION OF part FOR VALUES IN (-2,-1,0,1,2)","shape":"CREATE TABLE part_p1 PARTITION OF part FOR VALUES IN (-2, -1, 0, 1, 2);"}
+{"sql":"CREATE TABLE part_p2 PARTITION OF part DEFAULT PARTITION BY RANGE(a)","shape":"CREATE TABLE part_p2 PARTITION OF part DEFAULT PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE part_p2_p1 PARTITION OF part_p2 DEFAULT","shape":"CREATE TABLE part_p2_p1 PARTITION OF part_p2 DEFAULT;"}
+{"sql":"CREATE TABLE part_rev (b INT, c INT, a INT)","shape":"CREATE TABLE part_rev (b INT, c INT, a INT);"}
+{"sql":"ALTER TABLE part ATTACH PARTITION part_rev FOR VALUES IN (3)"}
+{"sql":"ALTER TABLE part_rev DROP COLUMN c","shape":"ALTER TABLE part_rev DROP COLUMN c;"}
+{"sql":"INSERT INTO part VALUES (-1,-1), (1,1), (2,NULL), (NULL,-2),(NULL,NULL)","shape":"INSERT INTO part VALUES (-1, -1), (1, 1), (2, NULL), (NULL, -2), (NULL, NULL);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT tableoid::regclass as part, a, b FROM part WHERE a IS NULL ORDER BY 1, 2, 3","shape":"EXPLAIN (COSTS OFF) SELECT tableoid::regclass AS part, a, b FROM part WHERE a IS NULL ORDER BY 1, 2, 3;"}
+{"sql":"EXPLAIN (VERBOSE, COSTS OFF) SELECT * FROM part p(x) ORDER BY x","shape":"EXPLAIN (VERBOSE, COSTS OFF) SELECT * FROM part AS p(x) ORDER BY x;"}
+{"sql":"explain (costs off) select * from mc2p t1, lateral (select count(*) from mc3p t2 where t2.a = t1.b and abs(t2.b) = 1 and t2.c = 1) s where t1.a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p AS t1, LATERAL (SELECT count(*) FROM mc3p AS t2 WHERE ((t2.a = t1.b) AND (abs(t2.b) = 1)) AND (t2.c = 1)) AS s WHERE t1.a = 1;"}
+{"sql":"explain (costs off) select * from mc2p t1, lateral (select count(*) from mc3p t2 where t2.c = t1.b and abs(t2.b) = 1 and t2.a = 1) s where t1.a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p AS t1, LATERAL (SELECT count(*) FROM mc3p AS t2 WHERE ((t2.c = t1.b) AND (abs(t2.b) = 1)) AND (t2.a = 1)) AS s WHERE t1.a = 1;"}
+{"sql":"explain (costs off) select * from mc2p t1, lateral (select count(*) from mc3p t2 where t2.a = 1 and abs(t2.b) = 1 and t2.c = 1) s where t1.a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mc2p AS t1, LATERAL (SELECT count(*) FROM mc3p AS t2 WHERE ((t2.a = 1) AND (abs(t2.b) = 1)) AND (t2.c = 1)) AS s WHERE t1.a = 1;"}
+{"sql":"create table rp (a int) partition by range (a)","shape":"CREATE TABLE rp (a int) PARTITION BY RANGE (a);"}
+{"sql":"create table rp0 partition of rp for values from (minvalue) to (1)","shape":"CREATE TABLE rp0 PARTITION OF rp FOR VALUES FROM (minvalue) TO (1);"}
+{"sql":"create table rp1 partition of rp for values from (1) to (2)","shape":"CREATE TABLE rp1 PARTITION OF rp FOR VALUES FROM (1) TO (2);"}
+{"sql":"create table rp2 partition of rp for values from (2) to (maxvalue)","shape":"CREATE TABLE rp2 PARTITION OF rp FOR VALUES FROM (2) TO (maxvalue);"}
+{"sql":"explain (costs off) select * from rp where a <> 1","shape":"EXPLAIN (COSTS off) SELECT * FROM rp WHERE a <> 1;"}
+{"sql":"explain (costs off) select * from rp where a <> 1 and a <> 2","shape":"EXPLAIN (COSTS off) SELECT * FROM rp WHERE (a <> 1) AND (a <> 2);"}
+{"sql":"explain (costs off) select * from lp where a <> 'a'","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE a <> 'a';"}
+{"sql":"explain (costs off) select * from lp where a <> 'a' and a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE (a <> 'a') AND (a IS NULL);"}
+{"sql":"explain (costs off) select * from lp where (a <> 'a' and a <> 'd') or a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM lp WHERE ((a <> 'a') AND (a <> 'd')) OR (a IS NULL);"}
+{"sql":"explain (costs off) select * from rlp where a = 15 and b <> 'ab' and b <> 'cd' and b <> 'xy' and b is not null","shape":"EXPLAIN (COSTS off) SELECT * FROM rlp WHERE ((((a = 15) AND (b <> 'ab')) AND (b <> 'cd')) AND (b <> 'xy')) AND (b IS NOT NULL);"}
+{"sql":"create table coll_pruning_multi (a text) partition by range (substr(a, 1) collate \"POSIX\", substr(a, 1) collate \"C\")","shape":"CREATE TABLE coll_pruning_multi (a text) PARTITION BY RANGE (substr(a, 1) COLLATE \"POSIX\", substr(a, 1) COLLATE \"C\");"}
+{"sql":"create table coll_pruning_multi1 partition of coll_pruning_multi for values from ('a', 'a') to ('a', 'e')","shape":"CREATE TABLE coll_pruning_multi1 PARTITION OF coll_pruning_multi FOR VALUES FROM ('a', 'a') TO ('a', 'e');"}
+{"sql":"create table coll_pruning_multi2 partition of coll_pruning_multi for values from ('a', 'e') to ('a', 'z')","shape":"CREATE TABLE coll_pruning_multi2 PARTITION OF coll_pruning_multi FOR VALUES FROM ('a', 'e') TO ('a', 'z');"}
+{"sql":"create table coll_pruning_multi3 partition of coll_pruning_multi for values from ('b', 'a') to ('b', 'e')","shape":"CREATE TABLE coll_pruning_multi3 PARTITION OF coll_pruning_multi FOR VALUES FROM ('b', 'a') TO ('b', 'e');"}
+{"sql":"explain (costs off) select * from coll_pruning_multi where substr(a, 1) = 'e' collate \"C\"","shape":"EXPLAIN (COSTS off) SELECT * FROM coll_pruning_multi WHERE substr(a, 1) = ('e' COLLATE \"C\");"}
+{"sql":"explain (costs off) select * from coll_pruning_multi where substr(a, 1) = 'a' collate \"POSIX\"","shape":"EXPLAIN (COSTS off) SELECT * FROM coll_pruning_multi WHERE substr(a, 1) = ('a' COLLATE \"POSIX\");"}
+{"sql":"explain (costs off) select * from coll_pruning_multi where substr(a, 1) = 'e' collate \"C\" and substr(a, 1) = 'a' collate \"POSIX\"","shape":"EXPLAIN (COSTS off) SELECT * FROM coll_pruning_multi WHERE (substr(a, 1) = ('e' COLLATE \"C\")) AND (substr(a, 1) = ('a' COLLATE \"POSIX\"));"}
+{"sql":"create table like_op_noprune (a text) partition by list (a)","shape":"CREATE TABLE like_op_noprune (a text) PARTITION BY LIST (a);"}
+{"sql":"create table like_op_noprune1 partition of like_op_noprune for values in ('ABC')","shape":"CREATE TABLE like_op_noprune1 PARTITION OF like_op_noprune FOR VALUES IN ('ABC');"}
+{"sql":"create table like_op_noprune2 partition of like_op_noprune for values in ('BCD')","shape":"CREATE TABLE like_op_noprune2 PARTITION OF like_op_noprune FOR VALUES IN ('BCD');"}
+{"sql":"explain (costs off) select * from like_op_noprune where a like '%BC'","shape":"EXPLAIN (COSTS off) SELECT * FROM like_op_noprune WHERE a LIKE '%BC';"}
+{"sql":"create table lparted_by_int2 (a smallint) partition by list (a)","shape":"CREATE TABLE lparted_by_int2 (a smallint) PARTITION BY LIST (a);"}
+{"sql":"create table lparted_by_int2_1 partition of lparted_by_int2 for values in (1)","shape":"CREATE TABLE lparted_by_int2_1 PARTITION OF lparted_by_int2 FOR VALUES IN (1);"}
+{"sql":"create table lparted_by_int2_16384 partition of lparted_by_int2 for values in (16384)","shape":"CREATE TABLE lparted_by_int2_16384 PARTITION OF lparted_by_int2 FOR VALUES IN (16384);"}
+{"sql":"explain (costs off) select * from lparted_by_int2 where a = 100_000_000_000_000","shape":"EXPLAIN (COSTS off) SELECT * FROM lparted_by_int2 WHERE a = 100_000_000_000_000;"}
+{"sql":"create table rparted_by_int2 (a smallint) partition by range (a)","shape":"CREATE TABLE rparted_by_int2 (a smallint) PARTITION BY RANGE (a);"}
+{"sql":"create table rparted_by_int2_1 partition of rparted_by_int2 for values from (1) to (10)","shape":"CREATE TABLE rparted_by_int2_1 PARTITION OF rparted_by_int2 FOR VALUES FROM (1) TO (10);"}
+{"sql":"create table rparted_by_int2_16384 partition of rparted_by_int2 for values from (10) to (16384)","shape":"CREATE TABLE rparted_by_int2_16384 PARTITION OF rparted_by_int2 FOR VALUES FROM (10) TO (16384);"}
+{"sql":"explain (costs off) select * from rparted_by_int2 where a > 100_000_000_000_000","shape":"EXPLAIN (COSTS off) SELECT * FROM rparted_by_int2 WHERE a > 100_000_000_000_000;"}
+{"sql":"create table rparted_by_int2_maxvalue partition of rparted_by_int2 for values from (16384) to (maxvalue)","shape":"CREATE TABLE rparted_by_int2_maxvalue PARTITION OF rparted_by_int2 FOR VALUES FROM (16384) TO (maxvalue);"}
+{"sql":"drop table lp, coll_pruning, rlp, mc3p, mc2p, boolpart, iboolpart, boolrangep, rp, coll_pruning_multi, like_op_noprune, lparted_by_int2, rparted_by_int2","shape":"DROP TABLE lp, coll_pruning, rlp, mc3p, mc2p, boolpart, iboolpart, boolrangep, rp, coll_pruning_multi, like_op_noprune, lparted_by_int2, rparted_by_int2;"}
+{"sql":"create table asptab (id int primary key) partition by range (id)","shape":"CREATE TABLE asptab (id int PRIMARY KEY) PARTITION BY RANGE (id);"}
+{"sql":"create table asptab0 partition of asptab for values from (0) to (1)","shape":"CREATE TABLE asptab0 PARTITION OF asptab FOR VALUES FROM (0) TO (1);"}
+{"sql":"create table asptab1 partition of asptab for values from (1) to (2)","shape":"CREATE TABLE asptab1 PARTITION OF asptab FOR VALUES FROM (1) TO (2);"}
+{"sql":"explain (costs off)\nselect * from\n  (select exists (select 1 from int4_tbl tinner where f1 = touter.f1) as b\n   from int4_tbl touter) ss,\n  asptab\nwhere asptab.id > ss.b::int","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT EXISTS (SELECT 1 FROM int4_tbl AS tinner WHERE f1 = touter.f1) AS b FROM int4_tbl AS touter) AS ss, asptab WHERE asptab.id > ss.b::int;"}
+{"sql":"drop table asptab","shape":"DROP TABLE asptab;"}
+{"sql":"create table hp (a int, b text, c int)\n  partition by hash (a part_test_int4_ops, b part_test_text_ops)","shape":"CREATE TABLE hp (a int, b text, c int) PARTITION BY HASH (a part_test_int4_ops, b part_test_text_ops);"}
+{"sql":"create table hp0 partition of hp for values with (modulus 4, remainder 0)","shape":"CREATE TABLE hp0 PARTITION OF hp FOR VALUES WITH (MODULUS 4, REMAINDER 0);"}
+{"sql":"create table hp3 partition of hp for values with (modulus 4, remainder 3)","shape":"CREATE TABLE hp3 PARTITION OF hp FOR VALUES WITH (MODULUS 4, REMAINDER 3);"}
+{"sql":"create table hp1 partition of hp for values with (modulus 4, remainder 1)","shape":"CREATE TABLE hp1 PARTITION OF hp FOR VALUES WITH (MODULUS 4, REMAINDER 1);"}
+{"sql":"create table hp2 partition of hp for values with (modulus 4, remainder 2)","shape":"CREATE TABLE hp2 PARTITION OF hp FOR VALUES WITH (MODULUS 4, REMAINDER 2);"}
+{"sql":"insert into hp values (null, null, 0)","shape":"INSERT INTO hp VALUES (NULL, NULL, 0);"}
+{"sql":"insert into hp values (1, null, 1)","shape":"INSERT INTO hp VALUES (1, NULL, 1);"}
+{"sql":"insert into hp values (1, 'xxx', 2)","shape":"INSERT INTO hp VALUES (1, 'xxx', 2);"}
+{"sql":"insert into hp values (null, 'xxx', 3)","shape":"INSERT INTO hp VALUES (NULL, 'xxx', 3);"}
+{"sql":"insert into hp values (2, 'xxx', 4)","shape":"INSERT INTO hp VALUES (2, 'xxx', 4);"}
+{"sql":"insert into hp values (1, 'abcde', 5)","shape":"INSERT INTO hp VALUES (1, 'abcde', 5);"}
+{"sql":"select tableoid::regclass, * from hp order by c","shape":"SELECT tableoid::regclass, * FROM hp ORDER BY c;"}
+{"sql":"explain (costs off) select * from hp where a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE a = 1;"}
+{"sql":"explain (costs off) select * from hp where b = 'xxx'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE b = 'xxx';"}
+{"sql":"explain (costs off) select * from hp where a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE a IS NULL;"}
+{"sql":"explain (costs off) select * from hp where b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE b IS NULL;"}
+{"sql":"explain (costs off) select * from hp where a < 1 and b = 'xxx'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a < 1) AND (b = 'xxx');"}
+{"sql":"explain (costs off) select * from hp where a <> 1 and b = 'yyy'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a <> 1) AND (b = 'yyy');"}
+{"sql":"explain (costs off) select * from hp where a <> 1 and b <> 'xxx'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a <> 1) AND (b <> 'xxx');"}
+{"sql":"explain (costs off) select * from hp where a is null and b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a IS NULL) AND (b IS NULL);"}
+{"sql":"explain (costs off) select * from hp where a = 1 and b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a = 1) AND (b IS NULL);"}
+{"sql":"explain (costs off) select * from hp where a = 1 and b = 'xxx'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a = 1) AND (b = 'xxx');"}
+{"sql":"explain (costs off) select * from hp where a is null and b = 'xxx'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a IS NULL) AND (b = 'xxx');"}
+{"sql":"explain (costs off) select * from hp where a = 2 and b = 'xxx'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a = 2) AND (b = 'xxx');"}
+{"sql":"explain (costs off) select * from hp where a = 1 and b = 'abcde'","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (a = 1) AND (b = 'abcde');"}
+{"sql":"explain (costs off) select * from hp where (a = 1 and b = 'abcde') or (a = 2 and b = 'xxx') or (a is null and b is null)","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE (((a = 1) AND (b = 'abcde')) OR ((a = 2) AND (b = 'xxx'))) OR ((a IS NULL) AND (b IS NULL));"}
+{"sql":"drop table hp1","shape":"DROP TABLE hp1;"}
+{"sql":"drop table hp3","shape":"DROP TABLE hp3;"}
+{"sql":"explain (costs off) select * from hp where a = 1 and b = 'abcde' and\n  (c = 2 or c = 3)","shape":"EXPLAIN (COSTS off) SELECT * FROM hp WHERE ((a = 1) AND (b = 'abcde')) AND ((c = 2) OR (c = 3));"}
+{"sql":"drop table hp2","shape":"DROP TABLE hp2;"}
+{"sql":"create table ab (a int not null, b int not null) partition by list (a)","shape":"CREATE TABLE ab (a int NOT NULL, b int NOT NULL) PARTITION BY LIST (a);"}
+{"sql":"create table ab_a2 partition of ab for values in(2) partition by list (b)","shape":"CREATE TABLE ab_a2 PARTITION OF ab FOR VALUES IN (2) PARTITION BY LIST (b);"}
+{"sql":"create table ab_a2_b1 partition of ab_a2 for values in (1)","shape":"CREATE TABLE ab_a2_b1 PARTITION OF ab_a2 FOR VALUES IN (1);"}
+{"sql":"create table ab_a2_b2 partition of ab_a2 for values in (2)","shape":"CREATE TABLE ab_a2_b2 PARTITION OF ab_a2 FOR VALUES IN (2);"}
+{"sql":"create table ab_a2_b3 partition of ab_a2 for values in (3)","shape":"CREATE TABLE ab_a2_b3 PARTITION OF ab_a2 FOR VALUES IN (3);"}
+{"sql":"create table ab_a1 partition of ab for values in(1) partition by list (b)","shape":"CREATE TABLE ab_a1 PARTITION OF ab FOR VALUES IN (1) PARTITION BY LIST (b);"}
+{"sql":"create table ab_a1_b1 partition of ab_a1 for values in (1)","shape":"CREATE TABLE ab_a1_b1 PARTITION OF ab_a1 FOR VALUES IN (1);"}
+{"sql":"create table ab_a1_b2 partition of ab_a1 for values in (2)","shape":"CREATE TABLE ab_a1_b2 PARTITION OF ab_a1 FOR VALUES IN (2);"}
+{"sql":"create table ab_a1_b3 partition of ab_a1 for values in (3)","shape":"CREATE TABLE ab_a1_b3 PARTITION OF ab_a1 FOR VALUES IN (3);"}
+{"sql":"create table ab_a3 partition of ab for values in(3) partition by list (b)","shape":"CREATE TABLE ab_a3 PARTITION OF ab FOR VALUES IN (3) PARTITION BY LIST (b);"}
+{"sql":"create table ab_a3_b1 partition of ab_a3 for values in (1)","shape":"CREATE TABLE ab_a3_b1 PARTITION OF ab_a3 FOR VALUES IN (1);"}
+{"sql":"create table ab_a3_b2 partition of ab_a3 for values in (2)","shape":"CREATE TABLE ab_a3_b2 PARTITION OF ab_a3 FOR VALUES IN (2);"}
+{"sql":"create table ab_a3_b3 partition of ab_a3 for values in (3)","shape":"CREATE TABLE ab_a3_b3 PARTITION OF ab_a3 FOR VALUES IN (3);"}
+{"sql":"set enable_indexonlyscan = off","shape":"SET enable_indexonlyscan TO off;"}
+{"sql":"prepare ab_q1 (int, int, int) as\nselect * from ab where a between $1 and $2 and b <= $3","shape":"PREPARE ab_q1 (int, int, int) AS SELECT * FROM ab WHERE (a BETWEEN $1 AND $2) AND (b <= $3);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q1 (2, 2, 3)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q1(2, 2, 3);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q1 (1, 2, 3)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q1(1, 2, 3);"}
+{"sql":"deallocate ab_q1","shape":"DEALLOCATE ab_q1;"}
+{"sql":"prepare ab_q1 (int, int) as\nselect a from ab where a between $1 and $2 and b < 3","shape":"PREPARE ab_q1 (int, int) AS SELECT a FROM ab WHERE (a BETWEEN $1 AND $2) AND (b < 3);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q1 (2, 2)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q1(2, 2);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q1 (2, 4)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q1(2, 4);"}
+{"sql":"prepare ab_q2 (int, int) as\nselect a from ab where a between $1 and $2 and b < (select 3)","shape":"PREPARE ab_q2 (int, int) AS SELECT a FROM ab WHERE (a BETWEEN $1 AND $2) AND (b < (SELECT 3));"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q2 (2, 2)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q2(2, 2);"}
+{"sql":"prepare ab_q3 (int, int) as\nselect a from ab where b between $1 and $2 and a < (select 3)","shape":"PREPARE ab_q3 (int, int) AS SELECT a FROM ab WHERE (b BETWEEN $1 AND $2) AND (a < (SELECT 3));"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q3 (2, 2)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q3(2, 2);"}
+{"sql":"prepare hp_q1 (text) as\nselect * from hp where a is null and b = $1","shape":"PREPARE hp_q1 (text) AS SELECT * FROM hp WHERE (a IS NULL) AND (b = $1);"}
+{"sql":"explain (costs off) execute hp_q1('xxx')","shape":"EXPLAIN (COSTS off) EXECUTE hp_q1('xxx');"}
+{"sql":"deallocate hp_q1","shape":"DEALLOCATE hp_q1;"}
+{"sql":"drop table hp","shape":"DROP TABLE hp;"}
+{"sql":"create table list_part (a int) partition by list (a)","shape":"CREATE TABLE list_part (a int) PARTITION BY LIST (a);"}
+{"sql":"create table list_part1 partition of list_part for values in (1)","shape":"CREATE TABLE list_part1 PARTITION OF list_part FOR VALUES IN (1);"}
+{"sql":"create table list_part2 partition of list_part for values in (2)","shape":"CREATE TABLE list_part2 PARTITION OF list_part FOR VALUES IN (2);"}
+{"sql":"create table list_part3 partition of list_part for values in (3)","shape":"CREATE TABLE list_part3 PARTITION OF list_part FOR VALUES IN (3);"}
+{"sql":"create table list_part4 partition of list_part for values in (4)","shape":"CREATE TABLE list_part4 PARTITION OF list_part FOR VALUES IN (4);"}
+{"sql":"insert into list_part select generate_series(1,4)","shape":"INSERT INTO list_part SELECT generate_series(1, 4);"}
+{"sql":"declare cur SCROLL CURSOR for select 1 from list_part where a > (select 1) and a < (select 4)","shape":"declare cur SCROLL CURSOR for select 1 from list_part where a > (select 1) and a < (select 4);"}
+{"sql":"move 3 from cur","shape":"move 3 from cur;"}
+{"sql":"fetch backward all from cur","shape":"fetch backward all from cur;"}
+{"sql":"create function list_part_fn(int) returns int as $$ begin return $1; end;$$ language plpgsql stable","shape":"CREATE FUNCTION list_part_fn(int) RETURNS int AS ' begin return $1; end;' LANGUAGE plpgsql STABLE;"}
+{"sql":"explain (analyze, costs off, summary off, timing off) select * from list_part where a = list_part_fn(1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM list_part WHERE a = list_part_fn(1);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) select * from list_part where a = list_part_fn(a)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM list_part WHERE a = list_part_fn(a);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) select * from list_part where a = list_part_fn(1) + a","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM list_part WHERE a = (list_part_fn(1) + a);"}
+{"sql":"drop table list_part","shape":"DROP TABLE list_part;"}
+{"sql":"create function explain_parallel_append(text) returns setof text\nlanguage plpgsql as\n$$\ndeclare\n    ln text;\nbegin\n    for ln in\n        execute format('explain (analyze, costs off, summary off, timing off) %s',\n            $1)\n    loop\n        ln := regexp_replace(ln, 'Workers Launched: \\d+', 'Workers Launched: N');\n        ln := regexp_replace(ln, 'actual rows=\\d+ loops=\\d+', 'actual rows=N loops=N');\n        ln := regexp_replace(ln, 'Rows Removed by Filter: \\d+', 'Rows Removed by Filter: N');\n        return next ln;\n    end loop;\nend;\n$$","shape":"CREATE FUNCTION explain_parallel_append(text) RETURNS SETOF text LANGUAGE plpgsql AS '\ndeclare\n    ln text;\nbegin\n    for ln in\n        execute format(''explain (analyze, costs off, summary off, timing off) %s'',\n            $1)\n    loop\n        ln := regexp_replace(ln, ''Workers Launched: \\d+'', ''Workers Launched: N'');\n        ln := regexp_replace(ln, ''actual rows=\\d+ loops=\\d+'', ''actual rows=N loops=N'');\n        ln := regexp_replace(ln, ''Rows Removed by Filter: \\d+'', ''Rows Removed by Filter: N'');\n        return next ln;\n    end loop;\nend;\n';"}
+{"sql":"prepare ab_q4 (int, int) as\nselect avg(a) from ab where a between $1 and $2 and b < 4","shape":"PREPARE ab_q4 (int, int) AS SELECT avg(a) FROM ab WHERE (a BETWEEN $1 AND $2) AND (b < 4);"}
+{"sql":"select explain_parallel_append('execute ab_q4 (2, 2)')","shape":"SELECT explain_parallel_append('execute ab_q4 (2, 2)');"}
+{"sql":"prepare ab_q5 (int, int, int) as\nselect avg(a) from ab where a in($1,$2,$3) and b < 4","shape":"PREPARE ab_q5 (int, int, int) AS SELECT avg(a) FROM ab WHERE (a IN ($1, $2, $3)) AND (b < 4);"}
+{"sql":"select explain_parallel_append('execute ab_q5 (1, 1, 1)')","shape":"SELECT explain_parallel_append('execute ab_q5 (1, 1, 1)');"}
+{"sql":"select explain_parallel_append('execute ab_q5 (2, 3, 3)')","shape":"SELECT explain_parallel_append('execute ab_q5 (2, 3, 3)');"}
+{"sql":"select explain_parallel_append('execute ab_q5 (33, 44, 55)')","shape":"SELECT explain_parallel_append('execute ab_q5 (33, 44, 55)');"}
+{"sql":"select explain_parallel_append('select count(*) from ab where (a = (select 1) or a = (select 3)) and b = 2')","shape":"SELECT explain_parallel_append('select count(*) from ab where (a = (select 1) or a = (select 3)) and b = 2');"}
+{"sql":"create table lprt_a (a int not null)","shape":"CREATE TABLE lprt_a (a int NOT NULL);"}
+{"sql":"insert into lprt_a select 0 from generate_series(1,100)","shape":"INSERT INTO lprt_a SELECT 0 FROM generate_series(1, 100);"}
+{"sql":"insert into lprt_a values(1),(1)","shape":"INSERT INTO lprt_a VALUES (1), (1);"}
+{"sql":"analyze lprt_a","shape":"ANALYZE lprt_a;"}
+{"sql":"create index ab_a2_b1_a_idx on ab_a2_b1 (a)","shape":"CREATE INDEX ab_a2_b1_a_idx ON ab_a2_b1 (a);"}
+{"sql":"create index ab_a2_b2_a_idx on ab_a2_b2 (a)","shape":"CREATE INDEX ab_a2_b2_a_idx ON ab_a2_b2 (a);"}
+{"sql":"create index ab_a2_b3_a_idx on ab_a2_b3 (a)","shape":"CREATE INDEX ab_a2_b3_a_idx ON ab_a2_b3 (a);"}
+{"sql":"create index ab_a1_b1_a_idx on ab_a1_b1 (a)","shape":"CREATE INDEX ab_a1_b1_a_idx ON ab_a1_b1 (a);"}
+{"sql":"create index ab_a1_b2_a_idx on ab_a1_b2 (a)","shape":"CREATE INDEX ab_a1_b2_a_idx ON ab_a1_b2 (a);"}
+{"sql":"create index ab_a1_b3_a_idx on ab_a1_b3 (a)","shape":"CREATE INDEX ab_a1_b3_a_idx ON ab_a1_b3 (a);"}
+{"sql":"create index ab_a3_b1_a_idx on ab_a3_b1 (a)","shape":"CREATE INDEX ab_a3_b1_a_idx ON ab_a3_b1 (a);"}
+{"sql":"create index ab_a3_b2_a_idx on ab_a3_b2 (a)","shape":"CREATE INDEX ab_a3_b2_a_idx ON ab_a3_b2 (a);"}
+{"sql":"create index ab_a3_b3_a_idx on ab_a3_b3 (a)","shape":"CREATE INDEX ab_a3_b3_a_idx ON ab_a3_b3 (a);"}
+{"sql":"set enable_memoize = 0","shape":"SET enable_memoize TO 0;"}
+{"sql":"select explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a where a.a in(0, 0, 1)')","shape":"SELECT explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a where a.a in(0, 0, 1)');"}
+{"sql":"select explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a + 0 where a.a in(0, 0, 1)')","shape":"SELECT explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a + 0 where a.a in(0, 0, 1)');"}
+{"sql":"insert into lprt_a values(3),(3)","shape":"INSERT INTO lprt_a VALUES (3), (3);"}
+{"sql":"select explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a where a.a in(1, 0, 3)')","shape":"SELECT explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a where a.a in(1, 0, 3)');"}
+{"sql":"select explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a where a.a in(1, 0, 0)')","shape":"SELECT explain_parallel_append('select avg(ab.a) from ab inner join lprt_a a on ab.a = a.a where a.a in(1, 0, 0)');"}
+{"sql":"delete from lprt_a where a = 1","shape":"DELETE FROM lprt_a WHERE a = 1;"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from ab where a = (select max(a) from lprt_a) and b = (select max(a)-1 from lprt_a)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM ab WHERE (a = (SELECT max(a) FROM lprt_a)) AND (b = (SELECT max(a) - 1 FROM lprt_a));"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from (select * from ab where a = 1 union all select * from ab) ab where b = (select 1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM (SELECT * FROM ab WHERE a = 1 UNION ALL SELECT * FROM ab) AS ab WHERE b = (SELECT 1);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from (select * from ab where a = 1 union all (values(10,5)) union all select * from ab) ab where b = (select 1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM ((SELECT * FROM ab WHERE a = 1 UNION ALL (VALUES (10, 5))) UNION ALL SELECT * FROM ab) AS ab WHERE b = (SELECT 1);"}
+{"sql":"create table xy_1 (x int, y int)","shape":"CREATE TABLE xy_1 (x int, y int);"}
+{"sql":"insert into xy_1 values(100,-10)","shape":"INSERT INTO xy_1 VALUES (100, -10);"}
+{"sql":"set enable_indexscan = 0","shape":"SET enable_indexscan TO 0;"}
+{"sql":"prepare ab_q6 as\nselect * from (\n\tselect tableoid::regclass,a,b from ab\nunion all\n\tselect tableoid::regclass,x,y from xy_1\nunion all\n\tselect tableoid::regclass,a,b from ab\n) ab where a = $1 and b = (select -10)","shape":"PREPARE ab_q6 AS SELECT * FROM ((SELECT tableoid::regclass, a, b FROM ab UNION ALL SELECT tableoid::regclass, x, y FROM xy_1) UNION ALL SELECT tableoid::regclass, a, b FROM ab) AS ab WHERE (a = $1) AND (b = (SELECT -10));"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute ab_q6(1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ab_q6(1);"}
+{"sql":"execute ab_q6(100)","shape":"EXECUTE ab_q6(100);"}
+{"sql":"deallocate ab_q2","shape":"DEALLOCATE ab_q2;"}
+{"sql":"deallocate ab_q3","shape":"DEALLOCATE ab_q3;"}
+{"sql":"deallocate ab_q4","shape":"DEALLOCATE ab_q4;"}
+{"sql":"deallocate ab_q5","shape":"DEALLOCATE ab_q5;"}
+{"sql":"deallocate ab_q6","shape":"DEALLOCATE ab_q6;"}
+{"sql":"insert into ab values (1,2)","shape":"INSERT INTO ab VALUES (1, 2);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nupdate ab_a1 set b = 3 from ab where ab.a = 1 and ab.a = ab_a1.a","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) UPDATE ab_a1 SET b = 3 FROM ab WHERE (ab.a = 1) AND (ab.a = ab_a1.a);"}
+{"sql":"table ab","shape":"TABLE ab;"}
+{"sql":"truncate ab","shape":"TRUNCATE TABLE ab;"}
+{"sql":"insert into ab values (1, 1), (1, 2), (1, 3), (2, 1)","shape":"INSERT INTO ab VALUES (1, 1), (1, 2), (1, 3), (2, 1);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nupdate ab_a1 set b = 3 from ab_a2 where ab_a2.b = (select 1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) UPDATE ab_a1 SET b = 3 FROM ab_a2 WHERE ab_a2.b = (SELECT 1);"}
+{"sql":"select tableoid::regclass, * from ab","shape":"SELECT tableoid::regclass, * FROM ab;"}
+{"sql":"drop table ab, lprt_a","shape":"DROP TABLE ab, lprt_a;"}
+{"sql":"create table tbl1(col1 int)","shape":"CREATE TABLE tbl1 (col1 int);"}
+{"sql":"insert into tbl1 values (501), (505)","shape":"INSERT INTO tbl1 VALUES (501), (505);"}
+{"sql":"create table tprt (col1 int) partition by range (col1)","shape":"CREATE TABLE tprt (col1 int) PARTITION BY RANGE (col1);"}
+{"sql":"create table tprt_1 partition of tprt for values from (1) to (501)","shape":"CREATE TABLE tprt_1 PARTITION OF tprt FOR VALUES FROM (1) TO (501);"}
+{"sql":"create table tprt_2 partition of tprt for values from (501) to (1001)","shape":"CREATE TABLE tprt_2 PARTITION OF tprt FOR VALUES FROM (501) TO (1001);"}
+{"sql":"create table tprt_3 partition of tprt for values from (1001) to (2001)","shape":"CREATE TABLE tprt_3 PARTITION OF tprt FOR VALUES FROM (1001) TO (2001);"}
+{"sql":"create table tprt_4 partition of tprt for values from (2001) to (3001)","shape":"CREATE TABLE tprt_4 PARTITION OF tprt FOR VALUES FROM (2001) TO (3001);"}
+{"sql":"create table tprt_5 partition of tprt for values from (3001) to (4001)","shape":"CREATE TABLE tprt_5 PARTITION OF tprt FOR VALUES FROM (3001) TO (4001);"}
+{"sql":"create table tprt_6 partition of tprt for values from (4001) to (5001)","shape":"CREATE TABLE tprt_6 PARTITION OF tprt FOR VALUES FROM (4001) TO (5001);"}
+{"sql":"create index tprt1_idx on tprt_1 (col1)","shape":"CREATE INDEX tprt1_idx ON tprt_1 (col1);"}
+{"sql":"create index tprt2_idx on tprt_2 (col1)","shape":"CREATE INDEX tprt2_idx ON tprt_2 (col1);"}
+{"sql":"create index tprt3_idx on tprt_3 (col1)","shape":"CREATE INDEX tprt3_idx ON tprt_3 (col1);"}
+{"sql":"create index tprt4_idx on tprt_4 (col1)","shape":"CREATE INDEX tprt4_idx ON tprt_4 (col1);"}
+{"sql":"create index tprt5_idx on tprt_5 (col1)","shape":"CREATE INDEX tprt5_idx ON tprt_5 (col1);"}
+{"sql":"create index tprt6_idx on tprt_6 (col1)","shape":"CREATE INDEX tprt6_idx ON tprt_6 (col1);"}
+{"sql":"insert into tprt values (10), (20), (501), (502), (505), (1001), (4500)","shape":"INSERT INTO tprt VALUES (10), (20), (501), (502), (505), (1001), (4500);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from tbl1 join tprt on tbl1.col1 > tprt.col1","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM tbl1 JOIN tprt ON tbl1.col1 > tprt.col1;"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from tbl1 join tprt on tbl1.col1 = tprt.col1","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM tbl1 JOIN tprt ON tbl1.col1 = tprt.col1;"}
+{"sql":"select tbl1.col1, tprt.col1 from tbl1\ninner join tprt on tbl1.col1 > tprt.col1\norder by tbl1.col1, tprt.col1","shape":"SELECT tbl1.col1, tprt.col1 FROM tbl1 JOIN tprt ON tbl1.col1 > tprt.col1 ORDER BY tbl1.col1, tprt.col1;"}
+{"sql":"select tbl1.col1, tprt.col1 from tbl1\ninner join tprt on tbl1.col1 = tprt.col1\norder by tbl1.col1, tprt.col1","shape":"SELECT tbl1.col1, tprt.col1 FROM tbl1 JOIN tprt ON tbl1.col1 = tprt.col1 ORDER BY tbl1.col1, tprt.col1;"}
+{"sql":"insert into tbl1 values (1001), (1010), (1011)","shape":"INSERT INTO tbl1 VALUES (1001), (1010), (1011);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from tbl1 inner join tprt on tbl1.col1 > tprt.col1","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM tbl1 JOIN tprt ON tbl1.col1 > tprt.col1;"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from tbl1 inner join tprt on tbl1.col1 = tprt.col1","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM tbl1 JOIN tprt ON tbl1.col1 = tprt.col1;"}
+{"sql":"delete from tbl1","shape":"DELETE FROM tbl1;"}
+{"sql":"insert into tbl1 values (4400)","shape":"INSERT INTO tbl1 VALUES (4400);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from tbl1 join tprt on tbl1.col1 < tprt.col1","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM tbl1 JOIN tprt ON tbl1.col1 < tprt.col1;"}
+{"sql":"select tbl1.col1, tprt.col1 from tbl1\ninner join tprt on tbl1.col1 < tprt.col1\norder by tbl1.col1, tprt.col1","shape":"SELECT tbl1.col1, tprt.col1 FROM tbl1 JOIN tprt ON tbl1.col1 < tprt.col1 ORDER BY tbl1.col1, tprt.col1;"}
+{"sql":"insert into tbl1 values (10000)","shape":"INSERT INTO tbl1 VALUES (10000);"}
+{"sql":"drop table tbl1, tprt","shape":"DROP TABLE tbl1, tprt;"}
+{"sql":"create table part_abc (a int not null, b int not null, c int not null) partition by list (a)","shape":"CREATE TABLE part_abc (a int NOT NULL, b int NOT NULL, c int NOT NULL) PARTITION BY LIST (a);"}
+{"sql":"create table part_bac (b int not null, a int not null, c int not null) partition by list (b)","shape":"CREATE TABLE part_bac (b int NOT NULL, a int NOT NULL, c int NOT NULL) PARTITION BY LIST (b);"}
+{"sql":"create table part_cab (c int not null, a int not null, b int not null) partition by list (c)","shape":"CREATE TABLE part_cab (c int NOT NULL, a int NOT NULL, b int NOT NULL) PARTITION BY LIST (c);"}
+{"sql":"create table part_abc_p1 (a int not null, b int not null, c int not null)","shape":"CREATE TABLE part_abc_p1 (a int NOT NULL, b int NOT NULL, c int NOT NULL);"}
+{"sql":"alter table part_abc attach partition part_bac for values in(1)"}
+{"sql":"alter table part_bac attach partition part_cab for values in(2)"}
+{"sql":"alter table part_cab attach partition part_abc_p1 for values in(3)"}
+{"sql":"prepare part_abc_q1 (int, int, int) as\nselect * from part_abc where a = $1 and b = $2 and c = $3","shape":"PREPARE part_abc_q1 (int, int, int) AS SELECT * FROM part_abc WHERE ((a = $1) AND (b = $2)) AND (c = $3);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute part_abc_q1 (1, 2, 3)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE part_abc_q1(1, 2, 3);"}
+{"sql":"deallocate part_abc_q1","shape":"DEALLOCATE part_abc_q1;"}
+{"sql":"drop table part_abc","shape":"DROP TABLE part_abc;"}
+{"sql":"create table listp (a int, b int) partition by list (a)","shape":"CREATE TABLE listp (a int, b int) PARTITION BY LIST (a);"}
+{"sql":"create table listp_1 partition of listp for values in(1) partition by list (b)","shape":"CREATE TABLE listp_1 PARTITION OF listp FOR VALUES IN (1) PARTITION BY LIST (b);"}
+{"sql":"create table listp_1_1 partition of listp_1 for values in(1)","shape":"CREATE TABLE listp_1_1 PARTITION OF listp_1 FOR VALUES IN (1);"}
+{"sql":"create table listp_2 partition of listp for values in(2) partition by list (b)","shape":"CREATE TABLE listp_2 PARTITION OF listp FOR VALUES IN (2) PARTITION BY LIST (b);"}
+{"sql":"create table listp_2_1 partition of listp_2 for values in(2)","shape":"CREATE TABLE listp_2_1 PARTITION OF listp_2 FOR VALUES IN (2);"}
+{"sql":"select * from listp where b = 1","shape":"SELECT * FROM listp WHERE b = 1;"}
+{"sql":"prepare q1 (int,int) as select * from listp where b in ($1,$2)","shape":"PREPARE q1 (int, int) AS SELECT * FROM listp WHERE b IN ($1, $2);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)  execute q1 (1,1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE q1(1, 1);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)  execute q1 (2,2)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE q1(2, 2);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)  execute q1 (0,0)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE q1(0, 0);"}
+{"sql":"deallocate q1","shape":"DEALLOCATE q1;"}
+{"sql":"prepare q1 (int,int,int,int) as select * from listp where b in($1,$2) and $3 <> b and $4 <> b","shape":"PREPARE q1 (int, int, int, int) AS SELECT * FROM listp WHERE ((b IN ($1, $2)) AND ($3 <> b)) AND ($4 <> b);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)  execute q1 (1,2,2,0)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE q1(1, 2, 2, 0);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)  execute q1 (1,2,2,1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE q1(1, 2, 2, 1);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from listp where a = (select null::int)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM listp WHERE a = (SELECT NULL::int);"}
+{"sql":"drop table listp","shape":"DROP TABLE listp;"}
+{"sql":"create table stable_qual_pruning (a timestamp) partition by range (a)","shape":"CREATE TABLE stable_qual_pruning (a timestamp) PARTITION BY RANGE (a);"}
+{"sql":"create table stable_qual_pruning1 partition of stable_qual_pruning\n  for values from ('2000-01-01') to ('2000-02-01')","shape":"CREATE TABLE stable_qual_pruning1 PARTITION OF stable_qual_pruning FOR VALUES FROM ('2000-01-01') TO ('2000-02-01');"}
+{"sql":"create table stable_qual_pruning2 partition of stable_qual_pruning\n  for values from ('2000-02-01') to ('2000-03-01')","shape":"CREATE TABLE stable_qual_pruning2 PARTITION OF stable_qual_pruning FOR VALUES FROM ('2000-02-01') TO ('2000-03-01');"}
+{"sql":"create table stable_qual_pruning3 partition of stable_qual_pruning\n  for values from ('3000-02-01') to ('3000-03-01')","shape":"CREATE TABLE stable_qual_pruning3 PARTITION OF stable_qual_pruning FOR VALUES FROM ('3000-02-01') TO ('3000-03-01');"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning where a < localtimestamp","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a < localtimestamp;"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning where a < '2000-02-01'::timestamptz","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a < '2000-02-01'::timestamptz;"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning\n  where a = any(array['2010-02-01', '2020-01-01']::timestamp[])","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a = ANY (ARRAY['2010-02-01', '2020-01-01']::timestamp[]);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning\n  where a = any(array['2000-02-01', '2010-01-01']::timestamp[])","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a = ANY (ARRAY['2000-02-01', '2010-01-01']::timestamp[]);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning\n  where a = any(array['2000-02-01', localtimestamp]::timestamp[])","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a = ANY (ARRAY['2000-02-01', localtimestamp]::timestamp[]);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning\n  where a = any(array['2010-02-01', '2020-01-01']::timestamptz[])","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a = ANY (ARRAY['2010-02-01', '2020-01-01']::timestamptz[]);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning\n  where a = any(array['2000-02-01', '2010-01-01']::timestamptz[])","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a = ANY (ARRAY['2000-02-01', '2010-01-01']::timestamptz[]);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from stable_qual_pruning\n  where a = any(null::timestamptz[])","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM stable_qual_pruning WHERE a = ANY (NULL::timestamptz[]);"}
+{"sql":"drop table stable_qual_pruning","shape":"DROP TABLE stable_qual_pruning;"}
+{"sql":"create table mc3p0 partition of mc3p\n  for values from (0, 0, 0) to (0, maxvalue, maxvalue)","shape":"CREATE TABLE mc3p0 PARTITION OF mc3p FOR VALUES FROM (0, 0, 0) TO (0, maxvalue, maxvalue);"}
+{"sql":"create table mc3p1 partition of mc3p\n  for values from (1, 1, 1) to (2, minvalue, minvalue)","shape":"CREATE TABLE mc3p1 PARTITION OF mc3p FOR VALUES FROM (1, 1, 1) TO (2, minvalue, minvalue);"}
+{"sql":"create table mc3p2 partition of mc3p\n  for values from (2, minvalue, minvalue) to (3, maxvalue, maxvalue)","shape":"CREATE TABLE mc3p2 PARTITION OF mc3p FOR VALUES FROM (2, minvalue, minvalue) TO (3, maxvalue, maxvalue);"}
+{"sql":"insert into mc3p values (0, 1, 1), (1, 1, 1), (2, 1, 1)","shape":"INSERT INTO mc3p VALUES (0, 1, 1), (1, 1, 1), (2, 1, 1);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from mc3p where a < 3 and abs(b) = 1","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM mc3p WHERE (a < 3) AND (abs(b) = 1);"}
+{"sql":"prepare ps1 as\n  select * from mc3p where a = $1 and abs(b) < (select 3)","shape":"PREPARE ps1 AS SELECT * FROM mc3p WHERE (a = $1) AND (abs(b) < (SELECT 3));"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nexecute ps1(1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ps1(1);"}
+{"sql":"deallocate ps1","shape":"DEALLOCATE ps1;"}
+{"sql":"prepare ps2 as\n  select * from mc3p where a <= $1 and abs(b) < (select 3)","shape":"PREPARE ps2 AS SELECT * FROM mc3p WHERE (a <= $1) AND (abs(b) < (SELECT 3));"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nexecute ps2(1)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE ps2(1);"}
+{"sql":"deallocate ps2","shape":"DEALLOCATE ps2;"}
+{"sql":"drop table mc3p","shape":"DROP TABLE mc3p;"}
+{"sql":"create table boolvalues (value bool not null)","shape":"CREATE TABLE boolvalues (value bool NOT NULL);"}
+{"sql":"insert into boolvalues values('t'),('f')","shape":"INSERT INTO boolvalues VALUES ('t'), ('f');"}
+{"sql":"create table boolp (a bool) partition by list (a)","shape":"CREATE TABLE boolp (a bool) PARTITION BY LIST (a);"}
+{"sql":"create table boolp_t partition of boolp for values in('t')","shape":"CREATE TABLE boolp_t PARTITION OF boolp FOR VALUES IN ('t');"}
+{"sql":"create table boolp_f partition of boolp for values in('f')","shape":"CREATE TABLE boolp_f PARTITION OF boolp FOR VALUES IN ('f');"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from boolp where a = (select value from boolvalues where value)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM boolp WHERE a = (SELECT value FROM boolvalues WHERE value);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from boolp where a = (select value from boolvalues where not value)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM boolp WHERE a = (SELECT value FROM boolvalues WHERE NOT value);"}
+{"sql":"drop table boolp","shape":"DROP TABLE boolp;"}
+{"sql":"create table ma_test (a int, b int) partition by range (a)","shape":"CREATE TABLE ma_test (a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table ma_test_p1 partition of ma_test for values from (0) to (10)","shape":"CREATE TABLE ma_test_p1 PARTITION OF ma_test FOR VALUES FROM (0) TO (10);"}
+{"sql":"create table ma_test_p2 partition of ma_test for values from (10) to (20)","shape":"CREATE TABLE ma_test_p2 PARTITION OF ma_test FOR VALUES FROM (10) TO (20);"}
+{"sql":"create table ma_test_p3 partition of ma_test for values from (20) to (30)","shape":"CREATE TABLE ma_test_p3 PARTITION OF ma_test FOR VALUES FROM (20) TO (30);"}
+{"sql":"insert into ma_test select x,x from generate_series(0,29) t(x)","shape":"INSERT INTO ma_test SELECT x, x FROM generate_series(0, 29) AS t(x);"}
+{"sql":"create index on ma_test (b)","shape":"CREATE INDEX ON ma_test (b);"}
+{"sql":"analyze ma_test","shape":"ANALYZE ma_test;"}
+{"sql":"prepare mt_q1 (int) as select a from ma_test where a >= $1 and a % 10 = 5 order by b","shape":"PREPARE mt_q1 (int) AS SELECT a FROM ma_test WHERE (a >= $1) AND ((a % 10) = 5) ORDER BY b;"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute mt_q1(15)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE mt_q1(15);"}
+{"sql":"execute mt_q1(15)","shape":"EXECUTE mt_q1(15);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute mt_q1(25)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE mt_q1(25);"}
+{"sql":"execute mt_q1(25)","shape":"EXECUTE mt_q1(25);"}
+{"sql":"explain (analyze, costs off, summary off, timing off) execute mt_q1(35)","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) EXECUTE mt_q1(35);"}
+{"sql":"execute mt_q1(35)","shape":"EXECUTE mt_q1(35);"}
+{"sql":"deallocate mt_q1","shape":"DEALLOCATE mt_q1;"}
+{"sql":"prepare mt_q2 (int) as select * from ma_test where a >= $1 order by b limit 1","shape":"PREPARE mt_q2 (int) AS SELECT * FROM ma_test WHERE a >= $1 ORDER BY b LIMIT 1;"}
+{"sql":"explain (analyze, verbose, costs off, summary off, timing off) execute mt_q2 (35)","shape":"EXPLAIN (ANALYZE, VERBOSE, COSTS off, SUMMARY off, TIMING off) EXECUTE mt_q2(35);"}
+{"sql":"deallocate mt_q2","shape":"DEALLOCATE mt_q2;"}
+{"sql":"explain (analyze, costs off, summary off, timing off) select * from ma_test where a >= (select min(b) from ma_test_p2) order by b","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM ma_test WHERE a >= (SELECT min(b) FROM ma_test_p2) ORDER BY b;"}
+{"sql":"drop table ma_test","shape":"DROP TABLE ma_test;"}
+{"sql":"create table pp_arrpart (a int[]) partition by list (a)","shape":"CREATE TABLE pp_arrpart (a int[]) PARTITION BY LIST (a);"}
+{"sql":"create table pp_arrpart1 partition of pp_arrpart for values in ('{1}')","shape":"CREATE TABLE pp_arrpart1 PARTITION OF pp_arrpart FOR VALUES IN ('{1}');"}
+{"sql":"create table pp_arrpart2 partition of pp_arrpart for values in ('{2, 3}', '{4, 5}')","shape":"CREATE TABLE pp_arrpart2 PARTITION OF pp_arrpart FOR VALUES IN ('{2, 3}', '{4, 5}');"}
+{"sql":"explain (costs off) select * from pp_arrpart where a = '{1}'","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_arrpart WHERE a = '{1}';"}
+{"sql":"explain (costs off) select * from pp_arrpart where a = '{1, 2}'","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_arrpart WHERE a = '{1, 2}';"}
+{"sql":"explain (costs off) select * from pp_arrpart where a in ('{4, 5}', '{1}')","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_arrpart WHERE a IN ('{4, 5}', '{1}');"}
+{"sql":"explain (costs off) update pp_arrpart set a = a where a = '{1}'","shape":"EXPLAIN (COSTS off) UPDATE pp_arrpart SET a = a WHERE a = '{1}';"}
+{"sql":"explain (costs off) delete from pp_arrpart where a = '{1}'","shape":"EXPLAIN (COSTS off) DELETE FROM pp_arrpart WHERE a = '{1}';"}
+{"sql":"drop table pp_arrpart","shape":"DROP TABLE pp_arrpart;"}
+{"sql":"create table pph_arrpart (a int[]) partition by hash (a)","shape":"CREATE TABLE pph_arrpart (a int[]) PARTITION BY HASH (a);"}
+{"sql":"create table pph_arrpart1 partition of pph_arrpart for values with (modulus 2, remainder 0)","shape":"CREATE TABLE pph_arrpart1 PARTITION OF pph_arrpart FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"create table pph_arrpart2 partition of pph_arrpart for values with (modulus 2, remainder 1)","shape":"CREATE TABLE pph_arrpart2 PARTITION OF pph_arrpart FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"insert into pph_arrpart values ('{1}'), ('{1, 2}'), ('{4, 5}')","shape":"INSERT INTO pph_arrpart VALUES ('{1}'), ('{1, 2}'), ('{4, 5}');"}
+{"sql":"select tableoid::regclass, * from pph_arrpart order by 1","shape":"SELECT tableoid::regclass, * FROM pph_arrpart ORDER BY 1;"}
+{"sql":"explain (costs off) select * from pph_arrpart where a = '{1}'","shape":"EXPLAIN (COSTS off) SELECT * FROM pph_arrpart WHERE a = '{1}';"}
+{"sql":"explain (costs off) select * from pph_arrpart where a = '{1, 2}'","shape":"EXPLAIN (COSTS off) SELECT * FROM pph_arrpart WHERE a = '{1, 2}';"}
+{"sql":"explain (costs off) select * from pph_arrpart where a in ('{4, 5}', '{1}')","shape":"EXPLAIN (COSTS off) SELECT * FROM pph_arrpart WHERE a IN ('{4, 5}', '{1}');"}
+{"sql":"drop table pph_arrpart","shape":"DROP TABLE pph_arrpart;"}
+{"sql":"create type pp_colors as enum ('green', 'blue', 'black')","shape":"CREATE TYPE pp_colors AS ENUM ('green', 'blue', 'black');"}
+{"sql":"create table pp_enumpart (a pp_colors) partition by list (a)","shape":"CREATE TABLE pp_enumpart (a pp_colors) PARTITION BY LIST (a);"}
+{"sql":"create table pp_enumpart_green partition of pp_enumpart for values in ('green')","shape":"CREATE TABLE pp_enumpart_green PARTITION OF pp_enumpart FOR VALUES IN ('green');"}
+{"sql":"create table pp_enumpart_blue partition of pp_enumpart for values in ('blue')","shape":"CREATE TABLE pp_enumpart_blue PARTITION OF pp_enumpart FOR VALUES IN ('blue');"}
+{"sql":"explain (costs off) select * from pp_enumpart where a = 'blue'","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_enumpart WHERE a = 'blue';"}
+{"sql":"explain (costs off) select * from pp_enumpart where a = 'black'","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_enumpart WHERE a = 'black';"}
+{"sql":"drop table pp_enumpart","shape":"DROP TABLE pp_enumpart;"}
+{"sql":"drop type pp_colors","shape":"DROP TYPE pp_colors;"}
+{"sql":"create type pp_rectype as (a int, b int)","shape":"CREATE TYPE pp_rectype AS (a int, b int);"}
+{"sql":"create table pp_recpart (a pp_rectype) partition by list (a)","shape":"CREATE TABLE pp_recpart (a pp_rectype) PARTITION BY LIST (a);"}
+{"sql":"create table pp_recpart_11 partition of pp_recpart for values in ('(1,1)')","shape":"CREATE TABLE pp_recpart_11 PARTITION OF pp_recpart FOR VALUES IN ('(1,1)');"}
+{"sql":"create table pp_recpart_23 partition of pp_recpart for values in ('(2,3)')","shape":"CREATE TABLE pp_recpart_23 PARTITION OF pp_recpart FOR VALUES IN ('(2,3)');"}
+{"sql":"explain (costs off) select * from pp_recpart where a = '(1,1)'::pp_rectype","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_recpart WHERE a = '(1,1)'::pp_rectype;"}
+{"sql":"explain (costs off) select * from pp_recpart where a = '(1,2)'::pp_rectype","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_recpart WHERE a = '(1,2)'::pp_rectype;"}
+{"sql":"drop table pp_recpart","shape":"DROP TABLE pp_recpart;"}
+{"sql":"drop type pp_rectype","shape":"DROP TYPE pp_rectype;"}
+{"sql":"create table pp_intrangepart (a int4range) partition by list (a)","shape":"CREATE TABLE pp_intrangepart (a int4range) PARTITION BY LIST (a);"}
+{"sql":"create table pp_intrangepart12 partition of pp_intrangepart for values in ('[1,2]')","shape":"CREATE TABLE pp_intrangepart12 PARTITION OF pp_intrangepart FOR VALUES IN ('[1,2]');"}
+{"sql":"create table pp_intrangepart2inf partition of pp_intrangepart for values in ('[2,)')","shape":"CREATE TABLE pp_intrangepart2inf PARTITION OF pp_intrangepart FOR VALUES IN ('[2,)');"}
+{"sql":"explain (costs off) select * from pp_intrangepart where a = '[1,2]'::int4range","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_intrangepart WHERE a = '[1,2]'::int4range;"}
+{"sql":"explain (costs off) select * from pp_intrangepart where a = '(1,2)'::int4range","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_intrangepart WHERE a = '(1,2)'::int4range;"}
+{"sql":"drop table pp_intrangepart","shape":"DROP TABLE pp_intrangepart;"}
+{"sql":"create table pp_lp (a int, value int) partition by list (a)","shape":"CREATE TABLE pp_lp (a int, value int) PARTITION BY LIST (a);"}
+{"sql":"create table pp_lp1 partition of pp_lp for values in(1)","shape":"CREATE TABLE pp_lp1 PARTITION OF pp_lp FOR VALUES IN (1);"}
+{"sql":"create table pp_lp2 partition of pp_lp for values in(2)","shape":"CREATE TABLE pp_lp2 PARTITION OF pp_lp FOR VALUES IN (2);"}
+{"sql":"explain (costs off) select * from pp_lp where a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_lp WHERE a = 1;"}
+{"sql":"explain (costs off) update pp_lp set value = 10 where a = 1","shape":"EXPLAIN (COSTS off) UPDATE pp_lp SET value = 10 WHERE a = 1;"}
+{"sql":"explain (costs off) delete from pp_lp where a = 1","shape":"EXPLAIN (COSTS off) DELETE FROM pp_lp WHERE a = 1;"}
+{"sql":"set enable_partition_pruning = off","shape":"SET enable_partition_pruning TO off;"}
+{"sql":"set constraint_exclusion = 'partition'","shape":"SET constraint_exclusion TO 'partition';"}
+{"sql":"set constraint_exclusion = 'off'","shape":"SET constraint_exclusion TO 'off';"}
+{"sql":"drop table pp_lp","shape":"DROP TABLE pp_lp;"}
+{"sql":"create table inh_lp (a int, value int)","shape":"CREATE TABLE inh_lp (a int, value int);"}
+{"sql":"create table inh_lp1 (a int, value int, check(a = 1)) inherits (inh_lp)","shape":"CREATE TABLE inh_lp1 (a int, value int, CHECK (a = 1)) INHERITS (inh_lp);"}
+{"sql":"create table inh_lp2 (a int, value int, check(a = 2)) inherits (inh_lp)","shape":"CREATE TABLE inh_lp2 (a int, value int, CHECK (a = 2)) INHERITS (inh_lp);"}
+{"sql":"explain (costs off) select * from inh_lp where a = 1","shape":"EXPLAIN (COSTS off) SELECT * FROM inh_lp WHERE a = 1;"}
+{"sql":"explain (costs off) update inh_lp set value = 10 where a = 1","shape":"EXPLAIN (COSTS off) UPDATE inh_lp SET value = 10 WHERE a = 1;"}
+{"sql":"explain (costs off) delete from inh_lp where a = 1","shape":"EXPLAIN (COSTS off) DELETE FROM inh_lp WHERE a = 1;"}
+{"sql":"explain (costs off) update inh_lp1 set value = 10 where a = 2","shape":"EXPLAIN (COSTS off) UPDATE inh_lp1 SET value = 10 WHERE a = 2;"}
+{"sql":"drop table inh_lp cascade","shape":"DROP TABLE inh_lp CASCADE;"}
+{"sql":"reset enable_partition_pruning","shape":"RESET enable_partition_pruning;"}
+{"sql":"reset constraint_exclusion","shape":"RESET constraint_exclusion;"}
+{"sql":"create temp table pp_temp_parent (a int) partition by list (a)","shape":"CREATE TEMPORARY TABLE pp_temp_parent (a int) PARTITION BY LIST (a);"}
+{"sql":"create temp table pp_temp_part_1 partition of pp_temp_parent for values in (1)","shape":"CREATE TEMPORARY TABLE pp_temp_part_1 PARTITION OF pp_temp_parent FOR VALUES IN (1);"}
+{"sql":"create temp table pp_temp_part_def partition of pp_temp_parent default","shape":"CREATE TEMPORARY TABLE pp_temp_part_def PARTITION OF pp_temp_parent DEFAULT;"}
+{"sql":"explain (costs off) select * from pp_temp_parent where true","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_temp_parent WHERE TRUE;"}
+{"sql":"explain (costs off) select * from pp_temp_parent where a = 2","shape":"EXPLAIN (COSTS off) SELECT * FROM pp_temp_parent WHERE a = 2;"}
+{"sql":"drop table pp_temp_parent","shape":"DROP TABLE pp_temp_parent;"}
+{"sql":"create temp table p (a int, b int, c int) partition by list (a)","shape":"CREATE TEMPORARY TABLE p (a int, b int, c int) PARTITION BY LIST (a);"}
+{"sql":"create temp table p1 partition of p for values in (1)","shape":"CREATE TEMPORARY TABLE p1 PARTITION OF p FOR VALUES IN (1);"}
+{"sql":"create temp table p2 partition of p for values in (2)","shape":"CREATE TEMPORARY TABLE p2 PARTITION OF p FOR VALUES IN (2);"}
+{"sql":"create temp table q (a int, b int, c int) partition by list (a)","shape":"CREATE TEMPORARY TABLE q (a int, b int, c int) PARTITION BY LIST (a);"}
+{"sql":"create temp table q1 partition of q for values in (1) partition by list (b)","shape":"CREATE TEMPORARY TABLE q1 PARTITION OF q FOR VALUES IN (1) PARTITION BY LIST (b);"}
+{"sql":"create temp table q11 partition of q1 for values in (1) partition by list (c)","shape":"CREATE TEMPORARY TABLE q11 PARTITION OF q1 FOR VALUES IN (1) PARTITION BY LIST (c);"}
+{"sql":"create temp table q111 partition of q11 for values in (1)","shape":"CREATE TEMPORARY TABLE q111 PARTITION OF q11 FOR VALUES IN (1);"}
+{"sql":"create temp table q2 partition of q for values in (2) partition by list (b)","shape":"CREATE TEMPORARY TABLE q2 PARTITION OF q FOR VALUES IN (2) PARTITION BY LIST (b);"}
+{"sql":"create temp table q21 partition of q2 for values in (1)","shape":"CREATE TEMPORARY TABLE q21 PARTITION OF q2 FOR VALUES IN (1);"}
+{"sql":"create temp table q22 partition of q2 for values in (2)","shape":"CREATE TEMPORARY TABLE q22 PARTITION OF q2 FOR VALUES IN (2);"}
+{"sql":"insert into q22 values (2, 2, 3)","shape":"INSERT INTO q22 VALUES (2, 2, 3);"}
+{"sql":"explain (costs off)\nselect *\nfrom (\n      select * from p\n      union all\n      select * from q1\n      union all\n      select 1, 1, 1\n     ) s(a, b, c)\nwhere s.a = 1 and s.b = 1 and s.c = (select 1)","shape":"EXPLAIN (COSTS off) SELECT * FROM ((SELECT * FROM p UNION ALL SELECT * FROM q1) UNION ALL SELECT 1, 1, 1) AS s(a, b, c) WHERE ((s.a = 1) AND (s.b = 1)) AND (s.c = (SELECT 1));"}
+{"sql":"select *\nfrom (\n      select * from p\n      union all\n      select * from q1\n      union all\n      select 1, 1, 1\n     ) s(a, b, c)\nwhere s.a = 1 and s.b = 1 and s.c = (select 1)","shape":"SELECT * FROM ((SELECT * FROM p UNION ALL SELECT * FROM q1) UNION ALL SELECT 1, 1, 1) AS s(a, b, c) WHERE ((s.a = 1) AND (s.b = 1)) AND (s.c = (SELECT 1));"}
+{"sql":"prepare q (int, int) as\nselect *\nfrom (\n      select * from p\n      union all\n      select * from q1\n      union all\n      select 1, 1, 1\n     ) s(a, b, c)\nwhere s.a = $1 and s.b = $2 and s.c = (select 1)","shape":"PREPARE q (int, int) AS SELECT * FROM ((SELECT * FROM p UNION ALL SELECT * FROM q1) UNION ALL SELECT 1, 1, 1) AS s(a, b, c) WHERE ((s.a = $1) AND (s.b = $2)) AND (s.c = (SELECT 1));"}
+{"sql":"explain (costs off) execute q (1, 1)","shape":"EXPLAIN (COSTS off) EXECUTE q(1, 1);"}
+{"sql":"execute q (1, 1)","shape":"EXECUTE q(1, 1);"}
+{"sql":"drop table p, q","shape":"DROP TABLE p, q;"}
+{"sql":"create table listp1 partition of listp for values in(1)","shape":"CREATE TABLE listp1 PARTITION OF listp FOR VALUES IN (1);"}
+{"sql":"create table listp2 partition of listp for values in(2) partition by list(b)","shape":"CREATE TABLE listp2 PARTITION OF listp FOR VALUES IN (2) PARTITION BY LIST (b);"}
+{"sql":"create table listp2_10 partition of listp2 for values in (10)","shape":"CREATE TABLE listp2_10 PARTITION OF listp2 FOR VALUES IN (10);"}
+{"sql":"explain (analyze, costs off, summary off, timing off)\nselect * from listp where a = (select 2) and b <> 10","shape":"EXPLAIN (ANALYZE, COSTS off, SUMMARY off, TIMING off) SELECT * FROM listp WHERE (a = (SELECT 2)) AND (b <> 10);"}
+{"sql":"set enable_partition_pruning to off","shape":"SET enable_partition_pruning TO off;"}
+{"sql":"set constraint_exclusion to 'partition'","shape":"SET constraint_exclusion TO 'partition';"}
+{"sql":"explain (costs off) select * from listp1 where a = 2","shape":"EXPLAIN (COSTS off) SELECT * FROM listp1 WHERE a = 2;"}
+{"sql":"explain (costs off) update listp1 set a = 1 where a = 2","shape":"EXPLAIN (COSTS off) UPDATE listp1 SET a = 1 WHERE a = 2;"}
+{"sql":"set constraint_exclusion to 'on'","shape":"SET constraint_exclusion TO 'on';"}
+{"sql":"set parallel_setup_cost to 0","shape":"SET parallel_setup_cost TO 0;"}
+{"sql":"set parallel_tuple_cost to 0","shape":"SET parallel_tuple_cost TO 0;"}
+{"sql":"create table listp (a int) partition by list(a)","shape":"CREATE TABLE listp (a int) PARTITION BY LIST (a);"}
+{"sql":"create table listp_12 partition of listp for values in(1,2) partition by list(a)","shape":"CREATE TABLE listp_12 PARTITION OF listp FOR VALUES IN (1, 2) PARTITION BY LIST (a);"}
+{"sql":"create table listp_12_1 partition of listp_12 for values in(1)","shape":"CREATE TABLE listp_12_1 PARTITION OF listp_12 FOR VALUES IN (1);"}
+{"sql":"create table listp_12_2 partition of listp_12 for values in(2)","shape":"CREATE TABLE listp_12_2 PARTITION OF listp_12 FOR VALUES IN (2);"}
+{"sql":"alter table listp_12_1 set (parallel_workers = 0)"}
+{"sql":"select explain_parallel_append('select * from listp where a = (select 1);')","shape":"SELECT explain_parallel_append('select * from listp where a = (select 1);');"}
+{"sql":"select explain_parallel_append(\n'select * from listp where a = (select 1)\n  union all\nselect * from listp where a = (select 2);')","shape":"SELECT explain_parallel_append('select * from listp where a = (select 1)\n  union all\nselect * from listp where a = (select 2);');"}
+{"sql":"create table rangep (a int, b int) partition by range (a)","shape":"CREATE TABLE rangep (a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table rangep_0_to_100 partition of rangep for values from (0) to (100) partition by list (b)","shape":"CREATE TABLE rangep_0_to_100 PARTITION OF rangep FOR VALUES FROM (0) TO (100) PARTITION BY LIST (b);"}
+{"sql":"create table rangep_0_to_100_1 partition of rangep_0_to_100 for values in(1)","shape":"CREATE TABLE rangep_0_to_100_1 PARTITION OF rangep_0_to_100 FOR VALUES IN (1);"}
+{"sql":"create table rangep_0_to_100_2 partition of rangep_0_to_100 for values in(2)","shape":"CREATE TABLE rangep_0_to_100_2 PARTITION OF rangep_0_to_100 FOR VALUES IN (2);"}
+{"sql":"create table rangep_0_to_100_3 partition of rangep_0_to_100 for values in(3)","shape":"CREATE TABLE rangep_0_to_100_3 PARTITION OF rangep_0_to_100 FOR VALUES IN (3);"}
+{"sql":"create table rangep_100_to_200 partition of rangep for values from (100) to (200)","shape":"CREATE TABLE rangep_100_to_200 PARTITION OF rangep FOR VALUES FROM (100) TO (200);"}
+{"sql":"create index on rangep (a)","shape":"CREATE INDEX ON rangep (a);"}
+{"sql":"explain (analyze on, costs off, timing off, summary off)\nselect * from rangep where b IN((select 1),(select 2)) order by a","shape":"EXPLAIN (ANALYZE on, COSTS off, TIMING off, SUMMARY off) SELECT * FROM rangep WHERE b IN ((SELECT 1), (SELECT 2)) ORDER BY a;"}
+{"sql":"drop table rangep","shape":"DROP TABLE rangep;"}
+{"sql":"create table rp_prefix_test1 (a int, b varchar) partition by range(a, b)","shape":"CREATE TABLE rp_prefix_test1 (a int, b varchar) PARTITION BY RANGE (a, b);"}
+{"sql":"create table rp_prefix_test1_p1 partition of rp_prefix_test1 for values from (1, 'a') to (1, 'b')","shape":"CREATE TABLE rp_prefix_test1_p1 PARTITION OF rp_prefix_test1 FOR VALUES FROM (1, 'a') TO (1, 'b');"}
+{"sql":"create table rp_prefix_test1_p2 partition of rp_prefix_test1 for values from (2, 'a') to (2, 'b')","shape":"CREATE TABLE rp_prefix_test1_p2 PARTITION OF rp_prefix_test1 FOR VALUES FROM (2, 'a') TO (2, 'b');"}
+{"sql":"explain (costs off) select * from rp_prefix_test1 where a <= 1 and b = 'a'","shape":"EXPLAIN (COSTS off) SELECT * FROM rp_prefix_test1 WHERE (a <= 1) AND (b = 'a');"}
+{"sql":"create table rp_prefix_test2 (a int, b int, c int) partition by range(a, b, c)","shape":"CREATE TABLE rp_prefix_test2 (a int, b int, c int) PARTITION BY RANGE (a, b, c);"}
+{"sql":"create table rp_prefix_test2_p1 partition of rp_prefix_test2 for values from (1, 1, 0) to (1, 1, 10)","shape":"CREATE TABLE rp_prefix_test2_p1 PARTITION OF rp_prefix_test2 FOR VALUES FROM (1, 1, 0) TO (1, 1, 10);"}
+{"sql":"create table rp_prefix_test2_p2 partition of rp_prefix_test2 for values from (2, 2, 0) to (2, 2, 10)","shape":"CREATE TABLE rp_prefix_test2_p2 PARTITION OF rp_prefix_test2 FOR VALUES FROM (2, 2, 0) TO (2, 2, 10);"}
+{"sql":"explain (costs off) select * from rp_prefix_test2 where a <= 1 and b = 1 and c >= 0","shape":"EXPLAIN (COSTS off) SELECT * FROM rp_prefix_test2 WHERE ((a <= 1) AND (b = 1)) AND (c >= 0);"}
+{"sql":"create table rp_prefix_test3 (a int, b int, c int, d int) partition by range(a, b, c, d)","shape":"CREATE TABLE rp_prefix_test3 (a int, b int, c int, d int) PARTITION BY RANGE (a, b, c, d);"}
+{"sql":"create table rp_prefix_test3_p1 partition of rp_prefix_test3 for values from (1, 1, 1, 0) to (1, 1, 1, 10)","shape":"CREATE TABLE rp_prefix_test3_p1 PARTITION OF rp_prefix_test3 FOR VALUES FROM (1, 1, 1, 0) TO (1, 1, 1, 10);"}
+{"sql":"create table rp_prefix_test3_p2 partition of rp_prefix_test3 for values from (2, 2, 2, 0) to (2, 2, 2, 10)","shape":"CREATE TABLE rp_prefix_test3_p2 PARTITION OF rp_prefix_test3 FOR VALUES FROM (2, 2, 2, 0) TO (2, 2, 2, 10);"}
+{"sql":"explain (costs off) select * from rp_prefix_test3 where a >= 1 and b >= 1 and b >= 2 and c >= 2 and d >= 0","shape":"EXPLAIN (COSTS off) SELECT * FROM rp_prefix_test3 WHERE ((((a >= 1) AND (b >= 1)) AND (b >= 2)) AND (c >= 2)) AND (d >= 0);"}
+{"sql":"explain (costs off) select * from rp_prefix_test3 where a >= 1 and b >= 1 and b = 2 and c = 2 and d >= 0","shape":"EXPLAIN (COSTS off) SELECT * FROM rp_prefix_test3 WHERE ((((a >= 1) AND (b >= 1)) AND (b = 2)) AND (c = 2)) AND (d >= 0);"}
+{"sql":"drop table rp_prefix_test1","shape":"DROP TABLE rp_prefix_test1;"}
+{"sql":"drop table rp_prefix_test2","shape":"DROP TABLE rp_prefix_test2;"}
+{"sql":"drop table rp_prefix_test3","shape":"DROP TABLE rp_prefix_test3;"}
+{"sql":"create table hp_prefix_test (a int, b int, c int, d int)\n  partition by hash (a part_test_int4_ops, b part_test_int4_ops, c part_test_int4_ops, d part_test_int4_ops)","shape":"CREATE TABLE hp_prefix_test (a int, b int, c int, d int) PARTITION BY HASH (a part_test_int4_ops, b part_test_int4_ops, c part_test_int4_ops, d part_test_int4_ops);"}
+{"sql":"select 'create table hp_prefix_test_p' || x::text || ' partition of hp_prefix_test for values with (modulus 8, remainder ' || x::text || ');'\nfrom generate_Series(0,7) x","shape":"SELECT ((('create table hp_prefix_test_p' || x::text) || ' partition of hp_prefix_test for values with (modulus 8, remainder ') || x::text) || ');' FROM generate_Series(0, 7) AS x;"}
+{"sql":"insert into hp_prefix_test\nselect\n  case a when 0 then null else 1 end,\n  case b when 0 then null else 2 end,\n  case c when 0 then null else 3 end,\n  case d when 0 then null else 4 end\nfrom\n  generate_series(0,1) a,\n  generate_series(0,1) b,\n  generate_Series(0,1) c,\n  generate_Series(0,1) d","shape":"INSERT INTO hp_prefix_test SELECT CASE a WHEN 0 THEN NULL ELSE 1 END, CASE b WHEN 0 THEN NULL ELSE 2 END, CASE c WHEN 0 THEN NULL ELSE 3 END, CASE d WHEN 0 THEN NULL ELSE 4 END FROM generate_series(0, 1) AS a, generate_series(0, 1) AS b, generate_Series(0, 1) AS c, generate_Series(0, 1) AS d;"}
+{"sql":"select\n  'explain (costs off) select tableoid::regclass,* from hp_prefix_test where ' ||\n  string_agg(c.colname || case when g.s & (1 << c.colpos) = 0 then ' is null' else ' = ' || (colpos+1)::text end, ' and ' order by c.colpos)\nfrom (values('a',0),('b',1),('c',2),('d',3)) c(colname, colpos), generate_Series(0,15) g(s)\ngroup by g.s\norder by g.s","shape":"SELECT 'explain (costs off) select tableoid::regclass,* from hp_prefix_test where ' || string_agg(c.colname || CASE WHEN (g.s & (1 << c.colpos)) = 0 THEN ' is null' ELSE ' = ' || (colpos + 1)::text END, ' and ' ORDER BY c.colpos) FROM (VALUES ('a', 0), ('b', 1), ('c', 2), ('d', 3)) AS c(colname, colpos), generate_Series(0, 15) AS g(s) GROUP BY g.s ORDER BY g.s;"}
+{"sql":"select\n  'select tableoid::regclass,* from hp_prefix_test where ' ||\n  string_agg(c.colname || case when g.s & (1 << c.colpos) = 0 then ' is null' else ' = ' || (colpos+1)::text end, ' and ' order by c.colpos)\nfrom (values('a',0),('b',1),('c',2),('d',3)) c(colname, colpos), generate_Series(0,15) g(s)\ngroup by g.s\norder by g.s","shape":"SELECT 'select tableoid::regclass,* from hp_prefix_test where ' || string_agg(c.colname || CASE WHEN (g.s & (1 << c.colpos)) = 0 THEN ' is null' ELSE ' = ' || (colpos + 1)::text END, ' and ' ORDER BY c.colpos) FROM (VALUES ('a', 0), ('b', 1), ('c', 2), ('d', 3)) AS c(colname, colpos), generate_Series(0, 15) AS g(s) GROUP BY g.s ORDER BY g.s;"}
+{"sql":"drop table hp_prefix_test","shape":"DROP TABLE hp_prefix_test;"}
+{"sql":"create operator === (\n   leftarg = int4,\n   rightarg = int4,\n   procedure = int4eq,\n   commutator = ===,\n   hashes\n)"}
+{"sql":"create operator class part_test_int4_ops2\nfor type int4\nusing hash as\noperator 1 ===,\nfunction 2 part_hashint4_noop(int4, int8)"}
+{"sql":"create table hp_contradict_test (a int, b int) partition by hash (a part_test_int4_ops2, b part_test_int4_ops2)","shape":"CREATE TABLE hp_contradict_test (a int, b int) PARTITION BY HASH (a part_test_int4_ops2, b part_test_int4_ops2);"}
+{"sql":"create table hp_contradict_test_p1 partition of hp_contradict_test for values with (modulus 2, remainder 0)","shape":"CREATE TABLE hp_contradict_test_p1 PARTITION OF hp_contradict_test FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"create table hp_contradict_test_p2 partition of hp_contradict_test for values with (modulus 2, remainder 1)","shape":"CREATE TABLE hp_contradict_test_p2 PARTITION OF hp_contradict_test FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"explain (costs off) select * from hp_contradict_test where a is null and a === 1 and b === 1","shape":"EXPLAIN (COSTS off) SELECT * FROM hp_contradict_test WHERE ((a IS NULL) AND (a === 1)) AND (b === 1);"}
+{"sql":"explain (costs off) select * from hp_contradict_test where a === 1 and b === 1 and a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM hp_contradict_test WHERE ((a === 1) AND (b === 1)) AND (a IS NULL);"}
+{"sql":"drop table hp_contradict_test","shape":"DROP TABLE hp_contradict_test;"}
+{"sql":"drop operator class part_test_int4_ops2 using hash"}
+{"sql":"drop operator ===(int4, int4)"}

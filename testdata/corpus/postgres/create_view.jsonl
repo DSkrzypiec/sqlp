@@ -1,0 +1,258 @@
+{"sql":"CREATE TABLE real_city (\n\tpop\t\t\tint4,\n\tcname\t\ttext,\n\toutline \tpath\n)","shape":"CREATE TABLE real_city (pop int4, cname text, outline path);"}
+{"sql":"ANALYZE real_city","shape":"ANALYZE real_city;"}
+{"sql":"SELECT *\n   INTO TABLE ramp\n   FROM ONLY road\n   WHERE name ~ '.*Ramp'","shape":"SELECT * INTO ramp FROM ONLY road WHERE name ~ '.*Ramp';"}
+{"sql":"CREATE VIEW street AS\n   SELECT r.name, r.thepath, c.cname AS cname\n   FROM ONLY road r, real_city c\n   WHERE c.outline ?# r.thepath","shape":"CREATE VIEW street AS SELECT r.name, r.thepath, c.cname AS cname FROM ONLY road AS r, real_city AS c WHERE c.outline ?# r.thepath;"}
+{"sql":"CREATE VIEW iexit AS\n   SELECT ih.name, ih.thepath,\n\tinterpt_pp(ih.thepath, r.thepath) AS exit\n   FROM ihighway ih, ramp r\n   WHERE ih.thepath ?# r.thepath","shape":"CREATE VIEW iexit AS SELECT ih.name, ih.thepath, interpt_pp(ih.thepath, r.thepath) AS exit FROM ihighway AS ih, ramp AS r WHERE ih.thepath ?# r.thepath;"}
+{"sql":"CREATE VIEW toyemp AS\n   SELECT name, age, location, 12*salary AS annualsal\n   FROM emp","shape":"CREATE VIEW toyemp AS SELECT name, age, location, 12 * salary AS annualsal FROM emp;"}
+{"sql":"COMMENT ON VIEW noview IS 'no view'","shape":"COMMENT ON VIEW noview IS 'no view';"}
+{"sql":"COMMENT ON VIEW toyemp IS 'is a view'","shape":"COMMENT ON VIEW toyemp IS 'is a view';"}
+{"sql":"COMMENT ON VIEW toyemp IS NULL","shape":"COMMENT ON VIEW toyemp IS NULL;"}
+{"sql":"CREATE TABLE view_base_table (key int PRIMARY KEY, data varchar(20))","shape":"CREATE TABLE view_base_table (key int PRIMARY KEY, data varchar(20));"}
+{"sql":"CREATE VIEW key_dependent_view AS\n   SELECT * FROM view_base_table GROUP BY key","shape":"CREATE VIEW key_dependent_view AS SELECT * FROM view_base_table GROUP BY key;"}
+{"sql":"ALTER TABLE view_base_table DROP CONSTRAINT view_base_table_pkey","shape":"ALTER TABLE view_base_table DROP CONSTRAINT view_base_table_pkey;"}
+{"sql":"CREATE VIEW key_dependent_view_no_cols AS\n   SELECT FROM view_base_table GROUP BY key HAVING length(data) > 0","shape":"CREATE VIEW key_dependent_view_no_cols AS SELECT FROM view_base_table GROUP BY key HAVING length(data) > 0;"}
+{"sql":"CREATE TABLE viewtest_tbl (a int, b int, c numeric(10,1), d text COLLATE \"C\")","shape":"CREATE TABLE viewtest_tbl (a int, b int, c numeric(10, 1), d text COLLATE \"C\");"}
+{"sql":"COPY viewtest_tbl FROM stdin","shape":"COPY viewtest_tbl FROM STDIN;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT * FROM viewtest_tbl","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT * FROM viewtest_tbl;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT * FROM viewtest_tbl WHERE a > 10","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT * FROM viewtest_tbl WHERE a > 10;"}
+{"sql":"SELECT * FROM viewtest","shape":"SELECT * FROM viewtest;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT a, b, c, d FROM viewtest_tbl WHERE a > 5 ORDER BY b DESC","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT a, b, c, d FROM viewtest_tbl WHERE a > 5 ORDER BY b DESC;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT a FROM viewtest_tbl WHERE a <> 20","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT a FROM viewtest_tbl WHERE a <> 20;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT 1, * FROM viewtest_tbl","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT 1, * FROM viewtest_tbl;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT a, b::numeric, c, d FROM viewtest_tbl","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT a, b::numeric, c, d FROM viewtest_tbl;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT a, b, c::numeric(10,2), d FROM viewtest_tbl","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT a, b, c::numeric(10, 2), d FROM viewtest_tbl;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT a, b, c, d COLLATE \"POSIX\" FROM viewtest_tbl","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT a, b, c, d COLLATE \"POSIX\" FROM viewtest_tbl;"}
+{"sql":"CREATE OR REPLACE VIEW viewtest AS\n\tSELECT a, b, c, d, 0 AS e FROM viewtest_tbl","shape":"CREATE OR REPLACE VIEW viewtest AS SELECT a, b, c, d, 0 AS e FROM viewtest_tbl;"}
+{"sql":"DROP VIEW viewtest","shape":"DROP VIEW viewtest;"}
+{"sql":"DROP TABLE viewtest_tbl","shape":"DROP TABLE viewtest_tbl;"}
+{"sql":"CREATE SCHEMA temp_view_test\n    CREATE TABLE base_table (a int, id int)\n    CREATE TABLE base_table2 (a int, id int)","shape":"CREATE SCHEMA temp_view_test CREATE TABLE base_table (a int, id int) CREATE TABLE base_table2 (a int, id int);"}
+{"sql":"SET search_path TO temp_view_test, public","shape":"SET search_path TO temp_view_test, public;"}
+{"sql":"CREATE TEMPORARY TABLE temp_table (a int, id int)","shape":"CREATE TEMPORARY TABLE temp_table (a int, id int);"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM base_table","shape":"CREATE VIEW v1 AS SELECT * FROM base_table;"}
+{"sql":"CREATE VIEW v1_temp AS SELECT * FROM temp_table","shape":"CREATE VIEW v1_temp AS SELECT * FROM temp_table;"}
+{"sql":"CREATE TEMP VIEW v2_temp AS SELECT * FROM base_table","shape":"CREATE TEMPORARY VIEW v2_temp AS SELECT * FROM base_table;"}
+{"sql":"CREATE VIEW temp_view_test.v2 AS SELECT * FROM base_table","shape":"CREATE VIEW temp_view_test.v2 AS SELECT * FROM base_table;"}
+{"sql":"CREATE VIEW temp_view_test.v3_temp AS SELECT * FROM temp_table","shape":"CREATE VIEW temp_view_test.v3_temp AS SELECT * FROM temp_table;"}
+{"sql":"CREATE SCHEMA test_view_schema\n    CREATE TEMP VIEW testview AS SELECT 1","shape":"CREATE SCHEMA test_view_schema CREATE TEMPORARY VIEW testview AS SELECT 1;"}
+{"sql":"CREATE VIEW v3 AS\n    SELECT t1.a AS t1_a, t2.a AS t2_a\n    FROM base_table t1, base_table2 t2\n    WHERE t1.id = t2.id","shape":"CREATE VIEW v3 AS SELECT t1.a AS t1_a, t2.a AS t2_a FROM base_table AS t1, base_table2 AS t2 WHERE t1.id = t2.id;"}
+{"sql":"CREATE VIEW v4_temp AS\n    SELECT t1.a AS t1_a, t2.a AS t2_a\n    FROM base_table t1, temp_table t2\n    WHERE t1.id = t2.id","shape":"CREATE VIEW v4_temp AS SELECT t1.a AS t1_a, t2.a AS t2_a FROM base_table AS t1, temp_table AS t2 WHERE t1.id = t2.id;"}
+{"sql":"CREATE VIEW v5_temp AS\n    SELECT t1.a AS t1_a, t2.a AS t2_a, t3.a AS t3_a\n    FROM base_table t1, base_table2 t2, temp_table t3\n    WHERE t1.id = t2.id and t2.id = t3.id","shape":"CREATE VIEW v5_temp AS SELECT t1.a AS t1_a, t2.a AS t2_a, t3.a AS t3_a FROM base_table AS t1, base_table2 AS t2, temp_table AS t3 WHERE (t1.id = t2.id) AND (t2.id = t3.id);"}
+{"sql":"CREATE VIEW v4 AS SELECT * FROM base_table WHERE id IN (SELECT id FROM base_table2)","shape":"CREATE VIEW v4 AS SELECT * FROM base_table WHERE id IN (SELECT id FROM base_table2);"}
+{"sql":"CREATE VIEW v5 AS SELECT t1.id, t2.a FROM base_table t1, (SELECT * FROM base_table2) t2","shape":"CREATE VIEW v5 AS SELECT t1.id, t2.a FROM base_table AS t1, (SELECT * FROM base_table2) AS t2;"}
+{"sql":"CREATE VIEW v6 AS SELECT * FROM base_table WHERE EXISTS (SELECT 1 FROM base_table2)","shape":"CREATE VIEW v6 AS SELECT * FROM base_table WHERE EXISTS (SELECT 1 FROM base_table2);"}
+{"sql":"CREATE VIEW v7 AS SELECT * FROM base_table WHERE NOT EXISTS (SELECT 1 FROM base_table2)","shape":"CREATE VIEW v7 AS SELECT * FROM base_table WHERE NOT EXISTS (SELECT 1 FROM base_table2);"}
+{"sql":"CREATE VIEW v8 AS SELECT * FROM base_table WHERE EXISTS (SELECT 1)","shape":"CREATE VIEW v8 AS SELECT * FROM base_table WHERE EXISTS (SELECT 1);"}
+{"sql":"CREATE VIEW v6_temp AS SELECT * FROM base_table WHERE id IN (SELECT id FROM temp_table)","shape":"CREATE VIEW v6_temp AS SELECT * FROM base_table WHERE id IN (SELECT id FROM temp_table);"}
+{"sql":"CREATE VIEW v7_temp AS SELECT t1.id, t2.a FROM base_table t1, (SELECT * FROM temp_table) t2","shape":"CREATE VIEW v7_temp AS SELECT t1.id, t2.a FROM base_table AS t1, (SELECT * FROM temp_table) AS t2;"}
+{"sql":"CREATE VIEW v8_temp AS SELECT * FROM base_table WHERE EXISTS (SELECT 1 FROM temp_table)","shape":"CREATE VIEW v8_temp AS SELECT * FROM base_table WHERE EXISTS (SELECT 1 FROM temp_table);"}
+{"sql":"CREATE VIEW v9_temp AS SELECT * FROM base_table WHERE NOT EXISTS (SELECT 1 FROM temp_table)","shape":"CREATE VIEW v9_temp AS SELECT * FROM base_table WHERE NOT EXISTS (SELECT 1 FROM temp_table);"}
+{"sql":"CREATE VIEW v10_temp AS SELECT * FROM v7_temp","shape":"CREATE VIEW v10_temp AS SELECT * FROM v7_temp;"}
+{"sql":"CREATE VIEW v11_temp AS SELECT t1.id, t2.a FROM base_table t1, v10_temp t2","shape":"CREATE VIEW v11_temp AS SELECT t1.id, t2.a FROM base_table AS t1, v10_temp AS t2;"}
+{"sql":"CREATE VIEW v12_temp AS SELECT true FROM v11_temp","shape":"CREATE VIEW v12_temp AS SELECT TRUE FROM v11_temp;"}
+{"sql":"CREATE SEQUENCE seq1","shape":"CREATE SEQUENCE seq1;"}
+{"sql":"CREATE TEMPORARY SEQUENCE seq1_temp","shape":"CREATE TEMPORARY SEQUENCE seq1_temp;"}
+{"sql":"CREATE VIEW v9 AS SELECT seq1.is_called FROM seq1","shape":"CREATE VIEW v9 AS SELECT seq1.is_called FROM seq1;"}
+{"sql":"CREATE VIEW v13_temp AS SELECT seq1_temp.is_called FROM seq1_temp","shape":"CREATE VIEW v13_temp AS SELECT seq1_temp.is_called FROM seq1_temp;"}
+{"sql":"SELECT relname FROM pg_class\n    WHERE relname LIKE 'v_'\n    AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'temp_view_test')\n    ORDER BY relname","shape":"SELECT relname FROM pg_class WHERE (relname LIKE 'v_') AND (relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'temp_view_test')) ORDER BY relname;"}
+{"sql":"SELECT relname FROM pg_class\n    WHERE relname LIKE 'v%'\n    AND relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname LIKE 'pg_temp%')\n    ORDER BY relname","shape":"SELECT relname FROM pg_class WHERE (relname LIKE 'v%') AND (relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname LIKE 'pg_temp%')) ORDER BY relname;"}
+{"sql":"CREATE SCHEMA testviewschm2","shape":"CREATE SCHEMA testviewschm2;"}
+{"sql":"SET search_path TO testviewschm2, public","shape":"SET search_path TO testviewschm2, public;"}
+{"sql":"CREATE TABLE t1 (num int, name text)","shape":"CREATE TABLE t1 (num int, name text);"}
+{"sql":"CREATE TABLE t2 (num2 int, value text)","shape":"CREATE TABLE t2 (num2 int, value text);"}
+{"sql":"CREATE TEMP TABLE tt (num2 int, value text)","shape":"CREATE TEMPORARY TABLE tt (num2 int, value text);"}
+{"sql":"CREATE VIEW nontemp1 AS SELECT * FROM t1 CROSS JOIN t2","shape":"CREATE VIEW nontemp1 AS SELECT * FROM t1 CROSS JOIN t2;"}
+{"sql":"CREATE VIEW temporal1 AS SELECT * FROM t1 CROSS JOIN tt","shape":"CREATE VIEW temporal1 AS SELECT * FROM t1 CROSS JOIN tt;"}
+{"sql":"CREATE VIEW nontemp2 AS SELECT * FROM t1 INNER JOIN t2 ON t1.num = t2.num2","shape":"CREATE VIEW nontemp2 AS SELECT * FROM t1 JOIN t2 ON t1.num = t2.num2;"}
+{"sql":"CREATE VIEW temporal2 AS SELECT * FROM t1 INNER JOIN tt ON t1.num = tt.num2","shape":"CREATE VIEW temporal2 AS SELECT * FROM t1 JOIN tt ON t1.num = tt.num2;"}
+{"sql":"CREATE VIEW nontemp3 AS SELECT * FROM t1 LEFT JOIN t2 ON t1.num = t2.num2","shape":"CREATE VIEW nontemp3 AS SELECT * FROM t1 LEFT JOIN t2 ON t1.num = t2.num2;"}
+{"sql":"CREATE VIEW temporal3 AS SELECT * FROM t1 LEFT JOIN tt ON t1.num = tt.num2","shape":"CREATE VIEW temporal3 AS SELECT * FROM t1 LEFT JOIN tt ON t1.num = tt.num2;"}
+{"sql":"CREATE VIEW nontemp4 AS SELECT * FROM t1 LEFT JOIN t2 ON t1.num = t2.num2 AND t2.value = 'xxx'","shape":"CREATE VIEW nontemp4 AS SELECT * FROM t1 LEFT JOIN t2 ON (t1.num = t2.num2) AND (t2.value = 'xxx');"}
+{"sql":"CREATE VIEW temporal4 AS SELECT * FROM t1 LEFT JOIN tt ON t1.num = tt.num2 AND tt.value = 'xxx'","shape":"CREATE VIEW temporal4 AS SELECT * FROM t1 LEFT JOIN tt ON (t1.num = tt.num2) AND (tt.value = 'xxx');"}
+{"sql":"SELECT relname FROM pg_class\n    WHERE relname LIKE 'nontemp%'\n    AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'testviewschm2')\n    ORDER BY relname","shape":"SELECT relname FROM pg_class WHERE (relname LIKE 'nontemp%') AND (relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'testviewschm2')) ORDER BY relname;"}
+{"sql":"SELECT relname FROM pg_class\n    WHERE relname LIKE 'temporal%'\n    AND relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname LIKE 'pg_temp%')\n    ORDER BY relname","shape":"SELECT relname FROM pg_class WHERE (relname LIKE 'temporal%') AND (relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname LIKE 'pg_temp%')) ORDER BY relname;"}
+{"sql":"CREATE TABLE tbl1 ( a int, b int)","shape":"CREATE TABLE tbl1 (a int, b int);"}
+{"sql":"CREATE TABLE tbl2 (c int, d int)","shape":"CREATE TABLE tbl2 (c int, d int);"}
+{"sql":"CREATE TABLE tbl3 (e int, f int)","shape":"CREATE TABLE tbl3 (e int, f int);"}
+{"sql":"CREATE TABLE tbl4 (g int, h int)","shape":"CREATE TABLE tbl4 (g int, h int);"}
+{"sql":"CREATE TEMP TABLE tmptbl (i int, j int)","shape":"CREATE TEMPORARY TABLE tmptbl (i int, j int);"}
+{"sql":"CREATE   VIEW  pubview AS SELECT * FROM tbl1 WHERE tbl1.a\nBETWEEN (SELECT d FROM tbl2 WHERE c = 1) AND (SELECT e FROM tbl3 WHERE f = 2)\nAND EXISTS (SELECT g FROM tbl4 LEFT JOIN tbl3 ON tbl4.h = tbl3.f)","shape":"CREATE VIEW pubview AS SELECT * FROM tbl1 WHERE (tbl1.a BETWEEN (SELECT d FROM tbl2 WHERE c = 1) AND (SELECT e FROM tbl3 WHERE f = 2)) AND EXISTS (SELECT g FROM tbl4 LEFT JOIN tbl3 ON tbl4.h = tbl3.f);"}
+{"sql":"SELECT count(*) FROM pg_class where relname = 'pubview'\nAND relnamespace IN (SELECT OID FROM pg_namespace WHERE nspname = 'testviewschm2')","shape":"SELECT count(*) FROM pg_class WHERE (relname = 'pubview') AND (relnamespace IN (SELECT OID FROM pg_namespace WHERE nspname = 'testviewschm2'));"}
+{"sql":"CREATE   VIEW  mytempview AS SELECT * FROM tbl1 WHERE tbl1.a\nBETWEEN (SELECT d FROM tbl2 WHERE c = 1) AND (SELECT e FROM tbl3 WHERE f = 2)\nAND EXISTS (SELECT g FROM tbl4 LEFT JOIN tbl3 ON tbl4.h = tbl3.f)\nAND NOT EXISTS (SELECT g FROM tbl4 LEFT JOIN tmptbl ON tbl4.h = tmptbl.j)","shape":"CREATE VIEW mytempview AS SELECT * FROM tbl1 WHERE ((tbl1.a BETWEEN (SELECT d FROM tbl2 WHERE c = 1) AND (SELECT e FROM tbl3 WHERE f = 2)) AND EXISTS (SELECT g FROM tbl4 LEFT JOIN tbl3 ON tbl4.h = tbl3.f)) AND (NOT EXISTS (SELECT g FROM tbl4 LEFT JOIN tmptbl ON tbl4.h = tmptbl.j));"}
+{"sql":"SELECT count(*) FROM pg_class where relname LIKE 'mytempview'\nAnd relnamespace IN (SELECT OID FROM pg_namespace WHERE nspname LIKE 'pg_temp%')","shape":"SELECT count(*) FROM pg_class WHERE (relname LIKE 'mytempview') AND (relnamespace IN (SELECT OID FROM pg_namespace WHERE nspname LIKE 'pg_temp%'));"}
+{"sql":"CREATE VIEW mysecview1\n       AS SELECT * FROM tbl1 WHERE a = 0","shape":"CREATE VIEW mysecview1 AS SELECT * FROM tbl1 WHERE a = 0;"}
+{"sql":"CREATE VIEW mysecview2 WITH (security_barrier=true)\n       AS SELECT * FROM tbl1 WHERE a > 0","shape":"CREATE VIEW mysecview2 WITH (security_barrier = TRUE) AS SELECT * FROM tbl1 WHERE a > 0;"}
+{"sql":"CREATE VIEW mysecview3 WITH (security_barrier=false)\n       AS SELECT * FROM tbl1 WHERE a < 0","shape":"CREATE VIEW mysecview3 WITH (security_barrier = FALSE) AS SELECT * FROM tbl1 WHERE a < 0;"}
+{"sql":"CREATE VIEW mysecview4 WITH (security_barrier)\n       AS SELECT * FROM tbl1 WHERE a <> 0","shape":"CREATE VIEW mysecview4 WITH (security_barrier) AS SELECT * FROM tbl1 WHERE a <> 0;"}
+{"sql":"CREATE VIEW mysecview5 WITH (security_barrier=100)\t-- Error\n       AS SELECT * FROM tbl1 WHERE a > 100","shape":"CREATE VIEW mysecview5 WITH (security_barrier = 100) AS SELECT * FROM tbl1 WHERE a > 100;"}
+{"sql":"CREATE VIEW mysecview6 WITH (invalid_option)\t\t-- Error\n       AS SELECT * FROM tbl1 WHERE a < 100","shape":"CREATE VIEW mysecview6 WITH (invalid_option) AS SELECT * FROM tbl1 WHERE a < 100;"}
+{"sql":"CREATE VIEW mysecview7 WITH (security_invoker=true)\n       AS SELECT * FROM tbl1 WHERE a = 100","shape":"CREATE VIEW mysecview7 WITH (security_invoker = TRUE) AS SELECT * FROM tbl1 WHERE a = 100;"}
+{"sql":"CREATE VIEW mysecview8 WITH (security_invoker=false, security_barrier=true)\n       AS SELECT * FROM tbl1 WHERE a > 100","shape":"CREATE VIEW mysecview8 WITH (security_invoker = FALSE, security_barrier = TRUE) AS SELECT * FROM tbl1 WHERE a > 100;"}
+{"sql":"CREATE VIEW mysecview9 WITH (security_invoker)\n       AS SELECT * FROM tbl1 WHERE a < 100","shape":"CREATE VIEW mysecview9 WITH (security_invoker) AS SELECT * FROM tbl1 WHERE a < 100;"}
+{"sql":"CREATE VIEW mysecview10 WITH (security_invoker=100)\t-- Error\n       AS SELECT * FROM tbl1 WHERE a <> 100","shape":"CREATE VIEW mysecview10 WITH (security_invoker = 100) AS SELECT * FROM tbl1 WHERE a <> 100;"}
+{"sql":"SELECT relname, relkind, reloptions FROM pg_class\n       WHERE oid in ('mysecview1'::regclass, 'mysecview2'::regclass,\n                     'mysecview3'::regclass, 'mysecview4'::regclass,\n                     'mysecview7'::regclass, 'mysecview8'::regclass,\n                     'mysecview9'::regclass)\n       ORDER BY relname","shape":"SELECT relname, relkind, reloptions FROM pg_class WHERE oid IN ('mysecview1'::regclass, 'mysecview2'::regclass, 'mysecview3'::regclass, 'mysecview4'::regclass, 'mysecview7'::regclass, 'mysecview8'::regclass, 'mysecview9'::regclass) ORDER BY relname;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview1\n       AS SELECT * FROM tbl1 WHERE a = 256","shape":"CREATE OR REPLACE VIEW mysecview1 AS SELECT * FROM tbl1 WHERE a = 256;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview2\n       AS SELECT * FROM tbl1 WHERE a > 256","shape":"CREATE OR REPLACE VIEW mysecview2 AS SELECT * FROM tbl1 WHERE a > 256;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview3 WITH (security_barrier=true)\n       AS SELECT * FROM tbl1 WHERE a < 256","shape":"CREATE OR REPLACE VIEW mysecview3 WITH (security_barrier = TRUE) AS SELECT * FROM tbl1 WHERE a < 256;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview4 WITH (security_barrier=false)\n       AS SELECT * FROM tbl1 WHERE a <> 256","shape":"CREATE OR REPLACE VIEW mysecview4 WITH (security_barrier = FALSE) AS SELECT * FROM tbl1 WHERE a <> 256;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview7\n       AS SELECT * FROM tbl1 WHERE a > 256","shape":"CREATE OR REPLACE VIEW mysecview7 AS SELECT * FROM tbl1 WHERE a > 256;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview8 WITH (security_invoker=true)\n       AS SELECT * FROM tbl1 WHERE a < 256","shape":"CREATE OR REPLACE VIEW mysecview8 WITH (security_invoker = TRUE) AS SELECT * FROM tbl1 WHERE a < 256;"}
+{"sql":"CREATE OR REPLACE VIEW mysecview9 WITH (security_invoker=false, security_barrier=true)\n       AS SELECT * FROM tbl1 WHERE a <> 256","shape":"CREATE OR REPLACE VIEW mysecview9 WITH (security_invoker = FALSE, security_barrier = TRUE) AS SELECT * FROM tbl1 WHERE a <> 256;"}
+{"sql":"CREATE VIEW unspecified_types AS\n  SELECT 42 as i, 42.5 as num, 'foo' as u, 'foo'::unknown as u2, null as n","shape":"CREATE VIEW unspecified_types AS SELECT 42 AS i, 42.5 AS num, 'foo' AS u, 'foo'::unknown AS u2, NULL AS n;"}
+{"sql":"SELECT * FROM unspecified_types","shape":"SELECT * FROM unspecified_types;"}
+{"sql":"CREATE VIEW tt1 AS\n  SELECT * FROM (\n    VALUES\n       ('abc'::varchar(3), '0123456789', 42, 'abcd'::varchar(4)),\n       ('0123456789', 'abc'::varchar(3), 42.12, 'abc'::varchar(4))\n  ) vv(a,b,c,d)","shape":"CREATE VIEW tt1 AS SELECT * FROM (VALUES ('abc'::varchar(3), '0123456789', 42, 'abcd'::varchar(4)), ('0123456789', 'abc'::varchar(3), 42.12, 'abc'::varchar(4))) AS vv(a, b, c, d);"}
+{"sql":"SELECT * FROM tt1","shape":"SELECT * FROM tt1;"}
+{"sql":"SELECT a::varchar(3) FROM tt1","shape":"SELECT a::varchar(3) FROM tt1;"}
+{"sql":"DROP VIEW tt1","shape":"DROP VIEW tt1;"}
+{"sql":"CREATE TABLE tt1 (f1 int, f2 int, f3 text)","shape":"CREATE TABLE tt1 (f1 int, f2 int, f3 text);"}
+{"sql":"CREATE TABLE tx1 (x1 int, x2 int, x3 text)","shape":"CREATE TABLE tx1 (x1 int, x2 int, x3 text);"}
+{"sql":"CREATE TABLE temp_view_test.tt1 (y1 int, f2 int, f3 text)","shape":"CREATE TABLE temp_view_test.tt1 (y1 int, f2 int, f3 text);"}
+{"sql":"CREATE VIEW aliased_view_1 AS\n  select * from tt1\n    where exists (select 1 from tx1 where tt1.f1 = tx1.x1)","shape":"CREATE VIEW aliased_view_1 AS SELECT * FROM tt1 WHERE EXISTS (SELECT 1 FROM tx1 WHERE tt1.f1 = tx1.x1);"}
+{"sql":"CREATE VIEW aliased_view_2 AS\n  select * from tt1 a1\n    where exists (select 1 from tx1 where a1.f1 = tx1.x1)","shape":"CREATE VIEW aliased_view_2 AS SELECT * FROM tt1 AS a1 WHERE EXISTS (SELECT 1 FROM tx1 WHERE a1.f1 = tx1.x1);"}
+{"sql":"CREATE VIEW aliased_view_3 AS\n  select * from tt1\n    where exists (select 1 from tx1 a2 where tt1.f1 = a2.x1)","shape":"CREATE VIEW aliased_view_3 AS SELECT * FROM tt1 WHERE EXISTS (SELECT 1 FROM tx1 AS a2 WHERE tt1.f1 = a2.x1);"}
+{"sql":"CREATE VIEW aliased_view_4 AS\n  select * from temp_view_test.tt1\n    where exists (select 1 from tt1 where temp_view_test.tt1.y1 = tt1.f1)","shape":"CREATE VIEW aliased_view_4 AS SELECT * FROM temp_view_test.tt1 WHERE EXISTS (SELECT 1 FROM tt1 WHERE temp_view_test.tt1.y1 = tt1.f1);"}
+{"sql":"ALTER TABLE tx1 RENAME TO a1","shape":"ALTER TABLE tx1 RENAME TO a1;"}
+{"sql":"ALTER TABLE tt1 RENAME TO a2","shape":"ALTER TABLE tt1 RENAME TO a2;"}
+{"sql":"ALTER TABLE a1 RENAME TO tt1","shape":"ALTER TABLE a1 RENAME TO tt1;"}
+{"sql":"ALTER TABLE a2 RENAME TO tx1","shape":"ALTER TABLE a2 RENAME TO tx1;"}
+{"sql":"ALTER TABLE tx1 SET SCHEMA temp_view_test","shape":"ALTER TABLE tx1 SET SCHEMA temp_view_test;"}
+{"sql":"ALTER TABLE temp_view_test.tt1 RENAME TO tmp1","shape":"ALTER TABLE temp_view_test.tt1 RENAME TO tmp1;"}
+{"sql":"ALTER TABLE temp_view_test.tmp1 SET SCHEMA testviewschm2","shape":"ALTER TABLE temp_view_test.tmp1 SET SCHEMA testviewschm2;"}
+{"sql":"ALTER TABLE tmp1 RENAME TO tx1","shape":"ALTER TABLE tmp1 RENAME TO tx1;"}
+{"sql":"create view aliased_order_by as\nselect x1 as x2, x2 as x1, x3 from tt1\n  order by x2","shape":"CREATE VIEW aliased_order_by AS SELECT x1 AS x2, x2 AS x1, x3 FROM tt1 ORDER BY x2;"}
+{"sql":"alter view aliased_order_by rename column x1 to x0"}
+{"sql":"alter view aliased_order_by rename column x3 to x1"}
+{"sql":"create view view_of_joins as\nselect * from\n  (select * from (tbl1 cross join tbl2) same) ss,\n  (tbl3 cross join tbl4) same","shape":"CREATE VIEW view_of_joins AS SELECT * FROM (SELECT * FROM (tbl1 CROSS JOIN tbl2) AS same) AS ss, (tbl3 CROSS JOIN tbl4) AS same;"}
+{"sql":"create table tbl1a (a int, c int)","shape":"CREATE TABLE tbl1a (a int, c int);"}
+{"sql":"create view view_of_joins_2a as select * from tbl1 join tbl1a using (a)","shape":"CREATE VIEW view_of_joins_2a AS SELECT * FROM tbl1 JOIN tbl1a USING (a);"}
+{"sql":"create view view_of_joins_2b as select * from tbl1 join tbl1a using (a) as x","shape":"CREATE VIEW view_of_joins_2b AS SELECT * FROM tbl1 JOIN tbl1a USING (a) AS x;"}
+{"sql":"create view view_of_joins_2c as select * from (tbl1 join tbl1a using (a)) as y","shape":"CREATE VIEW view_of_joins_2c AS SELECT * FROM (tbl1 JOIN tbl1a USING (a)) AS y;"}
+{"sql":"create view view_of_joins_2d as select * from (tbl1 join tbl1a using (a) as x) as y","shape":"CREATE VIEW view_of_joins_2d AS SELECT * FROM (tbl1 JOIN tbl1a USING (a) AS x) AS y;"}
+{"sql":"select pg_get_viewdef('view_of_joins_2a', true)","shape":"SELECT pg_get_viewdef('view_of_joins_2a', TRUE);"}
+{"sql":"select pg_get_viewdef('view_of_joins_2b', true)","shape":"SELECT pg_get_viewdef('view_of_joins_2b', TRUE);"}
+{"sql":"select pg_get_viewdef('view_of_joins_2c', true)","shape":"SELECT pg_get_viewdef('view_of_joins_2c', TRUE);"}
+{"sql":"select pg_get_viewdef('view_of_joins_2d', true)","shape":"SELECT pg_get_viewdef('view_of_joins_2d', TRUE);"}
+{"sql":"create table tt2 (a int, b int, c int)","shape":"CREATE TABLE tt2 (a int, b int, c int);"}
+{"sql":"create table tt3 (ax int8, b int2, c numeric)","shape":"CREATE TABLE tt3 (ax int8, b int2, c numeric);"}
+{"sql":"create table tt4 (ay int, b int, q int)","shape":"CREATE TABLE tt4 (ay int, b int, q int);"}
+{"sql":"create view v1 as select * from tt2 natural join tt3","shape":"CREATE VIEW v1 AS SELECT * FROM tt2 NATURAL JOIN tt3;"}
+{"sql":"create view v1a as select * from (tt2 natural join tt3) j","shape":"CREATE VIEW v1a AS SELECT * FROM (tt2 NATURAL JOIN tt3) AS j;"}
+{"sql":"create view v2 as select * from tt2 join tt3 using (b,c) join tt4 using (b)","shape":"CREATE VIEW v2 AS SELECT * FROM (tt2 JOIN tt3 USING (b, c)) JOIN tt4 USING (b);"}
+{"sql":"create view v2a as select * from (tt2 join tt3 using (b,c) join tt4 using (b)) j","shape":"CREATE VIEW v2a AS SELECT * FROM ((tt2 JOIN tt3 USING (b, c)) JOIN tt4 USING (b)) AS j;"}
+{"sql":"create view v3 as select * from tt2 join tt3 using (b,c) full join tt4 using (b)","shape":"CREATE VIEW v3 AS SELECT * FROM (tt2 JOIN tt3 USING (b, c)) FULL JOIN tt4 USING (b);"}
+{"sql":"select pg_get_viewdef('v1', true)","shape":"SELECT pg_get_viewdef('v1', TRUE);"}
+{"sql":"select pg_get_viewdef('v1a', true)","shape":"SELECT pg_get_viewdef('v1a', TRUE);"}
+{"sql":"select pg_get_viewdef('v2', true)","shape":"SELECT pg_get_viewdef('v2', TRUE);"}
+{"sql":"select pg_get_viewdef('v2a', true)","shape":"SELECT pg_get_viewdef('v2a', TRUE);"}
+{"sql":"select pg_get_viewdef('v3', true)","shape":"SELECT pg_get_viewdef('v3', TRUE);"}
+{"sql":"alter table tt2 add column d int","shape":"ALTER TABLE tt2 ADD COLUMN d int;"}
+{"sql":"alter table tt2 add column e int","shape":"ALTER TABLE tt2 ADD COLUMN e int;"}
+{"sql":"alter table tt3 rename c to d","shape":"ALTER TABLE tt3 RENAME COLUMN c TO d;"}
+{"sql":"alter table tt3 add column c int","shape":"ALTER TABLE tt3 ADD COLUMN c int;"}
+{"sql":"alter table tt3 add column e int","shape":"ALTER TABLE tt3 ADD COLUMN e int;"}
+{"sql":"alter table tt2 drop column d","shape":"ALTER TABLE tt2 DROP COLUMN d;"}
+{"sql":"create table tt5 (a int, b int)","shape":"CREATE TABLE tt5 (a int, b int);"}
+{"sql":"create table tt6 (c int, d int)","shape":"CREATE TABLE tt6 (c int, d int);"}
+{"sql":"create view vv1 as select * from (tt5 cross join tt6) j(aa,bb,cc,dd)","shape":"CREATE VIEW vv1 AS SELECT * FROM (tt5 CROSS JOIN tt6) AS j(aa, bb, cc, dd);"}
+{"sql":"select pg_get_viewdef('vv1', true)","shape":"SELECT pg_get_viewdef('vv1', TRUE);"}
+{"sql":"alter table tt5 add column c int","shape":"ALTER TABLE tt5 ADD COLUMN c int;"}
+{"sql":"alter table tt5 add column cc int","shape":"ALTER TABLE tt5 ADD COLUMN cc int;"}
+{"sql":"alter table tt5 drop column c","shape":"ALTER TABLE tt5 DROP COLUMN c;"}
+{"sql":"create view v4 as select * from v1","shape":"CREATE VIEW v4 AS SELECT * FROM v1;"}
+{"sql":"alter view v1 rename column a to x"}
+{"sql":"select pg_get_viewdef('v4', true)","shape":"SELECT pg_get_viewdef('v4', TRUE);"}
+{"sql":"create table tt7 (x int, xx int, y int)","shape":"CREATE TABLE tt7 (x int, xx int, y int);"}
+{"sql":"alter table tt7 drop column xx","shape":"ALTER TABLE tt7 DROP COLUMN xx;"}
+{"sql":"create table tt8 (x int, z int)","shape":"CREATE TABLE tt8 (x int, z int);"}
+{"sql":"create view vv2 as\nselect * from (values(1,2,3,4,5)) v(a,b,c,d,e)\nunion all\nselect * from tt7 full join tt8 using (x), tt8 tt8x","shape":"CREATE VIEW vv2 AS SELECT * FROM (VALUES (1, 2, 3, 4, 5)) AS v(a, b, c, d, e) UNION ALL SELECT * FROM tt7 FULL JOIN tt8 USING (x), tt8 AS tt8x;"}
+{"sql":"select pg_get_viewdef('vv2', true)","shape":"SELECT pg_get_viewdef('vv2', TRUE);"}
+{"sql":"create view vv3 as\nselect * from (values(1,2,3,4,5,6)) v(a,b,c,x,e,f)\nunion all\nselect * from\n  tt7 full join tt8 using (x),\n  tt7 tt7x full join tt8 tt8x using (x)","shape":"CREATE VIEW vv3 AS SELECT * FROM (VALUES (1, 2, 3, 4, 5, 6)) AS v(a, b, c, x, e, f) UNION ALL SELECT * FROM tt7 FULL JOIN tt8 USING (x), tt7 AS tt7x FULL JOIN tt8 AS tt8x USING (x);"}
+{"sql":"select pg_get_viewdef('vv3', true)","shape":"SELECT pg_get_viewdef('vv3', TRUE);"}
+{"sql":"create view vv4 as\nselect * from (values(1,2,3,4,5,6,7)) v(a,b,c,x,e,f,g)\nunion all\nselect * from\n  tt7 full join tt8 using (x),\n  tt7 tt7x full join tt8 tt8x using (x) full join tt8 tt8y using (x)","shape":"CREATE VIEW vv4 AS SELECT * FROM (VALUES (1, 2, 3, 4, 5, 6, 7)) AS v(a, b, c, x, e, f, g) UNION ALL SELECT * FROM tt7 FULL JOIN tt8 USING (x), (tt7 AS tt7x FULL JOIN tt8 AS tt8x USING (x)) FULL JOIN tt8 AS tt8y USING (x);"}
+{"sql":"select pg_get_viewdef('vv4', true)","shape":"SELECT pg_get_viewdef('vv4', TRUE);"}
+{"sql":"alter table tt7 add column zz int","shape":"ALTER TABLE tt7 ADD COLUMN zz int;"}
+{"sql":"alter table tt7 add column z int","shape":"ALTER TABLE tt7 ADD COLUMN z int;"}
+{"sql":"alter table tt7 drop column zz","shape":"ALTER TABLE tt7 DROP COLUMN zz;"}
+{"sql":"alter table tt8 add column z2 int","shape":"ALTER TABLE tt8 ADD COLUMN z2 int;"}
+{"sql":"create table tt7a (x date, xx int, y int)","shape":"CREATE TABLE tt7a (x date, xx int, y int);"}
+{"sql":"alter table tt7a drop column xx","shape":"ALTER TABLE tt7a DROP COLUMN xx;"}
+{"sql":"create table tt8a (x timestamptz, z int)","shape":"CREATE TABLE tt8a (x timestamptz, z int);"}
+{"sql":"create view vv2a as\nselect * from (values(now(),2,3,now(),5)) v(a,b,c,d,e)\nunion all\nselect * from tt7a left join tt8a using (x), tt8a tt8ax","shape":"CREATE VIEW vv2a AS SELECT * FROM (VALUES (now(), 2, 3, now(), 5)) AS v(a, b, c, d, e) UNION ALL SELECT * FROM tt7a LEFT JOIN tt8a USING (x), tt8a AS tt8ax;"}
+{"sql":"select pg_get_viewdef('vv2a', true)","shape":"SELECT pg_get_viewdef('vv2a', TRUE);"}
+{"sql":"create table tt9 (x int, xx int, y int)","shape":"CREATE TABLE tt9 (x int, xx int, y int);"}
+{"sql":"create table tt10 (x int, z int)","shape":"CREATE TABLE tt10 (x int, z int);"}
+{"sql":"create view vv5 as select x,y,z from tt9 join tt10 using(x)","shape":"CREATE VIEW vv5 AS SELECT x, y, z FROM tt9 JOIN tt10 USING (x);"}
+{"sql":"select pg_get_viewdef('vv5', true)","shape":"SELECT pg_get_viewdef('vv5', TRUE);"}
+{"sql":"alter table tt9 drop column xx","shape":"ALTER TABLE tt9 DROP COLUMN xx;"}
+{"sql":"create table tt11 (x int, y int)","shape":"CREATE TABLE tt11 (x int, y int);"}
+{"sql":"create table tt12 (x int, z int)","shape":"CREATE TABLE tt12 (x int, z int);"}
+{"sql":"create table tt13 (z int, q int)","shape":"CREATE TABLE tt13 (z int, q int);"}
+{"sql":"create view vv6 as select x,y,z,q from\n  (tt11 join tt12 using(x)) join tt13 using(z)","shape":"CREATE VIEW vv6 AS SELECT x, y, z, q FROM (tt11 JOIN tt12 USING (x)) JOIN tt13 USING (z);"}
+{"sql":"select pg_get_viewdef('vv6', true)","shape":"SELECT pg_get_viewdef('vv6', TRUE);"}
+{"sql":"alter table tt11 add column z int","shape":"ALTER TABLE tt11 ADD COLUMN z int;"}
+{"sql":"create table tt14t (f1 text, f2 text, f3 text, f4 text)","shape":"CREATE TABLE tt14t (f1 text, f2 text, f3 text, f4 text);"}
+{"sql":"insert into tt14t values('foo', 'bar', 'baz', '42')","shape":"INSERT INTO tt14t VALUES ('foo', 'bar', 'baz', '42');"}
+{"sql":"alter table tt14t drop column f2","shape":"ALTER TABLE tt14t DROP COLUMN f2;"}
+{"sql":"create function tt14f() returns setof tt14t as\n$$\ndeclare\n    rec1 record;\nbegin\n    for rec1 in select * from tt14t\n    loop\n        return next rec1;\n    end loop;\nend;\n$$\nlanguage plpgsql","shape":"CREATE FUNCTION tt14f() RETURNS SETOF tt14t AS '\ndeclare\n    rec1 record;\nbegin\n    for rec1 in select * from tt14t\n    loop\n        return next rec1;\n    end loop;\nend;\n' LANGUAGE plpgsql;"}
+{"sql":"create view tt14v as select t.* from tt14f() t","shape":"CREATE VIEW tt14v AS SELECT t.* FROM tt14f() AS t;"}
+{"sql":"select pg_get_viewdef('tt14v', true)","shape":"SELECT pg_get_viewdef('tt14v', TRUE);"}
+{"sql":"select * from tt14v","shape":"SELECT * FROM tt14v;"}
+{"sql":"alter table tt14t drop column f3","shape":"ALTER TABLE tt14t DROP COLUMN f3;"}
+{"sql":"delete from pg_depend where\n  objid = (select oid from pg_rewrite\n           where ev_class = 'tt14v'::regclass and rulename = '_RETURN')\n  and refobjsubid = 3\nreturning pg_describe_object(classid, objid, objsubid) as obj,\n          pg_describe_object(refclassid, refobjid, refobjsubid) as ref,\n          deptype","shape":"DELETE FROM pg_depend WHERE (objid = (SELECT oid FROM pg_rewrite WHERE (ev_class = 'tt14v'::regclass) AND (rulename = '_RETURN'))) AND (refobjsubid = 3) RETURNING pg_describe_object(classid, objid, objsubid) AS obj, pg_describe_object(refclassid, refobjid, refobjsubid) AS ref, deptype;"}
+{"sql":"explain (verbose, costs off) select * from tt14v","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM tt14v;"}
+{"sql":"select f1, f4 from tt14v","shape":"SELECT f1, f4 FROM tt14v;"}
+{"sql":"alter table tt14t alter column f4 type integer using f4::integer","shape":"ALTER TABLE tt14t ALTER COLUMN f4 SET DATA TYPE integer USING f4::integer;"}
+{"sql":"delete from pg_depend where\n  objid = (select oid from pg_rewrite\n           where ev_class = 'tt14v'::regclass and rulename = '_RETURN')\n  and refobjsubid = 4\nreturning pg_describe_object(classid, objid, objsubid) as obj,\n          pg_describe_object(refclassid, refobjid, refobjsubid) as ref,\n          deptype","shape":"DELETE FROM pg_depend WHERE (objid = (SELECT oid FROM pg_rewrite WHERE (ev_class = 'tt14v'::regclass) AND (rulename = '_RETURN'))) AND (refobjsubid = 4) RETURNING pg_describe_object(classid, objid, objsubid) AS obj, pg_describe_object(refclassid, refobjid, refobjsubid) AS ref, deptype;"}
+{"sql":"select f1, f3 from tt14v","shape":"SELECT f1, f3 FROM tt14v;"}
+{"sql":"drop view tt14v","shape":"DROP VIEW tt14v;"}
+{"sql":"create view tt14v as select t.f1, t.f4 from tt14f() t","shape":"CREATE VIEW tt14v AS SELECT t.f1, t.f4 FROM tt14f() AS t;"}
+{"sql":"create type nestedcomposite as (x int8_tbl)","shape":"CREATE TYPE nestedcomposite AS (x int8_tbl);"}
+{"sql":"create view tt15v as select row(i)::nestedcomposite from int8_tbl i","shape":"CREATE VIEW tt15v AS SELECT ROW(i)::nestedcomposite FROM int8_tbl AS i;"}
+{"sql":"select * from tt15v","shape":"SELECT * FROM tt15v;"}
+{"sql":"select pg_get_viewdef('tt15v', true)","shape":"SELECT pg_get_viewdef('tt15v', TRUE);"}
+{"sql":"select row(i.*::int8_tbl)::nestedcomposite from int8_tbl i","shape":"SELECT ROW(i.*::int8_tbl)::nestedcomposite FROM int8_tbl AS i;"}
+{"sql":"create view tt16v as select * from int8_tbl i, lateral(values(i)) ss","shape":"CREATE VIEW tt16v AS SELECT * FROM int8_tbl AS i, LATERAL (VALUES (i)) AS ss;"}
+{"sql":"select * from tt16v","shape":"SELECT * FROM tt16v;"}
+{"sql":"select pg_get_viewdef('tt16v', true)","shape":"SELECT pg_get_viewdef('tt16v', TRUE);"}
+{"sql":"select * from int8_tbl i, lateral(values(i.*::int8_tbl)) ss","shape":"SELECT * FROM int8_tbl AS i, LATERAL (VALUES (i.*::int8_tbl)) AS ss;"}
+{"sql":"create view tt17v as select * from int8_tbl i where i in (values(i))","shape":"CREATE VIEW tt17v AS SELECT * FROM int8_tbl AS i WHERE i IN (VALUES (i));"}
+{"sql":"select * from tt17v","shape":"SELECT * FROM tt17v;"}
+{"sql":"select pg_get_viewdef('tt17v', true)","shape":"SELECT pg_get_viewdef('tt17v', TRUE);"}
+{"sql":"select * from int8_tbl i where i.* in (values(i.*::int8_tbl))","shape":"SELECT * FROM int8_tbl AS i WHERE i.* IN (VALUES (i.*::int8_tbl));"}
+{"sql":"create table tt15v_log(o tt15v, n tt15v, incr bool)","shape":"CREATE TABLE tt15v_log (o tt15v, n tt15v, incr bool);"}
+{"sql":"create rule updlog as on update to tt15v do also\n  insert into tt15v_log values(old, new, row(old,old) < row(new,new))"}
+{"sql":"create view tt18v as\n  select * from int8_tbl xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy\n  union all\n  select * from int8_tbl xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxz","shape":"CREATE VIEW tt18v AS SELECT * FROM int8_tbl AS xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy UNION ALL SELECT * FROM int8_tbl AS xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxz;"}
+{"sql":"select pg_get_viewdef('tt18v', true)","shape":"SELECT pg_get_viewdef('tt18v', TRUE);"}
+{"sql":"explain (costs off) select * from tt18v","shape":"EXPLAIN (COSTS off) SELECT * FROM tt18v;"}
+{"sql":"select 'foo'::text = any(array['abc','def','foo']::text[])","shape":"SELECT 'foo'::text = ANY (ARRAY['abc', 'def', 'foo']::text[]);"}
+{"sql":"select 'foo'::text = any((select array['abc','def','foo']::text[]))","shape":"SELECT 'foo'::text = ANY ((SELECT ARRAY['abc', 'def', 'foo']::text[]));"}
+{"sql":"select 'foo'::text = any((select array['abc','def','foo']::text[])::text[])","shape":"SELECT 'foo'::text = ANY ((SELECT ARRAY['abc', 'def', 'foo']::text[])::text[]);"}
+{"sql":"create view tt19v as\nselect 'foo'::text = any(array['abc','def','foo']::text[]) c1,\n       'foo'::text = any((select array['abc','def','foo']::text[])::text[]) c2","shape":"CREATE VIEW tt19v AS SELECT 'foo'::text = ANY (ARRAY['abc', 'def', 'foo']::text[]) AS c1, 'foo'::text = ANY ((SELECT ARRAY['abc', 'def', 'foo']::text[])::text[]) AS c2;"}
+{"sql":"select pg_get_viewdef('tt19v', true)","shape":"SELECT pg_get_viewdef('tt19v', TRUE);"}
+{"sql":"create view tt20v as\nselect * from\n  coalesce(1,2) as c,\n  collation for ('x'::text) col,\n  current_date as d,\n  localtimestamp(3) as t,\n  cast(1+2 as int4) as i4,\n  cast(1+2 as int8) as i8","shape":"CREATE VIEW tt20v AS SELECT * FROM coalesce(1, 2) AS c, COLLATION FOR ('x'::text) AS col, current_date AS d, localtimestamp(3) AS t, CAST(1 + 2 AS int4) AS i4, CAST(1 + 2 AS int8) AS i8;"}
+{"sql":"select pg_get_viewdef('tt20v', true)","shape":"SELECT pg_get_viewdef('tt20v', TRUE);"}
+{"sql":"create view tt201v as\nselect\n  ('2022-12-01'::date + '1 day'::interval) at time zone 'UTC' as atz,\n  extract(day from now()) as extr,\n  (now(), '1 day'::interval) overlaps\n    (current_timestamp(2), '1 day'::interval) as o,\n  'foo' is normalized isn,\n  'foo' is nfkc normalized isnn,\n  normalize('foo') as n,\n  normalize('foo', nfkd) as nfkd,\n  overlay('foo' placing 'bar' from 2) as ovl,\n  overlay('foo' placing 'bar' from 2 for 3) as ovl2,\n  position('foo' in 'foobar') as p,\n  substring('foo' from 2 for 3) as s,\n  substring('foo' similar 'f' escape '#') as ss,\n  substring('foo' from 'oo') as ssf,  -- historically-permitted abuse\n  trim(' ' from ' foo ') as bt,\n  trim(leading ' ' from ' foo ') as lt,\n  trim(trailing ' foo ') as rt,\n  trim(E'\\\\000'::bytea from E'\\\\000Tom\\\\000'::bytea) as btb,\n  trim(leading E'\\\\000'::bytea from E'\\\\000Tom\\\\000'::bytea) as ltb,\n  trim(trailing E'\\\\000'::bytea from E'\\\\000Tom\\\\000'::bytea) as rtb,\n  CURRENT_DATE as cd,\n  (select * from CURRENT_DATE) as cd2,\n  CURRENT_TIME as ct,\n  (select * from CURRENT_TIME) as ct2,\n  CURRENT_TIME (1) as ct3,\n  (select * from CURRENT_TIME (1)) as ct4,\n  CURRENT_TIMESTAMP as ct5,\n  (select * from CURRENT_TIMESTAMP) as ct6,\n  CURRENT_TIMESTAMP (1) as ct7,\n  (select * from CURRENT_TIMESTAMP (1)) as ct8,\n  LOCALTIME as lt1,\n  (select * from LOCALTIME) as lt2,\n  LOCALTIME (1) as lt3,\n  (select * from LOCALTIME (1)) as lt4,\n  LOCALTIMESTAMP as lt5,\n  (select * from LOCALTIMESTAMP) as lt6,\n  LOCALTIMESTAMP (1) as lt7,\n  (select * from LOCALTIMESTAMP (1)) as lt8,\n  CURRENT_CATALOG as ca,\n  (select * from CURRENT_CATALOG) as ca2,\n  CURRENT_ROLE as cr,\n  (select * from CURRENT_ROLE) as cr2,\n  CURRENT_SCHEMA as cs,\n  (select * from CURRENT_SCHEMA) as cs2,\n  CURRENT_USER as cu,\n  (select * from CURRENT_USER) as cu2,\n  USER as us,\n  (select * from USER) as us2,\n  SESSION_USER seu,\n  (select * from SESSION_USER) as seu2,\n  SYSTEM_USER as su,\n  (select * from SYSTEM_USER) as su2","shape":"CREATE VIEW tt201v AS SELECT ('2022-12-01'::date + '1 day'::interval) AT TIME ZONE 'UTC' AS atz, EXTRACT(DAY FROM now()) AS extr, (now(), '1 day'::interval) OVERLAPS (current_timestamp(2), '1 day'::interval) AS o, 'foo' IS NORMALIZED AS isn, 'foo' IS NFKC NORMALIZED AS isnn, normalize('foo') AS n, normalize('foo', nfkd) AS nfkd, OVERLAY('foo' PLACING 'bar' FROM 2) AS ovl, OVERLAY('foo' PLACING 'bar' FROM 2 FOR 3) AS ovl2, POSITION('foo' IN 'foobar') AS p, SUBSTRING('foo' FROM 2 FOR 3) AS s, SUBSTRING('foo' SIMILAR 'f' ESCAPE '#') AS ss, SUBSTRING('foo' FROM 'oo') AS ssf, TRIM(' ' FROM ' foo ') AS bt, TRIM(LEADING ' ' FROM ' foo ') AS lt, TRIM(TRAILING ' foo ') AS rt, TRIM(E'\\\\000'::bytea FROM E'\\\\000Tom\\\\000'::bytea) AS btb, TRIM(LEADING E'\\\\000'::bytea FROM E'\\\\000Tom\\\\000'::bytea) AS ltb, TRIM(TRAILING E'\\\\000'::bytea FROM E'\\\\000Tom\\\\000'::bytea) AS rtb, CURRENT_DATE AS cd, (SELECT * FROM CURRENT_DATE) AS cd2, CURRENT_TIME AS ct, (SELECT * FROM CURRENT_TIME) AS ct2, CURRENT_TIME(1) AS ct3, (SELECT * FROM CURRENT_TIME(1)) AS ct4, CURRENT_TIMESTAMP AS ct5, (SELECT * FROM CURRENT_TIMESTAMP) AS ct6, CURRENT_TIMESTAMP(1) AS ct7, (SELECT * FROM CURRENT_TIMESTAMP(1)) AS ct8, LOCALTIME AS lt1, (SELECT * FROM LOCALTIME) AS lt2, LOCALTIME(1) AS lt3, (SELECT * FROM LOCALTIME(1)) AS lt4, LOCALTIMESTAMP AS lt5, (SELECT * FROM LOCALTIMESTAMP) AS lt6, LOCALTIMESTAMP(1) AS lt7, (SELECT * FROM LOCALTIMESTAMP(1)) AS lt8, CURRENT_CATALOG AS ca, (SELECT * FROM CURRENT_CATALOG) AS ca2, CURRENT_ROLE AS cr, (SELECT * FROM CURRENT_ROLE) AS cr2, CURRENT_SCHEMA AS cs, (SELECT * FROM CURRENT_SCHEMA) AS cs2, CURRENT_USER AS cu, (SELECT * FROM CURRENT_USER) AS cu2, USER AS us, (SELECT * FROM USER) AS us2, SESSION_USER AS seu, (SELECT * FROM SESSION_USER) AS seu2, SYSTEM_USER AS su, (SELECT * FROM SYSTEM_USER) AS su2;"}
+{"sql":"select pg_get_viewdef('tt201v', true)","shape":"SELECT pg_get_viewdef('tt201v', TRUE);"}
+{"sql":"create view tt21v as\nselect * from tt5 natural inner join tt6","shape":"CREATE VIEW tt21v AS SELECT * FROM tt5 NATURAL JOIN tt6;"}
+{"sql":"select pg_get_viewdef('tt21v', true)","shape":"SELECT pg_get_viewdef('tt21v', TRUE);"}
+{"sql":"create view tt22v as\nselect * from tt5 natural left join tt6","shape":"CREATE VIEW tt22v AS SELECT * FROM tt5 NATURAL LEFT JOIN tt6;"}
+{"sql":"select pg_get_viewdef('tt22v', true)","shape":"SELECT pg_get_viewdef('tt22v', TRUE);"}
+{"sql":"create view tt23v (col_a, col_b) as\nselect q1 as other_name1, q2 as other_name2 from int8_tbl\nunion\nselect 42, 43","shape":"CREATE VIEW tt23v (col_a, col_b) AS SELECT q1 AS other_name1, q2 AS other_name2 FROM int8_tbl UNION SELECT 42, 43;"}
+{"sql":"select pg_get_viewdef('tt23v', true)","shape":"SELECT pg_get_viewdef('tt23v', TRUE);"}
+{"sql":"select pg_get_ruledef(oid, true) from pg_rewrite\n  where ev_class = 'tt23v'::regclass and ev_type = '1'","shape":"SELECT pg_get_ruledef(oid, TRUE) FROM pg_rewrite WHERE (ev_class = 'tt23v'::regclass) AND (ev_type = '1');"}
+{"sql":"create view tt24v as\nwith cte as materialized (select r from (values(1,2),(3,4)) r)\nselect (r).column2 as col_a, (rr).column2 as col_b from\n  cte join (select rr from (values(1,7),(3,8)) rr limit 2) ss\n  on (r).column1 = (rr).column1","shape":"CREATE VIEW tt24v AS WITH cte AS MATERIALIZED (SELECT r FROM (VALUES (1, 2), (3, 4)) AS r) SELECT (r).column2 AS col_a, (rr).column2 AS col_b FROM cte JOIN (SELECT rr FROM (VALUES (1, 7), (3, 8)) AS rr LIMIT 2) AS ss ON (r).column1 = (rr).column1;"}
+{"sql":"select pg_get_viewdef('tt24v', true)","shape":"SELECT pg_get_viewdef('tt24v', TRUE);"}
+{"sql":"create view tt25v as\nwith cte as materialized (select pg_get_keywords() k)\nselect (k).word from cte","shape":"CREATE VIEW tt25v AS WITH cte AS MATERIALIZED (SELECT pg_get_keywords() AS k) SELECT (k).word FROM cte;"}
+{"sql":"select pg_get_viewdef('tt25v', true)","shape":"SELECT pg_get_viewdef('tt25v', TRUE);"}
+{"sql":"explain (verbose, costs off)\nselect * from tt24v","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM tt24v;"}
+{"sql":"explain (verbose, costs off)\nselect (r).column2 from (select r from (values(1,2),(3,4)) r limit 1) ss","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT (r).column2 FROM (SELECT r FROM (VALUES (1, 2), (3, 4)) AS r LIMIT 1) AS ss;"}
+{"sql":"create view tt26v as\nselect x + y + z as c1,\n       (x * y) + z as c2,\n       x + (y * z) as c3,\n       (x + y) * z as c4,\n       x * (y + z) as c5,\n       x + (y + z) as c6,\n       x + (y # z) as c7,\n       (x > y) AND (y > z OR x > z) as c8,\n       (x > y) OR (y > z AND NOT (x > z)) as c9,\n       (x,y) <> ALL (values(1,2),(3,4)) as c10,\n       (x,y) <= ANY (values(1,2),(3,4)) as c11\nfrom (values(1,2,3)) v(x,y,z)","shape":"CREATE VIEW tt26v AS SELECT (x + y) + z AS c1, (x * y) + z AS c2, x + (y * z) AS c3, (x + y) * z AS c4, x * (y + z) AS c5, x + (y + z) AS c6, x + (y # z) AS c7, (x > y) AND ((y > z) OR (x > z)) AS c8, (x > y) OR ((y > z) AND (NOT (x > z))) AS c9, (x, y) <> ALL (VALUES (1, 2), (3, 4)) AS c10, (x, y) <= ANY (VALUES (1, 2), (3, 4)) AS c11 FROM (VALUES (1, 2, 3)) AS v(x, y, z);"}
+{"sql":"select pg_get_viewdef('tt26v', true)","shape":"SELECT pg_get_viewdef('tt26v', TRUE);"}
+{"sql":"create table tt27v_tbl (a int)","shape":"CREATE TABLE tt27v_tbl (a int);"}
+{"sql":"create view tt27v as select a from tt27v_tbl","shape":"CREATE VIEW tt27v AS SELECT a FROM tt27v_tbl;"}
+{"sql":"set restrict_nonsystem_relation_kind to 'view'","shape":"SET restrict_nonsystem_relation_kind TO 'view';"}
+{"sql":"select a from tt27v where a > 0","shape":"SELECT a FROM tt27v WHERE a > 0;"}
+{"sql":"insert into tt27v values (1)","shape":"INSERT INTO tt27v VALUES (1);"}
+{"sql":"select viewname from pg_views where viewname = 'tt27v'","shape":"SELECT viewname FROM pg_views WHERE viewname = 'tt27v';"}
+{"sql":"reset restrict_nonsystem_relation_kind","shape":"RESET restrict_nonsystem_relation_kind;"}
+{"sql":"DROP SCHEMA temp_view_test CASCADE","shape":"DROP SCHEMA temp_view_test CASCADE;"}
+{"sql":"DROP SCHEMA testviewschm2 CASCADE","shape":"DROP SCHEMA testviewschm2 CASCADE;"}

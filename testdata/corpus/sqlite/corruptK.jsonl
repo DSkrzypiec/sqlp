@@ -1,0 +1,9 @@
+{"sql":"INSERT INTO t1 VALUES(randomblob(20))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(100))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(27))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(800))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(90))"}
+{"sql":"DELETE FROM t1 WHERE rowid IN(2, 4)"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(900))"}
+{"sql":"CREATE TABLE t3(a, b, c)"}
+{"sql":"CREATE TABLE t4(a, b, c)"}

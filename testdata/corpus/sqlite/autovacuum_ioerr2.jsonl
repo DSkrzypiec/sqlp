@@ -1,0 +1,4 @@
+{"sql":"PRAGMA cache_size = 10"}
+{"sql":"CREATE TABLE abc(a)"}
+{"sql":"INSERT INTO abc VALUES(randstr(1100,1100))"}
+{"sql":"INSERT INTO abc VALUES(randstr(100,100))"}

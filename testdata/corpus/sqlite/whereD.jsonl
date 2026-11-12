@@ -1,0 +1,107 @@
+{"sql":"CREATE TABLE t(i,j,k,m,n)"}
+{"sql":"CREATE INDEX ijk ON t(i,j,k)"}
+{"sql":"CREATE INDEX jmn ON t(j,m,n)"}
+{"sql":"INSERT INTO t VALUES(3, 3, 'three', 3, 'tres')"}
+{"sql":"INSERT INTO t VALUES(2, 2, 'two', 2, 'dos')"}
+{"sql":"INSERT INTO t VALUES(1, 1, 'one', 1, 'uno')"}
+{"sql":"INSERT INTO t VALUES(4, 4, 'four', 4, 'cuatro')"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (+i=2 AND j=2)"}
+{"sql":"SELECT n FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2)"}
+{"sql":"SELECT k, n FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2) OR (i=3 AND j=3)"}
+{"sql":"SELECT n FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2) OR (i=3 AND j=3)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (j=2 AND m=2)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2) OR (j=3 AND m=3)"}
+{"sql":"SELECT n FROM t WHERE (i=1 AND j=1) OR (i=2 AND j=2) OR (j=3 AND m=3)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (j=2 AND m=2) OR (i=3 AND j=3)"}
+{"sql":"SELECT n FROM t WHERE (i=1 AND j=1) OR (j=2 AND m=2) OR (i=3 AND j=3)"}
+{"sql":"SELECT k FROM t WHERE (j=1 AND m=1) OR (i=2 AND j=2) OR (i=3 AND j=3)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=1) OR (j=2 AND i=2) OR (i=3 AND j=3)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND j=2) OR (i=2 AND j=1) OR (i=3 AND j=4)"}
+{"sql":"SELECT k FROM t WHERE (i=1 AND (j=1 or j=2)) OR (i=3 AND j=3)"}
+{"sql":"INSERT INTO t1 VALUES(5,6,7,8)"}
+{"sql":"INSERT INTO t2 VALUES(2,7)"}
+{"sql":"SELECT a, x FROM t1 JOIN t2 ON +y=d OR x=7 ORDER BY a, x"}
+{"sql":"SELECT a, x FROM t1 JOIN t2 ON y=d OR x=7 ORDER BY a, x"}
+{"sql":"CREATE UNIQUE INDEX i3 ON t3(a, b)"}
+{"sql":"INSERT INTO t3 VALUES(1, 'one', 'i')"}
+{"sql":"INSERT INTO t3 VALUES(3, 'three', 'iii')"}
+{"sql":"INSERT INTO t3 VALUES(6, 'six', 'vi')"}
+{"sql":"INSERT INTO t3 VALUES(2, 'two', 'ii')"}
+{"sql":"INSERT INTO t3 VALUES(4, 'four', 'iv')"}
+{"sql":"INSERT INTO t3 VALUES(5, 'five', 'v')"}
+{"sql":"CREATE TABLE t4(x PRIMARY KEY, y)"}
+{"sql":"INSERT INTO t4 VALUES('a', 'one')"}
+{"sql":"INSERT INTO t4 VALUES('b', 'two')"}
+{"sql":"CREATE TABLE t44(a INTEGER, b INTEGER)"}
+{"sql":"INSERT INTO t44 VALUES(1,2)"}
+{"sql":"INSERT INTO t44 VALUES(3,4)"}
+{"sql":"SELECT *\n    FROM t44 AS x\n       LEFT JOIN (SELECT a AS c, b AS d FROM t44) AS y ON a=c\n   WHERE d=4 OR d IS NULL"}
+{"sql":"SELECT *\n    FROM t44 AS x\n       LEFT JOIN (SELECT a AS c, b AS d FROM t44) AS y ON a=c\n   WHERE d=4 OR d IS NULL\n   ORDER BY a"}
+{"sql":"CREATE TABLE t46(c INTEGER, d INTEGER)"}
+{"sql":"INSERT INTO t46 SELECT a, b FROM t44"}
+{"sql":"SELECT * FROM t44 LEFT JOIN t46 ON a=c\n   WHERE d=4 OR d IS NULL"}
+{"sql":"SELECT * FROM t44 LEFT JOIN t46 ON a=c\n   WHERE d=4 OR d IS NULL\n   ORDER BY a"}
+{"sql":"CREATE TABLE t(c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17)"}
+{"sql":"CREATE INDEX tc0 ON t(c0)"}
+{"sql":"CREATE INDEX tc1 ON t(c1)"}
+{"sql":"CREATE INDEX tc2 ON t(c2)"}
+{"sql":"CREATE INDEX tc3 ON t(c3)"}
+{"sql":"CREATE INDEX tc4 ON t(c4)"}
+{"sql":"CREATE INDEX tc5 ON t(c5)"}
+{"sql":"CREATE INDEX tc6 ON t(c6)"}
+{"sql":"CREATE INDEX tc7 ON t(c7)"}
+{"sql":"CREATE INDEX tc8 ON t(c8)"}
+{"sql":"CREATE INDEX tc9 ON t(c9)"}
+{"sql":"CREATE INDEX tc10 ON t(c10)"}
+{"sql":"CREATE INDEX tc11 ON t(c11)"}
+{"sql":"CREATE INDEX tc12 ON t(c12)"}
+{"sql":"CREATE INDEX tc13 ON t(c13)"}
+{"sql":"CREATE INDEX tc14 ON t(c14)"}
+{"sql":"CREATE INDEX tc15 ON t(c15)"}
+{"sql":"CREATE INDEX tc16 ON t(c16)"}
+{"sql":"CREATE INDEX tc17 ON t(c17)"}
+{"sql":"INSERT INTO t(c0, c16) VALUES (1,1)"}
+{"sql":"SELECT * FROM t WHERE\n    c0=1 or  c1=1 or  c2=1 or  c3=1 or\n    c4=1 or  c5=1 or  c6=1 or  c7=1 or\n    c8=1 or  c9=1 or c10=1 or c11=1 or\n    c12=1 or c13=1 or c14=1 or c15=1 or\n    c16=1 or c17=1"}
+{"sql":"DELETE FROM t"}
+{"sql":"INSERT INTO t(c0,c17) VALUES(1,1)"}
+{"sql":"INSERT INTO t(c0,c15) VALUES(1,1)"}
+{"sql":"CREATE TABLE x1(a, b, c, d, e)"}
+{"sql":"CREATE INDEX x1a  ON x1(a)"}
+{"sql":"CREATE INDEX x1bc ON x1(b, c)"}
+{"sql":"CREATE INDEX x1cd ON x1(c, d)"}
+{"sql":"INSERT INTO x1 VALUES(1, 2, 3, 4, 'A')"}
+{"sql":"INSERT INTO x1 VALUES(5, 6, 7, 8, 'B')"}
+{"sql":"INSERT INTO x1 VALUES(9, 10, 11, 12, 'C')"}
+{"sql":"INSERT INTO x1 VALUES(13, 14, 15, 16, 'D')"}
+{"sql":"INSERT INTO t1(a,b) VALUES(null,2)"}
+{"sql":"CREATE VIEW t2 AS SELECT * FROM t1 WHERE b<10 OR a<7 ORDER BY b"}
+{"sql":"SELECT t1.* FROM t1 LEFT JOIN t2 ON abs(t1.a)=abs(t2.b)"}
+{"sql":"CREATE TABLE y2(x, y)"}
+{"sql":"CREATE INDEX y2xy ON y2(x, y)"}
+{"sql":"INSERT INTO y1 VALUES(1, 1)"}
+{"sql":"INSERT INTO y2 VALUES(3, 3)"}
+{"sql":"SELECT * FROM y1 LEFT JOIN y2 ON ((x=1 AND y=b) OR (x=2 AND y=b))"}
+{"sql":"CREATE TABLE foo (Id INTEGER PRIMARY KEY, fa INTEGER, fb INTEGER)"}
+{"sql":"CREATE TABLE bar (Id INTEGER PRIMARY KEY, ba INTEGER, bb INTEGER)"}
+{"sql":"INSERT INTO foo VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO foo VALUES(2, 1, 2)"}
+{"sql":"INSERT INTO foo VALUES(3, 1, 3)"}
+{"sql":"INSERT INTO foo VALUES(4, 1, 4)"}
+{"sql":"INSERT INTO foo VALUES(5, 1, 5)"}
+{"sql":"INSERT INTO foo VALUES(6, 1, 6)"}
+{"sql":"INSERT INTO foo VALUES(7, 1, 7)"}
+{"sql":"INSERT INTO foo VALUES(8, 1, 8)"}
+{"sql":"INSERT INTO foo VALUES(9, 1, 9)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 1, 1)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 2, 2)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 3, 3)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 1, 4)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 2, 5)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 3, 6)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 1, 7)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 2, 8)"}
+{"sql":"INSERT INTO bar VALUES(NULL, 3, 9)"}
+{"sql":"SELECT \n    bar.Id, bar.ba, bar.bb, foo.fb\n    FROM foo LEFT JOIN bar\n           ON (bar.ba = 1 AND bar.bb = foo.fb)\n           OR (bar.ba = 5 AND bar.bb = foo.fb)"}
+{"sql":"CREATE INDEX idx_bar ON bar(ba, bb)"}

@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t1(abcd, efgh)"}
+{"sql":"ALTER TABLE t1 RENAME abcd TO dcba"}
+{"sql":"PRAGMA encoding = 'utf-16'"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t1 WHERE abcd>efgh"}
+{"sql":"CREATE TABLE rr(a, b)"}
+{"sql":"CREATE VIEW vv AS SELECT * FROM rr"}
+{"sql":"CREATE TRIGGER vv1 INSTEAD OF INSERT ON vv BEGIN\n    SELECT 1, 2, 3;\n  END"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON rr BEGIN\n    INSERT INTO vv VALUES(new.a, new.b);\n  END"}
+{"sql":"ALTER TABLE rr RENAME a TO c"}
+{"sql":"CREATE VIEW vv AS SELECT * FROM (\n    WITH abc(d, e) AS (SELECT * FROM rr)\n    SELECT * FROM abc\n  )"}
+{"sql":"ALTER TABLE rr RENAME TO c"}

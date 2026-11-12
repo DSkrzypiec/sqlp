@@ -1,0 +1,7 @@
+{"sql":"CREATE TABLE t1(a, b UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(500))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(500), 1)"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(250))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(250), 2)"}
+{"sql":"CREATE VIRTUAL TABLE sss USING dbstat"}
+{"sql":"SELECT count(*) FROM sss"}

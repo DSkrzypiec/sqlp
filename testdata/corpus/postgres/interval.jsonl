@@ -1,0 +1,328 @@
+{"sql":"SET DATESTYLE = 'ISO'","shape":"SET DATESTYLE TO 'ISO';"}
+{"sql":"SET IntervalStyle to postgres","shape":"SET IntervalStyle TO postgres;"}
+{"sql":"SELECT INTERVAL '01:00' AS \"One hour\"","shape":"SELECT INTERVAL '01:00' AS \"One hour\";"}
+{"sql":"SELECT INTERVAL '+02:00' AS \"Two hours\"","shape":"SELECT INTERVAL '+02:00' AS \"Two hours\";"}
+{"sql":"SELECT INTERVAL '-08:00' AS \"Eight hours\"","shape":"SELECT INTERVAL '-08:00' AS \"Eight hours\";"}
+{"sql":"SELECT INTERVAL '-1 +02:03' AS \"22 hours ago...\"","shape":"SELECT INTERVAL '-1 +02:03' AS \"22 hours ago...\";"}
+{"sql":"SELECT INTERVAL '-1 days +02:03' AS \"22 hours ago...\"","shape":"SELECT INTERVAL '-1 days +02:03' AS \"22 hours ago...\";"}
+{"sql":"SELECT INTERVAL '1.5 weeks' AS \"Ten days twelve hours\"","shape":"SELECT INTERVAL '1.5 weeks' AS \"Ten days twelve hours\";"}
+{"sql":"SELECT INTERVAL '1.5 months' AS \"One month 15 days\"","shape":"SELECT INTERVAL '1.5 months' AS \"One month 15 days\";"}
+{"sql":"SELECT INTERVAL '10 years -11 month -12 days +13:14' AS \"9 years...\"","shape":"SELECT INTERVAL '10 years -11 month -12 days +13:14' AS \"9 years...\";"}
+{"sql":"CREATE TABLE INTERVAL_TBL (f1 interval)","shape":"CREATE TABLE INTERVAL_TBL (f1 interval);"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 1 minute')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 1 minute');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 5 hour')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 5 hour');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 10 day')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 10 day');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 34 year')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 34 year');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 3 months')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 3 months');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 14 seconds ago')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 14 seconds ago');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('1 day 2 hours 3 minutes 4 seconds')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('1 day 2 hours 3 minutes 4 seconds');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('6 years')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('6 years');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('5 months')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('5 months');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('5 months 12 hours')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('5 months 12 hours');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('badly formatted interval')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('badly formatted interval');"}
+{"sql":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 30 eons ago')","shape":"INSERT INTO INTERVAL_TBL (f1) VALUES ('@ 30 eons ago');"}
+{"sql":"SELECT pg_input_is_valid('1.5 weeks', 'interval')","shape":"SELECT pg_input_is_valid('1.5 weeks', 'interval');"}
+{"sql":"SELECT pg_input_is_valid('garbage', 'interval')","shape":"SELECT pg_input_is_valid('garbage', 'interval');"}
+{"sql":"SELECT pg_input_is_valid('@ 30 eons ago', 'interval')","shape":"SELECT pg_input_is_valid('@ 30 eons ago', 'interval');"}
+{"sql":"SELECT * FROM pg_input_error_info('garbage', 'interval')","shape":"SELECT * FROM pg_input_error_info('garbage', 'interval');"}
+{"sql":"SELECT * FROM pg_input_error_info('@ 30 eons ago', 'interval')","shape":"SELECT * FROM pg_input_error_info('@ 30 eons ago', 'interval');"}
+{"sql":"SELECT * FROM INTERVAL_TBL","shape":"SELECT * FROM INTERVAL_TBL;"}
+{"sql":"SELECT * FROM INTERVAL_TBL\n   WHERE INTERVAL_TBL.f1 <> interval '@ 10 days'","shape":"SELECT * FROM INTERVAL_TBL WHERE INTERVAL_TBL.f1 <> interval '@ 10 days';"}
+{"sql":"SELECT * FROM INTERVAL_TBL\n   WHERE INTERVAL_TBL.f1 <= interval '@ 5 hours'","shape":"SELECT * FROM INTERVAL_TBL WHERE INTERVAL_TBL.f1 <= interval '@ 5 hours';"}
+{"sql":"SELECT * FROM INTERVAL_TBL\n   WHERE INTERVAL_TBL.f1 < interval '@ 1 day'","shape":"SELECT * FROM INTERVAL_TBL WHERE INTERVAL_TBL.f1 < interval '@ 1 day';"}
+{"sql":"SELECT * FROM INTERVAL_TBL\n   WHERE INTERVAL_TBL.f1 = interval '@ 34 years'","shape":"SELECT * FROM INTERVAL_TBL WHERE INTERVAL_TBL.f1 = interval '@ 34 years';"}
+{"sql":"SELECT * FROM INTERVAL_TBL\n   WHERE INTERVAL_TBL.f1 >= interval '@ 1 month'","shape":"SELECT * FROM INTERVAL_TBL WHERE INTERVAL_TBL.f1 >= interval '@ 1 month';"}
+{"sql":"SELECT * FROM INTERVAL_TBL\n   WHERE INTERVAL_TBL.f1 > interval '@ 3 seconds ago'","shape":"SELECT * FROM INTERVAL_TBL WHERE INTERVAL_TBL.f1 > interval '@ 3 seconds ago';"}
+{"sql":"SELECT r1.*, r2.*\n   FROM INTERVAL_TBL r1, INTERVAL_TBL r2\n   WHERE r1.f1 > r2.f1\n   ORDER BY r1.f1, r2.f1","shape":"SELECT r1.*, r2.* FROM INTERVAL_TBL AS r1, INTERVAL_TBL AS r2 WHERE r1.f1 > r2.f1 ORDER BY r1.f1, r2.f1;"}
+{"sql":"CREATE TEMP TABLE INTERVAL_TBL_OF (f1 interval)","shape":"CREATE TEMPORARY TABLE INTERVAL_TBL_OF (f1 interval);"}
+{"sql":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES\n  ('2147483647 days 2147483647 months'),\n  ('2147483647 days -2147483648 months'),\n  ('1 year'),\n  ('-2147483648 days 2147483647 months'),\n  ('-2147483648 days -2147483648 months')","shape":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('2147483647 days 2147483647 months'), ('2147483647 days -2147483648 months'), ('1 year'), ('-2147483648 days 2147483647 months'), ('-2147483648 days -2147483648 months');"}
+{"sql":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('2147483648 days')","shape":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('2147483648 days');"}
+{"sql":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('-2147483649 days')","shape":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('-2147483649 days');"}
+{"sql":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('2147483647 years')","shape":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('2147483647 years');"}
+{"sql":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('-2147483648 years')","shape":"INSERT INTO INTERVAL_TBL_OF (f1) VALUES ('-2147483648 years');"}
+{"sql":"select extract(epoch from '256 microseconds'::interval * (2^55)::float8)","shape":"SELECT EXTRACT(EPOCH FROM '256 microseconds'::interval * (2 ^ 55)::float8);"}
+{"sql":"SELECT r1.*, r2.*\n   FROM INTERVAL_TBL_OF r1, INTERVAL_TBL_OF r2\n   WHERE r1.f1 > r2.f1\n   ORDER BY r1.f1, r2.f1","shape":"SELECT r1.*, r2.* FROM INTERVAL_TBL_OF AS r1, INTERVAL_TBL_OF AS r2 WHERE r1.f1 > r2.f1 ORDER BY r1.f1, r2.f1;"}
+{"sql":"CREATE INDEX ON INTERVAL_TBL_OF USING btree (f1)","shape":"CREATE INDEX ON INTERVAL_TBL_OF USING btree (f1);"}
+{"sql":"SET enable_seqscan TO false","shape":"SET enable_seqscan TO FALSE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT f1 FROM INTERVAL_TBL_OF r1 ORDER BY f1","shape":"EXPLAIN (COSTS OFF) SELECT f1 FROM INTERVAL_TBL_OF AS r1 ORDER BY f1;"}
+{"sql":"SELECT f1 FROM INTERVAL_TBL_OF r1 ORDER BY f1","shape":"SELECT f1 FROM INTERVAL_TBL_OF AS r1 ORDER BY f1;"}
+{"sql":"DROP TABLE INTERVAL_TBL_OF","shape":"DROP TABLE INTERVAL_TBL_OF;"}
+{"sql":"CREATE TABLE INTERVAL_MULDIV_TBL (span interval)","shape":"CREATE TABLE INTERVAL_MULDIV_TBL (span interval);"}
+{"sql":"COPY INTERVAL_MULDIV_TBL FROM STDIN","shape":"COPY INTERVAL_MULDIV_TBL FROM STDIN;"}
+{"sql":"SELECT span * 0.3 AS product\nFROM INTERVAL_MULDIV_TBL","shape":"SELECT span * 0.3 AS product FROM INTERVAL_MULDIV_TBL;"}
+{"sql":"SELECT span * 8.2 AS product\nFROM INTERVAL_MULDIV_TBL","shape":"SELECT span * 8.2 AS product FROM INTERVAL_MULDIV_TBL;"}
+{"sql":"SELECT span / 10 AS quotient\nFROM INTERVAL_MULDIV_TBL","shape":"SELECT span / 10 AS quotient FROM INTERVAL_MULDIV_TBL;"}
+{"sql":"SELECT span / 100 AS quotient\nFROM INTERVAL_MULDIV_TBL","shape":"SELECT span / 100 AS quotient FROM INTERVAL_MULDIV_TBL;"}
+{"sql":"DROP TABLE INTERVAL_MULDIV_TBL","shape":"DROP TABLE INTERVAL_MULDIV_TBL;"}
+{"sql":"SET DATESTYLE = 'postgres'","shape":"SET DATESTYLE TO 'postgres';"}
+{"sql":"SET IntervalStyle to postgres_verbose","shape":"SET IntervalStyle TO postgres_verbose;"}
+{"sql":"SELECT '3000000 months'::interval * 1000","shape":"SELECT '3000000 months'::interval * 1000;"}
+{"sql":"SELECT '3000000 months'::interval / 0.001","shape":"SELECT '3000000 months'::interval / 0.001;"}
+{"sql":"SELECT '3000000 days'::interval * 1000","shape":"SELECT '3000000 days'::interval * 1000;"}
+{"sql":"SELECT '3000000 days'::interval / 0.001","shape":"SELECT '3000000 days'::interval / 0.001;"}
+{"sql":"SELECT '1 month 2146410 days'::interval * 1000.5002","shape":"SELECT '1 month 2146410 days'::interval * 1000.5002;"}
+{"sql":"SELECT '4611686018427387904 usec'::interval / 0.1","shape":"SELECT '4611686018427387904 usec'::interval / 0.1;"}
+{"sql":"select avg(f1) from interval_tbl","shape":"SELECT avg(f1) FROM interval_tbl;"}
+{"sql":"select '4 millenniums 5 centuries 4 decades 1 year 4 months 4 days 17 minutes 31 seconds'::interval","shape":"SELECT '4 millenniums 5 centuries 4 decades 1 year 4 months 4 days 17 minutes 31 seconds'::interval;"}
+{"sql":"select '100000000y 10mon -1000000000d -100000h -10min -10.000001s ago'::interval","shape":"SELECT '100000000y 10mon -1000000000d -100000h -10min -10.000001s ago'::interval;"}
+{"sql":"SELECT justify_hours(interval '6 months 3 days 52 hours 3 minutes 2 seconds') as \"6 mons 5 days 4 hours 3 mins 2 seconds\"","shape":"SELECT justify_hours(interval '6 months 3 days 52 hours 3 minutes 2 seconds') AS \"6 mons 5 days 4 hours 3 mins 2 seconds\";"}
+{"sql":"SELECT justify_days(interval '6 months 36 days 5 hours 4 minutes 3 seconds') as \"7 mons 6 days 5 hours 4 mins 3 seconds\"","shape":"SELECT justify_days(interval '6 months 36 days 5 hours 4 minutes 3 seconds') AS \"7 mons 6 days 5 hours 4 mins 3 seconds\";"}
+{"sql":"SELECT justify_hours(interval '2147483647 days 24 hrs')","shape":"SELECT justify_hours(interval '2147483647 days 24 hrs');"}
+{"sql":"SELECT justify_days(interval '2147483647 months 30 days')","shape":"SELECT justify_days(interval '2147483647 months 30 days');"}
+{"sql":"SELECT justify_interval(interval '1 month -1 hour') as \"1 month -1 hour\"","shape":"SELECT justify_interval(interval '1 month -1 hour') AS \"1 month -1 hour\";"}
+{"sql":"SELECT justify_interval(interval '2147483647 days 24 hrs')","shape":"SELECT justify_interval(interval '2147483647 days 24 hrs');"}
+{"sql":"SELECT justify_interval(interval '-2147483648 days -24 hrs')","shape":"SELECT justify_interval(interval '-2147483648 days -24 hrs');"}
+{"sql":"SELECT justify_interval(interval '2147483647 months 30 days')","shape":"SELECT justify_interval(interval '2147483647 months 30 days');"}
+{"sql":"SELECT justify_interval(interval '-2147483648 months -30 days')","shape":"SELECT justify_interval(interval '-2147483648 months -30 days');"}
+{"sql":"SELECT justify_interval(interval '2147483647 months 30 days -24 hrs')","shape":"SELECT justify_interval(interval '2147483647 months 30 days -24 hrs');"}
+{"sql":"SELECT justify_interval(interval '-2147483648 months -30 days 24 hrs')","shape":"SELECT justify_interval(interval '-2147483648 months -30 days 24 hrs');"}
+{"sql":"SELECT justify_interval(interval '2147483647 months -30 days 1440 hrs')","shape":"SELECT justify_interval(interval '2147483647 months -30 days 1440 hrs');"}
+{"sql":"SELECT justify_interval(interval '-2147483648 months 30 days -1440 hrs')","shape":"SELECT justify_interval(interval '-2147483648 months 30 days -1440 hrs');"}
+{"sql":"SET IntervalStyle TO postgres","shape":"SET IntervalStyle TO postgres;"}
+{"sql":"SELECT '1 millisecond'::interval, '1 microsecond'::interval,\n       '500 seconds 99 milliseconds 51 microseconds'::interval","shape":"SELECT '1 millisecond'::interval, '1 microsecond'::interval, '500 seconds 99 milliseconds 51 microseconds'::interval;"}
+{"sql":"SELECT '3 days 5 milliseconds'::interval","shape":"SELECT '3 days 5 milliseconds'::interval;"}
+{"sql":"SELECT '1 second 2 seconds'::interval","shape":"SELECT '1 second 2 seconds'::interval;"}
+{"sql":"SELECT '10 milliseconds 20 milliseconds'::interval","shape":"SELECT '10 milliseconds 20 milliseconds'::interval;"}
+{"sql":"SELECT '5.5 seconds 3 milliseconds'::interval","shape":"SELECT '5.5 seconds 3 milliseconds'::interval;"}
+{"sql":"SELECT '1:20:05 5 microseconds'::interval","shape":"SELECT '1:20:05 5 microseconds'::interval;"}
+{"sql":"SELECT '1 day 1 day'::interval","shape":"SELECT '1 day 1 day'::interval;"}
+{"sql":"SELECT interval '1-2'","shape":"SELECT interval '1-2';"}
+{"sql":"SELECT interval '999' second","shape":"SELECT interval '999' SECOND;"}
+{"sql":"SELECT interval '999' minute","shape":"SELECT interval '999' MINUTE;"}
+{"sql":"SELECT interval '999' hour","shape":"SELECT interval '999' HOUR;"}
+{"sql":"SELECT interval '999' day","shape":"SELECT interval '999' DAY;"}
+{"sql":"SELECT interval '999' month","shape":"SELECT interval '999' MONTH;"}
+{"sql":"SELECT interval '1' year","shape":"SELECT interval '1' YEAR;"}
+{"sql":"SELECT interval '2' month","shape":"SELECT interval '2' MONTH;"}
+{"sql":"SELECT interval '3' day","shape":"SELECT interval '3' DAY;"}
+{"sql":"SELECT interval '4' hour","shape":"SELECT interval '4' HOUR;"}
+{"sql":"SELECT interval '5' minute","shape":"SELECT interval '5' MINUTE;"}
+{"sql":"SELECT interval '6' second","shape":"SELECT interval '6' SECOND;"}
+{"sql":"SELECT interval '1' year to month","shape":"SELECT interval '1' YEAR TO MONTH;"}
+{"sql":"SELECT interval '1-2' year to month","shape":"SELECT interval '1-2' YEAR TO MONTH;"}
+{"sql":"SELECT interval '1 2' day to hour","shape":"SELECT interval '1 2' DAY TO HOUR;"}
+{"sql":"SELECT interval '1 2:03' day to hour","shape":"SELECT interval '1 2:03' DAY TO HOUR;"}
+{"sql":"SELECT interval '1 2:03:04' day to hour","shape":"SELECT interval '1 2:03:04' DAY TO HOUR;"}
+{"sql":"SELECT interval '1 2' day to minute","shape":"SELECT interval '1 2' DAY TO MINUTE;"}
+{"sql":"SELECT interval '1 2:03' day to minute","shape":"SELECT interval '1 2:03' DAY TO MINUTE;"}
+{"sql":"SELECT interval '1 2:03:04' day to minute","shape":"SELECT interval '1 2:03:04' DAY TO MINUTE;"}
+{"sql":"SELECT interval '1 2' day to second","shape":"SELECT interval '1 2' DAY TO SECOND;"}
+{"sql":"SELECT interval '1 2:03' day to second","shape":"SELECT interval '1 2:03' DAY TO SECOND;"}
+{"sql":"SELECT interval '1 2:03:04' day to second","shape":"SELECT interval '1 2:03:04' DAY TO SECOND;"}
+{"sql":"SELECT interval '1 2' hour to minute","shape":"SELECT interval '1 2' HOUR TO MINUTE;"}
+{"sql":"SELECT interval '1 2:03' hour to minute","shape":"SELECT interval '1 2:03' HOUR TO MINUTE;"}
+{"sql":"SELECT interval '1 2:03:04' hour to minute","shape":"SELECT interval '1 2:03:04' HOUR TO MINUTE;"}
+{"sql":"SELECT interval '1 2' hour to second","shape":"SELECT interval '1 2' HOUR TO SECOND;"}
+{"sql":"SELECT interval '1 2:03' hour to second","shape":"SELECT interval '1 2:03' HOUR TO SECOND;"}
+{"sql":"SELECT interval '1 2:03:04' hour to second","shape":"SELECT interval '1 2:03:04' HOUR TO SECOND;"}
+{"sql":"SELECT interval '1 2' minute to second","shape":"SELECT interval '1 2' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '1 2:03' minute to second","shape":"SELECT interval '1 2:03' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '1 2:03:04' minute to second","shape":"SELECT interval '1 2:03:04' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '1 +2:03' minute to second","shape":"SELECT interval '1 +2:03' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '1 +2:03:04' minute to second","shape":"SELECT interval '1 +2:03:04' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '1 -2:03' minute to second","shape":"SELECT interval '1 -2:03' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '1 -2:03:04' minute to second","shape":"SELECT interval '1 -2:03:04' MINUTE TO SECOND;"}
+{"sql":"SELECT interval '123 11' day to hour","shape":"SELECT interval '123 11' DAY TO HOUR;"}
+{"sql":"SELECT interval '123 11' day","shape":"SELECT interval '123 11' DAY;"}
+{"sql":"SELECT interval '123 11'","shape":"SELECT interval '123 11';"}
+{"sql":"SELECT interval '123 2:03 -2:04'","shape":"SELECT interval '123 2:03 -2:04';"}
+{"sql":"SELECT interval(0) '1 day 01:23:45.6789'","shape":"SELECT interval(0) '1 day 01:23:45.6789';"}
+{"sql":"SELECT interval(2) '1 day 01:23:45.6789'","shape":"SELECT interval(2) '1 day 01:23:45.6789';"}
+{"sql":"SELECT interval '12:34.5678' minute to second(2)","shape":"SELECT interval '12:34.5678' MINUTE TO SECOND(2);"}
+{"sql":"SELECT interval '1.234' second","shape":"SELECT interval '1.234' SECOND;"}
+{"sql":"SELECT interval '1.234' second(2)","shape":"SELECT interval '1.234' SECOND(2);"}
+{"sql":"SELECT interval '1 2.345' day to second(2)","shape":"SELECT interval '1 2.345' DAY TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03' day to second(2)","shape":"SELECT interval '1 2:03' DAY TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03.4567' day to second(2)","shape":"SELECT interval '1 2:03.4567' DAY TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03:04.5678' day to second(2)","shape":"SELECT interval '1 2:03:04.5678' DAY TO SECOND(2);"}
+{"sql":"SELECT interval '1 2.345' hour to second(2)","shape":"SELECT interval '1 2.345' HOUR TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03.45678' hour to second(2)","shape":"SELECT interval '1 2:03.45678' HOUR TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03:04.5678' hour to second(2)","shape":"SELECT interval '1 2:03:04.5678' HOUR TO SECOND(2);"}
+{"sql":"SELECT interval '1 2.3456' minute to second(2)","shape":"SELECT interval '1 2.3456' MINUTE TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03.5678' minute to second(2)","shape":"SELECT interval '1 2:03.5678' MINUTE TO SECOND(2);"}
+{"sql":"SELECT interval '1 2:03:04.5678' minute to second(2)","shape":"SELECT interval '1 2:03:04.5678' MINUTE TO SECOND(2);"}
+{"sql":"SELECT f1, f1::INTERVAL DAY TO MINUTE AS \"minutes\",\n  (f1 + INTERVAL '1 month')::INTERVAL MONTH::INTERVAL YEAR AS \"years\"\n  FROM interval_tbl","shape":"SELECT f1, f1::INTERVAL DAY TO MINUTE AS \"minutes\", (f1 + INTERVAL '1 month')::INTERVAL MONTH::INTERVAL YEAR AS \"years\" FROM interval_tbl;"}
+{"sql":"SET IntervalStyle TO sql_standard","shape":"SET IntervalStyle TO sql_standard;"}
+{"sql":"SELECT  interval '0'                       AS \"zero\",\n        interval '1-2' year to month       AS \"year-month\",\n        interval '1 2:03:04' day to second AS \"day-time\",\n        - interval '1-2'                   AS \"negative year-month\",\n        - interval '1 2:03:04'             AS \"negative day-time\"","shape":"SELECT interval '0' AS \"zero\", interval '1-2' YEAR TO MONTH AS \"year-month\", interval '1 2:03:04' DAY TO SECOND AS \"day-time\", -interval '1-2' AS \"negative year-month\", -interval '1 2:03:04' AS \"negative day-time\";"}
+{"sql":"SELECT  interval '+1 -1:00:00',\n        interval '-1 +1:00:00',\n        interval '+1-2 -3 +4:05:06.789',\n        interval '-1-2 +3 -4:05:06.789'","shape":"SELECT interval '+1 -1:00:00', interval '-1 +1:00:00', interval '+1-2 -3 +4:05:06.789', interval '-1-2 +3 -4:05:06.789';"}
+{"sql":"SELECT  interval '-23 hours 45 min 12.34 sec',\n        interval '-1 day 23 hours 45 min 12.34 sec',\n        interval '-1 year 2 months 1 day 23 hours 45 min 12.34 sec',\n        interval '-1 year 2 months 1 day 23 hours 45 min +12.34 sec'","shape":"SELECT interval '-23 hours 45 min 12.34 sec', interval '-1 day 23 hours 45 min 12.34 sec', interval '-1 year 2 months 1 day 23 hours 45 min 12.34 sec', interval '-1 year 2 months 1 day 23 hours 45 min +12.34 sec';"}
+{"sql":"SELECT  interval '1 day -1 hours',\n        interval '-1 days +1 hours',\n        interval '1 years 2 months -3 days 4 hours 5 minutes 6.789 seconds',\n        - interval '1 years 2 months -3 days 4 hours 5 minutes 6.789 seconds'","shape":"SELECT interval '1 day -1 hours', interval '-1 days +1 hours', interval '1 years 2 months -3 days 4 hours 5 minutes 6.789 seconds', -interval '1 years 2 months -3 days 4 hours 5 minutes 6.789 seconds';"}
+{"sql":"SELECT  interval ''","shape":"SELECT interval '';"}
+{"sql":"SET IntervalStyle to iso_8601","shape":"SET IntervalStyle TO iso_8601;"}
+{"sql":"select  interval '0'                                AS \"zero\",\n        interval '1-2'                              AS \"a year 2 months\",\n        interval '1 2:03:04'                        AS \"a bit over a day\",\n        interval '2:03:04.45679'                    AS \"a bit over 2 hours\",\n        (interval '1-2' + interval '3 4:05:06.7')   AS \"all fields\",\n        (interval '1-2' - interval '3 4:05:06.7')   AS \"mixed sign\",\n        (- interval '1-2' + interval '3 4:05:06.7') AS \"negative\"","shape":"SELECT interval '0' AS \"zero\", interval '1-2' AS \"a year 2 months\", interval '1 2:03:04' AS \"a bit over a day\", interval '2:03:04.45679' AS \"a bit over 2 hours\", (interval '1-2' + interval '3 4:05:06.7') AS \"all fields\", (interval '1-2' - interval '3 4:05:06.7') AS \"mixed sign\", ((-interval '1-2') + interval '3 4:05:06.7') AS \"negative\";"}
+{"sql":"SET IntervalStyle to sql_standard","shape":"SET IntervalStyle TO sql_standard;"}
+{"sql":"select  interval 'P0Y'                    AS \"zero\",\n        interval 'P1Y2M'                  AS \"a year 2 months\",\n        interval 'P1W'                    AS \"a week\",\n        interval 'P1DT2H3M4S'             AS \"a bit over a day\",\n        interval 'P1Y2M3DT4H5M6.7S'       AS \"all fields\",\n        interval 'P-1Y-2M-3DT-4H-5M-6.7S' AS \"negative\",\n        interval 'PT-0.1S'                AS \"fractional second\"","shape":"SELECT interval 'P0Y' AS \"zero\", interval 'P1Y2M' AS \"a year 2 months\", interval 'P1W' AS \"a week\", interval 'P1DT2H3M4S' AS \"a bit over a day\", interval 'P1Y2M3DT4H5M6.7S' AS \"all fields\", interval 'P-1Y-2M-3DT-4H-5M-6.7S' AS \"negative\", interval 'PT-0.1S' AS \"fractional second\";"}
+{"sql":"select  interval 'P00021015T103020'       AS \"ISO8601 Basic Format\",\n        interval 'P0002-10-15T10:30:20'   AS \"ISO8601 Extended Format\"","shape":"SELECT interval 'P00021015T103020' AS \"ISO8601 Basic Format\", interval 'P0002-10-15T10:30:20' AS \"ISO8601 Extended Format\";"}
+{"sql":"select  interval 'P0002'                  AS \"year only\",\n        interval 'P0002-10'               AS \"year month\",\n        interval 'P0002-10-15'            AS \"year month day\",\n        interval 'P0002T1S'               AS \"year only plus time\",\n        interval 'P0002-10T1S'            AS \"year month plus time\",\n        interval 'P0002-10-15T1S'         AS \"year month day plus time\",\n        interval 'PT10'                   AS \"hour only\",\n        interval 'PT10:30'                AS \"hour minute\"","shape":"SELECT interval 'P0002' AS \"year only\", interval 'P0002-10' AS \"year month\", interval 'P0002-10-15' AS \"year month day\", interval 'P0002T1S' AS \"year only plus time\", interval 'P0002-10T1S' AS \"year month plus time\", interval 'P0002-10-15T1S' AS \"year month day plus time\", interval 'PT10' AS \"hour only\", interval 'PT10:30' AS \"hour minute\";"}
+{"sql":"select interval 'P1Y0M3DT4H5M6S'","shape":"SELECT interval 'P1Y0M3DT4H5M6S';"}
+{"sql":"select interval 'P1.0Y0M3DT4H5M6S'","shape":"SELECT interval 'P1.0Y0M3DT4H5M6S';"}
+{"sql":"select interval 'P1.1Y0M3DT4H5M6S'","shape":"SELECT interval 'P1.1Y0M3DT4H5M6S';"}
+{"sql":"select interval 'P1.Y0M3DT4H5M6S'","shape":"SELECT interval 'P1.Y0M3DT4H5M6S';"}
+{"sql":"select interval 'P.1Y0M3DT4H5M6S'","shape":"SELECT interval 'P.1Y0M3DT4H5M6S';"}
+{"sql":"select interval 'P10.5e4Y'","shape":"SELECT interval 'P10.5e4Y';"}
+{"sql":"select interval 'P.Y0M3DT4H5M6S'","shape":"SELECT interval 'P.Y0M3DT4H5M6S';"}
+{"sql":"select interval '-10 mons -3 days +03:55:06.70'","shape":"SELECT interval '-10 mons -3 days +03:55:06.70';"}
+{"sql":"select interval '1 year 2 mons 3 days 04:05:06.699999'","shape":"SELECT interval '1 year 2 mons 3 days 04:05:06.699999';"}
+{"sql":"select interval '0:0:0.7', interval '@ 0.70 secs', interval '0.7 seconds'","shape":"SELECT interval '0:0:0.7', interval '@ 0.70 secs', interval '0.7 seconds';"}
+{"sql":"select interval '2562047788.01521550194 hours'","shape":"SELECT interval '2562047788.01521550194 hours';"}
+{"sql":"select interval '-2562047788.01521550222 hours'","shape":"SELECT interval '-2562047788.01521550222 hours';"}
+{"sql":"select interval '153722867280.912930117 minutes'","shape":"SELECT interval '153722867280.912930117 minutes';"}
+{"sql":"select interval '-153722867280.912930133 minutes'","shape":"SELECT interval '-153722867280.912930133 minutes';"}
+{"sql":"select interval '9223372036854.775807 seconds'","shape":"SELECT interval '9223372036854.775807 seconds';"}
+{"sql":"select interval '-9223372036854.775808 seconds'","shape":"SELECT interval '-9223372036854.775808 seconds';"}
+{"sql":"select interval '9223372036854775.807 milliseconds'","shape":"SELECT interval '9223372036854775.807 milliseconds';"}
+{"sql":"select interval '-9223372036854775.808 milliseconds'","shape":"SELECT interval '-9223372036854775.808 milliseconds';"}
+{"sql":"select interval '9223372036854775807 microseconds'","shape":"SELECT interval '9223372036854775807 microseconds';"}
+{"sql":"select interval '-9223372036854775808 microseconds'","shape":"SELECT interval '-9223372036854775808 microseconds';"}
+{"sql":"select interval 'PT2562047788H54.775807S'","shape":"SELECT interval 'PT2562047788H54.775807S';"}
+{"sql":"select interval 'PT-2562047788H-54.775808S'","shape":"SELECT interval 'PT-2562047788H-54.775808S';"}
+{"sql":"select interval 'PT2562047788:00:54.775807'","shape":"SELECT interval 'PT2562047788:00:54.775807';"}
+{"sql":"select interval 'PT2562047788.0152155019444'","shape":"SELECT interval 'PT2562047788.0152155019444';"}
+{"sql":"select interval 'PT-2562047788.0152155022222'","shape":"SELECT interval 'PT-2562047788.0152155022222';"}
+{"sql":"select interval '2147483648 years'","shape":"SELECT interval '2147483648 years';"}
+{"sql":"select interval '-2147483649 years'","shape":"SELECT interval '-2147483649 years';"}
+{"sql":"select interval '2147483648 months'","shape":"SELECT interval '2147483648 months';"}
+{"sql":"select interval '-2147483649 months'","shape":"SELECT interval '-2147483649 months';"}
+{"sql":"select interval '2147483648 days'","shape":"SELECT interval '2147483648 days';"}
+{"sql":"select interval '-2147483649 days'","shape":"SELECT interval '-2147483649 days';"}
+{"sql":"select interval '2562047789 hours'","shape":"SELECT interval '2562047789 hours';"}
+{"sql":"select interval '-2562047789 hours'","shape":"SELECT interval '-2562047789 hours';"}
+{"sql":"select interval '153722867281 minutes'","shape":"SELECT interval '153722867281 minutes';"}
+{"sql":"select interval '-153722867281 minutes'","shape":"SELECT interval '-153722867281 minutes';"}
+{"sql":"select interval '9223372036855 seconds'","shape":"SELECT interval '9223372036855 seconds';"}
+{"sql":"select interval '-9223372036855 seconds'","shape":"SELECT interval '-9223372036855 seconds';"}
+{"sql":"select interval '9223372036854777 millisecond'","shape":"SELECT interval '9223372036854777 millisecond';"}
+{"sql":"select interval '-9223372036854777 millisecond'","shape":"SELECT interval '-9223372036854777 millisecond';"}
+{"sql":"select interval '9223372036854775808 microsecond'","shape":"SELECT interval '9223372036854775808 microsecond';"}
+{"sql":"select interval '-9223372036854775809 microsecond'","shape":"SELECT interval '-9223372036854775809 microsecond';"}
+{"sql":"select interval 'P2147483648'","shape":"SELECT interval 'P2147483648';"}
+{"sql":"select interval 'P-2147483649'","shape":"SELECT interval 'P-2147483649';"}
+{"sql":"select interval 'P1-2147483647-2147483647'","shape":"SELECT interval 'P1-2147483647-2147483647';"}
+{"sql":"select interval 'PT2562047789'","shape":"SELECT interval 'PT2562047789';"}
+{"sql":"select interval 'PT-2562047789'","shape":"SELECT interval 'PT-2562047789';"}
+{"sql":"select interval '2147483647 weeks'","shape":"SELECT interval '2147483647 weeks';"}
+{"sql":"select interval '-2147483648 weeks'","shape":"SELECT interval '-2147483648 weeks';"}
+{"sql":"select interval '2147483647 decades'","shape":"SELECT interval '2147483647 decades';"}
+{"sql":"select interval '-2147483648 decades'","shape":"SELECT interval '-2147483648 decades';"}
+{"sql":"select interval '2147483647 centuries'","shape":"SELECT interval '2147483647 centuries';"}
+{"sql":"select interval '-2147483648 centuries'","shape":"SELECT interval '-2147483648 centuries';"}
+{"sql":"select interval '2147483647 millennium'","shape":"SELECT interval '2147483647 millennium';"}
+{"sql":"select interval '-2147483648 millennium'","shape":"SELECT interval '-2147483648 millennium';"}
+{"sql":"select interval '1 week 2147483647 days'","shape":"SELECT interval '1 week 2147483647 days';"}
+{"sql":"select interval '-1 week -2147483648 days'","shape":"SELECT interval '-1 week -2147483648 days';"}
+{"sql":"select interval '2147483647 days 1 week'","shape":"SELECT interval '2147483647 days 1 week';"}
+{"sql":"select interval '-2147483648 days -1 week'","shape":"SELECT interval '-2147483648 days -1 week';"}
+{"sql":"select interval 'P1W2147483647D'","shape":"SELECT interval 'P1W2147483647D';"}
+{"sql":"select interval 'P-1W-2147483648D'","shape":"SELECT interval 'P-1W-2147483648D';"}
+{"sql":"select interval 'P2147483647D1W'","shape":"SELECT interval 'P2147483647D1W';"}
+{"sql":"select interval 'P-2147483648D-1W'","shape":"SELECT interval 'P-2147483648D-1W';"}
+{"sql":"select interval '1 decade 2147483647 years'","shape":"SELECT interval '1 decade 2147483647 years';"}
+{"sql":"select interval '1 century 2147483647 years'","shape":"SELECT interval '1 century 2147483647 years';"}
+{"sql":"select interval '1 millennium 2147483647 years'","shape":"SELECT interval '1 millennium 2147483647 years';"}
+{"sql":"select interval '-1 decade -2147483648 years'","shape":"SELECT interval '-1 decade -2147483648 years';"}
+{"sql":"select interval '-1 century -2147483648 years'","shape":"SELECT interval '-1 century -2147483648 years';"}
+{"sql":"select interval '-1 millennium -2147483648 years'","shape":"SELECT interval '-1 millennium -2147483648 years';"}
+{"sql":"select interval '2147483647 years 1 decade'","shape":"SELECT interval '2147483647 years 1 decade';"}
+{"sql":"select interval '2147483647 years 1 century'","shape":"SELECT interval '2147483647 years 1 century';"}
+{"sql":"select interval '2147483647 years 1 millennium'","shape":"SELECT interval '2147483647 years 1 millennium';"}
+{"sql":"select interval '-2147483648 years -1 decade'","shape":"SELECT interval '-2147483648 years -1 decade';"}
+{"sql":"select interval '-2147483648 years -1 century'","shape":"SELECT interval '-2147483648 years -1 century';"}
+{"sql":"select interval '-2147483648 years -1 millennium'","shape":"SELECT interval '-2147483648 years -1 millennium';"}
+{"sql":"select interval '0.1 millennium 2147483647 months'","shape":"SELECT interval '0.1 millennium 2147483647 months';"}
+{"sql":"select interval '0.1 centuries 2147483647 months'","shape":"SELECT interval '0.1 centuries 2147483647 months';"}
+{"sql":"select interval '0.1 decades 2147483647 months'","shape":"SELECT interval '0.1 decades 2147483647 months';"}
+{"sql":"select interval '0.1 yrs 2147483647 months'","shape":"SELECT interval '0.1 yrs 2147483647 months';"}
+{"sql":"select interval '-0.1 millennium -2147483648 months'","shape":"SELECT interval '-0.1 millennium -2147483648 months';"}
+{"sql":"select interval '-0.1 centuries -2147483648 months'","shape":"SELECT interval '-0.1 centuries -2147483648 months';"}
+{"sql":"select interval '-0.1 decades -2147483648 months'","shape":"SELECT interval '-0.1 decades -2147483648 months';"}
+{"sql":"select interval '-0.1 yrs -2147483648 months'","shape":"SELECT interval '-0.1 yrs -2147483648 months';"}
+{"sql":"select interval '2147483647 months 0.1 millennium'","shape":"SELECT interval '2147483647 months 0.1 millennium';"}
+{"sql":"select interval '2147483647 months 0.1 centuries'","shape":"SELECT interval '2147483647 months 0.1 centuries';"}
+{"sql":"select interval '2147483647 months 0.1 decades'","shape":"SELECT interval '2147483647 months 0.1 decades';"}
+{"sql":"select interval '2147483647 months 0.1 yrs'","shape":"SELECT interval '2147483647 months 0.1 yrs';"}
+{"sql":"select interval '-2147483648 months -0.1 millennium'","shape":"SELECT interval '-2147483648 months -0.1 millennium';"}
+{"sql":"select interval '-2147483648 months -0.1 centuries'","shape":"SELECT interval '-2147483648 months -0.1 centuries';"}
+{"sql":"select interval '-2147483648 months -0.1 decades'","shape":"SELECT interval '-2147483648 months -0.1 decades';"}
+{"sql":"select interval '-2147483648 months -0.1 yrs'","shape":"SELECT interval '-2147483648 months -0.1 yrs';"}
+{"sql":"select interval '0.1 months 2147483647 days'","shape":"SELECT interval '0.1 months 2147483647 days';"}
+{"sql":"select interval '-0.1 months -2147483648 days'","shape":"SELECT interval '-0.1 months -2147483648 days';"}
+{"sql":"select interval '2147483647 days 0.1 months'","shape":"SELECT interval '2147483647 days 0.1 months';"}
+{"sql":"select interval '-2147483648 days -0.1 months'","shape":"SELECT interval '-2147483648 days -0.1 months';"}
+{"sql":"select interval '0.5 weeks 2147483647 days'","shape":"SELECT interval '0.5 weeks 2147483647 days';"}
+{"sql":"select interval '-0.5 weeks -2147483648 days'","shape":"SELECT interval '-0.5 weeks -2147483648 days';"}
+{"sql":"select interval '2147483647 days 0.5 weeks'","shape":"SELECT interval '2147483647 days 0.5 weeks';"}
+{"sql":"select interval '-2147483648 days -0.5 weeks'","shape":"SELECT interval '-2147483648 days -0.5 weeks';"}
+{"sql":"select interval '0.01 months 9223372036854775807 microseconds'","shape":"SELECT interval '0.01 months 9223372036854775807 microseconds';"}
+{"sql":"select interval '-0.01 months -9223372036854775808 microseconds'","shape":"SELECT interval '-0.01 months -9223372036854775808 microseconds';"}
+{"sql":"select interval '9223372036854775807 microseconds 0.01 months'","shape":"SELECT interval '9223372036854775807 microseconds 0.01 months';"}
+{"sql":"select interval '-9223372036854775808 microseconds -0.01 months'","shape":"SELECT interval '-9223372036854775808 microseconds -0.01 months';"}
+{"sql":"select interval '0.1 weeks 9223372036854775807 microseconds'","shape":"SELECT interval '0.1 weeks 9223372036854775807 microseconds';"}
+{"sql":"select interval '-0.1 weeks -9223372036854775808 microseconds'","shape":"SELECT interval '-0.1 weeks -9223372036854775808 microseconds';"}
+{"sql":"select interval '9223372036854775807 microseconds 0.1 weeks'","shape":"SELECT interval '9223372036854775807 microseconds 0.1 weeks';"}
+{"sql":"select interval '-9223372036854775808 microseconds -0.1 weeks'","shape":"SELECT interval '-9223372036854775808 microseconds -0.1 weeks';"}
+{"sql":"select interval '0.1 days 9223372036854775807 microseconds'","shape":"SELECT interval '0.1 days 9223372036854775807 microseconds';"}
+{"sql":"select interval '-0.1 days -9223372036854775808 microseconds'","shape":"SELECT interval '-0.1 days -9223372036854775808 microseconds';"}
+{"sql":"select interval '9223372036854775807 microseconds 0.1 days'","shape":"SELECT interval '9223372036854775807 microseconds 0.1 days';"}
+{"sql":"select interval '-9223372036854775808 microseconds -0.1 days'","shape":"SELECT interval '-9223372036854775808 microseconds -0.1 days';"}
+{"sql":"select interval 'P0.1Y2147483647M'","shape":"SELECT interval 'P0.1Y2147483647M';"}
+{"sql":"select interval 'P-0.1Y-2147483648M'","shape":"SELECT interval 'P-0.1Y-2147483648M';"}
+{"sql":"select interval 'P2147483647M0.1Y'","shape":"SELECT interval 'P2147483647M0.1Y';"}
+{"sql":"select interval 'P-2147483648M-0.1Y'","shape":"SELECT interval 'P-2147483648M-0.1Y';"}
+{"sql":"select interval 'P0.1M2147483647D'","shape":"SELECT interval 'P0.1M2147483647D';"}
+{"sql":"select interval 'P-0.1M-2147483648D'","shape":"SELECT interval 'P-0.1M-2147483648D';"}
+{"sql":"select interval 'P2147483647D0.1M'","shape":"SELECT interval 'P2147483647D0.1M';"}
+{"sql":"select interval 'P-2147483648D-0.1M'","shape":"SELECT interval 'P-2147483648D-0.1M';"}
+{"sql":"select interval 'P0.5W2147483647D'","shape":"SELECT interval 'P0.5W2147483647D';"}
+{"sql":"select interval 'P-0.5W-2147483648D'","shape":"SELECT interval 'P-0.5W-2147483648D';"}
+{"sql":"select interval 'P2147483647D0.5W'","shape":"SELECT interval 'P2147483647D0.5W';"}
+{"sql":"select interval 'P-2147483648D-0.5W'","shape":"SELECT interval 'P-2147483648D-0.5W';"}
+{"sql":"select interval 'P0.01MT2562047788H54.775807S'","shape":"SELECT interval 'P0.01MT2562047788H54.775807S';"}
+{"sql":"select interval 'P-0.01MT-2562047788H-54.775808S'","shape":"SELECT interval 'P-0.01MT-2562047788H-54.775808S';"}
+{"sql":"select interval 'P0.1DT2562047788H54.775807S'","shape":"SELECT interval 'P0.1DT2562047788H54.775807S';"}
+{"sql":"select interval 'P-0.1DT-2562047788H-54.775808S'","shape":"SELECT interval 'P-0.1DT-2562047788H-54.775808S';"}
+{"sql":"select interval 'PT2562047788.1H54.775807S'","shape":"SELECT interval 'PT2562047788.1H54.775807S';"}
+{"sql":"select interval 'PT-2562047788.1H-54.775808S'","shape":"SELECT interval 'PT-2562047788.1H-54.775808S';"}
+{"sql":"select interval 'PT2562047788H0.1M54.775807S'","shape":"SELECT interval 'PT2562047788H0.1M54.775807S';"}
+{"sql":"select interval 'PT-2562047788H-0.1M-54.775808S'","shape":"SELECT interval 'PT-2562047788H-0.1M-54.775808S';"}
+{"sql":"select interval 'P0.1-2147483647-00'","shape":"SELECT interval 'P0.1-2147483647-00';"}
+{"sql":"select interval 'P00-0.1-2147483647'","shape":"SELECT interval 'P00-0.1-2147483647';"}
+{"sql":"select interval 'P00-0.01-00T2562047788:00:54.775807'","shape":"SELECT interval 'P00-0.01-00T2562047788:00:54.775807';"}
+{"sql":"select interval 'P00-00-0.1T2562047788:00:54.775807'","shape":"SELECT interval 'P00-00-0.1T2562047788:00:54.775807';"}
+{"sql":"select interval 'PT2562047788.1:00:54.775807'","shape":"SELECT interval 'PT2562047788.1:00:54.775807';"}
+{"sql":"select interval 'PT2562047788:01.:54.775807'","shape":"SELECT interval 'PT2562047788:01.:54.775807';"}
+{"sql":"select interval '0.1 2562047788:0:54.775807'","shape":"SELECT interval '0.1 2562047788:0:54.775807';"}
+{"sql":"select interval '0.1 2562047788:0:54.775808 ago'","shape":"SELECT interval '0.1 2562047788:0:54.775808 ago';"}
+{"sql":"select interval '2562047788.1:0:54.775807'","shape":"SELECT interval '2562047788.1:0:54.775807';"}
+{"sql":"select interval '2562047788.1:0:54.775808 ago'","shape":"SELECT interval '2562047788.1:0:54.775808 ago';"}
+{"sql":"select interval '2562047788:0.1:54.775807'","shape":"SELECT interval '2562047788:0.1:54.775807';"}
+{"sql":"select interval '2562047788:0.1:54.775808 ago'","shape":"SELECT interval '2562047788:0.1:54.775808 ago';"}
+{"sql":"select interval '-2147483648 months ago'","shape":"SELECT interval '-2147483648 months ago';"}
+{"sql":"select interval '-2147483648 days ago'","shape":"SELECT interval '-2147483648 days ago';"}
+{"sql":"select interval '-9223372036854775808 microseconds ago'","shape":"SELECT interval '-9223372036854775808 microseconds ago';"}
+{"sql":"select interval '-2147483648 months -2147483648 days -9223372036854775808 microseconds ago'","shape":"SELECT interval '-2147483648 months -2147483648 days -9223372036854775808 microseconds ago';"}
+{"sql":"select interval '-2147483648 months -2147483648 days -9223372036854775808 us'","shape":"SELECT interval '-2147483648 months -2147483648 days -9223372036854775808 us';"}
+{"sql":"select '30 days'::interval = '1 month'::interval as t","shape":"SELECT '30 days'::interval = '1 month'::interval AS t;"}
+{"sql":"select interval_hash('30 days'::interval) = interval_hash('1 month'::interval) as t","shape":"SELECT interval_hash('30 days'::interval) = interval_hash('1 month'::interval) AS t;"}
+{"sql":"select make_interval(years := 2)","shape":"SELECT make_interval(years => 2);"}
+{"sql":"select make_interval(years := 1, months := 6)","shape":"SELECT make_interval(years => 1, months => 6);"}
+{"sql":"select make_interval(years := 1, months := -1, weeks := 5, days := -7, hours := 25, mins := -180)","shape":"SELECT make_interval(years => 1, months => -1, weeks => 5, days => -7, hours => 25, mins => -180);"}
+{"sql":"select make_interval() = make_interval(years := 0, months := 0, weeks := 0, days := 0, mins := 0, secs := 0.0)","shape":"SELECT make_interval() = make_interval(years => 0, months => 0, weeks => 0, days => 0, mins => 0, secs => 0.0);"}
+{"sql":"select make_interval(hours := -2, mins := -10, secs := -25.3)","shape":"SELECT make_interval(hours => -2, mins => -10, secs => -25.3);"}
+{"sql":"select make_interval(years := 'inf'::float::int)","shape":"SELECT make_interval(years => 'inf'::float::int);"}
+{"sql":"select make_interval(months := 'NaN'::float::int)","shape":"SELECT make_interval(months => 'NaN'::float::int);"}
+{"sql":"select make_interval(secs := 'inf')","shape":"SELECT make_interval(secs => 'inf');"}
+{"sql":"select make_interval(secs := 'NaN')","shape":"SELECT make_interval(secs => 'NaN');"}
+{"sql":"select make_interval(secs := 7e12)","shape":"SELECT make_interval(secs => 7e12);"}
+{"sql":"SELECT f1,\n    EXTRACT(MICROSECOND FROM f1) AS MICROSECOND,\n    EXTRACT(MILLISECOND FROM f1) AS MILLISECOND,\n    EXTRACT(SECOND FROM f1) AS SECOND,\n    EXTRACT(MINUTE FROM f1) AS MINUTE,\n    EXTRACT(HOUR FROM f1) AS HOUR,\n    EXTRACT(DAY FROM f1) AS DAY,\n    EXTRACT(MONTH FROM f1) AS MONTH,\n    EXTRACT(QUARTER FROM f1) AS QUARTER,\n    EXTRACT(YEAR FROM f1) AS YEAR,\n    EXTRACT(DECADE FROM f1) AS DECADE,\n    EXTRACT(CENTURY FROM f1) AS CENTURY,\n    EXTRACT(MILLENNIUM FROM f1) AS MILLENNIUM,\n    EXTRACT(EPOCH FROM f1) AS EPOCH\n    FROM INTERVAL_TBL","shape":"SELECT f1, EXTRACT(MICROSECOND FROM f1) AS MICROSECOND, EXTRACT(MILLISECOND FROM f1) AS MILLISECOND, EXTRACT(SECOND FROM f1) AS SECOND, EXTRACT(MINUTE FROM f1) AS MINUTE, EXTRACT(HOUR FROM f1) AS HOUR, EXTRACT(DAY FROM f1) AS DAY, EXTRACT(MONTH FROM f1) AS MONTH, EXTRACT(QUARTER FROM f1) AS QUARTER, EXTRACT(YEAR FROM f1) AS YEAR, EXTRACT(DECADE FROM f1) AS DECADE, EXTRACT(CENTURY FROM f1) AS CENTURY, EXTRACT(MILLENNIUM FROM f1) AS MILLENNIUM, EXTRACT(EPOCH FROM f1) AS EPOCH FROM INTERVAL_TBL;"}
+{"sql":"SELECT EXTRACT(FORTNIGHT FROM INTERVAL '2 days')","shape":"SELECT EXTRACT(FORTNIGHT FROM INTERVAL '2 days');"}
+{"sql":"SELECT EXTRACT(TIMEZONE FROM INTERVAL '2 days')","shape":"SELECT EXTRACT(TIMEZONE FROM INTERVAL '2 days');"}
+{"sql":"SELECT EXTRACT(DECADE FROM INTERVAL '100 y')","shape":"SELECT EXTRACT(DECADE FROM INTERVAL '100 y');"}
+{"sql":"SELECT EXTRACT(DECADE FROM INTERVAL '99 y')","shape":"SELECT EXTRACT(DECADE FROM INTERVAL '99 y');"}
+{"sql":"SELECT EXTRACT(DECADE FROM INTERVAL '-99 y')","shape":"SELECT EXTRACT(DECADE FROM INTERVAL '-99 y');"}
+{"sql":"SELECT EXTRACT(DECADE FROM INTERVAL '-100 y')","shape":"SELECT EXTRACT(DECADE FROM INTERVAL '-100 y');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM INTERVAL '100 y')","shape":"SELECT EXTRACT(CENTURY FROM INTERVAL '100 y');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM INTERVAL '99 y')","shape":"SELECT EXTRACT(CENTURY FROM INTERVAL '99 y');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM INTERVAL '-99 y')","shape":"SELECT EXTRACT(CENTURY FROM INTERVAL '-99 y');"}
+{"sql":"SELECT EXTRACT(CENTURY FROM INTERVAL '-100 y')","shape":"SELECT EXTRACT(CENTURY FROM INTERVAL '-100 y');"}
+{"sql":"SELECT f1,\n    date_part('microsecond', f1) AS microsecond,\n    date_part('millisecond', f1) AS millisecond,\n    date_part('second', f1) AS second,\n    date_part('epoch', f1) AS epoch\n    FROM INTERVAL_TBL","shape":"SELECT f1, date_part('microsecond', f1) AS microsecond, date_part('millisecond', f1) AS millisecond, date_part('second', f1) AS second, date_part('epoch', f1) AS epoch FROM INTERVAL_TBL;"}
+{"sql":"SELECT extract(epoch from interval '1000000000 days')","shape":"SELECT EXTRACT(EPOCH FROM interval '1000000000 days');"}

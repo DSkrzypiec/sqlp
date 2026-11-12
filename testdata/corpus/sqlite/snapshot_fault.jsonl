@@ -1,0 +1,5 @@
+{"sql":"CREATE TABLE t1(zzz)"}
+{"sql":"INSERT INTO t1 VALUES('def')"}
+{"sql":"INSERT INTO t1 VALUES(randomblob( 500 * 9500 ))"}
+{"sql":"PRAGMA user_version = 211"}
+{"sql":"INSERT INTO t1 VALUES(randomblob( 5000 ))"}

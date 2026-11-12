@@ -1,0 +1,91 @@
+{"sql":"CREATE TABLE collate4t1(a COLLATE NOCASE, b COLLATE TEXT)"}
+{"sql":"INSERT INTO collate4t1 VALUES( 'a', 'a' )"}
+{"sql":"INSERT INTO collate4t1 VALUES( 'b', 'b' )"}
+{"sql":"INSERT INTO collate4t1 VALUES( NULL, NULL )"}
+{"sql":"INSERT INTO collate4t1 VALUES( 'B', 'B' )"}
+{"sql":"INSERT INTO collate4t1 VALUES( 'A', 'A' )"}
+{"sql":"CREATE INDEX collate4i1 ON collate4t1(a)"}
+{"sql":"CREATE INDEX collate4i2 ON collate4t1(b)"}
+{"sql":"CREATE TABLE collate4t2(\n      a PRIMARY KEY COLLATE NOCASE, \n      b UNIQUE COLLATE TEXT\n    )"}
+{"sql":"INSERT INTO collate4t2 VALUES( 'a', 'a' )"}
+{"sql":"INSERT INTO collate4t2 VALUES( NULL, NULL )"}
+{"sql":"INSERT INTO collate4t2 VALUES( 'B', 'B' )"}
+{"sql":"CREATE TABLE collate4t3(\n      b COLLATE TEXT,  \n      a COLLATE NOCASE, \n      UNIQUE(a), PRIMARY KEY(b)\n    )"}
+{"sql":"INSERT INTO collate4t3 VALUES( 'a', 'a' )"}
+{"sql":"INSERT INTO collate4t3 VALUES( NULL, NULL )"}
+{"sql":"INSERT INTO collate4t3 VALUES( 'B', 'B' )"}
+{"sql":"CREATE TABLE collate4t4(a COLLATE NOCASE, b COLLATE TEXT)"}
+{"sql":"INSERT INTO collate4t4 VALUES( 'a', 'a' )"}
+{"sql":"INSERT INTO collate4t4 VALUES( 'b', 'b' )"}
+{"sql":"INSERT INTO collate4t4 VALUES( NULL, NULL )"}
+{"sql":"INSERT INTO collate4t4 VALUES( 'B', 'B' )"}
+{"sql":"INSERT INTO collate4t4 VALUES( 'A', 'A' )"}
+{"sql":"CREATE INDEX collate4i3 ON collate4t4(a COLLATE TEXT)"}
+{"sql":"CREATE INDEX collate4i4 ON collate4t4(b COLLATE NOCASE)"}
+{"sql":"DROP TABLE collate4t1"}
+{"sql":"DROP TABLE collate4t2"}
+{"sql":"DROP TABLE collate4t3"}
+{"sql":"DROP TABLE collate4t4"}
+{"sql":"CREATE INDEX collate4i1 ON collate4t1(a, b)"}
+{"sql":"CREATE TABLE collate4t2(\n      a COLLATE NOCASE, \n      b COLLATE TEXT, \n      PRIMARY KEY(a, b)\n    )"}
+{"sql":"CREATE TABLE collate4t3(a COLLATE NOCASE, b COLLATE TEXT)"}
+{"sql":"INSERT INTO collate4t3 VALUES( 'b', 'b' )"}
+{"sql":"INSERT INTO collate4t3 VALUES( 'A', 'A' )"}
+{"sql":"CREATE INDEX collate4i2 ON collate4t3(a COLLATE TEXT, b COLLATE NOCASE)"}
+{"sql":"CREATE TABLE collate4t1(a COLLATE NOCASE)"}
+{"sql":"CREATE TABLE collate4t2(b COLLATE TEXT)"}
+{"sql":"INSERT INTO collate4t1 VALUES('a')"}
+{"sql":"INSERT INTO collate4t1 VALUES('A')"}
+{"sql":"INSERT INTO collate4t1 VALUES('b')"}
+{"sql":"INSERT INTO collate4t1 VALUES('B')"}
+{"sql":"INSERT INTO collate4t1 VALUES('c')"}
+{"sql":"INSERT INTO collate4t1 VALUES('C')"}
+{"sql":"INSERT INTO collate4t1 VALUES('d')"}
+{"sql":"INSERT INTO collate4t1 VALUES('D')"}
+{"sql":"INSERT INTO collate4t1 VALUES('e')"}
+{"sql":"INSERT INTO collate4t2 VALUES('A')"}
+{"sql":"INSERT INTO collate4t2 VALUES('Z')"}
+{"sql":"DROP INDEX collate4i1"}
+{"sql":"CREATE INDEX collate4i1 ON collate4t1(a COLLATE TEXT)"}
+{"sql":"CREATE TABLE collate4t1(a COLLATE nocase, b COLLATE text, c)"}
+{"sql":"CREATE TABLE collate4t2(a COLLATE nocase, b COLLATE text, c COLLATE TEXT)"}
+{"sql":"INSERT INTO collate4t1 VALUES('0', '0', '0')"}
+{"sql":"INSERT INTO collate4t1 VALUES('0', '0', '1')"}
+{"sql":"INSERT INTO collate4t1 VALUES('0', '1', '0')"}
+{"sql":"INSERT INTO collate4t1 VALUES('0', '1', '1')"}
+{"sql":"INSERT INTO collate4t1 VALUES('1', '0', '0')"}
+{"sql":"INSERT INTO collate4t1 VALUES('1', '0', '1')"}
+{"sql":"INSERT INTO collate4t1 VALUES('1', '1', '0')"}
+{"sql":"INSERT INTO collate4t1 VALUES('1', '1', '1')"}
+{"sql":"insert into collate4t2 SELECT * FROM collate4t1"}
+{"sql":"CREATE INDEX collate4i1 ON collate4t1(a, b, c)"}
+{"sql":"CREATE INDEX collate4i1 ON collate4t1(a, b, c COLLATE text)"}
+{"sql":"CREATE TABLE collate4t1(a PRIMARY KEY COLLATE NOCASE)"}
+{"sql":"INSERT INTO collate4t1 VALUES('abc')"}
+{"sql":"INSERT INTO collate4t1 VALUES('ABC')"}
+{"sql":"SELECT * FROM collate4t1"}
+{"sql":"INSERT INTO collate4t1 SELECT upper(a) FROM collate4t1"}
+{"sql":"INSERT INTO collate4t1 VALUES(1)"}
+{"sql":"UPDATE collate4t1 SET a = 'abc'"}
+{"sql":"CREATE TABLE collate4t1(a COLLATE NOCASE UNIQUE)"}
+{"sql":"CREATE TABLE collate4t1(a)"}
+{"sql":"CREATE UNIQUE INDEX collate4i1 ON collate4t1(a COLLATE NOCASE)"}
+{"sql":"CREATE TABLE collate4t1(a COLLATE TEXT)"}
+{"sql":"INSERT INTO collate4t1 VALUES('2')"}
+{"sql":"INSERT INTO collate4t1 VALUES('10')"}
+{"sql":"INSERT INTO collate4t1 VALUES('20')"}
+{"sql":"INSERT INTO collate4t1 VALUES('104')"}
+{"sql":"CREATE INDEX collate4i1 ON collate4t1(a COLLATE NUMERIC)"}
+{"sql":"CREATE TABLE collate4t1(a COLLATE TEXT, b COLLATE NUMERIC)"}
+{"sql":"INSERT INTO collate4t1 VALUES('11', '101')"}
+{"sql":"INSERT INTO collate4t1 VALUES('101', '11')"}
+{"sql":"SELECT max(a, b) FROM collate4t1"}
+{"sql":"SELECT max(b, a) FROM collate4t1"}
+{"sql":"SELECT max(a, '101') FROM collate4t1"}
+{"sql":"SELECT max('101', a) FROM collate4t1"}
+{"sql":"SELECT max(b, '101') FROM collate4t1"}
+{"sql":"SELECT max('101', b) FROM collate4t1"}
+{"sql":"CREATE TABLE collate4t1(a INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO collate4t1 VALUES(101)"}
+{"sql":"INSERT INTO collate4t1 VALUES(10)"}
+{"sql":"INSERT INTO collate4t1 VALUES(15)"}

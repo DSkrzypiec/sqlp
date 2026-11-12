@@ -1,0 +1,7 @@
+{"sql":"SELECT DISTINCT x, y FROM t1"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(x, y)"}
+{"sql":"CREATE TABLE t2(x, y NOT NULL)"}
+{"sql":"SELECT DISTINCT x FROM t2"}
+{"sql":"SELECT DISTINCT y FROM t2"}
+{"sql":"SELECT DISTINCT x, y FROM t2 WHERE y=10"}
+{"sql":"SELECT DISTINCT x, y FROM t2 WHERE x=10"}

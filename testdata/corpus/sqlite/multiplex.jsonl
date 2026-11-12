@@ -1,0 +1,24 @@
+{"sql":"SELECT multiplex_control(2, 32768)"}
+{"sql":"SELECT multiplex_control(3, -1)"}
+{"sql":"SELECT multiplex_control(2, 31)"}
+{"sql":"SELECT multiplex_control(3, 100)"}
+{"sql":"SELECT multiplex_control(2, 1073741824)"}
+{"sql":"SELECT multiplex_control(1, 0)"}
+{"sql":"SELECT multiplex_control(1, 1)"}
+{"sql":"SELECT multiplex_control(1, -1)"}
+{"sql":"SELECT multiplex_control(-1, 0)"}
+{"sql":"SELECT multiplex_control(4, 1)"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(1100))"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(1100))"}
+{"sql":"INSERT INTO t1 VALUES(3, randomblob(1100))"}
+{"sql":"PRAGMA multiplex_enabled"}
+{"sql":"PRAGMA multiplex_filecount"}
+{"sql":"PRAGMA multiplex_chunksize"}
+{"sql":"SELECT multiplex_control(2, 65536)"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(1000))"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(65536))"}
+{"sql":"INSERT INTO t1 VALUES('t', 'u')"}
+{"sql":"INSERT INTO t1 VALUES('r', 's')"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(500), randomblob(500))"}
+{"sql":"INSERT INTO t2 VALUES(zeroblob(200000))"}
+{"sql":"INSERT INTO t1 VALUES(10, zeroblob(1200))"}

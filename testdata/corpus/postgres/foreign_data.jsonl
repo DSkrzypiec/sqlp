@@ -1,0 +1,388 @@
+{"sql":"DROP ROLE IF EXISTS regress_foreign_data_user, regress_test_role, regress_test_role2, regress_test_role_super, regress_test_indirect, regress_unprivileged_role","shape":"DROP ROLE IF EXISTS regress_foreign_data_user, regress_test_role, regress_test_role2, regress_test_role_super, regress_test_indirect, regress_unprivileged_role;"}
+{"sql":"CREATE ROLE regress_foreign_data_user LOGIN SUPERUSER"}
+{"sql":"SET SESSION AUTHORIZATION 'regress_foreign_data_user'"}
+{"sql":"CREATE ROLE regress_test_role2"}
+{"sql":"CREATE ROLE regress_test_role_super SUPERUSER"}
+{"sql":"CREATE ROLE regress_test_indirect"}
+{"sql":"CREATE ROLE regress_unprivileged_role"}
+{"sql":"COMMENT ON FOREIGN DATA WRAPPER dummy IS 'useless'"}
+{"sql":"CREATE FOREIGN DATA WRAPPER postgresql VALIDATOR postgresql_fdw_validator"}
+{"sql":"SELECT fdwname, fdwhandler::regproc, fdwvalidator::regproc, fdwoptions FROM pg_foreign_data_wrapper ORDER BY 1, 2, 3","shape":"SELECT fdwname, fdwhandler::regproc, fdwvalidator::regproc, fdwoptions FROM pg_foreign_data_wrapper ORDER BY 1, 2, 3;"}
+{"sql":"SELECT srvname, srvoptions FROM pg_foreign_server","shape":"SELECT srvname, srvoptions FROM pg_foreign_server;"}
+{"sql":"SELECT * FROM pg_user_mapping","shape":"SELECT * FROM pg_user_mapping;"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo VALIDATOR bar"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo"}
+{"sql":"DROP FOREIGN DATA WRAPPER foo"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo OPTIONS (testing '1')"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo OPTIONS (testing '1', testing '2')"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo OPTIONS (testing '1', another '2')"}
+{"sql":"SET ROLE regress_test_role"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo VALIDATOR postgresql_fdw_validator"}
+{"sql":"CREATE FUNCTION invalid_fdw_handler() RETURNS int LANGUAGE SQL AS 'SELECT 1;'","shape":"CREATE FUNCTION invalid_fdw_handler() RETURNS int LANGUAGE SQL AS 'SELECT 1;';"}
+{"sql":"CREATE FOREIGN DATA WRAPPER test_fdw HANDLER invalid_fdw_handler"}
+{"sql":"CREATE FOREIGN DATA WRAPPER test_fdw HANDLER test_fdw_handler HANDLER invalid_fdw_handler"}
+{"sql":"CREATE FOREIGN DATA WRAPPER test_fdw HANDLER test_fdw_handler"}
+{"sql":"DROP FOREIGN DATA WRAPPER test_fdw"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (nonexistent 'fdw')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo","reject":true}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo VALIDATOR bar"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo NO VALIDATOR"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (a '1', b '2')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (SET c '4')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (DROP c)"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (ADD x '1', DROP x)"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (DROP a, SET b '3', ADD c '4')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (a '2')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (b '4')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (ADD d '5')"}
+{"sql":"SET ROLE regress_test_role_super"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OWNER TO regress_test_role"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OWNER TO regress_test_role_super"}
+{"sql":"ALTER ROLE regress_test_role_super NOSUPERUSER"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (ADD e '6')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo RENAME TO foo1"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo1 RENAME TO foo"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo HANDLER invalid_fdw_handler"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo HANDLER test_fdw_handler HANDLER anything"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo HANDLER test_fdw_handler"}
+{"sql":"DROP FUNCTION invalid_fdw_handler()"}
+{"sql":"DROP FOREIGN DATA WRAPPER nonexistent"}
+{"sql":"DROP FOREIGN DATA WRAPPER IF EXISTS nonexistent"}
+{"sql":"DROP ROLE regress_test_role_super","shape":"DROP ROLE regress_test_role_super;"}
+{"sql":"CREATE SERVER s1 FOREIGN DATA WRAPPER foo"}
+{"sql":"COMMENT ON SERVER s1 IS 'foreign server'"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s1"}
+{"sql":"CREATE USER MAPPING IF NOT EXISTS FOR current_user SERVER s1"}
+{"sql":"DROP FOREIGN DATA WRAPPER foo CASCADE"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foo OPTIONS (\"test wrapper\" 'true')"}
+{"sql":"CREATE SERVER IF NOT EXISTS s1 FOREIGN DATA WRAPPER foo"}
+{"sql":"CREATE SERVER s2 FOREIGN DATA WRAPPER foo OPTIONS (host 'a', dbname 'b')"}
+{"sql":"CREATE SERVER s3 TYPE 'oracle' FOREIGN DATA WRAPPER foo"}
+{"sql":"CREATE SERVER s4 TYPE 'oracle' FOREIGN DATA WRAPPER foo OPTIONS (host 'a', dbname 'b')"}
+{"sql":"CREATE SERVER s5 VERSION '15.0' FOREIGN DATA WRAPPER foo"}
+{"sql":"CREATE SERVER s6 VERSION '16.0' FOREIGN DATA WRAPPER foo OPTIONS (host 'a', dbname 'b')"}
+{"sql":"CREATE SERVER s7 TYPE 'oracle' VERSION '17.0' FOREIGN DATA WRAPPER foo OPTIONS (host 'a', dbname 'b')"}
+{"sql":"CREATE SERVER s8 FOREIGN DATA WRAPPER postgresql OPTIONS (foo '1')"}
+{"sql":"CREATE SERVER s8 FOREIGN DATA WRAPPER postgresql OPTIONS (host 'localhost', dbname 's8db')"}
+{"sql":"CREATE SERVER t1 FOREIGN DATA WRAPPER foo"}
+{"sql":"GRANT USAGE ON FOREIGN DATA WRAPPER foo TO regress_test_role"}
+{"sql":"REVOKE USAGE ON FOREIGN DATA WRAPPER foo FROM regress_test_role"}
+{"sql":"GRANT USAGE ON FOREIGN DATA WRAPPER foo TO regress_test_indirect"}
+{"sql":"CREATE SERVER t2 FOREIGN DATA WRAPPER foo"}
+{"sql":"GRANT regress_test_indirect TO regress_test_role","shape":"GRANT regress_test_indirect TO regress_test_role;"}
+{"sql":"REVOKE regress_test_indirect FROM regress_test_role","shape":"REVOKE regress_test_indirect FROM regress_test_role;"}
+{"sql":"ALTER SERVER s0","reject":true}
+{"sql":"ALTER SERVER s0 OPTIONS (a '1')"}
+{"sql":"ALTER SERVER s1 VERSION '1.0' OPTIONS (servername 's1')"}
+{"sql":"ALTER SERVER s2 VERSION '1.1'"}
+{"sql":"ALTER SERVER s3 OPTIONS (\"tns name\" 'orcl', port '1521')"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s1 TO regress_test_role"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s6 TO regress_test_role2 WITH GRANT OPTION"}
+{"sql":"ALTER SERVER s1 VERSION '1.1'"}
+{"sql":"ALTER SERVER s1 OWNER TO regress_test_role"}
+{"sql":"GRANT regress_test_role2 TO regress_test_role","shape":"GRANT regress_test_role2 TO regress_test_role;"}
+{"sql":"ALTER SERVER s1 OWNER TO regress_test_role2"}
+{"sql":"ALTER SERVER s8 OPTIONS (foo '1')"}
+{"sql":"ALTER SERVER s8 OPTIONS (connect_timeout '30', SET dbname 'db1', DROP host)"}
+{"sql":"ALTER SERVER s1 OWNER TO regress_test_indirect"}
+{"sql":"DROP ROLE regress_test_indirect","shape":"DROP ROLE regress_test_indirect;"}
+{"sql":"ALTER SERVER s8 RENAME to s8new"}
+{"sql":"ALTER SERVER s8new RENAME to s8"}
+{"sql":"DROP SERVER nonexistent"}
+{"sql":"DROP SERVER IF EXISTS nonexistent"}
+{"sql":"DROP SERVER s2"}
+{"sql":"DROP SERVER s1"}
+{"sql":"ALTER SERVER s2 OWNER TO regress_test_role"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s3"}
+{"sql":"DROP SERVER s3"}
+{"sql":"DROP SERVER s3 CASCADE"}
+{"sql":"CREATE USER MAPPING FOR regress_test_missing_role SERVER s1"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s4"}
+{"sql":"CREATE USER MAPPING FOR user SERVER s4"}
+{"sql":"CREATE USER MAPPING FOR public SERVER s4 OPTIONS (\"this mapping\" 'is public')"}
+{"sql":"CREATE USER MAPPING FOR user SERVER s8 OPTIONS (username 'test', password 'secret')"}
+{"sql":"CREATE USER MAPPING FOR user SERVER s8 OPTIONS (user 'test', password 'secret')"}
+{"sql":"ALTER SERVER s5 OWNER TO regress_test_role"}
+{"sql":"ALTER SERVER s6 OWNER TO regress_test_indirect"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s5"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s6 OPTIONS (username 'test')"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s7"}
+{"sql":"CREATE USER MAPPING FOR public SERVER s8"}
+{"sql":"ALTER SERVER t1 OWNER TO regress_test_indirect"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER t1 OPTIONS (username 'bob', password 'boo')"}
+{"sql":"CREATE USER MAPPING FOR public SERVER t1"}
+{"sql":"ALTER USER MAPPING FOR regress_test_missing_role SERVER s4 OPTIONS (gotcha 'true')"}
+{"sql":"ALTER USER MAPPING FOR user SERVER ss4 OPTIONS (gotcha 'true')"}
+{"sql":"ALTER USER MAPPING FOR public SERVER s5 OPTIONS (gotcha 'true')"}
+{"sql":"ALTER USER MAPPING FOR current_user SERVER s8 OPTIONS (username 'test')"}
+{"sql":"ALTER USER MAPPING FOR current_user SERVER s8 OPTIONS (DROP user, SET password 'public')"}
+{"sql":"ALTER USER MAPPING FOR current_user SERVER s5 OPTIONS (ADD modified '1')"}
+{"sql":"ALTER USER MAPPING FOR public SERVER s4 OPTIONS (ADD modified '1')"}
+{"sql":"ALTER USER MAPPING FOR public SERVER t1 OPTIONS (ADD modified '1')"}
+{"sql":"DROP USER MAPPING FOR regress_test_missing_role SERVER s4"}
+{"sql":"DROP USER MAPPING FOR user SERVER ss4"}
+{"sql":"DROP USER MAPPING FOR public SERVER s7"}
+{"sql":"DROP USER MAPPING IF EXISTS FOR regress_test_missing_role SERVER s4"}
+{"sql":"DROP USER MAPPING IF EXISTS FOR user SERVER ss4"}
+{"sql":"DROP USER MAPPING IF EXISTS FOR public SERVER s7"}
+{"sql":"DROP USER MAPPING FOR public SERVER s8"}
+{"sql":"DROP SERVER s7"}
+{"sql":"CREATE SCHEMA foreign_schema","shape":"CREATE SCHEMA foreign_schema;"}
+{"sql":"CREATE FOREIGN TABLE ft1 ()","reject":true}
+{"sql":"CREATE FOREIGN TABLE ft1 () SERVER no_server"}
+{"sql":"CREATE FOREIGN TABLE ft1 (\n\tc1 integer OPTIONS (\"param 1\" 'val1') PRIMARY KEY,\n\tc2 text OPTIONS (param2 'val2', param3 'val3'),\n\tc3 date\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"CREATE TABLE ref_table (id integer PRIMARY KEY)","shape":"CREATE TABLE ref_table (id integer PRIMARY KEY);"}
+{"sql":"CREATE FOREIGN TABLE ft1 (\n\tc1 integer OPTIONS (\"param 1\" 'val1') REFERENCES ref_table (id),\n\tc2 text OPTIONS (param2 'val2', param3 'val3'),\n\tc3 date\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"DROP TABLE ref_table","shape":"DROP TABLE ref_table;"}
+{"sql":"CREATE FOREIGN TABLE ft1 (\n\tc1 integer OPTIONS (\"param 1\" 'val1') NOT NULL,\n\tc2 text OPTIONS (param2 'val2', param3 'val3'),\n\tc3 date,\n\tUNIQUE (c3)\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"CREATE FOREIGN TABLE ft1 (\n\tc1 integer OPTIONS (\"param 1\" 'val1') NOT NULL,\n\tc2 text OPTIONS (param2 'val2', param3 'val3') CHECK (c2 <> ''),\n\tc3 date,\n\tCHECK (c3 BETWEEN '1994-01-01'::date AND '1994-01-31'::date)\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"COMMENT ON FOREIGN TABLE ft1 IS 'ft1'"}
+{"sql":"COMMENT ON COLUMN ft1.c1 IS 'ft1.c1'","shape":"COMMENT ON COLUMN ft1.c1 IS 'ft1.c1';"}
+{"sql":"CREATE INDEX id_ft1_c2 ON ft1 (c2)","shape":"CREATE INDEX id_ft1_c2 ON ft1 (c2);"}
+{"sql":"SELECT * FROM ft1","shape":"SELECT * FROM ft1;"}
+{"sql":"EXPLAIN SELECT * FROM ft1","shape":"EXPLAIN SELECT * FROM ft1;"}
+{"sql":"CREATE TABLE lt1 (a INT) PARTITION BY RANGE (a)","shape":"CREATE TABLE lt1 (a INT) PARTITION BY RANGE (a);"}
+{"sql":"CREATE FOREIGN TABLE ft_part1\n  PARTITION OF lt1 FOR VALUES FROM (0) TO (1000) SERVER s0"}
+{"sql":"CREATE INDEX ON lt1 (a)","shape":"CREATE INDEX ON lt1 (a);"}
+{"sql":"CREATE UNIQUE INDEX ON lt1 (a)","shape":"CREATE UNIQUE INDEX ON lt1 (a);"}
+{"sql":"ALTER TABLE lt1 ADD PRIMARY KEY (a)","shape":"ALTER TABLE lt1 ADD PRIMARY KEY (a);"}
+{"sql":"DROP TABLE lt1","shape":"DROP TABLE lt1;"}
+{"sql":"CREATE FOREIGN TABLE ft_part2 (a INT) SERVER s0"}
+{"sql":"ALTER TABLE lt1 ATTACH PARTITION ft_part2 FOR VALUES FROM (1000) TO (2000)"}
+{"sql":"DROP FOREIGN TABLE ft_part1, ft_part2"}
+{"sql":"CREATE FOREIGN TABLE ft_part2 (a INT NOT NULL) SERVER s0"}
+{"sql":"ALTER TABLE lt1 ATTACH PARTITION ft_part2\n  FOR VALUES FROM (1000) TO (2000)"}
+{"sql":"DROP FOREIGN TABLE ft_part2"}
+{"sql":"CREATE TABLE lt1_part1\n  PARTITION OF lt1 FOR VALUES FROM (0) TO (1000)\n  PARTITION BY RANGE (a)","shape":"CREATE TABLE lt1_part1 PARTITION OF lt1 FOR VALUES FROM (0) TO (1000) PARTITION BY RANGE (a);"}
+{"sql":"CREATE FOREIGN TABLE ft_part_1_1\n  PARTITION OF lt1_part1 FOR VALUES FROM (0) TO (100) SERVER s0"}
+{"sql":"CREATE FOREIGN TABLE ft_part_1_2 (a INT) SERVER s0"}
+{"sql":"ALTER TABLE lt1_part1 ATTACH PARTITION ft_part_1_2 FOR VALUES FROM (100) TO (200)"}
+{"sql":"DROP FOREIGN TABLE ft_part_1_1, ft_part_1_2"}
+{"sql":"CREATE FOREIGN TABLE ft_part_1_2 (a INT NOT NULL) SERVER s0"}
+{"sql":"DROP FOREIGN TABLE ft_part_1_2"}
+{"sql":"COMMENT ON FOREIGN TABLE ft1 IS 'foreign table'"}
+{"sql":"COMMENT ON FOREIGN TABLE ft1 IS NULL"}
+{"sql":"COMMENT ON COLUMN ft1.c1 IS 'foreign column'","shape":"COMMENT ON COLUMN ft1.c1 IS 'foreign column';"}
+{"sql":"COMMENT ON COLUMN ft1.c1 IS NULL","shape":"COMMENT ON COLUMN ft1.c1 IS NULL;"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c4 integer"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c5 integer DEFAULT 0"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c6 integer"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c7 integer NOT NULL"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c8 integer"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c9 integer"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c10 integer OPTIONS (p1 'v1')"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c4 SET DEFAULT 0"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c5 DROP DEFAULT"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c6 SET NOT NULL"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c7 DROP NOT NULL"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 TYPE char(10) USING '0'"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 SET DATA TYPE text"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN xmin OPTIONS (ADD p1 'v1')"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c7 OPTIONS (ADD p1 'v1', ADD p2 'v2'),\n                        ALTER COLUMN c8 OPTIONS (ADD p1 'v1', ADD p2 'v2')"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 OPTIONS (SET p2 'V2', DROP p1)"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c1 SET STATISTICS 10000"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c1 SET (n_distinct = 100)"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 SET STATISTICS -1"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 SET STORAGE PLAIN"}
+{"sql":"CREATE TABLE use_ft1_column_type (x ft1)","shape":"CREATE TABLE use_ft1_column_type (x ft1);"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER COLUMN c8 SET DATA TYPE integer"}
+{"sql":"DROP TABLE use_ft1_column_type","shape":"DROP TABLE use_ft1_column_type;"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD PRIMARY KEY (c7)"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD CONSTRAINT ft1_c9_check CHECK (c9 < 0) NOT VALID"}
+{"sql":"ALTER FOREIGN TABLE ft1 ALTER CONSTRAINT ft1_c9_check DEFERRABLE"}
+{"sql":"ALTER FOREIGN TABLE ft1 DROP CONSTRAINT ft1_c9_check"}
+{"sql":"ALTER FOREIGN TABLE ft1 DROP CONSTRAINT no_const"}
+{"sql":"ALTER FOREIGN TABLE ft1 DROP CONSTRAINT IF EXISTS no_const"}
+{"sql":"ALTER FOREIGN TABLE ft1 OWNER TO regress_test_role"}
+{"sql":"ALTER FOREIGN TABLE ft1 OPTIONS (DROP delimiter, SET quote '~', ADD escape '@')"}
+{"sql":"ALTER FOREIGN TABLE ft1 DROP COLUMN no_column"}
+{"sql":"ALTER FOREIGN TABLE ft1 DROP COLUMN IF EXISTS no_column"}
+{"sql":"ALTER FOREIGN TABLE ft1 DROP COLUMN c9"}
+{"sql":"ALTER FOREIGN TABLE ft1 ADD COLUMN c11 serial"}
+{"sql":"ALTER FOREIGN TABLE ft1 SET SCHEMA foreign_schema"}
+{"sql":"ALTER FOREIGN TABLE ft1 SET TABLESPACE ts"}
+{"sql":"ALTER SEQUENCE foreign_schema.ft1_c11_seq SET SCHEMA public"}
+{"sql":"ALTER FOREIGN TABLE foreign_schema.ft1 RENAME c1 TO foreign_column_1"}
+{"sql":"ALTER FOREIGN TABLE foreign_schema.ft1 RENAME TO foreign_table_1"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ADD COLUMN c4 integer"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ADD COLUMN c6 integer"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ADD COLUMN c7 integer NOT NULL"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ADD COLUMN c8 integer"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ADD COLUMN c9 integer"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ADD COLUMN c10 integer OPTIONS (p1 'v1')"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ALTER COLUMN c6 SET NOT NULL"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ALTER COLUMN c7 DROP NOT NULL"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ALTER COLUMN c8 TYPE char(10)"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ALTER COLUMN c8 SET DATA TYPE text"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ALTER COLUMN c7 OPTIONS (ADD p1 'v1', ADD p2 'v2'),\n                        ALTER COLUMN c8 OPTIONS (ADD p1 'v1', ADD p2 'v2')"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 ALTER COLUMN c8 OPTIONS (SET p2 'V2', DROP p1)"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 DROP CONSTRAINT IF EXISTS no_const"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 DROP CONSTRAINT ft1_c1_check"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 OWNER TO regress_test_role"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 OPTIONS (DROP delimiter, SET quote '~', ADD escape '@')"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 DROP COLUMN IF EXISTS no_column"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 DROP COLUMN c9"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 SET SCHEMA foreign_schema"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 RENAME c1 TO foreign_column_1"}
+{"sql":"ALTER FOREIGN TABLE IF EXISTS doesnt_exist_ft1 RENAME TO foreign_table_1"}
+{"sql":"SELECT * FROM information_schema.foreign_data_wrappers ORDER BY 1, 2","shape":"SELECT * FROM information_schema.foreign_data_wrappers ORDER BY 1, 2;"}
+{"sql":"SELECT * FROM information_schema.foreign_data_wrapper_options ORDER BY 1, 2, 3","shape":"SELECT * FROM information_schema.foreign_data_wrapper_options ORDER BY 1, 2, 3;"}
+{"sql":"SELECT * FROM information_schema.foreign_servers ORDER BY 1, 2","shape":"SELECT * FROM information_schema.foreign_servers ORDER BY 1, 2;"}
+{"sql":"SELECT * FROM information_schema.foreign_server_options ORDER BY 1, 2, 3","shape":"SELECT * FROM information_schema.foreign_server_options ORDER BY 1, 2, 3;"}
+{"sql":"SELECT * FROM information_schema.user_mappings ORDER BY lower(authorization_identifier), 2, 3","shape":"SELECT * FROM information_schema.user_mappings ORDER BY lower(authorization_identifier), 2, 3;"}
+{"sql":"SELECT * FROM information_schema.user_mapping_options ORDER BY lower(authorization_identifier), 2, 3, 4","shape":"SELECT * FROM information_schema.user_mapping_options ORDER BY lower(authorization_identifier), 2, 3, 4;"}
+{"sql":"SELECT * FROM information_schema.usage_privileges WHERE object_type LIKE 'FOREIGN%' AND object_name IN ('s6', 'foo') ORDER BY 1, 2, 3, 4, 5","shape":"SELECT * FROM information_schema.usage_privileges WHERE (object_type LIKE 'FOREIGN%') AND (object_name IN ('s6', 'foo')) ORDER BY 1, 2, 3, 4, 5;"}
+{"sql":"SELECT * FROM information_schema.role_usage_grants WHERE object_type LIKE 'FOREIGN%' AND object_name IN ('s6', 'foo') ORDER BY 1, 2, 3, 4, 5","shape":"SELECT * FROM information_schema.role_usage_grants WHERE (object_type LIKE 'FOREIGN%') AND (object_name IN ('s6', 'foo')) ORDER BY 1, 2, 3, 4, 5;"}
+{"sql":"SELECT * FROM information_schema.foreign_tables ORDER BY 1, 2, 3","shape":"SELECT * FROM information_schema.foreign_tables ORDER BY 1, 2, 3;"}
+{"sql":"SELECT * FROM information_schema.foreign_table_options ORDER BY 1, 2, 3, 4","shape":"SELECT * FROM information_schema.foreign_table_options ORDER BY 1, 2, 3, 4;"}
+{"sql":"SELECT * FROM information_schema.user_mapping_options ORDER BY 1, 2, 3, 4","shape":"SELECT * FROM information_schema.user_mapping_options ORDER BY 1, 2, 3, 4;"}
+{"sql":"DROP USER MAPPING FOR current_user SERVER t1"}
+{"sql":"SET ROLE regress_test_role2"}
+{"sql":"SELECT has_foreign_data_wrapper_privilege('regress_test_role',\n    (SELECT oid FROM pg_foreign_data_wrapper WHERE fdwname='foo'), 'USAGE')","shape":"SELECT has_foreign_data_wrapper_privilege('regress_test_role', (SELECT oid FROM pg_foreign_data_wrapper WHERE fdwname = 'foo'), 'USAGE');"}
+{"sql":"SELECT has_foreign_data_wrapper_privilege('regress_test_role', 'foo', 'USAGE')","shape":"SELECT has_foreign_data_wrapper_privilege('regress_test_role', 'foo', 'USAGE');"}
+{"sql":"SELECT has_foreign_data_wrapper_privilege(\n    (SELECT oid FROM pg_roles WHERE rolname='regress_test_role'),\n    (SELECT oid FROM pg_foreign_data_wrapper WHERE fdwname='foo'), 'USAGE')","shape":"SELECT has_foreign_data_wrapper_privilege((SELECT oid FROM pg_roles WHERE rolname = 'regress_test_role'), (SELECT oid FROM pg_foreign_data_wrapper WHERE fdwname = 'foo'), 'USAGE');"}
+{"sql":"SELECT has_foreign_data_wrapper_privilege(\n    (SELECT oid FROM pg_foreign_data_wrapper WHERE fdwname='foo'), 'USAGE')","shape":"SELECT has_foreign_data_wrapper_privilege((SELECT oid FROM pg_foreign_data_wrapper WHERE fdwname = 'foo'), 'USAGE');"}
+{"sql":"SELECT has_foreign_data_wrapper_privilege(\n    (SELECT oid FROM pg_roles WHERE rolname='regress_test_role'), 'foo', 'USAGE')","shape":"SELECT has_foreign_data_wrapper_privilege((SELECT oid FROM pg_roles WHERE rolname = 'regress_test_role'), 'foo', 'USAGE');"}
+{"sql":"SELECT has_foreign_data_wrapper_privilege('foo', 'USAGE')","shape":"SELECT has_foreign_data_wrapper_privilege('foo', 'USAGE');"}
+{"sql":"SELECT has_server_privilege('regress_test_role',\n    (SELECT oid FROM pg_foreign_server WHERE srvname='s8'), 'USAGE')","shape":"SELECT has_server_privilege('regress_test_role', (SELECT oid FROM pg_foreign_server WHERE srvname = 's8'), 'USAGE');"}
+{"sql":"SELECT has_server_privilege('regress_test_role', 's8', 'USAGE')","shape":"SELECT has_server_privilege('regress_test_role', 's8', 'USAGE');"}
+{"sql":"SELECT has_server_privilege(\n    (SELECT oid FROM pg_roles WHERE rolname='regress_test_role'),\n    (SELECT oid FROM pg_foreign_server WHERE srvname='s8'), 'USAGE')","shape":"SELECT has_server_privilege((SELECT oid FROM pg_roles WHERE rolname = 'regress_test_role'), (SELECT oid FROM pg_foreign_server WHERE srvname = 's8'), 'USAGE');"}
+{"sql":"SELECT has_server_privilege(\n    (SELECT oid FROM pg_foreign_server WHERE srvname='s8'), 'USAGE')","shape":"SELECT has_server_privilege((SELECT oid FROM pg_foreign_server WHERE srvname = 's8'), 'USAGE');"}
+{"sql":"SELECT has_server_privilege(\n    (SELECT oid FROM pg_roles WHERE rolname='regress_test_role'), 's8', 'USAGE')","shape":"SELECT has_server_privilege((SELECT oid FROM pg_roles WHERE rolname = 'regress_test_role'), 's8', 'USAGE');"}
+{"sql":"SELECT has_server_privilege('s8', 'USAGE')","shape":"SELECT has_server_privilege('s8', 'USAGE');"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s8 TO regress_test_role"}
+{"sql":"REVOKE USAGE ON FOREIGN SERVER s8 FROM regress_test_role"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s4 TO regress_test_role"}
+{"sql":"DROP USER MAPPING FOR public SERVER s4"}
+{"sql":"ALTER SERVER s6 OPTIONS (DROP host, DROP dbname)"}
+{"sql":"ALTER USER MAPPING FOR regress_test_role SERVER s6 OPTIONS (DROP username)"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo VALIDATOR postgresql_fdw_validator"}
+{"sql":"SET ROLE regress_unprivileged_role"}
+{"sql":"CREATE FOREIGN DATA WRAPPER foobar"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OPTIONS (gotcha 'true')"}
+{"sql":"ALTER FOREIGN DATA WRAPPER foo OWNER TO regress_unprivileged_role"}
+{"sql":"CREATE SERVER s9 FOREIGN DATA WRAPPER foo"}
+{"sql":"ALTER SERVER s4 VERSION '0.5'"}
+{"sql":"ALTER SERVER s4 OWNER TO regress_unprivileged_role"}
+{"sql":"DROP SERVER s4"}
+{"sql":"CREATE USER MAPPING FOR public SERVER s4"}
+{"sql":"ALTER USER MAPPING FOR regress_test_role SERVER s6 OPTIONS (gotcha 'true')"}
+{"sql":"DROP USER MAPPING FOR regress_test_role SERVER s6"}
+{"sql":"GRANT USAGE ON FOREIGN DATA WRAPPER postgresql TO regress_unprivileged_role"}
+{"sql":"GRANT USAGE ON FOREIGN DATA WRAPPER foo TO regress_unprivileged_role WITH GRANT OPTION"}
+{"sql":"GRANT USAGE ON FOREIGN DATA WRAPPER postgresql TO regress_test_role"}
+{"sql":"CREATE SERVER s9 FOREIGN DATA WRAPPER postgresql"}
+{"sql":"ALTER SERVER s6 VERSION '0.5'"}
+{"sql":"DROP SERVER s6"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s6 TO regress_test_role"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s9 TO regress_test_role"}
+{"sql":"CREATE USER MAPPING FOR public SERVER s6"}
+{"sql":"CREATE USER MAPPING FOR public SERVER s9"}
+{"sql":"REVOKE USAGE ON FOREIGN DATA WRAPPER foo FROM regress_unprivileged_role"}
+{"sql":"REVOKE USAGE ON FOREIGN DATA WRAPPER foo FROM regress_unprivileged_role CASCADE"}
+{"sql":"CREATE SERVER s10 FOREIGN DATA WRAPPER foo"}
+{"sql":"ALTER SERVER s9 VERSION '1.1'"}
+{"sql":"CREATE USER MAPPING FOR current_user SERVER s9"}
+{"sql":"DROP SERVER s9 CASCADE"}
+{"sql":"GRANT USAGE ON FOREIGN SERVER s9 TO regress_unprivileged_role"}
+{"sql":"ALTER SERVER s9 VERSION '1.2'"}
+{"sql":"CREATE USER MAPPING FOR public SERVER s10 OPTIONS (user 'secret')"}
+{"sql":"CREATE USER MAPPING FOR regress_unprivileged_role SERVER s10 OPTIONS (user 'secret')"}
+{"sql":"DROP SERVER s10 CASCADE"}
+{"sql":"CREATE FUNCTION dummy_trigger() RETURNS TRIGGER AS $$\n  BEGIN\n    RETURN NULL;\n  END\n$$ language plpgsql","shape":"CREATE FUNCTION dummy_trigger() RETURNS TRIGGER AS '\n  BEGIN\n    RETURN NULL;\n  END\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER trigtest_before_stmt BEFORE INSERT OR UPDATE OR DELETE\nON foreign_schema.foreign_table_1\nFOR EACH STATEMENT\nEXECUTE PROCEDURE dummy_trigger()","shape":"CREATE TRIGGER trigtest_before_stmt BEFORE INSERT OR UPDATE OR DELETE ON foreign_schema.foreign_table_1 FOR EACH STATEMENT EXECUTE FUNCTION dummy_trigger();"}
+{"sql":"CREATE TRIGGER trigtest_after_stmt AFTER INSERT OR UPDATE OR DELETE\nON foreign_schema.foreign_table_1\nFOR EACH STATEMENT\nEXECUTE PROCEDURE dummy_trigger()","shape":"CREATE TRIGGER trigtest_after_stmt AFTER INSERT OR UPDATE OR DELETE ON foreign_schema.foreign_table_1 FOR EACH STATEMENT EXECUTE FUNCTION dummy_trigger();"}
+{"sql":"CREATE TRIGGER trigtest_after_stmt_tt AFTER INSERT OR UPDATE OR DELETE -- ERROR\nON foreign_schema.foreign_table_1\nREFERENCING NEW TABLE AS new_table\nFOR EACH STATEMENT\nEXECUTE PROCEDURE dummy_trigger()","shape":"CREATE TRIGGER trigtest_after_stmt_tt AFTER INSERT OR UPDATE OR DELETE ON foreign_schema.foreign_table_1 REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dummy_trigger();"}
+{"sql":"CREATE TRIGGER trigtest_before_row BEFORE INSERT OR UPDATE OR DELETE\nON foreign_schema.foreign_table_1\nFOR EACH ROW\nEXECUTE PROCEDURE dummy_trigger()","shape":"CREATE TRIGGER trigtest_before_row BEFORE INSERT OR UPDATE OR DELETE ON foreign_schema.foreign_table_1 FOR EACH ROW EXECUTE FUNCTION dummy_trigger();"}
+{"sql":"CREATE TRIGGER trigtest_after_row AFTER INSERT OR UPDATE OR DELETE\nON foreign_schema.foreign_table_1\nFOR EACH ROW\nEXECUTE PROCEDURE dummy_trigger()","shape":"CREATE TRIGGER trigtest_after_row AFTER INSERT OR UPDATE OR DELETE ON foreign_schema.foreign_table_1 FOR EACH ROW EXECUTE FUNCTION dummy_trigger();"}
+{"sql":"CREATE CONSTRAINT TRIGGER trigtest_constraint AFTER INSERT OR UPDATE OR DELETE\nON foreign_schema.foreign_table_1\nFOR EACH ROW\nEXECUTE PROCEDURE dummy_trigger()","shape":"CREATE CONSTRAINT TRIGGER trigtest_constraint AFTER INSERT OR UPDATE OR DELETE ON foreign_schema.foreign_table_1 FOR EACH ROW EXECUTE FUNCTION dummy_trigger();"}
+{"sql":"ALTER FOREIGN TABLE foreign_schema.foreign_table_1\n\tDISABLE TRIGGER trigtest_before_stmt"}
+{"sql":"ALTER FOREIGN TABLE foreign_schema.foreign_table_1\n\tENABLE TRIGGER trigtest_before_stmt"}
+{"sql":"DROP TRIGGER trigtest_before_stmt ON foreign_schema.foreign_table_1","shape":"DROP TRIGGER trigtest_before_stmt ON foreign_schema.foreign_table_1;"}
+{"sql":"DROP TRIGGER trigtest_before_row ON foreign_schema.foreign_table_1","shape":"DROP TRIGGER trigtest_before_row ON foreign_schema.foreign_table_1;"}
+{"sql":"DROP TRIGGER trigtest_after_stmt ON foreign_schema.foreign_table_1","shape":"DROP TRIGGER trigtest_after_stmt ON foreign_schema.foreign_table_1;"}
+{"sql":"DROP TRIGGER trigtest_after_row ON foreign_schema.foreign_table_1","shape":"DROP TRIGGER trigtest_after_row ON foreign_schema.foreign_table_1;"}
+{"sql":"DROP FUNCTION dummy_trigger()"}
+{"sql":"CREATE TABLE fd_pt1 (\n\tc1 integer NOT NULL,\n\tc2 text,\n\tc3 date\n)","shape":"CREATE TABLE fd_pt1 (c1 integer NOT NULL, c2 text, c3 date);"}
+{"sql":"CREATE FOREIGN TABLE ft2 () INHERITS (fd_pt1)\n  SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"DROP FOREIGN TABLE ft2"}
+{"sql":"CREATE FOREIGN TABLE ft2 (\n\tc1 integer NOT NULL,\n\tc2 text,\n\tc3 date\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"ALTER FOREIGN TABLE ft2 INHERIT fd_pt1"}
+{"sql":"CREATE TABLE ct3() INHERITS(ft2)","shape":"CREATE TABLE ct3 () INHERITS (ft2);"}
+{"sql":"CREATE FOREIGN TABLE ft3 (\n\tc1 integer NOT NULL,\n\tc2 text,\n\tc3 date\n) INHERITS(ft2)\n  SERVER s0"}
+{"sql":"ALTER TABLE fd_pt1 ADD COLUMN c4 integer","shape":"ALTER TABLE fd_pt1 ADD COLUMN c4 integer;"}
+{"sql":"ALTER TABLE fd_pt1 ADD COLUMN c5 integer DEFAULT 0","shape":"ALTER TABLE fd_pt1 ADD COLUMN c5 integer DEFAULT 0;"}
+{"sql":"ALTER TABLE fd_pt1 ADD COLUMN c6 integer","shape":"ALTER TABLE fd_pt1 ADD COLUMN c6 integer;"}
+{"sql":"ALTER TABLE fd_pt1 ADD COLUMN c7 integer NOT NULL","shape":"ALTER TABLE fd_pt1 ADD COLUMN c7 integer NOT NULL;"}
+{"sql":"ALTER TABLE fd_pt1 ADD COLUMN c8 integer","shape":"ALTER TABLE fd_pt1 ADD COLUMN c8 integer;"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c4 SET DEFAULT 0","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c4 SET DEFAULT 0;"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c5 DROP DEFAULT","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c5 DROP DEFAULT;"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c6 SET NOT NULL","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c6 SET NOT NULL;"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c7 DROP NOT NULL","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c7 DROP NOT NULL;"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c8 TYPE char(10) USING '0'","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c8 SET DATA TYPE char(10) USING '0';"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c8 TYPE char(10)","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c8 SET DATA TYPE char(10);"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c8 SET DATA TYPE text","shape":"ALTER TABLE fd_pt1 ALTER COLUMN c8 SET DATA TYPE text;"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c1 SET STATISTICS 10000"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c1 SET (n_distinct = 100)"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c8 SET STATISTICS -1"}
+{"sql":"ALTER TABLE fd_pt1 ALTER COLUMN c8 SET STORAGE EXTERNAL"}
+{"sql":"ALTER TABLE fd_pt1 DROP COLUMN c4","shape":"ALTER TABLE fd_pt1 DROP COLUMN c4;"}
+{"sql":"ALTER TABLE fd_pt1 DROP COLUMN c5","shape":"ALTER TABLE fd_pt1 DROP COLUMN c5;"}
+{"sql":"ALTER TABLE fd_pt1 DROP COLUMN c6","shape":"ALTER TABLE fd_pt1 DROP COLUMN c6;"}
+{"sql":"ALTER TABLE fd_pt1 DROP COLUMN c7","shape":"ALTER TABLE fd_pt1 DROP COLUMN c7;"}
+{"sql":"ALTER TABLE fd_pt1 DROP COLUMN c8","shape":"ALTER TABLE fd_pt1 DROP COLUMN c8;"}
+{"sql":"ALTER TABLE fd_pt1 ADD CONSTRAINT fd_pt1chk1 CHECK (c1 > 0) NO INHERIT","shape":"ALTER TABLE fd_pt1 ADD CONSTRAINT fd_pt1chk1 CHECK (c1 > 0) NO INHERIT;"}
+{"sql":"ALTER TABLE fd_pt1 ADD CONSTRAINT fd_pt1chk2 CHECK (c2 <> '')","shape":"ALTER TABLE fd_pt1 ADD CONSTRAINT fd_pt1chk2 CHECK (c2 <> '');"}
+{"sql":"SELECT relname, conname, contype, conislocal, coninhcount, connoinherit\n  FROM pg_class AS pc JOIN pg_constraint AS pgc ON (conrelid = pc.oid)\n  WHERE pc.relname = 'fd_pt1'\n  ORDER BY 1,2","shape":"SELECT relname, conname, contype, conislocal, coninhcount, connoinherit FROM pg_class AS pc JOIN pg_constraint AS pgc ON (conrelid = pc.oid) WHERE pc.relname = 'fd_pt1' ORDER BY 1, 2;"}
+{"sql":"DROP FOREIGN TABLE ft2 CASCADE"}
+{"sql":"ALTER FOREIGN TABLE ft2 ADD CONSTRAINT fd_pt1chk2 CHECK (c2 <> '')"}
+{"sql":"ALTER TABLE fd_pt1 DROP CONSTRAINT fd_pt1chk1 CASCADE","shape":"ALTER TABLE fd_pt1 DROP CONSTRAINT fd_pt1chk1 CASCADE;"}
+{"sql":"ALTER TABLE fd_pt1 DROP CONSTRAINT fd_pt1chk2 CASCADE","shape":"ALTER TABLE fd_pt1 DROP CONSTRAINT fd_pt1chk2 CASCADE;"}
+{"sql":"INSERT INTO fd_pt1 VALUES (1, 'fd_pt1'::text, '1994-01-01'::date)","shape":"INSERT INTO fd_pt1 VALUES (1, 'fd_pt1'::text, '1994-01-01'::date);"}
+{"sql":"ALTER TABLE fd_pt1 ADD CONSTRAINT fd_pt1chk3 CHECK (c2 <> '') NOT VALID","shape":"ALTER TABLE fd_pt1 ADD CONSTRAINT fd_pt1chk3 CHECK (c2 <> '') NOT VALID;"}
+{"sql":"ALTER TABLE fd_pt1 VALIDATE CONSTRAINT fd_pt1chk3"}
+{"sql":"ALTER TABLE fd_pt1 RENAME COLUMN c1 TO f1","shape":"ALTER TABLE fd_pt1 RENAME COLUMN c1 TO f1;"}
+{"sql":"ALTER TABLE fd_pt1 RENAME COLUMN c2 TO f2","shape":"ALTER TABLE fd_pt1 RENAME COLUMN c2 TO f2;"}
+{"sql":"ALTER TABLE fd_pt1 RENAME COLUMN c3 TO f3","shape":"ALTER TABLE fd_pt1 RENAME COLUMN c3 TO f3;"}
+{"sql":"ALTER TABLE fd_pt1 RENAME CONSTRAINT fd_pt1chk3 TO f2_check","shape":"ALTER TABLE fd_pt1 RENAME CONSTRAINT fd_pt1chk3 TO f2_check;"}
+{"sql":"DROP TABLE fd_pt1 CASCADE","shape":"DROP TABLE fd_pt1 CASCADE;"}
+{"sql":"IMPORT FOREIGN SCHEMA s1 FROM SERVER s9 INTO public"}
+{"sql":"IMPORT FOREIGN SCHEMA s1 LIMIT TO (t1) FROM SERVER s9 INTO public"}
+{"sql":"IMPORT FOREIGN SCHEMA s1 EXCEPT (t1) FROM SERVER s9 INTO public"}
+{"sql":"IMPORT FOREIGN SCHEMA s1 EXCEPT (t1, t2) FROM SERVER s9 INTO public\nOPTIONS (option1 'value1', option2 'value2')"}
+{"sql":"DROP FOREIGN TABLE no_table"}
+{"sql":"DROP FOREIGN TABLE IF EXISTS no_table"}
+{"sql":"DROP FOREIGN TABLE foreign_schema.foreign_table_1"}
+{"sql":"REASSIGN OWNED BY regress_test_role TO regress_test_role2","shape":"REASSIGN OWNED BY regress_test_role TO regress_test_role2;"}
+{"sql":"DROP OWNED BY regress_test_role2"}
+{"sql":"DROP OWNED BY regress_test_role2 CASCADE"}
+{"sql":"CREATE TABLE fd_pt2 (\n\tc1 integer NOT NULL,\n\tc2 text,\n\tc3 date\n) PARTITION BY LIST (c1)","shape":"CREATE TABLE fd_pt2 (c1 integer NOT NULL, c2 text, c3 date) PARTITION BY LIST (c1);"}
+{"sql":"CREATE FOREIGN TABLE fd_pt2_1 PARTITION OF fd_pt2 FOR VALUES IN (1)\n  SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"DROP FOREIGN TABLE fd_pt2_1"}
+{"sql":"CREATE FOREIGN TABLE fd_pt2_1 (\n\tc1 integer NOT NULL,\n\tc2 text,\n\tc3 date,\n\tc4 char\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"ALTER TABLE fd_pt2 ATTACH PARTITION fd_pt2_1 FOR VALUES IN (1)"}
+{"sql":"CREATE FOREIGN TABLE fd_pt2_1 (\n\tc1 integer NOT NULL,\n\tc2 text,\n\tc3 date\n) SERVER s0 OPTIONS (delimiter ',', quote '\"', \"be quoted\" 'value')"}
+{"sql":"ALTER TABLE fd_pt2_1 ADD c4 char","shape":"ALTER TABLE fd_pt2_1 ADD COLUMN c4 char;"}
+{"sql":"ALTER TABLE fd_pt2_1 ALTER c3 SET NOT NULL","shape":"ALTER TABLE fd_pt2_1 ALTER COLUMN c3 SET NOT NULL;"}
+{"sql":"ALTER TABLE fd_pt2_1 ADD CONSTRAINT p21chk CHECK (c2 <> '')","shape":"ALTER TABLE fd_pt2_1 ADD CONSTRAINT p21chk CHECK (c2 <> '');"}
+{"sql":"ALTER TABLE fd_pt2_1 ALTER c1 DROP NOT NULL","shape":"ALTER TABLE fd_pt2_1 ALTER COLUMN c1 DROP NOT NULL;"}
+{"sql":"ALTER TABLE fd_pt2 DETACH PARTITION fd_pt2_1"}
+{"sql":"ALTER TABLE fd_pt2 ALTER c2 SET NOT NULL","shape":"ALTER TABLE fd_pt2 ALTER COLUMN c2 SET NOT NULL;"}
+{"sql":"ALTER FOREIGN TABLE fd_pt2_1 ALTER c2 SET NOT NULL"}
+{"sql":"ALTER TABLE fd_pt2 ADD CONSTRAINT fd_pt2chk1 CHECK (c1 > 0)","shape":"ALTER TABLE fd_pt2 ADD CONSTRAINT fd_pt2chk1 CHECK (c1 > 0);"}
+{"sql":"ALTER FOREIGN TABLE fd_pt2_1 ADD CONSTRAINT fd_pt2chk1 CHECK (c1 > 0)"}
+{"sql":"DROP TABLE fd_pt2","shape":"DROP TABLE fd_pt2;"}
+{"sql":"CREATE FOREIGN TABLE foreign_part PARTITION OF temp_parted DEFAULT\n  SERVER s0"}
+{"sql":"CREATE FOREIGN TABLE foreign_part (a int) SERVER s0"}
+{"sql":"ALTER TABLE temp_parted ATTACH PARTITION foreign_part DEFAULT"}
+{"sql":"DROP FOREIGN TABLE foreign_part"}
+{"sql":"DROP SCHEMA foreign_schema CASCADE","shape":"DROP SCHEMA foreign_schema CASCADE;"}
+{"sql":"DROP SERVER t1 CASCADE"}
+{"sql":"DROP SERVER s8 CASCADE"}
+{"sql":"DROP ROLE regress_unprivileged_role","shape":"DROP ROLE regress_unprivileged_role;"}
+{"sql":"REVOKE ALL ON FOREIGN DATA WRAPPER postgresql FROM regress_unprivileged_role"}
+{"sql":"DROP ROLE regress_test_role2","shape":"DROP ROLE regress_test_role2;"}
+{"sql":"DROP FOREIGN DATA WRAPPER postgresql CASCADE"}
+{"sql":"DROP FOREIGN DATA WRAPPER dummy CASCADE"}
+{"sql":"DROP ROLE regress_foreign_data_user","shape":"DROP ROLE regress_foreign_data_user;"}
+{"sql":"SELECT fdwname, fdwhandler, fdwvalidator, fdwoptions FROM pg_foreign_data_wrapper","shape":"SELECT fdwname, fdwhandler, fdwvalidator, fdwoptions FROM pg_foreign_data_wrapper;"}

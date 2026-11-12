@@ -1,0 +1,8 @@
+{"sql":"INSERT INTO t1 VALUES('abcdefghijklmnopqrstuvwxyz')"}
+{"sql":"INSERT INTO t1 SELECT rowid || ' ' || x FROM t1"}
+{"sql":"SELECT md5sum(x) FROM t1"}
+{"sql":"SELECT md5sum(x) FROM t2"}
+{"sql":"CREATE TABLE t3 AS SELECT * FROM t1"}
+{"sql":"SELECT md5sum(x) FROM t3"}
+{"sql":"CREATE TABLE t4 AS SELECT * FROM t1"}
+{"sql":"SELECT md5sum(x) FROM t4"}

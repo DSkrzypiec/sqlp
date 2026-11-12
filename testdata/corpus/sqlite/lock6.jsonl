@@ -1,0 +1,4 @@
+{"sql":"PRAGMA lock_proxy_file=\":auto:\""}
+{"sql":"PRAGMA lock_proxy_file"}
+{"sql":"PRAGMA lock_proxy_file=\"notmine\""}
+{"sql":"PRAGMA lock_proxy_file=\"mine\""}

@@ -1,0 +1,11 @@
+{"sql":"CREATE VIRTUAL TABLE sqlite_stat1 USING fts5(a)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts5(b)"}
+{"sql":"INSERT INTO t3 VALUES('this is a test')"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING rtree(id,x,y)"}
+{"sql":"INSERT INTO t3(b) VALUES('Four score and seven years ago')"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'this'"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'four seven'"}
+{"sql":"INSERT INTO sqlite_stat1(a)\n  VALUES('We hold these truths to be self-evident...')"}
+{"sql":"INSERT INTO t1 VALUES('Ebed-malech')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING rtree(a,b,c)"}
+{"sql":"ALTER TABLE t2 ADD d GENERATED ALWAYS AS (c IN (SELECT 1 FROM t1)) VIRTUAL"}

@@ -1,0 +1,7 @@
+{"sql":"PRAGMA data_version"}
+{"sql":"PRAGMA temp.data_version"}
+{"sql":"PRAGMA main.data_version=1234"}
+{"sql":"PRAGMA main.data_version"}
+{"sql":"INSERT INTO t1 VALUES(100),(200),(300)"}
+{"sql":"INSERT INTO t1 VALUES(400),(500)"}
+{"sql":"PRAGMA shrink_memory"}

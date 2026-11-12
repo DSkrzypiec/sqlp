@@ -1,0 +1,3 @@
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3(a, b, c)"}
+{"sql":"INSERT INTO ft VALUES('one', 'one', 'one')"}
+{"sql":"SELECT * FROM ft WHERE ft MATCH 'b:one'"}

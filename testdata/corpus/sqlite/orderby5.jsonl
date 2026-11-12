@@ -1,0 +1,39 @@
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT a, b, c FROM t1 WHERE a=0"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT a, c, b FROM t1 WHERE a=0"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT a, c, b FROM t1 WHERE a='xyz' COLLATE nocase"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT a COLLATE nocase, c, b FROM t1 WHERE a='xyz'"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT a COLLATE nocase, c, b FROM t1 WHERE a='xyz' COLLATE nocase"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT b, a, c FROM t1 WHERE a=0"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT b, c, a FROM t1 WHERE a=0"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT c, a, b FROM t1 WHERE a=0"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT c, b, a FROM t1 WHERE a=0"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT DISTINCT c, b, a FROM t1 WHERE +a=0"}
+{"sql":"CREATE INDEX t2bc ON t2(b,c)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t1','t1bc','1000000 10 9')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t2','t2bc','100 10 5')"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t2 WHERE a=0 ORDER BY a, b, c"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE likelihood(a=0, 0.03) ORDER BY a, b, c"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE +a=0 ORDER BY a, b, c"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE a=0 ORDER BY b, a, c"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE a=0 ORDER BY b, c, a"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE a=0 ORDER BY a, c, b"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE a=0 ORDER BY c, a, b"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t1 WHERE a=0 ORDER BY c, b, a"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY, b, c, d, e, f)"}
+{"sql":"CREATE INDEX t3bcde ON t3(b, c, d, e)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT a FROM t3 WHERE b=2 AND c=3 ORDER BY d DESC, e DESC, b, c, a DESC"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY, b, c, d, e, f) WITHOUT rowid"}
+{"sql":"CREATE TABLE t4(b COLLATE nocase)"}
+{"sql":"INSERT INTO t4 VALUES('ABC')"}
+{"sql":"INSERT INTO t4 VALUES('aBC')"}
+{"sql":"SELECT * FROM t4 ORDER BY b COLLATE binary"}
+{"sql":"SELECT * FROM t4 WHERE b='abc' ORDER BY b COLLATE binary"}
+{"sql":"CREATE TABLE Records(typeID INTEGER, key TEXT COLLATE nocase, value TEXT)"}
+{"sql":"CREATE INDEX RecordsIndex ON Records(typeID, key, value)"}
+{"sql":"explain query plan\n  SELECT typeID, key, value FROM Records \n  WHERE typeID = 2 AND key = 'x' \n  ORDER BY key, value"}
+{"sql":"explain query plan\n  SELECT typeID, key, value FROM Records \n  WHERE typeID = 2 AND (key = 'x' COLLATE binary)\n  ORDER BY key, value"}
+{"sql":"explain query plan\n  SELECT typeID, key, value FROM Records \n  WHERE typeID = 2 \n  ORDER BY key, value"}
+{"sql":"CREATE TABLE t5(a INTEGER PRIMARY KEY, b COLLATE hello, c, d)"}
+{"sql":"SELECT a FROM t5 WHERE b='def' ORDER BY b"}
+{"sql":"CREATE TABLE t2(b INTEGER PRIMARY KEY, c INT)"}
+{"sql":"SELECT DISTINCT *\n    FROM t1 LEFT JOIN t2 ON b=c AND b=(SELECT a FROM t1)\n   WHERE c>10"}

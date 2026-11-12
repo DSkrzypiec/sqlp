@@ -1,0 +1,70 @@
+{"sql":"create type int8alias1","shape":"CREATE TYPE int8alias1;"}
+{"sql":"create function int8alias1in(cstring) returns int8alias1\n  strict immutable language internal as 'int8in'","shape":"CREATE FUNCTION int8alias1in(cstring) RETURNS int8alias1 STRICT IMMUTABLE LANGUAGE internal AS 'int8in';"}
+{"sql":"create function int8alias1out(int8alias1) returns cstring\n  strict immutable language internal as 'int8out'","shape":"CREATE FUNCTION int8alias1out(int8alias1) RETURNS cstring STRICT IMMUTABLE LANGUAGE internal AS 'int8out';"}
+{"sql":"create type int8alias1 (\n    input = int8alias1in,\n    output = int8alias1out,\n    like = int8\n)"}
+{"sql":"create type int8alias2","shape":"CREATE TYPE int8alias2;"}
+{"sql":"create function int8alias2in(cstring) returns int8alias2\n  strict immutable language internal as 'int8in'","shape":"CREATE FUNCTION int8alias2in(cstring) RETURNS int8alias2 STRICT IMMUTABLE LANGUAGE internal AS 'int8in';"}
+{"sql":"create function int8alias2out(int8alias2) returns cstring\n  strict immutable language internal as 'int8out'","shape":"CREATE FUNCTION int8alias2out(int8alias2) RETURNS cstring STRICT IMMUTABLE LANGUAGE internal AS 'int8out';"}
+{"sql":"create type int8alias2 (\n    input = int8alias2in,\n    output = int8alias2out,\n    like = int8\n)"}
+{"sql":"create cast (int8 as int8alias1) without function"}
+{"sql":"create cast (int8 as int8alias2) without function"}
+{"sql":"create cast (int8alias1 as int8) without function"}
+{"sql":"create cast (int8alias2 as int8) without function"}
+{"sql":"create function int8alias1eq(int8alias1, int8alias1) returns bool\n  strict immutable language internal as 'int8eq'","shape":"CREATE FUNCTION int8alias1eq(int8alias1, int8alias1) RETURNS bool STRICT IMMUTABLE LANGUAGE internal AS 'int8eq';"}
+{"sql":"create operator = (\n    procedure = int8alias1eq,\n    leftarg = int8alias1, rightarg = int8alias1,\n    commutator = =,\n    restrict = eqsel, join = eqjoinsel,\n    merges\n)"}
+{"sql":"alter operator family integer_ops using btree add\n  operator 3 = (int8alias1, int8alias1)"}
+{"sql":"create function int8alias2eq(int8alias2, int8alias2) returns bool\n  strict immutable language internal as 'int8eq'","shape":"CREATE FUNCTION int8alias2eq(int8alias2, int8alias2) RETURNS bool STRICT IMMUTABLE LANGUAGE internal AS 'int8eq';"}
+{"sql":"create operator = (\n    procedure = int8alias2eq,\n    leftarg = int8alias2, rightarg = int8alias2,\n    commutator = =,\n    restrict = eqsel, join = eqjoinsel,\n    merges\n)"}
+{"sql":"alter operator family integer_ops using btree add\n  operator 3 = (int8alias2, int8alias2)"}
+{"sql":"create function int8alias1eq(int8, int8alias1) returns bool\n  strict immutable language internal as 'int8eq'","shape":"CREATE FUNCTION int8alias1eq(int8, int8alias1) RETURNS bool STRICT IMMUTABLE LANGUAGE internal AS 'int8eq';"}
+{"sql":"create operator = (\n    procedure = int8alias1eq,\n    leftarg = int8, rightarg = int8alias1,\n    restrict = eqsel, join = eqjoinsel,\n    merges\n)"}
+{"sql":"alter operator family integer_ops using btree add\n  operator 3 = (int8, int8alias1)"}
+{"sql":"create function int8alias1eq(int8alias1, int8alias2) returns bool\n  strict immutable language internal as 'int8eq'","shape":"CREATE FUNCTION int8alias1eq(int8alias1, int8alias2) RETURNS bool STRICT IMMUTABLE LANGUAGE internal AS 'int8eq';"}
+{"sql":"create operator = (\n    procedure = int8alias1eq,\n    leftarg = int8alias1, rightarg = int8alias2,\n    restrict = eqsel, join = eqjoinsel,\n    merges\n)"}
+{"sql":"alter operator family integer_ops using btree add\n  operator 3 = (int8alias1, int8alias2)"}
+{"sql":"create function int8alias1lt(int8alias1, int8alias1) returns bool\n  strict immutable language internal as 'int8lt'","shape":"CREATE FUNCTION int8alias1lt(int8alias1, int8alias1) RETURNS bool STRICT IMMUTABLE LANGUAGE internal AS 'int8lt';"}
+{"sql":"create operator < (\n    procedure = int8alias1lt,\n    leftarg = int8alias1, rightarg = int8alias1\n)"}
+{"sql":"alter operator family integer_ops using btree add\n  operator 1 < (int8alias1, int8alias1)"}
+{"sql":"create function int8alias1cmp(int8, int8alias1) returns int\n  strict immutable language internal as 'btint8cmp'","shape":"CREATE FUNCTION int8alias1cmp(int8, int8alias1) RETURNS int STRICT IMMUTABLE LANGUAGE internal AS 'btint8cmp';"}
+{"sql":"alter operator family integer_ops using btree add\n  function 1 int8alias1cmp (int8, int8alias1)"}
+{"sql":"create table ec0 (ff int8 primary key, f1 int8, f2 int8)","shape":"CREATE TABLE ec0 (ff int8 PRIMARY KEY, f1 int8, f2 int8);"}
+{"sql":"create table ec1 (ff int8 primary key, f1 int8alias1, f2 int8alias2)","shape":"CREATE TABLE ec1 (ff int8 PRIMARY KEY, f1 int8alias1, f2 int8alias2);"}
+{"sql":"create table ec2 (xf int8 primary key, x1 int8alias1, x2 int8alias2)","shape":"CREATE TABLE ec2 (xf int8 PRIMARY KEY, x1 int8alias1, x2 int8alias2);"}
+{"sql":"set enable_hashjoin = off","shape":"SET enable_hashjoin TO off;"}
+{"sql":"set enable_mergejoin = off","shape":"SET enable_mergejoin TO off;"}
+{"sql":"explain (costs off)\n  select * from ec0 where ff = f1 and f1 = '42'::int8","shape":"EXPLAIN (COSTS off) SELECT * FROM ec0 WHERE (ff = f1) AND (f1 = '42'::int8);"}
+{"sql":"explain (costs off)\n  select * from ec0 where ff = f1 and f1 = '42'::int8alias1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec0 WHERE (ff = f1) AND (f1 = '42'::int8alias1);"}
+{"sql":"explain (costs off)\n  select * from ec1 where ff = f1 and f1 = '42'::int8alias1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1 WHERE (ff = f1) AND (f1 = '42'::int8alias1);"}
+{"sql":"explain (costs off)\n  select * from ec1 where ff = f1 and f1 = '42'::int8alias2","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1 WHERE (ff = f1) AND (f1 = '42'::int8alias2);"}
+{"sql":"explain (costs off)\n  select * from ec1, ec2 where ff = x1 and ff = '42'::int8","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, ec2 WHERE (ff = x1) AND (ff = '42'::int8);"}
+{"sql":"explain (costs off)\n  select * from ec1, ec2 where ff = x1 and ff = '42'::int8alias1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, ec2 WHERE (ff = x1) AND (ff = '42'::int8alias1);"}
+{"sql":"explain (costs off)\n  select * from ec1, ec2 where ff = x1 and '42'::int8 = x1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, ec2 WHERE (ff = x1) AND ('42'::int8 = x1);"}
+{"sql":"explain (costs off)\n  select * from ec1, ec2 where ff = x1 and x1 = '42'::int8alias1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, ec2 WHERE (ff = x1) AND (x1 = '42'::int8alias1);"}
+{"sql":"explain (costs off)\n  select * from ec1, ec2 where ff = x1 and x1 = '42'::int8alias2","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, ec2 WHERE (ff = x1) AND (x1 = '42'::int8alias2);"}
+{"sql":"create unique index ec1_expr1 on ec1((ff + 1))","shape":"CREATE UNIQUE INDEX ec1_expr1 ON ec1 ((ff + 1));"}
+{"sql":"create unique index ec1_expr2 on ec1((ff + 2 + 1))","shape":"CREATE UNIQUE INDEX ec1_expr2 ON ec1 (((ff + 2) + 1));"}
+{"sql":"create unique index ec1_expr3 on ec1((ff + 3 + 1))","shape":"CREATE UNIQUE INDEX ec1_expr3 ON ec1 (((ff + 3) + 1));"}
+{"sql":"create unique index ec1_expr4 on ec1((ff + 4))","shape":"CREATE UNIQUE INDEX ec1_expr4 ON ec1 ((ff + 4));"}
+{"sql":"explain (costs off)\n  select * from ec1,\n    (select ff + 1 as x from\n       (select ff + 2 as ff from ec1\n        union all\n        select ff + 3 as ff from ec1) ss0\n     union all\n     select ff + 4 as x from ec1) as ss1\n  where ss1.x = ec1.f1 and ec1.ff = 42::int8","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, (SELECT ff + 1 AS x FROM (SELECT ff + 2 AS ff FROM ec1 UNION ALL SELECT ff + 3 AS ff FROM ec1) AS ss0 UNION ALL SELECT ff + 4 AS x FROM ec1) AS ss1 WHERE (ss1.x = ec1.f1) AND (ec1.ff = 42::int8);"}
+{"sql":"explain (costs off)\n  select * from ec1,\n    (select ff + 1 as x from\n       (select ff + 2 as ff from ec1\n        union all\n        select ff + 3 as ff from ec1) ss0\n     union all\n     select ff + 4 as x from ec1) as ss1\n  where ss1.x = ec1.f1 and ec1.ff = 42::int8 and ec1.ff = ec1.f1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, (SELECT ff + 1 AS x FROM (SELECT ff + 2 AS ff FROM ec1 UNION ALL SELECT ff + 3 AS ff FROM ec1) AS ss0 UNION ALL SELECT ff + 4 AS x FROM ec1) AS ss1 WHERE ((ss1.x = ec1.f1) AND (ec1.ff = 42::int8)) AND (ec1.ff = ec1.f1);"}
+{"sql":"explain (costs off)\n  select * from ec1,\n    (select ff + 1 as x from\n       (select ff + 2 as ff from ec1\n        union all\n        select ff + 3 as ff from ec1) ss0\n     union all\n     select ff + 4 as x from ec1) as ss1,\n    (select ff + 1 as x from\n       (select ff + 2 as ff from ec1\n        union all\n        select ff + 3 as ff from ec1) ss0\n     union all\n     select ff + 4 as x from ec1) as ss2\n  where ss1.x = ec1.f1 and ss1.x = ss2.x and ec1.ff = 42::int8","shape":"EXPLAIN (COSTS off) SELECT * FROM ec1, (SELECT ff + 1 AS x FROM (SELECT ff + 2 AS ff FROM ec1 UNION ALL SELECT ff + 3 AS ff FROM ec1) AS ss0 UNION ALL SELECT ff + 4 AS x FROM ec1) AS ss1, (SELECT ff + 1 AS x FROM (SELECT ff + 2 AS ff FROM ec1 UNION ALL SELECT ff + 3 AS ff FROM ec1) AS ss0 UNION ALL SELECT ff + 4 AS x FROM ec1) AS ss2 WHERE ((ss1.x = ec1.f1) AND (ss1.x = ss2.x)) AND (ec1.ff = 42::int8);"}
+{"sql":"set enable_mergejoin = on","shape":"SET enable_mergejoin TO on;"}
+{"sql":"set enable_nestloop = off","shape":"SET enable_nestloop TO off;"}
+{"sql":"set enable_nestloop = on","shape":"SET enable_nestloop TO on;"}
+{"sql":"drop index ec1_expr3","shape":"DROP INDEX ec1_expr3;"}
+{"sql":"alter table ec1 enable row level security"}
+{"sql":"create policy p1 on ec1 using (f1 < '5'::int8alias1)"}
+{"sql":"create user regress_user_ectest"}
+{"sql":"grant select on ec0 to regress_user_ectest","shape":"GRANT SELECT ON ec0 TO regress_user_ectest;"}
+{"sql":"grant select on ec1 to regress_user_ectest","shape":"GRANT SELECT ON ec1 TO regress_user_ectest;"}
+{"sql":"explain (costs off)\n  select * from ec0 a, ec1 b\n  where a.ff = b.ff and a.ff = 43::bigint::int8alias1","shape":"EXPLAIN (COSTS off) SELECT * FROM ec0 AS a, ec1 AS b WHERE (a.ff = b.ff) AND (a.ff = 43::bigint::int8alias1);"}
+{"sql":"set session authorization regress_user_ectest"}
+{"sql":"reset session authorization","shape":"RESET session_authorization;"}
+{"sql":"revoke select on ec0 from regress_user_ectest","shape":"REVOKE SELECT ON ec0 FROM regress_user_ectest;"}
+{"sql":"revoke select on ec1 from regress_user_ectest","shape":"REVOKE SELECT ON ec1 FROM regress_user_ectest;"}
+{"sql":"drop user regress_user_ectest","shape":"DROP USER regress_user_ectest;"}
+{"sql":"explain (costs off)\n  select * from tenk1 where unique1 = unique1 and unique2 = unique2","shape":"EXPLAIN (COSTS off) SELECT * FROM tenk1 WHERE (unique1 = unique1) AND (unique2 = unique2);"}
+{"sql":"explain (costs off)\n  select * from tenk1 where unique1 = unique1 or unique2 = unique2","shape":"EXPLAIN (COSTS off) SELECT * FROM tenk1 WHERE (unique1 = unique1) OR (unique2 = unique2);"}
+{"sql":"create temp table undername (f1 name, f2 int)","shape":"CREATE TEMPORARY TABLE undername (f1 name, f2 int);"}
+{"sql":"create temp view overview as\n  select f1::information_schema.sql_identifier as sqli, f2 from undername","shape":"CREATE TEMPORARY VIEW overview AS SELECT f1::information_schema.sql_identifier AS sqli, f2 FROM undername;"}
+{"sql":"explain (costs off)  -- this should not require a sort\n  select * from overview where sqli = 'foo' order by sqli","shape":"EXPLAIN (COSTS off) SELECT * FROM overview WHERE sqli = 'foo' ORDER BY sqli;"}

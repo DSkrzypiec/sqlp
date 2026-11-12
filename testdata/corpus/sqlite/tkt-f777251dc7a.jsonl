@@ -1,0 +1,5 @@
+{"sql":"CREATE TEMP TABLE t1(x UNIQUE)"}
+{"sql":"CREATE TEMP TABLE t3(w, z)"}
+{"sql":"CREATE TABLE xyzzy(abc)"}
+{"sql":"SELECT x, force_rollback(), EXISTS(SELECT 1 FROM t3 WHERE w=x) FROM t2"}
+{"sql":"SELECT ins() AS x FROM t2 UNION ALL SELECT ins() AS x FROM t1"}

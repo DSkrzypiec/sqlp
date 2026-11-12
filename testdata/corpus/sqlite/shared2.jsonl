@@ -1,0 +1,9 @@
+{"sql":"CREATE TABLE numbers(a PRIMARY KEY, b)"}
+{"sql":"INSERT INTO numbers(oid) VALUES(NULL)"}
+{"sql":"INSERT INTO numbers(oid) SELECT NULL FROM numbers"}
+{"sql":"UPDATE numbers set a = oid, b = 'abcdefghijklmnopqrstuvwxyz0123456789'"}
+{"sql":"pragma read_uncommitted = 1"}
+{"sql":"SELECT count(*) FROM numbers"}
+{"sql":"DELETE FROM numbers"}
+{"sql":"CREATE TABLE t1(a, b DEFAULT 'hello world')"}
+{"sql":"SELECT a, b FROM t0"}

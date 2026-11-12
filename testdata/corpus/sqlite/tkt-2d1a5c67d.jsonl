@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t3 VALUES(NULL, randomblob(500))"}
+{"sql":"INSERT INTO t3 SELECT NULL, b||b FROM t3"}
+{"sql":"INSERT INTO t4 VALUES('xyz')"}
+{"sql":"SELECT * FROM t4 WHERE a = 'xyz'"}

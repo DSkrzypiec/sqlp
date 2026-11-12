@@ -1,0 +1,25 @@
+{"sql":"CREATE TABLE t1(a,b,x)"}
+{"sql":"CREATE TABLE t2(c,d,y)"}
+{"sql":"CREATE INDEX t2d ON t2(d)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t1','t1b','10000 500')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t2','t2d','10000 500')"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t1, t2 WHERE d=b"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t1, t2 WHERE d>b AND x=y"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t1, t2 WHERE d<b AND x=y"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t1, t2 WHERE d IS NULL AND x=y"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM t1, t2 WHERE d IN (5,b) AND x=y"}
+{"sql":"CREATE TABLE v(b, d, e)"}
+{"sql":"CREATE TABLE u(a, b, c)"}
+{"sql":"INSERT INTO \"sqlite_stat1\" VALUES('u','uab','40000 400 1')"}
+{"sql":"INSERT INTO \"sqlite_stat1\" VALUES('v','vbde','40000 400 1 1')"}
+{"sql":"INSERT INTO \"sqlite_stat1\" VALUES('v','ve','40000 21')"}
+{"sql":"CREATE INDEX uab on u(a, b)"}
+{"sql":"CREATE INDEX ve on v(e)"}
+{"sql":"CREATE INDEX vbde on v(b,d,e)"}
+{"sql":"DROP TABLE IF EXISTS sqlite_stat4"}
+{"sql":"select count(*) from u, v where u.b = v.b and v.e > 34"}
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE t2(cid INT, pid INT, rx INT, PRIMARY KEY(cid, pid, rx))"}
+{"sql":"CREATE INDEX x1 ON t2(pid, rx)"}
+{"sql":"REPLACE INTO sqlite_stat1(tbl, idx, stat) VALUES\n    ('t2', 'x1', '500000 250 250'),\n    ('t2','sqlite_autoindex_t2_1','500000 1 1 1')"}
+{"sql":"WITH RECURSIVE children(id) AS (\n    SELECT cid FROM t2 WHERE pid = ?1 AND rx = ?2\n    UNION \n    SELECT cid FROM t2 JOIN children ON t2.pid = children.id AND rx = ?2\n  ) SELECT count(id) FROM children"}

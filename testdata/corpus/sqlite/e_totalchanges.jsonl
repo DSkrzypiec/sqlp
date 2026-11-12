@@ -1,0 +1,2 @@
+{"sql":"CREATE INDEX t1_b ON t1(b)"}
+{"sql":"CREATE INDEX t2_y ON t2(y)"}

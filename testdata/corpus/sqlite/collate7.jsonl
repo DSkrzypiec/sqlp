@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE abc(a COLLATE CASELESS, b, c)"}
+{"sql":"PRAGMA encoding='utf-16'"}
+{"sql":"CREATE TABLE abc16(a COLLATE CASELESS, b, c)"}
+{"sql":"SELECT * FROM abc16 WHERE a < 'abc'"}

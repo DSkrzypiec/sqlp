@@ -1,0 +1,4 @@
+{"sql":"SELECT getdatabaseencoding() <> 'WIN1252' OR\n       (SELECT count(*) FROM pg_collation WHERE collname IN ('de_DE', 'en_US', 'sv_SE') AND collencoding = pg_char_to_encoding('WIN1252')) <> 3 OR\n       (version() !~ 'Visual C\\+\\+' AND version() !~ 'mingw32' AND version() !~ 'windows')\n       AS skip_test","shape":"SELECT ((getdatabaseencoding() <> 'WIN1252') OR ((SELECT count(*) FROM pg_collation WHERE (collname IN ('de_DE', 'en_US', 'sv_SE')) AND (collencoding = pg_char_to_encoding('WIN1252'))) <> 3)) OR (((version() !~ 'Visual C\\+\\+') AND (version() !~ 'mingw32')) AND (version() !~ 'windows')) AS skip_test;"}
+{"sql":"SET client_encoding TO WIN1252","shape":"SET client_encoding TO WIN1252;"}
+{"sql":"CREATE COLLATION ctest_det (locale = 'en_US', deterministic = true)"}
+{"sql":"CREATE COLLATION ctest_nondet (locale = 'en_US', deterministic = false)"}

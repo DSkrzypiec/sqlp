@@ -1,0 +1,21 @@
+{"sql":"CREATE VIRTUAL TABLE xx USING fts3(x)"}
+{"sql":"INSERT INTO xx VALUES('A x x x B C x x')"}
+{"sql":"INSERT INTO xx VALUES('A B C x B x x C')"}
+{"sql":"INSERT INTO xx VALUES('A x x B C x x x')"}
+{"sql":"SELECT oid,extract(offsets(xx), x) FROM xx WHERE xx MATCH 'a OR (b NEAR/1 c)'"}
+{"sql":"DELETE FROM xx"}
+{"sql":"INSERT INTO xx VALUES('A x x C x x x C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(1, 'A B C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(2, 'A x')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(3, 'A B C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(4, 'A B C x x x x x x x B')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(5, 'A x x x x x x x x x C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(6, 'A x x x x x x x x x x x B')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(7, 'A B C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(6, 'A x')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(5, 'A B C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(3, 'A x x x x x x x x x C')"}
+{"sql":"INSERT INTO xx(rowid, x) VALUES(2, 'A x x x x x x x x x x x B')"}
+{"sql":"SELECT oid,extract(offsets(xx), x) FROM xx WHERE xx MATCH 'a OR (b NEAR/1 c)'\n  ORDER BY docid DESC"}
+{"sql":"INSERT INTO x1 VALUES('A A A')"}
+{"sql":"SELECT offsets(x1) FROM x1 WHERE x1 MATCH 'a OR b AND c NEAR d'"}

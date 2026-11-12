@@ -1,0 +1,14 @@
+{"sql":"INSERT INTO t1 VALUES('We listened and looked sideways up!')"}
+{"sql":"INSERT INTO t1 VALUES('Fear at my heart, as at a cup,')"}
+{"sql":"INSERT INTO t1 VALUES('My life-blood seemed to sip!')"}
+{"sql":"INSERT INTO t1 VALUES('The stars were dim, and thick the night')"}
+{"sql":"INSERT INTO t1 VALUES('The steersman''s face by his lamp gleamed white;')"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'stars'"}
+{"sql":"CREATE TABLE t2ext(a, b)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(content=t2ext)"}
+{"sql":"CREATE VIRTUAL TABLE t1aux USING fts4aux(t1)"}
+{"sql":"CREATE VIRTUAL TABLE t2aux USING fts4aux(t2)"}
+{"sql":"INSERT INTO t1   VALUES('a b c')"}
+{"sql":"INSERT INTO t2(rowid, a, b) VALUES(1, 'd e f', 'g h i')"}
+{"sql":"INSERT INTO t1 VALUES('j k l')"}
+{"sql":"INSERT INTO t2(rowid, a, b) VALUES(2, 'j k l', 'm n o')"}

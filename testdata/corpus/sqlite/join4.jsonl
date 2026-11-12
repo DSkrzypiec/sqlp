@@ -1,0 +1,17 @@
+{"sql":"create temp table t1(a integer, b varchar(10))"}
+{"sql":"insert into t1 values(1,'one')"}
+{"sql":"insert into t1 values(2,'two')"}
+{"sql":"insert into t1 values(3,'three')"}
+{"sql":"insert into t1 values(4,'four')"}
+{"sql":"create temp table t2(x integer, y varchar(10), z varchar(10))"}
+{"sql":"insert into t2 values(2,'niban','ok')"}
+{"sql":"insert into t2 values(4,'yonban','err')"}
+{"sql":"select * from t1 left outer join t2 on t1.a=t2.x where t2.z='ok'"}
+{"sql":"create table t1(a integer, b varchar(10))"}
+{"sql":"create table t2(x integer, y varchar(10), z varchar(10))"}
+{"sql":"select * from t1 left outer join t2 on t1.a=t2.x and t2.z='ok'"}
+{"sql":"create index i2 on t2(z)"}
+{"sql":"select * from t1 left outer join t2 on t1.a=t2.x where t2.z>='ok'"}
+{"sql":"select * from t1 left outer join t2 on t1.a=t2.x and t2.z>='ok'"}
+{"sql":"select * from t1 left outer join t2 on t1.a=t2.x where t2.z IN ('ok')"}
+{"sql":"select * from t1 left outer join t2 on t1.a=t2.x and t2.z IN ('ok')"}

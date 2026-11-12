@@ -1,0 +1,364 @@
+{"sql":"SELECT 'first line'\n' - next line'\n\t' - third line'\n\tAS \"Three lines to one\"","shape":"SELECT 'first line - next line - third line' AS \"Three lines to one\";"}
+{"sql":"SELECT 'first line'\n' - next line' /* this comment is not allowed here */\n' - third line'\n\tAS \"Illegal comment within continuation\"","reject":true}
+{"sql":"SET standard_conforming_strings TO on","shape":"SET standard_conforming_strings TO on;"}
+{"sql":"SELECT U&'d\\0061t\\+000061' AS U&\"d\\0061t\\+000061\"","shape":"SELECT U&'d\\0061t\\+000061' AS U&\"d\\0061t\\+000061\";"}
+{"sql":"SELECT U&'d!0061t\\+000061' UESCAPE '!' AS U&\"d*0061t\\+000061\" UESCAPE '*'","shape":"SELECT U&'d!0061t\\+000061' UESCAPE '!' AS U&\"d*0061t\\+000061\" UESCAPE '*';"}
+{"sql":"SELECT U&'a\\\\b' AS \"a\\b\"","shape":"SELECT U&'a\\\\b' AS \"a\\b\";"}
+{"sql":"SELECT U&' \\' UESCAPE '!' AS \"tricky\"","shape":"SELECT U&' \\' UESCAPE '!' AS \"tricky\";"}
+{"sql":"SELECT 'tricky' AS U&\"\\\" UESCAPE '!'","shape":"SELECT 'tricky' AS U&\"\\\" UESCAPE '!';"}
+{"sql":"SELECT U&'wrong: \\061'","reject":true}
+{"sql":"SELECT U&'wrong: \\+0061'","reject":true}
+{"sql":"SELECT U&'wrong: +0061' UESCAPE +","reject":true}
+{"sql":"SELECT U&'wrong: +0061' UESCAPE '+'","reject":true}
+{"sql":"SELECT U&'wrong: \\db99'","reject":true}
+{"sql":"SELECT U&'wrong: \\db99xy'","reject":true}
+{"sql":"SELECT U&'wrong: \\db99\\\\'","reject":true}
+{"sql":"SELECT U&'wrong: \\db99\\0061'","reject":true}
+{"sql":"SELECT U&'wrong: \\+00db99\\+000061'","reject":true}
+{"sql":"SELECT U&'wrong: \\+2FFFFF'","reject":true}
+{"sql":"SELECT E'd\\u0061t\\U00000061' AS \"data\"","shape":"SELECT E'd\\u0061t\\U00000061' AS \"data\";"}
+{"sql":"SELECT E'a\\\\b' AS \"a\\b\"","shape":"SELECT E'a\\\\b' AS \"a\\b\";"}
+{"sql":"SELECT E'wrong: \\u061'","reject":true}
+{"sql":"SELECT E'wrong: \\U0061'","reject":true}
+{"sql":"SELECT E'wrong: \\udb99'","reject":true}
+{"sql":"SELECT E'wrong: \\udb99xy'","reject":true}
+{"sql":"SELECT E'wrong: \\udb99\\\\'","reject":true}
+{"sql":"SELECT E'wrong: \\udb99\\u0061'","reject":true}
+{"sql":"SELECT E'wrong: \\U0000db99\\U00000061'","reject":true}
+{"sql":"SELECT E'wrong: \\U002FFFFF'","reject":true}
+{"sql":"SET standard_conforming_strings TO off","shape":"SET standard_conforming_strings TO off;"}
+{"sql":"RESET standard_conforming_strings","shape":"RESET standard_conforming_strings;"}
+{"sql":"SET bytea_output TO hex","shape":"SET bytea_output TO hex;"}
+{"sql":"SELECT E'\\\\xDeAdBeEf'::bytea","shape":"SELECT E'\\\\xDeAdBeEf'::bytea;"}
+{"sql":"SELECT E'\\\\x De Ad Be Ef '::bytea","shape":"SELECT E'\\\\x De Ad Be Ef '::bytea;"}
+{"sql":"SELECT E'\\\\xDeAdBeE'::bytea","shape":"SELECT E'\\\\xDeAdBeE'::bytea;"}
+{"sql":"SELECT E'\\\\xDeAdBeEx'::bytea","shape":"SELECT E'\\\\xDeAdBeEx'::bytea;"}
+{"sql":"SELECT E'\\\\xDe00BeEf'::bytea","shape":"SELECT E'\\\\xDe00BeEf'::bytea;"}
+{"sql":"SELECT E'DeAdBeEf'::bytea","shape":"SELECT E'DeAdBeEf'::bytea;"}
+{"sql":"SELECT E'De\\\\000dBeEf'::bytea","shape":"SELECT E'De\\\\000dBeEf'::bytea;"}
+{"sql":"SELECT E'De\\123dBeEf'::bytea","shape":"SELECT E'De\\123dBeEf'::bytea;"}
+{"sql":"SELECT E'De\\\\123dBeEf'::bytea","shape":"SELECT E'De\\\\123dBeEf'::bytea;"}
+{"sql":"SELECT E'De\\\\678dBeEf'::bytea","shape":"SELECT E'De\\\\678dBeEf'::bytea;"}
+{"sql":"SELECT pg_input_is_valid(E'\\\\xDeAdBeE', 'bytea')","shape":"SELECT pg_input_is_valid(E'\\\\xDeAdBeE', 'bytea');"}
+{"sql":"SELECT * FROM pg_input_error_info(E'\\\\xDeAdBeE', 'bytea')","shape":"SELECT * FROM pg_input_error_info(E'\\\\xDeAdBeE', 'bytea');"}
+{"sql":"SELECT * FROM pg_input_error_info(E'\\\\xDeAdBeEx', 'bytea')","shape":"SELECT * FROM pg_input_error_info(E'\\\\xDeAdBeEx', 'bytea');"}
+{"sql":"SELECT * FROM pg_input_error_info(E'foo\\\\99bar', 'bytea')","shape":"SELECT * FROM pg_input_error_info(E'foo\\\\99bar', 'bytea');"}
+{"sql":"SELECT CAST(f1 AS text) AS \"text(char)\" FROM CHAR_TBL","shape":"SELECT CAST(f1 AS text) AS \"text(char)\" FROM CHAR_TBL;"}
+{"sql":"SELECT CAST(f1 AS text) AS \"text(varchar)\" FROM VARCHAR_TBL","shape":"SELECT CAST(f1 AS text) AS \"text(varchar)\" FROM VARCHAR_TBL;"}
+{"sql":"SELECT CAST(name 'namefield' AS text) AS \"text(name)\"","shape":"SELECT CAST(name 'namefield' AS text) AS \"text(name)\";"}
+{"sql":"SELECT CAST(f1 AS char(10)) AS \"char(text)\" FROM TEXT_TBL","shape":"SELECT CAST(f1 AS char(10)) AS \"char(text)\" FROM TEXT_TBL;"}
+{"sql":"SELECT CAST(f1 AS char(20)) AS \"char(text)\" FROM TEXT_TBL","shape":"SELECT CAST(f1 AS char(20)) AS \"char(text)\" FROM TEXT_TBL;"}
+{"sql":"SELECT CAST(f1 AS char(10)) AS \"char(varchar)\" FROM VARCHAR_TBL","shape":"SELECT CAST(f1 AS char(10)) AS \"char(varchar)\" FROM VARCHAR_TBL;"}
+{"sql":"SELECT CAST(name 'namefield' AS char(10)) AS \"char(name)\"","shape":"SELECT CAST(name 'namefield' AS char(10)) AS \"char(name)\";"}
+{"sql":"SELECT CAST(f1 AS varchar) AS \"varchar(text)\" FROM TEXT_TBL","shape":"SELECT CAST(f1 AS varchar) AS \"varchar(text)\" FROM TEXT_TBL;"}
+{"sql":"SELECT CAST(f1 AS varchar) AS \"varchar(char)\" FROM CHAR_TBL","shape":"SELECT CAST(f1 AS varchar) AS \"varchar(char)\" FROM CHAR_TBL;"}
+{"sql":"SELECT CAST(name 'namefield' AS varchar) AS \"varchar(name)\"","shape":"SELECT CAST(name 'namefield' AS varchar) AS \"varchar(name)\";"}
+{"sql":"SELECT TRIM(BOTH FROM '  bunch o blanks  ') = 'bunch o blanks' AS \"bunch o blanks\"","shape":"SELECT TRIM(BOTH FROM '  bunch o blanks  ') = 'bunch o blanks' AS \"bunch o blanks\";"}
+{"sql":"SELECT TRIM(LEADING FROM '  bunch o blanks  ') = 'bunch o blanks  ' AS \"bunch o blanks  \"","shape":"SELECT TRIM(LEADING FROM '  bunch o blanks  ') = 'bunch o blanks  ' AS \"bunch o blanks  \";"}
+{"sql":"SELECT TRIM(TRAILING FROM '  bunch o blanks  ') = '  bunch o blanks' AS \"  bunch o blanks\"","shape":"SELECT TRIM(TRAILING FROM '  bunch o blanks  ') = '  bunch o blanks' AS \"  bunch o blanks\";"}
+{"sql":"SELECT TRIM(BOTH 'x' FROM 'xxxxxsome Xsxxxxx') = 'some Xs' AS \"some Xs\"","shape":"SELECT TRIM(BOTH 'x' FROM 'xxxxxsome Xsxxxxx') = 'some Xs' AS \"some Xs\";"}
+{"sql":"SELECT SUBSTRING('1234567890' FROM 3) = '34567890' AS \"34567890\"","shape":"SELECT SUBSTRING('1234567890' FROM 3) = '34567890' AS \"34567890\";"}
+{"sql":"SELECT SUBSTRING('1234567890' FROM 4 FOR 3) = '456' AS \"456\"","shape":"SELECT SUBSTRING('1234567890' FROM 4 FOR 3) = '456' AS \"456\";"}
+{"sql":"SELECT SUBSTRING('string' FROM 2 FOR 2147483646) AS \"tring\"","shape":"SELECT SUBSTRING('string' FROM 2 FOR 2147483646) AS \"tring\";"}
+{"sql":"SELECT SUBSTRING('string' FROM -10 FOR 2147483646) AS \"string\"","shape":"SELECT SUBSTRING('string' FROM -10 FOR 2147483646) AS \"string\";"}
+{"sql":"SELECT SUBSTRING('string' FROM -10 FOR -2147483646) AS \"error\"","shape":"SELECT SUBSTRING('string' FROM -10 FOR -2147483646) AS \"error\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"(b_d)#\"%' ESCAPE '#') AS \"bcd\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"(b_d)#\"%' ESCAPE '#') AS \"bcd\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' FROM 'a#\"(b_d)#\"%' FOR '#') AS \"bcd\"","shape":"SELECT SUBSTRING('abcdefg' FROM 'a#\"(b_d)#\"%' FOR '#') AS \"bcd\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR '#\"(b_d)#\"%' ESCAPE '#') IS NULL AS \"True\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR '#\"(b_d)#\"%' ESCAPE '#') IS NULL AS \"True\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR '%' ESCAPE NULL) IS NULL AS \"True\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR '%' ESCAPE NULL) IS NULL AS \"True\";"}
+{"sql":"SELECT SUBSTRING(NULL SIMILAR '%' ESCAPE '#') IS NULL AS \"True\"","shape":"SELECT SUBSTRING(NULL SIMILAR '%' ESCAPE '#') IS NULL AS \"True\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR NULL ESCAPE '#') IS NULL AS \"True\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR NULL ESCAPE '#') IS NULL AS \"True\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%#\"g' ESCAPE '#') AS \"bcdef\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%#\"g' ESCAPE '#') AS \"bcdef\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a*#\"%#\"g*' ESCAPE '#') AS \"abcdefg\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a*#\"%#\"g*' ESCAPE '#') AS \"abcdefg\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a|b#\"%#\"g' ESCAPE '#') AS \"bcdef\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a|b#\"%#\"g' ESCAPE '#') AS \"bcdef\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%#\"x|g' ESCAPE '#') AS \"bcdef\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%#\"x|g' ESCAPE '#') AS \"bcdef\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%|ab#\"g' ESCAPE '#') AS \"bcdef\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%|ab#\"g' ESCAPE '#') AS \"bcdef\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a*#\"%#\"g*#\"x' ESCAPE '#') AS \"error\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a*#\"%#\"g*#\"x' ESCAPE '#') AS \"error\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%g' ESCAPE '#') AS \"bcdefg\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a#\"%g' ESCAPE '#') AS \"bcdefg\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' SIMILAR 'a%g' ESCAPE '#') AS \"abcdefg\"","shape":"SELECT SUBSTRING('abcdefg' SIMILAR 'a%g' ESCAPE '#') AS \"abcdefg\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' FROM 'c.e') AS \"cde\"","shape":"SELECT SUBSTRING('abcdefg' FROM 'c.e') AS \"cde\";"}
+{"sql":"SELECT SUBSTRING('abcdefg' FROM 'b(.*)f') AS \"cde\"","shape":"SELECT SUBSTRING('abcdefg' FROM 'b(.*)f') AS \"cde\";"}
+{"sql":"SELECT SUBSTRING('foo' FROM 'foo(bar)?') IS NULL AS t","shape":"SELECT SUBSTRING('foo' FROM 'foo(bar)?') IS NULL AS t;"}
+{"sql":"SELECT 'abcdefg' SIMILAR TO '_bcd%' AS true","shape":"SELECT 'abcdefg' SIMILAR TO '_bcd%' AS true;"}
+{"sql":"SELECT 'abcdefg' SIMILAR TO 'bcd%' AS false","shape":"SELECT 'abcdefg' SIMILAR TO 'bcd%' AS false;"}
+{"sql":"SELECT 'abcdefg' SIMILAR TO '_bcd#%' ESCAPE '#' AS false","shape":"SELECT 'abcdefg' SIMILAR TO '_bcd#%' ESCAPE '#' AS false;"}
+{"sql":"SELECT 'abcd%' SIMILAR TO '_bcd#%' ESCAPE '#' AS true","shape":"SELECT 'abcd%' SIMILAR TO '_bcd#%' ESCAPE '#' AS true;"}
+{"sql":"SELECT 'abcdefg' SIMILAR TO '_bcd\\%' AS false","shape":"SELECT 'abcdefg' SIMILAR TO '_bcd\\%' AS false;"}
+{"sql":"SELECT 'abcd\\efg' SIMILAR TO '_bcd\\%' ESCAPE '' AS true","shape":"SELECT 'abcd\\efg' SIMILAR TO '_bcd\\%' ESCAPE '' AS true;"}
+{"sql":"SELECT 'abcdefg' SIMILAR TO '_bcd%' ESCAPE NULL AS null","shape":"SELECT 'abcdefg' SIMILAR TO '_bcd%' ESCAPE NULL AS null;"}
+{"sql":"SELECT 'abcdefg' SIMILAR TO '_bcd#%' ESCAPE '##' AS error","shape":"SELECT 'abcdefg' SIMILAR TO '_bcd#%' ESCAPE '##' AS error;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '_[_[:alpha:]_]_'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '_[_[:alpha:]_]_';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '%[%[:alnum:]%]%'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '%[%[:alnum:]%]%';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '.[.[:alnum:].].'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '.[.[:alnum:].].';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '$[$[:alnum:]$]$'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '$[$[:alnum:]$]$';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '()[([:alnum:](]()'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '()[([:alnum:](]()';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '^[^[:alnum:]^[^^][[^^]][\\^][[\\^]]\\^]^'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '^[^[:alnum:]^[^^][[^^]][\\^][[\\^]]\\^]^';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '[]%][^]%][^%]%'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '[]%][^]%][^%]%';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '[^^]^'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '[^^]^';"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '[|a]%' ESCAPE '|'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM TEXT_TBL WHERE f1 SIMILAR TO '[|a]%' ESCAPE '|';"}
+{"sql":"SELECT regexp_replace('1112223333', E'(\\\\d{3})(\\\\d{3})(\\\\d{4})', E'(\\\\1) \\\\2-\\\\3')","shape":"SELECT regexp_replace('1112223333', E'(\\\\d{3})(\\\\d{3})(\\\\d{4})', E'(\\\\1) \\\\2-\\\\3');"}
+{"sql":"SELECT regexp_replace('foobarrbazz', E'(.)\\\\1', E'X\\\\&Y', 'g')","shape":"SELECT regexp_replace('foobarrbazz', E'(.)\\\\1', E'X\\\\&Y', 'g');"}
+{"sql":"SELECT regexp_replace('foobarrbazz', E'(.)\\\\1', E'X\\\\\\\\Y', 'g')","shape":"SELECT regexp_replace('foobarrbazz', E'(.)\\\\1', E'X\\\\\\\\Y', 'g');"}
+{"sql":"SELECT regexp_replace('foobarrbazz', E'(.)\\\\1', E'X\\\\Y\\\\1Z\\\\')","shape":"SELECT regexp_replace('foobarrbazz', E'(.)\\\\1', E'X\\\\Y\\\\1Z\\\\');"}
+{"sql":"SELECT regexp_replace('AAA   BBB   CCC   ', E'\\\\s+', ' ', 'g')","shape":"SELECT regexp_replace('AAA   BBB   CCC   ', E'\\\\s+', ' ', 'g');"}
+{"sql":"SELECT regexp_replace('AAA', '^|$', 'Z', 'g')","shape":"SELECT regexp_replace('AAA', '^|$', 'Z', 'g');"}
+{"sql":"SELECT regexp_replace('AAA aaa', 'A+', 'Z', 'gi')","shape":"SELECT regexp_replace('AAA aaa', 'A+', 'Z', 'gi');"}
+{"sql":"SELECT regexp_replace('AAA aaa', 'A+', 'Z', 'z')","shape":"SELECT regexp_replace('AAA aaa', 'A+', 'Z', 'z');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'A|e|i|o|u', 'X', 1)","shape":"SELECT regexp_replace('A PostgreSQL function', 'A|e|i|o|u', 'X', 1);"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'A|e|i|o|u', 'X', 1, 2)","shape":"SELECT regexp_replace('A PostgreSQL function', 'A|e|i|o|u', 'X', 1, 2);"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 0, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 0, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 1, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 1, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 2, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 2, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 3, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 3, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 9, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 9, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'A|e|i|o|u', 'X', 7, 0, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'A|e|i|o|u', 'X', 7, 0, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 1, 'g')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, 1, 'g');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', -1, 0, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', -1, 0, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, -1, 'i')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', 1, -1, 'i');"}
+{"sql":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', '1')","shape":"SELECT regexp_replace('A PostgreSQL function', 'a|e|i|o|u', 'X', '1');"}
+{"sql":"SELECT regexp_count('123123123123123', '(12)3')","shape":"SELECT regexp_count('123123123123123', '(12)3');"}
+{"sql":"SELECT regexp_count('123123123123', '123', 1)","shape":"SELECT regexp_count('123123123123', '123', 1);"}
+{"sql":"SELECT regexp_count('123123123123', '123', 3)","shape":"SELECT regexp_count('123123123123', '123', 3);"}
+{"sql":"SELECT regexp_count('123123123123', '123', 33)","shape":"SELECT regexp_count('123123123123', '123', 33);"}
+{"sql":"SELECT regexp_count('ABCABCABCABC', 'Abc', 1, '')","shape":"SELECT regexp_count('ABCABCABCABC', 'Abc', 1, '');"}
+{"sql":"SELECT regexp_count('ABCABCABCABC', 'Abc', 1, 'i')","shape":"SELECT regexp_count('ABCABCABCABC', 'Abc', 1, 'i');"}
+{"sql":"SELECT regexp_count('123123123123', '123', 0)","shape":"SELECT regexp_count('123123123123', '123', 0);"}
+{"sql":"SELECT regexp_count('123123123123', '123', -3)","shape":"SELECT regexp_count('123123123123', '123', -3);"}
+{"sql":"SELECT regexp_like('Steven', '^Ste(v|ph)en$')","shape":"SELECT regexp_like('Steven', '^Ste(v|ph)en$');"}
+{"sql":"SELECT regexp_like('a'||CHR(10)||'d', 'a.d', 'n')","shape":"SELECT regexp_like(('a' || CHR(10)) || 'd', 'a.d', 'n');"}
+{"sql":"SELECT regexp_like('a'||CHR(10)||'d', 'a.d', 's')","shape":"SELECT regexp_like(('a' || CHR(10)) || 'd', 'a.d', 's');"}
+{"sql":"SELECT regexp_like('abc', ' a . c ', 'x')","shape":"SELECT regexp_like('abc', ' a . c ', 'x');"}
+{"sql":"SELECT regexp_like('abc', 'a.c', 'g')","shape":"SELECT regexp_like('abc', 'a.c', 'g');"}
+{"sql":"SELECT regexp_instr('abcdefghi', 'd.f')","shape":"SELECT regexp_instr('abcdefghi', 'd.f');"}
+{"sql":"SELECT regexp_instr('abcdefghi', 'd.q')","shape":"SELECT regexp_instr('abcdefghi', 'd.q');"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c')","shape":"SELECT regexp_instr('abcabcabc', 'a.c');"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 2)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 2);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 3)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 3);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 4)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 4);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'A.C', 1, 2, 0, 'i')","shape":"SELECT regexp_instr('abcabcabc', 'A.C', 1, 2, 0, 'i');"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 0)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 0);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 1)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 1);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 2)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 2);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 3)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 3);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 4)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 4);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 5)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 0, 'i', 5);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 0)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 0);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 1)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 1);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 2)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 2);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 3)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 3);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 4)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 4);"}
+{"sql":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 5)","shape":"SELECT regexp_instr('1234567890', '(123)(4(56)(78))', 1, 1, 1, 'i', 5);"}
+{"sql":"SELECT regexp_instr('foo', 'foo(bar)?', 1, 1, 0, '', 1)","shape":"SELECT regexp_instr('foo', 'foo(bar)?', 1, 1, 0, '', 1);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 0, 1)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 0, 1);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 0)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 0);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, -1)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, -1);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, 2)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, 2);"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, 0, 'g')","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, 0, 'g');"}
+{"sql":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, 0, '', -1)","shape":"SELECT regexp_instr('abcabcabc', 'a.c', 1, 1, 0, '', -1);"}
+{"sql":"SELECT regexp_substr('abcdefghi', 'd.f')","shape":"SELECT regexp_substr('abcdefghi', 'd.f');"}
+{"sql":"SELECT regexp_substr('abcdefghi', 'd.q') IS NULL AS t","shape":"SELECT regexp_substr('abcdefghi', 'd.q') IS NULL AS t;"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c')","shape":"SELECT regexp_substr('abcabcabc', 'a.c');"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 2)","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 2);"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 3)","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 3);"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 4) IS NULL AS t","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 4) IS NULL AS t;"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'A.C', 1, 2, 'i')","shape":"SELECT regexp_substr('abcabcabc', 'A.C', 1, 2, 'i');"}
+{"sql":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 0)","shape":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 0);"}
+{"sql":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 1)","shape":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 1);"}
+{"sql":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 2)","shape":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 2);"}
+{"sql":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 3)","shape":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 3);"}
+{"sql":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 4)","shape":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 4);"}
+{"sql":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 5) IS NULL AS t","shape":"SELECT regexp_substr('1234567890', '(123)(4(56)(78))', 1, 1, 'i', 5) IS NULL AS t;"}
+{"sql":"SELECT regexp_substr('foo', 'foo(bar)?', 1, 1, '', 1) IS NULL AS t","shape":"SELECT regexp_substr('foo', 'foo(bar)?', 1, 1, '', 1) IS NULL AS t;"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 0, 1)","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 0, 1);"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 0)","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 0);"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 1, 'g')","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 1, 'g');"}
+{"sql":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 1, '', -1)","shape":"SELECT regexp_substr('abcabcabc', 'a.c', 1, 1, '', -1);"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(bar)(beque)$re$)","shape":"SELECT regexp_matches('foobarbequebaz', '(bar)(beque)');"}
+{"sql":"SELECT regexp_matches('foObARbEqUEbAz', $re$(bar)(beque)$re$, 'i')","shape":"SELECT regexp_matches('foObARbEqUEbAz', '(bar)(beque)', 'i');"}
+{"sql":"SELECT regexp_matches('foobarbequebazilbarfbonk', $re$(b[^b]+)(b[^b]+)$re$, 'g')","shape":"SELECT regexp_matches('foobarbequebazilbarfbonk', '(b[^b]+)(b[^b]+)', 'g');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(bar)(.*)(beque)$re$)","shape":"SELECT regexp_matches('foobarbequebaz', '(bar)(.*)(beque)');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(bar)(.+)(beque)$re$)","shape":"SELECT regexp_matches('foobarbequebaz', '(bar)(.+)(beque)');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(bar)(.+)?(beque)$re$)","shape":"SELECT regexp_matches('foobarbequebaz', '(bar)(.+)?(beque)');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$barbeque$re$)","shape":"SELECT regexp_matches('foobarbequebaz', 'barbeque');"}
+{"sql":"SELECT regexp_matches('foo' || chr(10) || 'bar' || chr(10) || 'bequq' || chr(10) || 'baz', '^', 'mg')","shape":"SELECT regexp_matches(((((('foo' || chr(10)) || 'bar') || chr(10)) || 'bequq') || chr(10)) || 'baz', '^', 'mg');"}
+{"sql":"SELECT regexp_matches('foo' || chr(10) || 'bar' || chr(10) || 'bequq' || chr(10) || 'baz', '$', 'mg')","shape":"SELECT regexp_matches(((((('foo' || chr(10)) || 'bar') || chr(10)) || 'bequq') || chr(10)) || 'baz', '$', 'mg');"}
+{"sql":"SELECT regexp_matches('1' || chr(10) || '2' || chr(10) || '3' || chr(10) || '4' || chr(10), '^.?', 'mg')","shape":"SELECT regexp_matches((((((('1' || chr(10)) || '2') || chr(10)) || '3') || chr(10)) || '4') || chr(10), '^.?', 'mg');"}
+{"sql":"SELECT regexp_matches(chr(10) || '1' || chr(10) || '2' || chr(10) || '3' || chr(10) || '4' || chr(10), '.?$', 'mg')","shape":"SELECT regexp_matches((((((((chr(10) || '1') || chr(10)) || '2') || chr(10)) || '3') || chr(10)) || '4') || chr(10), '.?$', 'mg');"}
+{"sql":"SELECT regexp_matches(chr(10) || '1' || chr(10) || '2' || chr(10) || '3' || chr(10) || '4', '.?$', 'mg')","shape":"SELECT regexp_matches(((((((chr(10) || '1') || chr(10)) || '2') || chr(10)) || '3') || chr(10)) || '4', '.?$', 'mg');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(bar)(beque)$re$, 'gz')","shape":"SELECT regexp_matches('foobarbequebaz', '(bar)(beque)', 'gz');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(barbeque$re$)","shape":"SELECT regexp_matches('foobarbequebaz', '(barbeque');"}
+{"sql":"SELECT regexp_matches('foobarbequebaz', $re$(bar)(beque){2,1}$re$)","shape":"SELECT regexp_matches('foobarbequebaz', '(bar)(beque){2,1}');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', $re$\\s+$re$) AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', '\\s+') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', $re$\\s+$re$)","shape":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', '\\s+');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', $re$\\s*$re$) AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', '\\s*') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', $re$\\s*$re$)","shape":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', '\\s*');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', '') AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', '') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', '')","shape":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', '');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'i') AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'i') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'i')","shape":"SELECT regexp_split_to_array('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'i');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', 'nomatch') AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('the quick brown fox jumps over the lazy dog', 'nomatch') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', 'nomatch')","shape":"SELECT regexp_split_to_array('the quick brown fox jumps over the lazy dog', 'nomatch');"}
+{"sql":"SELECT regexp_split_to_array('123456','1')","shape":"SELECT regexp_split_to_array('123456', '1');"}
+{"sql":"SELECT regexp_split_to_array('123456','6')","shape":"SELECT regexp_split_to_array('123456', '6');"}
+{"sql":"SELECT regexp_split_to_array('123456','.')","shape":"SELECT regexp_split_to_array('123456', '.');"}
+{"sql":"SELECT regexp_split_to_array('123456','')","shape":"SELECT regexp_split_to_array('123456', '');"}
+{"sql":"SELECT regexp_split_to_array('123456','(?:)')","shape":"SELECT regexp_split_to_array('123456', '(?:)');"}
+{"sql":"SELECT regexp_split_to_array('1','')","shape":"SELECT regexp_split_to_array('1', '');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'zippy') AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'zippy') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'iz')","shape":"SELECT regexp_split_to_array('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'iz');"}
+{"sql":"SELECT foo, length(foo) FROM regexp_split_to_table('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'g') AS foo","shape":"SELECT foo, length(foo) FROM regexp_split_to_table('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'g') AS foo;"}
+{"sql":"SELECT regexp_split_to_array('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'g')","shape":"SELECT regexp_split_to_array('thE QUick bROWn FOx jUMPs ovEr The lazy dOG', 'e', 'g');"}
+{"sql":"SELECT POSITION('4' IN '1234567890') = '4' AS \"4\"","shape":"SELECT POSITION('4' IN '1234567890') = '4' AS \"4\";"}
+{"sql":"SELECT POSITION('5' IN '1234567890') = '5' AS \"5\"","shape":"SELECT POSITION('5' IN '1234567890') = '5' AS \"5\";"}
+{"sql":"SELECT OVERLAY('abcdef' PLACING '45' FROM 4) AS \"abc45f\"","shape":"SELECT OVERLAY('abcdef' PLACING '45' FROM 4) AS \"abc45f\";"}
+{"sql":"SELECT OVERLAY('yabadoo' PLACING 'daba' FROM 5) AS \"yabadaba\"","shape":"SELECT OVERLAY('yabadoo' PLACING 'daba' FROM 5) AS \"yabadaba\";"}
+{"sql":"SELECT OVERLAY('yabadoo' PLACING 'daba' FROM 5 FOR 0) AS \"yabadabadoo\"","shape":"SELECT OVERLAY('yabadoo' PLACING 'daba' FROM 5 FOR 0) AS \"yabadabadoo\";"}
+{"sql":"SELECT OVERLAY('babosa' PLACING 'ubb' FROM 2 FOR 4) AS \"bubba\"","shape":"SELECT OVERLAY('babosa' PLACING 'ubb' FROM 2 FOR 4) AS \"bubba\";"}
+{"sql":"SELECT 'hawkeye' LIKE 'h%' AS \"true\"","shape":"SELECT 'hawkeye' LIKE 'h%' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' NOT LIKE 'h%' AS \"false\"","shape":"SELECT 'hawkeye' NOT LIKE 'h%' AS \"false\";"}
+{"sql":"SELECT 'hawkeye' LIKE 'H%' AS \"false\"","shape":"SELECT 'hawkeye' LIKE 'H%' AS \"false\";"}
+{"sql":"SELECT 'hawkeye' NOT LIKE 'H%' AS \"true\"","shape":"SELECT 'hawkeye' NOT LIKE 'H%' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' LIKE 'indio%' AS \"false\"","shape":"SELECT 'hawkeye' LIKE 'indio%' AS \"false\";"}
+{"sql":"SELECT 'hawkeye' NOT LIKE 'indio%' AS \"true\"","shape":"SELECT 'hawkeye' NOT LIKE 'indio%' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' LIKE 'h%eye' AS \"true\"","shape":"SELECT 'hawkeye' LIKE 'h%eye' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' NOT LIKE 'h%eye' AS \"false\"","shape":"SELECT 'hawkeye' NOT LIKE 'h%eye' AS \"false\";"}
+{"sql":"SELECT 'indio' LIKE '_ndio' AS \"true\"","shape":"SELECT 'indio' LIKE '_ndio' AS \"true\";"}
+{"sql":"SELECT 'indio' NOT LIKE '_ndio' AS \"false\"","shape":"SELECT 'indio' NOT LIKE '_ndio' AS \"false\";"}
+{"sql":"SELECT 'indio' LIKE 'in__o' AS \"true\"","shape":"SELECT 'indio' LIKE 'in__o' AS \"true\";"}
+{"sql":"SELECT 'indio' NOT LIKE 'in__o' AS \"false\"","shape":"SELECT 'indio' NOT LIKE 'in__o' AS \"false\";"}
+{"sql":"SELECT 'indio' LIKE 'in_o' AS \"false\"","shape":"SELECT 'indio' LIKE 'in_o' AS \"false\";"}
+{"sql":"SELECT 'indio' NOT LIKE 'in_o' AS \"true\"","shape":"SELECT 'indio' NOT LIKE 'in_o' AS \"true\";"}
+{"sql":"SELECT 'abc'::name LIKE '_b_' AS \"true\"","shape":"SELECT 'abc'::name LIKE '_b_' AS \"true\";"}
+{"sql":"SELECT 'abc'::name NOT LIKE '_b_' AS \"false\"","shape":"SELECT 'abc'::name NOT LIKE '_b_' AS \"false\";"}
+{"sql":"SELECT 'abc'::bytea LIKE '_b_'::bytea AS \"true\"","shape":"SELECT 'abc'::bytea LIKE '_b_'::bytea AS \"true\";"}
+{"sql":"SELECT 'abc'::bytea NOT LIKE '_b_'::bytea AS \"false\"","shape":"SELECT 'abc'::bytea NOT LIKE '_b_'::bytea AS \"false\";"}
+{"sql":"SELECT 'hawkeye' LIKE 'h%' ESCAPE '#' AS \"true\"","shape":"SELECT 'hawkeye' LIKE 'h%' ESCAPE '#' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' NOT LIKE 'h%' ESCAPE '#' AS \"false\"","shape":"SELECT 'hawkeye' NOT LIKE 'h%' ESCAPE '#' AS \"false\";"}
+{"sql":"SELECT 'indio' LIKE 'ind_o' ESCAPE '$' AS \"true\"","shape":"SELECT 'indio' LIKE 'ind_o' ESCAPE '$' AS \"true\";"}
+{"sql":"SELECT 'indio' NOT LIKE 'ind_o' ESCAPE '$' AS \"false\"","shape":"SELECT 'indio' NOT LIKE 'ind_o' ESCAPE '$' AS \"false\";"}
+{"sql":"SELECT 'h%' LIKE 'h#%' ESCAPE '#' AS \"true\"","shape":"SELECT 'h%' LIKE 'h#%' ESCAPE '#' AS \"true\";"}
+{"sql":"SELECT 'h%' NOT LIKE 'h#%' ESCAPE '#' AS \"false\"","shape":"SELECT 'h%' NOT LIKE 'h#%' ESCAPE '#' AS \"false\";"}
+{"sql":"SELECT 'h%wkeye' LIKE 'h#%' ESCAPE '#' AS \"false\"","shape":"SELECT 'h%wkeye' LIKE 'h#%' ESCAPE '#' AS \"false\";"}
+{"sql":"SELECT 'h%wkeye' NOT LIKE 'h#%' ESCAPE '#' AS \"true\"","shape":"SELECT 'h%wkeye' NOT LIKE 'h#%' ESCAPE '#' AS \"true\";"}
+{"sql":"SELECT 'h%wkeye' LIKE 'h#%%' ESCAPE '#' AS \"true\"","shape":"SELECT 'h%wkeye' LIKE 'h#%%' ESCAPE '#' AS \"true\";"}
+{"sql":"SELECT 'h%wkeye' NOT LIKE 'h#%%' ESCAPE '#' AS \"false\"","shape":"SELECT 'h%wkeye' NOT LIKE 'h#%%' ESCAPE '#' AS \"false\";"}
+{"sql":"SELECT 'h%awkeye' LIKE 'h#%a%k%e' ESCAPE '#' AS \"true\"","shape":"SELECT 'h%awkeye' LIKE 'h#%a%k%e' ESCAPE '#' AS \"true\";"}
+{"sql":"SELECT 'h%awkeye' NOT LIKE 'h#%a%k%e' ESCAPE '#' AS \"false\"","shape":"SELECT 'h%awkeye' NOT LIKE 'h#%a%k%e' ESCAPE '#' AS \"false\";"}
+{"sql":"SELECT 'indio' LIKE '_ndio' ESCAPE '$' AS \"true\"","shape":"SELECT 'indio' LIKE '_ndio' ESCAPE '$' AS \"true\";"}
+{"sql":"SELECT 'indio' NOT LIKE '_ndio' ESCAPE '$' AS \"false\"","shape":"SELECT 'indio' NOT LIKE '_ndio' ESCAPE '$' AS \"false\";"}
+{"sql":"SELECT 'i_dio' LIKE 'i$_d_o' ESCAPE '$' AS \"true\"","shape":"SELECT 'i_dio' LIKE 'i$_d_o' ESCAPE '$' AS \"true\";"}
+{"sql":"SELECT 'i_dio' NOT LIKE 'i$_d_o' ESCAPE '$' AS \"false\"","shape":"SELECT 'i_dio' NOT LIKE 'i$_d_o' ESCAPE '$' AS \"false\";"}
+{"sql":"SELECT 'i_dio' LIKE 'i$_nd_o' ESCAPE '$' AS \"false\"","shape":"SELECT 'i_dio' LIKE 'i$_nd_o' ESCAPE '$' AS \"false\";"}
+{"sql":"SELECT 'i_dio' NOT LIKE 'i$_nd_o' ESCAPE '$' AS \"true\"","shape":"SELECT 'i_dio' NOT LIKE 'i$_nd_o' ESCAPE '$' AS \"true\";"}
+{"sql":"SELECT 'i_dio' LIKE 'i$_d%o' ESCAPE '$' AS \"true\"","shape":"SELECT 'i_dio' LIKE 'i$_d%o' ESCAPE '$' AS \"true\";"}
+{"sql":"SELECT 'i_dio' NOT LIKE 'i$_d%o' ESCAPE '$' AS \"false\"","shape":"SELECT 'i_dio' NOT LIKE 'i$_d%o' ESCAPE '$' AS \"false\";"}
+{"sql":"SELECT 'a_c'::bytea LIKE 'a$__'::bytea ESCAPE '$'::bytea AS \"true\"","shape":"SELECT 'a_c'::bytea LIKE 'a$__'::bytea ESCAPE '$'::bytea AS \"true\";"}
+{"sql":"SELECT 'a_c'::bytea NOT LIKE 'a$__'::bytea ESCAPE '$'::bytea AS \"false\"","shape":"SELECT 'a_c'::bytea NOT LIKE 'a$__'::bytea ESCAPE '$'::bytea AS \"false\";"}
+{"sql":"SELECT 'maca' LIKE 'm%aca' ESCAPE '%' AS \"true\"","shape":"SELECT 'maca' LIKE 'm%aca' ESCAPE '%' AS \"true\";"}
+{"sql":"SELECT 'maca' NOT LIKE 'm%aca' ESCAPE '%' AS \"false\"","shape":"SELECT 'maca' NOT LIKE 'm%aca' ESCAPE '%' AS \"false\";"}
+{"sql":"SELECT 'ma%a' LIKE 'm%a%%a' ESCAPE '%' AS \"true\"","shape":"SELECT 'ma%a' LIKE 'm%a%%a' ESCAPE '%' AS \"true\";"}
+{"sql":"SELECT 'ma%a' NOT LIKE 'm%a%%a' ESCAPE '%' AS \"false\"","shape":"SELECT 'ma%a' NOT LIKE 'm%a%%a' ESCAPE '%' AS \"false\";"}
+{"sql":"SELECT 'bear' LIKE 'b_ear' ESCAPE '_' AS \"true\"","shape":"SELECT 'bear' LIKE 'b_ear' ESCAPE '_' AS \"true\";"}
+{"sql":"SELECT 'bear' NOT LIKE 'b_ear' ESCAPE '_' AS \"false\"","shape":"SELECT 'bear' NOT LIKE 'b_ear' ESCAPE '_' AS \"false\";"}
+{"sql":"SELECT 'be_r' LIKE 'b_e__r' ESCAPE '_' AS \"true\"","shape":"SELECT 'be_r' LIKE 'b_e__r' ESCAPE '_' AS \"true\";"}
+{"sql":"SELECT 'be_r' NOT LIKE 'b_e__r' ESCAPE '_' AS \"false\"","shape":"SELECT 'be_r' NOT LIKE 'b_e__r' ESCAPE '_' AS \"false\";"}
+{"sql":"SELECT 'be_r' LIKE '__e__r' ESCAPE '_' AS \"false\"","shape":"SELECT 'be_r' LIKE '__e__r' ESCAPE '_' AS \"false\";"}
+{"sql":"SELECT 'be_r' NOT LIKE '__e__r' ESCAPE '_' AS \"true\"","shape":"SELECT 'be_r' NOT LIKE '__e__r' ESCAPE '_' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' ILIKE 'h%' AS \"true\"","shape":"SELECT 'hawkeye' ILIKE 'h%' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' NOT ILIKE 'h%' AS \"false\"","shape":"SELECT 'hawkeye' NOT ILIKE 'h%' AS \"false\";"}
+{"sql":"SELECT 'hawkeye' ILIKE 'H%' AS \"true\"","shape":"SELECT 'hawkeye' ILIKE 'H%' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' NOT ILIKE 'H%' AS \"false\"","shape":"SELECT 'hawkeye' NOT ILIKE 'H%' AS \"false\";"}
+{"sql":"SELECT 'hawkeye' ILIKE 'H%Eye' AS \"true\"","shape":"SELECT 'hawkeye' ILIKE 'H%Eye' AS \"true\";"}
+{"sql":"SELECT 'hawkeye' NOT ILIKE 'H%Eye' AS \"false\"","shape":"SELECT 'hawkeye' NOT ILIKE 'H%Eye' AS \"false\";"}
+{"sql":"SELECT 'Hawkeye' ILIKE 'h%' AS \"true\"","shape":"SELECT 'Hawkeye' ILIKE 'h%' AS \"true\";"}
+{"sql":"SELECT 'Hawkeye' NOT ILIKE 'h%' AS \"false\"","shape":"SELECT 'Hawkeye' NOT ILIKE 'h%' AS \"false\";"}
+{"sql":"SELECT 'ABC'::name ILIKE '_b_' AS \"true\"","shape":"SELECT 'ABC'::name ILIKE '_b_' AS \"true\";"}
+{"sql":"SELECT 'ABC'::name NOT ILIKE '_b_' AS \"false\"","shape":"SELECT 'ABC'::name NOT ILIKE '_b_' AS \"false\";"}
+{"sql":"SELECT 'foo' LIKE '_%' as t, 'f' LIKE '_%' as t, '' LIKE '_%' as f","shape":"SELECT 'foo' LIKE '_%' AS t, 'f' LIKE '_%' AS t, '' LIKE '_%' AS f;"}
+{"sql":"SELECT 'foo' LIKE '%_' as t, 'f' LIKE '%_' as t, '' LIKE '%_' as f","shape":"SELECT 'foo' LIKE '%_' AS t, 'f' LIKE '%_' AS t, '' LIKE '%_' AS f;"}
+{"sql":"SELECT 'foo' LIKE '__%' as t, 'foo' LIKE '___%' as t, 'foo' LIKE '____%' as f","shape":"SELECT 'foo' LIKE '__%' AS t, 'foo' LIKE '___%' AS t, 'foo' LIKE '____%' AS f;"}
+{"sql":"SELECT 'foo' LIKE '%__' as t, 'foo' LIKE '%___' as t, 'foo' LIKE '%____' as f","shape":"SELECT 'foo' LIKE '%__' AS t, 'foo' LIKE '%___' AS t, 'foo' LIKE '%____' AS f;"}
+{"sql":"SELECT 'jack' LIKE '%____%' AS t","shape":"SELECT 'jack' LIKE '%____%' AS t;"}
+{"sql":"CREATE TABLE texttest (a text PRIMARY KEY, b int)","shape":"CREATE TABLE texttest (a text PRIMARY KEY, b int);"}
+{"sql":"SELECT * FROM texttest WHERE a LIKE '%1%'","shape":"SELECT * FROM texttest WHERE a LIKE '%1%';"}
+{"sql":"CREATE TABLE byteatest (a bytea PRIMARY KEY, b int)","shape":"CREATE TABLE byteatest (a bytea PRIMARY KEY, b int);"}
+{"sql":"SELECT * FROM byteatest WHERE a LIKE '%1%'","shape":"SELECT * FROM byteatest WHERE a LIKE '%1%';"}
+{"sql":"DROP TABLE texttest, byteatest","shape":"DROP TABLE texttest, byteatest;"}
+{"sql":"SELECT 'unknown' || ' and unknown' AS \"Concat unknown types\"","shape":"SELECT 'unknown' || ' and unknown' AS \"Concat unknown types\";"}
+{"sql":"SELECT text 'text' || ' and unknown' AS \"Concat text to unknown type\"","shape":"SELECT text 'text' || ' and unknown' AS \"Concat text to unknown type\";"}
+{"sql":"SELECT char(20) 'characters' || ' and text' AS \"Concat char to unknown type\"","shape":"SELECT char(20) 'characters' || ' and text' AS \"Concat char to unknown type\";"}
+{"sql":"SELECT text 'text' || char(20) ' and characters' AS \"Concat text to char\"","shape":"SELECT text 'text' || char(20) ' and characters' AS \"Concat text to char\";"}
+{"sql":"SELECT text 'text' || varchar ' and varchar' AS \"Concat text to varchar\"","shape":"SELECT text 'text' || varchar ' and varchar' AS \"Concat text to varchar\";"}
+{"sql":"CREATE TABLE toasttest(f1 text)","shape":"CREATE TABLE toasttest (f1 text);"}
+{"sql":"insert into toasttest values(repeat('1234567890',10000))","shape":"INSERT INTO toasttest VALUES (repeat('1234567890', 10000));"}
+{"sql":"alter table toasttest alter column f1 set storage external"}
+{"sql":"SELECT substr(f1, -1, 5) from toasttest","shape":"SELECT substr(f1, -1, 5) FROM toasttest;"}
+{"sql":"SELECT substr(f1, 5, -1) from toasttest","shape":"SELECT substr(f1, 5, -1) FROM toasttest;"}
+{"sql":"SELECT substr(f1, 99995) from toasttest","shape":"SELECT substr(f1, 99995) FROM toasttest;"}
+{"sql":"SELECT substr(f1, 99995, 10) from toasttest","shape":"SELECT substr(f1, 99995, 10) FROM toasttest;"}
+{"sql":"TRUNCATE TABLE toasttest","shape":"TRUNCATE TABLE toasttest;"}
+{"sql":"INSERT INTO toasttest values (repeat('1234567890',300))","shape":"INSERT INTO toasttest VALUES (repeat('1234567890', 300));"}
+{"sql":"SELECT pg_relation_size(reltoastrelid) = 0 AS is_empty\n  FROM pg_class where relname = 'toasttest'","shape":"SELECT pg_relation_size(reltoastrelid) = 0 AS is_empty FROM pg_class WHERE relname = 'toasttest';"}
+{"sql":"ALTER TABLE toasttest set (toast_tuple_target = 4080)"}
+{"sql":"DROP TABLE toasttest","shape":"DROP TABLE toasttest;"}
+{"sql":"CREATE TABLE toasttest(f1 bytea)","shape":"CREATE TABLE toasttest (f1 bytea);"}
+{"sql":"insert into toasttest values(decode(repeat('1234567890',10000),'escape'))","shape":"INSERT INTO toasttest VALUES (decode(repeat('1234567890', 10000), 'escape'));"}
+{"sql":"CREATE TABLE toasttest (c char(4096))","shape":"CREATE TABLE toasttest (c char(4096));"}
+{"sql":"INSERT INTO toasttest VALUES('x')","shape":"INSERT INTO toasttest VALUES ('x');"}
+{"sql":"SELECT length(c), c::text FROM toasttest","shape":"SELECT length(c), c::text FROM toasttest;"}
+{"sql":"SELECT c FROM toasttest","shape":"SELECT c FROM toasttest;"}
+{"sql":"SELECT length('abcdef') AS \"length_6\"","shape":"SELECT length('abcdef') AS \"length_6\";"}
+{"sql":"SELECT strpos('abcdef', 'cd') AS \"pos_3\"","shape":"SELECT strpos('abcdef', 'cd') AS \"pos_3\";"}
+{"sql":"SELECT strpos('abcdef', 'xy') AS \"pos_0\"","shape":"SELECT strpos('abcdef', 'xy') AS \"pos_0\";"}
+{"sql":"SELECT strpos('abcdef', '') AS \"pos_1\"","shape":"SELECT strpos('abcdef', '') AS \"pos_1\";"}
+{"sql":"SELECT strpos('', 'xy') AS \"pos_0\"","shape":"SELECT strpos('', 'xy') AS \"pos_0\";"}
+{"sql":"SELECT strpos('', '') AS \"pos_1\"","shape":"SELECT strpos('', '') AS \"pos_1\";"}
+{"sql":"SELECT replace('abcdef', 'de', '45') AS \"abc45f\"","shape":"SELECT replace('abcdef', 'de', '45') AS \"abc45f\";"}
+{"sql":"SELECT replace('yabadabadoo', 'ba', '123') AS \"ya123da123doo\"","shape":"SELECT replace('yabadabadoo', 'ba', '123') AS \"ya123da123doo\";"}
+{"sql":"SELECT replace('yabadoo', 'bad', '') AS \"yaoo\"","shape":"SELECT replace('yabadoo', 'bad', '') AS \"yaoo\";"}
+{"sql":"select split_part('','@',1) AS \"empty string\"","shape":"SELECT split_part('', '@', 1) AS \"empty string\";"}
+{"sql":"select split_part('','@',-1) AS \"empty string\"","shape":"SELECT split_part('', '@', -1) AS \"empty string\";"}
+{"sql":"select split_part('joeuser@mydatabase','',1) AS \"joeuser@mydatabase\"","shape":"SELECT split_part('joeuser@mydatabase', '', 1) AS \"joeuser@mydatabase\";"}
+{"sql":"select split_part('joeuser@mydatabase','',2) AS \"empty string\"","shape":"SELECT split_part('joeuser@mydatabase', '', 2) AS \"empty string\";"}
+{"sql":"select split_part('joeuser@mydatabase','',-1) AS \"joeuser@mydatabase\"","shape":"SELECT split_part('joeuser@mydatabase', '', -1) AS \"joeuser@mydatabase\";"}
+{"sql":"select split_part('joeuser@mydatabase','',-2) AS \"empty string\"","shape":"SELECT split_part('joeuser@mydatabase', '', -2) AS \"empty string\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',0) AS \"an error\"","shape":"SELECT split_part('joeuser@mydatabase', '@', 0) AS \"an error\";"}
+{"sql":"select split_part('joeuser@mydatabase','@@',1) AS \"joeuser@mydatabase\"","shape":"SELECT split_part('joeuser@mydatabase', '@@', 1) AS \"joeuser@mydatabase\";"}
+{"sql":"select split_part('joeuser@mydatabase','@@',2) AS \"empty string\"","shape":"SELECT split_part('joeuser@mydatabase', '@@', 2) AS \"empty string\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',1) AS \"joeuser\"","shape":"SELECT split_part('joeuser@mydatabase', '@', 1) AS \"joeuser\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',2) AS \"mydatabase\"","shape":"SELECT split_part('joeuser@mydatabase', '@', 2) AS \"mydatabase\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',3) AS \"empty string\"","shape":"SELECT split_part('joeuser@mydatabase', '@', 3) AS \"empty string\";"}
+{"sql":"select split_part('@joeuser@mydatabase@','@',2) AS \"joeuser\"","shape":"SELECT split_part('@joeuser@mydatabase@', '@', 2) AS \"joeuser\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',-1) AS \"mydatabase\"","shape":"SELECT split_part('joeuser@mydatabase', '@', -1) AS \"mydatabase\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',-2) AS \"joeuser\"","shape":"SELECT split_part('joeuser@mydatabase', '@', -2) AS \"joeuser\";"}
+{"sql":"select split_part('joeuser@mydatabase','@',-3) AS \"empty string\"","shape":"SELECT split_part('joeuser@mydatabase', '@', -3) AS \"empty string\";"}
+{"sql":"select split_part('@joeuser@mydatabase@','@',-2) AS \"mydatabase\"","shape":"SELECT split_part('@joeuser@mydatabase@', '@', -2) AS \"mydatabase\";"}
+{"sql":"select to_hex(256*256*256 - 1) AS \"ffffff\"","shape":"SELECT to_hex(((256 * 256) * 256) - 1) AS \"ffffff\";"}
+{"sql":"select to_hex(256::bigint*256::bigint*256::bigint*256::bigint - 1) AS \"ffffffff\"","shape":"SELECT to_hex((((256::bigint * 256::bigint) * 256::bigint) * 256::bigint) - 1) AS \"ffffffff\";"}
+{"sql":"SELECT sha224('')","shape":"SELECT sha224('');"}
+{"sql":"SELECT sha224('The quick brown fox jumps over the lazy dog.')","shape":"SELECT sha224('The quick brown fox jumps over the lazy dog.');"}
+{"sql":"SELECT sha256('')","shape":"SELECT sha256('');"}
+{"sql":"SELECT sha256('The quick brown fox jumps over the lazy dog.')","shape":"SELECT sha256('The quick brown fox jumps over the lazy dog.');"}
+{"sql":"SELECT sha384('')","shape":"SELECT sha384('');"}
+{"sql":"SELECT sha384('The quick brown fox jumps over the lazy dog.')","shape":"SELECT sha384('The quick brown fox jumps over the lazy dog.');"}
+{"sql":"SELECT sha512('')","shape":"SELECT sha512('');"}
+{"sql":"SELECT sha512('The quick brown fox jumps over the lazy dog.')","shape":"SELECT sha512('The quick brown fox jumps over the lazy dog.');"}
+{"sql":"SELECT encode('\\x1234567890abcdef00', 'hex')","shape":"SELECT encode('\\x1234567890abcdef00', 'hex');"}
+{"sql":"SELECT decode('1234567890abcdef00', 'hex')","shape":"SELECT decode('1234567890abcdef00', 'hex');"}
+{"sql":"SELECT encode(('\\x' || repeat('1234567890abcdef0001', 7))::bytea, 'base64')","shape":"SELECT encode(('\\x' || repeat('1234567890abcdef0001', 7))::bytea, 'base64');"}
+{"sql":"SELECT decode(encode(('\\x' || repeat('1234567890abcdef0001', 7))::bytea,\n                     'base64'), 'base64')","shape":"SELECT decode(encode(('\\x' || repeat('1234567890abcdef0001', 7))::bytea, 'base64'), 'base64');"}
+{"sql":"SELECT encode('\\x1234567890abcdef00', 'escape')","shape":"SELECT encode('\\x1234567890abcdef00', 'escape');"}
+{"sql":"SELECT decode(encode('\\x1234567890abcdef00', 'escape'), 'escape')","shape":"SELECT decode(encode('\\x1234567890abcdef00', 'escape'), 'escape');"}
+{"sql":"SELECT get_bit('\\x1234567890abcdef00'::bytea, 43)","shape":"SELECT get_bit('\\x1234567890abcdef00'::bytea, 43);"}
+{"sql":"SELECT get_bit('\\x1234567890abcdef00'::bytea, 99)","shape":"SELECT get_bit('\\x1234567890abcdef00'::bytea, 99);"}
+{"sql":"SELECT set_bit('\\x1234567890abcdef00'::bytea, 43, 0)","shape":"SELECT set_bit('\\x1234567890abcdef00'::bytea, 43, 0);"}
+{"sql":"SELECT set_bit('\\x1234567890abcdef00'::bytea, 99, 0)","shape":"SELECT set_bit('\\x1234567890abcdef00'::bytea, 99, 0);"}
+{"sql":"SELECT get_byte('\\x1234567890abcdef00'::bytea, 3)","shape":"SELECT get_byte('\\x1234567890abcdef00'::bytea, 3);"}
+{"sql":"SELECT get_byte('\\x1234567890abcdef00'::bytea, 99)","shape":"SELECT get_byte('\\x1234567890abcdef00'::bytea, 99);"}
+{"sql":"SELECT set_byte('\\x1234567890abcdef00'::bytea, 7, 11)","shape":"SELECT set_byte('\\x1234567890abcdef00'::bytea, 7, 11);"}
+{"sql":"SELECT set_byte('\\x1234567890abcdef00'::bytea, 99, 11)","shape":"SELECT set_byte('\\x1234567890abcdef00'::bytea, 99, 11);"}
+{"sql":"set escape_string_warning = off","shape":"SET escape_string_warning TO off;"}
+{"sql":"show escape_string_warning","shape":"SHOW escape_string_warning;"}
+{"sql":"show standard_conforming_strings","shape":"SHOW standard_conforming_strings;"}
+{"sql":"set escape_string_warning = on","shape":"SET escape_string_warning TO on;"}
+{"sql":"select 'a\\bcd' as f1, 'a\\b''cd' as f2, 'a\\b''''cd' as f3, 'abcd\\'   as f4, 'ab\\''cd' as f5, '\\\\' as f6","shape":"SELECT 'a\\bcd' AS f1, 'a\\b''cd' AS f2, 'a\\b''''cd' AS f3, 'abcd\\' AS f4, 'ab\\''cd' AS f5, '\\\\' AS f6;"}

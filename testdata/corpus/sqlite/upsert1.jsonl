@@ -1,0 +1,56 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c DEFAULT 0)"}
+{"sql":"CREATE UNIQUE INDEX t1x1 ON t1(b)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2) ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,99),(99,2) ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(2,3) ON CONFLICT(a) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(2,99) ON CONFLICT(a) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(3,4) ON CONFLICT(b) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(99,4) ON CONFLICT(b) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(x) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(c) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(b COLLATE nocase) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(5,6) ON CONFLICT(b COLLATE binary) DO NOTHING"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b INT, c DEFAULT 0)"}
+{"sql":"CREATE UNIQUE INDEX t1x1 ON t1(a+b)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(7,8) ON CONFLICT(a+b) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(8,7),(9,6) ON CONFLICT(a+b) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(8,7),(9,6) ON CONFLICT(a) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(9,10) ON CONFLICT(a+(+b)) DO NOTHING"}
+{"sql":"CREATE UNIQUE INDEX t1x1 ON t1(b) WHERE b>10"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2),(3,2) ON CONFLICT(b) DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2),(3,2) ON CONFLICT(b) WHERE b!=10 DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2),(3,2),(4,20),(5,20)\n         ON CONFLICT(b) WHERE b>10 DO NOTHING"}
+{"sql":"SELECT *, 'x' FROM t1 ORDER BY b, a"}
+{"sql":"CREATE TABLE t2(a TEXT UNIQUE, b INT DEFAULT 1)"}
+{"sql":"INSERT INTO t2(a) VALUES('one'),('two'),('three')"}
+{"sql":"INSERT INTO t2(a) VALUES('one'),('one'),('three'),('four')\n      ON CONFLICT(a) DO UPDATE SET b=b+1"}
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y INT UNIQUE)"}
+{"sql":"INSERT INTO t1(x,y) SELECT 1,2 WHERE true\n    ON CONFLICT(x) DO UPDATE SET y=max(t1.y,excluded.y) AND true"}
+{"sql":"CREATE TABLE t1(b UNIQUE, a INT PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"INSERT OR IGNORE INTO t1(a) VALUES('1') ON CONFLICT(a) DO NOTHING"}
+{"sql":"INSERT OR IGNORE INTO t1(a) VALUES('1'),(1) ON CONFLICT(a) DO NOTHING"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b INT, c INT, d INT, e INT)"}
+{"sql":"CREATE UNIQUE INDEX t1e ON t1(e)"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)\n    ON CONFLICT(e) DO UPDATE SET c=excluded.c"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)\n    ON CONFLICT(a) DO UPDATE SET c=excluded.c"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,2,33,44,5)\n    ON CONFLICT(b) DO UPDATE SET c=excluded.c"}
+{"sql":"CREATE TABLE t1(a INT, b INT, c INT, d INT, e INT)"}
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b INT, c INT, d INT, e INT) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t0(c0 REAL UNIQUE, c1)"}
+{"sql":"CREATE UNIQUE INDEX test800i0 ON t0(0 || c1)"}
+{"sql":"INSERT INTO t0(c0, c1) VALUES (1, 2),  (2, 1)"}
+{"sql":"INSERT INTO t0(c0) VALUES (1) ON CONFLICT(c0) DO UPDATE SET c1=excluded.c0"}
+{"sql":"CREATE VIEW t1(a) AS SELECT 1"}
+{"sql":"CREATE TRIGGER t1r1 INSTEAD OF INSERT ON t1 BEGIN\n     SELECT 2;\n  END"}
+{"sql":"INSERT INTO t1 VALUES(3) ON CONFLICT(x) DO NOTHING"}
+{"sql":"CREATE TABLE t0(c0 PRIMARY KEY, c1, c2 UNIQUE) WITHOUT ROWID"}
+{"sql":"INSERT OR FAIL INTO t0(c2) VALUES (0), (NULL)\n    ON CONFLICT(c2) DO UPDATE SET c1 = c0"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY ON CONFLICT REPLACE, b UNIQUE)"}
+{"sql":"INSERT INTO t1(b) VALUES(22)"}
+{"sql":"INSERT INTO t1 VALUES(2,22) ON CONFLICT (b) DO NOTHING"}
+{"sql":"CREATE UNIQUE INDEX t1x ON t1(b+3)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2) ON CONFLICT(b+?1) DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES\n    (11, printf('%.9000c','a')),\n    (11, printf('%.9000c','a')),\n    (33, printf('%.9000c','b')),\n    (33, printf('%.9000c','b'))"}
+{"sql":"CREATE TABLE t2(x INT UNIQUE, y TEXT)"}
+{"sql":"CREATE TRIGGER r1 BEFORE UPDATE ON t2 BEGIN\n    SELECT raise(ABORT,'Incorrect old.y value passed to trigger!')\n     WHERE old.y != new.y;\n    /* ^^^ This trigger will fire and cause the ABORT if the problem has\n    ** not been fixed, or if there is a regression. */\n  END"}
+{"sql":"INSERT INTO t2(x, y) SELECT x, y FROM t1\n   WHERE true\n   ON CONFLICT (x) DO UPDATE SET y = excluded.y"}

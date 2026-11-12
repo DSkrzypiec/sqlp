@@ -1,0 +1,276 @@
+{"sql":"select ''::textrange","shape":"SELECT ''::textrange;"}
+{"sql":"select '-[a,z)'::textrange","shape":"SELECT '-[a,z)'::textrange;"}
+{"sql":"select '[a,z) - '::textrange","shape":"SELECT '[a,z) - '::textrange;"}
+{"sql":"select '(\",a)'::textrange","shape":"SELECT '(\",a)'::textrange;"}
+{"sql":"select '(,,a)'::textrange","shape":"SELECT '(,,a)'::textrange;"}
+{"sql":"select '(),a)'::textrange","shape":"SELECT '(),a)'::textrange;"}
+{"sql":"select '(a,))'::textrange","shape":"SELECT '(a,))'::textrange;"}
+{"sql":"select '(],a)'::textrange","shape":"SELECT '(],a)'::textrange;"}
+{"sql":"select '(a,])'::textrange","shape":"SELECT '(a,])'::textrange;"}
+{"sql":"select '[z,a]'::textrange","shape":"SELECT '[z,a]'::textrange;"}
+{"sql":"select '  empty  '::textrange","shape":"SELECT '  empty  '::textrange;"}
+{"sql":"select ' ( empty, empty )  '::textrange","shape":"SELECT ' ( empty, empty )  '::textrange;"}
+{"sql":"select ' ( \" a \" \" a \", \" z \" \" z \" )  '::textrange","shape":"SELECT ' ( \" a \" \" a \", \" z \" \" z \" )  '::textrange;"}
+{"sql":"select '(a,)'::textrange","shape":"SELECT '(a,)'::textrange;"}
+{"sql":"select '[,z]'::textrange","shape":"SELECT '[,z]'::textrange;"}
+{"sql":"select '[a,]'::textrange","shape":"SELECT '[a,]'::textrange;"}
+{"sql":"select '(,)'::textrange","shape":"SELECT '(,)'::textrange;"}
+{"sql":"select '[ , ]'::textrange","shape":"SELECT '[ , ]'::textrange;"}
+{"sql":"select '[\"\",\"\"]'::textrange","shape":"SELECT '[\"\",\"\"]'::textrange;"}
+{"sql":"select '[\",\",\",\"]'::textrange","shape":"SELECT '[\",\",\",\"]'::textrange;"}
+{"sql":"select '[\"\\\\\",\"\\\\\"]'::textrange","shape":"SELECT '[\"\\\\\",\"\\\\\"]'::textrange;"}
+{"sql":"select '(\\\\,a)'::textrange","shape":"SELECT '(\\\\,a)'::textrange;"}
+{"sql":"select '((,z)'::textrange","shape":"SELECT '((,z)'::textrange;"}
+{"sql":"select '([,z)'::textrange","shape":"SELECT '([,z)'::textrange;"}
+{"sql":"select '(!,()'::textrange","shape":"SELECT '(!,()'::textrange;"}
+{"sql":"select '(!,[)'::textrange","shape":"SELECT '(!,[)'::textrange;"}
+{"sql":"select '[a,a]'::textrange","shape":"SELECT '[a,a]'::textrange;"}
+{"sql":"select '[a,a)'::textrange","shape":"SELECT '[a,a)'::textrange;"}
+{"sql":"select '(a,a]'::textrange","shape":"SELECT '(a,a]'::textrange;"}
+{"sql":"select '(a,a)'::textrange","shape":"SELECT '(a,a)'::textrange;"}
+{"sql":"select pg_input_is_valid('(1,4)', 'int4range')","shape":"SELECT pg_input_is_valid('(1,4)', 'int4range');"}
+{"sql":"select pg_input_is_valid('(1,4', 'int4range')","shape":"SELECT pg_input_is_valid('(1,4', 'int4range');"}
+{"sql":"select * from pg_input_error_info('(1,4', 'int4range')","shape":"SELECT * FROM pg_input_error_info('(1,4', 'int4range');"}
+{"sql":"select pg_input_is_valid('(4,1)', 'int4range')","shape":"SELECT pg_input_is_valid('(4,1)', 'int4range');"}
+{"sql":"select * from pg_input_error_info('(4,1)', 'int4range')","shape":"SELECT * FROM pg_input_error_info('(4,1)', 'int4range');"}
+{"sql":"select pg_input_is_valid('(4,zed)', 'int4range')","shape":"SELECT pg_input_is_valid('(4,zed)', 'int4range');"}
+{"sql":"select * from pg_input_error_info('(4,zed)', 'int4range')","shape":"SELECT * FROM pg_input_error_info('(4,zed)', 'int4range');"}
+{"sql":"select pg_input_is_valid('[1,2147483647]', 'int4range')","shape":"SELECT pg_input_is_valid('[1,2147483647]', 'int4range');"}
+{"sql":"select * from pg_input_error_info('[1,2147483647]', 'int4range')","shape":"SELECT * FROM pg_input_error_info('[1,2147483647]', 'int4range');"}
+{"sql":"select pg_input_is_valid('[2000-01-01,5874897-12-31]', 'daterange')","shape":"SELECT pg_input_is_valid('[2000-01-01,5874897-12-31]', 'daterange');"}
+{"sql":"select * from pg_input_error_info('[2000-01-01,5874897-12-31]', 'daterange')","shape":"SELECT * FROM pg_input_error_info('[2000-01-01,5874897-12-31]', 'daterange');"}
+{"sql":"CREATE TABLE numrange_test (nr NUMRANGE)","shape":"CREATE TABLE numrange_test (nr NUMRANGE);"}
+{"sql":"create index numrange_test_btree on numrange_test(nr)","shape":"CREATE INDEX numrange_test_btree ON numrange_test (nr);"}
+{"sql":"INSERT INTO numrange_test VALUES('[,)')","shape":"INSERT INTO numrange_test VALUES ('[,)');"}
+{"sql":"INSERT INTO numrange_test VALUES('[3,]')","shape":"INSERT INTO numrange_test VALUES ('[3,]');"}
+{"sql":"INSERT INTO numrange_test VALUES('[, 5)')","shape":"INSERT INTO numrange_test VALUES ('[, 5)');"}
+{"sql":"INSERT INTO numrange_test VALUES(numrange(1.1, 2.2))","shape":"INSERT INTO numrange_test VALUES (numrange(1.1, 2.2));"}
+{"sql":"INSERT INTO numrange_test VALUES('empty')","shape":"INSERT INTO numrange_test VALUES ('empty');"}
+{"sql":"INSERT INTO numrange_test VALUES(numrange(1.7, 1.7, '[]'))","shape":"INSERT INTO numrange_test VALUES (numrange(1.7, 1.7, '[]'));"}
+{"sql":"SELECT nr, isempty(nr), lower(nr), upper(nr) FROM numrange_test","shape":"SELECT nr, isempty(nr), lower(nr), upper(nr) FROM numrange_test;"}
+{"sql":"SELECT nr, lower_inc(nr), lower_inf(nr), upper_inc(nr), upper_inf(nr) FROM numrange_test","shape":"SELECT nr, lower_inc(nr), lower_inf(nr), upper_inc(nr), upper_inf(nr) FROM numrange_test;"}
+{"sql":"SELECT * FROM numrange_test WHERE range_contains(nr, numrange(1.9,1.91))","shape":"SELECT * FROM numrange_test WHERE range_contains(nr, numrange(1.9, 1.91));"}
+{"sql":"SELECT * FROM numrange_test WHERE nr @> numrange(1.0,10000.1)","shape":"SELECT * FROM numrange_test WHERE nr @> numrange(1.0, 10000.1);"}
+{"sql":"SELECT * FROM numrange_test WHERE range_contained_by(numrange(-1e7,-10000.1), nr)","shape":"SELECT * FROM numrange_test WHERE range_contained_by(numrange(-1e7, -10000.1), nr);"}
+{"sql":"SELECT * FROM numrange_test WHERE 1.9 <@ nr","shape":"SELECT * FROM numrange_test WHERE 1.9 <@ nr;"}
+{"sql":"select * from numrange_test where nr = 'empty'","shape":"SELECT * FROM numrange_test WHERE nr = 'empty';"}
+{"sql":"select * from numrange_test where nr = '(1.1, 2.2)'","shape":"SELECT * FROM numrange_test WHERE nr = '(1.1, 2.2)';"}
+{"sql":"select * from numrange_test where nr = '[1.1, 2.2)'","shape":"SELECT * FROM numrange_test WHERE nr = '[1.1, 2.2)';"}
+{"sql":"select * from numrange_test where nr < 'empty'","shape":"SELECT * FROM numrange_test WHERE nr < 'empty';"}
+{"sql":"select * from numrange_test where nr < numrange(-1000.0, -1000.0,'[]')","shape":"SELECT * FROM numrange_test WHERE nr < numrange(-1000.0, -1000.0, '[]');"}
+{"sql":"select * from numrange_test where nr < numrange(0.0, 1.0,'[]')","shape":"SELECT * FROM numrange_test WHERE nr < numrange(0.0, 1.0, '[]');"}
+{"sql":"select * from numrange_test where nr < numrange(1000.0, 1001.0,'[]')","shape":"SELECT * FROM numrange_test WHERE nr < numrange(1000.0, 1001.0, '[]');"}
+{"sql":"select * from numrange_test where nr <= 'empty'","shape":"SELECT * FROM numrange_test WHERE nr <= 'empty';"}
+{"sql":"select * from numrange_test where nr >= 'empty'","shape":"SELECT * FROM numrange_test WHERE nr >= 'empty';"}
+{"sql":"select * from numrange_test where nr > 'empty'","shape":"SELECT * FROM numrange_test WHERE nr > 'empty';"}
+{"sql":"select * from numrange_test where nr > numrange(-1001.0, -1000.0,'[]')","shape":"SELECT * FROM numrange_test WHERE nr > numrange(-1001.0, -1000.0, '[]');"}
+{"sql":"select * from numrange_test where nr > numrange(0.0, 1.0,'[]')","shape":"SELECT * FROM numrange_test WHERE nr > numrange(0.0, 1.0, '[]');"}
+{"sql":"select * from numrange_test where nr > numrange(1000.0, 1000.0,'[]')","shape":"SELECT * FROM numrange_test WHERE nr > numrange(1000.0, 1000.0, '[]');"}
+{"sql":"select numrange(2.0, 1.0)","shape":"SELECT numrange(2.0, 1.0);"}
+{"sql":"select numrange(2.0, 3.0) -|- numrange(3.0, 4.0)","shape":"SELECT numrange(2.0, 3.0) -|- numrange(3.0, 4.0);"}
+{"sql":"select range_adjacent(numrange(2.0, 3.0), numrange(3.1, 4.0))","shape":"SELECT range_adjacent(numrange(2.0, 3.0), numrange(3.1, 4.0));"}
+{"sql":"select range_adjacent(numrange(2.0, 3.0), numrange(3.1, null))","shape":"SELECT range_adjacent(numrange(2.0, 3.0), numrange(3.1, NULL));"}
+{"sql":"select numrange(2.0, 3.0, '[]') -|- numrange(3.0, 4.0, '()')","shape":"SELECT numrange(2.0, 3.0, '[]') -|- numrange(3.0, 4.0, '()');"}
+{"sql":"select numrange(1.0, 2.0) -|- numrange(2.0, 3.0,'[]')","shape":"SELECT numrange(1.0, 2.0) -|- numrange(2.0, 3.0, '[]');"}
+{"sql":"select range_adjacent(numrange(2.0, 3.0, '(]'), numrange(1.0, 2.0, '(]'))","shape":"SELECT range_adjacent(numrange(2.0, 3.0, '(]'), numrange(1.0, 2.0, '(]'));"}
+{"sql":"select numrange(1.1, 3.3) <@ numrange(0.1,10.1)","shape":"SELECT numrange(1.1, 3.3) <@ numrange(0.1, 10.1);"}
+{"sql":"select numrange(0.1, 10.1) <@ numrange(1.1,3.3)","shape":"SELECT numrange(0.1, 10.1) <@ numrange(1.1, 3.3);"}
+{"sql":"select numrange(1.1, 2.2) - numrange(2.0, 3.0)","shape":"SELECT numrange(1.1, 2.2) - numrange(2.0, 3.0);"}
+{"sql":"select numrange(1.1, 2.2) - numrange(2.2, 3.0)","shape":"SELECT numrange(1.1, 2.2) - numrange(2.2, 3.0);"}
+{"sql":"select numrange(1.1, 2.2,'[]') - numrange(2.0, 3.0)","shape":"SELECT numrange(1.1, 2.2, '[]') - numrange(2.0, 3.0);"}
+{"sql":"select range_minus(numrange(10.1,12.2,'[]'), numrange(110.0,120.2,'(]'))","shape":"SELECT range_minus(numrange(10.1, 12.2, '[]'), numrange(110.0, 120.2, '(]'));"}
+{"sql":"select range_minus(numrange(10.1,12.2,'[]'), numrange(0.0,120.2,'(]'))","shape":"SELECT range_minus(numrange(10.1, 12.2, '[]'), numrange(0.0, 120.2, '(]'));"}
+{"sql":"select numrange(4.5, 5.5, '[]') && numrange(5.5, 6.5)","shape":"SELECT numrange(4.5, 5.5, '[]') && numrange(5.5, 6.5);"}
+{"sql":"select numrange(1.0, 2.0) << numrange(3.0, 4.0)","shape":"SELECT numrange(1.0, 2.0) << numrange(3.0, 4.0);"}
+{"sql":"select numrange(1.0, 3.0,'[]') << numrange(3.0, 4.0,'[]')","shape":"SELECT numrange(1.0, 3.0, '[]') << numrange(3.0, 4.0, '[]');"}
+{"sql":"select numrange(1.0, 3.0,'()') << numrange(3.0, 4.0,'()')","shape":"SELECT numrange(1.0, 3.0, '()') << numrange(3.0, 4.0, '()');"}
+{"sql":"select numrange(1.0, 2.0) >> numrange(3.0, 4.0)","shape":"SELECT numrange(1.0, 2.0) >> numrange(3.0, 4.0);"}
+{"sql":"select numrange(3.0, 70.0) &< numrange(6.6, 100.0)","shape":"SELECT numrange(3.0, 70.0) &< numrange(6.6, 100.0);"}
+{"sql":"select numrange(1.1, 2.2) < numrange(1.0, 200.2)","shape":"SELECT numrange(1.1, 2.2) < numrange(1.0, 200.2);"}
+{"sql":"select numrange(1.1, 2.2) < numrange(1.1, 1.2)","shape":"SELECT numrange(1.1, 2.2) < numrange(1.1, 1.2);"}
+{"sql":"select numrange(1.0, 2.0) + numrange(2.0, 3.0)","shape":"SELECT numrange(1.0, 2.0) + numrange(2.0, 3.0);"}
+{"sql":"select numrange(1.0, 2.0) + numrange(1.5, 3.0)","shape":"SELECT numrange(1.0, 2.0) + numrange(1.5, 3.0);"}
+{"sql":"select numrange(1.0, 2.0) + numrange(2.5, 3.0)","shape":"SELECT numrange(1.0, 2.0) + numrange(2.5, 3.0);"}
+{"sql":"select range_merge(numrange(1.0, 2.0), numrange(2.0, 3.0))","shape":"SELECT range_merge(numrange(1.0, 2.0), numrange(2.0, 3.0));"}
+{"sql":"select range_merge(numrange(1.0, 2.0), numrange(1.5, 3.0))","shape":"SELECT range_merge(numrange(1.0, 2.0), numrange(1.5, 3.0));"}
+{"sql":"select range_merge(numrange(1.0, 2.0), numrange(2.5, 3.0))","shape":"SELECT range_merge(numrange(1.0, 2.0), numrange(2.5, 3.0));"}
+{"sql":"select numrange(1.0, 2.0) * numrange(2.0, 3.0)","shape":"SELECT numrange(1.0, 2.0) * numrange(2.0, 3.0);"}
+{"sql":"select numrange(1.0, 2.0) * numrange(1.5, 3.0)","shape":"SELECT numrange(1.0, 2.0) * numrange(1.5, 3.0);"}
+{"sql":"select numrange(1.0, 2.0) * numrange(2.5, 3.0)","shape":"SELECT numrange(1.0, 2.0) * numrange(2.5, 3.0);"}
+{"sql":"select range_intersect_agg(nr) from numrange_test","shape":"SELECT range_intersect_agg(nr) FROM numrange_test;"}
+{"sql":"select range_intersect_agg(nr) from numrange_test where false","shape":"SELECT range_intersect_agg(nr) FROM numrange_test WHERE FALSE;"}
+{"sql":"select range_intersect_agg(nr) from numrange_test where nr @> 4.0","shape":"SELECT range_intersect_agg(nr) FROM numrange_test WHERE nr @> 4.0;"}
+{"sql":"analyze numrange_test","shape":"ANALYZE numrange_test;"}
+{"sql":"create table numrange_test2(nr numrange)","shape":"CREATE TABLE numrange_test2 (nr numrange);"}
+{"sql":"create index numrange_test2_hash_idx on numrange_test2 using hash (nr)","shape":"CREATE INDEX numrange_test2_hash_idx ON numrange_test2 USING hash (nr);"}
+{"sql":"INSERT INTO numrange_test2 VALUES('[, 5)')","shape":"INSERT INTO numrange_test2 VALUES ('[, 5)');"}
+{"sql":"INSERT INTO numrange_test2 VALUES(numrange(1.1, 2.2))","shape":"INSERT INTO numrange_test2 VALUES (numrange(1.1, 2.2));"}
+{"sql":"INSERT INTO numrange_test2 VALUES(numrange(1.1, 2.2,'()'))","shape":"INSERT INTO numrange_test2 VALUES (numrange(1.1, 2.2, '()'));"}
+{"sql":"INSERT INTO numrange_test2 VALUES('empty')","shape":"INSERT INTO numrange_test2 VALUES ('empty');"}
+{"sql":"select * from numrange_test2 where nr = 'empty'::numrange","shape":"SELECT * FROM numrange_test2 WHERE nr = 'empty'::numrange;"}
+{"sql":"select * from numrange_test2 where nr = numrange(1.1, 2.2)","shape":"SELECT * FROM numrange_test2 WHERE nr = numrange(1.1, 2.2);"}
+{"sql":"select * from numrange_test2 where nr = numrange(1.1, 2.3)","shape":"SELECT * FROM numrange_test2 WHERE nr = numrange(1.1, 2.3);"}
+{"sql":"select * from numrange_test natural join numrange_test2 order by nr","shape":"SELECT * FROM numrange_test NATURAL JOIN numrange_test2 ORDER BY nr;"}
+{"sql":"DROP TABLE numrange_test2","shape":"DROP TABLE numrange_test2;"}
+{"sql":"CREATE TABLE textrange_test (tr textrange)","shape":"CREATE TABLE textrange_test (tr textrange);"}
+{"sql":"create index textrange_test_btree on textrange_test(tr)","shape":"CREATE INDEX textrange_test_btree ON textrange_test (tr);"}
+{"sql":"INSERT INTO textrange_test VALUES('[,)')","shape":"INSERT INTO textrange_test VALUES ('[,)');"}
+{"sql":"INSERT INTO textrange_test VALUES('[\"a\",]')","shape":"INSERT INTO textrange_test VALUES ('[\"a\",]');"}
+{"sql":"INSERT INTO textrange_test VALUES('[,\"q\")')","shape":"INSERT INTO textrange_test VALUES ('[,\"q\")');"}
+{"sql":"INSERT INTO textrange_test VALUES(textrange('b', 'g'))","shape":"INSERT INTO textrange_test VALUES (textrange('b', 'g'));"}
+{"sql":"INSERT INTO textrange_test VALUES('empty')","shape":"INSERT INTO textrange_test VALUES ('empty');"}
+{"sql":"INSERT INTO textrange_test VALUES(textrange('d', 'd', '[]'))","shape":"INSERT INTO textrange_test VALUES (textrange('d', 'd', '[]'));"}
+{"sql":"SELECT tr, isempty(tr), lower(tr), upper(tr) FROM textrange_test","shape":"SELECT tr, isempty(tr), lower(tr), upper(tr) FROM textrange_test;"}
+{"sql":"SELECT tr, lower_inc(tr), lower_inf(tr), upper_inc(tr), upper_inf(tr) FROM textrange_test","shape":"SELECT tr, lower_inc(tr), lower_inf(tr), upper_inc(tr), upper_inf(tr) FROM textrange_test;"}
+{"sql":"SELECT * FROM textrange_test WHERE range_contains(tr, textrange('f', 'fx'))","shape":"SELECT * FROM textrange_test WHERE range_contains(tr, textrange('f', 'fx'));"}
+{"sql":"SELECT * FROM textrange_test WHERE tr @> textrange('a', 'z')","shape":"SELECT * FROM textrange_test WHERE tr @> textrange('a', 'z');"}
+{"sql":"SELECT * FROM textrange_test WHERE range_contained_by(textrange('0','9'), tr)","shape":"SELECT * FROM textrange_test WHERE range_contained_by(textrange('0', '9'), tr);"}
+{"sql":"SELECT * FROM textrange_test WHERE 'e'::text <@ tr","shape":"SELECT * FROM textrange_test WHERE 'e'::text <@ tr;"}
+{"sql":"select * from textrange_test where tr = 'empty'","shape":"SELECT * FROM textrange_test WHERE tr = 'empty';"}
+{"sql":"select * from textrange_test where tr = '(\"b\",\"g\")'","shape":"SELECT * FROM textrange_test WHERE tr = '(\"b\",\"g\")';"}
+{"sql":"select * from textrange_test where tr = '[\"b\",\"g\")'","shape":"SELECT * FROM textrange_test WHERE tr = '[\"b\",\"g\")';"}
+{"sql":"select * from textrange_test where tr < 'empty'","shape":"SELECT * FROM textrange_test WHERE tr < 'empty';"}
+{"sql":"select int4range(1, 10, '[]')","shape":"SELECT int4range(1, 10, '[]');"}
+{"sql":"select int4range(1, 10, '[)')","shape":"SELECT int4range(1, 10, '[)');"}
+{"sql":"select int4range(1, 10, '(]')","shape":"SELECT int4range(1, 10, '(]');"}
+{"sql":"select int4range(1, 10, '()')","shape":"SELECT int4range(1, 10, '()');"}
+{"sql":"select int4range(1, 2, '()')","shape":"SELECT int4range(1, 2, '()');"}
+{"sql":"select daterange('2000-01-10'::date, '2000-01-20'::date, '[]')","shape":"SELECT daterange('2000-01-10'::date, '2000-01-20'::date, '[]');"}
+{"sql":"select daterange('2000-01-10'::date, '2000-01-20'::date, '[)')","shape":"SELECT daterange('2000-01-10'::date, '2000-01-20'::date, '[)');"}
+{"sql":"select daterange('2000-01-10'::date, '2000-01-20'::date, '(]')","shape":"SELECT daterange('2000-01-10'::date, '2000-01-20'::date, '(]');"}
+{"sql":"select daterange('2000-01-10'::date, '2000-01-20'::date, '()')","shape":"SELECT daterange('2000-01-10'::date, '2000-01-20'::date, '()');"}
+{"sql":"select daterange('2000-01-10'::date, '2000-01-11'::date, '()')","shape":"SELECT daterange('2000-01-10'::date, '2000-01-11'::date, '()');"}
+{"sql":"select daterange('2000-01-10'::date, '2000-01-11'::date, '(]')","shape":"SELECT daterange('2000-01-10'::date, '2000-01-11'::date, '(]');"}
+{"sql":"select daterange('-infinity'::date, '2000-01-01'::date, '()')","shape":"SELECT daterange('-infinity'::date, '2000-01-01'::date, '()');"}
+{"sql":"select daterange('-infinity'::date, '2000-01-01'::date, '[)')","shape":"SELECT daterange('-infinity'::date, '2000-01-01'::date, '[)');"}
+{"sql":"select daterange('2000-01-01'::date, 'infinity'::date, '[)')","shape":"SELECT daterange('2000-01-01'::date, 'infinity'::date, '[)');"}
+{"sql":"select daterange('2000-01-01'::date, 'infinity'::date, '[]')","shape":"SELECT daterange('2000-01-01'::date, 'infinity'::date, '[]');"}
+{"sql":"create table test_range_gist(ir int4range)","shape":"CREATE TABLE test_range_gist (ir int4range);"}
+{"sql":"create index test_range_gist_idx on test_range_gist using gist (ir)","shape":"CREATE INDEX test_range_gist_idx ON test_range_gist USING gist (ir);"}
+{"sql":"insert into test_range_gist select int4range(g, g+10) from generate_series(1,2000) g","shape":"INSERT INTO test_range_gist SELECT int4range(g, g + 10) FROM generate_series(1, 2000) AS g;"}
+{"sql":"insert into test_range_gist select 'empty'::int4range from generate_series(1,500) g","shape":"INSERT INTO test_range_gist SELECT 'empty'::int4range FROM generate_series(1, 500) AS g;"}
+{"sql":"insert into test_range_gist select int4range(g, g+10000) from generate_series(1,1000) g","shape":"INSERT INTO test_range_gist SELECT int4range(g, g + 10000) FROM generate_series(1, 1000) AS g;"}
+{"sql":"insert into test_range_gist select int4range(NULL,g*10,'(]') from generate_series(1,100) g","shape":"INSERT INTO test_range_gist SELECT int4range(NULL, g * 10, '(]') FROM generate_series(1, 100) AS g;"}
+{"sql":"insert into test_range_gist select int4range(g*10,NULL,'(]') from generate_series(1,100) g","shape":"INSERT INTO test_range_gist SELECT int4range(g * 10, NULL, '(]') FROM generate_series(1, 100) AS g;"}
+{"sql":"analyze test_range_gist","shape":"ANALYZE test_range_gist;"}
+{"sql":"select count(*) from test_range_gist where ir @> 'empty'::int4range","shape":"SELECT count(*) FROM test_range_gist WHERE ir @> 'empty'::int4range;"}
+{"sql":"select count(*) from test_range_gist where ir = int4range(10,20)","shape":"SELECT count(*) FROM test_range_gist WHERE ir = int4range(10, 20);"}
+{"sql":"select count(*) from test_range_gist where ir @> 10","shape":"SELECT count(*) FROM test_range_gist WHERE ir @> 10;"}
+{"sql":"select count(*) from test_range_gist where ir @> int4range(10,20)","shape":"SELECT count(*) FROM test_range_gist WHERE ir @> int4range(10, 20);"}
+{"sql":"select count(*) from test_range_gist where ir && int4range(10,20)","shape":"SELECT count(*) FROM test_range_gist WHERE ir && int4range(10, 20);"}
+{"sql":"select count(*) from test_range_gist where ir <@ int4range(10,50)","shape":"SELECT count(*) FROM test_range_gist WHERE ir <@ int4range(10, 50);"}
+{"sql":"select count(*) from test_range_gist where ir << int4range(100,500)","shape":"SELECT count(*) FROM test_range_gist WHERE ir << int4range(100, 500);"}
+{"sql":"select count(*) from test_range_gist where ir >> int4range(100,500)","shape":"SELECT count(*) FROM test_range_gist WHERE ir >> int4range(100, 500);"}
+{"sql":"select count(*) from test_range_gist where ir &< int4range(100,500)","shape":"SELECT count(*) FROM test_range_gist WHERE ir &< int4range(100, 500);"}
+{"sql":"select count(*) from test_range_gist where ir &> int4range(100,500)","shape":"SELECT count(*) FROM test_range_gist WHERE ir &> int4range(100, 500);"}
+{"sql":"select count(*) from test_range_gist where ir -|- int4range(100,500)","shape":"SELECT count(*) FROM test_range_gist WHERE ir -|- int4range(100, 500);"}
+{"sql":"select count(*) from test_range_gist where ir @> '{}'::int4multirange","shape":"SELECT count(*) FROM test_range_gist WHERE ir @> '{}'::int4multirange;"}
+{"sql":"select count(*) from test_range_gist where ir @> int4multirange(int4range(10,20), int4range(30,40))","shape":"SELECT count(*) FROM test_range_gist WHERE ir @> int4multirange(int4range(10, 20), int4range(30, 40));"}
+{"sql":"select count(*) from test_range_gist where ir && '{(10,20),(30,40),(50,60)}'::int4multirange","shape":"SELECT count(*) FROM test_range_gist WHERE ir && '{(10,20),(30,40),(50,60)}'::int4multirange;"}
+{"sql":"select count(*) from test_range_gist where ir <@ '{(10,30),(40,60),(70,90)}'::int4multirange","shape":"SELECT count(*) FROM test_range_gist WHERE ir <@ '{(10,30),(40,60),(70,90)}'::int4multirange;"}
+{"sql":"select count(*) from test_range_gist where ir << int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_range_gist WHERE ir << int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_range_gist where ir >> int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_range_gist WHERE ir >> int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_range_gist where ir &< int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_range_gist WHERE ir &< int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_range_gist where ir &> int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_range_gist WHERE ir &> int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"select count(*) from test_range_gist where ir -|- int4multirange(int4range(100,200), int4range(400,500))","shape":"SELECT count(*) FROM test_range_gist WHERE ir -|- int4multirange(int4range(100, 200), int4range(400, 500));"}
+{"sql":"drop index test_range_gist_idx","shape":"DROP INDEX test_range_gist_idx;"}
+{"sql":"create table test_range_spgist(ir int4range)","shape":"CREATE TABLE test_range_spgist (ir int4range);"}
+{"sql":"create index test_range_spgist_idx on test_range_spgist using spgist (ir)","shape":"CREATE INDEX test_range_spgist_idx ON test_range_spgist USING spgist (ir);"}
+{"sql":"insert into test_range_spgist select int4range(g, g+10) from generate_series(1,2000) g","shape":"INSERT INTO test_range_spgist SELECT int4range(g, g + 10) FROM generate_series(1, 2000) AS g;"}
+{"sql":"insert into test_range_spgist select 'empty'::int4range from generate_series(1,500) g","shape":"INSERT INTO test_range_spgist SELECT 'empty'::int4range FROM generate_series(1, 500) AS g;"}
+{"sql":"insert into test_range_spgist select int4range(g, g+10000) from generate_series(1,1000) g","shape":"INSERT INTO test_range_spgist SELECT int4range(g, g + 10000) FROM generate_series(1, 1000) AS g;"}
+{"sql":"insert into test_range_spgist select int4range(NULL,g*10,'(]') from generate_series(1,100) g","shape":"INSERT INTO test_range_spgist SELECT int4range(NULL, g * 10, '(]') FROM generate_series(1, 100) AS g;"}
+{"sql":"insert into test_range_spgist select int4range(g*10,NULL,'(]') from generate_series(1,100) g","shape":"INSERT INTO test_range_spgist SELECT int4range(g * 10, NULL, '(]') FROM generate_series(1, 100) AS g;"}
+{"sql":"select count(*) from test_range_spgist where ir @> 'empty'::int4range","shape":"SELECT count(*) FROM test_range_spgist WHERE ir @> 'empty'::int4range;"}
+{"sql":"select count(*) from test_range_spgist where ir = int4range(10,20)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir = int4range(10, 20);"}
+{"sql":"select count(*) from test_range_spgist where ir @> 10","shape":"SELECT count(*) FROM test_range_spgist WHERE ir @> 10;"}
+{"sql":"select count(*) from test_range_spgist where ir @> int4range(10,20)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir @> int4range(10, 20);"}
+{"sql":"select count(*) from test_range_spgist where ir && int4range(10,20)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir && int4range(10, 20);"}
+{"sql":"select count(*) from test_range_spgist where ir <@ int4range(10,50)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir <@ int4range(10, 50);"}
+{"sql":"select count(*) from test_range_spgist where ir << int4range(100,500)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir << int4range(100, 500);"}
+{"sql":"select count(*) from test_range_spgist where ir >> int4range(100,500)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir >> int4range(100, 500);"}
+{"sql":"select count(*) from test_range_spgist where ir &< int4range(100,500)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir &< int4range(100, 500);"}
+{"sql":"select count(*) from test_range_spgist where ir &> int4range(100,500)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir &> int4range(100, 500);"}
+{"sql":"select count(*) from test_range_spgist where ir -|- int4range(100,500)","shape":"SELECT count(*) FROM test_range_spgist WHERE ir -|- int4range(100, 500);"}
+{"sql":"drop index test_range_spgist_idx","shape":"DROP INDEX test_range_spgist_idx;"}
+{"sql":"explain (costs off)\nselect ir from test_range_spgist where ir -|- int4range(10,20) order by ir","shape":"EXPLAIN (COSTS off) SELECT ir FROM test_range_spgist WHERE ir -|- int4range(10, 20) ORDER BY ir;"}
+{"sql":"select ir from test_range_spgist where ir -|- int4range(10,20) order by ir","shape":"SELECT ir FROM test_range_spgist WHERE ir -|- int4range(10, 20) ORDER BY ir;"}
+{"sql":"create table test_range_elem(i int4)","shape":"CREATE TABLE test_range_elem (i int4);"}
+{"sql":"create index test_range_elem_idx on test_range_elem (i)","shape":"CREATE INDEX test_range_elem_idx ON test_range_elem (i);"}
+{"sql":"insert into test_range_elem select i from generate_series(1,100) i","shape":"INSERT INTO test_range_elem SELECT i FROM generate_series(1, 100) AS i;"}
+{"sql":"select count(*) from test_range_elem where i <@ int4range(10,50)","shape":"SELECT count(*) FROM test_range_elem WHERE i <@ int4range(10, 50);"}
+{"sql":"create index on test_range_elem using spgist(int4range(i,i+10))","shape":"CREATE INDEX ON test_range_elem USING spgist (int4range(i, i + 10));"}
+{"sql":"explain (costs off)\nselect count(*) from test_range_elem where int4range(i,i+10) <@ int4range(10,30)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM test_range_elem WHERE int4range(i, i + 10) <@ int4range(10, 30);"}
+{"sql":"select count(*) from test_range_elem where int4range(i,i+10) <@ int4range(10,30)","shape":"SELECT count(*) FROM test_range_elem WHERE int4range(i, i + 10) <@ int4range(10, 30);"}
+{"sql":"drop table test_range_elem","shape":"DROP TABLE test_range_elem;"}
+{"sql":"create table test_range_excl(\n  room int4range,\n  speaker int4range,\n  during tsrange,\n  exclude using gist (room with =, during with &&),\n  exclude using gist (speaker with =, during with &&)\n)","shape":"CREATE TABLE test_range_excl (room int4range, speaker int4range, during tsrange, EXCLUDE USING gist (room WITH =, during WITH &&), EXCLUDE USING gist (speaker WITH =, during WITH &&));"}
+{"sql":"insert into test_range_excl\n  values(int4range(123, 123, '[]'), int4range(1, 1, '[]'), '[2010-01-02 10:00, 2010-01-02 11:00)')","shape":"INSERT INTO test_range_excl VALUES (int4range(123, 123, '[]'), int4range(1, 1, '[]'), '[2010-01-02 10:00, 2010-01-02 11:00)');"}
+{"sql":"insert into test_range_excl\n  values(int4range(123, 123, '[]'), int4range(2, 2, '[]'), '[2010-01-02 11:00, 2010-01-02 12:00)')","shape":"INSERT INTO test_range_excl VALUES (int4range(123, 123, '[]'), int4range(2, 2, '[]'), '[2010-01-02 11:00, 2010-01-02 12:00)');"}
+{"sql":"insert into test_range_excl\n  values(int4range(123, 123, '[]'), int4range(3, 3, '[]'), '[2010-01-02 10:10, 2010-01-02 11:00)')","shape":"INSERT INTO test_range_excl VALUES (int4range(123, 123, '[]'), int4range(3, 3, '[]'), '[2010-01-02 10:10, 2010-01-02 11:00)');"}
+{"sql":"insert into test_range_excl\n  values(int4range(124, 124, '[]'), int4range(3, 3, '[]'), '[2010-01-02 10:10, 2010-01-02 11:10)')","shape":"INSERT INTO test_range_excl VALUES (int4range(124, 124, '[]'), int4range(3, 3, '[]'), '[2010-01-02 10:10, 2010-01-02 11:10)');"}
+{"sql":"insert into test_range_excl\n  values(int4range(125, 125, '[]'), int4range(1, 1, '[]'), '[2010-01-02 10:10, 2010-01-02 11:00)')","shape":"INSERT INTO test_range_excl VALUES (int4range(125, 125, '[]'), int4range(1, 1, '[]'), '[2010-01-02 10:10, 2010-01-02 11:00)');"}
+{"sql":"select int8range(10000000000::int8, 20000000000::int8,'(]')","shape":"SELECT int8range(10000000000::int8, 20000000000::int8, '(]');"}
+{"sql":"set timezone to '-08'","shape":"SET timezone TO '-08';"}
+{"sql":"select '[2010-01-01 01:00:00 -05, 2010-01-01 02:00:00 -08)'::tstzrange","shape":"SELECT '[2010-01-01 01:00:00 -05, 2010-01-01 02:00:00 -08)'::tstzrange;"}
+{"sql":"select '[2010-01-01 01:00:00 -08, 2010-01-01 02:00:00 -05)'::tstzrange","shape":"SELECT '[2010-01-01 01:00:00 -08, 2010-01-01 02:00:00 -05)'::tstzrange;"}
+{"sql":"set timezone to default","shape":"SET timezone TO DEFAULT;"}
+{"sql":"create type bogus_float8range as range (subtype=float8, subtype_diff=float4mi)"}
+{"sql":"select '[123.001, 5.e9)'::float8range @> 888.882::float8","shape":"SELECT '[123.001, 5.e9)'::float8range @> 888.882::float8;"}
+{"sql":"create table float8range_test(f8r float8range, i int)","shape":"CREATE TABLE float8range_test (f8r float8range, i int);"}
+{"sql":"insert into float8range_test values(float8range(-100.00007, '1.111113e9'), 42)","shape":"INSERT INTO float8range_test VALUES (float8range(-100.00007, '1.111113e9'), 42);"}
+{"sql":"select * from float8range_test","shape":"SELECT * FROM float8range_test;"}
+{"sql":"drop table float8range_test","shape":"DROP TABLE float8range_test;"}
+{"sql":"select '[4,50)'::mydomainrange @> 7::mydomain","shape":"SELECT '[4,50)'::mydomainrange @> 7::mydomain;"}
+{"sql":"drop domain mydomain","shape":"DROP DOMAIN mydomain;"}
+{"sql":"create domain restrictedrange as int4range check (upper(value) < 10)","shape":"CREATE DOMAIN restrictedrange AS int4range CHECK (upper(value) < 10);"}
+{"sql":"select '[4,5)'::restrictedrange @> 7","shape":"SELECT '[4,5)'::restrictedrange @> 7;"}
+{"sql":"select '[4,50)'::restrictedrange @> 7","shape":"SELECT '[4,50)'::restrictedrange @> 7;"}
+{"sql":"drop domain restrictedrange","shape":"DROP DOMAIN restrictedrange;"}
+{"sql":"create type textrange1 as range(subtype=text, collation=\"C\")"}
+{"sql":"create type textrange2 as range(subtype=text, collation=\"C\")"}
+{"sql":"select textrange1('a','Z') @> 'b'::text","shape":"SELECT textrange1('a', 'Z') @> 'b'::text;"}
+{"sql":"select textrange2('a','z') @> 'b'::text","shape":"SELECT textrange2('a', 'z') @> 'b'::text;"}
+{"sql":"create function anyarray_anyrange_func(a anyarray, r anyrange)\n  returns anyelement as 'select $1[1] + lower($2);' language sql","shape":"CREATE FUNCTION anyarray_anyrange_func(a anyarray, r anyrange) RETURNS anyelement AS 'select $1[1] + lower($2);' LANGUAGE sql;"}
+{"sql":"select anyarray_anyrange_func(ARRAY[1,2], int4range(10,20))","shape":"SELECT anyarray_anyrange_func(ARRAY[1, 2], int4range(10, 20));"}
+{"sql":"select anyarray_anyrange_func(ARRAY[1,2], numrange(10,20))","shape":"SELECT anyarray_anyrange_func(ARRAY[1, 2], numrange(10, 20));"}
+{"sql":"drop function anyarray_anyrange_func(anyarray, anyrange)"}
+{"sql":"create function bogus_func(anyelement)\n  returns anyrange as 'select int4range(1,10)' language sql","shape":"CREATE FUNCTION bogus_func(anyelement) RETURNS anyrange AS 'select int4range(1,10)' LANGUAGE sql;"}
+{"sql":"create function bogus_func(int)\n  returns anyrange as 'select int4range(1,10)' language sql","shape":"CREATE FUNCTION bogus_func(int) RETURNS anyrange AS 'select int4range(1,10)' LANGUAGE sql;"}
+{"sql":"create function range_add_bounds(anyrange)\n  returns anyelement as 'select lower($1) + upper($1)' language sql","shape":"CREATE FUNCTION range_add_bounds(anyrange) RETURNS anyelement AS 'select lower($1) + upper($1)' LANGUAGE sql;"}
+{"sql":"select range_add_bounds(int4range(1, 17))","shape":"SELECT range_add_bounds(int4range(1, 17));"}
+{"sql":"select range_add_bounds(numrange(1.0001, 123.123))","shape":"SELECT range_add_bounds(numrange(1.0001, 123.123));"}
+{"sql":"create function rangetypes_sql(q anyrange, b anyarray, out c anyelement)\n  as $$ select upper($1) + $2[1] $$\n  language sql","shape":"CREATE FUNCTION rangetypes_sql(q anyrange, b anyarray, OUT c anyelement) AS ' select upper($1) + $2[1] ' LANGUAGE sql;"}
+{"sql":"select rangetypes_sql(int4range(1,10), ARRAY[2,20])","shape":"SELECT rangetypes_sql(int4range(1, 10), ARRAY[2, 20]);"}
+{"sql":"select rangetypes_sql(numrange(1,10), ARRAY[2,20])","shape":"SELECT rangetypes_sql(numrange(1, 10), ARRAY[2, 20]);"}
+{"sql":"create function anycompatiblearray_anycompatiblerange_func(a anycompatiblearray, r anycompatiblerange)\n  returns anycompatible as 'select $1[1] + lower($2);' language sql","shape":"CREATE FUNCTION anycompatiblearray_anycompatiblerange_func(a anycompatiblearray, r anycompatiblerange) RETURNS anycompatible AS 'select $1[1] + lower($2);' LANGUAGE sql;"}
+{"sql":"select anycompatiblearray_anycompatiblerange_func(ARRAY[1,2], int4range(10,20))","shape":"SELECT anycompatiblearray_anycompatiblerange_func(ARRAY[1, 2], int4range(10, 20));"}
+{"sql":"select anycompatiblearray_anycompatiblerange_func(ARRAY[1,2], numrange(10,20))","shape":"SELECT anycompatiblearray_anycompatiblerange_func(ARRAY[1, 2], numrange(10, 20));"}
+{"sql":"select anycompatiblearray_anycompatiblerange_func(ARRAY[1.1,2], int4range(10,20))","shape":"SELECT anycompatiblearray_anycompatiblerange_func(ARRAY[1.1, 2], int4range(10, 20));"}
+{"sql":"drop function anycompatiblearray_anycompatiblerange_func(anycompatiblearray, anycompatiblerange)"}
+{"sql":"select ARRAY[numrange(1.1, 1.2), numrange(12.3, 155.5)]","shape":"SELECT ARRAY[numrange(1.1, 1.2), numrange(12.3, 155.5)];"}
+{"sql":"create table i8r_array (f1 int, f2 int8range[])","shape":"CREATE TABLE i8r_array (f1 int, f2 int8range[]);"}
+{"sql":"insert into i8r_array values (42, array[int8range(1,10), int8range(2,20)])","shape":"INSERT INTO i8r_array VALUES (42, ARRAY[int8range(1, 10), int8range(2, 20)]);"}
+{"sql":"select * from i8r_array","shape":"SELECT * FROM i8r_array;"}
+{"sql":"drop table i8r_array","shape":"DROP TABLE i8r_array;"}
+{"sql":"create type arrayrange as range (subtype=int4[])"}
+{"sql":"select arrayrange(ARRAY[1,2], ARRAY[2,1])","shape":"SELECT arrayrange(ARRAY[1, 2], ARRAY[2, 1]);"}
+{"sql":"select arrayrange(ARRAY[2,1], ARRAY[1,2])","shape":"SELECT arrayrange(ARRAY[2, 1], ARRAY[1, 2]);"}
+{"sql":"select array[1,1] <@ arrayrange(array[1,2], array[2,1])","shape":"SELECT ARRAY[1, 1] <@ arrayrange(ARRAY[1, 2], ARRAY[2, 1]);"}
+{"sql":"select array[1,3] <@ arrayrange(array[1,2], array[2,1])","shape":"SELECT ARRAY[1, 3] <@ arrayrange(ARRAY[1, 2], ARRAY[2, 1]);"}
+{"sql":"select *, row_to_json(upper(t)) as u from\n  (values (two_ints_range(row(1,2), row(3,4))),\n          (two_ints_range(row(5,6), row(7,8)))) v(t)","shape":"SELECT *, row_to_json(upper(t)) AS u FROM (VALUES (two_ints_range(ROW(1, 2), ROW(3, 4))), (two_ints_range(ROW(5, 6), ROW(7, 8)))) AS v(t);"}
+{"sql":"alter type two_ints add attribute c two_ints_range"}
+{"sql":"create type cashrange as range (subtype = money)"}
+{"sql":"select '(2,5)'::cashrange except select '(5,6)'::cashrange","shape":"SELECT '(2,5)'::cashrange EXCEPT SELECT '(5,6)'::cashrange;"}
+{"sql":"create function outparam_succeed(i anyrange, out r anyrange, out t text)\n  as $$ select $1, 'foo'::text $$ language sql","shape":"CREATE FUNCTION outparam_succeed(i anyrange, OUT r anyrange, OUT t text) AS ' select $1, ''foo''::text ' LANGUAGE sql;"}
+{"sql":"select * from outparam_succeed(int4range(1,2))","shape":"SELECT * FROM outparam_succeed(int4range(1, 2));"}
+{"sql":"create function outparam2_succeed(r anyrange, out lu anyarray, out ul anyarray)\n  as $$ select array[lower($1), upper($1)], array[upper($1), lower($1)] $$\n  language sql","shape":"CREATE FUNCTION outparam2_succeed(r anyrange, OUT lu anyarray, OUT ul anyarray) AS ' select array[lower($1), upper($1)], array[upper($1), lower($1)] ' LANGUAGE sql;"}
+{"sql":"select * from outparam2_succeed(int4range(1,11))","shape":"SELECT * FROM outparam2_succeed(int4range(1, 11));"}
+{"sql":"create function outparam_succeed2(i anyrange, out r anyarray, out t text)\n  as $$ select ARRAY[upper($1)], 'foo'::text $$ language sql","shape":"CREATE FUNCTION outparam_succeed2(i anyrange, OUT r anyarray, OUT t text) AS ' select ARRAY[upper($1)], ''foo''::text ' LANGUAGE sql;"}
+{"sql":"select * from outparam_succeed2(int4range(int4range(1,2)))","shape":"SELECT * FROM outparam_succeed2(int4range(int4range(1, 2)));"}
+{"sql":"create function inoutparam_succeed(out i anyelement, inout r anyrange)\n  as $$ select upper($1), $1 $$ language sql","shape":"CREATE FUNCTION inoutparam_succeed(OUT i anyelement, INOUT r anyrange) AS ' select upper($1), $1 ' LANGUAGE sql;"}
+{"sql":"select * from inoutparam_succeed(int4range(1,2))","shape":"SELECT * FROM inoutparam_succeed(int4range(1, 2));"}
+{"sql":"create function table_succeed(r anyrange)\n  returns table(l anyelement, u anyelement)\n  as $$ select lower($1), upper($1) $$\n  language sql","shape":"CREATE FUNCTION table_succeed(r anyrange) RETURNS TABLE (l anyelement, u anyelement) AS ' select lower($1), upper($1) ' LANGUAGE sql;"}
+{"sql":"select * from table_succeed(int4range(1,11))","shape":"SELECT * FROM table_succeed(int4range(1, 11));"}
+{"sql":"create function outparam_fail(i anyelement, out r anyrange, out t text)\n  as $$ select '[1,10]', 'foo' $$ language sql","shape":"CREATE FUNCTION outparam_fail(i anyelement, OUT r anyrange, OUT t text) AS ' select ''[1,10]'', ''foo'' ' LANGUAGE sql;"}
+{"sql":"create function inoutparam_fail(inout i anyelement, out r anyrange)\n  as $$ select $1, '[1,10]' $$ language sql","shape":"CREATE FUNCTION inoutparam_fail(INOUT i anyelement, OUT r anyrange) AS ' select $1, ''[1,10]'' ' LANGUAGE sql;"}
+{"sql":"create function table_fail(i anyelement) returns table(i anyelement, r anyrange)\n  as $$ select $1, '[1,10]' $$ language sql","shape":"CREATE FUNCTION table_fail(i anyelement) RETURNS TABLE (i anyelement, r anyrange) AS ' select $1, ''[1,10]'' ' LANGUAGE sql;"}

@@ -1,0 +1,65 @@
+{"sql":"SELECT ''::text AS two, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 > 50\n\t\tORDER BY unique1 LIMIT 2","shape":"SELECT ''::text AS two, unique1, unique2, stringu1 FROM onek WHERE unique1 > 50 ORDER BY unique1 LIMIT 2;"}
+{"sql":"SELECT ''::text AS five, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 > 60\n\t\tORDER BY unique1 LIMIT 5","shape":"SELECT ''::text AS five, unique1, unique2, stringu1 FROM onek WHERE unique1 > 60 ORDER BY unique1 LIMIT 5;"}
+{"sql":"SELECT ''::text AS two, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 > 60 AND unique1 < 63\n\t\tORDER BY unique1 LIMIT 5","shape":"SELECT ''::text AS two, unique1, unique2, stringu1 FROM onek WHERE (unique1 > 60) AND (unique1 < 63) ORDER BY unique1 LIMIT 5;"}
+{"sql":"SELECT ''::text AS three, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 > 100\n\t\tORDER BY unique1 LIMIT 3 OFFSET 20","shape":"SELECT ''::text AS three, unique1, unique2, stringu1 FROM onek WHERE unique1 > 100 ORDER BY unique1 LIMIT 3 OFFSET 20;"}
+{"sql":"SELECT ''::text AS zero, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 < 50\n\t\tORDER BY unique1 DESC LIMIT 8 OFFSET 99","shape":"SELECT ''::text AS zero, unique1, unique2, stringu1 FROM onek WHERE unique1 < 50 ORDER BY unique1 DESC LIMIT 8 OFFSET 99;"}
+{"sql":"SELECT ''::text AS eleven, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 < 50\n\t\tORDER BY unique1 DESC LIMIT 20 OFFSET 39","shape":"SELECT ''::text AS eleven, unique1, unique2, stringu1 FROM onek WHERE unique1 < 50 ORDER BY unique1 DESC LIMIT 20 OFFSET 39;"}
+{"sql":"SELECT ''::text AS ten, unique1, unique2, stringu1\n\t\tFROM onek\n\t\tORDER BY unique1 OFFSET 990","shape":"SELECT ''::text AS ten, unique1, unique2, stringu1 FROM onek ORDER BY unique1 OFFSET 990;"}
+{"sql":"SELECT ''::text AS five, unique1, unique2, stringu1\n\t\tFROM onek\n\t\tORDER BY unique1 OFFSET 990 LIMIT 5","shape":"SELECT ''::text AS five, unique1, unique2, stringu1 FROM onek ORDER BY unique1 LIMIT 5 OFFSET 990;"}
+{"sql":"SELECT ''::text AS five, unique1, unique2, stringu1\n\t\tFROM onek\n\t\tORDER BY unique1 LIMIT 5 OFFSET 900","shape":"SELECT ''::text AS five, unique1, unique2, stringu1 FROM onek ORDER BY unique1 LIMIT 5 OFFSET 900;"}
+{"sql":"select * from int8_tbl limit (case when random() < 0.5 then null::bigint end)","shape":"SELECT * FROM int8_tbl LIMIT (CASE WHEN random() < 0.5 THEN NULL::bigint END);"}
+{"sql":"select * from int8_tbl offset (case when random() < 0.5 then null::bigint end)","shape":"SELECT * FROM int8_tbl OFFSET (CASE WHEN random() < 0.5 THEN NULL::bigint END);"}
+{"sql":"declare c1 cursor for select * from int8_tbl limit 10","shape":"declare c1 cursor for select * from int8_tbl limit 10;"}
+{"sql":"fetch all in c1","shape":"fetch all in c1;"}
+{"sql":"fetch 1 in c1","shape":"fetch 1 in c1;"}
+{"sql":"fetch backward 1 in c1","shape":"fetch backward 1 in c1;"}
+{"sql":"fetch backward all in c1","shape":"fetch backward all in c1;"}
+{"sql":"declare c2 cursor for select * from int8_tbl limit 3","shape":"declare c2 cursor for select * from int8_tbl limit 3;"}
+{"sql":"fetch all in c2","shape":"fetch all in c2;"}
+{"sql":"fetch 1 in c2","shape":"fetch 1 in c2;"}
+{"sql":"fetch backward 1 in c2","shape":"fetch backward 1 in c2;"}
+{"sql":"fetch backward all in c2","shape":"fetch backward all in c2;"}
+{"sql":"declare c3 cursor for select * from int8_tbl offset 3","shape":"declare c3 cursor for select * from int8_tbl offset 3;"}
+{"sql":"fetch all in c3","shape":"fetch all in c3;"}
+{"sql":"fetch 1 in c3","shape":"fetch 1 in c3;"}
+{"sql":"fetch backward 1 in c3","shape":"fetch backward 1 in c3;"}
+{"sql":"fetch backward all in c3","shape":"fetch backward all in c3;"}
+{"sql":"declare c4 cursor for select * from int8_tbl offset 10","shape":"declare c4 cursor for select * from int8_tbl offset 10;"}
+{"sql":"fetch all in c4","shape":"fetch all in c4;"}
+{"sql":"fetch 1 in c4","shape":"fetch 1 in c4;"}
+{"sql":"fetch backward 1 in c4","shape":"fetch backward 1 in c4;"}
+{"sql":"fetch backward all in c4","shape":"fetch backward all in c4;"}
+{"sql":"declare c5 cursor for select * from int8_tbl order by q1 fetch first 2 rows with ties","shape":"declare c5 cursor for select * from int8_tbl order by q1 fetch first 2 rows with ties;"}
+{"sql":"fetch all in c5","shape":"fetch all in c5;"}
+{"sql":"fetch 1 in c5","shape":"fetch 1 in c5;"}
+{"sql":"fetch backward 1 in c5","shape":"fetch backward 1 in c5;"}
+{"sql":"fetch backward all in c5","shape":"fetch backward all in c5;"}
+{"sql":"SELECT\n  (SELECT n\n     FROM (VALUES (1)) AS x,\n          (SELECT n FROM generate_series(1,10) AS n\n             ORDER BY n LIMIT 1 OFFSET s-1) AS y) AS z\n  FROM generate_series(1,10) AS s","shape":"SELECT (SELECT n FROM (VALUES (1)) AS x, (SELECT n FROM generate_series(1, 10) AS n ORDER BY n LIMIT 1 OFFSET s - 1) AS y) AS z FROM generate_series(1, 10) AS s;"}
+{"sql":"create temp sequence testseq","shape":"CREATE TEMPORARY SEQUENCE testseq;"}
+{"sql":"explain (verbose, costs off)\nselect unique1, unique2, nextval('testseq')\n  from tenk1 order by unique2 limit 10","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT unique1, unique2, nextval('testseq') FROM tenk1 ORDER BY unique2 LIMIT 10;"}
+{"sql":"select unique1, unique2, nextval('testseq')\n  from tenk1 order by unique2 limit 10","shape":"SELECT unique1, unique2, nextval('testseq') FROM tenk1 ORDER BY unique2 LIMIT 10;"}
+{"sql":"select currval('testseq')","shape":"SELECT currval('testseq');"}
+{"sql":"explain (verbose, costs off)\nselect unique1, unique2, nextval('testseq')\n  from tenk1 order by tenthous limit 10","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT unique1, unique2, nextval('testseq') FROM tenk1 ORDER BY tenthous LIMIT 10;"}
+{"sql":"select unique1, unique2, nextval('testseq')\n  from tenk1 order by tenthous limit 10","shape":"SELECT unique1, unique2, nextval('testseq') FROM tenk1 ORDER BY tenthous LIMIT 10;"}
+{"sql":"explain (verbose, costs off)\nselect unique1, unique2, generate_series(1,10)\n  from tenk1 order by unique2 limit 7","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT unique1, unique2, generate_series(1, 10) FROM tenk1 ORDER BY unique2 LIMIT 7;"}
+{"sql":"select unique1, unique2, generate_series(1,10)\n  from tenk1 order by unique2 limit 7","shape":"SELECT unique1, unique2, generate_series(1, 10) FROM tenk1 ORDER BY unique2 LIMIT 7;"}
+{"sql":"explain (verbose, costs off)\nselect unique1, unique2, generate_series(1,10)\n  from tenk1 order by tenthous limit 7","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT unique1, unique2, generate_series(1, 10) FROM tenk1 ORDER BY tenthous LIMIT 7;"}
+{"sql":"select unique1, unique2, generate_series(1,10)\n  from tenk1 order by tenthous limit 7","shape":"SELECT unique1, unique2, generate_series(1, 10) FROM tenk1 ORDER BY tenthous LIMIT 7;"}
+{"sql":"explain (verbose, costs off)\nselect generate_series(0,2) as s1, generate_series((random()*.1)::int,2) as s2","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT generate_series(0, 2) AS s1, generate_series((random() * .1)::int, 2) AS s2;"}
+{"sql":"select generate_series(0,2) as s1, generate_series((random()*.1)::int,2) as s2","shape":"SELECT generate_series(0, 2) AS s1, generate_series((random() * .1)::int, 2) AS s2;"}
+{"sql":"explain (verbose, costs off)\nselect generate_series(0,2) as s1, generate_series((random()*.1)::int,2) as s2\norder by s2 desc","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT generate_series(0, 2) AS s1, generate_series((random() * .1)::int, 2) AS s2 ORDER BY s2 DESC;"}
+{"sql":"select generate_series(0,2) as s1, generate_series((random()*.1)::int,2) as s2\norder by s2 desc","shape":"SELECT generate_series(0, 2) AS s1, generate_series((random() * .1)::int, 2) AS s2 ORDER BY s2 DESC;"}
+{"sql":"explain (verbose, costs off)\nselect sum(tenthous) as s1, sum(tenthous) + random()*0 as s2\n  from tenk1 group by thousand order by thousand limit 3","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT sum(tenthous) AS s1, sum(tenthous) + (random() * 0) AS s2 FROM tenk1 GROUP BY thousand ORDER BY thousand LIMIT 3;"}
+{"sql":"select sum(tenthous) as s1, sum(tenthous) + random()*0 as s2\n  from tenk1 group by thousand order by thousand limit 3","shape":"SELECT sum(tenthous) AS s1, sum(tenthous) + (random() * 0) AS s2 FROM tenk1 GROUP BY thousand ORDER BY thousand LIMIT 3;"}
+{"sql":"SELECT  thousand\n\t\tFROM onek WHERE thousand < 5\n\t\tORDER BY thousand FETCH FIRST 2 ROW WITH TIES","shape":"SELECT thousand FROM onek WHERE thousand < 5 ORDER BY thousand FETCH FIRST 2 ROWS WITH TIES;"}
+{"sql":"SELECT  thousand\n\t\tFROM onek WHERE thousand < 5\n\t\tORDER BY thousand FETCH FIRST ROWS WITH TIES","shape":"SELECT thousand FROM onek WHERE thousand < 5 ORDER BY thousand FETCH FIRST ROWS WITH TIES;"}
+{"sql":"SELECT  thousand\n\t\tFROM onek WHERE thousand < 5\n\t\tORDER BY thousand FETCH FIRST 1 ROW WITH TIES","shape":"SELECT thousand FROM onek WHERE thousand < 5 ORDER BY thousand FETCH FIRST 1 ROWS WITH TIES;"}
+{"sql":"SELECT  thousand\n\t\tFROM onek WHERE thousand < 5\n\t\tORDER BY thousand FETCH FIRST 2 ROW ONLY","shape":"SELECT thousand FROM onek WHERE thousand < 5 ORDER BY thousand FETCH FIRST 2 ROWS ONLY;"}
+{"sql":"SELECT  thousand\n\t\tFROM onek WHERE thousand < 5\n\t\tORDER BY thousand FETCH FIRST 1 ROW WITH TIES FOR UPDATE SKIP LOCKED","reject":true}
+{"sql":"SELECT ''::text AS two, unique1, unique2, stringu1\n\t\tFROM onek WHERE unique1 > 50\n\t\tFETCH FIRST 2 ROW WITH TIES","reject":true}
+{"sql":"CREATE VIEW limit_thousand_v_1 AS SELECT thousand FROM onek WHERE thousand < 995\n\t\tORDER BY thousand FETCH FIRST 5 ROWS WITH TIES OFFSET 10","shape":"CREATE VIEW limit_thousand_v_1 AS SELECT thousand FROM onek WHERE thousand < 995 ORDER BY thousand OFFSET 10 ROWS FETCH FIRST 5 ROWS WITH TIES;"}
+{"sql":"CREATE VIEW limit_thousand_v_2 AS SELECT thousand FROM onek WHERE thousand < 995\n\t\tORDER BY thousand OFFSET 10 FETCH FIRST 5 ROWS ONLY","shape":"CREATE VIEW limit_thousand_v_2 AS SELECT thousand FROM onek WHERE thousand < 995 ORDER BY thousand OFFSET 10 ROWS FETCH FIRST 5 ROWS ONLY;"}
+{"sql":"CREATE VIEW limit_thousand_v_3 AS SELECT thousand FROM onek WHERE thousand < 995\n\t\tORDER BY thousand FETCH FIRST NULL ROWS WITH TIES","shape":"CREATE VIEW limit_thousand_v_3 AS SELECT thousand FROM onek WHERE thousand < 995 ORDER BY thousand FETCH FIRST NULL ROWS WITH TIES;"}
+{"sql":"CREATE VIEW limit_thousand_v_3 AS SELECT thousand FROM onek WHERE thousand < 995\n\t\tORDER BY thousand FETCH FIRST (NULL+1) ROWS WITH TIES","shape":"CREATE VIEW limit_thousand_v_3 AS SELECT thousand FROM onek WHERE thousand < 995 ORDER BY thousand FETCH FIRST (NULL + 1) ROWS WITH TIES;"}
+{"sql":"CREATE VIEW limit_thousand_v_4 AS SELECT thousand FROM onek WHERE thousand < 995\n\t\tORDER BY thousand FETCH FIRST (5::bigint) ROWS WITH TIES","shape":"CREATE VIEW limit_thousand_v_4 AS SELECT thousand FROM onek WHERE thousand < 995 ORDER BY thousand FETCH FIRST (5::bigint) ROWS WITH TIES;"}
+{"sql":"CREATE VIEW limit_thousand_v_5 AS SELECT thousand FROM onek WHERE thousand < 995\n\t\tORDER BY thousand FETCH FIRST NULL ROWS ONLY","shape":"CREATE VIEW limit_thousand_v_5 AS SELECT thousand FROM onek WHERE thousand < 995 ORDER BY thousand FETCH FIRST NULL ROWS ONLY;"}

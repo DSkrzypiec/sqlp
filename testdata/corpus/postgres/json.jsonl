@@ -1,0 +1,443 @@
+{"sql":"SELECT '\"\"'::json","shape":"SELECT '\"\"'::json;"}
+{"sql":"SELECT $$''$$::json","shape":"SELECT ''''''::json;"}
+{"sql":"SELECT '\"abc\"'::json","shape":"SELECT '\"abc\"'::json;"}
+{"sql":"SELECT '\"abc'::json","shape":"SELECT '\"abc'::json;"}
+{"sql":"SELECT '\"abc\ndef\"'::json","shape":"SELECT '\"abc\ndef\"'::json;"}
+{"sql":"SELECT '\"\\n\\\"\\\\\"'::json","shape":"SELECT '\"\\n\\\"\\\\\"'::json;"}
+{"sql":"SELECT '\"\\v\"'::json","shape":"SELECT '\"\\v\"'::json;"}
+{"sql":"SELECT ('\"'||repeat('.', 12)||'abc\"')::json","shape":"SELECT (('\"' || repeat('.', 12)) || 'abc\"')::json;"}
+{"sql":"SELECT ('\"'||repeat('.', 12)||'abc\\n\"')::json","shape":"SELECT (('\"' || repeat('.', 12)) || 'abc\\n\"')::json;"}
+{"sql":"SELECT '1'::json","shape":"SELECT '1'::json;"}
+{"sql":"SELECT '0'::json","shape":"SELECT '0'::json;"}
+{"sql":"SELECT '01'::json","shape":"SELECT '01'::json;"}
+{"sql":"SELECT '0.1'::json","shape":"SELECT '0.1'::json;"}
+{"sql":"SELECT '9223372036854775808'::json","shape":"SELECT '9223372036854775808'::json;"}
+{"sql":"SELECT '1e100'::json","shape":"SELECT '1e100'::json;"}
+{"sql":"SELECT '1.3e100'::json","shape":"SELECT '1.3e100'::json;"}
+{"sql":"SELECT '1f2'::json","shape":"SELECT '1f2'::json;"}
+{"sql":"SELECT '0.x1'::json","shape":"SELECT '0.x1'::json;"}
+{"sql":"SELECT '1.3ex100'::json","shape":"SELECT '1.3ex100'::json;"}
+{"sql":"SELECT '[]'::json","shape":"SELECT '[]'::json;"}
+{"sql":"SELECT '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]'::json","shape":"SELECT '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]'::json;"}
+{"sql":"SELECT '[1,2]'::json","shape":"SELECT '[1,2]'::json;"}
+{"sql":"SELECT '[1,2,]'::json","shape":"SELECT '[1,2,]'::json;"}
+{"sql":"SELECT '[1,2'::json","shape":"SELECT '[1,2'::json;"}
+{"sql":"SELECT '[1,[2]'::json","shape":"SELECT '[1,[2]'::json;"}
+{"sql":"SELECT '{}'::json","shape":"SELECT '{}'::json;"}
+{"sql":"SELECT '{\"abc\"}'::json","shape":"SELECT '{\"abc\"}'::json;"}
+{"sql":"SELECT '{\"abc\":1}'::json","shape":"SELECT '{\"abc\":1}'::json;"}
+{"sql":"SELECT '{1:\"abc\"}'::json","shape":"SELECT '{1:\"abc\"}'::json;"}
+{"sql":"SELECT '{\"abc\",1}'::json","shape":"SELECT '{\"abc\",1}'::json;"}
+{"sql":"SELECT '{\"abc\"=1}'::json","shape":"SELECT '{\"abc\"=1}'::json;"}
+{"sql":"SELECT '{\"abc\"::1}'::json","shape":"SELECT '{\"abc\"::1}'::json;"}
+{"sql":"SELECT '{\"abc\":1,\"def\":2,\"ghi\":[3,4],\"hij\":{\"klm\":5,\"nop\":[6]}}'::json","shape":"SELECT '{\"abc\":1,\"def\":2,\"ghi\":[3,4],\"hij\":{\"klm\":5,\"nop\":[6]}}'::json;"}
+{"sql":"SELECT '{\"abc\":1:2}'::json","shape":"SELECT '{\"abc\":1:2}'::json;"}
+{"sql":"SELECT '{\"abc\":1,3}'::json","shape":"SELECT '{\"abc\":1,3}'::json;"}
+{"sql":"SET max_stack_depth = '100kB'","shape":"SET max_stack_depth TO '100kB';"}
+{"sql":"SELECT repeat('[', 10000)::json","shape":"SELECT repeat('[', 10000)::json;"}
+{"sql":"SELECT repeat('{\"a\":', 10000)::json","shape":"SELECT repeat('{\"a\":', 10000)::json;"}
+{"sql":"RESET max_stack_depth","shape":"RESET max_stack_depth;"}
+{"sql":"SELECT 'true'::json","shape":"SELECT 'true'::json;"}
+{"sql":"SELECT 'false'::json","shape":"SELECT 'false'::json;"}
+{"sql":"SELECT 'null'::json","shape":"SELECT 'null'::json;"}
+{"sql":"SELECT ' true '::json","shape":"SELECT ' true '::json;"}
+{"sql":"SELECT 'true false'::json","shape":"SELECT 'true false'::json;"}
+{"sql":"SELECT 'true, false'::json","shape":"SELECT 'true, false'::json;"}
+{"sql":"SELECT 'truf'::json","shape":"SELECT 'truf'::json;"}
+{"sql":"SELECT 'trues'::json","shape":"SELECT 'trues'::json;"}
+{"sql":"SELECT ''::json","shape":"SELECT ''::json;"}
+{"sql":"SELECT '    '::json","shape":"SELECT '    '::json;"}
+{"sql":"SELECT '{\n\t\t\"one\": 1,\n\t\t\"two\":\"two\",\n\t\t\"three\":\n\t\ttrue}'::json","shape":"SELECT '{\n\t\t\"one\": 1,\n\t\t\"two\":\"two\",\n\t\t\"three\":\n\t\ttrue}'::json;"}
+{"sql":"SELECT '{\n\t\t\"one\": 1,\n\t\t\"two\":,\"two\",  -- ERROR extraneous comma before field \"two\"\n\t\t\"three\":\n\t\ttrue}'::json","shape":"SELECT '{\n\t\t\"one\": 1,\n\t\t\"two\":,\"two\",  -- ERROR extraneous comma before field \"two\"\n\t\t\"three\":\n\t\ttrue}'::json;"}
+{"sql":"SELECT '{\n\t\t\"one\": 1,\n\t\t\"two\":\"two\",\n\t\t\"averyveryveryveryveryveryveryveryveryverylongfieldname\":}'::json","shape":"SELECT '{\n\t\t\"one\": 1,\n\t\t\"two\":\"two\",\n\t\t\"averyveryveryveryveryveryveryveryveryverylongfieldname\":}'::json;"}
+{"sql":"select pg_input_is_valid('{\"a\":true}', 'json')","shape":"SELECT pg_input_is_valid('{\"a\":true}', 'json');"}
+{"sql":"select pg_input_is_valid('{\"a\":true', 'json')","shape":"SELECT pg_input_is_valid('{\"a\":true', 'json');"}
+{"sql":"select * from pg_input_error_info('{\"a\":true', 'json')","shape":"SELECT * FROM pg_input_error_info('{\"a\":true', 'json');"}
+{"sql":"SELECT array_to_json(array(select 1 as a))","shape":"SELECT array_to_json(ARRAY(SELECT 1 AS a));"}
+{"sql":"SELECT array_to_json(array_agg(q),false) from (select x as b, x * 2 as c from generate_series(1,3) x) q","shape":"SELECT array_to_json(array_agg(q), FALSE) FROM (SELECT x AS b, x * 2 AS c FROM generate_series(1, 3) AS x) AS q;"}
+{"sql":"SELECT array_to_json(array_agg(q),true) from (select x as b, x * 2 as c from generate_series(1,3) x) q","shape":"SELECT array_to_json(array_agg(q), TRUE) FROM (SELECT x AS b, x * 2 AS c FROM generate_series(1, 3) AS x) AS q;"}
+{"sql":"SELECT array_to_json(array_agg(q),false)\n  FROM ( SELECT $$a$$ || x AS b, y AS c,\n               ARRAY[ROW(x.*,ARRAY[1,2,3]),\n               ROW(y.*,ARRAY[4,5,6])] AS z\n         FROM generate_series(1,2) x,\n              generate_series(4,5) y) q","shape":"SELECT array_to_json(array_agg(q), FALSE) FROM (SELECT 'a' || x AS b, y AS c, ARRAY[ROW(x.*, ARRAY[1, 2, 3]), ROW(y.*, ARRAY[4, 5, 6])] AS z FROM generate_series(1, 2) AS x, generate_series(4, 5) AS y) AS q;"}
+{"sql":"SELECT array_to_json(array_agg(x),false) from generate_series(5,10) x","shape":"SELECT array_to_json(array_agg(x), FALSE) FROM generate_series(5, 10) AS x;"}
+{"sql":"SELECT array_to_json('{{1,5},{99,100}}'::int[])","shape":"SELECT array_to_json('{{1,5},{99,100}}'::int[]);"}
+{"sql":"SELECT row_to_json(row(1,'foo'))","shape":"SELECT row_to_json(ROW(1, 'foo'));"}
+{"sql":"SELECT row_to_json(q)\nFROM (SELECT $$a$$ || x AS b,\n         y AS c,\n         ARRAY[ROW(x.*,ARRAY[1,2,3]),\n               ROW(y.*,ARRAY[4,5,6])] AS z\n      FROM generate_series(1,2) x,\n           generate_series(4,5) y) q","shape":"SELECT row_to_json(q) FROM (SELECT 'a' || x AS b, y AS c, ARRAY[ROW(x.*, ARRAY[1, 2, 3]), ROW(y.*, ARRAY[4, 5, 6])] AS z FROM generate_series(1, 2) AS x, generate_series(4, 5) AS y) AS q;"}
+{"sql":"SELECT row_to_json(q,true)\nFROM (SELECT $$a$$ || x AS b,\n         y AS c,\n         ARRAY[ROW(x.*,ARRAY[1,2,3]),\n               ROW(y.*,ARRAY[4,5,6])] AS z\n      FROM generate_series(1,2) x,\n           generate_series(4,5) y) q","shape":"SELECT row_to_json(q, TRUE) FROM (SELECT 'a' || x AS b, y AS c, ARRAY[ROW(x.*, ARRAY[1, 2, 3]), ROW(y.*, ARRAY[4, 5, 6])] AS z FROM generate_series(1, 2) AS x, generate_series(4, 5) AS y) AS q;"}
+{"sql":"CREATE TEMP TABLE rows AS\nSELECT x, 'txt' || x as y\nFROM generate_series(1,3) AS x","shape":"CREATE TEMPORARY TABLE rows AS SELECT x, 'txt' || x AS y FROM generate_series(1, 3) AS x;"}
+{"sql":"SELECT row_to_json(q,true)\nFROM rows q","shape":"SELECT row_to_json(q, TRUE) FROM rows AS q;"}
+{"sql":"SELECT row_to_json(row((select array_agg(x) as d from generate_series(5,10) x)),false)","shape":"SELECT row_to_json(ROW((SELECT array_agg(x) AS d FROM generate_series(5, 10) AS x)), FALSE);"}
+{"sql":"analyze rows","shape":"ANALYZE rows;"}
+{"sql":"select attname, to_json(histogram_bounds) histogram_bounds\nfrom pg_stats\nwhere tablename = 'rows' and\n      schemaname = pg_my_temp_schema()::regnamespace::text\norder by 1","shape":"SELECT attname, to_json(histogram_bounds) AS histogram_bounds FROM pg_stats WHERE (tablename = 'rows') AND (schemaname = pg_my_temp_schema()::regnamespace::text) ORDER BY 1;"}
+{"sql":"select to_json(timestamp '2014-05-28 12:22:35.614298')","shape":"SELECT to_json(timestamp '2014-05-28 12:22:35.614298');"}
+{"sql":"SET LOCAL TIME ZONE 10.5","shape":"SET LOCAL TIME ZONE 10.5;"}
+{"sql":"select to_json(timestamptz '2014-05-28 12:22:35.614298-04')","shape":"SELECT to_json(timestamptz '2014-05-28 12:22:35.614298-04');"}
+{"sql":"SET LOCAL TIME ZONE -8","shape":"SET LOCAL TIME ZONE -8;"}
+{"sql":"select to_json(date '2014-05-28')","shape":"SELECT to_json(date '2014-05-28');"}
+{"sql":"select to_json(date 'Infinity')","shape":"SELECT to_json(date 'Infinity');"}
+{"sql":"select to_json(date '-Infinity')","shape":"SELECT to_json(date '-Infinity');"}
+{"sql":"select to_json(timestamp 'Infinity')","shape":"SELECT to_json(timestamp 'Infinity');"}
+{"sql":"select to_json(timestamp '-Infinity')","shape":"SELECT to_json(timestamp '-Infinity');"}
+{"sql":"select to_json(timestamptz 'Infinity')","shape":"SELECT to_json(timestamptz 'Infinity');"}
+{"sql":"select to_json(timestamptz '-Infinity')","shape":"SELECT to_json(timestamptz '-Infinity');"}
+{"sql":"SELECT json_agg(q)\n  FROM ( SELECT $$a$$ || x AS b, y AS c,\n               ARRAY[ROW(x.*,ARRAY[1,2,3]),\n               ROW(y.*,ARRAY[4,5,6])] AS z\n         FROM generate_series(1,2) x,\n              generate_series(4,5) y) q","shape":"SELECT json_agg(q) FROM (SELECT 'a' || x AS b, y AS c, ARRAY[ROW(x.*, ARRAY[1, 2, 3]), ROW(y.*, ARRAY[4, 5, 6])] AS z FROM generate_series(1, 2) AS x, generate_series(4, 5) AS y) AS q;"}
+{"sql":"SELECT json_agg(q ORDER BY x, y)\n  FROM rows q","shape":"SELECT json_agg(q ORDER BY x, y) FROM rows AS q;"}
+{"sql":"UPDATE rows SET x = NULL WHERE x = 1","shape":"UPDATE rows SET x = NULL WHERE x = 1;"}
+{"sql":"SELECT json_agg(q ORDER BY x NULLS FIRST, y)\n  FROM rows q","shape":"SELECT json_agg(q ORDER BY x NULLS FIRST, y) FROM rows AS q;"}
+{"sql":"SELECT row_to_json(q)\nFROM (SELECT 'NaN'::float8 AS \"float8field\") q","shape":"SELECT row_to_json(q) FROM (SELECT 'NaN'::float8 AS \"float8field\") AS q;"}
+{"sql":"SELECT row_to_json(q)\nFROM (SELECT 'Infinity'::float8 AS \"float8field\") q","shape":"SELECT row_to_json(q) FROM (SELECT 'Infinity'::float8 AS \"float8field\") AS q;"}
+{"sql":"SELECT row_to_json(q)\nFROM (SELECT '-Infinity'::float8 AS \"float8field\") q","shape":"SELECT row_to_json(q) FROM (SELECT '-Infinity'::float8 AS \"float8field\") AS q;"}
+{"sql":"SELECT row_to_json(q)\nFROM (SELECT '{\"a\":1,\"b\": [2,3,4,\"d\",\"e\",\"f\"],\"c\":{\"p\":1,\"q\":2}}'::json AS \"jsonfield\") q","shape":"SELECT row_to_json(q) FROM (SELECT '{\"a\":1,\"b\": [2,3,4,\"d\",\"e\",\"f\"],\"c\":{\"p\":1,\"q\":2}}'::json AS \"jsonfield\") AS q;"}
+{"sql":"CREATE TEMP TABLE test_json (\n       json_type text,\n       test_json json\n)","shape":"CREATE TEMPORARY TABLE test_json (json_type text, test_json json);"}
+{"sql":"INSERT INTO test_json VALUES\n('scalar','\"a scalar\"'),\n('array','[\"zero\", \"one\",\"two\",null,\"four\",\"five\", [1,2,3],{\"f1\":9}]'),\n('object','{\"field1\":\"val1\",\"field2\":\"val2\",\"field3\":null, \"field4\": 4, \"field5\": [1,2,3], \"field6\": {\"f1\":9}}')","shape":"INSERT INTO test_json VALUES ('scalar', '\"a scalar\"'), ('array', '[\"zero\", \"one\",\"two\",null,\"four\",\"five\", [1,2,3],{\"f1\":9}]'), ('object', '{\"field1\":\"val1\",\"field2\":\"val2\",\"field3\":null, \"field4\": 4, \"field5\": [1,2,3], \"field6\": {\"f1\":9}}');"}
+{"sql":"SELECT test_json -> 'x'\nFROM test_json\nWHERE json_type = 'scalar'","shape":"SELECT test_json -> 'x' FROM test_json WHERE json_type = 'scalar';"}
+{"sql":"SELECT test_json -> 'x'\nFROM test_json\nWHERE json_type = 'array'","shape":"SELECT test_json -> 'x' FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT test_json -> 'x'\nFROM test_json\nWHERE json_type = 'object'","shape":"SELECT test_json -> 'x' FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT test_json->'field2'\nFROM test_json\nWHERE json_type = 'object'","shape":"SELECT test_json -> 'field2' FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT test_json->>'field2'\nFROM test_json\nWHERE json_type = 'object'","shape":"SELECT test_json ->> 'field2' FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT test_json -> 2\nFROM test_json\nWHERE json_type = 'scalar'","shape":"SELECT test_json -> 2 FROM test_json WHERE json_type = 'scalar';"}
+{"sql":"SELECT test_json -> 2\nFROM test_json\nWHERE json_type = 'array'","shape":"SELECT test_json -> 2 FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT test_json -> -1\nFROM test_json\nWHERE json_type = 'array'","shape":"SELECT test_json -> (-1) FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT test_json -> 2\nFROM test_json\nWHERE json_type = 'object'","shape":"SELECT test_json -> 2 FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT test_json->>2\nFROM test_json\nWHERE json_type = 'array'","shape":"SELECT test_json ->> 2 FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT test_json ->> 6 FROM test_json WHERE json_type = 'array'","shape":"SELECT test_json ->> 6 FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT test_json ->> 7 FROM test_json WHERE json_type = 'array'","shape":"SELECT test_json ->> 7 FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT test_json ->> 'field4' FROM test_json WHERE json_type = 'object'","shape":"SELECT test_json ->> 'field4' FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT test_json ->> 'field5' FROM test_json WHERE json_type = 'object'","shape":"SELECT test_json ->> 'field5' FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT test_json ->> 'field6' FROM test_json WHERE json_type = 'object'","shape":"SELECT test_json ->> 'field6' FROM test_json WHERE json_type = 'object';"}
+{"sql":"SELECT json_object_keys(test_json)\nFROM test_json\nWHERE json_type = 'scalar'","shape":"SELECT json_object_keys(test_json) FROM test_json WHERE json_type = 'scalar';"}
+{"sql":"SELECT json_object_keys(test_json)\nFROM test_json\nWHERE json_type = 'array'","shape":"SELECT json_object_keys(test_json) FROM test_json WHERE json_type = 'array';"}
+{"sql":"SELECT json_object_keys(test_json)\nFROM test_json\nWHERE json_type = 'object'","shape":"SELECT json_object_keys(test_json) FROM test_json WHERE json_type = 'object';"}
+{"sql":"select count(*) from\n    (select json_object_keys(json_object(array_agg(g)))\n     from (select unnest(array['f'||n,n::text])as g\n           from generate_series(1,300) as n) x ) y","shape":"SELECT count(*) FROM (SELECT json_object_keys(json_object(array_agg(g))) FROM (SELECT unnest(ARRAY['f' || n, n::text]) AS g FROM generate_series(1, 300) AS n) AS x) AS y;"}
+{"sql":"select (test_json->'field3') is null as expect_false\nfrom test_json\nwhere json_type = 'object'","shape":"SELECT (test_json -> 'field3') IS NULL AS expect_false FROM test_json WHERE json_type = 'object';"}
+{"sql":"select (test_json->>'field3') is null as expect_true\nfrom test_json\nwhere json_type = 'object'","shape":"SELECT (test_json ->> 'field3') IS NULL AS expect_true FROM test_json WHERE json_type = 'object';"}
+{"sql":"select (test_json->3) is null as expect_false\nfrom test_json\nwhere json_type = 'array'","shape":"SELECT (test_json -> 3) IS NULL AS expect_false FROM test_json WHERE json_type = 'array';"}
+{"sql":"select (test_json->>3) is null as expect_true\nfrom test_json\nwhere json_type = 'array'","shape":"SELECT (test_json ->> 3) IS NULL AS expect_true FROM test_json WHERE json_type = 'array';"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> null::text","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> NULL::text;"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> null::int","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> NULL::int;"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> 1","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> 1;"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> -1","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> (-1);"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> 'z'","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> 'z';"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> ''","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json -> '';"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json -> 1","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json -> 1;"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json -> 3","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json -> 3;"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json -> 'z'","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json -> 'z';"}
+{"sql":"select '{\"a\": \"c\", \"b\": null}'::json -> 'b'","shape":"SELECT '{\"a\": \"c\", \"b\": null}'::json -> 'b';"}
+{"sql":"select '\"foo\"'::json -> 1","shape":"SELECT '\"foo\"'::json -> 1;"}
+{"sql":"select '\"foo\"'::json -> 'z'","shape":"SELECT '\"foo\"'::json -> 'z';"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> null::text","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> NULL::text;"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> null::int","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> NULL::int;"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> 1","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> 1;"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> 'z'","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> 'z';"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> ''","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json ->> '';"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json ->> 1","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json ->> 1;"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json ->> 3","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json ->> 3;"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json ->> 'z'","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json ->> 'z';"}
+{"sql":"select '{\"a\": \"c\", \"b\": null}'::json ->> 'b'","shape":"SELECT '{\"a\": \"c\", \"b\": null}'::json ->> 'b';"}
+{"sql":"select '\"foo\"'::json ->> 1","shape":"SELECT '\"foo\"'::json ->> 1;"}
+{"sql":"select '\"foo\"'::json ->> 'z'","shape":"SELECT '\"foo\"'::json ->> 'z';"}
+{"sql":"SELECT json_array_length('[1,2,3,{\"f1\":1,\"f2\":[5,6]},4]')","shape":"SELECT json_array_length('[1,2,3,{\"f1\":1,\"f2\":[5,6]},4]');"}
+{"sql":"SELECT json_array_length('[]')","shape":"SELECT json_array_length('[]');"}
+{"sql":"SELECT json_array_length('{\"f1\":1,\"f2\":[5,6]}')","shape":"SELECT json_array_length('{\"f1\":1,\"f2\":[5,6]}');"}
+{"sql":"SELECT json_array_length('4')","shape":"SELECT json_array_length('4');"}
+{"sql":"select json_each('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null}')","shape":"SELECT json_each('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null}');"}
+{"sql":"select * from json_each('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null,\"f5\":99,\"f6\":\"stringy\"}') q","shape":"SELECT * FROM json_each('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null,\"f5\":99,\"f6\":\"stringy\"}') AS q;"}
+{"sql":"select json_each_text('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null,\"f5\":\"null\"}')","shape":"SELECT json_each_text('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null,\"f5\":\"null\"}');"}
+{"sql":"select * from json_each_text('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null,\"f5\":99,\"f6\":\"stringy\"}') q","shape":"SELECT * FROM json_each_text('{\"f1\":[1,2,3],\"f2\":{\"f3\":1},\"f4\":null,\"f5\":99,\"f6\":\"stringy\"}') AS q;"}
+{"sql":"select json_extract_path('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f4','f6')","shape":"SELECT json_extract_path('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f4', 'f6');"}
+{"sql":"select json_extract_path('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f2')","shape":"SELECT json_extract_path('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f2');"}
+{"sql":"select json_extract_path('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f2',0::text)","shape":"SELECT json_extract_path('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f2', 0::text);"}
+{"sql":"select json_extract_path('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f2',1::text)","shape":"SELECT json_extract_path('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f2', 1::text);"}
+{"sql":"select json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f4','f6')","shape":"SELECT json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f4', 'f6');"}
+{"sql":"select json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f2')","shape":"SELECT json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f2');"}
+{"sql":"select json_extract_path_text('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f2',0::text)","shape":"SELECT json_extract_path_text('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f2', 0::text);"}
+{"sql":"select json_extract_path_text('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}','f2',1::text)","shape":"SELECT json_extract_path_text('{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}', 'f2', 1::text);"}
+{"sql":"select json_extract_path('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":null,\"f6\":\"stringy\"}}','f4','f5') is null as expect_false","shape":"SELECT json_extract_path('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":null,\"f6\":\"stringy\"}}', 'f4', 'f5') IS NULL AS expect_false;"}
+{"sql":"select json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":null,\"f6\":\"stringy\"}}','f4','f5') is null as expect_true","shape":"SELECT json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":{\"f5\":null,\"f6\":\"stringy\"}}', 'f4', 'f5') IS NULL AS expect_true;"}
+{"sql":"select json_extract_path('{\"f2\":{\"f3\":1},\"f4\":[0,1,2,null]}','f4','3') is null as expect_false","shape":"SELECT json_extract_path('{\"f2\":{\"f3\":1},\"f4\":[0,1,2,null]}', 'f4', '3') IS NULL AS expect_false;"}
+{"sql":"select json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":[0,1,2,null]}','f4','3') is null as expect_true","shape":"SELECT json_extract_path_text('{\"f2\":{\"f3\":1},\"f4\":[0,1,2,null]}', 'f4', '3') IS NULL AS expect_true;"}
+{"sql":"select '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>array['f4','f6']","shape":"SELECT '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #> ARRAY['f4', 'f6'];"}
+{"sql":"select '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>array['f2']","shape":"SELECT '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #> ARRAY['f2'];"}
+{"sql":"select '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>array['f2','0']","shape":"SELECT '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #> ARRAY['f2', '0'];"}
+{"sql":"select '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>array['f2','1']","shape":"SELECT '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #> ARRAY['f2', '1'];"}
+{"sql":"select '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>>array['f4','f6']","shape":"SELECT '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #>> ARRAY['f4', 'f6'];"}
+{"sql":"select '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>>array['f2']","shape":"SELECT '{\"f2\":{\"f3\":1},\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #>> ARRAY['f2'];"}
+{"sql":"select '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>>array['f2','0']","shape":"SELECT '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #>> ARRAY['f2', '0'];"}
+{"sql":"select '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json#>>array['f2','1']","shape":"SELECT '{\"f2\":[\"f3\",1],\"f4\":{\"f5\":99,\"f6\":\"stringy\"}}'::json #>> ARRAY['f2', '1'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> '{}'","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> '{}';"}
+{"sql":"select '[1,2,3]'::json #> '{}'","shape":"SELECT '[1,2,3]'::json #> '{}';"}
+{"sql":"select '\"foo\"'::json #> '{}'","shape":"SELECT '\"foo\"'::json #> '{}';"}
+{"sql":"select '42'::json #> '{}'","shape":"SELECT '42'::json #> '{}';"}
+{"sql":"select 'null'::json #> '{}'","shape":"SELECT 'null'::json #> '{}';"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a', null]","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a', NULL];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a', '']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a', ''];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a','b']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a', 'b'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a','b','c']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a', 'b', 'c'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a','b','c','d']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a', 'b', 'c', 'd'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> array['a','z','c']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #> ARRAY['a', 'z', 'c'];"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #> array['a','1','b']","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #> ARRAY['a', '1', 'b'];"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #> array['a','z','b']","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #> ARRAY['a', 'z', 'b'];"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #> array['1','b']","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #> ARRAY['1', 'b'];"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #> array['z','b']","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #> ARRAY['z', 'b'];"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": null}]'::json #> array['1','b']","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": null}]'::json #> ARRAY['1', 'b'];"}
+{"sql":"select '\"foo\"'::json #> array['z']","shape":"SELECT '\"foo\"'::json #> ARRAY['z'];"}
+{"sql":"select '42'::json #> array['f2']","shape":"SELECT '42'::json #> ARRAY['f2'];"}
+{"sql":"select '42'::json #> array['0']","shape":"SELECT '42'::json #> ARRAY['0'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> '{}'","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> '{}';"}
+{"sql":"select '[1,2,3]'::json #>> '{}'","shape":"SELECT '[1,2,3]'::json #>> '{}';"}
+{"sql":"select '\"foo\"'::json #>> '{}'","shape":"SELECT '\"foo\"'::json #>> '{}';"}
+{"sql":"select '42'::json #>> '{}'","shape":"SELECT '42'::json #>> '{}';"}
+{"sql":"select 'null'::json #>> '{}'","shape":"SELECT 'null'::json #>> '{}';"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a', null]","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a', NULL];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a', '']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a', ''];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a','b']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a', 'b'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a','b','c']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a', 'b', 'c'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a','b','c','d']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a', 'b', 'c', 'd'];"}
+{"sql":"select '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> array['a','z','c']","shape":"SELECT '{\"a\": {\"b\":{\"c\": \"foo\"}}}'::json #>> ARRAY['a', 'z', 'c'];"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #>> array['a','1','b']","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #>> ARRAY['a', '1', 'b'];"}
+{"sql":"select '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #>> array['a','z','b']","shape":"SELECT '{\"a\": [{\"b\": \"c\"}, {\"b\": \"cc\"}]}'::json #>> ARRAY['a', 'z', 'b'];"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #>> array['1','b']","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #>> ARRAY['1', 'b'];"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #>> array['z','b']","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": \"cc\"}]'::json #>> ARRAY['z', 'b'];"}
+{"sql":"select '[{\"b\": \"c\"}, {\"b\": null}]'::json #>> array['1','b']","shape":"SELECT '[{\"b\": \"c\"}, {\"b\": null}]'::json #>> ARRAY['1', 'b'];"}
+{"sql":"select '\"foo\"'::json #>> array['z']","shape":"SELECT '\"foo\"'::json #>> ARRAY['z'];"}
+{"sql":"select '42'::json #>> array['f2']","shape":"SELECT '42'::json #>> ARRAY['f2'];"}
+{"sql":"select '42'::json #>> array['0']","shape":"SELECT '42'::json #>> ARRAY['0'];"}
+{"sql":"select json_array_elements('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]')","shape":"SELECT json_array_elements('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]');"}
+{"sql":"select * from json_array_elements('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]') q","shape":"SELECT * FROM json_array_elements('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]') AS q;"}
+{"sql":"select json_array_elements_text('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]')","shape":"SELECT json_array_elements_text('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]');"}
+{"sql":"select * from json_array_elements_text('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]') q","shape":"SELECT * FROM json_array_elements_text('[1,true,[1,[2,3]],null,{\"f1\":1,\"f2\":[7,8,9]},false,\"stringy\"]') AS q;"}
+{"sql":"create type jpop as (a text, b int, c timestamp)","shape":"CREATE TYPE jpop AS (a text, b int, c timestamp);"}
+{"sql":"CREATE DOMAIN js_int_not_null  AS int     NOT NULL","shape":"CREATE DOMAIN js_int_not_null AS int NOT NULL;"}
+{"sql":"CREATE DOMAIN js_int_array_1d  AS int[]   CHECK(array_length(VALUE, 1) = 3)","shape":"CREATE DOMAIN js_int_array_1d AS int[] CHECK (array_length(VALUE, 1) = 3);"}
+{"sql":"CREATE DOMAIN js_int_array_2d  AS int[][] CHECK(array_length(VALUE, 2) = 3)","shape":"CREATE DOMAIN js_int_array_2d AS int[][] CHECK (array_length(VALUE, 2) = 3);"}
+{"sql":"create type j_unordered_pair as (x int, y int)","shape":"CREATE TYPE j_unordered_pair AS (x int, y int);"}
+{"sql":"create domain j_ordered_pair as j_unordered_pair check((value).x <= (value).y)","shape":"CREATE DOMAIN j_ordered_pair AS j_unordered_pair CHECK ((value).x <= (value).y);"}
+{"sql":"CREATE TYPE jsrec AS (\n\ti\tint,\n\tia\t_int4,\n\tia1\tint[],\n\tia2\tint[][],\n\tia3\tint[][][],\n\tia1d\tjs_int_array_1d,\n\tia2d\tjs_int_array_2d,\n\tt\ttext,\n\tta\ttext[],\n\tc\tchar(10),\n\tca\tchar(10)[],\n\tts\ttimestamp,\n\tjs\tjson,\n\tjsb\tjsonb,\n\tjsa\tjson[],\n\trec\tjpop,\n\treca\tjpop[]\n)","shape":"CREATE TYPE jsrec AS (i int, ia _int4, ia1 int[], ia2 int[][], ia3 int[][][], ia1d js_int_array_1d, ia2d js_int_array_2d, t text, ta text[], c char(10), ca char(10)[], ts timestamp, js json, jsb jsonb, jsa json[], rec jpop, reca jpop[]);"}
+{"sql":"CREATE TYPE jsrec_i_not_null AS (\n\ti\tjs_int_not_null\n)","shape":"CREATE TYPE jsrec_i_not_null AS (i js_int_not_null);"}
+{"sql":"select * from json_populate_record(null::jpop,'{\"a\":\"blurfl\",\"x\":43.2}') q","shape":"SELECT * FROM json_populate_record(NULL::jpop, '{\"a\":\"blurfl\",\"x\":43.2}') AS q;"}
+{"sql":"select * from json_populate_record(row('x',3,'2012-12-31 15:30:56')::jpop,'{\"a\":\"blurfl\",\"x\":43.2}') q","shape":"SELECT * FROM json_populate_record(ROW('x', 3, '2012-12-31 15:30:56')::jpop, '{\"a\":\"blurfl\",\"x\":43.2}') AS q;"}
+{"sql":"select * from json_populate_record(null::jpop,'{\"a\":[100,200,false],\"x\":43.2}') q","shape":"SELECT * FROM json_populate_record(NULL::jpop, '{\"a\":[100,200,false],\"x\":43.2}') AS q;"}
+{"sql":"select * from json_populate_record(row('x',3,'2012-12-31 15:30:56')::jpop,'{\"a\":[100,200,false],\"x\":43.2}') q","shape":"SELECT * FROM json_populate_record(ROW('x', 3, '2012-12-31 15:30:56')::jpop, '{\"a\":[100,200,false],\"x\":43.2}') AS q;"}
+{"sql":"select * from json_populate_record(row('x',3,'2012-12-31 15:30:56')::jpop,'{\"c\":[100,200,false],\"x\":43.2}') q","shape":"SELECT * FROM json_populate_record(ROW('x', 3, '2012-12-31 15:30:56')::jpop, '{\"c\":[100,200,false],\"x\":43.2}') AS q;"}
+{"sql":"select * from json_populate_record(row('x',3,'2012-12-31 15:30:56')::jpop,'{}') q","shape":"SELECT * FROM json_populate_record(ROW('x', 3, '2012-12-31 15:30:56')::jpop, '{}') AS q;"}
+{"sql":"SELECT i FROM json_populate_record(NULL::jsrec_i_not_null, '{\"x\": 43.2}') q","shape":"SELECT i FROM json_populate_record(NULL::jsrec_i_not_null, '{\"x\": 43.2}') AS q;"}
+{"sql":"SELECT i FROM json_populate_record(NULL::jsrec_i_not_null, '{\"i\": null}') q","shape":"SELECT i FROM json_populate_record(NULL::jsrec_i_not_null, '{\"i\": null}') AS q;"}
+{"sql":"SELECT i FROM json_populate_record(NULL::jsrec_i_not_null, '{\"i\": 12345}') q","shape":"SELECT i FROM json_populate_record(NULL::jsrec_i_not_null, '{\"i\": 12345}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": null}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": null}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": 123}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": 123}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [1, \"2\", null, 4]}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [[1, 2], [3, 4]]}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [[1, 2], [3, 4]]}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [[1], 2]}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [[1], 2]}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [[1], [2, 3]]}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": [[1], [2, 3]]}') AS q;"}
+{"sql":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": \"{1,2,3}\"}') q","shape":"SELECT ia FROM json_populate_record(NULL::jsrec, '{\"ia\": \"{1,2,3}\"}') AS q;"}
+{"sql":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": null}') q","shape":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": null}') AS q;"}
+{"sql":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": 123}') q","shape":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": 123}') AS q;"}
+{"sql":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": [1, \"2\", null, 4]}') q","shape":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": [[1, 2, 3]]}') q","shape":"SELECT ia1 FROM json_populate_record(NULL::jsrec, '{\"ia1\": [[1, 2, 3]]}') AS q;"}
+{"sql":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": null}') q","shape":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": null}') AS q;"}
+{"sql":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": 123}') q","shape":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": 123}') AS q;"}
+{"sql":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": [1, \"2\", null, 4]}') q","shape":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": [1, \"2\", null]}') q","shape":"SELECT ia1d FROM json_populate_record(NULL::jsrec, '{\"ia1d\": [1, \"2\", null]}') AS q;"}
+{"sql":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [1, \"2\", null, 4]}') q","shape":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[1, 2], [null, 4]]}') q","shape":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[1, 2], [null, 4]]}') AS q;"}
+{"sql":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[], []]}') q","shape":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[], []]}') AS q;"}
+{"sql":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[1, 2], [3]]}') q","shape":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[1, 2], [3]]}') AS q;"}
+{"sql":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[1, 2], 3, 4]}') q","shape":"SELECT ia2 FROM json_populate_record(NULL::jsrec, '{\"ia2\": [[1, 2], 3, 4]}') AS q;"}
+{"sql":"SELECT ia2d FROM json_populate_record(NULL::jsrec, '{\"ia2d\": [[1, \"2\"], [null, 4]]}') q","shape":"SELECT ia2d FROM json_populate_record(NULL::jsrec, '{\"ia2d\": [[1, \"2\"], [null, 4]]}') AS q;"}
+{"sql":"SELECT ia2d FROM json_populate_record(NULL::jsrec, '{\"ia2d\": [[1, \"2\", 3], [null, 5, 6]]}') q","shape":"SELECT ia2d FROM json_populate_record(NULL::jsrec, '{\"ia2d\": [[1, \"2\", 3], [null, 5, 6]]}') AS q;"}
+{"sql":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [1, \"2\", null, 4]}') q","shape":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [[1, 2], [null, 4]]}') q","shape":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [[1, 2], [null, 4]]}') AS q;"}
+{"sql":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[], []], [[], []], [[], []] ]}') q","shape":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[], []], [[], []], [[], []] ]}') AS q;"}
+{"sql":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[1, 2]], [[3, 4]] ]}') q","shape":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[1, 2]], [[3, 4]] ]}') AS q;"}
+{"sql":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[1, 2], [3, 4]], [[5, 6], [7, 8]] ]}') q","shape":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[1, 2], [3, 4]], [[5, 6], [7, 8]] ]}') AS q;"}
+{"sql":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[1, 2], [3, 4]], [[5, 6], [7, 8], [9, 10]] ]}') q","shape":"SELECT ia3 FROM json_populate_record(NULL::jsrec, '{\"ia3\": [ [[1, 2], [3, 4]], [[5, 6], [7, 8], [9, 10]] ]}') AS q;"}
+{"sql":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": null}') q","shape":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": null}') AS q;"}
+{"sql":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": 123}') q","shape":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": 123}') AS q;"}
+{"sql":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": [1, \"2\", null, 4]}') q","shape":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": [[1, 2, 3], {\"k\": \"v\"}]}') q","shape":"SELECT ta FROM json_populate_record(NULL::jsrec, '{\"ta\": [[1, 2, 3], {\"k\": \"v\"}]}') AS q;"}
+{"sql":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": null}') q","shape":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": null}') AS q;"}
+{"sql":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": \"aaa\"}') q","shape":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": \"aaa\"}') AS q;"}
+{"sql":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": \"aaaaaaaaaa\"}') q","shape":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": \"aaaaaaaaaa\"}') AS q;"}
+{"sql":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": \"aaaaaaaaaaaaa\"}') q","shape":"SELECT c FROM json_populate_record(NULL::jsrec, '{\"c\": \"aaaaaaaaaaaaa\"}') AS q;"}
+{"sql":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": null}') q","shape":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": null}') AS q;"}
+{"sql":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": 123}') q","shape":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": 123}') AS q;"}
+{"sql":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": [1, \"2\", null, 4]}') q","shape":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": [\"aaaaaaaaaaaaaaaa\"]}') q","shape":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": [\"aaaaaaaaaaaaaaaa\"]}') AS q;"}
+{"sql":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": [[1, 2, 3], {\"k\": \"v\"}]}') q","shape":"SELECT ca FROM json_populate_record(NULL::jsrec, '{\"ca\": [[1, 2, 3], {\"k\": \"v\"}]}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": null}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": null}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": true}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": true}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": 123.45}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": 123.45}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": \"123.45\"}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": \"123.45\"}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": \"abc\"}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": \"abc\"}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": [123, \"123\", null, {\"key\": \"value\"}]}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": [123, \"123\", null, {\"key\": \"value\"}]}') AS q;"}
+{"sql":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": {\"a\": \"bbb\", \"b\": null, \"c\": 123.45}}') q","shape":"SELECT js FROM json_populate_record(NULL::jsrec, '{\"js\": {\"a\": \"bbb\", \"b\": null, \"c\": 123.45}}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": null}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": null}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": true}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": true}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": 123.45}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": 123.45}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": \"123.45\"}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": \"123.45\"}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": \"abc\"}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": \"abc\"}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": [123, \"123\", null, {\"key\": \"value\"}]}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": [123, \"123\", null, {\"key\": \"value\"}]}') AS q;"}
+{"sql":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": {\"a\": \"bbb\", \"b\": null, \"c\": 123.45}}') q","shape":"SELECT jsb FROM json_populate_record(NULL::jsrec, '{\"jsb\": {\"a\": \"bbb\", \"b\": null, \"c\": 123.45}}') AS q;"}
+{"sql":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": null}') q","shape":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": null}') AS q;"}
+{"sql":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": 123}') q","shape":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": 123}') AS q;"}
+{"sql":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": [1, \"2\", null, 4]}') q","shape":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": [1, \"2\", null, 4]}') AS q;"}
+{"sql":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": [\"aaa\", null, [1, 2, \"3\", {}], { \"k\" : \"v\" }]}') q","shape":"SELECT jsa FROM json_populate_record(NULL::jsrec, '{\"jsa\": [\"aaa\", null, [1, 2, \"3\", {}], { \"k\" : \"v\" }]}') AS q;"}
+{"sql":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": 123}') q","shape":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": 123}') AS q;"}
+{"sql":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": [1, 2]}') q","shape":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": [1, 2]}') AS q;"}
+{"sql":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": {\"a\": \"abc\", \"c\": \"01.02.2003\", \"x\": 43.2}}') q","shape":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": {\"a\": \"abc\", \"c\": \"01.02.2003\", \"x\": 43.2}}') AS q;"}
+{"sql":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": \"(abc,42,01.02.2003)\"}') q","shape":"SELECT rec FROM json_populate_record(NULL::jsrec, '{\"rec\": \"(abc,42,01.02.2003)\"}') AS q;"}
+{"sql":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": 123}') q","shape":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": 123}') AS q;"}
+{"sql":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": [1, 2]}') q","shape":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": [1, 2]}') AS q;"}
+{"sql":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": [{\"a\": \"abc\", \"b\": 456}, null, {\"c\": \"01.02.2003\", \"x\": 43.2}]}') q","shape":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": [{\"a\": \"abc\", \"b\": 456}, null, {\"c\": \"01.02.2003\", \"x\": 43.2}]}') AS q;"}
+{"sql":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": [\"(abc,42,01.02.2003)\"]}') q","shape":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": [\"(abc,42,01.02.2003)\"]}') AS q;"}
+{"sql":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": \"{\\\"(abc,42,01.02.2003)\\\"}\"}') q","shape":"SELECT reca FROM json_populate_record(NULL::jsrec, '{\"reca\": \"{\\\"(abc,42,01.02.2003)\\\"}\"}') AS q;"}
+{"sql":"SELECT rec FROM json_populate_record(\n\trow(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,\n\t\trow('x',3,'2012-12-31 15:30:56')::jpop,NULL)::jsrec,\n\t'{\"rec\": {\"a\": \"abc\", \"c\": \"01.02.2003\", \"x\": 43.2}}'\n) q","shape":"SELECT rec FROM json_populate_record(ROW(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ROW('x', 3, '2012-12-31 15:30:56')::jpop, NULL)::jsrec, '{\"rec\": {\"a\": \"abc\", \"c\": \"01.02.2003\", \"x\": 43.2}}') AS q;"}
+{"sql":"SELECT json_populate_record(null::record, '{\"x\": 0, \"y\": 1}')","shape":"SELECT json_populate_record(NULL::record, '{\"x\": 0, \"y\": 1}');"}
+{"sql":"SELECT json_populate_record(row(1,2), '{\"f1\": 0, \"f2\": 1}')","shape":"SELECT json_populate_record(ROW(1, 2), '{\"f1\": 0, \"f2\": 1}');"}
+{"sql":"SELECT * FROM\n  json_populate_record(null::record, '{\"x\": 776}') AS (x int, y int)","shape":"SELECT * FROM json_populate_record(NULL::record, '{\"x\": 776}') AS (x int, y int);"}
+{"sql":"SELECT json_populate_record(null::j_ordered_pair, '{\"x\": 0, \"y\": 1}')","shape":"SELECT json_populate_record(NULL::j_ordered_pair, '{\"x\": 0, \"y\": 1}');"}
+{"sql":"SELECT json_populate_record(row(1,2)::j_ordered_pair, '{\"x\": 0}')","shape":"SELECT json_populate_record(ROW(1, 2)::j_ordered_pair, '{\"x\": 0}');"}
+{"sql":"SELECT json_populate_record(row(1,2)::j_ordered_pair, '{\"x\": 1, \"y\": 0}')","shape":"SELECT json_populate_record(ROW(1, 2)::j_ordered_pair, '{\"x\": 1, \"y\": 0}');"}
+{"sql":"select * from json_populate_recordset(null::jpop,'[{\"a\":\"blurfl\",\"x\":43.2},{\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') q","shape":"SELECT * FROM json_populate_recordset(NULL::jpop, '[{\"a\":\"blurfl\",\"x\":43.2},{\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') AS q;"}
+{"sql":"select * from json_populate_recordset(row('def',99,null)::jpop,'[{\"a\":\"blurfl\",\"x\":43.2},{\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') q","shape":"SELECT * FROM json_populate_recordset(ROW('def', 99, NULL)::jpop, '[{\"a\":\"blurfl\",\"x\":43.2},{\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') AS q;"}
+{"sql":"select * from json_populate_recordset(row('def',99,null)::jpop,'[{\"a\":[100,200,300],\"x\":43.2},{\"a\":{\"z\":true},\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') q","shape":"SELECT * FROM json_populate_recordset(ROW('def', 99, NULL)::jpop, '[{\"a\":[100,200,300],\"x\":43.2},{\"a\":{\"z\":true},\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') AS q;"}
+{"sql":"select * from json_populate_recordset(row('def',99,null)::jpop,'[{\"c\":[100,200,300],\"x\":43.2},{\"a\":{\"z\":true},\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') q","shape":"SELECT * FROM json_populate_recordset(ROW('def', 99, NULL)::jpop, '[{\"c\":[100,200,300],\"x\":43.2},{\"a\":{\"z\":true},\"b\":3,\"c\":\"2012-01-20 10:42:53\"}]') AS q;"}
+{"sql":"create type jpop2 as (a int, b json, c int, d int)","shape":"CREATE TYPE jpop2 AS (a int, b json, c int, d int);"}
+{"sql":"select * from json_populate_recordset(null::jpop2, '[{\"a\":2,\"c\":3,\"b\":{\"z\":4},\"d\":6}]') q","shape":"SELECT * FROM json_populate_recordset(NULL::jpop2, '[{\"a\":2,\"c\":3,\"b\":{\"z\":4},\"d\":6}]') AS q;"}
+{"sql":"SELECT json_populate_recordset(null::record, '[{\"x\": 0, \"y\": 1}]')","shape":"SELECT json_populate_recordset(NULL::record, '[{\"x\": 0, \"y\": 1}]');"}
+{"sql":"SELECT json_populate_recordset(row(1,2), '[{\"f1\": 0, \"f2\": 1}]')","shape":"SELECT json_populate_recordset(ROW(1, 2), '[{\"f1\": 0, \"f2\": 1}]');"}
+{"sql":"SELECT i, json_populate_recordset(row(i,50), '[{\"f1\":\"42\"},{\"f2\":\"43\"}]')\nFROM (VALUES (1),(2)) v(i)","shape":"SELECT i, json_populate_recordset(ROW(i, 50), '[{\"f1\":\"42\"},{\"f2\":\"43\"}]') FROM (VALUES (1), (2)) AS v(i);"}
+{"sql":"SELECT * FROM\n  json_populate_recordset(null::record, '[{\"x\": 776}]') AS (x int, y int)","shape":"SELECT * FROM json_populate_recordset(NULL::record, '[{\"x\": 776}]') AS (x int, y int);"}
+{"sql":"SELECT json_populate_recordset(null::record, '[]')","shape":"SELECT json_populate_recordset(NULL::record, '[]');"}
+{"sql":"SELECT json_populate_recordset(row(1,2), '[]')","shape":"SELECT json_populate_recordset(ROW(1, 2), '[]');"}
+{"sql":"SELECT * FROM json_populate_recordset(NULL::jpop,'[]') q","shape":"SELECT * FROM json_populate_recordset(NULL::jpop, '[]') AS q;"}
+{"sql":"SELECT * FROM\n  json_populate_recordset(null::record, '[]') AS (x int, y int)","shape":"SELECT * FROM json_populate_recordset(NULL::record, '[]') AS (x int, y int);"}
+{"sql":"SELECT json_populate_recordset(null::j_ordered_pair, '[{\"x\": 0, \"y\": 1}]')","shape":"SELECT json_populate_recordset(NULL::j_ordered_pair, '[{\"x\": 0, \"y\": 1}]');"}
+{"sql":"SELECT json_populate_recordset(row(1,2)::j_ordered_pair, '[{\"x\": 0}, {\"y\": 3}]')","shape":"SELECT json_populate_recordset(ROW(1, 2)::j_ordered_pair, '[{\"x\": 0}, {\"y\": 3}]');"}
+{"sql":"SELECT json_populate_recordset(row(1,2)::j_ordered_pair, '[{\"x\": 1, \"y\": 0}]')","shape":"SELECT json_populate_recordset(ROW(1, 2)::j_ordered_pair, '[{\"x\": 1, \"y\": 0}]');"}
+{"sql":"select * from json_populate_recordset(row(0::int),'[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\"}]') q (a text, b text)","shape":"SELECT * FROM json_populate_recordset(ROW(0::int), '[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\"}]') AS q(a text, b text);"}
+{"sql":"select * from json_populate_recordset(row(0::int,0::int),'[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\"}]') q (a text, b text)","shape":"SELECT * FROM json_populate_recordset(ROW(0::int, 0::int), '[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\"}]') AS q(a text, b text);"}
+{"sql":"select * from json_populate_recordset(row(0::int,0::int,0::int),'[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\"}]') q (a text, b text)","shape":"SELECT * FROM json_populate_recordset(ROW(0::int, 0::int, 0::int), '[{\"a\":\"1\",\"b\":\"2\"},{\"a\":\"3\"}]') AS q(a text, b text);"}
+{"sql":"select * from json_populate_recordset(row(1000000000::int,50::int),'[{\"b\":\"2\"},{\"a\":\"3\"}]') q (a text, b text)","shape":"SELECT * FROM json_populate_recordset(ROW(1000000000::int, 50::int), '[{\"b\":\"2\"},{\"a\":\"3\"}]') AS q(a text, b text);"}
+{"sql":"CREATE TEMP TABLE jspoptest (js json)","shape":"CREATE TEMPORARY TABLE jspoptest (js json);"}
+{"sql":"INSERT INTO jspoptest\nSELECT '{\n\t\"jsa\": [1, \"2\", null, 4],\n\t\"rec\": {\"a\": \"abc\", \"c\": \"01.02.2003\", \"x\": 43.2},\n\t\"reca\": [{\"a\": \"abc\", \"b\": 456}, null, {\"c\": \"01.02.2003\", \"x\": 43.2}]\n}'::json\nFROM generate_series(1, 3)","shape":"INSERT INTO jspoptest SELECT '{\n\t\"jsa\": [1, \"2\", null, 4],\n\t\"rec\": {\"a\": \"abc\", \"c\": \"01.02.2003\", \"x\": 43.2},\n\t\"reca\": [{\"a\": \"abc\", \"b\": 456}, null, {\"c\": \"01.02.2003\", \"x\": 43.2}]\n}'::json FROM generate_series(1, 3);"}
+{"sql":"SELECT (json_populate_record(NULL::jsrec, js)).* FROM jspoptest","shape":"SELECT (json_populate_record(NULL::jsrec, js)).* FROM jspoptest;"}
+{"sql":"DROP TYPE jsrec","shape":"DROP TYPE jsrec;"}
+{"sql":"DROP TYPE jsrec_i_not_null","shape":"DROP TYPE jsrec_i_not_null;"}
+{"sql":"DROP DOMAIN js_int_not_null","shape":"DROP DOMAIN js_int_not_null;"}
+{"sql":"DROP DOMAIN js_int_array_1d","shape":"DROP DOMAIN js_int_array_1d;"}
+{"sql":"DROP DOMAIN js_int_array_2d","shape":"DROP DOMAIN js_int_array_2d;"}
+{"sql":"DROP DOMAIN j_ordered_pair","shape":"DROP DOMAIN j_ordered_pair;"}
+{"sql":"DROP TYPE j_unordered_pair","shape":"DROP TYPE j_unordered_pair;"}
+{"sql":"select value, json_typeof(value)\n  from (values (json '123.4'),\n               (json '-1'),\n               (json '\"foo\"'),\n               (json 'true'),\n               (json 'false'),\n               (json 'null'),\n               (json '[1, 2, 3]'),\n               (json '[]'),\n               (json '{\"x\":\"foo\", \"y\":123}'),\n               (json '{}'),\n               (NULL::json))\n      as data(value)","shape":"SELECT value, json_typeof(value) FROM (VALUES (json '123.4'), (json '-1'), (json '\"foo\"'), (json 'true'), (json 'false'), (json 'null'), (json '[1, 2, 3]'), (json '[]'), (json '{\"x\":\"foo\", \"y\":123}'), (json '{}'), (NULL::json)) AS data(value);"}
+{"sql":"SELECT json_build_array('a',1,'b',1.2,'c',true,'d',null,'e',json '{\"x\": 3, \"y\": [1,2,3]}')","shape":"SELECT json_build_array('a', 1, 'b', 1.2, 'c', TRUE, 'd', NULL, 'e', json '{\"x\": 3, \"y\": [1,2,3]}');"}
+{"sql":"SELECT json_build_array('a', NULL)","shape":"SELECT json_build_array('a', NULL);"}
+{"sql":"SELECT json_build_array(VARIADIC NULL::text[])","shape":"SELECT json_build_array(VARIADIC NULL::text[]);"}
+{"sql":"SELECT json_build_array(VARIADIC '{}'::text[])","shape":"SELECT json_build_array(VARIADIC '{}'::text[]);"}
+{"sql":"SELECT json_build_array(VARIADIC '{a,b,c}'::text[])","shape":"SELECT json_build_array(VARIADIC '{a,b,c}'::text[]);"}
+{"sql":"SELECT json_build_array(VARIADIC ARRAY['a', NULL]::text[])","shape":"SELECT json_build_array(VARIADIC ARRAY['a', NULL]::text[]);"}
+{"sql":"SELECT json_build_array(VARIADIC '{1,2,3,4}'::text[])","shape":"SELECT json_build_array(VARIADIC '{1,2,3,4}'::text[]);"}
+{"sql":"SELECT json_build_array(VARIADIC '{1,2,3,4}'::int[])","shape":"SELECT json_build_array(VARIADIC '{1,2,3,4}'::int[]);"}
+{"sql":"SELECT json_build_array(VARIADIC '{{1,4},{2,5},{3,6}}'::int[][])","shape":"SELECT json_build_array(VARIADIC '{{1,4},{2,5},{3,6}}'::int[][]);"}
+{"sql":"SELECT json_build_object('a',1,'b',1.2,'c',true,'d',null,'e',json '{\"x\": 3, \"y\": [1,2,3]}')","shape":"SELECT json_build_object('a', 1, 'b', 1.2, 'c', TRUE, 'd', NULL, 'e', json '{\"x\": 3, \"y\": [1,2,3]}');"}
+{"sql":"SELECT json_build_object(\n       'a', json_build_object('b',false,'c',99),\n       'd', json_build_object('e',array[9,8,7]::int[],\n           'f', (select row_to_json(r) from ( select relkind, oid::regclass as name from pg_class where relname = 'pg_class') r)))","shape":"SELECT json_build_object('a', json_build_object('b', FALSE, 'c', 99), 'd', json_build_object('e', ARRAY[9, 8, 7]::int[], 'f', (SELECT row_to_json(r) FROM (SELECT relkind, oid::regclass AS name FROM pg_class WHERE relname = 'pg_class') AS r)));"}
+{"sql":"SELECT json_build_object('{a,b,c}'::text[])","shape":"SELECT json_build_object('{a,b,c}'::text[]);"}
+{"sql":"SELECT json_build_object('{a,b,c}'::text[], '{d,e,f}'::text[])","shape":"SELECT json_build_object('{a,b,c}'::text[], '{d,e,f}'::text[]);"}
+{"sql":"SELECT json_build_object('a', 'b', 'c')","shape":"SELECT json_build_object('a', 'b', 'c');"}
+{"sql":"SELECT json_build_object(NULL, 'a')","shape":"SELECT json_build_object(NULL, 'a');"}
+{"sql":"SELECT json_build_object('a', NULL)","shape":"SELECT json_build_object('a', NULL);"}
+{"sql":"SELECT json_build_object(VARIADIC NULL::text[])","shape":"SELECT json_build_object(VARIADIC NULL::text[]);"}
+{"sql":"SELECT json_build_object(VARIADIC '{}'::text[])","shape":"SELECT json_build_object(VARIADIC '{}'::text[]);"}
+{"sql":"SELECT json_build_object(VARIADIC '{a,b,c}'::text[])","shape":"SELECT json_build_object(VARIADIC '{a,b,c}'::text[]);"}
+{"sql":"SELECT json_build_object(VARIADIC ARRAY['a', NULL]::text[])","shape":"SELECT json_build_object(VARIADIC ARRAY['a', NULL]::text[]);"}
+{"sql":"SELECT json_build_object(VARIADIC ARRAY[NULL, 'a']::text[])","shape":"SELECT json_build_object(VARIADIC ARRAY[NULL, 'a']::text[]);"}
+{"sql":"SELECT json_build_object(VARIADIC '{1,2,3,4}'::text[])","shape":"SELECT json_build_object(VARIADIC '{1,2,3,4}'::text[]);"}
+{"sql":"SELECT json_build_object(VARIADIC '{1,2,3,4}'::int[])","shape":"SELECT json_build_object(VARIADIC '{1,2,3,4}'::int[]);"}
+{"sql":"SELECT json_build_object(VARIADIC '{{1,4},{2,5},{3,6}}'::int[][])","shape":"SELECT json_build_object(VARIADIC '{{1,4},{2,5},{3,6}}'::int[][]);"}
+{"sql":"SELECT json_build_array()","shape":"SELECT json_build_array();"}
+{"sql":"SELECT json_build_object()","shape":"SELECT json_build_object();"}
+{"sql":"SELECT json_build_object(1,2)","shape":"SELECT json_build_object(1, 2);"}
+{"sql":"SELECT json_build_object(null,2)","shape":"SELECT json_build_object(NULL, 2);"}
+{"sql":"SELECT json_build_object(r,2) FROM (SELECT 1 AS a, 2 AS b) r","shape":"SELECT json_build_object(r, 2) FROM (SELECT 1 AS a, 2 AS b) AS r;"}
+{"sql":"SELECT json_build_object(json '{\"a\":1,\"b\":2}', 3)","shape":"SELECT json_build_object(json '{\"a\":1,\"b\":2}', 3);"}
+{"sql":"SELECT json_build_object('{1,2,3}'::int[], 3)","shape":"SELECT json_build_object('{1,2,3}'::int[], 3);"}
+{"sql":"CREATE TEMP TABLE foo (serial_num int, name text, type text)","shape":"CREATE TEMPORARY TABLE foo (serial_num int, name text, type text);"}
+{"sql":"INSERT INTO foo VALUES (847001,'t15','GE1043')","shape":"INSERT INTO foo VALUES (847001, 't15', 'GE1043');"}
+{"sql":"INSERT INTO foo VALUES (847002,'t16','GE1043')","shape":"INSERT INTO foo VALUES (847002, 't16', 'GE1043');"}
+{"sql":"INSERT INTO foo VALUES (847003,'sub-alpha','GESS90')","shape":"INSERT INTO foo VALUES (847003, 'sub-alpha', 'GESS90');"}
+{"sql":"SELECT json_build_object('turbines',json_object_agg(serial_num,json_build_object('name',name,'type',type)))\nFROM foo","shape":"SELECT json_build_object('turbines', json_object_agg(serial_num, json_build_object('name', name, 'type', type))) FROM foo;"}
+{"sql":"SELECT json_object_agg(name, type) FROM foo","shape":"SELECT json_object_agg(name, type) FROM foo;"}
+{"sql":"INSERT INTO foo VALUES (999999, NULL, 'bar')","shape":"INSERT INTO foo VALUES (999999, NULL, 'bar');"}
+{"sql":"SELECT json_object('{}')","shape":"SELECT json_object('{}');"}
+{"sql":"SELECT json_object('{}', '{}')","shape":"SELECT json_object('{}', '{}');"}
+{"sql":"SELECT json_object('{a,1,b,2,3,NULL,\"d e f\",\"a b c\"}')","shape":"SELECT json_object('{a,1,b,2,3,NULL,\"d e f\",\"a b c\"}');"}
+{"sql":"SELECT json_object('{{a,1},{b,2},{3,NULL},{\"d e f\",\"a b c\"}}')","shape":"SELECT json_object('{{a,1},{b,2},{3,NULL},{\"d e f\",\"a b c\"}}');"}
+{"sql":"SELECT json_object('{a,b,c}')","shape":"SELECT json_object('{a,b,c}');"}
+{"sql":"SELECT json_object('{{a},{b}}')","shape":"SELECT json_object('{{a},{b}}');"}
+{"sql":"SELECT json_object('{{a,b,c},{b,c,d}}')","shape":"SELECT json_object('{{a,b,c},{b,c,d}}');"}
+{"sql":"SELECT json_object('{{{a,b},{c,d}},{{b,c},{d,e}}}')","shape":"SELECT json_object('{{{a,b},{c,d}},{{b,c},{d,e}}}');"}
+{"sql":"select json_object('{a,b,c,\"d e f\"}','{1,2,3,\"a b c\"}')","shape":"SELECT json_object('{a,b,c,\"d e f\"}','{1,2,3,\"a b c\"}');"}
+{"sql":"SELECT json_object('{{a,1},{b,2},{3,NULL},{\"d e f\",\"a b c\"}}', '{{a,1},{b,2},{3,NULL},{\"d e f\",\"a b c\"}}')","shape":"SELECT json_object('{{a,1},{b,2},{3,NULL},{\"d e f\",\"a b c\"}}', '{{a,1},{b,2},{3,NULL},{\"d e f\",\"a b c\"}}');"}
+{"sql":"select json_object('{a,b,c,\"d e f\",g}','{1,2,3,\"a b c\"}')","shape":"SELECT json_object('{a,b,c,\"d e f\",g}','{1,2,3,\"a b c\"}');"}
+{"sql":"select json_object('{a,b,c,\"d e f\"}','{1,2,3,\"a b c\",g}')","shape":"SELECT json_object('{a,b,c,\"d e f\"}','{1,2,3,\"a b c\",g}');"}
+{"sql":"select json_object('{a,b,NULL,\"d e f\"}','{1,2,3,\"a b c\"}')","shape":"SELECT json_object('{a,b,NULL,\"d e f\"}','{1,2,3,\"a b c\"}');"}
+{"sql":"select json_object('{a,b,\"\",\"d e f\"}','{1,2,3,\"a b c\"}')","shape":"SELECT json_object('{a,b,\"\",\"d e f\"}','{1,2,3,\"a b c\"}');"}
+{"sql":"select json_object_agg_unique(mod(i,100), i) from generate_series(0, 199) i","shape":"SELECT json_object_agg_unique(mod(i, 100), i) FROM generate_series(0, 199) AS i;"}
+{"sql":"select * from json_to_record('{\"a\":1,\"b\":\"foo\",\"c\":\"bar\"}')\n    as x(a int, b text, d text)","shape":"SELECT * FROM json_to_record('{\"a\":1,\"b\":\"foo\",\"c\":\"bar\"}') AS x(a int, b text, d text);"}
+{"sql":"select * from json_to_recordset('[{\"a\":1,\"b\":\"foo\",\"d\":false},{\"a\":2,\"b\":\"bar\",\"c\":true}]')\n    as x(a int, b text, c boolean)","shape":"SELECT * FROM json_to_recordset('[{\"a\":1,\"b\":\"foo\",\"d\":false},{\"a\":2,\"b\":\"bar\",\"c\":true}]') AS x(a int, b text, c boolean);"}
+{"sql":"select * from json_to_recordset('[{\"a\":1,\"b\":{\"d\":\"foo\"},\"c\":true},{\"a\":2,\"c\":false,\"b\":{\"d\":\"bar\"}}]')\n    as x(a int, b json, c boolean)","shape":"SELECT * FROM json_to_recordset('[{\"a\":1,\"b\":{\"d\":\"foo\"},\"c\":true},{\"a\":2,\"c\":false,\"b\":{\"d\":\"bar\"}}]') AS x(a int, b json, c boolean);"}
+{"sql":"select *, c is null as c_is_null\nfrom json_to_record('{\"a\":1, \"b\":{\"c\":16, \"d\":2}, \"x\":8, \"ca\": [\"1 2\", 3], \"ia\": [[1,2],[3,4]], \"r\": {\"a\": \"aaa\", \"b\": 123}}'::json)\n    as t(a int, b json, c text, x int, ca char(5)[], ia int[][], r jpop)","shape":"SELECT *, c IS NULL AS c_is_null FROM json_to_record('{\"a\":1, \"b\":{\"c\":16, \"d\":2}, \"x\":8, \"ca\": [\"1 2\", 3], \"ia\": [[1,2],[3,4]], \"r\": {\"a\": \"aaa\", \"b\": 123}}'::json) AS t(a int, b json, c text, x int, ca char(5)[], ia int[][], r jpop);"}
+{"sql":"select *, c is null as c_is_null\nfrom json_to_recordset('[{\"a\":1, \"b\":{\"c\":16, \"d\":2}, \"x\":8}]'::json)\n    as t(a int, b json, c text, x int)","shape":"SELECT *, c IS NULL AS c_is_null FROM json_to_recordset('[{\"a\":1, \"b\":{\"c\":16, \"d\":2}, \"x\":8}]'::json) AS t(a int, b json, c text, x int);"}
+{"sql":"select * from json_to_record('{\"ia\": null}') as x(ia _int4)","shape":"SELECT * FROM json_to_record('{\"ia\": null}') AS x(ia _int4);"}
+{"sql":"select * from json_to_record('{\"ia\": 123}') as x(ia _int4)","shape":"SELECT * FROM json_to_record('{\"ia\": 123}') AS x(ia _int4);"}
+{"sql":"select * from json_to_record('{\"ia\": [1, \"2\", null, 4]}') as x(ia _int4)","shape":"SELECT * FROM json_to_record('{\"ia\": [1, \"2\", null, 4]}') AS x(ia _int4);"}
+{"sql":"select * from json_to_record('{\"ia\": [[1, 2], [3, 4]]}') as x(ia _int4)","shape":"SELECT * FROM json_to_record('{\"ia\": [[1, 2], [3, 4]]}') AS x(ia _int4);"}
+{"sql":"select * from json_to_record('{\"ia\": [[1], 2]}') as x(ia _int4)","shape":"SELECT * FROM json_to_record('{\"ia\": [[1], 2]}') AS x(ia _int4);"}
+{"sql":"select * from json_to_record('{\"ia\": [[1], [2, 3]]}') as x(ia _int4)","shape":"SELECT * FROM json_to_record('{\"ia\": [[1], [2, 3]]}') AS x(ia _int4);"}
+{"sql":"select * from json_to_record('{\"ia2\": [1, 2, 3]}') as x(ia2 int[][])","shape":"SELECT * FROM json_to_record('{\"ia2\": [1, 2, 3]}') AS x(ia2 int[][]);"}
+{"sql":"select * from json_to_record('{\"ia2\": [[1, 2], [3, 4]]}') as x(ia2 int4[][])","shape":"SELECT * FROM json_to_record('{\"ia2\": [[1, 2], [3, 4]]}') AS x(ia2 int4[][]);"}
+{"sql":"select * from json_to_record('{\"ia2\": [[[1], [2], [3]]]}') as x(ia2 int4[][])","shape":"SELECT * FROM json_to_record('{\"ia2\": [[[1], [2], [3]]]}') AS x(ia2 int4[][]);"}
+{"sql":"select * from json_to_record('{\"out\": {\"key\": 1}}') as x(out json)","shape":"SELECT * FROM json_to_record('{\"out\": {\"key\": 1}}') AS x(out json);"}
+{"sql":"select * from json_to_record('{\"out\": [{\"key\": 1}]}') as x(out json)","shape":"SELECT * FROM json_to_record('{\"out\": [{\"key\": 1}]}') AS x(out json);"}
+{"sql":"select * from json_to_record('{\"out\": \"{\\\"key\\\": 1}\"}') as x(out json)","shape":"SELECT * FROM json_to_record('{\"out\": \"{\\\"key\\\": 1}\"}') AS x(out json);"}
+{"sql":"select * from json_to_record('{\"out\": {\"key\": 1}}') as x(out jsonb)","shape":"SELECT * FROM json_to_record('{\"out\": {\"key\": 1}}') AS x(out jsonb);"}
+{"sql":"select * from json_to_record('{\"out\": [{\"key\": 1}]}') as x(out jsonb)","shape":"SELECT * FROM json_to_record('{\"out\": [{\"key\": 1}]}') AS x(out jsonb);"}
+{"sql":"select * from json_to_record('{\"out\": \"{\\\"key\\\": 1}\"}') as x(out jsonb)","shape":"SELECT * FROM json_to_record('{\"out\": \"{\\\"key\\\": 1}\"}') AS x(out jsonb);"}
+{"sql":"select json_strip_nulls(null)","shape":"SELECT json_strip_nulls(NULL);"}
+{"sql":"select json_strip_nulls('1')","shape":"SELECT json_strip_nulls('1');"}
+{"sql":"select json_strip_nulls('\"a string\"')","shape":"SELECT json_strip_nulls('\"a string\"');"}
+{"sql":"select json_strip_nulls('null')","shape":"SELECT json_strip_nulls('null');"}
+{"sql":"select json_strip_nulls('[1,2,null,3,4]')","shape":"SELECT json_strip_nulls('[1,2,null,3,4]');"}
+{"sql":"select json_strip_nulls('{\"a\":1,\"b\":null,\"c\":[2,null,3],\"d\":{\"e\":4,\"f\":null}}')","shape":"SELECT json_strip_nulls('{\"a\":1,\"b\":null,\"c\":[2,null,3],\"d\":{\"e\":4,\"f\":null}}');"}
+{"sql":"select json_strip_nulls('[1,{\"a\":1,\"b\":null,\"c\":2},3]')","shape":"SELECT json_strip_nulls('[1,{\"a\":1,\"b\":null,\"c\":2},3]');"}
+{"sql":"select json_strip_nulls('{\"a\": {\"b\": null, \"c\": null}, \"d\": {} }')","shape":"SELECT json_strip_nulls('{\"a\": {\"b\": null, \"c\": null}, \"d\": {} }');"}
+{"sql":"select to_tsvector('{\"a\": \"aaa bbb ddd ccc\", \"b\": [\"eee fff ggg\"], \"c\": {\"d\": \"hhh iii\"}}'::json)","shape":"SELECT to_tsvector('{\"a\": \"aaa bbb ddd ccc\", \"b\": [\"eee fff ggg\"], \"c\": {\"d\": \"hhh iii\"}}'::json);"}
+{"sql":"select to_tsvector('simple', '{\"a\": \"aaa bbb ddd ccc\", \"b\": [\"eee fff ggg\"], \"c\": {\"d\": \"hhh iii\"}}'::json)","shape":"SELECT to_tsvector('simple', '{\"a\": \"aaa bbb ddd ccc\", \"b\": [\"eee fff ggg\"], \"c\": {\"d\": \"hhh iii\"}}'::json);"}
+{"sql":"select to_tsvector('english', '{\"a\": \"aaa in bbb ddd ccc\", \"b\": [\"the eee fff ggg\"], \"c\": {\"d\": \"hhh. iii\"}}'::json)","shape":"SELECT to_tsvector('english', '{\"a\": \"aaa in bbb ddd ccc\", \"b\": [\"the eee fff ggg\"], \"c\": {\"d\": \"hhh. iii\"}}'::json);"}
+{"sql":"select to_tsvector('english', '{\"a\": \"aaa in bbb ddd ccc\", \"b\": 123, \"c\": 456}'::json)","shape":"SELECT to_tsvector('english', '{\"a\": \"aaa in bbb ddd ccc\", \"b\": 123, \"c\": 456}'::json);"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"all\"')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"all\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"key\"')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"key\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"string\"')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"string\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"numeric\"')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"numeric\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"boolean\"')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"boolean\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '[\"string\", \"numeric\"]')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '[\"string\", \"numeric\"]');"}
+{"sql":"select to_tsvector('\"\"'::json)","shape":"SELECT to_tsvector('\"\"'::json);"}
+{"sql":"select to_tsvector('{}'::json)","shape":"SELECT to_tsvector('{}'::json);"}
+{"sql":"select to_tsvector('[]'::json)","shape":"SELECT to_tsvector('[]'::json);"}
+{"sql":"select to_tsvector('null'::json)","shape":"SELECT to_tsvector('null'::json);"}
+{"sql":"select json_to_tsvector('\"\"'::json, '\"all\"')","shape":"SELECT json_to_tsvector('\"\"'::json, '\"all\"');"}
+{"sql":"select json_to_tsvector('{}'::json, '\"all\"')","shape":"SELECT json_to_tsvector('{}'::json, '\"all\"');"}
+{"sql":"select json_to_tsvector('[]'::json, '\"all\"')","shape":"SELECT json_to_tsvector('[]'::json, '\"all\"');"}
+{"sql":"select json_to_tsvector('null'::json, '\"all\"')","shape":"SELECT json_to_tsvector('null'::json, '\"all\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"\"')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '\"\"');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '{}')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '{}');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '[]')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '[]');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, 'null')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, 'null');"}
+{"sql":"select json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '[\"all\", null]')","shape":"SELECT json_to_tsvector('english', '{\"a\": \"aaa in bbb\", \"b\": 123, \"c\": 456, \"d\": true, \"f\": false, \"g\": null}'::json, '[\"all\", null]');"}
+{"sql":"select ts_headline('{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\", \"c1\": \"ccc1 ddd1\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'))","shape":"SELECT ts_headline('{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\", \"c1\": \"ccc1 ddd1\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'));"}
+{"sql":"select ts_headline('english', '{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'))","shape":"SELECT ts_headline('english', '{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'));"}
+{"sql":"select ts_headline('{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\", \"c1\": \"ccc1 ddd1\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'), 'StartSel = <, StopSel = >')","shape":"SELECT ts_headline('{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\", \"c1\": \"ccc1 ddd1\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'), 'StartSel = <, StopSel = >');"}
+{"sql":"select ts_headline('english', '{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\", \"c1\": \"ccc1 ddd1\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'), 'StartSel = <, StopSel = >')","shape":"SELECT ts_headline('english', '{\"a\": \"aaa bbb\", \"b\": {\"c\": \"ccc ddd fff\", \"c1\": \"ccc1 ddd1\"}, \"d\": [\"ggg hhh\", \"iii jjj\"]}'::json, tsquery('bbb & ddd & hhh'), 'StartSel = <, StopSel = >');"}
+{"sql":"select ts_headline('null'::json, tsquery('aaa & bbb'))","shape":"SELECT ts_headline('null'::json, tsquery('aaa & bbb'));"}
+{"sql":"select ts_headline('{}'::json, tsquery('aaa & bbb'))","shape":"SELECT ts_headline('{}'::json, tsquery('aaa & bbb'));"}
+{"sql":"select ts_headline('[]'::json, tsquery('aaa & bbb'))","shape":"SELECT ts_headline('[]'::json, tsquery('aaa & bbb'));"}

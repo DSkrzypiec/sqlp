@@ -1,0 +1,9 @@
+{"sql":"EXPLAIN PRAGMA page_size"}
+{"sql":"PRAGMA page_size=511"}
+{"sql":"PRAGMA page_size=8192"}
+{"sql":"PRAGMA page_size=65537"}
+{"sql":"PRAGMA page_size=1234"}
+{"sql":"CREATE TABLE t1(x UNIQUE, y UNIQUE, z UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(randstr(10,9000))"}
+{"sql":"INSERT INTO t1 SELECT x||x FROM t1"}
+{"sql":"DELETE FROM t1 WHERE rowid%5!=0"}

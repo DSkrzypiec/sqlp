@@ -1,0 +1,397 @@
+{"sql":"SELECT ROW_NUMBER() OVER () FROM t","shape":"SELECT ROW_NUMBER() OVER () FROM t;"}
+{"sql":"SELECT ROW_NUMBER() OVER (ORDER BY a) FROM t","shape":"SELECT ROW_NUMBER() OVER (ORDER BY a) FROM t;"}
+{"sql":"SELECT ROW_NUMBER() OVER (PARTITION BY a) FROM t","shape":"SELECT ROW_NUMBER() OVER (PARTITION BY a) FROM t;"}
+{"sql":"SELECT ROW_NUMBER() OVER (PARTITION BY a ORDER BY b) FROM t","shape":"SELECT ROW_NUMBER() OVER (PARTITION BY a ORDER BY b) FROM t;"}
+{"sql":"SELECT ROW_NUMBER() OVER (PARTITION BY a, b ORDER BY c DESC, d) FROM t","shape":"SELECT ROW_NUMBER() OVER (PARTITION BY a, b ORDER BY c DESC, d) FROM t;"}
+{"sql":"SELECT RANK() OVER (ORDER BY a), DENSE_RANK() OVER (ORDER BY a) FROM t","shape":"SELECT RANK() OVER (ORDER BY a), DENSE_RANK() OVER (ORDER BY a) FROM t;"}
+{"sql":"SELECT NTILE(4) OVER (ORDER BY a) FROM t","shape":"SELECT NTILE(4) OVER (ORDER BY a) FROM t;"}
+{"sql":"SELECT LAG(a) OVER (ORDER BY a), LEAD(a, 1, 0) OVER (ORDER BY a) FROM t","shape":"SELECT LAG(a) OVER (ORDER BY a), LEAD(a, 1, 0) OVER (ORDER BY a) FROM t;"}
+{"sql":"SELECT FIRST_VALUE(a) OVER (ORDER BY a), LAST_VALUE(a) OVER (ORDER BY a), NTH_VALUE(a, 2) OVER (ORDER BY a) FROM t","shape":"SELECT FIRST_VALUE(a) OVER (ORDER BY a), LAST_VALUE(a) OVER (ORDER BY a), NTH_VALUE(a, 2) OVER (ORDER BY a) FROM t;"}
+{"sql":"SELECT SUM(a) OVER () FROM t","shape":"SELECT SUM(a) OVER () FROM t;"}
+{"sql":"SELECT SUM(a) OVER (PARTITION BY b) FROM t","shape":"SELECT SUM(a) OVER (PARTITION BY b) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b) + 1 FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b) + 1 FROM t;"}
+{"sql":"SELECT COUNT(*) OVER (PARTITION BY a) FROM t","shape":"SELECT COUNT(*) OVER (PARTITION BY a) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS UNBOUNDED PRECEDING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS UNBOUNDED PRECEDING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS CURRENT ROW) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS CURRENT ROW) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b RANGE UNBOUNDED PRECEDING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b RANGE UNBOUNDED PRECEDING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b GROUPS 1 PRECEDING) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b GROUPS 1 PRECEDING) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b GROUPS BETWEEN 1 PRECEDING AND CURRENT ROW) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b GROUPS BETWEEN 1 PRECEDING AND CURRENT ROW) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE GROUP) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE GROUP) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE TIES) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE TIES) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN a + 1 PRECEDING AND b * 2 FOLLOWING) FROM t"}
+{"sql":"SELECT SUM(a) OVER w FROM t WINDOW w AS (PARTITION BY b)","shape":"SELECT SUM(a) OVER w FROM t WINDOW w AS (PARTITION BY b);"}
+{"sql":"SELECT SUM(a) OVER w, COUNT(*) OVER w FROM t WINDOW w AS (ORDER BY b)","shape":"SELECT SUM(a) OVER w, COUNT(*) OVER w FROM t WINDOW w AS (ORDER BY b);"}
+{"sql":"SELECT SUM(a) OVER w FROM t WINDOW w AS ()","shape":"SELECT SUM(a) OVER w FROM t WINDOW w AS ();"}
+{"sql":"SELECT SUM(a) OVER x FROM t WINDOW w AS (PARTITION BY b), x AS (w ORDER BY c)","shape":"SELECT SUM(a) OVER x FROM t WINDOW w AS (PARTITION BY b), x AS (w ORDER BY c);"}
+{"sql":"SELECT SUM(a) OVER (w ORDER BY c) FROM t WINDOW w AS (PARTITION BY b)","shape":"SELECT SUM(a) OVER (w ORDER BY c) FROM t WINDOW w AS (PARTITION BY b);"}
+{"sql":"SELECT SUM(a) OVER (w) FROM t WINDOW w AS (PARTITION BY b)","shape":"SELECT SUM(a) OVER (w) FROM t WINDOW w AS (PARTITION BY b);"}
+{"sql":"SELECT SUM(a) OVER (w ROWS 1 PRECEDING) FROM t WINDOW w AS (ORDER BY b)","shape":"SELECT SUM(a) OVER (w ROWS 1 PRECEDING) FROM t WINDOW w AS (ORDER BY b);"}
+{"sql":"SELECT a FROM t WINDOW w AS (PARTITION BY b) ORDER BY a LIMIT 1","shape":"SELECT a FROM t WINDOW w AS (PARTITION BY b) ORDER BY a LIMIT 1;"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT(*) > 1 WINDOW w AS (ORDER BY a)","shape":"SELECT a FROM t GROUP BY a HAVING COUNT(*) > 1 WINDOW w AS (ORDER BY a);"}
+{"sql":"SELECT SUM(a) FILTER (WHERE a > 1) OVER (PARTITION BY b) FROM t","shape":"SELECT SUM(a) FILTER (WHERE a > 1) OVER (PARTITION BY b) FROM t;"}
+{"sql":"SELECT COUNT(*) FILTER (WHERE a > 1) OVER w FROM t WINDOW w AS (ORDER BY b)","shape":"SELECT COUNT(*) FILTER (WHERE a > 1) OVER w FROM t WINDOW w AS (ORDER BY b);"}
+{"sql":"SELECT SUM(SUM(a)) OVER (ORDER BY b) FROM t GROUP BY b","shape":"SELECT SUM(SUM(a)) OVER (ORDER BY b) FROM t GROUP BY b;"}
+{"sql":"SELECT * FROM (SELECT a, ROW_NUMBER() OVER (ORDER BY a) AS n FROM t) AS x WHERE n = 1","shape":"SELECT * FROM (SELECT a, ROW_NUMBER() OVER (ORDER BY a) AS n FROM t) AS x WHERE n = 1;"}
+{"sql":"SELECT a FROM t ORDER BY ROW_NUMBER() OVER (ORDER BY a)","shape":"SELECT a FROM t ORDER BY ROW_NUMBER() OVER (ORDER BY a);"}
+{"sql":"SELECT CASE WHEN ROW_NUMBER() OVER (ORDER BY a) = 1 THEN 1 END FROM t","shape":"SELECT CASE WHEN ROW_NUMBER() OVER (ORDER BY a) = 1 THEN 1 END FROM t;"}
+{"sql":"SELECT SUM(a) OVER (PARTITION BY b) / SUM(a) OVER () FROM t","shape":"SELECT SUM(a) OVER (PARTITION BY b) / SUM(a) OVER () FROM t;"}
+{"sql":"SELECT SUM(a) OVER"}
+{"sql":"SELECT SUM(a) OVER ( FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER PARTITION BY b FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (PARTITION b) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (PARTITION BY) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER a) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b PARTITION BY c) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (PARTITION BY b PARTITION BY c) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 PRECEDING) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 PRECEDING AND) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 FOLLOWING) FROM t"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS UNBOUNDED) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS UNBOUNDED FOLLOWING) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW) FROM t"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING) FROM t"}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS CURRENT) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE ALL) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER (ORDER BY b RANGE GROUPS 1 PRECEDING) FROM t","reject":true}
+{"sql":"SELECT a FROM t WINDOW","shape":"SELECT a FROM t AS WINDOW;"}
+{"sql":"SELECT a FROM t WINDOW w","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS","reject":true}
+{"sql":"SELECT a FROM t WINDOW AS (ORDER BY a)","reject":true}
+{"sql":"SELECT a FROM t WINDOW w (ORDER BY a)","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS (ORDER BY a),","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS (ORDER BY a) WHERE a = 1","reject":true}
+{"sql":"SELECT SUM(a) OVER w AS x OVER y FROM t","reject":true}
+{"sql":"SELECT SUM(a) FILTER (WHERE a > 1) FILTER (WHERE a > 2) FROM t","reject":true}
+{"sql":"SELECT SUM(a) OVER () OVER () FROM t","reject":true}
+{"sql":"SELECT OVER () FROM t"}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ) ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ( ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( ) ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( ) FROM","reject":true}
+{"sql":"ROW_NUMBER SELECT ( ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( ORDER a BY ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER 1 ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER PARTITION ( BY a ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION BY a ) FROM t","shape":"SELECT ROW_NUMBER() OVER (PARTITION BY a) FROM t;"}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION BY ) a FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ORDER OVER ( PARTITION BY a ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION BY a ORDER BY b ) t FROM","reject":true}
+{"sql":"SELECT SELECT ROW_NUMBER ( ) OVER ( PARTITION BY a ORDER BY b ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( LEAD OVER ( PARTITION BY a ORDER BY b ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION BY a BY b ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION BY a , b ORDER BY c DESC , d ROWS FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION PARTITION BY a , b ORDER BY c DESC , d ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) OVER ( PARTITION BY a , ORDER b BY c DESC , d ) FROM t","reject":true}
+{"sql":"SELECT ROW_NUMBER ( ) ) OVER ( PARTITION BY a , b ORDER BY c DESC , d ) FROM t","reject":true}
+{"sql":"SELECT RANK ( ) OVER ( ORDER BY a ) , DENSE_RANK ( ) OVER ORDER ( BY a ) FROM t","reject":true}
+{"sql":"PARTITION RANK ( ) OVER ( ORDER BY a ) , DENSE_RANK ( ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT RANK ( ) OVER ( ORDER BY a ) , DENSE_RANK ( ) OVER ( ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT RANK ( ) OVER ( ORDER BY a ) , DENSE_RANK ( ) OVER ( ORDER BY a ) FROM t","shape":"SELECT RANK() OVER (ORDER BY a), DENSE_RANK() OVER (ORDER BY a) FROM t;"}
+{"sql":"SELECT ( 4 ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT NTILE ( 4 ) ) ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT NTILE ( 4 ) OVER ( ORDER BY a ) t FROM","reject":true}
+{"sql":"SELECT NTILE ( 4 ) OVER ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT LAG ( a ) OVER ( ORDER BY a ) , LEAD ( a , 1 , 0 ) OVER ( ORDER BY a ) t"}
+{"sql":"SELECT LAG ( a ) OVER ( ORDER BY a ) , LEAD ( a , 1 , 0 ) OVER ORDER ( BY a ) FROM t","reject":true}
+{"sql":"SELECT LAG ( a ) OVER ( ORDER BY a ) , LEAD ( a , 1 , 0 OVER ) ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT LAG ( a ) OVER ( ORDER BY a ) , LEAD ( a 1 , 0 ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT FIRST_VALUE ( a ) OVER ( ORDER BY a ) , LAST_VALUE ( a ) OVER ORDER ( BY a ) , NTH_VALUE ( a , 2 ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT FIRST_VALUE ( a ) OVER ( ORDER BY a ) , LAST_VALUE a ( ) OVER ( ORDER BY a ) , NTH_VALUE ( a , 2 ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT FIRST_VALUE ( a ) OVER ( ORDER BY a ) , LAST_VALUE ( a ) OVER ( ORDER BY a ) , NTH_VALUE ( a b 2 ) OVER ( ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT FIRST_VALUE ( a ) OVER ( ORDER BY a ) , LAST_VALUE ( a ) OVER ( ORDER BY a ) , NTH_VALUE ( a , 2 ) OVER ( ) BY a ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ) ) FROM t","reject":true}
+{"sql":"SELECT ) ( a ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ) FROM t","shape":"SELECT SUM(a) OVER () FROM t;"}
+{"sql":"SELECT SUM ( a ) OVER ( ) t"}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY b ) FROM t","shape":"SELECT SUM(a) OVER (PARTITION BY b) FROM t;"}
+{"sql":"SELECT SUM ( a ) ( PARTITION BY b ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ( PARTITION BY b ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER OVER ( PARTITION BY b ) FROM t","reject":true}
+{"sql":"SELECT SELECT ( a ) OVER ( ORDER BY b ) + 1 FROM t","reject":true}
+{"sql":"SELECT SUM a ( ) OVER ( ORDER BY b ) + 1 FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ) ) + 1 FROM t","reject":true}
+{"sql":"SUM ( a ) OVER ( ORDER BY b ) + 1 FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) OVER ( PARTITION BY a ) ) FROM t","reject":true}
+{"sql":"SELECT ( COUNT * ) OVER ( PARTITION BY a ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) OVER ( PARTITION BY a ) FROM t t","shape":"SELECT COUNT(*) OVER (PARTITION BY a) FROM t AS t;"}
+{"sql":"SELECT COUNT ( * * ) OVER ( PARTITION BY a ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( BY ORDER b ROWS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING ) t FROM","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING a FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ( ORDER BY b ROWS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED PRECEDING ) ORDER t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED PRECEDING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS UNBOUNDED PRECEDING) FROM t;"}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED PRECEDING ) a t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER b BY ROWS UNBOUNDED PRECEDING ) FROM t","reject":true}
+{"sql":"1 SUM ( a ) OVER ( ORDER BY b ROWS CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ) OVER ( ORDER BY b ROWS CURRENT ROW ) FROM t"}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS CURRENT ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS CURRENT ROW ) FROM","reject":true}
+{"sql":"SELECT SUM ( a ) OVER BY ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t;"}
+{"sql":"SELECT SUM ( a ) ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b BETWEEN ROWS UNBOUNDED PRECEDING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW ) SELECT t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW ) t FROM","reject":true}
+{"sql":"SELECT SUM ORDER a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER b b ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ORDER ( BY b ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN CURRENT ROW AND FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a OVER ) ( ORDER BY b ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING COUNT FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) FROM t;"}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED AND UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING ) FROM","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE UNBOUNDED PRECEDING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b RANGE UNBOUNDED PRECEDING) FROM t;"}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER ( b RANGE UNBOUNDED PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) ( OVER ORDER BY b RANGE UNBOUNDED PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE UNBOUNDED PRECEDING FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER b RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE BETWEEN 1 PRECEDING AND FOLLOWING 1 ) FROM t","reject":true}
+{"sql":"SUM ( a ) OVER ( ORDER BY b RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b GROUPS 1 PRECEDING ) FROM t t","shape":"SELECT SUM(a) OVER (ORDER BY b GROUPS 1 PRECEDING) FROM t AS t;"}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b GROUPS 1 PRECEDING ) t"}
+{"sql":"SELECT SUM ( a ) OVER ( BY ORDER b GROUPS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( BY b GROUPS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER ) b GROUPS BETWEEN 1 PRECEDING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER b BY GROUPS BETWEEN 1 PRECEDING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b GROUPS BETWEEN 1 PRECEDING AND CURRENT OVER ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b GROUPS BETWEEN 1 PRECEDING AND CURRENT ROW FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW ) NTILE t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW ) t FROM","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING CURRENT EXCLUDE ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE GROUP ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ) GROUP FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE GROUP ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE GROUP ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS PRECEDING 1 EXCLUDE TIES ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ORDER BY b ROWS 1 PRECEDING EXCLUDE TIES ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE TIES ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) ( ORDER BY b ROWS 1 PRECEDING EXCLUDE TIES ) FROM t","reject":true}
+{"sql":"SELECT ( ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) a ( ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN a + PRECEDING AND b * 2 FOLLOWING ) FROM t","reject":true}
+{"sql":"SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN a + 1 PRECEDING AND b * 2 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN a t 1 PRECEDING AND b * 2 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w FROM t WINDOW w AS ( PARTITION b BY )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w FROM t WINDOW w AS ( PARTITION PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a OVER w FROM t WINDOW w AS ( PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w FROM t WINDOW w AS PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w , COUNT ( * ) OVER w FROM t ORDER w AS ( ORDER BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w , COUNT ( * ) OVER w FROM t WINDOW w AS ( ORDER b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w , COUNT ( * ) OVER w FROM t WINDOW w AS ( ORDER b BY )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w , ( * ) OVER w FROM t WINDOW w AS ( ORDER BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w FROM t WINDOW AS w ( )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER OVER w FROM t WINDOW w AS ( )"}
+{"sql":"SELECT SUM ( a ) OVER w FROM ) WINDOW w AS ( )","reject":true}
+{"sql":"SELECT SUM ( a ) a x FROM t WINDOW w AS ( PARTITION BY b ) , x AS ( w ORDER BY c )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER x FROM t * w AS ( PARTITION BY b ) , x AS ( w ORDER BY c )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER x FROM t w WINDOW AS ( PARTITION BY b ) , x AS ( w ORDER BY c )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER x FROM t WINDOW w AS ( PARTITION BY b ) , x AS ( SUM ORDER BY c )"}
+{"sql":"SELECT SUM ( a ) OVER ( w ORDER BY c ) FROM t WINDOW w AS ( PARTITION BY )","reject":true}
+{"sql":"SELECT ( SUM a ) OVER ( w ORDER BY c ) FROM t WINDOW w AS ( PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w b BY c ) FROM t WINDOW w AS ( PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w ORDER BY c ) FROM t WINDOW w AS ( PARTITION PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w ) FROM t WINDOW w AS ( PARTITION BY b )","shape":"SELECT SUM(a) OVER (w) FROM t WINDOW w AS (PARTITION BY b);"}
+{"sql":"SELECT SUM ( a ) OVER ( w ) FROM t WINDOW w AS ( PARTITION BY b a","reject":true}
+{"sql":"SELECT ( a ) OVER ( w ) FROM t WINDOW w AS ( PARTITION BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w ) FROM t WINDOW WINDOW w AS ( PARTITION BY b )","shape":"SELECT SUM(a) OVER (w) FROM t AS WINDOW WINDOW w AS (PARTITION BY b);"}
+{"sql":"SELECT SUM ( a ) OVER ( w ROWS 1 PRECEDING ) FROM t WINDOW w AS ( ORDER BY OVER )"}
+{"sql":"SELECT SUM ( a ) OVER ( w ROWS 1 a ) FROM t WINDOW w AS ( ORDER BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w 1 ROWS PRECEDING ) FROM t WINDOW w AS ( ORDER BY b )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w ROWS 1 PRECEDING ) FROM t WINDOW w AS ORDER BY b )","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( PARTITION ( b ) ORDER BY a LIMIT 1","reject":true}
+{"sql":"SELECT a a FROM t WINDOW w AS ( PARTITION BY b ) ORDER BY a LIMIT 1","shape":"SELECT a AS a FROM t WINDOW w AS (PARTITION BY b) ORDER BY a LIMIT 1;"}
+{"sql":"SELECT a FROM OVER WINDOW w AS ( PARTITION BY b ) ORDER BY a LIMIT 1"}
+{"sql":"SELECT a FROM t WINDOW w AS ( PARTITION BY b ORDER BY a LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT ( * ) ) > 1 WINDOW w AS ( ORDER BY a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING ( COUNT * ) > 1 WINDOW w AS ( ORDER BY a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT ( * ROWS > 1 WINDOW w AS ( ORDER BY a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT ( * ) > 1 WINDOW w AS ( ORDER BY )","reject":true}
+{"sql":"SELECT SUM SUM ( a ) FILTER ( WHERE a > 1 ) OVER ( PARTITION BY b ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER ( WHERE a > 1 ) OVER ( PARTITION BY b b ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER WHERE a > 1 ) OVER ( PARTITION BY b ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER ( WHERE a > 1 ) OVER ( PARTITION b ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a > 1 1 ) OVER w FROM t WINDOW w AS ( ORDER BY b )","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a > 1 OVER ) w FROM t WINDOW w AS ( ORDER BY b )","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a > 1 ) OVER w FROM t WINDOW w AS ( ORDER BY b ) )","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a > 1 ) OVER w FROM t WINDOW w AS ( BY b )","reject":true}
+{"sql":"SELECT SUM ( SUM ( a ) ) OVER ( ORDER BY BY b ) FROM t GROUP BY b","reject":true}
+{"sql":"SELECT SUM ( SUM ( a ) ) OVER ( ORDER BY b ) FROM t BY b","reject":true}
+{"sql":"SELECT SUM ( SUM ( a ROW_NUMBER ) OVER ( ORDER BY b ) FROM t GROUP BY b","reject":true}
+{"sql":"SELECT SUM ( SUM ( a ) OVER ( ORDER BY b ) FROM t GROUP BY b","reject":true}
+{"sql":"SELECT * FROM ( SELECT a , ROW_NUMBER ( ) OVER ( ORDER a BY ) AS n FROM t ) AS x WHERE n = 1","reject":true}
+{"sql":"SELECT * FROM ( SELECT a , ROW_NUMBER ( ) OVER ( ORDER BY a ) AS n FROM t ) AS x WHERE n =","reject":true}
+{"sql":"SELECT * FROM ( SELECT a , ROW_NUMBER ( ) OVER ( ( ORDER BY a ) AS n FROM t ) AS x WHERE n = 1","reject":true}
+{"sql":"SELECT * FROM ( SELECT a , ROW_NUMBER ( ) OVER ( ORDER BY a ) AS n FROM t AS ) x WHERE n = 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ROW_NUMBER ( ) OVER ( BY a )","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ROW_NUMBER ( ) OVER ( ORDER a BY )","reject":true}
+{"sql":"SELECT a FROM t OVER BY ROW_NUMBER ( ) OVER ( ORDER BY a )","reject":true}
+{"sql":"SELECT CASE WHEN ROW_NUMBER ( ) OVER ( ORDER BY a ) = ) THEN 1 END FROM t","reject":true}
+{"sql":"SELECT SELECT CASE WHEN ROW_NUMBER ( ) OVER ( ORDER BY a ) = 1 THEN 1 END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN ROW_NUMBER ( OVER ) ( ORDER BY a ) = 1 THEN 1 END FROM t","reject":true}
+{"sql":"SELECT CASE WHEN ROW_NUMBER ( ) ) OVER ( ORDER BY a ) = 1 THEN 1 END FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY b ) / SUM ( a ) OVER ( ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ) a OVER ( PARTITION BY b ) / SUM ( a ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY b ) / SUM ( a OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY ) / SUM ( a ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) =","reject":true}
+{"sql":"SELECT SUM ( a a ) OVER","reject":true}
+{"sql":"SELECT SUM a a ) OVER","reject":true}
+{"sql":"SELECT SUM ( a ) OVER"}
+{"sql":"SELECT SUM ( a ) OVER FROM FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( FROM t","reject":true}
+{"sql":"WHERE SUM ( a ) OVER ( FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( t","reject":true}
+{"sql":"SELECT SUM ( ( a ) OVER PARTITION BY b FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER OVER PARTITION BY b FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( BY b FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER PARTITION BY b FROM FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER PARTITION ( b ) FROM t","reject":true}
+{"sql":"w SUM ( a ) OVER ( PARTITION b ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ( PARTITION b ) FROM t","reject":true}
+{"sql":"SELECT SUM a ( ) OVER ( PARTITION b ) FROM t","reject":true}
+{"sql":"SELECT SUM t a ) OVER ( PARTITION BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ) a OVER ( PARTITION BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER OVER ( PARTITION BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY a FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER a ) t FROM","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( a ORDER ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) SUM ( ORDER a ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ( ORDER a ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER ORDER BY ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER ) BY FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) ( ORDER BY b PARTITION BY c ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ( BY c ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY BY b PARTITION BY c ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b PARTITION BY c ) PARTITION t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ( PARTITION BY b PARTITION BY c ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY b PARTITION BY c ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( BY b PARTITION BY c ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY b PARTITION BY c ) FROM t t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ) t t","reject":true}
+{"sql":"SELECT SUM ( a OVER ) ( ORDER BY b ROWS ) FROM t","reject":true}
+{"sql":"SELECT SUM a ) OVER ( ORDER BY b ROWS ) FROM t","reject":true}
+{"sql":"SELECT ( SUM a ) OVER ( ORDER BY b ROWS ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY ROWS b BETWEEN ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY BY b ROWS BETWEEN ) FROM t","reject":true}
+{"sql":"SELECT ( SUM a ) OVER ( ORDER BY b ROWS BETWEEN ) FROM t","reject":true}
+{"sql":"SUM SELECT ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT ( SUM a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b BETWEEN 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ) ORDER BY b ROWS BETWEEN 1 PRECEDING AND ) FROM t","reject":true}
+{"sql":"SELECT SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a OVER ) ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND ) FROM t","reject":true}
+{"sql":"SELECT a ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 ) FROM FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 ) t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY OVER ROWS 1 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b b 1 ) FROM t","reject":true}
+{"sql":"SUM ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING a FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER b BY ROWS 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ) UNBOUNDED FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED ) FROM a","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED ) FROM t t","reject":true}
+{"sql":"SUM SELECT ( a ) OVER ( ORDER BY b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER OVER ( ORDER BY b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a OVER ) ( ORDER BY b ROWS BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a a ) OVER ( ORDER BY b ROWS BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b t BETWEEN UNBOUNDED FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN FOLLOWING UNBOUNDED AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS CURRENT BETWEEN ROW AND UNBOUNDED PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT OVER ( a ) OVER ( ORDER BY b ROWS BETWEEN CURRENT ROW AND UNBOUNDED PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN CURRENT ROW AND PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN WHEN ROW AND UNBOUNDED PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING CURRENT AND ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM a ( ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b BETWEEN ROWS CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ORDER BY b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) ( ORDER BY b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM SUM ( a ) OVER ( ORDER BY b ROWS CURRENT ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b b ROWS CURRENT ) FROM t","reject":true}
+{"sql":"SELECT SELECT SUM ( a ) OVER ( ORDER BY b ROWS CURRENT ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY ROWS b 1 PRECEDING EXCLUDE ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ) ) FROM t","reject":true}
+{"sql":"SUM SELECT ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ALL ) OVER t","reject":true}
+{"sql":"SELECT SUM ( a ) ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ALL ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING PRECEDING EXCLUDE ALL ) FROM t","reject":true}
+{"sql":"ORDER SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE ALL ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a a ) OVER ( ORDER BY b RANGE GROUPS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ORDER BY b RANGE GROUPS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY RANGE b GROUPS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER a b RANGE GROUPS 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT a FROM WINDOW t"}
+{"sql":"a FROM t WINDOW","reject":true}
+{"sql":"a SELECT FROM t WINDOW","reject":true}
+{"sql":"SELECT a t FROM WINDOW w"}
+{"sql":"SELECT FROM a t WINDOW w","reject":true}
+{"sql":"SELECT a FROM WINDOW t w","reject":true}
+{"sql":"SELECT FROM a t WINDOW w AS","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS AS","reject":true}
+{"sql":"SELECT a FROM t w AS","reject":true}
+{"sql":"SELECT a FROM WINDOW t w AS","reject":true}
+{"sql":"SELECT a FROM t WINDOW ( AS ORDER BY a )","reject":true}
+{"sql":"SELECT a FROM t WINDOW AS AS ORDER BY a )","reject":true}
+{"sql":"SELECT a FROM t WINDOW WINDOW AS ( ORDER BY a )","shape":"SELECT a FROM t WINDOW WINDOW AS (ORDER BY a);"}
+{"sql":"SELECT a FROM t WINDOW ( ORDER BY a )","reject":true}
+{"sql":"SELECT a ( t WINDOW w ( ORDER BY a )","reject":true}
+{"sql":"SELECT a FROM t WINDOW w ( ORDER BY a BY","reject":true}
+{"sql":"SELECT a FROM t WINDOW w ( ORDER a )","reject":true}
+{"sql":"SELECT a FROM t WINDOW w ( BY a )","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( ORDER BY ) a ,","reject":true}
+{"sql":"SELECT a FROM t WINDOW w w AS ( ORDER BY a ) ,","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( ORDER BY a a ) ,","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( ORDER BY a ) ,","reject":true}
+{"sql":"SELECT a FROM t WINDOW b AS ( ORDER BY a ) WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( ORDER BY a ) WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( ORDER BY a ) WHERE a = w","reject":true}
+{"sql":"SELECT a FROM t WINDOW w AS ( ORDER BY a ) 2 a = 1","reject":true}
+{"sql":"SELECT SUM ( a OVER w AS x OVER y FROM t","reject":true}
+{"sql":"SELECT SUM SUM ( a ) OVER w AS x OVER y FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER BY AS x OVER y FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER w AS OVER OVER y FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER ( WHERE a > 1 ) FILTER ( WHERE a > 2 ) FROM t t","reject":true}
+{"sql":"( SUM ( a ) FILTER ( WHERE a > 1 ) FILTER ( WHERE a > 2 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER ( WHERE a > ) 1 FILTER ( WHERE a > 2 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) FILTER ( WHERE a > 1 ) FILTER ( WHERE > 2 ) FROM t","reject":true}
+{"sql":"SUM ( a ) OVER ( ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) ( ) OVER ( ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ) OVER ( ) BY t","reject":true}
+{"sql":"SELECT SELECT OVER ( ) FROM t","reject":true}
+{"sql":"SELECT OVER ( ) FROM t t"}
+{"sql":"SELECT OVER ( ) FROM","reject":true}
+{"sql":"SELECT AS ( ) FROM t","reject":true}

@@ -1,0 +1,72 @@
+{"sql":"SELECT json_object('ex','[52,3.14159]')"}
+{"sql":"SELECT json(jsonb_object('ex','[52,3.14159]'))"}
+{"sql":"SELECT json_object('ex',json('[52,3.14159]'))"}
+{"sql":"SELECT json(jsonb_object('ex',json('[52,3.14159]')))"}
+{"sql":"SELECT json_object('ex',jsonb('[52,3.14159]'))"}
+{"sql":"SELECT json(jsonb_object('ex',jsonb('[52,3.14159]')))"}
+{"sql":"SELECT json_object('ex',json_array(52,3.14159))"}
+{"sql":"SELECT json(jsonb_object('ex',json_array(52,3.14159)))"}
+{"sql":"SELECT json_object('ex',jsonb_array(52,3.14159))"}
+{"sql":"SELECT json(jsonb_object('ex',jsonb_array(52,3.14159)))"}
+{"sql":"SELECT json(' { \"this\" : \"is\", \"a\": [ \"test\" ] } ')"}
+{"sql":"SELECT json(jsonb(' { \"this\" : \"is\", \"a\": [ \"test\" ] } '))"}
+{"sql":"SELECT json_array(1,2,'3',4)"}
+{"sql":"SELECT json(jsonb_array(1,2,'3',4))"}
+{"sql":"SELECT json_array('[1,2]')"}
+{"sql":"SELECT json(jsonb_array('[1,2]'))"}
+{"sql":"SELECT json_array(json_array(1,2))"}
+{"sql":"SELECT json_array(jsonb_array(1,2))"}
+{"sql":"SELECT json(jsonb_array(json_array(1,2)))"}
+{"sql":"SELECT json(jsonb_array(jsonb_array(1,2)))"}
+{"sql":"SELECT json_array(1,null,'3','[4,5]','{\"six\":7.7}')"}
+{"sql":"SELECT json(jsonb_array(1,null,'3','[4,5]','{\"six\":7.7}'))"}
+{"sql":"SELECT json_array(1,null,'3',json('[4,5]'),json('{\"six\":7.7}'))"}
+{"sql":"SELECT json_array(1,null,'3',jsonb('[4,5]'),json('{\"six\":7.7}'))"}
+{"sql":"SELECT json(jsonb_array(1,null,'3',json('[4,5]'),json('{\"six\":7.7}')))"}
+{"sql":"SELECT json(jsonb_array(1,null,'3',jsonb('[4,5]'),jsonb('{\"six\":7.7}')))"}
+{"sql":"SELECT json_array_length('[1,2,3,4]')"}
+{"sql":"SELECT json_array_length(jsonb('[1,2,3,4]'))"}
+{"sql":"SELECT json_array_length('{\"one\":[1,2,3]}')"}
+{"sql":"SELECT json_object('a',2,'c',4)"}
+{"sql":"SELECT json(jsonb_object('a',2,'c',4))"}
+{"sql":"SELECT json_object('a',2,'c','{e:5}')"}
+{"sql":"SELECT json(jsonb_object('a',2,'c','{e:5}'))"}
+{"sql":"SELECT json_object('a',2,'c',json_object('e',5))"}
+{"sql":"SELECT json(jsonb_object('a',2,'c',json_object('e',5)))"}
+{"sql":"SELECT json_object('a',2,'c',jsonb_object('e',5))"}
+{"sql":"SELECT json(jsonb_object('a',2,'c',jsonb_object('e',5)))"}
+{"sql":"SELECT json_remove('{\"x\":25,\"y\":42}')"}
+{"sql":"SELECT json_remove(jsonb('{\"x\":25,\"y\":42}'))"}
+{"sql":"SELECT json(jsonb_remove('{\"x\":25,\"y\":42}'))"}
+{"sql":"SELECT json(jsonb_remove(jsonb('{\"x\":25,\"y\":42}')))"}
+{"sql":"SELECT json_type('{\"a\":[2,3.5,true,false,null,\"x\"]}')"}
+{"sql":"SELECT json_type(x'cc0f1761cb0b133235332e350102001778')"}
+{"sql":"SELECT json_valid(char(123)||'\"x\":35'||char(125))"}
+{"sql":"SELECT json_valid(char(123)||'\"x\":35')"}
+{"sql":"CREATE TABLE user(name,phone,phoneb)"}
+{"sql":"INSERT INTO user(name,phone) VALUES\n     ('Alice','[\"919-555-2345\",\"804-555-3621\"]'),\n     ('Bob','[\"201-555-8872\"]'),\n     ('Cindy','[\"704-555-9983\"]'),\n     ('Dave','[\"336-555-8421\",\"704-555-4321\",\"803-911-4421\"]')"}
+{"sql":"UPDATE user SET phoneb=jsonb(phone)"}
+{"sql":"SELECT DISTINCT user.name\n    FROM user, json_each(user.phone)\n   WHERE json_each.value LIKE '704-%'\n   ORDER BY 1"}
+{"sql":"SELECT DISTINCT user.name\n    FROM user, json_each(user.phoneb)\n   WHERE json_each.value LIKE '704-%'\n   ORDER BY 1"}
+{"sql":"SELECT name FROM user WHERE phone LIKE '704-%'\n  UNION\n  SELECT user.name\n    FROM user, json_each(user.phone)\n   WHERE json_valid(user.phone)\n     AND json_each.value LIKE '704-%'"}
+{"sql":"CREATE TABLE big(json JSON)"}
+{"sql":"INSERT INTO big(json) VALUES('{\n    \"id\":123,\n    \"stuff\":[1,2,3,4],\n    \"partlist\":[\n       {\"uuid\":\"bb108722-572e-11e5-9320-7f3b63a4ca74\"},\n       {\"uuid\":\"c690dc14-572e-11e5-95f9-dfc8861fd535\"},\n       {\"subassembly\":[\n          {\"uuid\":\"6fa5181e-5721-11e5-a04e-57f3d7b32808\"}\n       ]}\n    ]\n  }')"}
+{"sql":"INSERT INTO big(json) VALUES('{\n    \"id\":456,\n    \"stuff\":[\"hello\",\"world\",\"xyzzy\"],\n    \"partlist\":[\n       {\"uuid\":false},\n       {\"uuid\":\"c690dc14-572e-11e5-95f9-dfc8861fd535\"}\n    ]\n  }')"}
+{"sql":"SELECT big.rowid, fullkey, value\n    FROM big, json_tree(big.json)\n   WHERE json_tree.type NOT IN ('object','array')\n   ORDER BY +big.rowid, +json_tree.id"}
+{"sql":"SELECT big.rowid, fullkey, value\n    FROM big, json_tree(jsonb(big.json))\n   WHERE json_tree.type NOT IN ('object','array')\n   ORDER BY +big.rowid, +json_tree.id"}
+{"sql":"SELECT big.rowid, fullkey, atom\n    FROM big, json_tree(big.json)\n   WHERE atom IS NOT NULL\n   ORDER BY +big.rowid, +json_tree.id"}
+{"sql":"SELECT json_valid(char(32)  || '\"xyz\"')"}
+{"sql":"SELECT json_valid(char(200) || '\"xyz\"')"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<0x20)\n  SELECT x FROM c WHERE json_valid(printf('{\"a\":\"x%sz\"}', char(x))) ORDER BY x"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<0x1f)\n  SELECT sum(json_valid(json_quote('a'||char(x)||'z'))) FROM c ORDER BY x"}
+{"sql":"CREATE TABLE t1(a1 DATE, a2 INTEGER PRIMARY KEY, a3 INTEGER, memo TEXT)"}
+{"sql":"CREATE INDEX t1x1 ON t1(a3, a1, memo->>'y')"}
+{"sql":"INSERT INTO t1(a2,a1,a3,memo) VALUES (876, '2023-08-03', 5, '{\"x\":77,\"y\":4}')"}
+{"sql":"SELECT '{\"1\":\"one\",\"2\":\"two\",\"3\":\"three\"}'->>'2'"}
+{"sql":"SELECT '{\"1\":\"one\",\"2\":\"two\",\"3\":\"three\"}'->>2"}
+{"sql":"SELECT '[\"zero\",\"one\",\"two\"]'->>'1'"}
+{"sql":"SELECT '[\"zero\",\"one\",\"two\"]'->>1"}
+{"sql":"SELECT '{\"1\":\"one\",\"2\":\"two\",\"3\":\"three\"}'->'2'"}
+{"sql":"SELECT '{\"1\":\"one\",\"2\":\"two\",\"3\":\"three\"}'->2"}
+{"sql":"SELECT '[\"zero\",\"one\",\"two\"]'->'1'"}
+{"sql":"SELECT '[\"zero\",\"one\",\"two\"]'->1"}

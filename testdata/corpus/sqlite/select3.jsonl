@@ -1,0 +1,52 @@
+{"sql":"CREATE TABLE t1(n int, log int)"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log"}
+{"sql":"SELECT min(n),min(log),max(n),max(log),sum(n),sum(log),avg(n),avg(log)\n    FROM t1"}
+{"sql":"SELECT max(n)/avg(n), max(log)/avg(log) FROM t1"}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY log ORDER BY log"}
+{"sql":"SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log"}
+{"sql":"SELECT log, avg(n) FROM t1 GROUP BY log ORDER BY log"}
+{"sql":"SELECT log, avg(n)+1 FROM t1 GROUP BY log ORDER BY log"}
+{"sql":"SELECT log, avg(n)-min(n) FROM t1 GROUP BY log ORDER BY log"}
+{"sql":"SELECT log*2+1, avg(n)-min(n) FROM t1 GROUP BY log ORDER BY log"}
+{"sql":"SELECT log*2+1 as x, count(*) FROM t1 GROUP BY x ORDER BY x"}
+{"sql":"SELECT log*2+1 AS x, count(*) AS y FROM t1 GROUP BY x ORDER BY y, x"}
+{"sql":"SELECT log*2+1 AS x, count(*) AS y FROM t1 GROUP BY x ORDER BY 10-(x+y)"}
+{"sql":"#    SELECT log, count(*) FROM t1 GROUP BY 'x' ORDER BY log","reject":true}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY 0 ORDER BY log"}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY 3 ORDER BY log"}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY 1 ORDER BY log"}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY ORDER BY log","reject":true}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY","reject":true}
+{"sql":"SELECT log, count(*) FROM t1 HAVING log>=4"}
+{"sql":"SELECT count(*) FROM t1 HAVING log>=4"}
+{"sql":"SELECT count(*) FROM t1 HAVING log!=400"}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY log HAVING log>=4 ORDER BY log"}
+{"sql":"SELECT log, count(*) FROM t1 \n    GROUP BY log \n    HAVING count(*)>=4 \n    ORDER BY log"}
+{"sql":"SELECT log, count(*) FROM t1 \n    GROUP BY log \n    HAVING count(*)>=4 \n    ORDER BY max(n)+0"}
+{"sql":"SELECT log AS x, count(*) AS y FROM t1 \n    GROUP BY x\n    HAVING y>=4 \n    ORDER BY max(n)+0"}
+{"sql":"SELECT log AS x FROM t1 \n    GROUP BY x\n    HAVING count(*)>=4 \n    ORDER BY max(n)+0"}
+{"sql":"SELECT log, count(*), avg(n), max(n+log*2) FROM t1 \n    GROUP BY log \n    ORDER BY max(n+log*2)+0, avg(n)+0"}
+{"sql":"SELECT log, count(*), avg(n), max(n+log*2) FROM t1 \n    GROUP BY log \n    ORDER BY max(n+log*2)+0, min(log,avg(n))+0"}
+{"sql":"SELECT log, min(n) FROM t1 GROUP BY log ORDER BY log DESC"}
+{"sql":"SELECT log, min(n) FROM t1 GROUP BY log ORDER BY 1"}
+{"sql":"SELECT log, min(n) FROM t1 GROUP BY log ORDER BY 1 DESC"}
+{"sql":"SELECT a, sum(b) FROM t2 WHERE b=5 GROUP BY a"}
+{"sql":"SELECT a, sum(b) FROM t2 WHERE b=5"}
+{"sql":"CREATE TABLE A (\n      A1 DOUBLE,\n      A2 VARCHAR COLLATE NOCASE,\n      A3 DOUBLE\n    )"}
+{"sql":"INSERT INTO A VALUES(39136,'ABC',1201900000)"}
+{"sql":"INSERT INTO A VALUES(39136,'ABC',1207000000)"}
+{"sql":"SELECT typeof(sum(a3)) FROM a"}
+{"sql":"SELECT typeof(sum(a3)) FROM a GROUP BY a1"}
+{"sql":"CREATE TABLE t0(c0 REAL, c1 REAL GENERATED ALWAYS AS (c0))"}
+{"sql":"SELECT * FROM t0 GROUP BY c0"}
+{"sql":"SELECT max(t1.a), \n         (SELECT 'xyz' FROM (SELECT * FROM t2 WHERE 0) WHERE t1.b=1) \n  FROM t1"}
+{"sql":"SELECT max(a), val FROM t1 LEFT JOIN (\n        SELECT 'constant' AS val FROM t2 WHERE x=1234\n    )"}
+{"sql":"INSERT INTO t2 VALUES(123)"}
+{"sql":"INSERT INTO t2 VALUES(1234)"}
+{"sql":"SELECT count(x), m FROM t1 LEFT JOIN (SELECT x, 59 AS m FROM t2) GROUP BY a"}
+{"sql":"INSERT INTO t1 VALUES(1), (1), (2), (3)"}
+{"sql":"INSERT INTO t2 VALUES(45)"}
+{"sql":"INSERT INTO t2 VALUES(210)"}
+{"sql":"INSERT INTO t1 VALUES('value')"}
+{"sql":"SELECT group_concat(x), m FROM t1 \n    LEFT JOIN (SELECT x, 59 AS m FROM t2) GROUP BY a"}
+{"sql":"SELECT group_concat(x), m, n FROM t1 \n    LEFT JOIN (SELECT x, 59 AS m, 60 AS n FROM t2) GROUP BY a"}

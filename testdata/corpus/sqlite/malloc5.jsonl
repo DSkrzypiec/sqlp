@@ -1,0 +1,10 @@
+{"sql":"PRAGMA cache_size=2"}
+{"sql":"INSERT INTO def VALUES(10,11,12)"}
+{"sql":"PRAGMA cache_size=2000"}
+{"sql":"SELECT count(*), sum(a), sum(b) FROM abc"}
+{"sql":"INSERT INTO abc VALUES('abcdefghi', 1234567890, NULL)"}
+{"sql":"SELECT * FROM abc ORDER BY a"}
+{"sql":"PRAGMA default_cache_size=2"}
+{"sql":"INSERT INTO abc VALUES(randstr(50,50), randstr(75,75), randstr(100,100))"}
+{"sql":"INSERT INTO abc \n        SELECT randstr(50,50), randstr(75,75), randstr(100,100) FROM abc"}
+{"sql":"UPDATE abc SET c = randstr(100,100) \n    WHERE rowid = 1 OR rowid = (SELECT max(rowid) FROM abc)"}

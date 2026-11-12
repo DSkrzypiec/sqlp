@@ -1,0 +1,6 @@
+{"sql":"SELECT a, b+1 AS b_plus_one FROM t1 WHERE a=1"}
+{"sql":"PRAGMA vdbe_trace = 1"}
+{"sql":"PRAGMA vdbe_listing=1"}
+{"sql":"SELECT a, b+1 AS b_plus_one FROM t1 WHERE a=1 OR b_plus_one"}
+{"sql":"SELECT a, b+1 AS b_plus_one \n    FROM t1 \n    WHERE CASE WHEN a=1 THEN 1 ELSE b_plus_one END"}
+{"sql":"SELECT a, b+1 AS b_plus_one, c, d \n    FROM t1 LEFT JOIN t2 \n    ON (a=c AND d=b_plus_one)"}

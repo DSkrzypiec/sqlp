@@ -1,0 +1,16 @@
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(600))"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(600))"}
+{"sql":"INSERT INTO t1 VALUES(3, randomblob(600))"}
+{"sql":"PRAGMA mmap_size = 0"}
+{"sql":"SELECT b FROM t1 WHERE a=2"}
+{"sql":"INSERT INTO t1 VALUES(4, randomblob(600))"}
+{"sql":"PRAGMA journal_mode = WAL"}
+{"sql":"INSERT INTO t1 VALUES(5, randomblob(600))"}
+{"sql":"PRAGMA cache_size=3"}
+{"sql":"UPDATE t1 SET b=randomblob(1000)"}
+{"sql":"PRAGMA temp_store = file"}
+{"sql":"PRAGMA cache_size = -1024"}
+{"sql":"CREATE TABLE data(a INTEGER, b BLOB)"}
+{"sql":"WITH s(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<75000 )\n    INSERT INTO data SELECT i, hex(randomblob(50)) FROM s"}
+{"sql":"SELECT a, b FROM data ORDER BY a"}
+{"sql":"CREATE INDEX i1 ON data(a)"}

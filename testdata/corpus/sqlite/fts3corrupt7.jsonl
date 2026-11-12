@@ -1,0 +1,2 @@
+{"sql":"SELECT offsets(t1) FROM t1 WHERE t1 MATCH 'rtree NEAR rtree NEAR \"json1 enable\"'"}
+{"sql":"SELECT 0 FROM t1 WHERE t1 MATCH 'rtree NEAR rtree\"json1 enable\"'"}

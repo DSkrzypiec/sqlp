@@ -1,0 +1,19 @@
+{"sql":"CREATE TABLE t2244(a, b)"}
+{"sql":"CREATE VIRTUAL TABLE t2244e USING echo(t2244)"}
+{"sql":"INSERT INTO t2244 VALUES('AA', 'BB')"}
+{"sql":"INSERT INTO t2244 VALUES('CC', 'DD')"}
+{"sql":"SELECT rowid, * FROM t2244e"}
+{"sql":"SELECT * FROM t2244e WHERE rowid = 10"}
+{"sql":"UPDATE t2244e SET a = 'hello world' WHERE 0"}
+{"sql":"CREATE TABLE t2250(a, b)"}
+{"sql":"INSERT INTO t2250 VALUES(10, 20)"}
+{"sql":"CREATE VIRTUAL TABLE t2250e USING echo(t2250)"}
+{"sql":"select max(rowid) from t2250"}
+{"sql":"select max(rowid) from t2250e"}
+{"sql":"CREATE TABLE t2260a_real(a, b)"}
+{"sql":"CREATE TABLE t2260b_real(a, b)"}
+{"sql":"CREATE INDEX i2260 ON t2260a_real(a)"}
+{"sql":"CREATE INDEX i2260x ON t2260b_real(a)"}
+{"sql":"CREATE VIRTUAL TABLE t2260a USING echo(t2260a_real)"}
+{"sql":"CREATE VIRTUAL TABLE t2260b USING echo(t2260b_real)"}
+{"sql":"SELECT * FROM t2260a, t2260b WHERE t2260a.a = t2260b.a AND t2260a.a > 101"}

@@ -1,0 +1,95 @@
+{"sql":"CREATE TABLE test1 (\n      one varchar(10),\n      two text\n    )"}
+{"sql":"SELECT sql FROM sqlite_master WHERE type!='meta'"}
+{"sql":"SELECT name, tbl_name, type FROM sqlite_master WHERE type!='meta'"}
+{"sql":"SELECT name, tbl_name, type from sqlite_master WHERE type!='meta'"}
+{"sql":"SELECT * FROM sqlite_master WHERE type!='meta'"}
+{"sql":"CREATE TABLE \"create\" (f1 int)"}
+{"sql":"DROP TABLE \"create\""}
+{"sql":"SELECT name FROM \"sqlite_master\" WHERE type!='meta'"}
+{"sql":"CREATE TABLE test1(\"f1 ho\" int)"}
+{"sql":"SELECT name as \"X\" FROM sqlite_master WHERE type!='meta'"}
+{"sql":"DROP TABLE \"TEST1\""}
+{"sql":"CREATE TABLE TEST2(one text)"}
+{"sql":"CREATE TABLE test2(two text default 'hi')"}
+{"sql":"CREATE TABLE \"test2\" (two)"}
+{"sql":"CREATE TABLE sqlite_master(two text)"}
+{"sql":"CREATE TABLE IF NOT EXISTS test2(x,y)"}
+{"sql":"CREATE TABLE IF NOT EXISTS test2(x UNIQUE, y TEXT PRIMARY KEY)"}
+{"sql":"CREATE TABLE test2(one text)"}
+{"sql":"CREATE INDEX test3 ON test2(one)"}
+{"sql":"CREATE TABLE test3(two text)"}
+{"sql":"DROP INDEX test3"}
+{"sql":"DROP TABLE test3"}
+{"sql":"SELECT sql FROM sqlite_master WHERE type=='table'"}
+{"sql":"CREATE TABLE BIG(xyz foo)"}
+{"sql":"CREATE TABLE biG(xyz foo)"}
+{"sql":"CREATE TABLE bIg(xyz foo)"}
+{"sql":"CREATE TABLE Big(xyz foo)"}
+{"sql":"DROP TABLE big"}
+{"sql":"pragma vdbe_trace=on"}
+{"sql":"DROP TABLE test009"}
+{"sql":"DROP TABLE IF EXISTS test009"}
+{"sql":"DROP TABLE IF EXISTS sqlite_master"}
+{"sql":"EXPLAIN CREATE TABLE test1(f1 int)"}
+{"sql":"CREATE TABLE test1(f1 int)"}
+{"sql":"EXPLAIN DROP TABLE test1"}
+{"sql":"CREATE TABLE 'Spaces In This Name!'(x int)"}
+{"sql":"INSERT INTO 'spaces in this name!' VALUES(1)"}
+{"sql":"CREATE TABLE weird(\n      desc text,\n      asc text,\n      key int,\n      [14_vac] boolean,\n      fuzzy_dog_12 varchar(10),\n      begin blob,\n      end clob\n    )"}
+{"sql":"INSERT INTO weird VALUES('a','b',9,0,'xyz','hi','y''all')"}
+{"sql":"SELECT * FROM weird"}
+{"sql":"CREATE TABLE savepoint(release)"}
+{"sql":"INSERT INTO savepoint(release) VALUES(10)"}
+{"sql":"UPDATE savepoint SET release = 5"}
+{"sql":"SELECT release FROM savepoint"}
+{"sql":"CREATE TABLE \"t3\"\"xyz\"(a,b,c)"}
+{"sql":"INSERT INTO [t3\"xyz] VALUES(1,2,3)"}
+{"sql":"SELECT * FROM [t3\"xyz]"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='t4\"abc'"}
+{"sql":"CREATE TABLE t5 AS SELECT * FROM no_such_table"}
+{"sql":"CREATE TABLE t10(\"col.1\" [char.3])"}
+{"sql":"CREATE TABLE t11 AS SELECT * FROM t10"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 't11'"}
+{"sql":"CREATE TABLE t12(\n      a INTEGER,\n      b VARCHAR(10),\n      c VARCHAR(1,10),\n      d VARCHAR(+1,-10),\n      e VARCHAR (+1,-10),\n      f \"VARCHAR (+1,-10, 5)\",\n      g BIG INTEGER\n    )"}
+{"sql":"CREATE TABLE t13 AS SELECT * FROM t12"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 't13'"}
+{"sql":"CREATE TABLE t6(a,b,a)"}
+{"sql":"CREATE TABLE t6(a varchar(100), b blob, a integer)"}
+{"sql":"CREATE TABLE t6(a REFERENCES t4(a) NOT NULL)"}
+{"sql":"CREATE TABLE t6(a REFERENCES t4(a) MATCH PARTIAL)"}
+{"sql":"CREATE TABLE t6(a REFERENCES t4 MATCH FULL ON DELETE SET NULL NOT NULL)"}
+{"sql":"CREATE TABLE t6(a REFERENCES t4 MATCH FULL ON UPDATE SET DEFAULT DEFAULT 1)"}
+{"sql":"CREATE TABLE t6(a NOT NULL NOT DEFERRABLE INITIALLY IMMEDIATE)"}
+{"sql":"CREATE TABLE t6(a NOT NULL DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"CREATE TABLE t6(a,\n      FOREIGN KEY (a) REFERENCES t4(b) DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE t6(a,b,c,\n      FOREIGN KEY (b,c) REFERENCES t4(x,y) MATCH PARTIAL\n        ON UPDATE SET NULL ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE t6(a,b,c,\n      FOREIGN KEY (b,c) REFERENCES t4(x)\n    )"}
+{"sql":"CREATE TABLE t6(a,b,c,\n      FOREIGN KEY (b,c) REFERENCES t4(x,y,z)\n    )"}
+{"sql":"CREATE TABLE t6(a,b, c REFERENCES t4(x,y))"}
+{"sql":"CREATE TABLE t6(a,b,c,\n      FOREIGN KEY (b,x) REFERENCES t4(x,y)\n    )"}
+{"sql":"CREATE TABLE t6(a,b,c,\n      FOREIGN KEY (x,b) REFERENCES t4(x,y)\n    )"}
+{"sql":"CREATE TABLE t7(\n       a integer primary key,\n       b number(5,10),\n       c character varying (8),\n       d VARCHAR(9),\n       e clob,\n       f BLOB,\n       g Text,\n       h\n    )"}
+{"sql":"SELECT typeof(a), typeof(b), typeof(c), typeof(d),\n           typeof(e), typeof(f), typeof(g), typeof(h)\n    FROM t7 LIMIT 1"}
+{"sql":"SELECT typeof(a+b), typeof(a||b), typeof(c+d), typeof(c||d)\n    FROM t7 LIMIT 1"}
+{"sql":"CREATE TABLE t8 AS SELECT b, h, a as i, (SELECT f FROM t7) as j FROM t7"}
+{"sql":"CREATE TABLE t8 AS SELECT b, h, a as i, f as j FROM t7"}
+{"sql":"SELECT sql FROM sqlite_master WHERE tbl_name = 't8'"}
+{"sql":"CREATE TABLE tablet8(\n       a integer primary key,\n       tm text DEFAULT CURRENT_TIME,\n       dt text DEFAULT CURRENT_DATE,\n       dttm text DEFAULT CURRENT_TIMESTAMP\n    )"}
+{"sql":"SELECT * FROM tablet8"}
+{"sql":"CREATE TABLE t16(x DEFAULT(max(1)))"}
+{"sql":"INSERT INTO t16(x) VALUES(123)"}
+{"sql":"SELECT rowid, x FROM t16"}
+{"sql":"INSERT INTO t16(rowid) VALUES(4)"}
+{"sql":"DROP TABLE t16"}
+{"sql":"CREATE TABLE t16(x DEFAULT(abs(1)))"}
+{"sql":"CREATE TABLE t16(x DEFAULT(avg(1)))"}
+{"sql":"INSERT INTO t16(rowid) VALUES(123)"}
+{"sql":"CREATE TABLE t16(x DEFAULT(count()))"}
+{"sql":"CREATE TABLE t16(x DEFAULT(string_agg('x',',')))"}
+{"sql":"INSERT INTO t16 DEFAULT VALUES"}
+{"sql":"INSERT INTO t2(x,y) VALUES(3,4)"}
+{"sql":"CREATE TABLE t3 AS\n    SELECT a AS p, coalesce(y,a) AS q FROM t1 LEFT JOIN t2 ON a=x"}
+{"sql":"SELECT p, q, '|' FROM t3 ORDER BY p"}
+{"sql":"CREATE TABLE t1 AS SELECT zeroblob(2e20)"}
+{"sql":"CREATE TABLE t19 AS SELECT * FROM sqlite_master"}
+{"sql":"SELECT name FROM t19 ORDER BY name"}

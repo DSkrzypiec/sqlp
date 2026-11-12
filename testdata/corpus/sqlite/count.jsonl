@@ -1,0 +1,29 @@
+{"sql":"INSERT INTO t1 SELECT * FROM t1"}
+{"sql":"SELECT count(DISTINCT *) FROM t2","reject":true}
+{"sql":"SELECT count(DISTINCT) FROM t2"}
+{"sql":"SELECT count(*) FROM t2 HAVING count(*)>1"}
+{"sql":"SELECT count(*) FROM t2 HAVING count(*)<10"}
+{"sql":"CREATE VIEW v1 AS SELECT 1 AS a"}
+{"sql":"CREATE VIRTUAL TABLE techo USING echo(t1)"}
+{"sql":"SELECT a FROM (SELECT count(*) AS a FROM t3) WHERE a==0"}
+{"sql":"SELECT a FROM (SELECT count(*) AS a FROM t3) WHERE a==1"}
+{"sql":"INSERT INTO t4 VALUES('a', 'b')"}
+{"sql":"CREATE INDEX t4i1 ON t4(b, a)"}
+{"sql":"SELECT count(*) FROM t4"}
+{"sql":"CREATE INDEX t4i2 ON t4(b)"}
+{"sql":"DROP INDEX t4i1"}
+{"sql":"CREATE TABLE t5(a TEXT PRIMARY KEY, b VARCHAR(50)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t5 VALUES('bison','jazz')"}
+{"sql":"SELECT count(*) FROM t5"}
+{"sql":"CREATE TABLE t6(x)"}
+{"sql":"SELECT count(DISTINCT) FROM t6 GROUP BY x"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b INT, c VARCHAR(1000))"}
+{"sql":"INSERT INTO t1(a,b,c) values(1,2,'count.test cases for NOT INDEXED')"}
+{"sql":"UPDATE sqlite_stat1 SET stat='1000000 10' WHERE idx='t1b'"}
+{"sql":"SELECT count(1) FROM t1"}
+{"sql":"SELECT count(1) FROM t1 NOT INDEXED"}
+{"sql":"SELECT count(*) FROM t1 NOT INDEXED"}
+{"sql":"CREATE TABLE t7(a INT,b TEXT,c BLOB,d REAL)"}
+{"sql":"CREATE TABLE t8(a INT,b TEXT,c BLOB,d REAL)"}
+{"sql":"CREATE INDEX t8a ON t8(a)"}
+{"sql":"SELECT * FROM t8 WHERE (a, b) IN (\n      SELECT count(t8.b), count(*) FROM t7 AS ra0 ORDER BY count(*)\n  ) AND t8.b=0"}

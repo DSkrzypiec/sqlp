@@ -1,0 +1,3 @@
+{"sql":"SELECT name, arrayname, value FROM vars WHERE name = 'xyz'"}
+{"sql":"SELECT name FROM fsdir WHERE dir = '.' AND name = 'test.db'"}
+{"sql":"SELECT name FROM fsdir WHERE dir = '.' AND name = '.'"}

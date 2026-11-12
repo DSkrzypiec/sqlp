@@ -1,0 +1,1398 @@
+{"sql":"CREATE VIRTUAL TABLE f USING fuzzer"}
+{"sql":"CREATE VIRTUAL TABLE f USING fuzzer(one, two)"}
+{"sql":"CREATE VIRTUAL TABLE f USING fuzzer(nosuchtable)"}
+{"sql":"CREATE TEMP TABLE nosuchtable(a, b, c, d)"}
+{"sql":"DROP TABLE temp.nosuchtable"}
+{"sql":"CREATE TABLE nosuchtable(a, b, c, d)"}
+{"sql":"CREATE VIRTUAL TABLE temp.f USING fuzzer(nosuchtable)"}
+{"sql":"DROP TABLE IF EXISTS f_rules"}
+{"sql":"CREATE TABLE f_rules(a, b, c)"}
+{"sql":"CREATE VIRTUAL TABLE f USING fuzzer(f_rules)"}
+{"sql":"CREATE TABLE f_rules(a, b, c, d, e)"}
+{"sql":"CREATE TABLE f1_rules(ruleset DEFAULT 0, cfrom, cto, cost)"}
+{"sql":"INSERT INTO f1_rules(cfrom, cto, cost) VALUES('e','a',1)"}
+{"sql":"INSERT INTO f1_rules(cfrom, cto, cost) VALUES('a','e',10)"}
+{"sql":"INSERT INTO f1_rules(cfrom, cto, cost) VALUES('e','o',100)"}
+{"sql":"CREATE VIRTUAL TABLE f1 USING fuzzer(f1_rules)"}
+{"sql":"SELECT word, distance FROM f1 WHERE word MATCH 'abcde'"}
+{"sql":"INSERT INTO f1_rules(ruleset, cfrom, cto, cost) VALUES(1,'b','x',1)"}
+{"sql":"INSERT INTO f1_rules(ruleset, cfrom, cto, cost) VALUES(1,'d','y',10)"}
+{"sql":"INSERT INTO f1_rules(ruleset, cfrom, cto, cost) VALUES(1,'y','z',100)"}
+{"sql":"SELECT word, distance FROM f1 WHERE word MATCH 'abcde' AND ruleset=0"}
+{"sql":"SELECT word, distance FROM f1 WHERE word MATCH 'abcde' AND ruleset=1"}
+{"sql":"INSERT INTO f1 VALUES(1)"}
+{"sql":"DELETE FROM f1"}
+{"sql":"UPDATE f1 SET rowid=rowid+10000"}
+{"sql":"CREATE TEMP TABLE f2_rules(ruleset DEFAULT 0, cFrom, cTo, cost)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('a','e',24)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('a','o',47)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('a','u',50)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('e','a',23)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('e','i',33)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('e','o',37)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('i','e',33)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('i','y',33)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('o','a',41)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('o','e',46)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('o','u',57)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('u','o',58)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('y','i',33)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('t','th',70)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('th','t',66)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('a','',84)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','b',106)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('b','',106)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','c',94)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('c','',94)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','d',89)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('d','',89)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','e',83)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('e','',83)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','f',97)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('f','',97)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','g',99)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('g','',99)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','h',86)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('h','',86)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','i',85)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('i','',85)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','j',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('j','',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','k',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('k','',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','l',89)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('l','',89)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','m',96)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('m','',96)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','n',85)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('n','',85)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','o',85)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('o','',85)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','p',100)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('p','',100)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','q',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('q','',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','r',86)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('r','',86)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','s',86)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('s','',86)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','t',84)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('t','',84)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','u',94)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('u','',94)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','v',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('v','',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','w',96)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('w','',96)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','x',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('x','',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','y',100)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('y','',100)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('','z',120)"}
+{"sql":"INSERT INTO f2_rules(cFrom,cTo,cost) VALUES('z','',120)"}
+{"sql":"INSERT INTO f2_rules(ruleset,cFrom,cTo,cost)\n      SELECT 1, cFrom, cTo, 100 FROM f2_rules WHERE ruleset=0"}
+{"sql":"INSERT INTO f2_rules(ruleset,cFrom,cTo,cost)\n      SELECT 2, cFrom, cTo, 200-cost FROM f2_rules WHERE ruleset=0"}
+{"sql":"INSERT INTO f2_rules(ruleset,cFrom,cTo,cost)\n      SELECT 3, cFrom, cTo, cost FROM f2_rules WHERE ruleset=0"}
+{"sql":"INSERT INTO f2_rules(ruleset,cFrom,cTo,cost)\n      VALUES(3, 'mallard','duck',50),\n            (3, 'duck', 'mallard', 50),\n            (3, 'rock', 'stone', 50),\n            (3, 'stone', 'rock', 50)"}
+{"sql":"CREATE VIRTUAL TABLE temp.f2 USING fuzzer(f2_rules)"}
+{"sql":"CREATE TEMP TABLE streetname(n TEXT UNIQUE)"}
+{"sql":"INSERT INTO streetname VALUES('abbotsinch')"}
+{"sql":"INSERT INTO streetname VALUES('abbottsgate')"}
+{"sql":"INSERT INTO streetname VALUES('abbywood')"}
+{"sql":"INSERT INTO streetname VALUES('abner')"}
+{"sql":"INSERT INTO streetname VALUES('acacia ridge')"}
+{"sql":"INSERT INTO streetname VALUES('acorn creek')"}
+{"sql":"INSERT INTO streetname VALUES('acorn forest')"}
+{"sql":"INSERT INTO streetname VALUES('adel')"}
+{"sql":"INSERT INTO streetname VALUES('ainslie')"}
+{"sql":"INSERT INTO streetname VALUES('airways')"}
+{"sql":"INSERT INTO streetname VALUES('alabaster')"}
+{"sql":"INSERT INTO streetname VALUES('alba')"}
+{"sql":"INSERT INTO streetname VALUES('albertine')"}
+{"sql":"INSERT INTO streetname VALUES('alden glen')"}
+{"sql":"INSERT INTO streetname VALUES('alderson')"}
+{"sql":"INSERT INTO streetname VALUES('allen')"}
+{"sql":"INSERT INTO streetname VALUES('allen a brown')"}
+{"sql":"INSERT INTO streetname VALUES('allness glen')"}
+{"sql":"INSERT INTO streetname VALUES('aloysia')"}
+{"sql":"INSERT INTO streetname VALUES('alpine')"}
+{"sql":"INSERT INTO streetname VALUES('alwyn')"}
+{"sql":"INSERT INTO streetname VALUES('amaranthus')"}
+{"sql":"INSERT INTO streetname VALUES('amber glen')"}
+{"sql":"INSERT INTO streetname VALUES('amber leigh way')"}
+{"sql":"INSERT INTO streetname VALUES('amber meadows')"}
+{"sql":"INSERT INTO streetname VALUES('amberway')"}
+{"sql":"INSERT INTO streetname VALUES('ame')"}
+{"sql":"INSERT INTO streetname VALUES('amesbury hill')"}
+{"sql":"INSERT INTO streetname VALUES('anderson')"}
+{"sql":"INSERT INTO streetname VALUES('andrew thomas')"}
+{"sql":"INSERT INTO streetname VALUES('anduin falls')"}
+{"sql":"INSERT INTO streetname VALUES('ankeny')"}
+{"sql":"INSERT INTO streetname VALUES('annandale')"}
+{"sql":"INSERT INTO streetname VALUES('annbick')"}
+{"sql":"INSERT INTO streetname VALUES('antelope')"}
+{"sql":"INSERT INTO streetname VALUES('anzack')"}
+{"sql":"INSERT INTO streetname VALUES('apple glen')"}
+{"sql":"INSERT INTO streetname VALUES('applevalley')"}
+{"sql":"INSERT INTO streetname VALUES('appley mead')"}
+{"sql":"INSERT INTO streetname VALUES('aragorn')"}
+{"sql":"INSERT INTO streetname VALUES('arbor creek')"}
+{"sql":"INSERT INTO streetname VALUES('arbor day')"}
+{"sql":"INSERT INTO streetname VALUES('arbor meadows')"}
+{"sql":"INSERT INTO streetname VALUES('arbor spring')"}
+{"sql":"INSERT INTO streetname VALUES('arborview')"}
+{"sql":"INSERT INTO streetname VALUES('arklow')"}
+{"sql":"INSERT INTO streetname VALUES('armitage')"}
+{"sql":"INSERT INTO streetname VALUES('arvin')"}
+{"sql":"INSERT INTO streetname VALUES('ash cove')"}
+{"sql":"INSERT INTO streetname VALUES('ashford leigh')"}
+{"sql":"INSERT INTO streetname VALUES('ashmont')"}
+{"sql":"INSERT INTO streetname VALUES('atlas')"}
+{"sql":"INSERT INTO streetname VALUES('atwater')"}
+{"sql":"INSERT INTO streetname VALUES('auburn hill')"}
+{"sql":"INSERT INTO streetname VALUES('aulton link')"}
+{"sql":"INSERT INTO streetname VALUES('austin dekota')"}
+{"sql":"INSERT INTO streetname VALUES('austin knoll')"}
+{"sql":"INSERT INTO streetname VALUES('auten')"}
+{"sql":"INSERT INTO streetname VALUES('autumn harvest')"}
+{"sql":"INSERT INTO streetname VALUES('autumn oak')"}
+{"sql":"INSERT INTO streetname VALUES('autumn ridge')"}
+{"sql":"INSERT INTO streetname VALUES('avalon forest')"}
+{"sql":"INSERT INTO streetname VALUES('avalon loop')"}
+{"sql":"INSERT INTO streetname VALUES('avon farm')"}
+{"sql":"INSERT INTO streetname VALUES('avonhurst')"}
+{"sql":"INSERT INTO streetname VALUES('avonlea')"}
+{"sql":"INSERT INTO streetname VALUES('aynrand')"}
+{"sql":"INSERT INTO streetname VALUES('azure valley')"}
+{"sql":"INSERT INTO streetname VALUES('baberton')"}
+{"sql":"INSERT INTO streetname VALUES('baffin')"}
+{"sql":"INSERT INTO streetname VALUES('baggins')"}
+{"sql":"INSERT INTO streetname VALUES('balata')"}
+{"sql":"INSERT INTO streetname VALUES('ballantray')"}
+{"sql":"INSERT INTO streetname VALUES('ballston')"}
+{"sql":"INSERT INTO streetname VALUES('balsam tree')"}
+{"sql":"INSERT INTO streetname VALUES('bambi')"}
+{"sql":"INSERT INTO streetname VALUES('banwell')"}
+{"sql":"INSERT INTO streetname VALUES('barbee')"}
+{"sql":"INSERT INTO streetname VALUES('barefoot forest')"}
+{"sql":"INSERT INTO streetname VALUES('barnview')"}
+{"sql":"INSERT INTO streetname VALUES('baroda')"}
+{"sql":"INSERT INTO streetname VALUES('barson')"}
+{"sql":"INSERT INTO streetname VALUES('baskerville')"}
+{"sql":"INSERT INTO streetname VALUES('battle creek')"}
+{"sql":"INSERT INTO streetname VALUES('baucom')"}
+{"sql":"INSERT INTO streetname VALUES('bay pines')"}
+{"sql":"INSERT INTO streetname VALUES('beaker')"}
+{"sql":"INSERT INTO streetname VALUES('beard')"}
+{"sql":"INSERT INTO streetname VALUES('beardsley')"}
+{"sql":"INSERT INTO streetname VALUES('bearoak')"}
+{"sql":"INSERT INTO streetname VALUES('beauvista')"}
+{"sql":"INSERT INTO streetname VALUES('beaver creek')"}
+{"sql":"INSERT INTO streetname VALUES('beaver hollow')"}
+{"sql":"INSERT INTO streetname VALUES('bedlington')"}
+{"sql":"INSERT INTO streetname VALUES('beech cove')"}
+{"sql":"INSERT INTO streetname VALUES('beech crest')"}
+{"sql":"INSERT INTO streetname VALUES('beith')"}
+{"sql":"INSERT INTO streetname VALUES('bell glen')"}
+{"sql":"INSERT INTO streetname VALUES('bellmore')"}
+{"sql":"INSERT INTO streetname VALUES('bells mill')"}
+{"sql":"INSERT INTO streetname VALUES('bellville')"}
+{"sql":"INSERT INTO streetname VALUES('belmar place')"}
+{"sql":"INSERT INTO streetname VALUES('bembridge')"}
+{"sql":"INSERT INTO streetname VALUES('bennett neely')"}
+{"sql":"INSERT INTO streetname VALUES('bentgrass run')"}
+{"sql":"INSERT INTO streetname VALUES('benthaven')"}
+{"sql":"INSERT INTO streetname VALUES('bernardy')"}
+{"sql":"INSERT INTO streetname VALUES('bernbrook shadow')"}
+{"sql":"INSERT INTO streetname VALUES('berrybrook')"}
+{"sql":"INSERT INTO streetname VALUES('berrybush')"}
+{"sql":"INSERT INTO streetname VALUES('berwick')"}
+{"sql":"INSERT INTO streetname VALUES('betterton')"}
+{"sql":"INSERT INTO streetname VALUES('bickham')"}
+{"sql":"INSERT INTO streetname VALUES('billingham')"}
+{"sql":"INSERT INTO streetname VALUES('birchcroft')"}
+{"sql":"INSERT INTO streetname VALUES('birchstone')"}
+{"sql":"INSERT INTO streetname VALUES('birdwell')"}
+{"sql":"INSERT INTO streetname VALUES('bisaner')"}
+{"sql":"INSERT INTO streetname VALUES('bitterbush')"}
+{"sql":"INSERT INTO streetname VALUES('bitterroot')"}
+{"sql":"INSERT INTO streetname VALUES('black fox')"}
+{"sql":"INSERT INTO streetname VALUES('black maple')"}
+{"sql":"INSERT INTO streetname VALUES('black trail')"}
+{"sql":"INSERT INTO streetname VALUES('blackbird')"}
+{"sql":"INSERT INTO streetname VALUES('blake a dare')"}
+{"sql":"INSERT INTO streetname VALUES('blasdell')"}
+{"sql":"INSERT INTO streetname VALUES('blue aster')"}
+{"sql":"INSERT INTO streetname VALUES('blue finch')"}
+{"sql":"INSERT INTO streetname VALUES('blue lilac')"}
+{"sql":"INSERT INTO streetname VALUES('blue sky')"}
+{"sql":"INSERT INTO streetname VALUES('blue tick')"}
+{"sql":"INSERT INTO streetname VALUES('bob beatty')"}
+{"sql":"INSERT INTO streetname VALUES('bobcat')"}
+{"sql":"INSERT INTO streetname VALUES('bolton')"}
+{"sql":"INSERT INTO streetname VALUES('boomerang')"}
+{"sql":"INSERT INTO streetname VALUES('boulder')"}
+{"sql":"INSERT INTO streetname VALUES('boxer')"}
+{"sql":"INSERT INTO streetname VALUES('boxmeer')"}
+{"sql":"INSERT INTO streetname VALUES('brachnell view')"}
+{"sql":"INSERT INTO streetname VALUES('bradford lake')"}
+{"sql":"INSERT INTO streetname VALUES('bradwell')"}
+{"sql":"INSERT INTO streetname VALUES('brady')"}
+{"sql":"INSERT INTO streetname VALUES('braids bend')"}
+{"sql":"INSERT INTO streetname VALUES('bralers')"}
+{"sql":"INSERT INTO streetname VALUES('brandie glen')"}
+{"sql":"INSERT INTO streetname VALUES('brandy ridge')"}
+{"sql":"INSERT INTO streetname VALUES('brandybuck')"}
+{"sql":"INSERT INTO streetname VALUES('branthurst')"}
+{"sql":"INSERT INTO streetname VALUES('brassy creek')"}
+{"sql":"INSERT INTO streetname VALUES('brathay')"}
+{"sql":"INSERT INTO streetname VALUES('brawer farm')"}
+{"sql":"INSERT INTO streetname VALUES('breezy morn')"}
+{"sql":"INSERT INTO streetname VALUES('brenda')"}
+{"sql":"INSERT INTO streetname VALUES('brenly')"}
+{"sql":"INSERT INTO streetname VALUES('brenock')"}
+{"sql":"INSERT INTO streetname VALUES('brianwood')"}
+{"sql":"INSERT INTO streetname VALUES('briar rose')"}
+{"sql":"INSERT INTO streetname VALUES('briarcrest')"}
+{"sql":"INSERT INTO streetname VALUES('briarthorne')"}
+{"sql":"INSERT INTO streetname VALUES('brick dust')"}
+{"sql":"INSERT INTO streetname VALUES('bridgepath')"}
+{"sql":"INSERT INTO streetname VALUES('bridle ridge')"}
+{"sql":"INSERT INTO streetname VALUES('briggs')"}
+{"sql":"INSERT INTO streetname VALUES('brightleaf')"}
+{"sql":"INSERT INTO streetname VALUES('brigstock')"}
+{"sql":"INSERT INTO streetname VALUES('broad ridge')"}
+{"sql":"INSERT INTO streetname VALUES('brock')"}
+{"sql":"INSERT INTO streetname VALUES('brockhampton')"}
+{"sql":"INSERT INTO streetname VALUES('broken pine')"}
+{"sql":"INSERT INTO streetname VALUES('brompton')"}
+{"sql":"INSERT INTO streetname VALUES('brook falls')"}
+{"sql":"INSERT INTO streetname VALUES('brookings')"}
+{"sql":"INSERT INTO streetname VALUES('browne')"}
+{"sql":"INSERT INTO streetname VALUES('brownes creek')"}
+{"sql":"INSERT INTO streetname VALUES('brownes ferry')"}
+{"sql":"INSERT INTO streetname VALUES('brownestone view')"}
+{"sql":"INSERT INTO streetname VALUES('brumit')"}
+{"sql":"INSERT INTO streetname VALUES('bryn athyn')"}
+{"sql":"INSERT INTO streetname VALUES('buck')"}
+{"sql":"INSERT INTO streetname VALUES('bucklebury')"}
+{"sql":"INSERT INTO streetname VALUES('buckminister')"}
+{"sql":"INSERT INTO streetname VALUES('buckspring')"}
+{"sql":"INSERT INTO streetname VALUES('burch')"}
+{"sql":"INSERT INTO streetname VALUES('burch shire')"}
+{"sql":"INSERT INTO streetname VALUES('burkston')"}
+{"sql":"INSERT INTO streetname VALUES('burmith')"}
+{"sql":"INSERT INTO streetname VALUES('burnaby')"}
+{"sql":"INSERT INTO streetname VALUES('butterfly')"}
+{"sql":"INSERT INTO streetname VALUES('cabin creek')"}
+{"sql":"INSERT INTO streetname VALUES('cairns mill')"}
+{"sql":"INSERT INTO streetname VALUES('callender')"}
+{"sql":"INSERT INTO streetname VALUES('cambellton')"}
+{"sql":"INSERT INTO streetname VALUES('cambridge bay')"}
+{"sql":"INSERT INTO streetname VALUES('canary')"}
+{"sql":"INSERT INTO streetname VALUES('canbury')"}
+{"sql":"INSERT INTO streetname VALUES('candle leaf')"}
+{"sql":"INSERT INTO streetname VALUES('canipe')"}
+{"sql":"INSERT INTO streetname VALUES('canipe farm')"}
+{"sql":"INSERT INTO streetname VALUES('cannon')"}
+{"sql":"INSERT INTO streetname VALUES('canopy')"}
+{"sql":"INSERT INTO streetname VALUES('canso')"}
+{"sql":"INSERT INTO streetname VALUES('canterbrook')"}
+{"sql":"INSERT INTO streetname VALUES('cardinal glen')"}
+{"sql":"INSERT INTO streetname VALUES('cardinal point')"}
+{"sql":"INSERT INTO streetname VALUES('cardinals nest')"}
+{"sql":"INSERT INTO streetname VALUES('carlota')"}
+{"sql":"INSERT INTO streetname VALUES('carmathen')"}
+{"sql":"INSERT INTO streetname VALUES('carver')"}
+{"sql":"INSERT INTO streetname VALUES('carver pond')"}
+{"sql":"INSERT INTO streetname VALUES('casa loma')"}
+{"sql":"INSERT INTO streetname VALUES('caselton')"}
+{"sql":"INSERT INTO streetname VALUES('castello')"}
+{"sql":"INSERT INTO streetname VALUES('castle ridge')"}
+{"sql":"INSERT INTO streetname VALUES('castleglen')"}
+{"sql":"INSERT INTO streetname VALUES('castlemaine')"}
+{"sql":"INSERT INTO streetname VALUES('cavett')"}
+{"sql":"INSERT INTO streetname VALUES('caymus')"}
+{"sql":"INSERT INTO streetname VALUES('cedardale ridge')"}
+{"sql":"INSERT INTO streetname VALUES('cedarhurst')"}
+{"sql":"INSERT INTO streetname VALUES('cemkey way')"}
+{"sql":"INSERT INTO streetname VALUES('cerise')"}
+{"sql":"INSERT INTO streetname VALUES('chaceview')"}
+{"sql":"INSERT INTO streetname VALUES('chadsworth')"}
+{"sql":"INSERT INTO streetname VALUES('chadwell')"}
+{"sql":"INSERT INTO streetname VALUES('champions crest')"}
+{"sql":"INSERT INTO streetname VALUES('chandler haven')"}
+{"sql":"INSERT INTO streetname VALUES('chapel crossing')"}
+{"sql":"INSERT INTO streetname VALUES('chapel ridge')"}
+{"sql":"INSERT INTO streetname VALUES('charles crawford')"}
+{"sql":"INSERT INTO streetname VALUES('charminster')"}
+{"sql":"INSERT INTO streetname VALUES('chasewind')"}
+{"sql":"INSERT INTO streetname VALUES('chavel')"}
+{"sql":"INSERT INTO streetname VALUES('chelsea jade')"}
+{"sql":"INSERT INTO streetname VALUES('chestnut knoll')"}
+{"sql":"INSERT INTO streetname VALUES('cheviot')"}
+{"sql":"INSERT INTO streetname VALUES('chickadee')"}
+{"sql":"INSERT INTO streetname VALUES('chidley')"}
+{"sql":"INSERT INTO streetname VALUES('chimney ridge')"}
+{"sql":"INSERT INTO streetname VALUES('chimney springs')"}
+{"sql":"INSERT INTO streetname VALUES('chinaberry')"}
+{"sql":"INSERT INTO streetname VALUES('chinemist')"}
+{"sql":"INSERT INTO streetname VALUES('chinquapin')"}
+{"sql":"INSERT INTO streetname VALUES('chiswell')"}
+{"sql":"INSERT INTO streetname VALUES('christenbury')"}
+{"sql":"INSERT INTO streetname VALUES('christenbury hills')"}
+{"sql":"INSERT INTO streetname VALUES('churchill')"}
+{"sql":"INSERT INTO streetname VALUES('cindy')"}
+{"sql":"INSERT INTO streetname VALUES('cinnamon teal')"}
+{"sql":"INSERT INTO streetname VALUES('citadel')"}
+{"sql":"INSERT INTO streetname VALUES('clare olivia')"}
+{"sql":"INSERT INTO streetname VALUES('clarke creek')"}
+{"sql":"INSERT INTO streetname VALUES('clarke ridge')"}
+{"sql":"INSERT INTO streetname VALUES('clear day')"}
+{"sql":"INSERT INTO streetname VALUES('clear stream')"}
+{"sql":"INSERT INTO streetname VALUES('cleve brown')"}
+{"sql":"INSERT INTO streetname VALUES('cliff cameron')"}
+{"sql":"INSERT INTO streetname VALUES('cliffvale')"}
+{"sql":"INSERT INTO streetname VALUES('cloverside')"}
+{"sql":"INSERT INTO streetname VALUES('clymer')"}
+{"sql":"INSERT INTO streetname VALUES('coatbridge')"}
+{"sql":"INSERT INTO streetname VALUES('cobble glen')"}
+{"sql":"INSERT INTO streetname VALUES('cochran farm')"}
+{"sql":"INSERT INTO streetname VALUES('cochrane')"}
+{"sql":"INSERT INTO streetname VALUES('coleridge')"}
+{"sql":"INSERT INTO streetname VALUES('coleshire')"}
+{"sql":"INSERT INTO streetname VALUES('collins')"}
+{"sql":"INSERT INTO streetname VALUES('colvard')"}
+{"sql":"INSERT INTO streetname VALUES('colvard park')"}
+{"sql":"INSERT INTO streetname VALUES('condor')"}
+{"sql":"INSERT INTO streetname VALUES('conner ridge')"}
+{"sql":"INSERT INTO streetname VALUES('connery')"}
+{"sql":"INSERT INTO streetname VALUES('cooper run')"}
+{"sql":"INSERT INTO streetname VALUES('coopers ridge')"}
+{"sql":"INSERT INTO streetname VALUES('copper hill')"}
+{"sql":"INSERT INTO streetname VALUES('coppermine')"}
+{"sql":"INSERT INTO streetname VALUES('cornelia')"}
+{"sql":"INSERT INTO streetname VALUES('corner')"}
+{"sql":"INSERT INTO streetname VALUES('cornerstone')"}
+{"sql":"INSERT INTO streetname VALUES('cottage oaks')"}
+{"sql":"INSERT INTO streetname VALUES('cougar')"}
+{"sql":"INSERT INTO streetname VALUES('coves end')"}
+{"sql":"INSERT INTO streetname VALUES('cragland')"}
+{"sql":"INSERT INTO streetname VALUES('crail')"}
+{"sql":"INSERT INTO streetname VALUES('cranberry nook')"}
+{"sql":"INSERT INTO streetname VALUES('crawford brook')"}
+{"sql":"INSERT INTO streetname VALUES('crayton')"}
+{"sql":"INSERT INTO streetname VALUES('creek breeze')"}
+{"sql":"INSERT INTO streetname VALUES('crescent ridge')"}
+{"sql":"INSERT INTO streetname VALUES('crescent view')"}
+{"sql":"INSERT INTO streetname VALUES('cresta')"}
+{"sql":"INSERT INTO streetname VALUES('crestfield')"}
+{"sql":"INSERT INTO streetname VALUES('crestland')"}
+{"sql":"INSERT INTO streetname VALUES('crestwick')"}
+{"sql":"INSERT INTO streetname VALUES('crisfield')"}
+{"sql":"INSERT INTO streetname VALUES('crisp wood')"}
+{"sql":"INSERT INTO streetname VALUES('croft haven')"}
+{"sql":"INSERT INTO streetname VALUES('crofton springs')"}
+{"sql":"INSERT INTO streetname VALUES('cross')"}
+{"sql":"INSERT INTO streetname VALUES('crosspoint center')"}
+{"sql":"INSERT INTO streetname VALUES('crownvista')"}
+{"sql":"INSERT INTO streetname VALUES('crystal arms')"}
+{"sql":"INSERT INTO streetname VALUES('crystal crest')"}
+{"sql":"INSERT INTO streetname VALUES('crystal leaf')"}
+{"sql":"INSERT INTO streetname VALUES('cunningham park')"}
+{"sql":"INSERT INTO streetname VALUES('cypress pond')"}
+{"sql":"INSERT INTO streetname VALUES('daffodil')"}
+{"sql":"INSERT INTO streetname VALUES('daisyfield')"}
+{"sql":"INSERT INTO streetname VALUES('dalecrest')"}
+{"sql":"INSERT INTO streetname VALUES('dannelly park')"}
+{"sql":"INSERT INTO streetname VALUES('daphne')"}
+{"sql":"INSERT INTO streetname VALUES('daria')"}
+{"sql":"INSERT INTO streetname VALUES('dartmouth')"}
+{"sql":"INSERT INTO streetname VALUES('datha')"}
+{"sql":"INSERT INTO streetname VALUES('david cox')"}
+{"sql":"INSERT INTO streetname VALUES('davis')"}
+{"sql":"INSERT INTO streetname VALUES('davis crossing')"}
+{"sql":"INSERT INTO streetname VALUES('davis lake')"}
+{"sql":"INSERT INTO streetname VALUES('davis ridge')"}
+{"sql":"INSERT INTO streetname VALUES('dawnmist')"}
+{"sql":"INSERT INTO streetname VALUES('daybreak')"}
+{"sql":"INSERT INTO streetname VALUES('dearmon')"}
+{"sql":"INSERT INTO streetname VALUES('dearview')"}
+{"sql":"INSERT INTO streetname VALUES('deaton hill')"}
+{"sql":"INSERT INTO streetname VALUES('deer cross')"}
+{"sql":"INSERT INTO streetname VALUES('deerton')"}
+{"sql":"INSERT INTO streetname VALUES('degrasse')"}
+{"sql":"INSERT INTO streetname VALUES('delamere')"}
+{"sql":"INSERT INTO streetname VALUES('dellfield')"}
+{"sql":"INSERT INTO streetname VALUES('dellinger')"}
+{"sql":"INSERT INTO streetname VALUES('demington')"}
+{"sql":"INSERT INTO streetname VALUES('denmeade')"}
+{"sql":"INSERT INTO streetname VALUES('derita')"}
+{"sql":"INSERT INTO streetname VALUES('derita woods')"}
+{"sql":"INSERT INTO streetname VALUES('deruyter')"}
+{"sql":"INSERT INTO streetname VALUES('dervish')"}
+{"sql":"INSERT INTO streetname VALUES('devas')"}
+{"sql":"INSERT INTO streetname VALUES('devon croft')"}
+{"sql":"INSERT INTO streetname VALUES('devonbridge')"}
+{"sql":"INSERT INTO streetname VALUES('devongate')"}
+{"sql":"INSERT INTO streetname VALUES('devonhill')"}
+{"sql":"INSERT INTO streetname VALUES('dewmorn')"}
+{"sql":"INSERT INTO streetname VALUES('distribution center')"}
+{"sql":"INSERT INTO streetname VALUES('dominion crest')"}
+{"sql":"INSERT INTO streetname VALUES('dominion green')"}
+{"sql":"INSERT INTO streetname VALUES('dominion village')"}
+{"sql":"INSERT INTO streetname VALUES('dorshire')"}
+{"sql":"INSERT INTO streetname VALUES('double creek crossing')"}
+{"sql":"INSERT INTO streetname VALUES('dow')"}
+{"sql":"INSERT INTO streetname VALUES('downfield wood')"}
+{"sql":"INSERT INTO streetname VALUES('downing creek')"}
+{"sql":"INSERT INTO streetname VALUES('driscol')"}
+{"sql":"INSERT INTO streetname VALUES('driwood')"}
+{"sql":"INSERT INTO streetname VALUES('dry brook')"}
+{"sql":"INSERT INTO streetname VALUES('dumont')"}
+{"sql":"INSERT INTO streetname VALUES('dunblane')"}
+{"sql":"INSERT INTO streetname VALUES('dunfield')"}
+{"sql":"INSERT INTO streetname VALUES('dunoon')"}
+{"sql":"INSERT INTO streetname VALUES('dunslow')"}
+{"sql":"INSERT INTO streetname VALUES('dunstaff')"}
+{"sql":"INSERT INTO streetname VALUES('durham')"}
+{"sql":"INSERT INTO streetname VALUES('durston')"}
+{"sql":"INSERT INTO streetname VALUES('dusty cedar')"}
+{"sql":"INSERT INTO streetname VALUES('dusty trail')"}
+{"sql":"INSERT INTO streetname VALUES('dutchess')"}
+{"sql":"INSERT INTO streetname VALUES('duxford')"}
+{"sql":"INSERT INTO streetname VALUES('eagle creek')"}
+{"sql":"INSERT INTO streetname VALUES('eagles field')"}
+{"sql":"INSERT INTO streetname VALUES('eargle')"}
+{"sql":"INSERT INTO streetname VALUES('earlswood')"}
+{"sql":"INSERT INTO streetname VALUES('early mist')"}
+{"sql":"INSERT INTO streetname VALUES('earthenware')"}
+{"sql":"INSERT INTO streetname VALUES('eastfield park')"}
+{"sql":"INSERT INTO streetname VALUES('eastfield village')"}
+{"sql":"INSERT INTO streetname VALUES('easy')"}
+{"sql":"INSERT INTO streetname VALUES('eben')"}
+{"sql":"INSERT INTO streetname VALUES('edgepine')"}
+{"sql":"INSERT INTO streetname VALUES('edgewier')"}
+{"sql":"INSERT INTO streetname VALUES('edinburgh')"}
+{"sql":"INSERT INTO streetname VALUES('edinmeadow')"}
+{"sql":"INSERT INTO streetname VALUES('edmonton')"}
+{"sql":"INSERT INTO streetname VALUES('edwin jones')"}
+{"sql":"INSERT INTO streetname VALUES('elberon')"}
+{"sql":"INSERT INTO streetname VALUES('elderslie')"}
+{"sql":"INSERT INTO streetname VALUES('elementary view')"}
+{"sql":"INSERT INTO streetname VALUES('elendil')"}
+{"sql":"INSERT INTO streetname VALUES('elizabeth')"}
+{"sql":"INSERT INTO streetname VALUES('elm cove')"}
+{"sql":"INSERT INTO streetname VALUES('elrond')"}
+{"sql":"INSERT INTO streetname VALUES('elsenham')"}
+{"sql":"INSERT INTO streetname VALUES('elven')"}
+{"sql":"INSERT INTO streetname VALUES('emma lynn')"}
+{"sql":"INSERT INTO streetname VALUES('english setter')"}
+{"sql":"INSERT INTO streetname VALUES('enoch')"}
+{"sql":"INSERT INTO streetname VALUES('equipment')"}
+{"sql":"INSERT INTO streetname VALUES('ernest russell')"}
+{"sql":"INSERT INTO streetname VALUES('ernie')"}
+{"sql":"INSERT INTO streetname VALUES('esmeralda')"}
+{"sql":"INSERT INTO streetname VALUES('evergreen hollow')"}
+{"sql":"INSERT INTO streetname VALUES('eversfield')"}
+{"sql":"INSERT INTO streetname VALUES('ewen')"}
+{"sql":"INSERT INTO streetname VALUES('ewert cut')"}
+{"sql":"INSERT INTO streetname VALUES('exbury')"}
+{"sql":"INSERT INTO streetname VALUES('fair grounds park')"}
+{"sql":"INSERT INTO streetname VALUES('fairbourne')"}
+{"sql":"INSERT INTO streetname VALUES('fairchase')"}
+{"sql":"INSERT INTO streetname VALUES('faircreek')"}
+{"sql":"INSERT INTO streetname VALUES('fairglen')"}
+{"sql":"INSERT INTO streetname VALUES('fairlea')"}
+{"sql":"INSERT INTO streetname VALUES('fairmead')"}
+{"sql":"INSERT INTO streetname VALUES('fairmeadows')"}
+{"sql":"INSERT INTO streetname VALUES('fairstone')"}
+{"sql":"INSERT INTO streetname VALUES('fairvista')"}
+{"sql":"INSERT INTO streetname VALUES('fairway point')"}
+{"sql":"INSERT INTO streetname VALUES('falconcrest')"}
+{"sql":"INSERT INTO streetname VALUES('falls ridge')"}
+{"sql":"INSERT INTO streetname VALUES('falmouth')"}
+{"sql":"INSERT INTO streetname VALUES('far west')"}
+{"sql":"INSERT INTO streetname VALUES('farlow')"}
+{"sql":"INSERT INTO streetname VALUES('farris wheel')"}
+{"sql":"INSERT INTO streetname VALUES('fawndale')"}
+{"sql":"INSERT INTO streetname VALUES('feather bend')"}
+{"sql":"INSERT INTO streetname VALUES('fernledge')"}
+{"sql":"INSERT INTO streetname VALUES('fernmoss')"}
+{"sql":"INSERT INTO streetname VALUES('ferrell commons')"}
+{"sql":"INSERT INTO streetname VALUES('fieldstone')"}
+{"sql":"INSERT INTO streetname VALUES('fillian')"}
+{"sql":"INSERT INTO streetname VALUES('fincher')"}
+{"sql":"INSERT INTO streetname VALUES('foggy meadow')"}
+{"sql":"INSERT INTO streetname VALUES('fordyce')"}
+{"sql":"INSERT INTO streetname VALUES('forest grove')"}
+{"sql":"INSERT INTO streetname VALUES('forest path')"}
+{"sql":"INSERT INTO streetname VALUES('forestridge commons')"}
+{"sql":"INSERT INTO streetname VALUES('forestrock')"}
+{"sql":"INSERT INTO streetname VALUES('fortunes ridge')"}
+{"sql":"INSERT INTO streetname VALUES('founders club')"}
+{"sql":"INSERT INTO streetname VALUES('fountaingrass')"}
+{"sql":"INSERT INTO streetname VALUES('fox chase')"}
+{"sql":"INSERT INTO streetname VALUES('fox glen')"}
+{"sql":"INSERT INTO streetname VALUES('fox hill')"}
+{"sql":"INSERT INTO streetname VALUES('fox point')"}
+{"sql":"INSERT INTO streetname VALUES('fox trot')"}
+{"sql":"INSERT INTO streetname VALUES('foxbriar')"}
+{"sql":"INSERT INTO streetname VALUES('frank little')"}
+{"sql":"INSERT INTO streetname VALUES('franzia')"}
+{"sql":"INSERT INTO streetname VALUES('french woods')"}
+{"sql":"INSERT INTO streetname VALUES('frostmoor')"}
+{"sql":"INSERT INTO streetname VALUES('frye')"}
+{"sql":"INSERT INTO streetname VALUES('furlong')"}
+{"sql":"INSERT INTO streetname VALUES('galena view')"}
+{"sql":"INSERT INTO streetname VALUES('gallery pointe')"}
+{"sql":"INSERT INTO streetname VALUES('gammon')"}
+{"sql":"INSERT INTO streetname VALUES('garden grove')"}
+{"sql":"INSERT INTO streetname VALUES('gardendale')"}
+{"sql":"INSERT INTO streetname VALUES('garganey')"}
+{"sql":"INSERT INTO streetname VALUES('garnet field')"}
+{"sql":"INSERT INTO streetname VALUES('garrison')"}
+{"sql":"INSERT INTO streetname VALUES('garvin')"}
+{"sql":"INSERT INTO streetname VALUES('garvis')"}
+{"sql":"INSERT INTO streetname VALUES('gaskill')"}
+{"sql":"INSERT INTO streetname VALUES('gemstone')"}
+{"sql":"INSERT INTO streetname VALUES('gibbon')"}
+{"sql":"INSERT INTO streetname VALUES('gibbon terrace')"}
+{"sql":"INSERT INTO streetname VALUES('gibbons link')"}
+{"sql":"INSERT INTO streetname VALUES('gillman')"}
+{"sql":"INSERT INTO streetname VALUES('gladwood')"}
+{"sql":"INSERT INTO streetname VALUES('gladwyne')"}
+{"sql":"INSERT INTO streetname VALUES('glamorgan')"}
+{"sql":"INSERT INTO streetname VALUES('glaze')"}
+{"sql":"INSERT INTO streetname VALUES('glen brook')"}
+{"sql":"INSERT INTO streetname VALUES('glen cove')"}
+{"sql":"INSERT INTO streetname VALUES('glen hope')"}
+{"sql":"INSERT INTO streetname VALUES('glen manor')"}
+{"sql":"INSERT INTO streetname VALUES('glen olden')"}
+{"sql":"INSERT INTO streetname VALUES('glencairn')"}
+{"sql":"INSERT INTO streetname VALUES('glendock')"}
+{"sql":"INSERT INTO streetname VALUES('glenolden')"}
+{"sql":"INSERT INTO streetname VALUES('glenover')"}
+{"sql":"INSERT INTO streetname VALUES('glenshire')"}
+{"sql":"INSERT INTO streetname VALUES('glenstone')"}
+{"sql":"INSERT INTO streetname VALUES('gold dust')"}
+{"sql":"INSERT INTO streetname VALUES('golden pond')"}
+{"sql":"INSERT INTO streetname VALUES('goldenblush')"}
+{"sql":"INSERT INTO streetname VALUES('goldenfield')"}
+{"sql":"INSERT INTO streetname VALUES('goose landing')"}
+{"sql":"INSERT INTO streetname VALUES('gorham gate')"}
+{"sql":"INSERT INTO streetname VALUES('grabill')"}
+{"sql":"INSERT INTO streetname VALUES('graburns ford')"}
+{"sql":"INSERT INTO streetname VALUES('graham')"}
+{"sql":"INSERT INTO streetname VALUES('grahamson')"}
+{"sql":"INSERT INTO streetname VALUES('granard')"}
+{"sql":"INSERT INTO streetname VALUES('grand teton')"}
+{"sql":"INSERT INTO streetname VALUES('grande heights')"}
+{"sql":"INSERT INTO streetname VALUES('grandeur')"}
+{"sql":"INSERT INTO streetname VALUES('granite creek')"}
+{"sql":"INSERT INTO streetname VALUES('grasset')"}
+{"sql":"INSERT INTO streetname VALUES('graypark')"}
+{"sql":"INSERT INTO streetname VALUES('grays ridge')"}
+{"sql":"INSERT INTO streetname VALUES('great bear')"}
+{"sql":"INSERT INTO streetname VALUES('green clover')"}
+{"sql":"INSERT INTO streetname VALUES('green hedge')"}
+{"sql":"INSERT INTO streetname VALUES('green meadow')"}
+{"sql":"INSERT INTO streetname VALUES('green pasture')"}
+{"sql":"INSERT INTO streetname VALUES('greene')"}
+{"sql":"INSERT INTO streetname VALUES('greenloch')"}
+{"sql":"INSERT INTO streetname VALUES('greenock ridge')"}
+{"sql":"INSERT INTO streetname VALUES('greenware')"}
+{"sql":"INSERT INTO streetname VALUES('greenway village')"}
+{"sql":"INSERT INTO streetname VALUES('grenelefe village')"}
+{"sql":"INSERT INTO streetname VALUES('grey dogwood')"}
+{"sql":"INSERT INTO streetname VALUES('greyhound')"}
+{"sql":"INSERT INTO streetname VALUES('greylock ridge')"}
+{"sql":"INSERT INTO streetname VALUES('grosbeak')"}
+{"sql":"INSERT INTO streetname VALUES('grove')"}
+{"sql":"INSERT INTO streetname VALUES('groveton')"}
+{"sql":"INSERT INTO streetname VALUES('groveview')"}
+{"sql":"INSERT INTO streetname VALUES('hackberry creek')"}
+{"sql":"INSERT INTO streetname VALUES('hackberry grove')"}
+{"sql":"INSERT INTO streetname VALUES('hackett')"}
+{"sql":"INSERT INTO streetname VALUES('haddington')"}
+{"sql":"INSERT INTO streetname VALUES('hagler')"}
+{"sql":"INSERT INTO streetname VALUES('halcott')"}
+{"sql":"INSERT INTO streetname VALUES('half dome')"}
+{"sql":"INSERT INTO streetname VALUES('hallam')"}
+{"sql":"INSERT INTO streetname VALUES('hamilton russell')"}
+{"sql":"INSERT INTO streetname VALUES('hampton place')"}
+{"sql":"INSERT INTO streetname VALUES('hankins')"}
+{"sql":"INSERT INTO streetname VALUES('harburn forest')"}
+{"sql":"INSERT INTO streetname VALUES('harringham')"}
+{"sql":"INSERT INTO streetname VALUES('harrington woods')"}
+{"sql":"INSERT INTO streetname VALUES('harris corners')"}
+{"sql":"INSERT INTO streetname VALUES('harris cove')"}
+{"sql":"INSERT INTO streetname VALUES('harris glen')"}
+{"sql":"INSERT INTO streetname VALUES('harris hill')"}
+{"sql":"INSERT INTO streetname VALUES('harris oak')"}
+{"sql":"INSERT INTO streetname VALUES('harris pointe')"}
+{"sql":"INSERT INTO streetname VALUES('harris pond')"}
+{"sql":"INSERT INTO streetname VALUES('harris ridge')"}
+{"sql":"INSERT INTO streetname VALUES('harris technology')"}
+{"sql":"INSERT INTO streetname VALUES('harris woods')"}
+{"sql":"INSERT INTO streetname VALUES('hartfield downs')"}
+{"sql":"INSERT INTO streetname VALUES('hattie little')"}
+{"sql":"INSERT INTO streetname VALUES('hatwynn')"}
+{"sql":"INSERT INTO streetname VALUES('hawkins')"}
+{"sql":"INSERT INTO streetname VALUES('hawksnest')"}
+{"sql":"INSERT INTO streetname VALUES('haybridge')"}
+{"sql":"INSERT INTO streetname VALUES('hayden')"}
+{"sql":"INSERT INTO streetname VALUES('hazelcroft')"}
+{"sql":"INSERT INTO streetname VALUES('hazlitt')"}
+{"sql":"INSERT INTO streetname VALUES('hazy valley')"}
+{"sql":"INSERT INTO streetname VALUES('hearst')"}
+{"sql":"INSERT INTO streetname VALUES('heathcrest')"}
+{"sql":"INSERT INTO streetname VALUES('heathcroft')"}
+{"sql":"INSERT INTO streetname VALUES('hedge maple')"}
+{"sql":"INSERT INTO streetname VALUES('hedgecrest')"}
+{"sql":"INSERT INTO streetname VALUES('hedingham')"}
+{"sql":"INSERT INTO streetname VALUES('heman')"}
+{"sql":"INSERT INTO streetname VALUES('henderson')"}
+{"sql":"INSERT INTO streetname VALUES('henderson oaks')"}
+{"sql":"INSERT INTO streetname VALUES('henderson valley')"}
+{"sql":"INSERT INTO streetname VALUES('hendry')"}
+{"sql":"INSERT INTO streetname VALUES('heritage hills')"}
+{"sql":"INSERT INTO streetname VALUES('heritage woods')"}
+{"sql":"INSERT INTO streetname VALUES('heron cove')"}
+{"sql":"INSERT INTO streetname VALUES('heron glen')"}
+{"sql":"INSERT INTO streetname VALUES('hewitt')"}
+{"sql":"INSERT INTO streetname VALUES('hey rock')"}
+{"sql":"INSERT INTO streetname VALUES('heysham')"}
+{"sql":"INSERT INTO streetname VALUES('hickory cove')"}
+{"sql":"INSERT INTO streetname VALUES('hidden meadow')"}
+{"sql":"INSERT INTO streetname VALUES('high glen')"}
+{"sql":"INSERT INTO streetname VALUES('high laurel')"}
+{"sql":"INSERT INTO streetname VALUES('high valley')"}
+{"sql":"INSERT INTO streetname VALUES('highcroft')"}
+{"sql":"INSERT INTO streetname VALUES('highland')"}
+{"sql":"INSERT INTO streetname VALUES('highland commons')"}
+{"sql":"INSERT INTO streetname VALUES('highland creek')"}
+{"sql":"INSERT INTO streetname VALUES('highland glen')"}
+{"sql":"INSERT INTO streetname VALUES('highland park')"}
+{"sql":"INSERT INTO streetname VALUES('highlander')"}
+{"sql":"INSERT INTO streetname VALUES('highstream')"}
+{"sql":"INSERT INTO streetname VALUES('hilltop')"}
+{"sql":"INSERT INTO streetname VALUES('hobbitshire')"}
+{"sql":"INSERT INTO streetname VALUES('hoffman')"}
+{"sql":"INSERT INTO streetname VALUES('hogans way')"}
+{"sql":"INSERT INTO streetname VALUES('holbert')"}
+{"sql":"INSERT INTO streetname VALUES('hollow ridge')"}
+{"sql":"INSERT INTO streetname VALUES('holly vista')"}
+{"sql":"INSERT INTO streetname VALUES('hollywood')"}
+{"sql":"INSERT INTO streetname VALUES('hoover')"}
+{"sql":"INSERT INTO streetname VALUES('hopkins')"}
+{"sql":"INSERT INTO streetname VALUES('horace mann')"}
+{"sql":"INSERT INTO streetname VALUES('hornbeam')"}
+{"sql":"INSERT INTO streetname VALUES('horse pasture')"}
+{"sql":"INSERT INTO streetname VALUES('hosta')"}
+{"sql":"INSERT INTO streetname VALUES('howard')"}
+{"sql":"INSERT INTO streetname VALUES('hubbard')"}
+{"sql":"INSERT INTO streetname VALUES('hubbard falls')"}
+{"sql":"INSERT INTO streetname VALUES('hubbard woods')"}
+{"sql":"INSERT INTO streetname VALUES('hucks')"}
+{"sql":"INSERT INTO streetname VALUES('hunters creek')"}
+{"sql":"INSERT INTO streetname VALUES('hunters pointe')"}
+{"sql":"INSERT INTO streetname VALUES('hunters spring')"}
+{"sql":"INSERT INTO streetname VALUES('hunters whip')"}
+{"sql":"INSERT INTO streetname VALUES('huntmeadow')"}
+{"sql":"INSERT INTO streetname VALUES('hutchison mcdonald')"}
+{"sql":"INSERT INTO streetname VALUES('ingleton')"}
+{"sql":"INSERT INTO streetname VALUES('insdale')"}
+{"sql":"INSERT INTO streetname VALUES('interstate 85 service')"}
+{"sql":"INSERT INTO streetname VALUES('iola')"}
+{"sql":"INSERT INTO streetname VALUES('iredell')"}
+{"sql":"INSERT INTO streetname VALUES('iron brigade')"}
+{"sql":"INSERT INTO streetname VALUES('irwin valley')"}
+{"sql":"INSERT INTO streetname VALUES('irwin wood')"}
+{"sql":"INSERT INTO streetname VALUES('ivy brook')"}
+{"sql":"INSERT INTO streetname VALUES('ivy ridge')"}
+{"sql":"INSERT INTO streetname VALUES('jack russell')"}
+{"sql":"INSERT INTO streetname VALUES('jackson')"}
+{"sql":"INSERT INTO streetname VALUES('jacob martin')"}
+{"sql":"INSERT INTO streetname VALUES('jamison')"}
+{"sql":"INSERT INTO streetname VALUES('jane')"}
+{"sql":"INSERT INTO streetname VALUES('jaspar crest')"}
+{"sql":"INSERT INTO streetname VALUES('jessica')"}
+{"sql":"INSERT INTO streetname VALUES('jimmy oehler')"}
+{"sql":"INSERT INTO streetname VALUES('jocelyn')"}
+{"sql":"INSERT INTO streetname VALUES('johnston mill')"}
+{"sql":"INSERT INTO streetname VALUES('johnston oehler')"}
+{"sql":"INSERT INTO streetname VALUES('judal')"}
+{"sql":"INSERT INTO streetname VALUES('junipeous')"}
+{"sql":"INSERT INTO streetname VALUES('juniper')"}
+{"sql":"INSERT INTO streetname VALUES('juniperus')"}
+{"sql":"INSERT INTO streetname VALUES('kalispell')"}
+{"sql":"INSERT INTO streetname VALUES('karylsturn')"}
+{"sql":"INSERT INTO streetname VALUES('katelyn')"}
+{"sql":"INSERT INTO streetname VALUES('kayron')"}
+{"sql":"INSERT INTO streetname VALUES('keaton')"}
+{"sql":"INSERT INTO streetname VALUES('keble')"}
+{"sql":"INSERT INTO streetname VALUES('keels')"}
+{"sql":"INSERT INTO streetname VALUES('keith')"}
+{"sql":"INSERT INTO streetname VALUES('keithwood')"}
+{"sql":"INSERT INTO streetname VALUES('kelden walker')"}
+{"sql":"INSERT INTO streetname VALUES('kelsey emma')"}
+{"sql":"INSERT INTO streetname VALUES('kendrick')"}
+{"sql":"INSERT INTO streetname VALUES('kenmont')"}
+{"sql":"INSERT INTO streetname VALUES('kennerly cove')"}
+{"sql":"INSERT INTO streetname VALUES('kenninghall')"}
+{"sql":"INSERT INTO streetname VALUES('kent village')"}
+{"sql":"INSERT INTO streetname VALUES('kestral ridge')"}
+{"sql":"INSERT INTO streetname VALUES('kestrel')"}
+{"sql":"INSERT INTO streetname VALUES('kilmartin')"}
+{"sql":"INSERT INTO streetname VALUES('kilty')"}
+{"sql":"INSERT INTO streetname VALUES('kinglet')"}
+{"sql":"INSERT INTO streetname VALUES('kingsland')"}
+{"sql":"INSERT INTO streetname VALUES('kingsnorth')"}
+{"sql":"INSERT INTO streetname VALUES('kinsmore')"}
+{"sql":"INSERT INTO streetname VALUES('kirkgard')"}
+{"sql":"INSERT INTO streetname VALUES('kirkmont')"}
+{"sql":"INSERT INTO streetname VALUES('knightsgate')"}
+{"sql":"INSERT INTO streetname VALUES('kobuk')"}
+{"sql":"INSERT INTO streetname VALUES('kotlik')"}
+{"sql":"INSERT INTO streetname VALUES('kotz')"}
+{"sql":"INSERT INTO streetname VALUES('kyndall walk')"}
+{"sql":"INSERT INTO streetname VALUES('laborde')"}
+{"sql":"INSERT INTO streetname VALUES('lady bank')"}
+{"sql":"INSERT INTO streetname VALUES('lagrande')"}
+{"sql":"INSERT INTO streetname VALUES('lake')"}
+{"sql":"INSERT INTO streetname VALUES('lakeridge commons')"}
+{"sql":"INSERT INTO streetname VALUES('lakeview')"}
+{"sql":"INSERT INTO streetname VALUES('lakewood edge')"}
+{"sql":"INSERT INTO streetname VALUES('lakota')"}
+{"sql":"INSERT INTO streetname VALUES('lambrook')"}
+{"sql":"INSERT INTO streetname VALUES('lampkin')"}
+{"sql":"INSERT INTO streetname VALUES('lampkin park')"}
+{"sql":"INSERT INTO streetname VALUES('langham')"}
+{"sql":"INSERT INTO streetname VALUES('lanzerac manor')"}
+{"sql":"INSERT INTO streetname VALUES('larkmead forest')"}
+{"sql":"INSERT INTO streetname VALUES('lattice')"}
+{"sql":"INSERT INTO streetname VALUES('laurel crest')"}
+{"sql":"INSERT INTO streetname VALUES('laurel ridge')"}
+{"sql":"INSERT INTO streetname VALUES('laurel run')"}
+{"sql":"INSERT INTO streetname VALUES('laurenfield')"}
+{"sql":"INSERT INTO streetname VALUES('laveta')"}
+{"sql":"INSERT INTO streetname VALUES('lazy day')"}
+{"sql":"INSERT INTO streetname VALUES('leawood run')"}
+{"sql":"INSERT INTO streetname VALUES('lee marie')"}
+{"sql":"INSERT INTO streetname VALUES('legacy lake')"}
+{"sql":"INSERT INTO streetname VALUES('legacy park')"}
+{"sql":"INSERT INTO streetname VALUES('legato')"}
+{"sql":"INSERT INTO streetname VALUES('legolas')"}
+{"sql":"INSERT INTO streetname VALUES('leigh glen')"}
+{"sql":"INSERT INTO streetname VALUES('lence')"}
+{"sql":"INSERT INTO streetname VALUES('lenox hill')"}
+{"sql":"INSERT INTO streetname VALUES('leonine')"}
+{"sql":"INSERT INTO streetname VALUES('leslie')"}
+{"sql":"INSERT INTO streetname VALUES('lester hill')"}
+{"sql":"INSERT INTO streetname VALUES('levisey')"}
+{"sql":"INSERT INTO streetname VALUES('liberty bell')"}
+{"sql":"INSERT INTO streetname VALUES('linden berry')"}
+{"sql":"INSERT INTO streetname VALUES('lisbon')"}
+{"sql":"INSERT INTO streetname VALUES('little stoney')"}
+{"sql":"INSERT INTO streetname VALUES('livengood')"}
+{"sql":"INSERT INTO streetname VALUES('lochway')"}
+{"sql":"INSERT INTO streetname VALUES('lockman')"}
+{"sql":"INSERT INTO streetname VALUES('loganville')"}
+{"sql":"INSERT INTO streetname VALUES('lone tree')"}
+{"sql":"INSERT INTO streetname VALUES('long creek park')"}
+{"sql":"INSERT INTO streetname VALUES('long forest')"}
+{"sql":"INSERT INTO streetname VALUES('looking glass')"}
+{"sql":"INSERT INTO streetname VALUES('lookout point')"}
+{"sql":"INSERT INTO streetname VALUES('lowen')"}
+{"sql":"INSERT INTO streetname VALUES('lusby')"}
+{"sql":"INSERT INTO streetname VALUES('lyleton')"}
+{"sql":"INSERT INTO streetname VALUES('lynn lee')"}
+{"sql":"INSERT INTO streetname VALUES('lynnewood glen')"}
+{"sql":"INSERT INTO streetname VALUES('machrie')"}
+{"sql":"INSERT INTO streetname VALUES('mackinac')"}
+{"sql":"INSERT INTO streetname VALUES('maddox')"}
+{"sql":"INSERT INTO streetname VALUES('madison park')"}
+{"sql":"INSERT INTO streetname VALUES('mallard')"}
+{"sql":"INSERT INTO streetname VALUES('mallard cove')"}
+{"sql":"INSERT INTO streetname VALUES('mallard forest')"}
+{"sql":"INSERT INTO streetname VALUES('mallard grove')"}
+{"sql":"INSERT INTO streetname VALUES('mallard hill')"}
+{"sql":"INSERT INTO streetname VALUES('mallard park')"}
+{"sql":"INSERT INTO streetname VALUES('mallard ridge')"}
+{"sql":"INSERT INTO streetname VALUES('mallard view')"}
+{"sql":"INSERT INTO streetname VALUES('manbey')"}
+{"sql":"INSERT INTO streetname VALUES('manning')"}
+{"sql":"INSERT INTO streetname VALUES('mantario')"}
+{"sql":"INSERT INTO streetname VALUES('maple')"}
+{"sql":"INSERT INTO streetname VALUES('maple cove')"}
+{"sql":"INSERT INTO streetname VALUES('maple park')"}
+{"sql":"INSERT INTO streetname VALUES('marathon hill')"}
+{"sql":"INSERT INTO streetname VALUES('marbury')"}
+{"sql":"INSERT INTO streetname VALUES('marett')"}
+{"sql":"INSERT INTO streetname VALUES('marigold')"}
+{"sql":"INSERT INTO streetname VALUES('marionwood')"}
+{"sql":"INSERT INTO streetname VALUES('marshbank')"}
+{"sql":"INSERT INTO streetname VALUES('mason')"}
+{"sql":"INSERT INTO streetname VALUES('mayapple')"}
+{"sql":"INSERT INTO streetname VALUES('maylandia')"}
+{"sql":"INSERT INTO streetname VALUES('mayspring')"}
+{"sql":"INSERT INTO streetname VALUES('mcadam')"}
+{"sql":"INSERT INTO streetname VALUES('mcchesney')"}
+{"sql":"INSERT INTO streetname VALUES('mccurdy')"}
+{"sql":"INSERT INTO streetname VALUES('mcgrath')"}
+{"sql":"INSERT INTO streetname VALUES('mckendree')"}
+{"sql":"INSERT INTO streetname VALUES('mclaughlin')"}
+{"sql":"INSERT INTO streetname VALUES('mctaggart')"}
+{"sql":"INSERT INTO streetname VALUES('meadow green')"}
+{"sql":"INSERT INTO streetname VALUES('meadow knoll')"}
+{"sql":"INSERT INTO streetname VALUES('meadow post')"}
+{"sql":"INSERT INTO streetname VALUES('meadowmont')"}
+{"sql":"INSERT INTO streetname VALUES('meadowmont view')"}
+{"sql":"INSERT INTO streetname VALUES('meadowview hills')"}
+{"sql":"INSERT INTO streetname VALUES('melshire')"}
+{"sql":"INSERT INTO streetname VALUES('melstrand')"}
+{"sql":"INSERT INTO streetname VALUES('mentone')"}
+{"sql":"INSERT INTO streetname VALUES('meridale crossing')"}
+{"sql":"INSERT INTO streetname VALUES('merion hills')"}
+{"sql":"INSERT INTO streetname VALUES('merlot')"}
+{"sql":"INSERT INTO streetname VALUES('mersham')"}
+{"sql":"INSERT INTO streetname VALUES('metromont')"}
+{"sql":"INSERT INTO streetname VALUES('metromont industrial')"}
+{"sql":"INSERT INTO streetname VALUES('michaw')"}
+{"sql":"INSERT INTO streetname VALUES('milhaven')"}
+{"sql":"INSERT INTO streetname VALUES('milhof')"}
+{"sql":"INSERT INTO streetname VALUES('millstream ridge')"}
+{"sql":"INSERT INTO streetname VALUES('mineral ridge')"}
+{"sql":"INSERT INTO streetname VALUES('mint thistle')"}
+{"sql":"INSERT INTO streetname VALUES('mintleaf')"}
+{"sql":"INSERT INTO streetname VALUES('mintvale')"}
+{"sql":"INSERT INTO streetname VALUES('misty')"}
+{"sql":"INSERT INTO streetname VALUES('misty arbor')"}
+{"sql":"INSERT INTO streetname VALUES('misty creek')"}
+{"sql":"INSERT INTO streetname VALUES('misty oaks')"}
+{"sql":"INSERT INTO streetname VALUES('misty wood')"}
+{"sql":"INSERT INTO streetname VALUES('mitzi deborah')"}
+{"sql":"INSERT INTO streetname VALUES('mobile')"}
+{"sql":"INSERT INTO streetname VALUES('molly elizabeth')"}
+{"sql":"INSERT INTO streetname VALUES('monmouth')"}
+{"sql":"INSERT INTO streetname VALUES('montrose')"}
+{"sql":"INSERT INTO streetname VALUES('moonlight')"}
+{"sql":"INSERT INTO streetname VALUES('moose')"}
+{"sql":"INSERT INTO streetname VALUES('morning dew')"}
+{"sql":"INSERT INTO streetname VALUES('morningsong')"}
+{"sql":"INSERT INTO streetname VALUES('morningview')"}
+{"sql":"INSERT INTO streetname VALUES('morsey')"}
+{"sql":"INSERT INTO streetname VALUES('moss glen')"}
+{"sql":"INSERT INTO streetname VALUES('mossy bank')"}
+{"sql":"INSERT INTO streetname VALUES('motor sport')"}
+{"sql":"INSERT INTO streetname VALUES('mountain laurel')"}
+{"sql":"INSERT INTO streetname VALUES('mourning dove')"}
+{"sql":"INSERT INTO streetname VALUES('mozart')"}
+{"sql":"INSERT INTO streetname VALUES('munsing')"}
+{"sql":"INSERT INTO streetname VALUES('murray')"}
+{"sql":"INSERT INTO streetname VALUES('nathan')"}
+{"sql":"INSERT INTO streetname VALUES('netherhall')"}
+{"sql":"INSERT INTO streetname VALUES('netherton')"}
+{"sql":"INSERT INTO streetname VALUES('neuhoff')"}
+{"sql":"INSERT INTO streetname VALUES('nevin')"}
+{"sql":"INSERT INTO streetname VALUES('nevin brook')"}
+{"sql":"INSERT INTO streetname VALUES('nevin glen')"}
+{"sql":"INSERT INTO streetname VALUES('nevin place')"}
+{"sql":"INSERT INTO streetname VALUES('new england')"}
+{"sql":"INSERT INTO streetname VALUES('new house')"}
+{"sql":"INSERT INTO streetname VALUES('newbary')"}
+{"sql":"INSERT INTO streetname VALUES('newchurch')"}
+{"sql":"INSERT INTO streetname VALUES('newfane')"}
+{"sql":"INSERT INTO streetname VALUES('newgard')"}
+{"sql":"INSERT INTO streetname VALUES('nicholas')"}
+{"sql":"INSERT INTO streetname VALUES('nicole')"}
+{"sql":"INSERT INTO streetname VALUES('nobility')"}
+{"sql":"INSERT INTO streetname VALUES('norcroft')"}
+{"sql":"INSERT INTO streetname VALUES('northridge')"}
+{"sql":"INSERT INTO streetname VALUES('northside')"}
+{"sql":"INSERT INTO streetname VALUES('northwoods business')"}
+{"sql":"INSERT INTO streetname VALUES('norway')"}
+{"sql":"INSERT INTO streetname VALUES('nottinghill')"}
+{"sql":"INSERT INTO streetname VALUES('numenore')"}
+{"sql":"INSERT INTO streetname VALUES('nyewood')"}
+{"sql":"INSERT INTO streetname VALUES('oak')"}
+{"sql":"INSERT INTO streetname VALUES('oak cove')"}
+{"sql":"INSERT INTO streetname VALUES('oak pasture')"}
+{"sql":"INSERT INTO streetname VALUES('oakburn')"}
+{"sql":"INSERT INTO streetname VALUES('oakwinds')"}
+{"sql":"INSERT INTO streetname VALUES('oakwood')"}
+{"sql":"INSERT INTO streetname VALUES('obrien')"}
+{"sql":"INSERT INTO streetname VALUES('ocala')"}
+{"sql":"INSERT INTO streetname VALUES('old bridge')"}
+{"sql":"INSERT INTO streetname VALUES('old fox')"}
+{"sql":"INSERT INTO streetname VALUES('old potters')"}
+{"sql":"INSERT INTO streetname VALUES('old statesville')"}
+{"sql":"INSERT INTO streetname VALUES('old steine')"}
+{"sql":"INSERT INTO streetname VALUES('old stoney creek')"}
+{"sql":"INSERT INTO streetname VALUES('old sugar creek')"}
+{"sql":"INSERT INTO streetname VALUES('old timber')"}
+{"sql":"INSERT INTO streetname VALUES('old wagon')"}
+{"sql":"INSERT INTO streetname VALUES('old willow')"}
+{"sql":"INSERT INTO streetname VALUES('oldenway')"}
+{"sql":"INSERT INTO streetname VALUES('oneida')"}
+{"sql":"INSERT INTO streetname VALUES('ontario')"}
+{"sql":"INSERT INTO streetname VALUES('oriole')"}
+{"sql":"INSERT INTO streetname VALUES('orofino')"}
+{"sql":"INSERT INTO streetname VALUES('orr')"}
+{"sql":"INSERT INTO streetname VALUES('osage')"}
+{"sql":"INSERT INTO streetname VALUES('osceola')"}
+{"sql":"INSERT INTO streetname VALUES('osprey knoll')"}
+{"sql":"INSERT INTO streetname VALUES('oxford hill')"}
+{"sql":"INSERT INTO streetname VALUES('painted fern')"}
+{"sql":"INSERT INTO streetname VALUES('painted pony')"}
+{"sql":"INSERT INTO streetname VALUES('paisley')"}
+{"sql":"INSERT INTO streetname VALUES('pale moss')"}
+{"sql":"INSERT INTO streetname VALUES('palladium')"}
+{"sql":"INSERT INTO streetname VALUES('palmutum')"}
+{"sql":"INSERT INTO streetname VALUES('palustris')"}
+{"sql":"INSERT INTO streetname VALUES('panglemont')"}
+{"sql":"INSERT INTO streetname VALUES('panther')"}
+{"sql":"INSERT INTO streetname VALUES('panthersville')"}
+{"sql":"INSERT INTO streetname VALUES('paper whites')"}
+{"sql":"INSERT INTO streetname VALUES('park')"}
+{"sql":"INSERT INTO streetname VALUES('parker green')"}
+{"sql":"INSERT INTO streetname VALUES('parkhouse')"}
+{"sql":"INSERT INTO streetname VALUES('passour ridge')"}
+{"sql":"INSERT INTO streetname VALUES('pasture view')"}
+{"sql":"INSERT INTO streetname VALUES('patricia ann')"}
+{"sql":"INSERT INTO streetname VALUES('patton')"}
+{"sql":"INSERT INTO streetname VALUES('patton ridge')"}
+{"sql":"INSERT INTO streetname VALUES('pawpaw')"}
+{"sql":"INSERT INTO streetname VALUES('peach')"}
+{"sql":"INSERT INTO streetname VALUES('peakwood')"}
+{"sql":"INSERT INTO streetname VALUES('pebble creek')"}
+{"sql":"INSERT INTO streetname VALUES('pecan cove')"}
+{"sql":"INSERT INTO streetname VALUES('pedigree')"}
+{"sql":"INSERT INTO streetname VALUES('pelorus')"}
+{"sql":"INSERT INTO streetname VALUES('penmore')"}
+{"sql":"INSERT INTO streetname VALUES('pensfold')"}
+{"sql":"INSERT INTO streetname VALUES('pepperstone')"}
+{"sql":"INSERT INTO streetname VALUES('peregrine')"}
+{"sql":"INSERT INTO streetname VALUES('periwinkle')"}
+{"sql":"INSERT INTO streetname VALUES('perkins')"}
+{"sql":"INSERT INTO streetname VALUES('pete brown')"}
+{"sql":"INSERT INTO streetname VALUES('phillips')"}
+{"sql":"INSERT INTO streetname VALUES('pickway')"}
+{"sql":"INSERT INTO streetname VALUES('piercy woods')"}
+{"sql":"INSERT INTO streetname VALUES('pierpoint')"}
+{"sql":"INSERT INTO streetname VALUES('pine')"}
+{"sql":"INSERT INTO streetname VALUES('pine branch')"}
+{"sql":"INSERT INTO streetname VALUES('pine meadow')"}
+{"sql":"INSERT INTO streetname VALUES('pineleaf')"}
+{"sql":"INSERT INTO streetname VALUES('pinewood')"}
+{"sql":"INSERT INTO streetname VALUES('pintail')"}
+{"sql":"INSERT INTO streetname VALUES('pipestone')"}
+{"sql":"INSERT INTO streetname VALUES('placer maple')"}
+{"sql":"INSERT INTO streetname VALUES('plover')"}
+{"sql":"INSERT INTO streetname VALUES('plum')"}
+{"sql":"INSERT INTO streetname VALUES('po box')"}
+{"sql":"INSERT INTO streetname VALUES('pochard')"}
+{"sql":"INSERT INTO streetname VALUES('pointview')"}
+{"sql":"INSERT INTO streetname VALUES('polk and white')"}
+{"sql":"INSERT INTO streetname VALUES('pond valley')"}
+{"sql":"INSERT INTO streetname VALUES('pondridge')"}
+{"sql":"INSERT INTO streetname VALUES('pope farm')"}
+{"sql":"INSERT INTO streetname VALUES('poplar grove')"}
+{"sql":"INSERT INTO streetname VALUES('poplar springs')"}
+{"sql":"INSERT INTO streetname VALUES('portola')"}
+{"sql":"INSERT INTO streetname VALUES('potters glen')"}
+{"sql":"INSERT INTO streetname VALUES('powatan')"}
+{"sql":"INSERT INTO streetname VALUES('prairie valley')"}
+{"sql":"INSERT INTO streetname VALUES('prescott')"}
+{"sql":"INSERT INTO streetname VALUES('presmann')"}
+{"sql":"INSERT INTO streetname VALUES('prestigious')"}
+{"sql":"INSERT INTO streetname VALUES('princess')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity church')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity commons')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity park')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity point')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity ridge')"}
+{"sql":"INSERT INTO streetname VALUES('prosperity view')"}
+{"sql":"INSERT INTO streetname VALUES('purple finch')"}
+{"sql":"INSERT INTO streetname VALUES('quail')"}
+{"sql":"INSERT INTO streetname VALUES('queensbury')"}
+{"sql":"INSERT INTO streetname VALUES('quinn')"}
+{"sql":"INSERT INTO streetname VALUES('racine')"}
+{"sql":"INSERT INTO streetname VALUES('radbourne')"}
+{"sql":"INSERT INTO streetname VALUES('raddington')"}
+{"sql":"INSERT INTO streetname VALUES('raku')"}
+{"sql":"INSERT INTO streetname VALUES('rancliffe')"}
+{"sql":"INSERT INTO streetname VALUES('ravencrest')"}
+{"sql":"INSERT INTO streetname VALUES('reames')"}
+{"sql":"INSERT INTO streetname VALUES('rebecca run')"}
+{"sql":"INSERT INTO streetname VALUES('red bluff')"}
+{"sql":"INSERT INTO streetname VALUES('red clay')"}
+{"sql":"INSERT INTO streetname VALUES('red clover')"}
+{"sql":"INSERT INTO streetname VALUES('red rose')"}
+{"sql":"INSERT INTO streetname VALUES('red shed')"}
+{"sql":"INSERT INTO streetname VALUES('red tail')"}
+{"sql":"INSERT INTO streetname VALUES('redbridge')"}
+{"sql":"INSERT INTO streetname VALUES('redstart')"}
+{"sql":"INSERT INTO streetname VALUES('redstone view')"}
+{"sql":"INSERT INTO streetname VALUES('reedmont')"}
+{"sql":"INSERT INTO streetname VALUES('reeves')"}
+{"sql":"INSERT INTO streetname VALUES('regal')"}
+{"sql":"INSERT INTO streetname VALUES('reinbeck')"}
+{"sql":"INSERT INTO streetname VALUES('retriever')"}
+{"sql":"INSERT INTO streetname VALUES('ribbonwalk')"}
+{"sql":"INSERT INTO streetname VALUES('richardson park')"}
+{"sql":"INSERT INTO streetname VALUES('richfield')"}
+{"sql":"INSERT INTO streetname VALUES('riddings')"}
+{"sql":"INSERT INTO streetname VALUES('ridge')"}
+{"sql":"INSERT INTO streetname VALUES('ridge cliff')"}
+{"sql":"INSERT INTO streetname VALUES('ridge path')"}
+{"sql":"INSERT INTO streetname VALUES('ridge peak')"}
+{"sql":"INSERT INTO streetname VALUES('ridgefield')"}
+{"sql":"INSERT INTO streetname VALUES('ridgeline')"}
+{"sql":"INSERT INTO streetname VALUES('ridgeview commons')"}
+{"sql":"INSERT INTO streetname VALUES('riley')"}
+{"sql":"INSERT INTO streetname VALUES('riley woods')"}
+{"sql":"INSERT INTO streetname VALUES('rillet')"}
+{"sql":"INSERT INTO streetname VALUES('rindle')"}
+{"sql":"INSERT INTO streetname VALUES('rivendell')"}
+{"sql":"INSERT INTO streetname VALUES('robin')"}
+{"sql":"INSERT INTO streetname VALUES('robins nest')"}
+{"sql":"INSERT INTO streetname VALUES('robur')"}
+{"sql":"INSERT INTO streetname VALUES('robyns glen')"}
+{"sql":"INSERT INTO streetname VALUES('rock stream')"}
+{"sql":"INSERT INTO streetname VALUES('rockwell')"}
+{"sql":"INSERT INTO streetname VALUES('rockwell church')"}
+{"sql":"INSERT INTO streetname VALUES('rocky brook')"}
+{"sql":"INSERT INTO streetname VALUES('rocky ford club')"}
+{"sql":"INSERT INTO streetname VALUES('rotary')"}
+{"sql":"INSERT INTO streetname VALUES('rouda')"}
+{"sql":"INSERT INTO streetname VALUES('royal bluff')"}
+{"sql":"INSERT INTO streetname VALUES('royal celadon')"}
+{"sql":"INSERT INTO streetname VALUES('rubin lura')"}
+{"sql":"INSERT INTO streetname VALUES('runswyck')"}
+{"sql":"INSERT INTO streetname VALUES('ruth ferrell')"}
+{"sql":"INSERT INTO streetname VALUES('ruth polk')"}
+{"sql":"INSERT INTO streetname VALUES('ryan jay')"}
+{"sql":"INSERT INTO streetname VALUES('sackett')"}
+{"sql":"INSERT INTO streetname VALUES('saddle pace')"}
+{"sql":"INSERT INTO streetname VALUES('saddle run')"}
+{"sql":"INSERT INTO streetname VALUES('saddle trail')"}
+{"sql":"INSERT INTO streetname VALUES('saguaro')"}
+{"sql":"INSERT INTO streetname VALUES('saint audrey')"}
+{"sql":"INSERT INTO streetname VALUES('saint bernard')"}
+{"sql":"INSERT INTO streetname VALUES('saint frances')"}
+{"sql":"INSERT INTO streetname VALUES('sam roper')"}
+{"sql":"INSERT INTO streetname VALUES('samara')"}
+{"sql":"INSERT INTO streetname VALUES('sanders creek')"}
+{"sql":"INSERT INTO streetname VALUES('saquache')"}
+{"sql":"INSERT INTO streetname VALUES('sarnia')"}
+{"sql":"INSERT INTO streetname VALUES('savannah springs')"}
+{"sql":"INSERT INTO streetname VALUES('sawgrass ridge')"}
+{"sql":"INSERT INTO streetname VALUES('saxonbury')"}
+{"sql":"INSERT INTO streetname VALUES('scotch moss')"}
+{"sql":"INSERT INTO streetname VALUES('seasons')"}
+{"sql":"INSERT INTO streetname VALUES('serenity')"}
+{"sql":"INSERT INTO streetname VALUES('seths')"}
+{"sql":"INSERT INTO streetname VALUES('shadow lawn')"}
+{"sql":"INSERT INTO streetname VALUES('shadow oaks')"}
+{"sql":"INSERT INTO streetname VALUES('shadow pine')"}
+{"sql":"INSERT INTO streetname VALUES('shadyside')"}
+{"sql":"INSERT INTO streetname VALUES('shallow oak')"}
+{"sql":"INSERT INTO streetname VALUES('shelley')"}
+{"sql":"INSERT INTO streetname VALUES('shining oak')"}
+{"sql":"INSERT INTO streetname VALUES('ship')"}
+{"sql":"INSERT INTO streetname VALUES('shore haven')"}
+{"sql":"INSERT INTO streetname VALUES('shuman')"}
+{"sql":"INSERT INTO streetname VALUES('sidney')"}
+{"sql":"INSERT INTO streetname VALUES('silver birch')"}
+{"sql":"INSERT INTO streetname VALUES('silvermere')"}
+{"sql":"INSERT INTO streetname VALUES('simonton')"}
+{"sql":"INSERT INTO streetname VALUES('singing hills')"}
+{"sql":"INSERT INTO streetname VALUES('singing oak')"}
+{"sql":"INSERT INTO streetname VALUES('sipes')"}
+{"sql":"INSERT INTO streetname VALUES('six point')"}
+{"sql":"INSERT INTO streetname VALUES('skycrest')"}
+{"sql":"INSERT INTO streetname VALUES('skyline')"}
+{"sql":"INSERT INTO streetname VALUES('small')"}
+{"sql":"INSERT INTO streetname VALUES('smith corners')"}
+{"sql":"INSERT INTO streetname VALUES('smithwood')"}
+{"sql":"INSERT INTO streetname VALUES('snow hill')"}
+{"sql":"INSERT INTO streetname VALUES('soapstone')"}
+{"sql":"INSERT INTO streetname VALUES('sobeck')"}
+{"sql":"INSERT INTO streetname VALUES('socata')"}
+{"sql":"INSERT INTO streetname VALUES('solace')"}
+{"sql":"INSERT INTO streetname VALUES('solway')"}
+{"sql":"INSERT INTO streetname VALUES('song sparrow')"}
+{"sql":"INSERT INTO streetname VALUES('sorrento')"}
+{"sql":"INSERT INTO streetname VALUES('spector')"}
+{"sql":"INSERT INTO streetname VALUES('spin drift')"}
+{"sql":"INSERT INTO streetname VALUES('spring crest')"}
+{"sql":"INSERT INTO streetname VALUES('spring lee')"}
+{"sql":"INSERT INTO streetname VALUES('spring park')"}
+{"sql":"INSERT INTO streetname VALUES('spring terrace')"}
+{"sql":"INSERT INTO streetname VALUES('spring trace')"}
+{"sql":"INSERT INTO streetname VALUES('springhaven')"}
+{"sql":"INSERT INTO streetname VALUES('squirrel trail')"}
+{"sql":"INSERT INTO streetname VALUES('stardust')"}
+{"sql":"INSERT INTO streetname VALUES('stargaze')"}
+{"sql":"INSERT INTO streetname VALUES('starita')"}
+{"sql":"INSERT INTO streetname VALUES('starmount')"}
+{"sql":"INSERT INTO streetname VALUES('statesville')"}
+{"sql":"INSERT INTO streetname VALUES('steed')"}
+{"sql":"INSERT INTO streetname VALUES('steelewood')"}
+{"sql":"INSERT INTO streetname VALUES('steepleglen')"}
+{"sql":"INSERT INTO streetname VALUES('stephens farm')"}
+{"sql":"INSERT INTO streetname VALUES('stewarton')"}
+{"sql":"INSERT INTO streetname VALUES('stone park')"}
+{"sql":"INSERT INTO streetname VALUES('stonebrook')"}
+{"sql":"INSERT INTO streetname VALUES('stonefield')"}
+{"sql":"INSERT INTO streetname VALUES('stoneglen')"}
+{"sql":"INSERT INTO streetname VALUES('stonemarsh')"}
+{"sql":"INSERT INTO streetname VALUES('stoney garden')"}
+{"sql":"INSERT INTO streetname VALUES('stoney run')"}
+{"sql":"INSERT INTO streetname VALUES('stoney valley')"}
+{"sql":"INSERT INTO streetname VALUES('stoneykirk')"}
+{"sql":"INSERT INTO streetname VALUES('stream bank')"}
+{"sql":"INSERT INTO streetname VALUES('stream ridge')"}
+{"sql":"INSERT INTO streetname VALUES('suburban')"}
+{"sql":"INSERT INTO streetname VALUES('suffield')"}
+{"sql":"INSERT INTO streetname VALUES('sugar creek')"}
+{"sql":"INSERT INTO streetname VALUES('sugarberry')"}
+{"sql":"INSERT INTO streetname VALUES('sugarstone')"}
+{"sql":"INSERT INTO streetname VALUES('summer creek')"}
+{"sql":"INSERT INTO streetname VALUES('summer valley')"}
+{"sql":"INSERT INTO streetname VALUES('summercrest')"}
+{"sql":"INSERT INTO streetname VALUES('summercroft')"}
+{"sql":"INSERT INTO streetname VALUES('summerford')"}
+{"sql":"INSERT INTO streetname VALUES('summergold')"}
+{"sql":"INSERT INTO streetname VALUES('sunbeam')"}
+{"sql":"INSERT INTO streetname VALUES('sunbridge')"}
+{"sql":"INSERT INTO streetname VALUES('sunpath')"}
+{"sql":"INSERT INTO streetname VALUES('sunset')"}
+{"sql":"INSERT INTO streetname VALUES('sunset ridge')"}
+{"sql":"INSERT INTO streetname VALUES('sunstone')"}
+{"sql":"INSERT INTO streetname VALUES('suntrace')"}
+{"sql":"INSERT INTO streetname VALUES('sunwalk')"}
+{"sql":"INSERT INTO streetname VALUES('sutters hill')"}
+{"sql":"INSERT INTO streetname VALUES('suttonview')"}
+{"sql":"INSERT INTO streetname VALUES('swallow tail')"}
+{"sql":"INSERT INTO streetname VALUES('swanston')"}
+{"sql":"INSERT INTO streetname VALUES('sweet grove')"}
+{"sql":"INSERT INTO streetname VALUES('sweet rose')"}
+{"sql":"INSERT INTO streetname VALUES('sweetbriar ridge')"}
+{"sql":"INSERT INTO streetname VALUES('sweetfield')"}
+{"sql":"INSERT INTO streetname VALUES('sydney overlook')"}
+{"sql":"INSERT INTO streetname VALUES('sylvan')"}
+{"sql":"INSERT INTO streetname VALUES('symphony woods')"}
+{"sql":"INSERT INTO streetname VALUES('tallia')"}
+{"sql":"INSERT INTO streetname VALUES('tallu')"}
+{"sql":"INSERT INTO streetname VALUES('talwyn')"}
+{"sql":"INSERT INTO streetname VALUES('tanager')"}
+{"sql":"INSERT INTO streetname VALUES('tanager park')"}
+{"sql":"INSERT INTO streetname VALUES('tangley')"}
+{"sql":"INSERT INTO streetname VALUES('taranasay')"}
+{"sql":"INSERT INTO streetname VALUES('tarby')"}
+{"sql":"INSERT INTO streetname VALUES('tarland')"}
+{"sql":"INSERT INTO streetname VALUES('tarpway')"}
+{"sql":"INSERT INTO streetname VALUES('tauten')"}
+{"sql":"INSERT INTO streetname VALUES('taymouth')"}
+{"sql":"INSERT INTO streetname VALUES('ten trees')"}
+{"sql":"INSERT INTO streetname VALUES('terrace view')"}
+{"sql":"INSERT INTO streetname VALUES('terrier')"}
+{"sql":"INSERT INTO streetname VALUES('tesh')"}
+{"sql":"INSERT INTO streetname VALUES('teton')"}
+{"sql":"INSERT INTO streetname VALUES('tewkesbury')"}
+{"sql":"INSERT INTO streetname VALUES('thelema')"}
+{"sql":"INSERT INTO streetname VALUES('thistle bloom')"}
+{"sql":"INSERT INTO streetname VALUES('thistledown')"}
+{"sql":"INSERT INTO streetname VALUES('thomas ridge')"}
+{"sql":"INSERT INTO streetname VALUES('thornbrook')"}
+{"sql":"INSERT INTO streetname VALUES('tifton grass')"}
+{"sql":"INSERT INTO streetname VALUES('tigerton')"}
+{"sql":"INSERT INTO streetname VALUES('tomsie efird')"}
+{"sql":"INSERT INTO streetname VALUES('tor')"}
+{"sql":"INSERT INTO streetname VALUES('torphin')"}
+{"sql":"INSERT INTO streetname VALUES('torrence')"}
+{"sql":"INSERT INTO streetname VALUES('towering pine')"}
+{"sql":"INSERT INTO streetname VALUES('towhee')"}
+{"sql":"INSERT INTO streetname VALUES('toxaway')"}
+{"sql":"INSERT INTO streetname VALUES('tracy glenn')"}
+{"sql":"INSERT INTO streetname VALUES('tradition view')"}
+{"sql":"INSERT INTO streetname VALUES('trailer')"}
+{"sql":"INSERT INTO streetname VALUES('transport')"}
+{"sql":"INSERT INTO streetname VALUES('trehurst')"}
+{"sql":"INSERT INTO streetname VALUES('trexler')"}
+{"sql":"INSERT INTO streetname VALUES('trillium fields')"}
+{"sql":"INSERT INTO streetname VALUES('trimbach')"}
+{"sql":"INSERT INTO streetname VALUES('tucker')"}
+{"sql":"INSERT INTO streetname VALUES('tullamore')"}
+{"sql":"INSERT INTO streetname VALUES('tullock creek')"}
+{"sql":"INSERT INTO streetname VALUES('tunston')"}
+{"sql":"INSERT INTO streetname VALUES('tupelo')"}
+{"sql":"INSERT INTO streetname VALUES('turnabout')"}
+{"sql":"INSERT INTO streetname VALUES('turney')"}
+{"sql":"INSERT INTO streetname VALUES('turtle cross')"}
+{"sql":"INSERT INTO streetname VALUES('turtleback')"}
+{"sql":"INSERT INTO streetname VALUES('twelvestone')"}
+{"sql":"INSERT INTO streetname VALUES('twin')"}
+{"sql":"INSERT INTO streetname VALUES('twin brook')"}
+{"sql":"INSERT INTO streetname VALUES('twin lakes')"}
+{"sql":"INSERT INTO streetname VALUES('twisted pine')"}
+{"sql":"INSERT INTO streetname VALUES('tyler finley')"}
+{"sql":"INSERT INTO streetname VALUES('university station')"}
+{"sql":"INSERT INTO streetname VALUES('uphill')"}
+{"sql":"INSERT INTO streetname VALUES('valeview')"}
+{"sql":"INSERT INTO streetname VALUES('valhalla')"}
+{"sql":"INSERT INTO streetname VALUES('van')"}
+{"sql":"INSERT INTO streetname VALUES('vance davis')"}
+{"sql":"INSERT INTO streetname VALUES('vanhoy')"}
+{"sql":"INSERT INTO streetname VALUES('veckman')"}
+{"sql":"INSERT INTO streetname VALUES('victoria')"}
+{"sql":"INSERT INTO streetname VALUES('victory')"}
+{"sql":"INSERT INTO streetname VALUES('village glen')"}
+{"sql":"INSERT INTO streetname VALUES('vireo')"}
+{"sql":"INSERT INTO streetname VALUES('viscount')"}
+{"sql":"INSERT INTO streetname VALUES('voeltz')"}
+{"sql":"INSERT INTO streetname VALUES('wade e morgan')"}
+{"sql":"INSERT INTO streetname VALUES('wake')"}
+{"sql":"INSERT INTO streetname VALUES('wales')"}
+{"sql":"INSERT INTO streetname VALUES('wallace ridge')"}
+{"sql":"INSERT INTO streetname VALUES('waltham')"}
+{"sql":"INSERT INTO streetname VALUES('wanamassa')"}
+{"sql":"INSERT INTO streetname VALUES('warbler wood')"}
+{"sql":"INSERT INTO streetname VALUES('washington')"}
+{"sql":"INSERT INTO streetname VALUES('water')"}
+{"sql":"INSERT INTO streetname VALUES('waterelm')"}
+{"sql":"INSERT INTO streetname VALUES('waterford hills')"}
+{"sql":"INSERT INTO streetname VALUES('waterford valley')"}
+{"sql":"INSERT INTO streetname VALUES('waterloo')"}
+{"sql":"INSERT INTO streetname VALUES('waterton leas')"}
+{"sql":"INSERT INTO streetname VALUES('waverly lynn')"}
+{"sql":"INSERT INTO streetname VALUES('waverlyglen')"}
+{"sql":"INSERT INTO streetname VALUES('wayside')"}
+{"sql":"INSERT INTO streetname VALUES('westbury lake')"}
+{"sql":"INSERT INTO streetname VALUES('westray')"}
+{"sql":"INSERT INTO streetname VALUES('whistlers chase')"}
+{"sql":"INSERT INTO streetname VALUES('whistley green')"}
+{"sql":"INSERT INTO streetname VALUES('whistling oak')"}
+{"sql":"INSERT INTO streetname VALUES('whitcomb')"}
+{"sql":"INSERT INTO streetname VALUES('white aspen')"}
+{"sql":"INSERT INTO streetname VALUES('white cascade')"}
+{"sql":"INSERT INTO streetname VALUES('white mist')"}
+{"sql":"INSERT INTO streetname VALUES('white rock')"}
+{"sql":"INSERT INTO streetname VALUES('white stag')"}
+{"sql":"INSERT INTO streetname VALUES('whitegate')"}
+{"sql":"INSERT INTO streetname VALUES('whitehill')"}
+{"sql":"INSERT INTO streetname VALUES('whitetail')"}
+{"sql":"INSERT INTO streetname VALUES('whitewood')"}
+{"sql":"INSERT INTO streetname VALUES('wilburn park')"}
+{"sql":"INSERT INTO streetname VALUES('wild garden')"}
+{"sql":"INSERT INTO streetname VALUES('wild rose')"}
+{"sql":"INSERT INTO streetname VALUES('wilkins terrace')"}
+{"sql":"INSERT INTO streetname VALUES('william ficklen')"}
+{"sql":"INSERT INTO streetname VALUES('wiltshire ridge')"}
+{"sql":"INSERT INTO streetname VALUES('windchase')"}
+{"sql":"INSERT INTO streetname VALUES('winding jordan')"}
+{"sql":"INSERT INTO streetname VALUES('windy meadow')"}
+{"sql":"INSERT INTO streetname VALUES('winghaven')"}
+{"sql":"INSERT INTO streetname VALUES('wingmont')"}
+{"sql":"INSERT INTO streetname VALUES('winslow')"}
+{"sql":"INSERT INTO streetname VALUES('winter pine')"}
+{"sql":"INSERT INTO streetname VALUES('winter view')"}
+{"sql":"INSERT INTO streetname VALUES('wolf creek')"}
+{"sql":"INSERT INTO streetname VALUES('wondering oak')"}
+{"sql":"INSERT INTO streetname VALUES('woodard')"}
+{"sql":"INSERT INTO streetname VALUES('woodfire')"}
+{"sql":"INSERT INTO streetname VALUES('woodland commons')"}
+{"sql":"INSERT INTO streetname VALUES('woodland hills')"}
+{"sql":"INSERT INTO streetname VALUES('woodnotch')"}
+{"sql":"INSERT INTO streetname VALUES('woodstone')"}
+{"sql":"INSERT INTO streetname VALUES('worsley')"}
+{"sql":"INSERT INTO streetname VALUES('wren creek')"}
+{"sql":"INSERT INTO streetname VALUES('wrens nest')"}
+{"sql":"INSERT INTO streetname VALUES('wrexham')"}
+{"sql":"INSERT INTO streetname VALUES('wt harris')"}
+{"sql":"INSERT INTO streetname VALUES('wylie meadow')"}
+{"sql":"INSERT INTO streetname VALUES('wynborough')"}
+{"sql":"INSERT INTO streetname VALUES('wynbrook')"}
+{"sql":"INSERT INTO streetname VALUES('wyndham hill')"}
+{"sql":"INSERT INTO streetname VALUES('yandem')"}
+{"sql":"INSERT INTO streetname VALUES('yellow rose')"}
+{"sql":"INSERT INTO streetname VALUES('yellow spaniel')"}
+{"sql":"INSERT INTO streetname VALUES('yorkford')"}
+{"sql":"INSERT INTO streetname VALUES('ziegler')"}
+{"sql":"INSERT INTO streetname VALUES('zion renaissance')"}
+{"sql":"SELECT count(*) FROM streetname"}
+{"sql":"SELECT n, distance FROM f2, streetname\n     WHERE f2.word MATCH 'wersley'\n       AND f2.distance<=150\n       AND f2.word=streetname.n"}
+{"sql":"SELECT n, distance FROM f2, streetname\n     WHERE f2.word MATCH 'testledown'\n       AND f2.distance<=150\n       AND f2.word=streetname.n"}
+{"sql":"SELECT DISTINCT streetname.n FROM f2, streetname\n     WHERE f2.word MATCH 'tayle'\n       AND f2.distance<=200\n       AND streetname.n>=f2.word AND streetname.n<=(f2.word || x'F7BFBFBF')"}
+{"sql":"SELECT DISTINCT streetname.n\n      FROM f2 JOIN streetname\n        ON (streetname.n>=f2.word AND streetname.n<=(f2.word || 'zzzzzz'))\n     WHERE f2.word MATCH 'duck'\n       AND f2.distance<150\n       AND f2.ruleset=3\n     ORDER BY 1"}
+{"sql":"SELECT DISTINCT streetname.n\n      FROM f2 JOIN streetname\n        ON (streetname.n>=f2.word AND streetname.n<=(f2.word || 'zzzzzz'))\n     WHERE f2.word MATCH 'duck'\n       AND f2.distance<150\n       AND f2.ruleset=2\n     ORDER BY 1"}
+{"sql":"CREATE TABLE aux.f3_rules(ruleset, cfrom, cto, cost)"}
+{"sql":"INSERT INTO f3_rules(ruleset, cfrom, cto, cost) VALUES(0, 'x','y', 10)"}
+{"sql":"INSERT INTO f3_rules(ruleset, cfrom, cto, cost) VALUES(1, 'a','b', 10)"}
+{"sql":"CREATE VIRTUAL TABLE aux.f3 USING fuzzer(f3_rules)"}
+{"sql":"SELECT word FROM f3 WHERE word MATCH 'ax'"}
+{"sql":"CREATE TABLE \"fuzzer [x] rules table\"(a, b, c, d)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, NULL, 'abc', 10)"}
+{"sql":"CREATE VIRTUAL TABLE x USING fuzzer('fuzzer [x] rules table')"}
+{"sql":"SELECT word, distance FROM x WHERE word MATCH '123' LIMIT 4"}
+{"sql":"DELETE FROM \"fuzzer [x] rules table\""}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, 'x', NULL, 20)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, NULL, NULL, 10)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, 'x', 'x', 10)"}
+{"sql":"DROP TABLE x"}
+{"sql":"SELECT word, distance FROM x WHERE word MATCH 'xx'"}
+{"sql":"DROP TABLE IF EXISTS x"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, 'c', 'd', 1001)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, 'd', 'c', 0)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(0, 'd', 'c', -20)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(\n    0, 'x', '12345678901234567890123456789012345678901234567890', 2\n  )"}
+{"sql":"SELECT word FROM x WHERE word MATCH 'x'"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(\n    0, 'x', '123456789012345678901234567890123456789012345678901', 2\n  )"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(\n    0, '123456789012345678901234567890123456789012345678901', 'x', 2\n  )"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES(-1, 'x', 'y', 2)"}
+{"sql":"INSERT INTO \"fuzzer [x] rules table\" VALUES((1<<32)+100, 'x', 'y', 2)"}
+{"sql":"CREATE TABLE [x2 \"rules] (a, b, c, d)"}
+{"sql":"INSERT INTO [x2 \"rules] VALUES(0, 'a', 'b', 5)"}
+{"sql":"SELECT word FROM x2 WHERE word MATCH 'aaa'"}
+{"sql":"CREATE TABLE x3_rules(rule_set, cFrom, cTo, cost)"}
+{"sql":"INSERT INTO x3_rules VALUES(2, 'a', 'x', 10)"}
+{"sql":"INSERT INTO x3_rules VALUES(2, 'a', 'y',  9)"}
+{"sql":"INSERT INTO x3_rules VALUES(2, 'a', 'z',  8)"}
+{"sql":"CREATE VIRTUAL TABLE x3 USING fuzzer(x3_rules)"}
+{"sql":"SELECT cFrom, cTo, word \n    FROM x3_rules CROSS JOIN x3 \n    WHERE word MATCH 'a' AND cost=distance AND ruleset=2\n    ORDER BY +cTo"}
+{"sql":"SELECT cFrom, cTo, word \n    FROM x3 CROSS JOIN x3_rules\n    WHERE word MATCH 'a' AND cost=distance AND ruleset=2\n    ORDER BY +cTo DESC"}
+{"sql":"SELECT cFrom, cTo, word \n    FROM x3_rules, x3 \n    WHERE word MATCH 'a' AND cost=distance AND ruleset=2\n    ORDER BY +cTo DESC"}
+{"sql":"SELECT cFrom, cTo, word \n    FROM x3, x3_rules\n    WHERE word MATCH 'a' AND cost=distance AND ruleset=2\n    ORDER BY +cTo DESC"}
+{"sql":"CREATE INDEX i1 ON x3_rules(cost)"}
+{"sql":"SELECT word FROM x3_rules, x3 WHERE word MATCH x3_rules.cFrom AND ruleset=2"}
+{"sql":"SELECT word FROM x3_rules, x3 \n  WHERE word MATCH x3_rules.cFrom \n    AND ruleset=2 \n    AND x3_rules.cost=8"}
+{"sql":"SELECT word, distance FROM x3, t1 \n    WHERE x3.word MATCH t1.a AND ruleset=2 AND distance=t1.b"}
+{"sql":"INSERT INTO x3_rules VALUES(1, 'a', 't',  5)"}
+{"sql":"INSERT INTO x3_rules VALUES(1, 'a', 'u',  4)"}
+{"sql":"INSERT INTO x3_rules VALUES(1, 'a', 'v',  3)"}
+{"sql":"SELECT * FROM x3_rules"}
+{"sql":"SELECT word FROM x3 WHERE ruleset=2 AND word MATCH 'a' AND WORD MATCH 'b'"}
+{"sql":"SELECT word FROM x3 WHERE ruleset=1 AND word MATCH 'a'"}
+{"sql":"SELECT word FROM x3 WHERE ruleset<=1 AND word MATCH 'a'"}
+{"sql":"SELECT word FROM x3 WHERE ruleset=1 AND word MATCH 'a' ORDER BY distance ASC"}
+{"sql":"SELECT word FROM x3 WHERE ruleset=1 AND word MATCH 'a' ORDER BY distance DESC"}
+{"sql":"SELECT word FROM x3 WHERE ruleset=1 AND word MATCH 'a' ORDER BY word ASC"}
+{"sql":"SELECT word FROM x3 WHERE ruleset=1 AND word MATCH 'a' ORDER BY word DESC"}
+{"sql":"CREATE TABLE x4_rules(a, b, c, d)"}
+{"sql":"INSERT INTO x4_rules VALUES(0, 'a', 'b', 10)"}
+{"sql":"INSERT INTO x4_rules VALUES(0, 'a', 'c', 11)"}
+{"sql":"INSERT INTO x4_rules VALUES(0, 'bx', 'zz', 20)"}
+{"sql":"INSERT INTO x4_rules VALUES(0, 'cx', 'yy', 15)"}
+{"sql":"INSERT INTO x4_rules VALUES(0, 'zz', '!!', 50)"}
+{"sql":"CREATE VIRTUAL TABLE x4 USING fuzzer(x4_rules)"}
+{"sql":"SELECT word, distance FROM x4 WHERE word MATCH 'ax'"}
+{"sql":"CREATE TABLE x5_rules(a, b, c, d)"}
+{"sql":"CREATE VIRTUAL TABLE x5 USING fuzzer(x5_rules)"}
+{"sql":"SELECT word, distance FROM x5 WHERE word MATCH \n    'aaaaaaaaaXaaaaaaaaaXaaaaaaaaaXaaaaaaaaaXaaaaaaaaa' || \n    'aaaaaaaaaXaaaaaaaaaXaaaaaaaaaXaaaaaaaaaXaaaaaaaaa' || \n    'aaaaaaaaaXaaaaaaaaaXaaaaaaaaaXaaaaaaaaaXaaaaaaaaa'"}
+{"sql":"INSERT INTO x5_rules VALUES(0, 'a', '0.1.2.3.4.5.6.7.8.9.a', 1)"}
+{"sql":"DROP TABLE x5"}
+{"sql":"SELECT length(word) FROM x5 WHERE word MATCH 'a' LIMIT 50"}

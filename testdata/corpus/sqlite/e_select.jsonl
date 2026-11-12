@@ -1,0 +1,272 @@
+{"sql":"INSERT INTO t1 VALUES('a', 'one')"}
+{"sql":"INSERT INTO t1 VALUES('b', 'two')"}
+{"sql":"INSERT INTO t1 VALUES('c', 'three')"}
+{"sql":"INSERT INTO t2 VALUES('a', 'I')"}
+{"sql":"INSERT INTO t2 VALUES('b', 'II')"}
+{"sql":"INSERT INTO t2 VALUES('c', 'III')"}
+{"sql":"CREATE TABLE t3(a, c)"}
+{"sql":"INSERT INTO t3 VALUES('a', 1)"}
+{"sql":"INSERT INTO t3 VALUES('b', 2)"}
+{"sql":"CREATE TABLE t4(a, c)"}
+{"sql":"INSERT INTO t4 VALUES('a', NULL)"}
+{"sql":"INSERT INTO t4 VALUES('b', 2)"}
+{"sql":"SELECT count(*) FROM t1, t2 ON (t1.a=t2.a) USING (a)","reject":true}
+{"sql":"SELECT count(*) FROM t1, t2 USING (a) ON (t1.a=t2.a)","reject":true}
+{"sql":"CREATE TABLE xx(x, y)"}
+{"sql":"INSERT INTO xx VALUES('IiJlsIPepMuAhU', X'10B00B897A15BAA02E3F98DCE8F2')"}
+{"sql":"INSERT INTO xx VALUES(NULL, -16.87)"}
+{"sql":"INSERT INTO xx VALUES(-17.89, 'linguistically')"}
+{"sql":"CREATE TABLE x2(c, d, e)"}
+{"sql":"CREATE TABLE x3(f, g, h, i)"}
+{"sql":"INSERT INTO x1 VALUES(24, 'converging')"}
+{"sql":"INSERT INTO x1 VALUES(NULL, X'CB71')"}
+{"sql":"INSERT INTO x1 VALUES('blonds', 'proprietary')"}
+{"sql":"INSERT INTO x2 VALUES(-60.06, NULL, NULL)"}
+{"sql":"INSERT INTO x2 VALUES(-58, NULL, 1.21)"}
+{"sql":"INSERT INTO x3 VALUES(-39.24, NULL, 'encompass', -1)"}
+{"sql":"INSERT INTO x3 VALUES('presenting', 51, 'reformation', 'dignified')"}
+{"sql":"INSERT INTO x3 VALUES('conducting', -87.24, 37.56, NULL)"}
+{"sql":"INSERT INTO x3 VALUES('coldest', -96, 'dramatists', 82.3)"}
+{"sql":"INSERT INTO x3 VALUES('alerting', NULL, -93.79, NULL)"}
+{"sql":"SELECT * FROM x1, x2"}
+{"sql":"SELECT * FROM x2 JOIN x3"}
+{"sql":"SELECT * FROM x3 CROSS JOIN x1"}
+{"sql":"SELECT * FROM x3 INNER JOIN x3 AS x4"}
+{"sql":"SELECT * FROM t1, t2"}
+{"sql":"SELECT * FROM t1 AS x, t1 AS y"}
+{"sql":"CREATE TABLE t5(a COLLATE nocase, b COLLATE binary)"}
+{"sql":"INSERT INTO t5 VALUES('AA', 'cc')"}
+{"sql":"INSERT INTO t5 VALUES('BB', 'dd')"}
+{"sql":"INSERT INTO t5 VALUES(NULL, NULL)"}
+{"sql":"CREATE TABLE t6(a COLLATE binary, b COLLATE nocase)"}
+{"sql":"INSERT INTO t6 VALUES('aa', 'cc')"}
+{"sql":"INSERT INTO t6 VALUES('bb', 'DD')"}
+{"sql":"INSERT INTO t6 VALUES(NULL, NULL)"}
+{"sql":"CREATE TABLE t8(a, d, e)"}
+{"sql":"INSERT INTO t7 VALUES('x', 'ex',  24)"}
+{"sql":"INSERT INTO t7 VALUES('y', 'why', 25)"}
+{"sql":"INSERT INTO t8 VALUES('x', 'abc', 24)"}
+{"sql":"INSERT INTO t8 VALUES('z', 'ghi', 26)"}
+{"sql":"CREATE TABLE t10(x, y)"}
+{"sql":"INSERT INTO t10 VALUES(1, 'true')"}
+{"sql":"INSERT INTO t10 VALUES(0, 'false')"}
+{"sql":"CREATE TABLE x1(k, x, y, z)"}
+{"sql":"INSERT INTO x1 VALUES(1, 'relinquished', 'aphasia', 78.43)"}
+{"sql":"INSERT INTO x1 VALUES(2, X'A8E8D66F',    X'07CF',   -81)"}
+{"sql":"INSERT INTO x1 VALUES(3, -22,            -27.57,    NULL)"}
+{"sql":"INSERT INTO x1 VALUES(4, NULL,           'bygone',  'picky')"}
+{"sql":"INSERT INTO x1 VALUES(5, NULL,           96.28,     NULL)"}
+{"sql":"INSERT INTO x1 VALUES(6, 0,              1,         2)"}
+{"sql":"CREATE TABLE x2(k, x, y2)"}
+{"sql":"INSERT INTO x2 VALUES(1, 50, X'B82838')"}
+{"sql":"INSERT INTO x2 VALUES(5, 84.79, 65.88)"}
+{"sql":"INSERT INTO x2 VALUES(3, -22, X'0E1BE452A393')"}
+{"sql":"INSERT INTO x2 VALUES(7, 'mistrusted', 'standardized')"}
+{"sql":"SELECT k FROM x1 WHERE x"}
+{"sql":"SELECT k FROM x1 WHERE y"}
+{"sql":"SELECT k FROM x1 WHERE z"}
+{"sql":"SELECT k FROM x1 WHERE '1'||z"}
+{"sql":"SELECT k FROM x1 WHERE x IS NULL"}
+{"sql":"SELECT k FROM x1 WHERE z - 78.43"}
+{"sql":"SELECT k FROM x1 LEFT JOIN x2 USING(k)"}
+{"sql":"SELECT k FROM x1 LEFT JOIN x2 USING(k) WHERE x2.k ORDER BY +k"}
+{"sql":"SELECT k FROM x1 LEFT JOIN x2 USING(k) WHERE x2.k IS NULL"}
+{"sql":"SELECT k FROM x1 NATURAL JOIN x2 WHERE x2.k"}
+{"sql":"SELECT k FROM x1 NATURAL JOIN x2 WHERE x2.k-3"}
+{"sql":"CREATE TABLE z1(a, b, c)"}
+{"sql":"CREATE TABLE z2(d, e)"}
+{"sql":"CREATE TABLE z3(a, b)"}
+{"sql":"INSERT INTO z1 VALUES(51.65, -59.58, 'belfries')"}
+{"sql":"INSERT INTO z1 VALUES(-5, NULL, 75)"}
+{"sql":"INSERT INTO z1 VALUES(-2.2, -23.18, 'suiters')"}
+{"sql":"INSERT INTO z1 VALUES(NULL, 67, 'quartets')"}
+{"sql":"INSERT INTO z1 VALUES(-1.04, -32.3, 'aspen')"}
+{"sql":"INSERT INTO z1 VALUES(63, 'born', -26)"}
+{"sql":"INSERT INTO z2 VALUES(NULL, 21)"}
+{"sql":"INSERT INTO z2 VALUES(36, 6)"}
+{"sql":"INSERT INTO z3 VALUES('subsistence', 'gauze')"}
+{"sql":"INSERT INTO z3 VALUES(49.17, -67)"}
+{"sql":"CREATE TABLE a1(one PRIMARY KEY, two)"}
+{"sql":"INSERT INTO a1 VALUES(2, 3)"}
+{"sql":"INSERT INTO a1 VALUES(3, 6)"}
+{"sql":"INSERT INTO a1 VALUES(4, 10)"}
+{"sql":"CREATE TABLE a2(one PRIMARY KEY, three)"}
+{"sql":"INSERT INTO a2 VALUES(1, 1)"}
+{"sql":"INSERT INTO a2 VALUES(3, 2)"}
+{"sql":"INSERT INTO a2 VALUES(6, 3)"}
+{"sql":"INSERT INTO a2 VALUES(10, 4)"}
+{"sql":"CREATE TABLE b1(one PRIMARY KEY, two)"}
+{"sql":"INSERT INTO b1 VALUES(1, 'o')"}
+{"sql":"INSERT INTO b1 VALUES(4, 'f')"}
+{"sql":"INSERT INTO b1 VALUES(3, 't')"}
+{"sql":"INSERT INTO b1 VALUES(2, 't')"}
+{"sql":"INSERT INTO b1 VALUES(5, 'f')"}
+{"sql":"INSERT INTO b1 VALUES(7, 's')"}
+{"sql":"INSERT INTO b1 VALUES(6, 's')"}
+{"sql":"CREATE TABLE b2(x, y)"}
+{"sql":"INSERT INTO b2 VALUES(NULL, 0)"}
+{"sql":"INSERT INTO b2 VALUES(NULL, 1)"}
+{"sql":"INSERT INTO b2 VALUES('xyz', 2)"}
+{"sql":"INSERT INTO b2 VALUES('abc', 3)"}
+{"sql":"INSERT INTO b2 VALUES('xyz', 4)"}
+{"sql":"CREATE TABLE b3(a COLLATE nocase, b COLLATE binary)"}
+{"sql":"INSERT INTO b3 VALUES('abc', 'abc')"}
+{"sql":"INSERT INTO b3 VALUES('aBC', 'aBC')"}
+{"sql":"INSERT INTO b3 VALUES('Def', 'Def')"}
+{"sql":"INSERT INTO b3 VALUES('dEF', 'dEF')"}
+{"sql":"CREATE TABLE c1(up, down)"}
+{"sql":"INSERT INTO c1 VALUES('x', 1)"}
+{"sql":"INSERT INTO c1 VALUES('x', 2)"}
+{"sql":"INSERT INTO c1 VALUES('x', 4)"}
+{"sql":"INSERT INTO c1 VALUES('x', 8)"}
+{"sql":"INSERT INTO c1 VALUES('y', 16)"}
+{"sql":"INSERT INTO c1 VALUES('y', 32)"}
+{"sql":"CREATE TABLE c2(i, j)"}
+{"sql":"INSERT INTO c2 VALUES(1, 0)"}
+{"sql":"INSERT INTO c2 VALUES(2, 1)"}
+{"sql":"INSERT INTO c2 VALUES(3, 3)"}
+{"sql":"INSERT INTO c2 VALUES(4, 6)"}
+{"sql":"INSERT INTO c2 VALUES(5, 10)"}
+{"sql":"INSERT INTO c2 VALUES(6, 15)"}
+{"sql":"INSERT INTO c2 VALUES(7, 21)"}
+{"sql":"INSERT INTO c2 VALUES(8, 28)"}
+{"sql":"INSERT INTO c2 VALUES(9, 36)"}
+{"sql":"CREATE TABLE c3(i PRIMARY KEY, k TEXT)"}
+{"sql":"INSERT INTO c3 VALUES(1,  'hydrogen')"}
+{"sql":"INSERT INTO c3 VALUES(2,  'helium')"}
+{"sql":"INSERT INTO c3 VALUES(3,  'lithium')"}
+{"sql":"INSERT INTO c3 VALUES(4,  'beryllium')"}
+{"sql":"INSERT INTO c3 VALUES(5,  'boron')"}
+{"sql":"INSERT INTO c3 VALUES(94, 'plutonium')"}
+{"sql":"CREATE TABLE h1(a, b)"}
+{"sql":"INSERT INTO h1 VALUES(1, 'one')"}
+{"sql":"INSERT INTO h1 VALUES(1, 'I')"}
+{"sql":"INSERT INTO h1 VALUES(1, 'i')"}
+{"sql":"INSERT INTO h1 VALUES(4, 'four')"}
+{"sql":"INSERT INTO h1 VALUES(4, 'IV')"}
+{"sql":"INSERT INTO h1 VALUES(4, 'iv')"}
+{"sql":"CREATE TABLE h2(x COLLATE nocase)"}
+{"sql":"INSERT INTO h2 VALUES('One')"}
+{"sql":"INSERT INTO h2 VALUES('Two')"}
+{"sql":"INSERT INTO h2 VALUES('Three')"}
+{"sql":"INSERT INTO h2 VALUES('Four')"}
+{"sql":"INSERT INTO h2 VALUES('one')"}
+{"sql":"INSERT INTO h2 VALUES('two')"}
+{"sql":"INSERT INTO h2 VALUES('three')"}
+{"sql":"INSERT INTO h2 VALUES('four')"}
+{"sql":"CREATE TABLE h3(c, d)"}
+{"sql":"INSERT INTO h3 VALUES(1, NULL)"}
+{"sql":"INSERT INTO h3 VALUES(2, NULL)"}
+{"sql":"INSERT INTO h3 VALUES(3, NULL)"}
+{"sql":"INSERT INTO h3 VALUES(4, '2')"}
+{"sql":"INSERT INTO h3 VALUES(5, NULL)"}
+{"sql":"INSERT INTO h3 VALUES(6, '2,3')"}
+{"sql":"INSERT INTO h3 VALUES(7, NULL)"}
+{"sql":"INSERT INTO h3 VALUES(8, '2,4')"}
+{"sql":"INSERT INTO h3 VALUES(9, '3')"}
+{"sql":"CREATE TABLE j1(a, b, c)"}
+{"sql":"CREATE TABLE j2(e, f)"}
+{"sql":"CREATE TABLE j3(g)"}
+{"sql":"CREATE TABLE q1(a TEXT, b INTEGER, c)"}
+{"sql":"CREATE TABLE q2(d NUMBER, e BLOB)"}
+{"sql":"CREATE TABLE q3(f REAL, g)"}
+{"sql":"INSERT INTO q1 VALUES(16, -87.66, NULL)"}
+{"sql":"INSERT INTO q1 VALUES('legible', 94, -42.47)"}
+{"sql":"INSERT INTO q1 VALUES('beauty', 36, NULL)"}
+{"sql":"INSERT INTO q2 VALUES('legible', 1)"}
+{"sql":"INSERT INTO q2 VALUES('beauty', 2)"}
+{"sql":"INSERT INTO q2 VALUES(-65.91, 4)"}
+{"sql":"INSERT INTO q2 VALUES('emanating', -16.56)"}
+{"sql":"INSERT INTO q3 VALUES('beauty', 2)"}
+{"sql":"CREATE TABLE y1(a COLLATE nocase, b COLLATE binary, c)"}
+{"sql":"INSERT INTO y1 VALUES('Abc', 'abc', 'aBC')"}
+{"sql":"CREATE TABLE w1(a TEXT, b NUMBER)"}
+{"sql":"CREATE TABLE w2(a, b TEXT)"}
+{"sql":"INSERT INTO w1 VALUES('1', 4.1)"}
+{"sql":"INSERT INTO w2 VALUES(1, 4.1)"}
+{"sql":"*","reject":true}
+{"sql":"CREATE TABLE d1(x, y, z)"}
+{"sql":"INSERT INTO d1 VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO d1 VALUES(2, 5, -1)"}
+{"sql":"INSERT INTO d1 VALUES(1, 2, 8)"}
+{"sql":"INSERT INTO d1 VALUES(1, 2, 7)"}
+{"sql":"INSERT INTO d1 VALUES(2, 4, 93)"}
+{"sql":"INSERT INTO d1 VALUES(1, 2, -20)"}
+{"sql":"INSERT INTO d1 VALUES(1, 4, 93)"}
+{"sql":"INSERT INTO d1 VALUES(1, 5, -1)"}
+{"sql":"CREATE TABLE d2(a, b)"}
+{"sql":"INSERT INTO d2 VALUES('gently', 'failings')"}
+{"sql":"INSERT INTO d2 VALUES('commercials', 'bathrobe')"}
+{"sql":"INSERT INTO d2 VALUES('iterate', 'sexton')"}
+{"sql":"INSERT INTO d2 VALUES('babied', 'charitableness')"}
+{"sql":"INSERT INTO d2 VALUES('solemnness', 'annexed')"}
+{"sql":"INSERT INTO d2 VALUES('rejoicing', 'liabilities')"}
+{"sql":"INSERT INTO d2 VALUES('pragmatist', 'guarded')"}
+{"sql":"INSERT INTO d2 VALUES('barked', 'interrupted')"}
+{"sql":"INSERT INTO d2 VALUES('reemphasizes', 'reply')"}
+{"sql":"INSERT INTO d2 VALUES('lad', 'relenting')"}
+{"sql":"CREATE TABLE d3(a)"}
+{"sql":"INSERT INTO d3 VALUES('text')"}
+{"sql":"INSERT INTO d3 VALUES(14.1)"}
+{"sql":"INSERT INTO d3 VALUES(13)"}
+{"sql":"INSERT INTO d3 VALUES(X'78787878')"}
+{"sql":"INSERT INTO d3 VALUES(15)"}
+{"sql":"INSERT INTO d3 VALUES(12.9)"}
+{"sql":"INSERT INTO d3 VALUES(null)"}
+{"sql":"CREATE TABLE d4(x COLLATE nocase)"}
+{"sql":"INSERT INTO d4 VALUES('abc')"}
+{"sql":"INSERT INTO d4 VALUES('ghi')"}
+{"sql":"INSERT INTO d4 VALUES('DEF')"}
+{"sql":"INSERT INTO d4 VALUES('JKL')"}
+{"sql":"SELECT a FROM d3 ORDER BY a"}
+{"sql":"SELECT a FROM d3 ORDER BY a DESC"}
+{"sql":"SELECT x FROM d4 ORDER BY 1 COLLATE binary"}
+{"sql":"SELECT x COLLATE binary FROM d4 ORDER BY 1 COLLATE nocase"}
+{"sql":"SELECT x COLLATE binary FROM d4 ORDER BY 1"}
+{"sql":"SELECT x COLLATE binary FROM d4 ORDER BY x"}
+{"sql":"SELECT x COLLATE binary AS x FROM d4 ORDER BY x"}
+{"sql":"SELECT x AS y FROM d4 ORDER BY y"}
+{"sql":"SELECT x||'' FROM d4 ORDER BY x"}
+{"sql":"SELECT x FROM d4 ORDER BY x||''"}
+{"sql":"CREATE TABLE d5(a, b)"}
+{"sql":"CREATE TABLE d6(c, d)"}
+{"sql":"CREATE TABLE d7(e, f)"}
+{"sql":"INSERT INTO d5 VALUES(1, 'f')"}
+{"sql":"INSERT INTO d6 VALUES(2, 'e')"}
+{"sql":"INSERT INTO d7 VALUES(3, 'd')"}
+{"sql":"INSERT INTO d5 VALUES(4, 'c')"}
+{"sql":"INSERT INTO d6 VALUES(5, 'b')"}
+{"sql":"INSERT INTO d7 VALUES(6, 'a')"}
+{"sql":"CREATE TABLE d8(x COLLATE nocase)"}
+{"sql":"CREATE TABLE d9(y COLLATE nocase)"}
+{"sql":"INSERT INTO d8 VALUES('a')"}
+{"sql":"INSERT INTO d9 VALUES('B')"}
+{"sql":"INSERT INTO d8 VALUES('c')"}
+{"sql":"INSERT INTO d9 VALUES('D')"}
+{"sql":"CREATE TABLE f1(a, b)"}
+{"sql":"INSERT INTO f1 VALUES(26, 'z')"}
+{"sql":"INSERT INTO f1 VALUES(25, 'y')"}
+{"sql":"INSERT INTO f1 VALUES(24, 'x')"}
+{"sql":"INSERT INTO f1 VALUES(23, 'w')"}
+{"sql":"INSERT INTO f1 VALUES(22, 'v')"}
+{"sql":"INSERT INTO f1 VALUES(21, 'u')"}
+{"sql":"INSERT INTO f1 VALUES(20, 't')"}
+{"sql":"INSERT INTO f1 VALUES(19, 's')"}
+{"sql":"INSERT INTO f1 VALUES(18, 'r')"}
+{"sql":"INSERT INTO f1 VALUES(17, 'q')"}
+{"sql":"INSERT INTO f1 VALUES(16, 'p')"}
+{"sql":"INSERT INTO f1 VALUES(15, 'o')"}
+{"sql":"INSERT INTO f1 VALUES(14, 'n')"}
+{"sql":"INSERT INTO f1 VALUES(13, 'm')"}
+{"sql":"INSERT INTO f1 VALUES(12, 'l')"}
+{"sql":"INSERT INTO f1 VALUES(11, 'k')"}
+{"sql":"INSERT INTO f1 VALUES(10, 'j')"}
+{"sql":"INSERT INTO f1 VALUES(9, 'i')"}
+{"sql":"INSERT INTO f1 VALUES(8, 'h')"}
+{"sql":"INSERT INTO f1 VALUES(7, 'g')"}
+{"sql":"INSERT INTO f1 VALUES(6, 'f')"}
+{"sql":"INSERT INTO f1 VALUES(5, 'e')"}
+{"sql":"INSERT INTO f1 VALUES(4, 'd')"}
+{"sql":"INSERT INTO f1 VALUES(3, 'c')"}
+{"sql":"INSERT INTO f1 VALUES(2, 'b')"}
+{"sql":"INSERT INTO f1 VALUES(1, 'a')"}

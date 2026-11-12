@@ -1,0 +1,105 @@
+{"sql":"INSERT INTO abc VALUES('o', 't', 't')"}
+{"sql":"INSERT INTO abc VALUES('f', 'f', 's')"}
+{"sql":"CREATE TABLE x(y)"}
+{"sql":"INSERT INTO x VALUES('z')"}
+{"sql":"PRAGMA journal_size_limit = 2048"}
+{"sql":"PRAGMA aux.journal_mode = PERSIST"}
+{"sql":"PRAGMA aux.journal_size_limit = 0"}
+{"sql":"CREATE TABLE aux.t2 AS SELECT * FROM t1"}
+{"sql":"#     CREATE TABLE t1(x, y, UNIQUE(x, y))","reject":true}
+{"sql":"#     INSERT INTO t1 VALUES(1, randomblob(1501))","reject":true}
+{"sql":"#     INSERT INTO t1 VALUES(2, randomblob(1502))","reject":true}
+{"sql":"#     INSERT INTO t1 VALUES(3, randomblob(1503))","reject":true}
+{"sql":"#     INSERT INTO t1 VALUES(4, randomblob(1504))","reject":true}
+{"sql":"#     INSERT INTO t1 \n#       SELECT x, randomblob(1500+oid+(SELECT max(oid) FROM t1)) FROM t1","reject":true}
+{"sql":"#     BEGIN","reject":true}
+{"sql":"#       UPDATE t1 SET x=x+4 WHERE x=1","reject":true}
+{"sql":"#       SAVEPOINT one","reject":true}
+{"sql":"#         UPDATE t1 SET x=x+4 WHERE x=2","reject":true}
+{"sql":"#         SAVEPOINT three","reject":true}
+{"sql":"#           UPDATE t1 SET x=x+4 WHERE x=3","reject":true}
+{"sql":"#           SAVEPOINT four","reject":true}
+{"sql":"#             UPDATE t1 SET x=x+4 WHERE x=4","reject":true}
+{"sql":"#         RELEASE three","reject":true}
+{"sql":"#     COMMIT","reject":true}
+{"sql":"#     SELECT DISTINCT x FROM t1","reject":true}
+{"sql":"INSERT INTO t2 VALUES(NULL, randomblob(1500))"}
+{"sql":"INSERT INTO t2 SELECT NULL, randomblob(1500) FROM t2"}
+{"sql":"UPDATE t1 SET b = randomblob(1500)"}
+{"sql":"UPDATE t1 SET a = 65, b = randomblob(1500) WHERE (a+1)>200"}
+{"sql":"INSERT INTO t1 VALUES(NULL, randomblob(1500))"}
+{"sql":"INSERT INTO t1 SELECT NULL, randomblob(1500) FROM t1"}
+{"sql":"DELETE FROM t1 WHERE a>32"}
+{"sql":"CREATE TABLE xx(a, b, UNIQUE(a, b))"}
+{"sql":"INSERT INTO xx VALUES(a_string(200), a_string(200))"}
+{"sql":"INSERT INTO xx SELECT a_string(200), a_string(200) FROM xx"}
+{"sql":"UPDATE xx SET a = a_string(300)"}
+{"sql":"PRAGMA auto_vacuum = on"}
+{"sql":"CREATE TABLE t3(z UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(a_string(202))"}
+{"sql":"INSERT INTO t2 VALUES(a_string(203))"}
+{"sql":"INSERT INTO t3 VALUES(a_string(204))"}
+{"sql":"INSERT INTO t1 SELECT a_string(202) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(203) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(204) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(205) FROM t1"}
+{"sql":"INSERT INTO t2 SELECT a_string(length(x)) FROM t1"}
+{"sql":"INSERT INTO t3 SELECT a_string(length(x)) FROM t1"}
+{"sql":"SAVEPOINT trans"}
+{"sql":"UPDATE t2 SET y = y||'2'"}
+{"sql":"ROLLBACK TO trans"}
+{"sql":"UPDATE t1 SET x = x||'3'"}
+{"sql":"RELEASE trans"}
+{"sql":"CREATE TABLE t1(x, y UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(a_string(333), a_string(444))"}
+{"sql":"INSERT INTO t1 SELECT a_string(333+rowid), a_string(444+rowid) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(44), a_string(55) FROM t1 LIMIT 13"}
+{"sql":"UPDATE t1 SET x = a_string(length(x)), y = a_string(length(y))"}
+{"sql":"CREATE TABLE t2 AS SELECT * FROM t1 LIMIT 10"}
+{"sql":"CREATE TABLE xx(a, b)"}
+{"sql":"CREATE TABLE two.t2(x, y UNIQUE)"}
+{"sql":"INSERT INTO t2 VALUES(a_string(333), a_string(444))"}
+{"sql":"INSERT INTO t1 VALUES(a_string(11), a_string(22))"}
+{"sql":"INSERT INTO t1 VALUES(a_string(333), a_string(555))"}
+{"sql":"INSERT INTO t1 VALUES(8, 9)"}
+{"sql":"INSERT INTO t1 VALUES(1862, 'Botha')"}
+{"sql":"INSERT INTO t1 VALUES(1870, 'Smuts')"}
+{"sql":"INSERT INTO t1 VALUES(1866, 'Hertzog')"}
+{"sql":"INSERT INTO t1 VALUES(22, 'Clarke')"}
+{"sql":"INSERT INTO t1 VALUES(99, 'Bradman')"}
+{"sql":"CREATE TABLE qq(x)"}
+{"sql":"INSERT INTO qq VALUES('Herbert')"}
+{"sql":"INSERT INTO qq VALUES('Macalister')"}
+{"sql":"INSERT INTO qq VALUES('Mackenzie')"}
+{"sql":"INSERT INTO qq VALUES('Lilley')"}
+{"sql":"INSERT INTO qq VALUES('Palmer')"}
+{"sql":"INSERT INTO qq VALUES('Beatty')"}
+{"sql":"INSERT INTO t1 VALUES(a_string(5000), a_string(6000))"}
+{"sql":"INSERT INTO t4 VALUES(4)"}
+{"sql":"INSERT INTO t5 VALUES(5)"}
+{"sql":"INSERT INTO t6 VALUES(6)"}
+{"sql":"UPDATE t4 SET x = x+1"}
+{"sql":"UPDATE t6 SET x = x+1"}
+{"sql":"UPDATE t3 SET x = x+1"}
+{"sql":"INSERT INTO t0 VALUES(1, 2)"}
+{"sql":"CREATE TABLE t0(a PRIMARY KEY, b UNIQUE)"}
+{"sql":"INSERT INTO t0 VALUES(a_string(222), a_string(333))"}
+{"sql":"INSERT INTO t0 VALUES(a_string(223), a_string(334))"}
+{"sql":"INSERT INTO t0 VALUES(a_string(224), a_string(335))"}
+{"sql":"INSERT INTO t0 VALUES(a_string(225), a_string(336))"}
+{"sql":"INSERT INTO t0 SELECT a||'x', b||'x' FROM t0"}
+{"sql":"INSERT INTO t2 VALUES(3,4)"}
+{"sql":"CREATE TABLE x(a, b)"}
+{"sql":"INSERT INTO t1 VALUES(a_string(500))"}
+{"sql":"INSERT INTO t1 SELECT a_string(500) FROM t1"}
+{"sql":"INSERT INTO t2 VALUES( a_string(800), a_string(800) )"}
+{"sql":"INSERT INTO t2 SELECT a_string(800), a_string(800) FROM t2"}
+{"sql":"INSERT INTO t1 VALUES (a_string(20000), a_string(20000))"}
+{"sql":"UPDATE t2 SET a = a_string(800), b = a_string(800)"}
+{"sql":"PRAGMA wal_autocheckpoint = 0"}
+{"sql":"PRAGMA cache_size = 100000"}
+{"sql":"PRAGMA mmap_size=0"}
+{"sql":"INSERT INTO t1 VALUES(a_string(2000), a_string(2000))"}
+{"sql":"UPDATE t2 SET a = a_string(799)"}
+{"sql":"INSERT INTO t1 VALUES( randomblob(4000) )"}
+{"sql":"UPDATE t1 SET x=randomblob(200)"}

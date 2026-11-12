@@ -1,0 +1,7 @@
+{"sql":"INSERT INTO t1 VALUES(10,110)"}
+{"sql":"INSERT INTO t1 VALUES(11,111)"}
+{"sql":"INSERT INTO t1 SELECT null, b+4 FROM t1"}
+{"sql":"INSERT INTO t1 SELECT null, b+8 FROM t1"}
+{"sql":"INSERT INTO t1 SELECT null, b+16 FROM t1"}
+{"sql":"SELECT b FROM t1 WHERE a IS NOT NULL"}
+{"sql":"SELECT b FROM tv1 WHERE a IS NOT NULL"}

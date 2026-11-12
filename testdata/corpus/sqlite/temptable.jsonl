@@ -1,0 +1,24 @@
+{"sql":"INSERT INTO t2 VALUES(8,9,0)"}
+{"sql":"CREATE TEMPORARY TABLE t2(x,y)"}
+{"sql":"SELECT y FROM t2 WHERE x=1"}
+{"sql":"INSERT INTO t2 VALUES(10,20)"}
+{"sql":"INSERT INTO t2 VALUES(9,8,7)"}
+{"sql":"SELECT * FROM main.t2"}
+{"sql":"#    SELECT name FROM main.sqlite_master WHERE type='table'","reject":true}
+{"sql":"SELECT name FROM main.sqlite_master WHERE type='table'"}
+{"sql":"CREATE TEMP TABLE t2(x unique,y)"}
+{"sql":"CREATE TABLE t2(x unique, y)"}
+{"sql":"#     SELECT name FROM sqlite_master WHERE type='table'\n#","reject":true}
+{"sql":"CREATE TEMP TABLE mask(a,b,c)"}
+{"sql":"CREATE INDEX mask ON t2(x)"}
+{"sql":"#    SELECT * FROM t2","reject":true}
+{"sql":"SELECT y FROM t2 WHERE x=3"}
+{"sql":"INSERT INTO t8 VALUES('xyzzy')"}
+{"sql":"CREATE TEMP TABLE t9(x,y)"}
+{"sql":"INSERT INTO t9 VALUES(1,2)"}
+{"sql":"INSERT INTO t8 VALUES('hello')"}
+{"sql":"SELECT * FROM t8,t9"}
+{"sql":"CREATE TEMP TABLE two.abc(x,y)"}
+{"sql":"CREATE TEMP TABLE tbl2(a, b)"}
+{"sql":"SELECT * FROM tbl"}
+{"sql":"CREATE TEMP TABLE tbl(a, b)"}

@@ -1,0 +1,32 @@
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE c MATCH 'four'"}
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE b MATCH 'four'"}
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE a MATCH 'four'"}
+{"sql":"SELECT tbl_name FROM sqlite_master WHERE type = 'table'"}
+{"sql":"ALTER TABLE t1 RENAME to fts_t1"}
+{"sql":"SELECT rowid, snippet(fts_t1) FROM fts_t1 WHERE a MATCH 'four'"}
+{"sql":"CREATE TABLE t1_segdir(a, b, c)"}
+{"sql":"ALTER TABLE fts_t1 RENAME to t1"}
+{"sql":"INSERT INTO fts_t1(a, b, c) VALUES('one two three', 'one four', 'one two')"}
+{"sql":"SELECT rowid, snippet( fts_t1 ) FROM fts_t1 WHERE a MATCH 'four'"}
+{"sql":"SELECT a FROM fts_t1"}
+{"sql":"SELECT a, b, c FROM fts_t1 WHERE c MATCH 'four'"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(a, b, c)"}
+{"sql":"INSERT INTO t1(a, b, c) VALUES('one three four', 'one four', 'one two')"}
+{"sql":"SELECT a, b, c FROM t1 WHERE c MATCH 'two'"}
+{"sql":"SELECT a, b, c FROM t1 WHERE  c  MATCH 'two'"}
+{"sql":"CREATE VIRTUAL TABLE aux.t1 USING fts3(a, b, c)"}
+{"sql":"INSERT INTO aux.t1(a, b, c) VALUES(\n      'neung song sahm', 'neung see', 'neung see song'\n    )"}
+{"sql":"SELECT a, b, c FROM aux.t1 WHERE a MATCH 'song'"}
+{"sql":"SELECT a, b, c FROM t2 WHERE a MATCH 'song'"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts3"}
+{"sql":"INSERT INTO t4 VALUES('the quick brown fox')"}
+{"sql":"INSERT INTO t4 VALUES('jumped over the')"}
+{"sql":"INSERT INTO t5 VALUES('lazy dog')"}
+{"sql":"INSERT INTO t5 VALUES('Down came a jumbuck to drink at that billabong')"}
+{"sql":"ALTER TABLE t5 RENAME TO t6"}
+{"sql":"INSERT INTO t6 VALUES('Down came the troopers, one, two, three')"}
+{"sql":"SELECT snippet(t5, '[', ']') FROM t5 WHERE t5 MATCH 'the'"}
+{"sql":"CREATE VIRTUAL TABLE t7 USING FTS4"}
+{"sql":"INSERT INTO t7 VALUES('coined by a German clinician')"}
+{"sql":"SELECT count(*) FROM sqlite_master WHERE name LIKE 't7%'"}
+{"sql":"SELECT count(*) FROM sqlite_master WHERE name LIKE 't8%'"}

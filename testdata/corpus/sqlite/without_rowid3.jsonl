@@ -1,0 +1,62 @@
+{"sql":"CREATE TABLE i(i INT PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE i(i TEXT COLLATE nocase PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE i(i TEXT PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE ab(a PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE cd(\n      c PRIMARY KEY REFERENCES ab ON UPDATE CASCADE ON DELETE CASCADE, \n      d\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(\n      node PRIMARY KEY, \n      parent REFERENCES t1 ON DELETE CASCADE\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE t2(node PRIMARY KEY, parent) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE t2(a PRIMARY KEY, b REFERENCES t1(a)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t2(c INT PRIMARY KEY REFERENCES t1, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE t2(\n      c INT PRIMARY KEY,\n      d INTEGER DEFAULT 1 REFERENCES t1 ON DELETE SET DEFAULT\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE pp(a, b, c, PRIMARY KEY(b, c)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(rowid PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"INSERT INTO t1 VALUES(10, 100)"}
+{"sql":"CREATE TABLE t1(a, b PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(x COLLATE NOCASE PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE up(\n      c00, c01, c02, c03, c04, c05, c06, c07, c08, c09,\n      c10, c11, c12, c13, c14, c15, c16, c17, c18, c19,\n      c20, c21, c22, c23, c24, c25, c26, c27, c28, c29,\n      c30, c31, c32, c33, c34, c35, c36, c37, c38, c39,\n      PRIMARY KEY(c34, c35)\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE pp(a UNIQUE, b, c, PRIMARY KEY(b, c)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY) WITHOUT rowid"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='t2'"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b REFERENCES t1) WITHOUT rowid"}
+{"sql":"CREATE TABLE t2(a PRIMARY KEY, b REFERENCES t1, c REFERENCES t2)\n            WITHOUT rowid"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE type = 'table'"}
+{"sql":"CREATE TEMP TABLE t1(a PRIMARY KEY) WITHOUT rowid"}
+{"sql":"INSERT INTO temp.t2(a,b) VALUES(1,2)"}
+{"sql":"SELECT sql FROM temp.sqlite_schema WHERE name='t2'"}
+{"sql":"CREATE TEMP TABLE t1(a PRIMARY KEY, b REFERENCES t1) WITHOUT rowid"}
+{"sql":"CREATE TEMP TABLE t2(a PRIMARY KEY, b REFERENCES t1, c REFERENCES t2)\n            WITHOUT rowid"}
+{"sql":"SELECT sql FROM sqlite_temp_schema WHERE type = 'table'"}
+{"sql":"SELECT sql FROM temp.sqlite_schema WHERE type = 'table'"}
+{"sql":"CREATE TABLE aux.t1(a PRIMARY KEY) WITHOUT rowid"}
+{"sql":"SELECT sql FROM aux.sqlite_schema WHERE name='t2'"}
+{"sql":"CREATE TABLE aux.t1(a PRIMARY KEY, b REFERENCES t1) WITHOUT rowid"}
+{"sql":"CREATE TABLE aux.t2(a PRIMARY KEY, b REFERENCES t1, c REFERENCES t2)\n            WITHOUT rowid"}
+{"sql":"SELECT sql FROM aux.sqlite_schema WHERE type = 'table'"}
+{"sql":"CREATE TABLE t1(x PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE pp(x, y, PRIMARY KEY(x, y)) WITHOUT ROWID"}
+{"sql":"CREATE TABLE pp(a PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a,b,c,d,e,f,\n     UNIQUE (a,b),\n     PRIMARY KEY (e,c),\n     FOREIGN KEY (d,f) REFERENCES t1(e,c)\n  ) WITHOUT rowid"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3,5,5,3)"}
+{"sql":"INSERT INTO t1 VALUES(2,3,4,6,6,4)"}
+{"sql":"INSERT INTO t1 VALUES('x','y',1.5,'fizzle','fizzle',1.5)"}
+{"sql":"SELECT *, '|' FROM t1 ORDER BY a, b"}
+{"sql":"UPDATE t1 SET c=99, f=99 WHERE a=1"}
+{"sql":"UPDATE t1 SET e=876, d=876 WHERE a=2"}
+{"sql":"UPDATE t1 SET c=11, e=22 WHERE a=1"}
+{"sql":"UPDATE t1 SET d=11, f=22 WHERE a=1"}
+{"sql":"CREATE TABLE t1(a,b,c,d,e,f,\n     PRIMARY KEY (a,b),\n     UNIQUE (e,c),\n     FOREIGN KEY (d,f) REFERENCES t1(e,c)\n  ) WITHOUT rowid"}
+{"sql":"CREATE TABLE high(\"a'b!\" PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE long(a, b PRIMARY KEY, c) WITHOUT rowid"}
+{"sql":"CREATE TABLE nought(a, b PRIMARY KEY, c) WITHOUT rowid"}
+{"sql":"CREATE TABLE one(a INT PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE main(id INT PRIMARY KEY) WITHOUT rowid"}
+{"sql":"CREATE TABLE cc(c PRIMARY KEY, d REFERENCES pp) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b, c, UNIQUE(b, c)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, c, UNIQUE(c, b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE tdd08(a INTEGER PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE tce71(a INTEGER PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE TABLE tce73(a INTEGER PRIMARY KEY, b, UNIQUE(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a,b,PRIMARY KEY(a,b)) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t2(a,b,PRIMARY KEY(a,b)) WITHOUT ROWID"}

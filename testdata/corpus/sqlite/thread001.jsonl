@@ -1,0 +1,7 @@
+{"sql":"DROP TABLE ab"}
+{"sql":"CREATE TABLE ab(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE INDEX ab_i ON ab(b)"}
+{"sql":"INSERT INTO ab SELECT NULL, md5sum(a, b) FROM ab"}
+{"sql":"SELECT \n        (SELECT md5sum(a, b) FROM ab WHERE a < (SELECT max(a) FROM ab)) ==\n        (SELECT b FROM ab WHERE a = (SELECT max(a) FROM ab))"}
+{"sql":"SELECT \n            (SELECT md5sum(a, b) FROM ab WHERE +a < (SELECT max(a) FROM ab)) ==\n            (SELECT b FROM ab WHERE a = (SELECT max(a) FROM ab))"}
+{"sql":"SELECT \n        (SELECT md5sum(a, b) FROM ab WHERE +a < (SELECT max(a) FROM ab)) ==\n        (SELECT b FROM ab WHERE a = (SELECT max(a) FROM ab))"}

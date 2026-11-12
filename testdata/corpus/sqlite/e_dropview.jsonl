@@ -1,0 +1,11 @@
+{"sql":"CREATE VIEW \"new view\" AS SELECT * FROM t1 AS x, t1 AS y"}
+{"sql":"SELECT * FROM \"new view\""}
+{"sql":"SELECT * FROM sqlite_master WHERE name = 'new view'"}
+{"sql":"DROP VIEW \"new view\""}
+{"sql":"SELECT * FROM temp.v1"}
+{"sql":"DROP VIEW temp.v1"}
+{"sql":"SELECT * FROM main.v1"}
+{"sql":"SELECT * FROM main.v2"}
+{"sql":"SELECT * FROM aux.v2"}
+{"sql":"DROP VIEW aux.v2"}
+{"sql":"DROP VIEW v3"}

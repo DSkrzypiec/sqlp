@@ -1,0 +1,66 @@
+{"sql":"CREATE INDEX i1 ON t1(b || 'x')"}
+{"sql":"SELECT 'TWOX' == (b || 'x') FROM t1 WHERE (b || 'x')>'onex'"}
+{"sql":"SELECT 'TWOX' == (b || 'x') COLLATE nocase  FROM t1 WHERE (b || 'x')>'onex'"}
+{"sql":"CREATE INDEX i2 ON t1(a+1)"}
+{"sql":"SELECT a+1, quote(a+1) FROM t1 ORDER BY 1"}
+{"sql":"SELECT b FROM t1 WHERE b IS NOT NULL AND a IS NULL \n  GROUP BY b COLLATE nocase\n  ORDER BY b COLLATE nocase"}
+{"sql":"INSERT INTO t2 VALUES('.ABC')"}
+{"sql":"INSERT INTO t2 VALUES('.abcd')"}
+{"sql":"INSERT INTO t2 VALUES('.defg')"}
+{"sql":"INSERT INTO t2 VALUES('.DEF')"}
+{"sql":"SELECT x FROM t2 ORDER BY substr(x, 2) COLLATE nocase"}
+{"sql":"CREATE INDEX i2 ON t2( substr(x, 2) )"}
+{"sql":"INSERT INTO t4 VALUES('.ABC', 1)"}
+{"sql":"INSERT INTO t4 VALUES('.abc', 2)"}
+{"sql":"INSERT INTO t4 VALUES('.ABC', 3)"}
+{"sql":"INSERT INTO t4 VALUES('.abc', 4)"}
+{"sql":"SELECT * FROM t4 \n  WHERE substr(a, 2) = 'abc' COLLATE NOCASE\n  ORDER BY substr(a, 2), b"}
+{"sql":"CREATE INDEX i4 ON t4( substr(a, 2) COLLATE NOCASE, b )"}
+{"sql":"DROP INDEX i4"}
+{"sql":"UPDATE t4 SET a = printf('%s%d',a,b)"}
+{"sql":"SELECT * FROM t4 ORDER BY Substr(a,-2) COLLATE nocase"}
+{"sql":"SELECT * FROM t4 ORDER BY Substr(a,-2) COLLATE binary"}
+{"sql":"CREATE INDEX i4 ON t4( Substr(a,-2) COLLATE nocase )"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t4 ORDER BY Substr(a,-2) COLLATE nocase"}
+{"sql":"INSERT INTO t2 VALUES(2,3,4,5,6,7)"}
+{"sql":"CREATE INDEX t2abc ON t2(a+b+c)"}
+{"sql":"CREATE INDEX t2cd ON t2(c*d)"}
+{"sql":"CREATE INDEX t2def ON t2(d,e+25*f)"}
+{"sql":"SELECT sqlite_master.name \n      FROM sqlite_master, explain('UPDATE t2 SET b=b+1')\n     WHERE explain.opcode LIKE 'Open%'\n       AND sqlite_master.rootpage=explain.p2\n     ORDER BY 1"}
+{"sql":"SELECT sqlite_master.name \n      FROM sqlite_master, explain('UPDATE t2 SET c=c+1')\n     WHERE explain.opcode LIKE 'Open%'\n       AND sqlite_master.rootpage=explain.p2\n     ORDER BY 1"}
+{"sql":"SELECT sqlite_master.name \n      FROM sqlite_master, explain('UPDATE t2 SET c=c+1, f=NULL')\n     WHERE explain.opcode LIKE 'Open%'\n       AND sqlite_master.rootpage=explain.p2\n     ORDER BY 1"}
+{"sql":"CREATE TABLE t5(a INTEGER, b INTEGER)"}
+{"sql":"INSERT INTO t5 VALUES(2, 4), (3, 9)"}
+{"sql":"SELECT * FROM t5 WHERE abs(a)=2 or abs(b)=9"}
+{"sql":"CREATE INDEX t5a ON t5( abs(a) )"}
+{"sql":"CREATE INDEX t5b ON t5( abs(b) )"}
+{"sql":"CREATE TABLE x1(a INTEGER PRIMARY KEY, b)"}
+{"sql":"INSERT INTO x1 VALUES\n      (1, 123), (2, '123'), (3, '123abc'), (4, 123.0), (5, 1234)"}
+{"sql":"SELECT a, b FROM x1 WHERE CAST(b AS INTEGER) = 123"}
+{"sql":"CREATE INDEX x1i ON x1( CAST(b AS INTEGER) )"}
+{"sql":"SELECT a, b FROM x1 WHERE CAST(b AS TEXT) = 123"}
+{"sql":"CREATE INDEX x1i2 ON x1( CAST(b AS TEXT) )"}
+{"sql":"CREATE TABLE IF NOT EXISTS t0(c0)"}
+{"sql":"INSERT INTO t0(c0) VALUES (-9223372036854775808)"}
+{"sql":"CREATE INDEX i0 ON t0(ABS(c0))"}
+{"sql":"SELECT sql FROM sqlite_master WHERE tbl_name = 't0'"}
+{"sql":"CREATE INDEX i0 ON t0(c0)"}
+{"sql":"CREATE INDEX i0 ON t0(c0) WHERE c0 NOT NULL"}
+{"sql":"SELECT * FROM t0 WHERE ~('' BETWEEN t0.c0 AND TRUE)"}
+{"sql":"SELECT ~('' BETWEEN t0.c0 AND TRUE) FROM t0"}
+{"sql":"INSERT INTO t1 VALUES(1, 2), (3, 4)"}
+{"sql":"CREATE INDEX t1x ON t1(a, abs(b))"}
+{"sql":"INSERT INTO t1(a,b) VALUES(4,4),(5,-5),(5,20),(6,6)"}
+{"sql":"INSERT INTO t2(c,d) VALUES(100,1),(200,1),(300,2)"}
+{"sql":"SELECT *,\n    (SELECT max(c+abs(b)) FROM t2 GROUP BY d ORDER BY d LIMIT 1) AS subq\n   FROM t1 WHERE a=5"}
+{"sql":"CREATE INDEX t1x ON t1 (b, +b COLLATE NOCASE)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,'abcde')"}
+{"sql":"SELECT * FROM t1 AS a0\n   WHERE (SELECT count(a0.b=+a0.b COLLATE NOCASE IN (b)) FROM t1 GROUP BY 2.5)\n   ORDER BY a0.b"}
+{"sql":"CREATE TABLE t2(a TEXT)"}
+{"sql":"INSERT INTO t2 VALUES('alice'),('bob'),('cindy'),('david')"}
+{"sql":"CREATE INDEX t2x ON t2 (+a COLLATE NOCASE)"}
+{"sql":"SELECT count(+a COLLATE NOCASE IN (SELECT 1)) AS x\n    FROM t2\n   GROUP BY SUBSTR(0,0)"}
+{"sql":"CREATE TABLE t3 (a INT, b AS (-a))"}
+{"sql":"CREATE INDEX t3x ON t3(b, a)"}
+{"sql":"INSERT INTO t3(a) VALUES(44)"}
+{"sql":"SELECT * FROM t3 AS a0\n   WHERE (SELECT sum(-a0.a=b) FROM t3 GROUP BY b)\n   GROUP BY b"}

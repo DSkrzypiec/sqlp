@@ -1,0 +1,3 @@
+{"sql":"SELECT datetime('now', 'localtime')"}
+{"sql":"SELECT datetime('now', 'utc')"}
+{"sql":"SELECT datetime('2000-01-01', 'utc')"}

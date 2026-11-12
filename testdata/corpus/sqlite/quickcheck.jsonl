@@ -1,0 +1,1 @@
+{"sql":"CREATE TABLE t1(\n    a INTEGER NOT NULL, b INTEGER NOT NULL, c AS (a+1),\n    PRIMARY KEY(b, a)\n  ) WITHOUT ROWID"}

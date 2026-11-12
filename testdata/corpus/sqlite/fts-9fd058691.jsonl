@@ -1,0 +1,10 @@
+{"sql":"CREATE VIRTUAL TABLE fts USING fts3( tags TEXT)"}
+{"sql":"INSERT INTO fts (tags) VALUES ('tag1')"}
+{"sql":"SELECT * FROM fts WHERE tags MATCH 'tag1'"}
+{"sql":"UPDATE fts SET tags = 'tag1' WHERE rowid = 1"}
+{"sql":"CREATE VIRTUAL TABLE fts USING fts3(tags TEXT)"}
+{"sql":"INSERT INTO fts (docid, tags) VALUES (1, 'tag1')"}
+{"sql":"INSERT INTO fts (docid, tags) VALUES (2, NULL)"}
+{"sql":"INSERT INTO fts (docid, tags) VALUES (3, 'three')"}
+{"sql":"UPDATE fts SET tags = 'two' WHERE rowid = 2"}
+{"sql":"SELECT * FROM fts WHERE tags MATCH 'two'"}

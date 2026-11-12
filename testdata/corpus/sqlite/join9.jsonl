@@ -1,0 +1,28 @@
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 NATURAL LEFT JOIN t5 NATURAL LEFT JOIN t6\n     ORDER BY 1"}
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 NATURAL LEFT JOIN t5 NATURAL LEFT JOIN t6\n     ORDER BY id"}
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 LEFT JOIN t5 USING(id) LEFT JOIN t6 USING(id)\n     ORDER BY id"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t5 NATURAL RIGHT JOIN t4 NATURAL LEFT JOIN t6\n     ORDER BY 1"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t5 NATURAL RIGHT JOIN t4 NATURAL LEFT JOIN t6\n     ORDER BY id"}
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 NATURAL RIGHT JOIN t5 NATURAL RIGHT JOIN t6\n     ORDER BY 1"}
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 NATURAL RIGHT JOIN t5 NATURAL RIGHT JOIN t6\n     ORDER BY id"}
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 NATURAL FULL JOIN t5 NATURAL FULL JOIN t6\n     ORDER BY 1"}
+{"sql":"SELECT *, t4.id, t5.id, t6.id\n      FROM t4 NATURAL FULL JOIN t5 NATURAL FULL JOIN t6\n     ORDER BY id"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t4 NATURAL FULL JOIN t6 NATURAL FULL JOIN t5\n     ORDER BY id"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t5 NATURAL FULL JOIN t4 NATURAL FULL JOIN t6\n     ORDER BY id"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t5 NATURAL FULL JOIN t6 NATURAL FULL JOIN t4\n     ORDER BY id"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t6 NATURAL FULL JOIN t4 NATURAL FULL JOIN t5\n     ORDER BY id"}
+{"sql":"SELECT id, x, y, z, t4.id, t5.id, t6.id\n      FROM t6 NATURAL FULL JOIN t5 NATURAL FULL JOIN t4\n     ORDER BY id"}
+{"sql":"SELECT id, w, x, y, z\n      FROM t3 FULL JOIN t4 USING(id)\n              NATURAL FULL JOIN t5\n              FULL JOIN t6 USING(id)\n      ORDER BY 1"}
+{"sql":"SELECT id, w, x, y, z\n       FROM t3 JOIN dual AS d1 ON true\n               FULL JOIN t4 USING(id)\n               JOIN dual AS d2 ON true\n               NATURAL FULL JOIN t5\n               JOIN dual AS d3 ON true\n               FULL JOIN t6 USING(id)\n               CROSS JOIN dual AS d4\n      ORDER BY 1"}
+{"sql":"SELECT id, w, x, y, z\n       FROM t3 JOIN dual AS d1 ON true\n               FULL JOIN t4 USING(id)\n               JOIN dual AS d2 ON true\n               NATURAL FULL JOIN t5\n               JOIN dual AS d3 ON true\n               FULL JOIN t6 USING(id)\n               CROSS JOIN dual AS d4\n      WHERE x<>'bob' OR x IS NULL\n      ORDER BY 1"}
+{"sql":"WITH t7(id,a) AS MATERIALIZED (SELECT * FROM t4 WHERE false)\n    SELECT *\n      FROM t7 \n           JOIN t7 AS t7b USING(id)\n           FULL JOIN t3 USING(id)"}
+{"sql":"SELECT *\n      FROM (t3 NATURAL FULL JOIN t4)\n           NATURAL FULL JOIN\n           (t5 NATURAL FULL JOIN t6)\n    ORDER BY 1"}
+{"sql":"SELECT *\n      FROM t3 NATURAL FULL JOIN \n           (t4 NATURAL FULL JOIN\n            (t5 NATURAL FULL JOIN t6))\n    ORDER BY 1"}
+{"sql":"SELECT *\n      FROM t3 FULL JOIN (\n                t4 FULL JOIN (\n                    t5 FULL JOIN t6 USING (id)\n                ) USING(id)\n           ) USING(id)\n    ORDER BY 1"}
+{"sql":"SELECT *\n      FROM t3 FULL JOIN (\n               t4 FULL JOIN (\n                   t5 FULL JOIN t6 USING(id)\n               ) USING(id)\n           ) AS j1 ON j1.id=t3.id\n     ORDER BY coalesce(t3.id,j1.id)"}
+{"sql":"SELECT *\n      FROM t3 FULL JOIN (\n                t4 RIGHT JOIN (\n                    t5 FULL JOIN t6 USING(id)\n                ) USING(id)\n           ) AS j1 ON j1.id=t3.id\n     ORDER BY coalesce(t3.id,j1.id)"}
+{"sql":"SELECT *\n      FROM t3 FULL JOIN (\n                t4 LEFT JOIN (\n                    t5 FULL JOIN t6 USING(id)\n                ) USING(id)\n           ) AS j1 ON j1.id=t3.id\n     ORDER BY coalesce(t3.id,j1.id)"}
+{"sql":"WITH t56(id,y,z) AS (SELECT * FROM t5 FULL JOIN t6 USING(id) LIMIT 50)\n    SELECT id,x,y,z FROM t4 JOIN t56 USING(id)\n    ORDER BY 1"}
+{"sql":"SELECT id,x,y,z\n      FROM t4 INNER JOIN (t5 FULL JOIN t6 USING(id)) USING(id)\n     ORDER BY 1"}
+{"sql":"SELECT id,x,y,z\n      FROM t4 FULL JOIN t5 USING(id) INNER JOIN t6 USING(id)\n     ORDER BY 1"}
+{"sql":"WITH t45(id,x,y) AS (SELECT * FROM t4 FULL JOIN t5 USING(id) LIMIT 50)\n    SELECT id,x,y,z FROM t45 JOIN t6 USING(id)\n    ORDER BY 1"}

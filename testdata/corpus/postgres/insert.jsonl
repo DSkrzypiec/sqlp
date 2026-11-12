@@ -1,0 +1,352 @@
+{"sql":"create table inserttest (col1 int4, col2 int4 NOT NULL, col3 text default 'testing')","shape":"CREATE TABLE inserttest (col1 int4, col2 int4 NOT NULL, col3 text DEFAULT 'testing');"}
+{"sql":"insert into inserttest (col1, col2, col3) values (DEFAULT, DEFAULT, DEFAULT)","shape":"INSERT INTO inserttest (col1, col2, col3) VALUES (DEFAULT, DEFAULT, DEFAULT);"}
+{"sql":"insert into inserttest (col2, col3) values (3, DEFAULT)","shape":"INSERT INTO inserttest (col2, col3) VALUES (3, DEFAULT);"}
+{"sql":"insert into inserttest (col1, col2, col3) values (DEFAULT, 5, DEFAULT)","shape":"INSERT INTO inserttest (col1, col2, col3) VALUES (DEFAULT, 5, DEFAULT);"}
+{"sql":"insert into inserttest values (DEFAULT, 5, 'test')","shape":"INSERT INTO inserttest VALUES (DEFAULT, 5, 'test');"}
+{"sql":"insert into inserttest values (DEFAULT, 7)","shape":"INSERT INTO inserttest VALUES (DEFAULT, 7);"}
+{"sql":"select * from inserttest","shape":"SELECT * FROM inserttest;"}
+{"sql":"insert into inserttest (col1, col2, col3) values (DEFAULT, DEFAULT)","shape":"INSERT INTO inserttest (col1, col2, col3) VALUES (DEFAULT, DEFAULT);"}
+{"sql":"insert into inserttest (col1, col2, col3) values (1, 2)","shape":"INSERT INTO inserttest (col1, col2, col3) VALUES (1, 2);"}
+{"sql":"insert into inserttest (col1) values (1, 2)","shape":"INSERT INTO inserttest (col1) VALUES (1, 2);"}
+{"sql":"insert into inserttest (col1) values (DEFAULT, DEFAULT)","shape":"INSERT INTO inserttest (col1) VALUES (DEFAULT, DEFAULT);"}
+{"sql":"insert into inserttest values(10, 20, '40'), (-1, 2, DEFAULT),\n    ((select 2), (select i from (values(3)) as foo (i)), 'values are fun!')","shape":"INSERT INTO inserttest VALUES (10, 20, '40'), (-1, 2, DEFAULT), ((SELECT 2), (SELECT i FROM (VALUES (3)) AS foo(i)), 'values are fun!');"}
+{"sql":"insert into inserttest values(30, 50, repeat('x', 10000))","shape":"INSERT INTO inserttest VALUES (30, 50, repeat('x', 10000));"}
+{"sql":"select col1, col2, char_length(col3) from inserttest","shape":"SELECT col1, col2, char_length(col3) FROM inserttest;"}
+{"sql":"drop table inserttest","shape":"DROP TABLE inserttest;"}
+{"sql":"CREATE TABLE large_tuple_test (a int, b text) WITH (fillfactor = 10)","shape":"CREATE TABLE large_tuple_test (a int, b text) WITH (fillfactor = 10);"}
+{"sql":"ALTER TABLE large_tuple_test ALTER COLUMN b SET STORAGE plain"}
+{"sql":"INSERT INTO large_tuple_test (select 1, NULL)","shape":"INSERT INTO large_tuple_test (SELECT 1, NULL);"}
+{"sql":"INSERT INTO large_tuple_test (select 2, repeat('a', 1000))","shape":"INSERT INTO large_tuple_test (SELECT 2, repeat('a', 1000));"}
+{"sql":"SELECT pg_size_pretty(pg_relation_size('large_tuple_test'::regclass, 'main'))","shape":"SELECT pg_size_pretty(pg_relation_size('large_tuple_test'::regclass, 'main'));"}
+{"sql":"INSERT INTO large_tuple_test (select 3, NULL)","shape":"INSERT INTO large_tuple_test (SELECT 3, NULL);"}
+{"sql":"INSERT INTO large_tuple_test (select 4, repeat('a', 8126))","shape":"INSERT INTO large_tuple_test (SELECT 4, repeat('a', 8126));"}
+{"sql":"DROP TABLE large_tuple_test","shape":"DROP TABLE large_tuple_test;"}
+{"sql":"create type insert_test_type as (if1 int, if2 text[])","shape":"CREATE TYPE insert_test_type AS (if1 int, if2 text[]);"}
+{"sql":"create table inserttest (f1 int, f2 int[],\n                         f3 insert_test_type, f4 insert_test_type[])","shape":"CREATE TABLE inserttest (f1 int, f2 int[], f3 insert_test_type, f4 insert_test_type[]);"}
+{"sql":"insert into inserttest (f2[1], f2[2]) values (1,2)","shape":"INSERT INTO inserttest (f2[1], f2[2]) VALUES (1, 2);"}
+{"sql":"insert into inserttest (f2[1], f2[2]) values (3,4), (5,6)","shape":"INSERT INTO inserttest (f2[1], f2[2]) VALUES (3, 4), (5, 6);"}
+{"sql":"insert into inserttest (f2[1], f2[2]) select 7,8","shape":"INSERT INTO inserttest (f2[1], f2[2]) SELECT 7, 8;"}
+{"sql":"insert into inserttest (f2[1], f2[2]) values (1,default)","shape":"INSERT INTO inserttest (f2[1], f2[2]) VALUES (1, DEFAULT);"}
+{"sql":"insert into inserttest (f3.if1, f3.if2) values (1,array['foo'])","shape":"INSERT INTO inserttest (f3.if1, f3.if2) VALUES (1, ARRAY['foo']);"}
+{"sql":"insert into inserttest (f3.if1, f3.if2) values (1,'{foo}'), (2,'{bar}')","shape":"INSERT INTO inserttest (f3.if1, f3.if2) VALUES (1, '{foo}'), (2, '{bar}');"}
+{"sql":"insert into inserttest (f3.if1, f3.if2) select 3, '{baz,quux}'","shape":"INSERT INTO inserttest (f3.if1, f3.if2) SELECT 3, '{baz,quux}';"}
+{"sql":"insert into inserttest (f3.if1, f3.if2) values (1,default)","shape":"INSERT INTO inserttest (f3.if1, f3.if2) VALUES (1, DEFAULT);"}
+{"sql":"insert into inserttest (f3.if2[1], f3.if2[2]) values ('foo', 'bar')","shape":"INSERT INTO inserttest (f3.if2[1], f3.if2[2]) VALUES ('foo', 'bar');"}
+{"sql":"insert into inserttest (f3.if2[1], f3.if2[2]) values ('foo', 'bar'), ('baz', 'quux')","shape":"INSERT INTO inserttest (f3.if2[1], f3.if2[2]) VALUES ('foo', 'bar'), ('baz', 'quux');"}
+{"sql":"insert into inserttest (f3.if2[1], f3.if2[2]) select 'bear', 'beer'","shape":"INSERT INTO inserttest (f3.if2[1], f3.if2[2]) SELECT 'bear', 'beer';"}
+{"sql":"insert into inserttest (f4[1].if2[1], f4[1].if2[2]) values ('foo', 'bar')","shape":"INSERT INTO inserttest (f4[1].if2[1], f4[1].if2[2]) VALUES ('foo', 'bar');"}
+{"sql":"insert into inserttest (f4[1].if2[1], f4[1].if2[2]) values ('foo', 'bar'), ('baz', 'quux')","shape":"INSERT INTO inserttest (f4[1].if2[1], f4[1].if2[2]) VALUES ('foo', 'bar'), ('baz', 'quux');"}
+{"sql":"insert into inserttest (f4[1].if2[1], f4[1].if2[2]) select 'bear', 'beer'","shape":"INSERT INTO inserttest (f4[1].if2[1], f4[1].if2[2]) SELECT 'bear', 'beer';"}
+{"sql":"create table inserttest2 (f1 bigint, f2 text)","shape":"CREATE TABLE inserttest2 (f1 bigint, f2 text);"}
+{"sql":"create rule irule1 as on insert to inserttest2 do also\n  insert into inserttest (f3.if2[1], f3.if2[2])\n  values (new.f1,new.f2)"}
+{"sql":"create rule irule2 as on insert to inserttest2 do also\n  insert into inserttest (f4[1].if1, f4[1].if2[2])\n  values (1,'fool'),(new.f1,new.f2)"}
+{"sql":"create rule irule3 as on insert to inserttest2 do also\n  insert into inserttest (f4[1].if1, f4[1].if2[2])\n  select new.f1, new.f2"}
+{"sql":"drop table inserttest2","shape":"DROP TABLE inserttest2;"}
+{"sql":"create domain insert_pos_ints as int[] check (value[1] > 0)","shape":"CREATE DOMAIN insert_pos_ints AS int[] CHECK (value[1] > 0);"}
+{"sql":"create domain insert_test_domain as insert_test_type\n  check ((value).if2[1] is not null)","shape":"CREATE DOMAIN insert_test_domain AS insert_test_type CHECK ((value).if2[1] IS NOT NULL);"}
+{"sql":"create table inserttesta (f1 int, f2 insert_pos_ints)","shape":"CREATE TABLE inserttesta (f1 int, f2 insert_pos_ints);"}
+{"sql":"create table inserttestb (f3 insert_test_domain, f4 insert_test_domain[])","shape":"CREATE TABLE inserttestb (f3 insert_test_domain, f4 insert_test_domain[]);"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) values (1,2)","shape":"INSERT INTO inserttesta (f2[1], f2[2]) VALUES (1, 2);"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) values (3,4), (5,6)","shape":"INSERT INTO inserttesta (f2[1], f2[2]) VALUES (3, 4), (5, 6);"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) select 7,8","shape":"INSERT INTO inserttesta (f2[1], f2[2]) SELECT 7, 8;"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) values (1,default)","shape":"INSERT INTO inserttesta (f2[1], f2[2]) VALUES (1, DEFAULT);"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) values (0,2)","shape":"INSERT INTO inserttesta (f2[1], f2[2]) VALUES (0, 2);"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) values (3,4), (0,6)","shape":"INSERT INTO inserttesta (f2[1], f2[2]) VALUES (3, 4), (0, 6);"}
+{"sql":"insert into inserttesta (f2[1], f2[2]) select 0,8","shape":"INSERT INTO inserttesta (f2[1], f2[2]) SELECT 0, 8;"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) values (1,array['foo'])","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) VALUES (1, ARRAY['foo']);"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) values (1,'{foo}'), (2,'{bar}')","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) VALUES (1, '{foo}'), (2, '{bar}');"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) select 3, '{baz,quux}'","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) SELECT 3, '{baz,quux}';"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) values (1,default)","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) VALUES (1, DEFAULT);"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) values (1,array[null])","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) VALUES (1, ARRAY[NULL]);"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) values (1,'{null}'), (2,'{bar}')","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) VALUES (1, '{null}'), (2, '{bar}');"}
+{"sql":"insert into inserttestb (f3.if1, f3.if2) select 3, '{null,quux}'","shape":"INSERT INTO inserttestb (f3.if1, f3.if2) SELECT 3, '{null,quux}';"}
+{"sql":"insert into inserttestb (f3.if2[1], f3.if2[2]) values ('foo', 'bar')","shape":"INSERT INTO inserttestb (f3.if2[1], f3.if2[2]) VALUES ('foo', 'bar');"}
+{"sql":"insert into inserttestb (f3.if2[1], f3.if2[2]) values ('foo', 'bar'), ('baz', 'quux')","shape":"INSERT INTO inserttestb (f3.if2[1], f3.if2[2]) VALUES ('foo', 'bar'), ('baz', 'quux');"}
+{"sql":"insert into inserttestb (f3.if2[1], f3.if2[2]) select 'bear', 'beer'","shape":"INSERT INTO inserttestb (f3.if2[1], f3.if2[2]) SELECT 'bear', 'beer';"}
+{"sql":"insert into inserttestb (f3, f4[1].if2[1], f4[1].if2[2]) values (row(1,'{x}'), 'foo', 'bar')","shape":"INSERT INTO inserttestb (f3, f4[1].if2[1], f4[1].if2[2]) VALUES (ROW(1, '{x}'), 'foo', 'bar');"}
+{"sql":"insert into inserttestb (f3, f4[1].if2[1], f4[1].if2[2]) values (row(1,'{x}'), 'foo', 'bar'), (row(2,'{y}'), 'baz', 'quux')","shape":"INSERT INTO inserttestb (f3, f4[1].if2[1], f4[1].if2[2]) VALUES (ROW(1, '{x}'), 'foo', 'bar'), (ROW(2, '{y}'), 'baz', 'quux');"}
+{"sql":"insert into inserttestb (f3, f4[1].if2[1], f4[1].if2[2]) select row(1,'{x}')::insert_test_domain, 'bear', 'beer'","shape":"INSERT INTO inserttestb (f3, f4[1].if2[1], f4[1].if2[2]) SELECT ROW(1, '{x}')::insert_test_domain, 'bear', 'beer';"}
+{"sql":"select * from inserttesta","shape":"SELECT * FROM inserttesta;"}
+{"sql":"select * from inserttestb","shape":"SELECT * FROM inserttestb;"}
+{"sql":"create rule irule1 as on insert to inserttest2 do also\n  insert into inserttestb (f3.if2[1], f3.if2[2])\n  values (new.f1,new.f2)"}
+{"sql":"create rule irule2 as on insert to inserttest2 do also\n  insert into inserttestb (f4[1].if1, f4[1].if2[2])\n  values (1,'fool'),(new.f1,new.f2)"}
+{"sql":"create rule irule3 as on insert to inserttest2 do also\n  insert into inserttestb (f4[1].if1, f4[1].if2[2])\n  select new.f1, new.f2"}
+{"sql":"drop table inserttesta","shape":"DROP TABLE inserttesta;"}
+{"sql":"drop table inserttestb","shape":"DROP TABLE inserttestb;"}
+{"sql":"drop domain insert_pos_ints","shape":"DROP DOMAIN insert_pos_ints;"}
+{"sql":"drop domain insert_test_domain","shape":"DROP DOMAIN insert_test_domain;"}
+{"sql":"create domain insert_nnarray as int[]\n  check (value[1] is not null and value[2] is not null)","shape":"CREATE DOMAIN insert_nnarray AS int[] CHECK ((value[1] IS NOT NULL) AND (value[2] IS NOT NULL));"}
+{"sql":"create domain insert_test_domain as insert_test_type\n  check ((value).if1 is not null and (value).if2 is not null)","shape":"CREATE DOMAIN insert_test_domain AS insert_test_type CHECK (((value).if1 IS NOT NULL) AND ((value).if2 IS NOT NULL));"}
+{"sql":"create table inserttesta (f1 insert_nnarray)","shape":"CREATE TABLE inserttesta (f1 insert_nnarray);"}
+{"sql":"insert into inserttesta (f1[1]) values (1)","shape":"INSERT INTO inserttesta (f1[1]) VALUES (1);"}
+{"sql":"insert into inserttesta (f1[1], f1[2]) values (1, 2)","shape":"INSERT INTO inserttesta (f1[1], f1[2]) VALUES (1, 2);"}
+{"sql":"create table inserttestb (f1 insert_test_domain)","shape":"CREATE TABLE inserttestb (f1 insert_test_domain);"}
+{"sql":"insert into inserttestb (f1.if1) values (1)","shape":"INSERT INTO inserttestb (f1.if1) VALUES (1);"}
+{"sql":"insert into inserttestb (f1.if1, f1.if2) values (1, '{foo}')","shape":"INSERT INTO inserttestb (f1.if1, f1.if2) VALUES (1, '{foo}');"}
+{"sql":"drop domain insert_nnarray","shape":"DROP DOMAIN insert_nnarray;"}
+{"sql":"drop type insert_test_type cascade","shape":"DROP TYPE insert_test_type CASCADE;"}
+{"sql":"create table range_parted (\n\ta text,\n\tb int\n) partition by range (a, (b+0))","shape":"CREATE TABLE range_parted (a text, b int) PARTITION BY RANGE (a, (b + 0));"}
+{"sql":"insert into range_parted values ('a', 11)","shape":"INSERT INTO range_parted VALUES ('a', 11);"}
+{"sql":"create table part1 partition of range_parted for values from ('a', 1) to ('a', 10)","shape":"CREATE TABLE part1 PARTITION OF range_parted FOR VALUES FROM ('a', 1) TO ('a', 10);"}
+{"sql":"create table part2 partition of range_parted for values from ('a', 10) to ('a', 20)","shape":"CREATE TABLE part2 PARTITION OF range_parted FOR VALUES FROM ('a', 10) TO ('a', 20);"}
+{"sql":"create table part3 partition of range_parted for values from ('b', 1) to ('b', 10)","shape":"CREATE TABLE part3 PARTITION OF range_parted FOR VALUES FROM ('b', 1) TO ('b', 10);"}
+{"sql":"create table part4 partition of range_parted for values from ('b', 10) to ('b', 20)","shape":"CREATE TABLE part4 PARTITION OF range_parted FOR VALUES FROM ('b', 10) TO ('b', 20);"}
+{"sql":"insert into part1 values ('a', 11)","shape":"INSERT INTO part1 VALUES ('a', 11);"}
+{"sql":"insert into part1 values ('b', 1)","shape":"INSERT INTO part1 VALUES ('b', 1);"}
+{"sql":"insert into part1 values ('a', 1)","shape":"INSERT INTO part1 VALUES ('a', 1);"}
+{"sql":"insert into part4 values ('b', 21)","shape":"INSERT INTO part4 VALUES ('b', 21);"}
+{"sql":"insert into part4 values ('a', 10)","shape":"INSERT INTO part4 VALUES ('a', 10);"}
+{"sql":"insert into part4 values ('b', 10)","shape":"INSERT INTO part4 VALUES ('b', 10);"}
+{"sql":"insert into part1 values (null)","shape":"INSERT INTO part1 VALUES (NULL);"}
+{"sql":"insert into part1 values (1)","shape":"INSERT INTO part1 VALUES (1);"}
+{"sql":"create table list_parted (\n\ta text,\n\tb int\n) partition by list (lower(a))","shape":"CREATE TABLE list_parted (a text, b int) PARTITION BY LIST (lower(a));"}
+{"sql":"create table part_aa_bb partition of list_parted FOR VALUES IN ('aa', 'bb')","shape":"CREATE TABLE part_aa_bb PARTITION OF list_parted FOR VALUES IN ('aa', 'bb');"}
+{"sql":"create table part_cc_dd partition of list_parted FOR VALUES IN ('cc', 'dd')","shape":"CREATE TABLE part_cc_dd PARTITION OF list_parted FOR VALUES IN ('cc', 'dd');"}
+{"sql":"create table part_null partition of list_parted FOR VALUES IN (null)","shape":"CREATE TABLE part_null PARTITION OF list_parted FOR VALUES IN (NULL);"}
+{"sql":"insert into part_aa_bb values ('cc', 1)","shape":"INSERT INTO part_aa_bb VALUES ('cc', 1);"}
+{"sql":"insert into part_aa_bb values ('AAa', 1)","shape":"INSERT INTO part_aa_bb VALUES ('AAa', 1);"}
+{"sql":"insert into part_aa_bb values (null)","shape":"INSERT INTO part_aa_bb VALUES (NULL);"}
+{"sql":"insert into part_cc_dd values ('cC', 1)","shape":"INSERT INTO part_cc_dd VALUES ('cC', 1);"}
+{"sql":"insert into part_null values (null, 0)","shape":"INSERT INTO part_null VALUES (NULL, 0);"}
+{"sql":"create table part_ee_ff partition of list_parted for values in ('ee', 'ff') partition by range (b)","shape":"CREATE TABLE part_ee_ff PARTITION OF list_parted FOR VALUES IN ('ee', 'ff') PARTITION BY RANGE (b);"}
+{"sql":"create table part_ee_ff1 partition of part_ee_ff for values from (1) to (10)","shape":"CREATE TABLE part_ee_ff1 PARTITION OF part_ee_ff FOR VALUES FROM (1) TO (10);"}
+{"sql":"create table part_ee_ff2 partition of part_ee_ff for values from (10) to (20)","shape":"CREATE TABLE part_ee_ff2 PARTITION OF part_ee_ff FOR VALUES FROM (10) TO (20);"}
+{"sql":"create table part_default partition of list_parted default","shape":"CREATE TABLE part_default PARTITION OF list_parted DEFAULT;"}
+{"sql":"insert into part_default values ('aa', 2)","shape":"INSERT INTO part_default VALUES ('aa', 2);"}
+{"sql":"insert into part_default values (null, 2)","shape":"INSERT INTO part_default VALUES (NULL, 2);"}
+{"sql":"insert into part_default values ('Zz', 2)","shape":"INSERT INTO part_default VALUES ('Zz', 2);"}
+{"sql":"drop table part_default","shape":"DROP TABLE part_default;"}
+{"sql":"create table part_xx_yy partition of list_parted for values in ('xx', 'yy') partition by list (a)","shape":"CREATE TABLE part_xx_yy PARTITION OF list_parted FOR VALUES IN ('xx', 'yy') PARTITION BY LIST (a);"}
+{"sql":"create table part_xx_yy_p1 partition of part_xx_yy for values in ('xx')","shape":"CREATE TABLE part_xx_yy_p1 PARTITION OF part_xx_yy FOR VALUES IN ('xx');"}
+{"sql":"create table part_xx_yy_defpart partition of part_xx_yy default","shape":"CREATE TABLE part_xx_yy_defpart PARTITION OF part_xx_yy DEFAULT;"}
+{"sql":"create table part_default partition of list_parted default partition by range(b)","shape":"CREATE TABLE part_default PARTITION OF list_parted DEFAULT PARTITION BY RANGE (b);"}
+{"sql":"create table part_default_p1 partition of part_default for values from (20) to (30)","shape":"CREATE TABLE part_default_p1 PARTITION OF part_default FOR VALUES FROM (20) TO (30);"}
+{"sql":"create table part_default_p2 partition of part_default for values from (30) to (40)","shape":"CREATE TABLE part_default_p2 PARTITION OF part_default FOR VALUES FROM (30) TO (40);"}
+{"sql":"insert into part_ee_ff1 values ('EE', 11)","shape":"INSERT INTO part_ee_ff1 VALUES ('EE', 11);"}
+{"sql":"insert into part_default_p2 values ('gg', 43)","shape":"INSERT INTO part_default_p2 VALUES ('gg', 43);"}
+{"sql":"insert into part_ee_ff1 values ('cc', 1)","shape":"INSERT INTO part_ee_ff1 VALUES ('cc', 1);"}
+{"sql":"insert into part_default values ('gg', 43)","shape":"INSERT INTO part_default VALUES ('gg', 43);"}
+{"sql":"insert into part_ee_ff1 values ('ff', 1)","shape":"INSERT INTO part_ee_ff1 VALUES ('ff', 1);"}
+{"sql":"insert into part_ee_ff2 values ('ff', 11)","shape":"INSERT INTO part_ee_ff2 VALUES ('ff', 11);"}
+{"sql":"insert into part_default_p1 values ('cd', 25)","shape":"INSERT INTO part_default_p1 VALUES ('cd', 25);"}
+{"sql":"insert into part_default_p2 values ('de', 35)","shape":"INSERT INTO part_default_p2 VALUES ('de', 35);"}
+{"sql":"insert into list_parted values ('ab', 21)","shape":"INSERT INTO list_parted VALUES ('ab', 21);"}
+{"sql":"insert into list_parted values ('xx', 1)","shape":"INSERT INTO list_parted VALUES ('xx', 1);"}
+{"sql":"insert into list_parted values ('yy', 2)","shape":"INSERT INTO list_parted VALUES ('yy', 2);"}
+{"sql":"select tableoid::regclass, * from list_parted","shape":"SELECT tableoid::regclass, * FROM list_parted;"}
+{"sql":"insert into range_parted values ('a', 0)","shape":"INSERT INTO range_parted VALUES ('a', 0);"}
+{"sql":"insert into range_parted values ('a', 1)","shape":"INSERT INTO range_parted VALUES ('a', 1);"}
+{"sql":"insert into range_parted values ('a', 10)","shape":"INSERT INTO range_parted VALUES ('a', 10);"}
+{"sql":"insert into range_parted values ('a', 20)","shape":"INSERT INTO range_parted VALUES ('a', 20);"}
+{"sql":"insert into range_parted values ('b', 1)","shape":"INSERT INTO range_parted VALUES ('b', 1);"}
+{"sql":"insert into range_parted values ('b', 10)","shape":"INSERT INTO range_parted VALUES ('b', 10);"}
+{"sql":"insert into range_parted values ('a')","shape":"INSERT INTO range_parted VALUES ('a');"}
+{"sql":"create table part_def partition of range_parted default","shape":"CREATE TABLE part_def PARTITION OF range_parted DEFAULT;"}
+{"sql":"insert into part_def values ('b', 10)","shape":"INSERT INTO part_def VALUES ('b', 10);"}
+{"sql":"insert into part_def values ('c', 10)","shape":"INSERT INTO part_def VALUES ('c', 10);"}
+{"sql":"insert into range_parted values (null, null)","shape":"INSERT INTO range_parted VALUES (NULL, NULL);"}
+{"sql":"insert into range_parted values ('a', null)","shape":"INSERT INTO range_parted VALUES ('a', NULL);"}
+{"sql":"insert into range_parted values (null, 19)","shape":"INSERT INTO range_parted VALUES (NULL, 19);"}
+{"sql":"insert into range_parted values ('b', 20)","shape":"INSERT INTO range_parted VALUES ('b', 20);"}
+{"sql":"select tableoid::regclass, * from range_parted","shape":"SELECT tableoid::regclass, * FROM range_parted;"}
+{"sql":"insert into list_parted values (null, 1)","shape":"INSERT INTO list_parted VALUES (NULL, 1);"}
+{"sql":"insert into list_parted (a) values ('aA')","shape":"INSERT INTO list_parted (a) VALUES ('aA');"}
+{"sql":"insert into list_parted values ('EE', 0)","shape":"INSERT INTO list_parted VALUES ('EE', 0);"}
+{"sql":"insert into part_ee_ff values ('EE', 0)","shape":"INSERT INTO part_ee_ff VALUES ('EE', 0);"}
+{"sql":"insert into list_parted values ('EE', 1)","shape":"INSERT INTO list_parted VALUES ('EE', 1);"}
+{"sql":"insert into part_ee_ff values ('EE', 10)","shape":"INSERT INTO part_ee_ff VALUES ('EE', 10);"}
+{"sql":"create table part_gg partition of list_parted for values in ('gg') partition by range (b)","shape":"CREATE TABLE part_gg PARTITION OF list_parted FOR VALUES IN ('gg') PARTITION BY RANGE (b);"}
+{"sql":"create table part_gg1 partition of part_gg for values from (minvalue) to (1)","shape":"CREATE TABLE part_gg1 PARTITION OF part_gg FOR VALUES FROM (minvalue) TO (1);"}
+{"sql":"create table part_gg2 partition of part_gg for values from (1) to (10) partition by range (b)","shape":"CREATE TABLE part_gg2 PARTITION OF part_gg FOR VALUES FROM (1) TO (10) PARTITION BY RANGE (b);"}
+{"sql":"create table part_gg2_1 partition of part_gg2 for values from (1) to (5)","shape":"CREATE TABLE part_gg2_1 PARTITION OF part_gg2 FOR VALUES FROM (1) TO (5);"}
+{"sql":"create table part_gg2_2 partition of part_gg2 for values from (5) to (10)","shape":"CREATE TABLE part_gg2_2 PARTITION OF part_gg2 FOR VALUES FROM (5) TO (10);"}
+{"sql":"create table part_ee_ff3 partition of part_ee_ff for values from (20) to (30) partition by range (b)","shape":"CREATE TABLE part_ee_ff3 PARTITION OF part_ee_ff FOR VALUES FROM (20) TO (30) PARTITION BY RANGE (b);"}
+{"sql":"create table part_ee_ff3_1 partition of part_ee_ff3 for values from (20) to (25)","shape":"CREATE TABLE part_ee_ff3_1 PARTITION OF part_ee_ff3 FOR VALUES FROM (20) TO (25);"}
+{"sql":"create table part_ee_ff3_2 partition of part_ee_ff3 for values from (25) to (30)","shape":"CREATE TABLE part_ee_ff3_2 PARTITION OF part_ee_ff3 FOR VALUES FROM (25) TO (30);"}
+{"sql":"truncate list_parted","shape":"TRUNCATE TABLE list_parted;"}
+{"sql":"insert into list_parted values ('aa'), ('cc')","shape":"INSERT INTO list_parted VALUES ('aa'), ('cc');"}
+{"sql":"insert into list_parted select 'Ff', s.a from generate_series(1, 29) s(a)","shape":"INSERT INTO list_parted SELECT 'Ff', s.a FROM generate_series(1, 29) AS s(a);"}
+{"sql":"insert into list_parted select 'gg', s.a from generate_series(1, 9) s(a)","shape":"INSERT INTO list_parted SELECT 'gg', s.a FROM generate_series(1, 9) AS s(a);"}
+{"sql":"insert into list_parted (b) values (1)","shape":"INSERT INTO list_parted (b) VALUES (1);"}
+{"sql":"select tableoid::regclass::text, a, min(b) as min_b, max(b) as max_b from list_parted group by 1, 2 order by 1","shape":"SELECT tableoid::regclass::text, a, min(b) AS min_b, max(b) AS max_b FROM list_parted GROUP BY 1, 2 ORDER BY 1;"}
+{"sql":"create table hash_parted (\n\ta int\n) partition by hash (a part_test_int4_ops)","shape":"CREATE TABLE hash_parted (a int) PARTITION BY HASH (a part_test_int4_ops);"}
+{"sql":"create table hpart0 partition of hash_parted for values with (modulus 4, remainder 0)","shape":"CREATE TABLE hpart0 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 4, REMAINDER 0);"}
+{"sql":"create table hpart1 partition of hash_parted for values with (modulus 4, remainder 1)","shape":"CREATE TABLE hpart1 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 4, REMAINDER 1);"}
+{"sql":"create table hpart2 partition of hash_parted for values with (modulus 4, remainder 2)","shape":"CREATE TABLE hpart2 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 4, REMAINDER 2);"}
+{"sql":"create table hpart3 partition of hash_parted for values with (modulus 4, remainder 3)","shape":"CREATE TABLE hpart3 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 4, REMAINDER 3);"}
+{"sql":"insert into hash_parted values(generate_series(1,10))","shape":"INSERT INTO hash_parted VALUES (generate_series(1, 10));"}
+{"sql":"insert into hpart0 values(12),(16)","shape":"INSERT INTO hpart0 VALUES (12), (16);"}
+{"sql":"insert into hpart0 values(11)","shape":"INSERT INTO hpart0 VALUES (11);"}
+{"sql":"insert into hpart3 values(11)","shape":"INSERT INTO hpart3 VALUES (11);"}
+{"sql":"select tableoid::regclass as part, a, a%4 as \"remainder = a % 4\"\nfrom hash_parted order by part","shape":"SELECT tableoid::regclass AS part, a, a % 4 AS \"remainder = a % 4\" FROM hash_parted ORDER BY part;"}
+{"sql":"drop table range_parted, list_parted","shape":"DROP TABLE range_parted, list_parted;"}
+{"sql":"drop table hash_parted","shape":"DROP TABLE hash_parted;"}
+{"sql":"create table list_parted (a int) partition by list (a)","shape":"CREATE TABLE list_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"insert into part_default values (null)","shape":"INSERT INTO part_default VALUES (NULL);"}
+{"sql":"insert into part_default values (1)","shape":"INSERT INTO part_default VALUES (1);"}
+{"sql":"insert into part_default values (-1)","shape":"INSERT INTO part_default VALUES (-1);"}
+{"sql":"select tableoid::regclass, a from list_parted","shape":"SELECT tableoid::regclass, a FROM list_parted;"}
+{"sql":"create table mlparted (a int, b int) partition by range (a, b)","shape":"CREATE TABLE mlparted (a int, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table mlparted1 (b int not null, a int not null) partition by range ((b+0))","shape":"CREATE TABLE mlparted1 (b int NOT NULL, a int NOT NULL) PARTITION BY RANGE ((b + 0));"}
+{"sql":"create table mlparted11 (like mlparted1)","shape":"CREATE TABLE mlparted11 (LIKE mlparted1);"}
+{"sql":"alter table mlparted11 drop a","shape":"ALTER TABLE mlparted11 DROP COLUMN a;"}
+{"sql":"alter table mlparted11 add a int","shape":"ALTER TABLE mlparted11 ADD COLUMN a int;"}
+{"sql":"alter table mlparted11 add a int not null","shape":"ALTER TABLE mlparted11 ADD COLUMN a int NOT NULL;"}
+{"sql":"select attrelid::regclass, attname, attnum\nfrom pg_attribute\nwhere attname = 'a'\n and (attrelid = 'mlparted'::regclass\n   or attrelid = 'mlparted1'::regclass\n   or attrelid = 'mlparted11'::regclass)\norder by attrelid::regclass::text","shape":"SELECT attrelid::regclass, attname, attnum FROM pg_attribute WHERE (attname = 'a') AND (((attrelid = 'mlparted'::regclass) OR (attrelid = 'mlparted1'::regclass)) OR (attrelid = 'mlparted11'::regclass)) ORDER BY attrelid::regclass::text;"}
+{"sql":"alter table mlparted1 attach partition mlparted11 for values from (2) to (5)"}
+{"sql":"alter table mlparted attach partition mlparted1 for values from (1, 2) to (1, 10)"}
+{"sql":"insert into mlparted values (1, 2)","shape":"INSERT INTO mlparted VALUES (1, 2);"}
+{"sql":"select tableoid::regclass, * from mlparted","shape":"SELECT tableoid::regclass, * FROM mlparted;"}
+{"sql":"insert into mlparted (a, b) values (1, 5)","shape":"INSERT INTO mlparted (a, b) VALUES (1, 5);"}
+{"sql":"truncate mlparted","shape":"TRUNCATE TABLE mlparted;"}
+{"sql":"alter table mlparted add constraint check_b check (b = 3)","shape":"ALTER TABLE mlparted ADD CONSTRAINT check_b CHECK (b = 3);"}
+{"sql":"create function mlparted11_trig_fn()\nreturns trigger AS\n$$\nbegin\n  NEW.b := 4;\n  return NEW;\nend;\n$$\nlanguage plpgsql","shape":"CREATE FUNCTION mlparted11_trig_fn() RETURNS trigger AS '\nbegin\n  NEW.b := 4;\n  return NEW;\nend;\n' LANGUAGE plpgsql;"}
+{"sql":"create trigger mlparted11_trig before insert ON mlparted11\n  for each row execute procedure mlparted11_trig_fn()","shape":"CREATE TRIGGER mlparted11_trig BEFORE INSERT ON mlparted11 FOR EACH ROW EXECUTE FUNCTION mlparted11_trig_fn();"}
+{"sql":"drop trigger mlparted11_trig on mlparted11","shape":"DROP TRIGGER mlparted11_trig ON mlparted11;"}
+{"sql":"drop function mlparted11_trig_fn()"}
+{"sql":"insert into mlparted1 (a, b) values (2, 3)","shape":"INSERT INTO mlparted1 (a, b) VALUES (2, 3);"}
+{"sql":"create table lparted_nonullpart (a int, b char) partition by list (b)","shape":"CREATE TABLE lparted_nonullpart (a int, b char) PARTITION BY LIST (b);"}
+{"sql":"create table lparted_nonullpart_a partition of lparted_nonullpart for values in ('a')","shape":"CREATE TABLE lparted_nonullpart_a PARTITION OF lparted_nonullpart FOR VALUES IN ('a');"}
+{"sql":"insert into lparted_nonullpart values (1)","shape":"INSERT INTO lparted_nonullpart VALUES (1);"}
+{"sql":"drop table lparted_nonullpart","shape":"DROP TABLE lparted_nonullpart;"}
+{"sql":"alter table mlparted drop constraint check_b","shape":"ALTER TABLE mlparted DROP CONSTRAINT check_b;"}
+{"sql":"create table mlparted12 partition of mlparted1 for values from (5) to (10)","shape":"CREATE TABLE mlparted12 PARTITION OF mlparted1 FOR VALUES FROM (5) TO (10);"}
+{"sql":"create table mlparted2 (b int not null, a int not null)","shape":"CREATE TABLE mlparted2 (b int NOT NULL, a int NOT NULL);"}
+{"sql":"alter table mlparted attach partition mlparted2 for values from (1, 10) to (1, 20)"}
+{"sql":"create table mlparted3 partition of mlparted for values from (1, 20) to (1, 30)","shape":"CREATE TABLE mlparted3 PARTITION OF mlparted FOR VALUES FROM (1, 20) TO (1, 30);"}
+{"sql":"create table mlparted4 (like mlparted)","shape":"CREATE TABLE mlparted4 (LIKE mlparted);"}
+{"sql":"alter table mlparted4 drop a","shape":"ALTER TABLE mlparted4 DROP COLUMN a;"}
+{"sql":"alter table mlparted4 add a int not null","shape":"ALTER TABLE mlparted4 ADD COLUMN a int NOT NULL;"}
+{"sql":"alter table mlparted attach partition mlparted4 for values from (1, 30) to (1, 40)"}
+{"sql":"with ins (a, b, c) as\n  (insert into mlparted (b, a) select s.a, 1 from generate_series(2, 39) s(a) returning tableoid::regclass, *)\n  select a, b, min(c), max(c) from ins group by a, b order by 1","shape":"WITH ins(a, b, c) AS (INSERT INTO mlparted (b, a) SELECT s.a, 1 FROM generate_series(2, 39) AS s(a) RETURNING tableoid::regclass, *) SELECT a, b, min(c), max(c) FROM ins GROUP BY a, b ORDER BY 1;"}
+{"sql":"alter table mlparted add c text","shape":"ALTER TABLE mlparted ADD COLUMN c text;"}
+{"sql":"create table mlparted5 (c text, a int not null, b int not null) partition by list (c)","shape":"CREATE TABLE mlparted5 (c text, a int NOT NULL, b int NOT NULL) PARTITION BY LIST (c);"}
+{"sql":"create table mlparted5a (a int not null, c text, b int not null)","shape":"CREATE TABLE mlparted5a (a int NOT NULL, c text, b int NOT NULL);"}
+{"sql":"alter table mlparted5 attach partition mlparted5a for values in ('a')"}
+{"sql":"alter table mlparted attach partition mlparted5 for values from (1, 40) to (1, 50)"}
+{"sql":"alter table mlparted add constraint check_b check (a = 1 and b < 45)","shape":"ALTER TABLE mlparted ADD CONSTRAINT check_b CHECK ((a = 1) AND (b < 45));"}
+{"sql":"insert into mlparted values (1, 45, 'a')","shape":"INSERT INTO mlparted VALUES (1, 45, 'a');"}
+{"sql":"create function mlparted5abrtrig_func() returns trigger as $$ begin new.c = 'b'; return new; end; $$ language plpgsql","shape":"CREATE FUNCTION mlparted5abrtrig_func() RETURNS trigger AS ' begin new.c = ''b''; return new; end; ' LANGUAGE plpgsql;"}
+{"sql":"create trigger mlparted5abrtrig before insert on mlparted5a for each row execute procedure mlparted5abrtrig_func()","shape":"CREATE TRIGGER mlparted5abrtrig BEFORE INSERT ON mlparted5a FOR EACH ROW EXECUTE FUNCTION mlparted5abrtrig_func();"}
+{"sql":"insert into mlparted5 (a, b, c) values (1, 40, 'a')","shape":"INSERT INTO mlparted5 (a, b, c) VALUES (1, 40, 'a');"}
+{"sql":"drop table mlparted5","shape":"DROP TABLE mlparted5;"}
+{"sql":"create table mlparted_def partition of mlparted default partition by range(a)","shape":"CREATE TABLE mlparted_def PARTITION OF mlparted DEFAULT PARTITION BY RANGE (a);"}
+{"sql":"create table mlparted_def1 partition of mlparted_def for values from (40) to (50)","shape":"CREATE TABLE mlparted_def1 PARTITION OF mlparted_def FOR VALUES FROM (40) TO (50);"}
+{"sql":"create table mlparted_def2 partition of mlparted_def for values from (50) to (60)","shape":"CREATE TABLE mlparted_def2 PARTITION OF mlparted_def FOR VALUES FROM (50) TO (60);"}
+{"sql":"insert into mlparted values (40, 100)","shape":"INSERT INTO mlparted VALUES (40, 100);"}
+{"sql":"insert into mlparted_def1 values (42, 100)","shape":"INSERT INTO mlparted_def1 VALUES (42, 100);"}
+{"sql":"insert into mlparted_def2 values (54, 50)","shape":"INSERT INTO mlparted_def2 VALUES (54, 50);"}
+{"sql":"insert into mlparted values (70, 100)","shape":"INSERT INTO mlparted VALUES (70, 100);"}
+{"sql":"insert into mlparted_def1 values (52, 50)","shape":"INSERT INTO mlparted_def1 VALUES (52, 50);"}
+{"sql":"insert into mlparted_def2 values (34, 50)","shape":"INSERT INTO mlparted_def2 VALUES (34, 50);"}
+{"sql":"create table mlparted_defd partition of mlparted_def default","shape":"CREATE TABLE mlparted_defd PARTITION OF mlparted_def DEFAULT;"}
+{"sql":"select tableoid::regclass, * from mlparted_def","shape":"SELECT tableoid::regclass, * FROM mlparted_def;"}
+{"sql":"alter table mlparted add d int, add e int","shape":"ALTER TABLE mlparted ADD COLUMN d int, ADD COLUMN e int;"}
+{"sql":"alter table mlparted drop e","shape":"ALTER TABLE mlparted DROP COLUMN e;"}
+{"sql":"create table mlparted5 partition of mlparted\n  for values from (1, 40) to (1, 50) partition by range (c)","shape":"CREATE TABLE mlparted5 PARTITION OF mlparted FOR VALUES FROM (1, 40) TO (1, 50) PARTITION BY RANGE (c);"}
+{"sql":"create table mlparted5_ab partition of mlparted5\n  for values from ('a') to ('c') partition by list (c)","shape":"CREATE TABLE mlparted5_ab PARTITION OF mlparted5 FOR VALUES FROM ('a') TO ('c') PARTITION BY LIST (c);"}
+{"sql":"create table mlparted5_cd partition of mlparted5\n  for values from ('c') to ('e') partition by list (c)","shape":"CREATE TABLE mlparted5_cd PARTITION OF mlparted5 FOR VALUES FROM ('c') TO ('e') PARTITION BY LIST (c);"}
+{"sql":"create table mlparted5_a partition of mlparted5_ab for values in ('a')","shape":"CREATE TABLE mlparted5_a PARTITION OF mlparted5_ab FOR VALUES IN ('a');"}
+{"sql":"create table mlparted5_b (d int, b int, c text, a int)","shape":"CREATE TABLE mlparted5_b (d int, b int, c text, a int);"}
+{"sql":"alter table mlparted5_ab attach partition mlparted5_b for values in ('b')"}
+{"sql":"insert into mlparted values (1, 2, 'a', 1)","shape":"INSERT INTO mlparted VALUES (1, 2, 'a', 1);"}
+{"sql":"insert into mlparted values (1, 40, 'a', 1)","shape":"INSERT INTO mlparted VALUES (1, 40, 'a', 1);"}
+{"sql":"insert into mlparted values (1, 45, 'b', 1)","shape":"INSERT INTO mlparted VALUES (1, 45, 'b', 1);"}
+{"sql":"insert into mlparted values (1, 45, 'c', 1)","shape":"INSERT INTO mlparted VALUES (1, 45, 'c', 1);"}
+{"sql":"insert into mlparted values (1, 45, 'f', 1)","shape":"INSERT INTO mlparted VALUES (1, 45, 'f', 1);"}
+{"sql":"select tableoid::regclass, * from mlparted order by a, b, c, d","shape":"SELECT tableoid::regclass, * FROM mlparted ORDER BY a, b, c, d;"}
+{"sql":"alter table mlparted drop d","shape":"ALTER TABLE mlparted DROP COLUMN d;"}
+{"sql":"alter table mlparted add e int, add d int","shape":"ALTER TABLE mlparted ADD COLUMN e int, ADD COLUMN d int;"}
+{"sql":"create table key_desc (a int, b int) partition by list ((a+0))","shape":"CREATE TABLE key_desc (a int, b int) PARTITION BY LIST ((a + 0));"}
+{"sql":"create table key_desc_1 partition of key_desc for values in (1) partition by range (b)","shape":"CREATE TABLE key_desc_1 PARTITION OF key_desc FOR VALUES IN (1) PARTITION BY RANGE (b);"}
+{"sql":"create user regress_insert_other_user"}
+{"sql":"grant select (a) on key_desc_1 to regress_insert_other_user","shape":"GRANT SELECT (a) ON key_desc_1 TO regress_insert_other_user;"}
+{"sql":"grant insert on key_desc to regress_insert_other_user","shape":"GRANT INSERT ON key_desc TO regress_insert_other_user;"}
+{"sql":"set role regress_insert_other_user"}
+{"sql":"insert into key_desc values (1, 1)","shape":"INSERT INTO key_desc VALUES (1, 1);"}
+{"sql":"grant select (b) on key_desc_1 to regress_insert_other_user","shape":"GRANT SELECT (b) ON key_desc_1 TO regress_insert_other_user;"}
+{"sql":"insert into key_desc values (2, 1)","shape":"INSERT INTO key_desc VALUES (2, 1);"}
+{"sql":"revoke all on key_desc from regress_insert_other_user","shape":"REVOKE ALL PRIVILEGES ON key_desc FROM regress_insert_other_user;"}
+{"sql":"revoke all on key_desc_1 from regress_insert_other_user","shape":"REVOKE ALL PRIVILEGES ON key_desc_1 FROM regress_insert_other_user;"}
+{"sql":"drop role regress_insert_other_user","shape":"DROP ROLE regress_insert_other_user;"}
+{"sql":"drop table key_desc, key_desc_1","shape":"DROP TABLE key_desc, key_desc_1;"}
+{"sql":"create table mcrparted0 partition of mcrparted for values from (minvalue, 0, 0) to (1, maxvalue, maxvalue)","shape":"CREATE TABLE mcrparted0 PARTITION OF mcrparted FOR VALUES FROM (minvalue, 0, 0) TO (1, maxvalue, maxvalue);"}
+{"sql":"create table mcrparted2 partition of mcrparted for values from (10, 6, minvalue) to (10, maxvalue, minvalue)","shape":"CREATE TABLE mcrparted2 PARTITION OF mcrparted FOR VALUES FROM (10, 6, minvalue) TO (10, maxvalue, minvalue);"}
+{"sql":"create table mcrparted4 partition of mcrparted for values from (21, minvalue, 0) to (30, 20, minvalue)","shape":"CREATE TABLE mcrparted4 PARTITION OF mcrparted FOR VALUES FROM (21, minvalue, 0) TO (30, 20, minvalue);"}
+{"sql":"create table mcrparted0 partition of mcrparted for values from (minvalue, minvalue, minvalue) to (1, maxvalue, maxvalue)","shape":"CREATE TABLE mcrparted0 PARTITION OF mcrparted FOR VALUES FROM (minvalue, minvalue, minvalue) TO (1, maxvalue, maxvalue);"}
+{"sql":"create table mcrparted1 partition of mcrparted for values from (2, 1, minvalue) to (10, 5, 10)","shape":"CREATE TABLE mcrparted1 PARTITION OF mcrparted FOR VALUES FROM (2, 1, minvalue) TO (10, 5, 10);"}
+{"sql":"create table mcrparted2 partition of mcrparted for values from (10, 6, minvalue) to (10, maxvalue, maxvalue)","shape":"CREATE TABLE mcrparted2 PARTITION OF mcrparted FOR VALUES FROM (10, 6, minvalue) TO (10, maxvalue, maxvalue);"}
+{"sql":"create table mcrparted4 partition of mcrparted for values from (21, minvalue, minvalue) to (30, 20, maxvalue)","shape":"CREATE TABLE mcrparted4 PARTITION OF mcrparted FOR VALUES FROM (21, minvalue, minvalue) TO (30, 20, maxvalue);"}
+{"sql":"create table mcrparted5 partition of mcrparted for values from (30, 21, 20) to (maxvalue, maxvalue, maxvalue)","shape":"CREATE TABLE mcrparted5 PARTITION OF mcrparted FOR VALUES FROM (30, 21, 20) TO (maxvalue, maxvalue, maxvalue);"}
+{"sql":"insert into mcrparted values (null, null, null)","shape":"INSERT INTO mcrparted VALUES (NULL, NULL, NULL);"}
+{"sql":"insert into mcrparted values (0, 1, 1)","shape":"INSERT INTO mcrparted VALUES (0, 1, 1);"}
+{"sql":"insert into mcrparted0 values (0, 1, 1)","shape":"INSERT INTO mcrparted0 VALUES (0, 1, 1);"}
+{"sql":"insert into mcrparted values (9, 1000, 1)","shape":"INSERT INTO mcrparted VALUES (9, 1000, 1);"}
+{"sql":"insert into mcrparted1 values (9, 1000, 1)","shape":"INSERT INTO mcrparted1 VALUES (9, 1000, 1);"}
+{"sql":"insert into mcrparted values (10, 5, -1)","shape":"INSERT INTO mcrparted VALUES (10, 5, -1);"}
+{"sql":"insert into mcrparted1 values (10, 5, -1)","shape":"INSERT INTO mcrparted1 VALUES (10, 5, -1);"}
+{"sql":"insert into mcrparted values (2, 1, 0)","shape":"INSERT INTO mcrparted VALUES (2, 1, 0);"}
+{"sql":"insert into mcrparted1 values (2, 1, 0)","shape":"INSERT INTO mcrparted1 VALUES (2, 1, 0);"}
+{"sql":"insert into mcrparted values (10, 6, 1000)","shape":"INSERT INTO mcrparted VALUES (10, 6, 1000);"}
+{"sql":"insert into mcrparted2 values (10, 6, 1000)","shape":"INSERT INTO mcrparted2 VALUES (10, 6, 1000);"}
+{"sql":"insert into mcrparted values (10, 1000, 1000)","shape":"INSERT INTO mcrparted VALUES (10, 1000, 1000);"}
+{"sql":"insert into mcrparted2 values (10, 1000, 1000)","shape":"INSERT INTO mcrparted2 VALUES (10, 1000, 1000);"}
+{"sql":"insert into mcrparted values (11, 1, -1)","shape":"INSERT INTO mcrparted VALUES (11, 1, -1);"}
+{"sql":"insert into mcrparted3 values (11, 1, -1)","shape":"INSERT INTO mcrparted3 VALUES (11, 1, -1);"}
+{"sql":"insert into mcrparted values (30, 21, 20)","shape":"INSERT INTO mcrparted VALUES (30, 21, 20);"}
+{"sql":"insert into mcrparted5 values (30, 21, 20)","shape":"INSERT INTO mcrparted5 VALUES (30, 21, 20);"}
+{"sql":"insert into mcrparted4 values (30, 21, 20)","shape":"INSERT INTO mcrparted4 VALUES (30, 21, 20);"}
+{"sql":"select tableoid::regclass::text, * from mcrparted order by 1","shape":"SELECT tableoid::regclass::text, * FROM mcrparted ORDER BY 1;"}
+{"sql":"create table brtrigpartcon (a int, b text) partition by list (a)","shape":"CREATE TABLE brtrigpartcon (a int, b text) PARTITION BY LIST (a);"}
+{"sql":"create table brtrigpartcon1 partition of brtrigpartcon for values in (1)","shape":"CREATE TABLE brtrigpartcon1 PARTITION OF brtrigpartcon FOR VALUES IN (1);"}
+{"sql":"create or replace function brtrigpartcon1trigf() returns trigger as $$begin new.a := 2; return new; end$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION brtrigpartcon1trigf() RETURNS trigger AS 'begin new.a := 2; return new; end' LANGUAGE plpgsql;"}
+{"sql":"create trigger brtrigpartcon1trig before insert on brtrigpartcon1 for each row execute procedure brtrigpartcon1trigf()","shape":"CREATE TRIGGER brtrigpartcon1trig BEFORE INSERT ON brtrigpartcon1 FOR EACH ROW EXECUTE FUNCTION brtrigpartcon1trigf();"}
+{"sql":"insert into brtrigpartcon values (1, 'hi there')","shape":"INSERT INTO brtrigpartcon VALUES (1, 'hi there');"}
+{"sql":"insert into brtrigpartcon1 values (1, 'hi there')","shape":"INSERT INTO brtrigpartcon1 VALUES (1, 'hi there');"}
+{"sql":"create table inserttest3 (f1 text default 'foo', f2 text default 'bar', f3 int)","shape":"CREATE TABLE inserttest3 (f1 text DEFAULT 'foo', f2 text DEFAULT 'bar', f3 int);"}
+{"sql":"create role regress_coldesc_role"}
+{"sql":"grant insert on inserttest3 to regress_coldesc_role","shape":"GRANT INSERT ON inserttest3 TO regress_coldesc_role;"}
+{"sql":"grant insert on brtrigpartcon to regress_coldesc_role","shape":"GRANT INSERT ON brtrigpartcon TO regress_coldesc_role;"}
+{"sql":"revoke select on brtrigpartcon from regress_coldesc_role","shape":"REVOKE SELECT ON brtrigpartcon FROM regress_coldesc_role;"}
+{"sql":"set role regress_coldesc_role"}
+{"sql":"with result as (insert into brtrigpartcon values (1, 'hi there') returning 1)\n  insert into inserttest3 (f3) select * from result","shape":"WITH result AS (INSERT INTO brtrigpartcon VALUES (1, 'hi there') RETURNING 1) INSERT INTO inserttest3 (f3) SELECT * FROM result;"}
+{"sql":"revoke all on inserttest3 from regress_coldesc_role","shape":"REVOKE ALL PRIVILEGES ON inserttest3 FROM regress_coldesc_role;"}
+{"sql":"revoke all on brtrigpartcon from regress_coldesc_role","shape":"REVOKE ALL PRIVILEGES ON brtrigpartcon FROM regress_coldesc_role;"}
+{"sql":"drop role regress_coldesc_role","shape":"DROP ROLE regress_coldesc_role;"}
+{"sql":"drop table inserttest3","shape":"DROP TABLE inserttest3;"}
+{"sql":"drop table brtrigpartcon","shape":"DROP TABLE brtrigpartcon;"}
+{"sql":"drop function brtrigpartcon1trigf()"}
+{"sql":"create table donothingbrtrig_test (a int, b text) partition by list (a)","shape":"CREATE TABLE donothingbrtrig_test (a int, b text) PARTITION BY LIST (a);"}
+{"sql":"create table donothingbrtrig_test1 (b text, a int)","shape":"CREATE TABLE donothingbrtrig_test1 (b text, a int);"}
+{"sql":"create table donothingbrtrig_test2 (c text, b text, a int)","shape":"CREATE TABLE donothingbrtrig_test2 (c text, b text, a int);"}
+{"sql":"alter table donothingbrtrig_test2 drop column c","shape":"ALTER TABLE donothingbrtrig_test2 DROP COLUMN c;"}
+{"sql":"create or replace function donothingbrtrig_func() returns trigger as $$begin raise notice 'b: %', new.b; return NULL; end$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION donothingbrtrig_func() RETURNS trigger AS 'begin raise notice ''b: %'', new.b; return NULL; end' LANGUAGE plpgsql;"}
+{"sql":"create trigger donothingbrtrig1 before insert on donothingbrtrig_test1 for each row execute procedure donothingbrtrig_func()","shape":"CREATE TRIGGER donothingbrtrig1 BEFORE INSERT ON donothingbrtrig_test1 FOR EACH ROW EXECUTE FUNCTION donothingbrtrig_func();"}
+{"sql":"create trigger donothingbrtrig2 before insert on donothingbrtrig_test2 for each row execute procedure donothingbrtrig_func()","shape":"CREATE TRIGGER donothingbrtrig2 BEFORE INSERT ON donothingbrtrig_test2 FOR EACH ROW EXECUTE FUNCTION donothingbrtrig_func();"}
+{"sql":"alter table donothingbrtrig_test attach partition donothingbrtrig_test1 for values in (1)"}
+{"sql":"alter table donothingbrtrig_test attach partition donothingbrtrig_test2 for values in (2)"}
+{"sql":"insert into donothingbrtrig_test values (1, 'foo'), (2, 'bar')","shape":"INSERT INTO donothingbrtrig_test VALUES (1, 'foo'), (2, 'bar');"}
+{"sql":"copy donothingbrtrig_test from stdout","shape":"COPY donothingbrtrig_test FROM STDOUT;"}
+{"sql":"1\tbaz\n2\tqux\nselect tableoid::regclass, * from donothingbrtrig_test","reject":true}
+{"sql":"drop table donothingbrtrig_test","shape":"DROP TABLE donothingbrtrig_test;"}
+{"sql":"drop function donothingbrtrig_func()"}
+{"sql":"create table mcrparted (a text, b int) partition by range(a, b)","shape":"CREATE TABLE mcrparted (a text, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table mcrparted1_lt_b partition of mcrparted for values from (minvalue, minvalue) to ('b', minvalue)","shape":"CREATE TABLE mcrparted1_lt_b PARTITION OF mcrparted FOR VALUES FROM (minvalue, minvalue) TO ('b', minvalue);"}
+{"sql":"create table mcrparted2_b partition of mcrparted for values from ('b', minvalue) to ('c', minvalue)","shape":"CREATE TABLE mcrparted2_b PARTITION OF mcrparted FOR VALUES FROM ('b', minvalue) TO ('c', minvalue);"}
+{"sql":"create table mcrparted3_c_to_common partition of mcrparted for values from ('c', minvalue) to ('common', minvalue)","shape":"CREATE TABLE mcrparted3_c_to_common PARTITION OF mcrparted FOR VALUES FROM ('c', minvalue) TO ('common', minvalue);"}
+{"sql":"create table mcrparted4_common_lt_0 partition of mcrparted for values from ('common', minvalue) to ('common', 0)","shape":"CREATE TABLE mcrparted4_common_lt_0 PARTITION OF mcrparted FOR VALUES FROM ('common', minvalue) TO ('common', 0);"}
+{"sql":"create table mcrparted5_common_0_to_10 partition of mcrparted for values from ('common', 0) to ('common', 10)","shape":"CREATE TABLE mcrparted5_common_0_to_10 PARTITION OF mcrparted FOR VALUES FROM ('common', 0) TO ('common', 10);"}
+{"sql":"create table mcrparted6_common_ge_10 partition of mcrparted for values from ('common', 10) to ('common', maxvalue)","shape":"CREATE TABLE mcrparted6_common_ge_10 PARTITION OF mcrparted FOR VALUES FROM ('common', 10) TO ('common', maxvalue);"}
+{"sql":"create table mcrparted7_gt_common_lt_d partition of mcrparted for values from ('common', maxvalue) to ('d', minvalue)","shape":"CREATE TABLE mcrparted7_gt_common_lt_d PARTITION OF mcrparted FOR VALUES FROM ('common', maxvalue) TO ('d', minvalue);"}
+{"sql":"create table mcrparted8_ge_d partition of mcrparted for values from ('d', minvalue) to (maxvalue, maxvalue)","shape":"CREATE TABLE mcrparted8_ge_d PARTITION OF mcrparted FOR VALUES FROM ('d', minvalue) TO (maxvalue, maxvalue);"}
+{"sql":"insert into mcrparted values ('aaa', 0), ('b', 0), ('bz', 10), ('c', -10),\n    ('comm', -10), ('common', -10), ('common', 0), ('common', 10),\n    ('commons', 0), ('d', -10), ('e', 0)","shape":"INSERT INTO mcrparted VALUES ('aaa', 0), ('b', 0), ('bz', 10), ('c', -10), ('comm', -10), ('common', -10), ('common', 0), ('common', 10), ('commons', 0), ('d', -10), ('e', 0);"}
+{"sql":"select tableoid::regclass, * from mcrparted order by a, b","shape":"SELECT tableoid::regclass, * FROM mcrparted ORDER BY a, b;"}
+{"sql":"create table returningwrtest (a int) partition by list (a)","shape":"CREATE TABLE returningwrtest (a int) PARTITION BY LIST (a);"}
+{"sql":"create table returningwrtest1 partition of returningwrtest for values in (1)","shape":"CREATE TABLE returningwrtest1 PARTITION OF returningwrtest FOR VALUES IN (1);"}
+{"sql":"insert into returningwrtest values (1) returning returningwrtest","shape":"INSERT INTO returningwrtest VALUES (1) RETURNING returningwrtest;"}
+{"sql":"alter table returningwrtest add b text","shape":"ALTER TABLE returningwrtest ADD COLUMN b text;"}
+{"sql":"create table returningwrtest2 (b text, c int, a int)","shape":"CREATE TABLE returningwrtest2 (b text, c int, a int);"}
+{"sql":"alter table returningwrtest2 drop c","shape":"ALTER TABLE returningwrtest2 DROP COLUMN c;"}
+{"sql":"alter table returningwrtest attach partition returningwrtest2 for values in (2)"}
+{"sql":"insert into returningwrtest values (2, 'foo') returning returningwrtest","shape":"INSERT INTO returningwrtest VALUES (2, 'foo') RETURNING returningwrtest;"}
+{"sql":"drop table returningwrtest","shape":"DROP TABLE returningwrtest;"}

@@ -1,0 +1,24 @@
+{"sql":"CREATE TABLE t1(a,b,c PRIMARY KEY) WITHOUT rowid"}
+{"sql":"INSERT INTO t1(a,b,c)\n     VALUES('abcde',1,101),('abdef',2,102),('xyz',3,103),('abcz',4,104)"}
+{"sql":"SELECT c FROM t1 WHERE a NOT LIKE 'abc%' AND a=7 ORDER BY +b"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT b FROM t1 WHERE a NOT LIKE 'abc%' AND a=7 ORDER BY +b"}
+{"sql":"DELETE FROM t1 WHERE c>=101"}
+{"sql":"CREATE TABLE t2(a,b PRIMARY KEY) without rowid"}
+{"sql":"UPDATE t2 SET a=NULL WHERE b%5==0"}
+{"sql":"CREATE TABLE t3(a,b PRIMARY KEY) without rowid"}
+{"sql":"CREATE TABLE t4(c, d)"}
+{"sql":"INSERT INTO t5 VALUES(1, 'xyz')"}
+{"sql":"INSERT INTO t4 VALUES('abc', 'not xyz')"}
+{"sql":"SELECT * FROM (SELECT * FROM t5 WHERE a=1 AND b='xyz'), t4 WHERE c='abc'"}
+{"sql":"CREATE INDEX i4 ON t4(c) WHERE d='xyz'"}
+{"sql":"CREATE VIEW v4 AS SELECT * FROM t4"}
+{"sql":"INSERT INTO t4 VALUES('def', 'xyz')"}
+{"sql":"SELECT * FROM v4 WHERE d='xyz' AND c='def'"}
+{"sql":"CREATE INDEX t5a ON t5(a) WHERE a=#1","reject":true}
+{"sql":"INSERT INTO t6 VALUES(1, 1)"}
+{"sql":"INSERT INTO t6 VALUES(0, 0)"}
+{"sql":"SELECT * FROM t6 WHERE y IS TRUE ORDER BY x"}
+{"sql":"CREATE INDEX i6 ON t6(x) WHERE y IS NOT TRUE"}
+{"sql":"CREATE INDEX t1y ON t1(y) WHERE y IS NOT NULL"}
+{"sql":"INSERT INTO t1(x) VALUES(1),(2)"}
+{"sql":"EXPLAIN QUERY PLAN SELECT 1 FROM t1 WHERE y=5"}

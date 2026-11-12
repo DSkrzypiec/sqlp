@@ -1,0 +1,19 @@
+{"sql":"select count(*) >= 0 as ok from pg_available_extension_versions","shape":"SELECT count(*) >= 0 AS ok FROM pg_available_extension_versions;"}
+{"sql":"select count(*) >= 0 as ok from pg_available_extensions","shape":"SELECT count(*) >= 0 AS ok FROM pg_available_extensions;"}
+{"sql":"select name, ident, parent, level, total_bytes >= free_bytes\n  from pg_backend_memory_contexts where level = 0","shape":"SELECT name, ident, parent, level, total_bytes >= free_bytes FROM pg_backend_memory_contexts WHERE level = 0;"}
+{"sql":"select count(*) > 20 as ok from pg_config","shape":"SELECT count(*) > 20 AS ok FROM pg_config;"}
+{"sql":"select count(*) = 0 as ok from pg_cursors","shape":"SELECT count(*) = 0 AS ok FROM pg_cursors;"}
+{"sql":"select count(*) >= 0 as ok from pg_file_settings","shape":"SELECT count(*) >= 0 AS ok FROM pg_file_settings;"}
+{"sql":"select count(*) > 0 as ok, count(*) FILTER (WHERE error IS NOT NULL) = 0 AS no_err\n  from pg_hba_file_rules","shape":"SELECT count(*) > 0 AS ok, count(*) FILTER (WHERE error IS NOT NULL) = 0 AS no_err FROM pg_hba_file_rules;"}
+{"sql":"select count(*) >= 0 as ok, count(*) FILTER (WHERE error IS NOT NULL) = 0 AS no_err\n  from pg_ident_file_mappings","shape":"SELECT count(*) >= 0 AS ok, count(*) FILTER (WHERE error IS NOT NULL) = 0 AS no_err FROM pg_ident_file_mappings;"}
+{"sql":"select count(*) > 0 as ok from pg_locks","shape":"SELECT count(*) > 0 AS ok FROM pg_locks;"}
+{"sql":"select count(*) = 0 as ok from pg_prepared_statements","shape":"SELECT count(*) = 0 AS ok FROM pg_prepared_statements;"}
+{"sql":"select count(*) >= 0 as ok from pg_prepared_xacts","shape":"SELECT count(*) >= 0 AS ok FROM pg_prepared_xacts;"}
+{"sql":"select count(*) > 0 as ok from pg_stat_slru","shape":"SELECT count(*) > 0 AS ok FROM pg_stat_slru;"}
+{"sql":"select count(*) = 1 as ok from pg_stat_wal","shape":"SELECT count(*) = 1 AS ok FROM pg_stat_wal;"}
+{"sql":"select count(*) = 0 as ok from pg_stat_wal_receiver","shape":"SELECT count(*) = 0 AS ok FROM pg_stat_wal_receiver;"}
+{"sql":"select name, setting from pg_settings where name like 'enable%'","shape":"SELECT name, setting FROM pg_settings WHERE name LIKE 'enable%';"}
+{"sql":"select count(distinct utc_offset) >= 24 as ok from pg_timezone_names","shape":"SELECT count(DISTINCT utc_offset) >= 24 AS ok FROM pg_timezone_names;"}
+{"sql":"select count(distinct utc_offset) >= 24 as ok from pg_timezone_abbrevs","shape":"SELECT count(DISTINCT utc_offset) >= 24 AS ok FROM pg_timezone_abbrevs;"}
+{"sql":"set timezone_abbreviations = 'Australia'","shape":"SET timezone_abbreviations TO 'Australia';"}
+{"sql":"set timezone_abbreviations = 'India'","shape":"SET timezone_abbreviations TO 'India';"}

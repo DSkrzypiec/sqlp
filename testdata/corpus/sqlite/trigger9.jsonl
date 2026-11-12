@@ -1,0 +1,28 @@
+{"sql":"INSERT INTO t1 VALUES('1', randstr(10000,10000), '2')"}
+{"sql":"INSERT INTO t1 VALUES('2', randstr(10000,10000), '4')"}
+{"sql":"INSERT INTO t1 VALUES('3', randstr(10000,10000), '6')"}
+{"sql":"CREATE TRIGGER trig1 BEFORE DELETE ON t1 BEGIN\n        INSERT INTO t2 VALUES(old.rowid);\n      END"}
+{"sql":"CREATE TRIGGER trig1 BEFORE DELETE ON t1 BEGIN\n        INSERT INTO t2 VALUES(old.x);\n      END"}
+{"sql":"CREATE TRIGGER trig1 BEFORE DELETE ON t1 WHEN old.x='1' BEGIN\n        INSERT INTO t2 VALUES(old.rowid);\n      END"}
+{"sql":"CREATE TRIGGER trig1 BEFORE UPDATE ON t1 BEGIN\n        INSERT INTO t2 VALUES(old.rowid);\n      END"}
+{"sql":"UPDATE t1 SET y = ''"}
+{"sql":"CREATE TRIGGER trig1 BEFORE UPDATE ON t1 BEGIN\n        INSERT INTO t2 VALUES(old.x);\n      END"}
+{"sql":"CREATE TRIGGER trig1 BEFORE UPDATE ON t1 WHEN old.x>='2' BEGIN\n        INSERT INTO t2 VALUES(old.x);\n      END"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t3"}
+{"sql":"CREATE TRIGGER trig1 INSTEAD OF UPDATE ON v1 BEGIN\n        INSERT INTO t2 VALUES(old.a);\n      END"}
+{"sql":"UPDATE v1 SET b = 'hello'"}
+{"sql":"CREATE VIEW v1 AS SELECT a, b AS c FROM t3 WHERE c > 'one'"}
+{"sql":"UPDATE v1 SET c = 'hello'"}
+{"sql":"INSERT INTO t3 VALUES(3, 'four')"}
+{"sql":"CREATE VIEW v1 AS SELECT DISTINCT a, b FROM t3"}
+{"sql":"INSERT INTO t3 VALUES(1, 'uno')"}
+{"sql":"CREATE VIEW v1 AS SELECT a, b FROM t3 EXCEPT SELECT 1, 'one'"}
+{"sql":"CREATE TRIGGER trig1 INSTEAD OF UPDATE ON v1 BEGIN\n          INSERT INTO t2 VALUES(old.a);\n        END"}
+{"sql":"INSERT INTO t3 VALUES(1, 'zero')"}
+{"sql":"CREATE VIEW v1 AS \n          SELECT sum(a) AS a, max(b) AS b FROM t3 GROUP BY t3.a HAVING b>'two'"}
+{"sql":"CREATE VIEW v1 AS SELECT a, b FROM t1"}
+{"sql":"CREATE TRIGGER tr1 INSTEAD OF DELETE ON v1 BEGIN\n    INSERT INTO log VALUES('delete');\n  END"}
+{"sql":"CREATE TRIGGER tr2 INSTEAD OF UPDATE ON v1 BEGIN\n    INSERT INTO log VALUES('update');\n  END"}
+{"sql":"CREATE TRIGGER tr3 INSTEAD OF INSERT ON v1 BEGIN\n    INSERT INTO log VALUES('insert');\n  END"}
+{"sql":"DELETE FROM v1 WHERE rowid=1"}
+{"sql":"UPDATE v1 SET a=b WHERE rowid=2"}

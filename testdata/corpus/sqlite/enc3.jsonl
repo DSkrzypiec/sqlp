@@ -1,0 +1,10 @@
+{"sql":"PRAGMA encoding=utf16le"}
+{"sql":"INSERT INTO t1 VALUES('abc''123',5)"}
+{"sql":"SELECT quote(x) || ' ' || quote(y) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(x'616263646566',NULL)"}
+{"sql":"INSERT INTO t2 VALUES(x'61006200630064006500')"}
+{"sql":"SELECT CAST(a AS text) FROM t2 WHERE CAST(a AS text) LIKE 'abc%'"}
+{"sql":"SELECT CAST(x'61006200630064006500' AS text)"}
+{"sql":"SELECT rowid FROM t2\n       WHERE CAST(a AS text) LIKE CAST(x'610062002500' AS text)"}
+{"sql":"ATTACH 'test.db' AS utf16"}
+{"sql":"SELECT 1 FROM utf16.sqlite_master LIMIT 1"}

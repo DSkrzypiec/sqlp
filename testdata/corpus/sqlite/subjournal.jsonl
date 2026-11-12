@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE t2(a BLOB)"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<100\n  ) INSERT INTO t2 SELECT randomblob(500) FROM s"}
+{"sql":"UPDATE t2 SET a=randomblob(499)"}
+{"sql":"UPDATE t2 SET a=randomblob(498)"}

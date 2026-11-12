@@ -1,0 +1,27 @@
+{"sql":"CREATE TABLE t1(a, b, c PRIMARY KEY)"}
+{"sql":"CREATE TABLE t1(a TEXT PRIMARY KEY, b TEXT) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES('1', 'one')"}
+{"sql":"INSERT INTO t1 VALUES('2', NULL)"}
+{"sql":"INSERT INTO t1 VALUES('3', 'three')"}
+{"sql":"SELECT b FROM t1 WHERE a IN (1,2,3) ORDER BY b ASC NULLS LAST"}
+{"sql":"INSERT INTO x1 VALUES(1), (2), (3)"}
+{"sql":"INSERT INTO x2 VALUES(4), (5), (6)"}
+{"sql":"CREATE TABLE t1(u)"}
+{"sql":"INSERT INTO t1 VALUES(1), (2), (3), (4), (5), (6)"}
+{"sql":"CREATE VIEW v1 AS SELECT u FROM t1 WHERE u IN (\n    SELECT a FROM x1\n  )"}
+{"sql":"CREATE VIEW v2 AS SELECT u FROM t1 WHERE u IN (\n    SELECT b FROM x2\n  )"}
+{"sql":"SELECT * FROM v2\n  UNION ALL\n  SELECT * FROM v1"}
+{"sql":"WITH w1 AS (\n    SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3\n  ),\n  w2 AS (\n    SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6\n  )\n  SELECT * FROM v1 WHERE u IN w1\n  UNION ALL\n  SELECT * FROM v2 WHERE u IN w2"}
+{"sql":"CREATE TABLE t1 (a int UNIQUE)"}
+{"sql":"CREATE TABLE t2 (b int UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES (1)"}
+{"sql":"INSERT INTO t2 VALUES (1), (2)"}
+{"sql":"SELECT t1.a, t2.b FROM t1, t2 WHERE (t1.a, t2.b) = (1, 1)"}
+{"sql":"SELECT t1.a, t2.b FROM t1, t2 WHERE (t1.a, t2.b) IN ((1, 1))"}
+{"sql":"SELECT t1.a, t2.b FROM t1, t2 WHERE (t1.a, t2.b) = (1, 2)"}
+{"sql":"SELECT t1.a, t2.b FROM t1, t2 WHERE (t1.a, t2.b) IN ((1, 2))"}
+{"sql":"INSERT INTO t1 VALUES(1,x'1111')"}
+{"sql":"CREATE TABLE t3(d)"}
+{"sql":"CREATE TRIGGER t1tr UPDATE ON t1 BEGIN\n    UPDATE t1 SET b=x'2222' FROM t2;\n    UPDATE t1\n       SET b = (SELECT a IN (SELECT a\n                               FROM t1\n                              WHERE (b,a) IN (SELECT rowid, d\n                                                FROM t3\n                                             )\n                            )\n                  FROM t1 NATURAL RIGHT JOIN t1\n               );\n  END"}
+{"sql":"UPDATE t1 SET b=x'3333'"}
+{"sql":"SELECT quote(b) FROM t1"}

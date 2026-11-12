@@ -1,0 +1,20 @@
+{"sql":"CREATE TABLE collate6log(a, b)"}
+{"sql":"CREATE TABLE collate6tab(a COLLATE NOCASE, b COLLATE BINARY)"}
+{"sql":"CREATE TRIGGER collate6trig BEFORE INSERT ON collate6tab \n      WHEN new.a = 'a' BEGIN\n        INSERT INTO collate6log VALUES(new.a, new.b);\n    END"}
+{"sql":"INSERT INTO collate6tab VALUES('a', 'b')"}
+{"sql":"SELECT * FROM collate6log"}
+{"sql":"INSERT INTO collate6tab VALUES('A', 'B')"}
+{"sql":"DROP TRIGGER collate6trig"}
+{"sql":"DELETE FROM collate6log"}
+{"sql":"CREATE TRIGGER collate6trig BEFORE INSERT ON collate6tab BEGIN\n      INSERT INTO collate6log VALUES(new.a='a', new.b='b');\n    END"}
+{"sql":"DROP TABLE collate6tab"}
+{"sql":"CREATE TABLE abc(a COLLATE binary, b, c)"}
+{"sql":"CREATE TABLE def(a, b, c)"}
+{"sql":"CREATE TRIGGER abc_t1 AFTER INSERT ON abc BEGIN\n      INSERT INTO def SELECT * FROM abc WHERE a < new.a COLLATE nocase;\n    END"}
+{"sql":"INSERT INTO abc VALUES('One', 'Two', 'Three')"}
+{"sql":"INSERT INTO abc VALUES('one', 'two', 'three')"}
+{"sql":"SELECT * FROM def"}
+{"sql":"UPDATE abc SET a = 'four' WHERE a = 'one'"}
+{"sql":"CREATE TRIGGER abc_t2 AFTER UPDATE ON abc BEGIN\n      INSERT INTO def SELECT * FROM abc WHERE a < new.a COLLATE nocase;\n    END"}
+{"sql":"SELECT 1 FROM sqlite_master WHERE name COLLATE nocase = 'hello'"}
+{"sql":"SELECT 1 FROM sqlite_master WHERE 'hello' = name COLLATE nocase"}

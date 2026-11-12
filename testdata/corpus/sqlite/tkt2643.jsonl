@@ -1,0 +1,2 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b UNIQUE, c)"}
+{"sql":"SELECT count(*) FROM t1 WHERE c IS NOT NULL"}

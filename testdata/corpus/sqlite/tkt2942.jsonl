@@ -1,0 +1,4 @@
+{"sql":"SELECT group_concat(num) FROM (SELECT num FROM t1 ORDER BY num DESC)"}
+{"sql":"SELECT group_concat(num) FROM (SELECT num FROM t1 ORDER BY num)"}
+{"sql":"SELECT group_concat(num) FROM (SELECT num FROM t1)"}
+{"sql":"SELECT group_concat(num) FROM (SELECT num FROM t1 ORDER BY rowid DESC)"}

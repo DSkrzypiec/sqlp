@@ -1,0 +1,58 @@
+{"sql":"CREATE TABLE x1(o, n)"}
+{"sql":"INSERT INTO x1 VALUES(1, 11)"}
+{"sql":"INSERT INTO x1 VALUES(2, 12)"}
+{"sql":"INSERT INTO x1 VALUES(3, 13)"}
+{"sql":"INSERT INTO x1 VALUES(4, 14)"}
+{"sql":"UPDATE t1 SET x=n FROM x1 WHERE x=o"}
+{"sql":"SELECT x, y, z FROM t1 ORDER BY 1"}
+{"sql":"INSERT INTO x1 VALUES(11, 21)"}
+{"sql":"INSERT INTO x1 VALUES(12, 22)"}
+{"sql":"INSERT INTO x1 VALUES(13, 23)"}
+{"sql":"INSERT INTO x1 VALUES(14, 24)"}
+{"sql":"INSERT INTO x1 VALUES(21, 31)"}
+{"sql":"INSERT INTO x1 VALUES(22, 32)"}
+{"sql":"INSERT INTO x1 VALUES(23, 33)"}
+{"sql":"INSERT INTO x1 VALUES(24, 34)"}
+{"sql":"INSERT INTO x1 VALUES(31, 32)"}
+{"sql":"INSERT INTO x1 VALUES(33, 34)"}
+{"sql":"UPDATE OR REPLACE t1 SET x=n FROM x1 WHERE x=o"}
+{"sql":"INSERT INTO t1 VALUES(33, 'ii', 'two')"}
+{"sql":"INSERT INTO t1 VALUES(35, 'iv', 'four')"}
+{"sql":"CREATE TABLE x2(o, n, zz)"}
+{"sql":"INSERT INTO x2 VALUES(32, 41, 'four')"}
+{"sql":"INSERT INTO x2 VALUES(33, 42, 'three')"}
+{"sql":"UPDATE OR IGNORE t1 SET x=n, z=zz FROM x2 WHERE x=o"}
+{"sql":"UPDATE OR REPLACE t1 SET x=n, z=zz FROM x2 WHERE x=o"}
+{"sql":"CREATE TABLE u1(a, b, c, PRIMARY KEY(b, c)) WITHOUT ROWID"}
+{"sql":"INSERT INTO u1 VALUES(0, 0, 0)"}
+{"sql":"INSERT INTO u1 VALUES(1, 0, 1)"}
+{"sql":"INSERT INTO u1 VALUES(2, 1, 0)"}
+{"sql":"INSERT INTO u1 VALUES(3, 1, 1)"}
+{"sql":"CREATE TABLE map(f, t)"}
+{"sql":"INSERT INTO map VALUES(0, 10)"}
+{"sql":"INSERT INTO map VALUES(1, 11)"}
+{"sql":"UPDATE u1 SET c=t FROM map WHERE c=f"}
+{"sql":"SELECT * FROM u1 ORDER BY a"}
+{"sql":"UPDATE u1 SET b=t FROM map WHERE b=f"}
+{"sql":"CREATE TABLE map2(o1, o2, n1, n2)"}
+{"sql":"INSERT INTO map2 VALUES\n    (10, 10, 50, 50), (10, 11, 50, 60), \n    (11, 10, 60, 50), (11, 11, 60, 60)"}
+{"sql":"UPDATE u1 SET b=n1, c=n2 FROM map2 WHERE b=o1 AND c=o2"}
+{"sql":"INSERT INTO g1 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO aux.g1 VALUES(10, 1, 10)"}
+{"sql":"INSERT INTO aux.g1 VALUES(20, 2, 20)"}
+{"sql":"INSERT INTO aux.g1 VALUES(30, 3, 30)"}
+{"sql":"UPDATE aux.g1 SET c=101 FROM main.g1"}
+{"sql":"SELECT * FROM aux.g1"}
+{"sql":"UPDATE g1 SET c=101 FROM g1 AS g2"}
+{"sql":"SELECT * FROM g1"}
+{"sql":"INSERT INTO p1 VALUES(11, 'eleven')"}
+{"sql":"INSERT INTO p1 VALUES(111, 'eleventyone')"}
+{"sql":"INSERT INTO c1 VALUES('a', 1)"}
+{"sql":"INSERT INTO c1 VALUES('b', 11)"}
+{"sql":"INSERT INTO c1 VALUES('c', 111)"}
+{"sql":"INSERT INTO map VALUES('a', 111)"}
+{"sql":"INSERT INTO map VALUES('c', 112)"}
+{"sql":"UPDATE c1 SET y=t FROM map WHERE x=f"}
+{"sql":"INSERT INTO map VALUES('eleven', 12)"}
+{"sql":"INSERT INTO map VALUES('eleventyone', 112)"}
+{"sql":"UPDATE p1 SET a=t FROM map WHERE b=f"}

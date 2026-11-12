@@ -1,0 +1,8 @@
+{"sql":"ATTACH 'file:test2.db?8_3_names=1' AS aux"}
+{"sql":"CREATE TABLE aux.t2(x, y)"}
+{"sql":"CREATE INDEX aux.t2x ON t2(x)"}
+{"sql":"CREATE INDEX aux.t2y ON t2(y)"}
+{"sql":"WITH s(a) AS (\n    SELECT 1 UNION ALL SELECT a+1 FROM s WHERE a<1000\n  )\n  INSERT INTO t1 SELECT a, randomblob(500) FROM s"}
+{"sql":"WITH s(a) AS (\n    SELECT 1 UNION ALL SELECT a+1 FROM s WHERE a<1000\n  )\n  INSERT INTO t2 SELECT a, randomblob(500) FROM s"}
+{"sql":"PRAGMA main.integrity_check"}
+{"sql":"PRAGMA aux.integrity_check"}

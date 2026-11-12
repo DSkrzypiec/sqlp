@@ -1,0 +1,12 @@
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(words, prefix=\"1,2,3\")"}
+{"sql":"INSERT INTO t2(t2) VALUES('integrity-check')"}
+{"sql":"INSERT INTO t2(t2) VALUES('merge=5,2')"}
+{"sql":"INSERT INTO t2(words) SELECT words FROM t1"}
+{"sql":"CREATE VIRTUAL TABLE fts USING fts4 (t)"}
+{"sql":"INSERT INTO fts (fts) VALUES ('optimize')"}
+{"sql":"INSERT INTO fts(fts) VALUES('integrity-check')"}
+{"sql":"SELECT count(*) FROM fts_segdir"}
+{"sql":"INSERT INTO fts (rowid, t) VALUES (2, 'test')"}
+{"sql":"SELECT level, idx FROM fts_segdir"}
+{"sql":"SELECT rowid FROM fts WHERE fts MATCH 'test'"}
+{"sql":"INSERT INTO fts (rowid, t) VALUES (3, 'xyz')"}

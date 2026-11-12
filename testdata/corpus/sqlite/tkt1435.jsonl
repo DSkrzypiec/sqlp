@@ -1,0 +1,18 @@
+{"sql":"CREATE TABLE Instances(\n    \tinstanceId INTEGER PRIMARY KEY,\n    \ttroveName STR,\n    \tversionId INT,\n    \tflavorId INT,\n    \ttimeStamps STR,\n    \tisPresent INT,\n    \tpinned BOOLEAN\n    )"}
+{"sql":"INSERT INTO \"Instances\"\n       VALUES(1, 'libhello:runtime', 1, 1, 1126929880.094, 1, 1)"}
+{"sql":"INSERT INTO \"Instances\"\n       VALUES(2, 'libhello:user', 1, 1, 1126929880.094, 1, 0)"}
+{"sql":"INSERT INTO \"Instances\"\n       VALUES(3, 'libhello:script', 1, 1, 1126929880.094, 1, 0)"}
+{"sql":"INSERT INTO \"Instances\"\n       VALUES(4, 'libhello', 1, 1, 1126929880.094, 1, 0)"}
+{"sql":"CREATE TABLE Versions(versionId INTEGER PRIMARY KEY,version STR UNIQUE)"}
+{"sql":"INSERT INTO \"Versions\" VALUES(0, NULL)"}
+{"sql":"INSERT INTO \"Versions\" VALUES(1, '/localhost@rpl:linux/0-1-1')"}
+{"sql":"CREATE TABLE Flavors(flavorId integer primary key, flavor str unique)"}
+{"sql":"INSERT INTO \"Flavors\" VALUES(0, NULL)"}
+{"sql":"INSERT INTO \"Flavors\" VALUES(1, '1#x86')"}
+{"sql":"CREATE TEMPORARY TABLE tlList (\n       row INTEGER PRIMARY KEY,\n       name STRING,\n       version STRING,\n       flavor STRING\n    )"}
+{"sql":"INSERT INTO tlList \n      values(NULL, 'libhello:script', '/localhost@rpl:linux/0-1-1', '1#x86')"}
+{"sql":"INSERT INTO tlList \n      values(NULL, 'libhello:user', '/localhost@rpl:linux/0-1-1', '1#x86')"}
+{"sql":"INSERT INTO tlList \n      values(NULL, 'libhello:runtime', '/localhost@rpl:linux/0-1-1', '1#x86')"}
+{"sql":"select row, pinned from tlList, Instances, Versions, Flavors\n        where\n            Instances.troveName = tlList.name\n        and Versions.version = tlList.version\n        and Instances.versionId = Versions.versionId\n        and (    Flavors.flavor = tlList.flavor or Flavors.flavor is NULL\n             and tlList.flavor = '')\n        and Instances.flavorId = Flavors.flavorId\n    order by row asc"}
+{"sql":"CREATE INDEX InstancesNameIdx ON Instances(troveName)"}
+{"sql":"CREATE UNIQUE INDEX InstancesIdx \n      ON Instances(troveName, versionId, flavorId)"}

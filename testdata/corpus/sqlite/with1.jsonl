@@ -1,0 +1,177 @@
+{"sql":"WITH x(a) AS ( SELECT * FROM t1) SELECT 10"}
+{"sql":"SELECT * FROM ( WITH x AS ( SELECT * FROM t1) SELECT 10 )"}
+{"sql":"WITH x(a) AS ( SELECT * FROM t1) INSERT INTO t1 VALUES(1,2)"}
+{"sql":"WITH x(a) AS ( SELECT * FROM t1) DELETE FROM t1"}
+{"sql":"WITH x(a) AS ( SELECT * FROM t1) UPDATE t1 SET x = y"}
+{"sql":"WITH tmp AS ( SELECT * FROM t1 ) SELECT x FROM tmp"}
+{"sql":"WITH tmp(a) AS ( SELECT * FROM t1 ) SELECT a FROM tmp"}
+{"sql":"SELECT * FROM (\n    WITH tmp(a) AS ( SELECT * FROM t1 ) SELECT a FROM tmp\n  )"}
+{"sql":"WITH tmp1(a) AS ( SELECT * FROM t1 ),\n       tmp2(x) AS ( SELECT * FROM tmp1)\n  SELECT * FROM tmp2"}
+{"sql":"WITH tmp2(x) AS ( SELECT * FROM tmp1),\n       tmp1(a) AS ( SELECT * FROM t1 )\n  SELECT * FROM tmp2"}
+{"sql":"WITH tmp2(x) AS ( SELECT * FROM tmp1 ),\n       tmp1(a) AS ( SELECT * FROM tmp2 )\n  SELECT * FROM tmp1"}
+{"sql":"WITH tmp(a) AS (SELECT * FROM t1),\n       tmp(a) AS (SELECT * FROM t1)\n  SELECT * FROM tmp"}
+{"sql":"INSERT INTO t3 VALUES('T3')"}
+{"sql":"INSERT INTO t4 VALUES('T4')"}
+{"sql":"WITH t3(a) AS (SELECT * FROM t4)\n  SELECT * FROM t3"}
+{"sql":"WITH tmp  AS ( SELECT * FROM t3 ),\n       tmp2 AS ( WITH tmp AS ( SELECT * FROM t4 ) SELECT * FROM tmp )\n  SELECT * FROM tmp2"}
+{"sql":"WITH tmp  AS ( SELECT * FROM t3 ),\n       tmp2 AS ( WITH xxxx AS ( SELECT * FROM t4 ) SELECT * FROM tmp )\n  SELECT * FROM tmp2"}
+{"sql":"WITH tmp AS ( SELECT * FROM t3 ),\n  SELECT * FROM tmp","reject":true}
+{"sql":"WITH dset AS ( SELECT 2 UNION ALL SELECT 4 )\n  DELETE FROM t1 WHERE x IN dset"}
+{"sql":"WITH iset AS ( SELECT 2 UNION ALL SELECT 4 )\n  INSERT INTO t1 SELECT * FROM iset"}
+{"sql":"WITH uset(a, b) AS ( SELECT 2, 8 UNION ALL SELECT 4, 9 )\n  UPDATE t1 SET x = COALESCE( (SELECT b FROM uset WHERE a=x), x )"}
+{"sql":"WITH i(x) AS ( VALUES(1) UNION ALL SELECT x+1 FROM i)\n  SELECT x FROM i LIMIT 10"}
+{"sql":"WITH i(x) AS ( VALUES(1) UNION ALL SELECT x+1 FROM i ORDER BY 1)\n  SELECT x FROM i LIMIT 10"}
+{"sql":"CREATE TABLE edge(xfrom, xto, seq, PRIMARY KEY(xfrom, xto)) WITHOUT ROWID"}
+{"sql":"INSERT INTO edge VALUES(0, 1, 10)"}
+{"sql":"INSERT INTO edge VALUES(1, 2, 20)"}
+{"sql":"INSERT INTO edge VALUES(0, 3, 30)"}
+{"sql":"INSERT INTO edge VALUES(2, 4, 40)"}
+{"sql":"INSERT INTO edge VALUES(3, 4, 40)"}
+{"sql":"INSERT INTO edge VALUES(2, 5, 50)"}
+{"sql":"INSERT INTO edge VALUES(3, 6, 60)"}
+{"sql":"INSERT INTO edge VALUES(5, 7, 70)"}
+{"sql":"INSERT INTO edge VALUES(3, 7, 70)"}
+{"sql":"INSERT INTO edge VALUES(4, 8, 80)"}
+{"sql":"INSERT INTO edge VALUES(7, 8, 80)"}
+{"sql":"INSERT INTO edge VALUES(8, 9, 90)"}
+{"sql":"WITH RECURSIVE\n    ancest(id, mtime) AS\n      (VALUES(0, 0)\n       UNION\n       SELECT edge.xto, edge.seq FROM edge, ancest\n        WHERE edge.xfrom=ancest.id\n        ORDER BY 2\n      )\n  SELECT * FROM ancest"}
+{"sql":"WITH RECURSIVE\n    ancest(id, mtime) AS\n      (VALUES(0, 0)\n       UNION ALL\n       SELECT edge.xto, edge.seq FROM edge, ancest\n        WHERE edge.xfrom=ancest.id\n        ORDER BY 2\n      )\n  SELECT * FROM ancest"}
+{"sql":"WITH RECURSIVE\n    ancest(id, mtime) AS\n      (VALUES(0, 0)\n       UNION ALL\n       SELECT edge.xto, edge.seq FROM edge, ancest\n        WHERE edge.xfrom=ancest.id\n        ORDER BY 2 LIMIT 4 OFFSET 2\n      )\n  SELECT * FROM ancest"}
+{"sql":"WITH i(x) AS ( VALUES(1) UNION ALL SELECT x+1 FROM i LIMIT 5)\n  SELECT x FROM i"}
+{"sql":"WITH i(x) AS ( VALUES(1) UNION ALL SELECT (x+1)%10 FROM i)\n  SELECT x FROM i LIMIT 20"}
+{"sql":"WITH i(x) AS ( VALUES(1) UNION SELECT (x+1)%10 FROM i)\n  SELECT x FROM i LIMIT 20"}
+{"sql":"WITH i(x, y) AS ( VALUES(1) )\n  SELECT * FROM i"}
+{"sql":"WITH i(x) AS ( VALUES(1,2) )\n  SELECT * FROM i"}
+{"sql":"WITH i(x) AS ( SELECT * FROM t5 )\n  SELECT * FROM i"}
+{"sql":"WITH i(x) AS ( SELECT 1, 2 UNION ALL SELECT 1 )\n  SELECT * FROM i"}
+{"sql":"WITH i(x) AS ( SELECT 1 UNION ALL SELECT 1, 2 )\n  SELECT * FROM i"}
+{"sql":"WITH i(x) AS ( SELECT 1 UNION ALL SELECT x+1, x*2 FROM i )\n  SELECT * FROM i"}
+{"sql":"WITH i(x) AS ( SELECT 1, 2 UNION SELECT x+1 FROM i )\n  SELECT * FROM i"}
+{"sql":"CREATE TABLE f(\n      id INTEGER PRIMARY KEY, parentid REFERENCES f, name TEXT\n  )"}
+{"sql":"INSERT INTO f VALUES(0, NULL, '')"}
+{"sql":"INSERT INTO f VALUES(1, 0, 'bin')"}
+{"sql":"INSERT INTO f VALUES(2, 1, 'true')"}
+{"sql":"INSERT INTO f VALUES(3, 1, 'false')"}
+{"sql":"INSERT INTO f VALUES(4, 1, 'ls')"}
+{"sql":"INSERT INTO f VALUES(5, 1, 'grep')"}
+{"sql":"INSERT INTO f VALUES(6, 0, 'etc')"}
+{"sql":"INSERT INTO f VALUES(7, 6, 'rc.d')"}
+{"sql":"INSERT INTO f VALUES(8, 7, 'rc.apache')"}
+{"sql":"INSERT INTO f VALUES(9, 7, 'rc.samba')"}
+{"sql":"INSERT INTO f VALUES(10, 0, 'home')"}
+{"sql":"INSERT INTO f VALUES(11, 10, 'dan')"}
+{"sql":"INSERT INTO f VALUES(12, 11, 'public_html')"}
+{"sql":"INSERT INTO f VALUES(13, 12, 'index.html')"}
+{"sql":"INSERT INTO f VALUES(14, 13, 'logo.gif')"}
+{"sql":"WITH flat(fid, fpath) AS (\n    SELECT id, '' FROM f WHERE parentid IS NULL\n    UNION ALL\n    SELECT id, fpath || '/' || name FROM f, flat WHERE parentid=fid\n  )\n  SELECT fpath FROM flat WHERE fpath!='' ORDER BY 1"}
+{"sql":"WITH flat(fid, fpath) AS (\n    SELECT id, '' FROM f WHERE parentid IS NULL\n    UNION ALL\n    SELECT id, fpath || '/' || name FROM f, flat WHERE parentid=fid\n  )\n  SELECT count(*) FROM flat"}
+{"sql":"WITH x(i) AS (\n    SELECT 1\n    UNION ALL\n    SELECT i+1 FROM x WHERE i<10\n  )\n  SELECT count(*) FROM x"}
+{"sql":"CREATE TABLE tree(i, p)"}
+{"sql":"INSERT INTO tree VALUES(1, NULL)"}
+{"sql":"INSERT INTO tree VALUES(2, 1)"}
+{"sql":"INSERT INTO tree VALUES(3, 1)"}
+{"sql":"INSERT INTO tree VALUES(4, 2)"}
+{"sql":"INSERT INTO tree VALUES(5, 4)"}
+{"sql":"WITH t(id, path) AS (\n    SELECT i, '' FROM tree WHERE p IS NULL\n    UNION ALL\n    SELECT i, path || '/' || i FROM tree, t WHERE p = id\n  ) \n  SELECT path FROM t"}
+{"sql":"WITH t(id) AS (\n    VALUES(2)\n    UNION ALL\n    SELECT i FROM tree, t WHERE p = id\n  ) \n  SELECT id FROM t"}
+{"sql":"WITH t(id) AS (\n    VALUES(2)\n    UNION ALL\n    SELECT i FROM tree WHERE p IN (SELECT id FROM t)\n  ) \n  SELECT id FROM t"}
+{"sql":"WITH t(id) AS (\n    VALUES(2)\n    UNION ALL\n    SELECT i FROM tree, t WHERE p = id AND p IN (SELECT id FROM t)\n  ) \n  SELECT id FROM t"}
+{"sql":"WITH t(id) AS (\n    SELECT i FROM tree WHERE 2 IN (SELECT id FROM t)\n    UNION ALL\n    SELECT i FROM tree, t WHERE p = id\n  ) \n  SELECT id FROM t"}
+{"sql":"WITH RECURSIVE\n    xaxis(x) AS (VALUES(-2.0) UNION ALL SELECT x+0.05 FROM xaxis WHERE x<1.2),\n    yaxis(y) AS (VALUES(-1.0) UNION ALL SELECT y+0.1 FROM yaxis WHERE y<1.0),\n    m(iter, cx, cy, x, y) AS (\n      SELECT 0, x, y, 0.0, 0.0 FROM xaxis, yaxis\n      UNION ALL\n      SELECT iter+1, cx, cy, x*x-y*y + cx, 2.0*x*y + cy FROM m \n       WHERE (x*x + y*y) < 4.0 AND iter<28\n    ),\n    m2(iter, cx, cy) AS (\n      SELECT max(iter), cx, cy FROM m GROUP BY cx, cy\n    ),\n    a(t) AS (\n      SELECT group_concat( substr(' .+*#', 1+min(iter/7,4), 1), '') \n      FROM m2 GROUP BY cy\n    )\n  SELECT group_concat(rtrim(t),x'0a') FROM a"}
+{"sql":"WITH RECURSIVE\n    input(sud) AS (\n      VALUES('53..7....6..195....98....6.8...6...34..8.3..17...2...6.6....28....419..5....8..79')\n    ),\n  \n    /* A table filled with digits 1..9, inclusive. */\n    digits(z, lp) AS (\n      VALUES('1', 1)\n      UNION ALL SELECT\n      CAST(lp+1 AS TEXT), lp+1 FROM digits WHERE lp<9\n    ),\n  \n    /* The tricky bit. */\n    x(s, ind) AS (\n      SELECT sud, instr(sud, '.') FROM input\n      UNION ALL\n      SELECT\n        substr(s, 1, ind-1) || z || substr(s, ind+1),\n        instr( substr(s, 1, ind-1) || z || substr(s, ind+1), '.' )\n       FROM x, digits AS z\n      WHERE ind>0\n        AND NOT EXISTS (\n              SELECT 1\n                FROM digits AS lp\n               WHERE z.z = substr(s, ((ind-1)/9)*9 + lp, 1)\n                  OR z.z = substr(s, ((ind-1)%9) + (lp-1)*9 + 1, 1)\n                  OR z.z = substr(s, (((ind-1)/3) % 3) * 3\n                          + ((ind-1)/27) * 27 + lp\n                          + ((lp-1) / 3) * 6, 1)\n           )\n    )\n  SELECT s FROM x WHERE ind=0"}
+{"sql":"DROP TABLE IF EXISTS tree"}
+{"sql":"CREATE TABLE tree(id INTEGER PRIMARY KEY, parentid, payload)"}
+{"sql":"WITH flat(fid, p) AS (\n    SELECT id, '/' || payload FROM tree WHERE parentid IS NULL\n    UNION ALL\n    SELECT id, p || '/' || payload FROM flat, tree WHERE parentid=fid\n  )\n  SELECT p FROM flat ORDER BY p"}
+{"sql":"WITH t(a) AS (\n    SELECT 1 AS b UNION ALL SELECT a+1 AS c FROM t WHERE a<5 ORDER BY a\n  ) \n  SELECT * FROM t"}
+{"sql":"WITH t(a) AS (\n    SELECT 1 AS b UNION ALL SELECT a+1 AS c FROM t WHERE a<5 ORDER BY b\n  ) \n  SELECT * FROM t"}
+{"sql":"WITH t(a) AS (\n    SELECT 1 AS b UNION ALL SELECT a+1 AS c FROM t WHERE a<5 ORDER BY c\n  ) \n  SELECT * FROM t"}
+{"sql":"WITH flat(fid, depth, p) AS (\n    SELECT id, 1, '/' || payload FROM tree WHERE parentid IS NULL\n    UNION ALL\n    SELECT id, depth+1, p||'/'||payload FROM flat, tree WHERE parentid=fid\n    ORDER BY 2, 3 COLLATE nocase\n  )\n  SELECT p FROM flat"}
+{"sql":"WITH flat(fid, depth, p) AS (\n      SELECT id, 1, ('/' || payload) COLLATE nocase \n      FROM tree WHERE parentid IS NULL\n    UNION ALL\n      SELECT id, depth+1, (p||'/'||payload)\n      FROM flat, tree WHERE parentid=fid\n    ORDER BY 2, 3\n  )\n  SELECT p FROM flat"}
+{"sql":"WITH flat(fid, depth, p) AS (\n      SELECT id, 1, ('/' || payload)\n      FROM tree WHERE parentid IS NULL\n    UNION ALL\n      SELECT id, depth+1, (p||'/'||payload) COLLATE nocase \n      FROM flat, tree WHERE parentid=fid\n    ORDER BY 2, 3\n  )\n  SELECT p FROM flat"}
+{"sql":"CREATE TABLE tst(a,b)"}
+{"sql":"INSERT INTO tst VALUES('a', 'A')"}
+{"sql":"INSERT INTO tst VALUES('b', 'B')"}
+{"sql":"INSERT INTO tst VALUES('c', 'C')"}
+{"sql":"SELECT a COLLATE nocase FROM tst UNION ALL SELECT b FROM tst ORDER BY 1"}
+{"sql":"SELECT a FROM tst UNION ALL SELECT b COLLATE nocase FROM tst ORDER BY 1"}
+{"sql":"SELECT a||'' FROM tst UNION ALL SELECT b COLLATE nocase FROM tst ORDER BY 1"}
+{"sql":"CREATE TABLE org(\n    name TEXT PRIMARY KEY,\n    boss TEXT REFERENCES org\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO org VALUES('Alice',NULL)"}
+{"sql":"INSERT INTO org VALUES('Bob','Alice')"}
+{"sql":"INSERT INTO org VALUES('Cindy','Alice')"}
+{"sql":"INSERT INTO org VALUES('Dave','Bob')"}
+{"sql":"INSERT INTO org VALUES('Emma','Bob')"}
+{"sql":"INSERT INTO org VALUES('Fred','Cindy')"}
+{"sql":"INSERT INTO org VALUES('Gail','Cindy')"}
+{"sql":"INSERT INTO org VALUES('Harry','Dave')"}
+{"sql":"INSERT INTO org VALUES('Ingrid','Dave')"}
+{"sql":"INSERT INTO org VALUES('Jim','Emma')"}
+{"sql":"INSERT INTO org VALUES('Kate','Emma')"}
+{"sql":"INSERT INTO org VALUES('Lanny','Fred')"}
+{"sql":"INSERT INTO org VALUES('Mary','Fred')"}
+{"sql":"INSERT INTO org VALUES('Noland','Gail')"}
+{"sql":"INSERT INTO org VALUES('Olivia','Gail')"}
+{"sql":"INSERT INTO org VALUES('Xaviar',NULL)"}
+{"sql":"INSERT INTO org VALUES('Xia','Xaviar')"}
+{"sql":"INSERT INTO org VALUES('Xerxes','Xaviar')"}
+{"sql":"INSERT INTO org VALUES('Xena','Xia')"}
+{"sql":"WITH RECURSIVE\n    under_alice(name,level) AS (\n       VALUES('Alice','0')\n       UNION ALL\n       SELECT org.name, under_alice.level+1\n         FROM org, under_alice\n        WHERE org.boss=under_alice.name\n        ORDER BY 2\n    )\n  SELECT group_concat(substr('...............',1,level*3) || name,x'0a')\n    FROM under_alice"}
+{"sql":"WITH RECURSIVE\n    under_alice(name,level) AS (\n       VALUES('Alice','0')\n       UNION ALL\n       SELECT org.name, under_alice.level+1\n         FROM org, under_alice\n        WHERE org.boss=under_alice.name\n        ORDER BY 2 DESC\n    )\n  SELECT group_concat(substr('...............',1,level*3) || name,x'0a')\n    FROM under_alice"}
+{"sql":"WITH RECURSIVE\n    under_alice(name,level) AS (\n       VALUES('Alice','0')\n       UNION ALL\n       SELECT org.name, under_alice.level+1\n         FROM org, under_alice\n        WHERE org.boss=under_alice.name\n    )\n  SELECT group_concat(substr('...............',1,level*3) || name,x'0a')\n    FROM under_alice"}
+{"sql":"WITH RECURSIVE\n  t1(x) AS (VALUES(2) UNION ALL SELECT x+2 FROM t1 WHERE x<20),\n  t2(y) AS (VALUES(3) UNION ALL SELECT y+3 FROM t2 WHERE y<20)\nSELECT x FROM t1 EXCEPT SELECT y FROM t2 ORDER BY 1"}
+{"sql":"WITH RECURSIVE c(i) AS (SELECT * UNION ALL SELECT i+1 FROM c WHERE i<10)\n  SELECT i FROM c"}
+{"sql":"WITH RECURSIVE c(i) AS (SELECT 5,* UNION ALL SELECT i+1 FROM c WHERE i<10)\n  SELECT i FROM c"}
+{"sql":"WITH RECURSIVE c(i,j) AS (SELECT 5,* UNION ALL SELECT i+1,11 FROM c WHERE i<10)\n  SELECT i FROM c"}
+{"sql":"WITH x AS (SELECT * FROM t) SELECT 0 EXCEPT SELECT 0 ORDER BY 1 COLLATE binary"}
+{"sql":"WITH RECURSIVE\n    d(x) AS (VALUES(1) UNION ALL SELECT rowid+1 FROM d WHERE rowid<10)\n  SELECT x FROM d"}
+{"sql":"WITH RECURSIVE\n    i(x) AS (VALUES(1) UNION SELECT count(*) FROM i)\n  SELECT * FROM i"}
+{"sql":"WITH RECURSIVE\n      i(x) AS (VALUES(1) UNION SELECT count(*) OVER () FROM i)\n      SELECT * FROM i"}
+{"sql":"WITH RECURSIVE\n      t(id, parent) AS (VALUES(1,2)),\n      q(id, parent, rn) AS (\n          VALUES(1,2,3)\n          UNION ALL\n          SELECT t.*, ROW_NUMBER() OVER (ORDER BY t.id) AS rn\n          FROM q JOIN t ON t.parent = q.id\n          )\n        SELECT * FROM q"}
+{"sql":"WITH x(a) AS (\n    WITH y(b) AS (SELECT 10)\n    SELECT 9 UNION ALL SELECT * FROM y\n  )\n  SELECT * FROM x"}
+{"sql":"WITH x AS (\n    WITH y(b) AS (SELECT 10)\n    SELECT * FROM y UNION ALL SELECT * FROM y\n  )\n  SELECT * FROM x"}
+{"sql":"WITH i AS (\n    WITH j AS (SELECT 5)\n    SELECT 5 FROM i UNION SELECT 8 FROM i\n  )\n  SELECT * FROM i"}
+{"sql":"WITH i AS (\n    WITH j AS (SELECT 5)\n    SELECT 5 FROM t1 UNION SELECT 8 FROM t11\n  )\n  SELECT * FROM i"}
+{"sql":"WITH \n  x1 AS (SELECT 10),\n  x2 AS (SELECT * FROM x1),\n  x3 AS (\n    WITH x1 AS (SELECT 11)\n    SELECT * FROM x2 UNION ALL SELECT * FROM x2\n  )\n  SELECT * FROM x3"}
+{"sql":"WITH \n  x1 AS (SELECT 10),\n  x2 AS (SELECT * FROM x1),\n  x3 AS (\n    WITH x1 AS (SELECT 11)\n    SELECT * FROM x2 UNION ALL SELECT * FROM x1\n  )\n  SELECT * FROM x3"}
+{"sql":"WITH \n  x1 AS (SELECT 10),\n  x2 AS (SELECT * FROM x1),\n  x3 AS (\n    WITH \n      x1 AS ( SELECT 11 ),\n      x4 AS ( SELECT * FROM x2 )\n    SELECT * FROM x4 UNION ALL SELECT * FROM x1\n  )\n  SELECT * FROM x3"}
+{"sql":"WITH \n  x1 AS (SELECT 10),\n  x2 AS (SELECT 11),\n  x3 AS (\n    SELECT * FROM x1 UNION ALL SELECT * FROM x2\n  ),\n  x4 AS (\n    WITH \n    x1 AS (SELECT 12),\n    x2 AS (SELECT 13)\n    SELECT * FROM x3\n  )\n  SELECT * FROM x4"}
+{"sql":"WITH xyz(x) AS (VALUES(NULL) UNION SELECT round(1<x) FROM xyz ORDER BY 1)\n  SELECT quote(x) FROM xyz"}
+{"sql":"WITH xyz(x) AS (\n    SELECT printf('%d', 5) * NULL\n    UNION SELECT round(1<1+x) \n    FROM xyz ORDER BY 1\n  )\n  SELECT 1 FROM xyz"}
+{"sql":"WITH\n    x1(a) AS (values(100))\n  INSERT INTO t1(x)\n    SELECT * FROM (WITH x2(y) AS (SELECT * FROM x1) SELECT y+a FROM x1, x2)"}
+{"sql":"WITH c(i)AS(VALUES(9)UNION SELECT~i FROM c)SELECT max(5)>i fROM c"}
+{"sql":"WITH c(i)AS(VALUES(5)UNIoN SELECT 0)SELECT min(1)-i fROM c"}
+{"sql":"WITH RECURSIVE t21(a,b) AS (\n    WITH t21(x) AS (VALUES(1))\n    SELECT x, x FROM t21 ORDER BY 1\n  )\n  SELECT * FROM t21 AS tA, t21 AS tB"}
+{"sql":"WITH RECURSIVE t21(a,b) AS (\n    WITH t21(x) AS (VALUES(1))\n    SELECT x, x FROM t21 ORDER BY 1 LIMIT 5\n  )\n  SELECT * FROM t21 AS tA, t21 AS tB"}
+{"sql":"SELECT printf('',\n     EXISTS (WITH RECURSIVE Table0 AS (WITH Table0 AS (SELECT DISTINCT 1)\n                                       SELECT *, * FROM Table0 ORDER BY 1 DESC)\n             SELECT * FROM Table0  NATURAL JOIN  Table0))"}
+{"sql":"WITH RECURSIVE c AS NOT MATERIALIZED (\n     WITH RECURSIVE c AS NOT MATERIALIZED (\n        WITH RECURSIVE c AS NOT MATERIALIZED (\n           WITH RECURSIVE c AS NOT MATERIALIZED (\n               WITH  c AS (VALUES(0))\n               SELECT 1 FROM c LEFT JOIN c ON ltrim(1)\n           )\n           SELECT 1 FROM c,c,c,c,c,c,c,c,c\n        )\n        SELECT  2 FROM c,c,c,c,c,c,c,c,c\n     )\n     SELECT 3 FROM c,c,c,c,c,c,c,c,c\n  )\n  SELECT 4 FROM c,c,c,c,c,c,c,c,c"}
+{"sql":"CREATE TABLE t1(id INTEGER NULL PRIMARY KEY, name Text)"}
+{"sql":"INSERT INTO t1 VALUES (1, 'john')"}
+{"sql":"INSERT INTO t1 VALUES (2, 'james')"}
+{"sql":"INSERT INTO t1 VALUES (3, 'jingle')"}
+{"sql":"INSERT INTO t1 VALUES (4, 'himer')"}
+{"sql":"INSERT INTO t1 VALUES (5, 'smith')"}
+{"sql":"CREATE VIEW v2 AS\n    WITH t4(Name) AS (VALUES ('A'), ('B'))\n    SELECT Name Name FROM t4"}
+{"sql":"CREATE VIEW v3 AS\n    WITH t4(Att, Val, Act) AS (VALUES\n      ('C', 'D', 'E'),\n      ('F', 'G', 'H')\n    )\n    SELECT D.Id Id, P.Name Protocol, T.Att Att, T.Val Val, T.Act Act\n    FROM t1 D\n    CROSS JOIN v2 P\n    CROSS JOIN t4 T"}
+{"sql":"CREATE VIEW v1 AS SELECT max(a), min(b) FROM t1 GROUP BY c"}
+{"sql":"ATTACH \"\" AS aux"}
+{"sql":"CREATE VIEW aux.v3 AS VALUES(1)"}
+{"sql":"CREATE VIEW main.v3 AS VALUES(3)"}
+{"sql":"CREATE VIEW aux.v2 AS SELECT * FROM v3"}
+{"sql":"CREATE VIEW main.v2 AS SELECT * FROM v3"}
+{"sql":"SELECT * FROM main.v2 AS a, aux.v2 AS b, aux.v2 AS c, main.v2 AS d"}
+{"sql":"WITH cte1 AS (\n      SELECT TRUE, (\n        WITH cte2 AS (SELECT avg(DISTINCT TRUE) FROM dual)\n        SELECT 2571 FROM cte2\n      ) AS subquery1\n      FROM dual\n      GROUP BY 1\n    )\n    SELECT (SELECT 1324 FROM cte1) FROM cte1"}
+{"sql":"WITH i(x) AS ( \n    VALUES(1) UNION ALL SELECT x+1 FRO, a.b,O. * ,I¬i O, a.b,O. * ORDER BY 1\n  )\n  SELECT x,O. * O FROM i ¬I,I? 10","reject":true}
+{"sql":"CREATE TABLE t (label VARCHAR(10), step INTEGER)"}
+{"sql":"INSERT INTO T VALUES('a', 1)"}
+{"sql":"INSERT INTO T VALUES('b', 1)"}
+{"sql":"WITH RECURSIVE cte(label, step) AS (\n      SELECT DISTINCT * FROM t \n    UNION ALL \n      SELECT label, step + 1 FROM cte WHERE step < 3\n  )\n  SELECT * FROM cte ORDER BY +label, +step"}
+{"sql":"WITH RECURSIVE cte(label, step) AS (\n      SELECT * FROM t \n    UNION\n      SELECT label, step + 1 FROM cte WHERE step < 3\n  )\n  SELECT * FROM cte ORDER BY +label, +step"}
+{"sql":"CREATE TABLE tworow(x)"}
+{"sql":"INSERT INTO tworow(x) VALUES(1),(2)"}
+{"sql":"DELETE FROM t WHERE rowid=2"}
+{"sql":"WITH RECURSIVE cte(label, step) AS (\n      SELECT * FROM t\n    UNION ALL\n      SELECT DISTINCT label, step + 1 FROM cte, tworow WHERE step < 3\n  )\n  SELECT * FROM cte ORDER BY +label, +step"}
+{"sql":"CREATE TABLE t1(k)"}
+{"sql":"CREATE TABLE log(k, cte_map, main_map)"}
+{"sql":"INSERT INTO map VALUES(1, 'main1'), (2, 'main2')"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO log\n        WITH map(k,v) AS (VALUES(1,'cte1'),(2,'cte2'))\n        SELECT\n          new.k,\n          (SELECT v FROM map WHERE k=new.k),\n          (SELECT v FROM main.map WHERE k=new.k);\n  END"}
+{"sql":"SELECT k, cte_map, main_map, '|' FROM log ORDER BY k"}

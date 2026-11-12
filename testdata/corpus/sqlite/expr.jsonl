@@ -1,0 +1,53 @@
+{"sql":"CREATE TABLE test1(i1 int, i2 int, r1 real, r2 real, t1 text, t2 text)"}
+{"sql":"INSERT INTO test1 VALUES(1,2,1.1,2.2,'hello','world')"}
+{"sql":"CREATE TABLE test1(i1 int, i2 int, t1 text, t2 text)"}
+{"sql":"INSERT INTO test1 VALUES(1,2,'hello','world')"}
+{"sql":"UPDATE test1 SET %s","reject":true}
+{"sql":"SELECT %s FROM test1","reject":true}
+{"sql":"SELECT 1 IS #1","reject":true}
+{"sql":"DROP TABLE test1"}
+{"sql":"CREATE TABLE test1(a int, b int)"}
+{"sql":"SELECT * FROM test1 ORDER BY a"}
+{"sql":"SELECT a FROM test1 WHERE %s ORDER BY a","reject":true}
+{"sql":"SELECT CURRENT_TIME==time('now')"}
+{"sql":"SELECT CURRENT_DATE==date('now')"}
+{"sql":"SELECT CURRENT_TIMESTAMP==datetime('now')"}
+{"sql":"SELECT round(-('-'||'123'))"}
+{"sql":"SELECT 'abc' LIKE 'abc' ESCAPE ''"}
+{"sql":"SELECT 'abc' LIKE 'abc' ESCAPE 'ab'"}
+{"sql":"SELECT typeof(9223372036854775807)"}
+{"sql":"SELECT typeof(00000009223372036854775807)"}
+{"sql":"SELECT typeof(+9223372036854775807)"}
+{"sql":"SELECT typeof(+000000009223372036854775807)"}
+{"sql":"SELECT typeof(9223372036854775808)"}
+{"sql":"SELECT typeof(00000009223372036854775808)"}
+{"sql":"SELECT typeof(+9223372036854775808)"}
+{"sql":"SELECT typeof(+0000009223372036854775808)"}
+{"sql":"SELECT typeof(-9223372036854775808)"}
+{"sql":"SELECT typeof(-00000009223372036854775808)"}
+{"sql":"SELECT typeof(-9223372036854775809)"}
+{"sql":"SELECT typeof(-00000009223372036854775809)"}
+{"sql":"SELECT (CASE a>4 THEN 1 ELSE 0 END) FROM test1","reject":true}
+{"sql":"SELECT (CASE WHEN a>4 THEN 1 ELSE 0) FROM test1","reject":true}
+{"sql":"SELECT 12345678901234567890"}
+{"sql":"SELECT 0+'9223372036854775807'"}
+{"sql":"SELECT '9223372036854775807'+0"}
+{"sql":"SELECT 0+'9223372036854775808'"}
+{"sql":"SELECT '9223372036854775808'+0"}
+{"sql":"SELECT 0+'9223372036854775807.0'"}
+{"sql":"SELECT '9223372036854775807.0'+0"}
+{"sql":"SELECT \"\" <= ''"}
+{"sql":"SELECT '' <= \"\""}
+{"sql":"INSERT INTO t1 VALUES(0),(1),(NULL),(0.5),('1x'),('0x')"}
+{"sql":"SELECT count(*) FROM t1\n   WHERE (x OR (8==9)) != (CASE WHEN x THEN 1 ELSE 0 END)"}
+{"sql":"SELECT count(*) FROM t1\n   WHERE (x OR (8==9)) != (NOT NOT x)"}
+{"sql":"SELECT sum(NOT x) FROM t1\n   WHERE x"}
+{"sql":"SELECT sum(CASE WHEN x THEN 0 ELSE 1 END) FROM t1\n   WHERE x"}
+{"sql":"SELECT count(*) FROM t1\n     WHERE (x OR (8==9)) != (CASE WHEN x THEN 1 ELSE 0 END)"}
+{"sql":"SELECT count(*) FROM t1\n     WHERE (x OR (8==9)) != (NOT NOT x)"}
+{"sql":"SELECT sum(NOT x) FROM t1\n     WHERE x"}
+{"sql":"SELECT sum(CASE WHEN x THEN 0 ELSE 1 END) FROM t1\n     WHERE x"}
+{"sql":"CREATE TABLE dual(dummy)"}
+{"sql":"SELECT implies_nonnull_row( (b=1 AND 0)>(b=3 AND 0),a)\n  FROM dual LEFT JOIN t1"}
+{"sql":"SELECT implies_nonnull_row( (b=1 AND 0)>(b=3 AND a=4),a)\n  FROM dual LEFT JOIN t1"}
+{"sql":"SELECT implies_nonnull_row( (b=1 AND a=2)>(b=3 AND a=4),a)\n  FROM dual LEFT JOIN t1"}

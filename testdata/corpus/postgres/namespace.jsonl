@@ -1,0 +1,18 @@
+{"sql":"SELECT pg_catalog.set_config('search_path', ' ', false)","shape":"SELECT pg_catalog.set_config('search_path', ' ', FALSE);"}
+{"sql":"CREATE SCHEMA test_ns_schema_1\n       CREATE UNIQUE INDEX abc_a_idx ON abc (a)\n\n       CREATE VIEW abc_view AS\n              SELECT a+1 AS a, b+1 AS b FROM abc\n\n       CREATE TABLE abc (\n              a serial,\n              b int UNIQUE\n       )","shape":"CREATE SCHEMA test_ns_schema_1 CREATE UNIQUE INDEX abc_a_idx ON abc (a) CREATE VIEW abc_view AS SELECT a + 1 AS a, b + 1 AS b FROM abc CREATE TABLE abc (a serial, b int UNIQUE);"}
+{"sql":"SET search_path to public","shape":"SET search_path TO public;"}
+{"sql":"SET search_path to public, test_ns_schema_1","shape":"SET search_path TO public, test_ns_schema_1;"}
+{"sql":"CREATE SCHEMA test_ns_schema_2\n       CREATE VIEW abc_view AS SELECT c FROM abc","shape":"CREATE SCHEMA test_ns_schema_2 CREATE VIEW abc_view AS SELECT c FROM abc;"}
+{"sql":"SHOW search_path","shape":"SHOW search_path;"}
+{"sql":"CREATE SCHEMA test_ns_schema_2\n       CREATE VIEW abc_view AS SELECT a FROM abc","shape":"CREATE SCHEMA test_ns_schema_2 CREATE VIEW abc_view AS SELECT a FROM abc;"}
+{"sql":"DROP SCHEMA test_ns_schema_2 CASCADE","shape":"DROP SCHEMA test_ns_schema_2 CASCADE;"}
+{"sql":"SELECT COUNT(*) FROM pg_class WHERE relnamespace =\n    (SELECT oid FROM pg_namespace WHERE nspname = 'test_ns_schema_1')","shape":"SELECT COUNT(*) FROM pg_class WHERE relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'test_ns_schema_1');"}
+{"sql":"INSERT INTO test_ns_schema_1.abc DEFAULT VALUES","shape":"INSERT INTO test_ns_schema_1.abc DEFAULT VALUES;"}
+{"sql":"SELECT * FROM test_ns_schema_1.abc","shape":"SELECT * FROM test_ns_schema_1.abc;"}
+{"sql":"SELECT * FROM test_ns_schema_1.abc_view","shape":"SELECT * FROM test_ns_schema_1.abc_view;"}
+{"sql":"ALTER SCHEMA test_ns_schema_1 RENAME TO test_ns_schema_renamed"}
+{"sql":"CREATE SCHEMA test_ns_schema_renamed","shape":"CREATE SCHEMA test_ns_schema_renamed;"}
+{"sql":"CREATE SCHEMA IF NOT EXISTS test_ns_schema_renamed","shape":"CREATE SCHEMA IF NOT EXISTS test_ns_schema_renamed;"}
+{"sql":"CREATE SCHEMA IF NOT EXISTS test_ns_schema_renamed -- fail, disallowed\n       CREATE TABLE abc (\n              a serial,\n              b int UNIQUE\n       )","reject":true}
+{"sql":"DROP SCHEMA test_ns_schema_renamed CASCADE","shape":"DROP SCHEMA test_ns_schema_renamed CASCADE;"}
+{"sql":"SELECT COUNT(*) FROM pg_class WHERE relnamespace =\n    (SELECT oid FROM pg_namespace WHERE nspname = 'test_ns_schema_renamed')","shape":"SELECT COUNT(*) FROM pg_class WHERE relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'test_ns_schema_renamed');"}

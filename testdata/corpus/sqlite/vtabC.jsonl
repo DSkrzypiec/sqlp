@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE m(a)"}
+{"sql":"INSERT INTO m VALUES(1000)"}
+{"sql":"SELECT * FROM m"}
+{"sql":"INSERT INTO m VALUES(9000000)"}

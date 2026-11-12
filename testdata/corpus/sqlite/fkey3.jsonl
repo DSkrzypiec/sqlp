@@ -1,0 +1,44 @@
+{"sql":"INSERT INTO t1 VALUES(101)"}
+{"sql":"CREATE TABLE t2(y INTEGER REFERENCES t1 (x))"}
+{"sql":"INSERT INTO t2 VALUES(100)"}
+{"sql":"INSERT INTO t2 VALUES(101)"}
+{"sql":"SELECT 1, x FROM t1"}
+{"sql":"SELECT 2, y FROM t2"}
+{"sql":"DELETE FROM t1 WHERE x=100"}
+{"sql":"CREATE TABLE t2(y INTEGER PRIMARY KEY REFERENCES t1 (x) ON UPDATE SET NULL)"}
+{"sql":"CREATE TABLE t3(a, b, c, d, \n    UNIQUE(a, b),\n    FOREIGN KEY(c, d) REFERENCES t3(a, b)\n  )"}
+{"sql":"INSERT INTO t3 VALUES(1, 2, 1, 2)"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 2, 5, 2)"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 3, 5, 2)"}
+{"sql":"CREATE TABLE t4(a UNIQUE, b REFERENCES t4(a))"}
+{"sql":"INSERT INTO t4 VALUES(NULL, 1)"}
+{"sql":"CREATE TABLE t5(a INTEGER PRIMARY KEY, b REFERENCES t5(a))"}
+{"sql":"INSERT INTO t5 VALUES(NULL, 1)"}
+{"sql":"INSERT INTO t5 VALUES(NULL, 3)"}
+{"sql":"CREATE TABLE t6(a INTEGER PRIMARY KEY, b, c, d,\n    FOREIGN KEY(c, d) REFERENCES t6(a, b)\n  )"}
+{"sql":"CREATE UNIQUE INDEX t6i ON t6(b, a)"}
+{"sql":"INSERT INTO t6 VALUES(NULL, 'a', 1, 'a')"}
+{"sql":"INSERT INTO t6 VALUES(2, 'a', 2, 'a')"}
+{"sql":"INSERT INTO t6 VALUES(5, 'a', 2, 'a')"}
+{"sql":"INSERT INTO t6 VALUES(NULL, 'a', 65, 'a')"}
+{"sql":"INSERT INTO t6 VALUES(100, 'one', 100, 'one')"}
+{"sql":"DELETE FROM t6 WHERE a = 100"}
+{"sql":"UPDATE t6 SET c = 1, d = 'a' WHERE a = 100"}
+{"sql":"CREATE TABLE t7(a, b, c, d INTEGER PRIMARY KEY,\n    FOREIGN KEY(c, d) REFERENCES t7(a, b)\n  )"}
+{"sql":"CREATE UNIQUE INDEX t7i ON t7(a, b)"}
+{"sql":"INSERT INTO t7 VALUES('x', 1, 'x', NULL)"}
+{"sql":"INSERT INTO t7 VALUES('x', 2, 'x', 2)"}
+{"sql":"INSERT INTO t7 VALUES('x', 450, 'x', NULL)"}
+{"sql":"INSERT INTO t7 VALUES('x', 450, 'x', 451)"}
+{"sql":"CREATE TABLE t8(a, b, c, d, e, FOREIGN KEY(c, d) REFERENCES t8(a, b))"}
+{"sql":"CREATE UNIQUE INDEX t8i1 ON t8(a, b)"}
+{"sql":"CREATE UNIQUE INDEX t8i2 ON t8(c)"}
+{"sql":"INSERT INTO t8 VALUES(1, 1, 1, 1, 1)"}
+{"sql":"UPDATE t8 SET d = 2"}
+{"sql":"UPDATE t8 SET d = 1"}
+{"sql":"UPDATE t8 SET e = 2"}
+{"sql":"CREATE TABLE TestTable (\n    id INTEGER PRIMARY KEY,\n    name text,\n    source_id integer not null,\n    parent_id integer,\n\n    foreign key(source_id, parent_id) references TestTable(source_id, id)\n  )"}
+{"sql":"CREATE UNIQUE INDEX testindex on TestTable(source_id, id)"}
+{"sql":"INSERT INTO TestTable VALUES (1, 'parent', 1, null)"}
+{"sql":"INSERT INTO TestTable VALUES (2, 'child', 1, 1)"}
+{"sql":"UPDATE TestTable SET parent_id=1000 where id=2"}

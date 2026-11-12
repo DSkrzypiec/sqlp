@@ -1,0 +1,526 @@
+{"sql":"SELECT (SELECT 1)","shape":"SELECT (SELECT 1);"}
+{"sql":"SELECT (SELECT MAX(a) FROM t)","shape":"SELECT (SELECT MAX(a) FROM t);"}
+{"sql":"SELECT (SELECT MAX(a) FROM t) + 1","shape":"SELECT (SELECT MAX(a) FROM t) + 1;"}
+{"sql":"SELECT 1 + (SELECT MAX(a) FROM t)","shape":"SELECT 1 + (SELECT MAX(a) FROM t);"}
+{"sql":"SELECT (SELECT MAX(a) FROM t) AS m, (SELECT MIN(a) FROM t) AS n","shape":"SELECT (SELECT MAX(a) FROM t) AS m, (SELECT MIN(a) FROM t) AS n;"}
+{"sql":"SELECT ((SELECT 1))","shape":"SELECT ((SELECT 1));"}
+{"sql":"SELECT (((SELECT 1)))","shape":"SELECT (((SELECT 1)));"}
+{"sql":"SELECT (SELECT (SELECT 1))","shape":"SELECT (SELECT (SELECT 1));"}
+{"sql":"SELECT (SELECT (SELECT (SELECT 1)))","shape":"SELECT (SELECT (SELECT (SELECT 1)));"}
+{"sql":"SELECT a, (SELECT COUNT(*) FROM u WHERE u.a = t.a) FROM t","shape":"SELECT a, (SELECT COUNT(*) FROM u WHERE u.a = t.a) FROM t;"}
+{"sql":"SELECT a, (SELECT MAX(x) FROM u WHERE u.a = t.a AND u.b > t.b) AS m FROM t","shape":"SELECT a, (SELECT MAX(x) FROM u WHERE (u.a = t.a) AND (u.b > t.b)) AS m FROM t;"}
+{"sql":"SELECT CASE WHEN (SELECT COUNT(*) FROM u) > 0 THEN 1 ELSE 0 END","shape":"SELECT CASE WHEN (SELECT COUNT(*) FROM u) > 0 THEN 1 ELSE 0 END;"}
+{"sql":"SELECT COALESCE((SELECT MAX(a) FROM t), 0)","shape":"SELECT COALESCE((SELECT MAX(a) FROM t), 0);"}
+{"sql":"SELECT ABS((SELECT MAX(a) FROM t))","shape":"SELECT ABS((SELECT MAX(a) FROM t));"}
+{"sql":"SELECT CAST((SELECT MAX(a) FROM t) AS TEXT)","shape":"SELECT CAST((SELECT MAX(a) FROM t) AS TEXT);"}
+{"sql":"SELECT (SELECT a FROM t ORDER BY a LIMIT 1)","shape":"SELECT (SELECT a FROM t ORDER BY a LIMIT 1);"}
+{"sql":"SELECT (SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1)","shape":"SELECT (SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1);"}
+{"sql":"SELECT ((SELECT 1) + 1) * 2","shape":"SELECT ((SELECT 1) + 1) * 2;"}
+{"sql":"SELECT (SELECT 1) UNION SELECT 2","shape":"SELECT (SELECT 1) UNION SELECT 2;"}
+{"sql":"SELECT a FROM t WHERE a = (SELECT MAX(a) FROM t)","shape":"SELECT a FROM t WHERE a = (SELECT MAX(a) FROM t);"}
+{"sql":"SELECT a FROM t WHERE (SELECT MAX(a) FROM t) = a","shape":"SELECT a FROM t WHERE (SELECT MAX(a) FROM t) = a;"}
+{"sql":"SELECT a FROM t WHERE a > (SELECT AVG(a) FROM t) AND b < (SELECT MAX(b) FROM u)","shape":"SELECT a FROM t WHERE (a > (SELECT AVG(a) FROM t)) AND (b < (SELECT MAX(b) FROM u));"}
+{"sql":"SELECT a FROM t WHERE (a + (SELECT 1)) > 0","shape":"SELECT a FROM t WHERE (a + (SELECT 1)) > 0;"}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a NOT IN (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a NOT IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE (a) IN (SELECT a FROM u)","shape":"SELECT a FROM t WHERE (a) IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE (a, b) IN (SELECT a, b FROM u)","shape":"SELECT a FROM t WHERE (a, b) IN (SELECT a, b FROM u);"}
+{"sql":"SELECT a FROM t WHERE (a, b) NOT IN (SELECT a, b FROM u)","shape":"SELECT a FROM t WHERE (a, b) NOT IN (SELECT a, b FROM u);"}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT a FROM u WHERE b IN (SELECT id FROM c))","shape":"SELECT a FROM t WHERE a IN (SELECT a FROM u WHERE b IN (SELECT id FROM c));"}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT a FROM u UNION SELECT id FROM c)","shape":"SELECT a FROM t WHERE a IN (SELECT a FROM u UNION SELECT id FROM c);"}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT a FROM u ORDER BY a LIMIT 2)","shape":"SELECT a FROM t WHERE a IN (SELECT a FROM u ORDER BY a LIMIT 2);"}
+{"sql":"SELECT a FROM t WHERE a IN ((SELECT a FROM u))","shape":"SELECT a FROM t WHERE a IN ((SELECT a FROM u));"}
+{"sql":"SELECT a FROM t WHERE a IN (VALUES (1), (2))","shape":"SELECT a FROM t WHERE a IN (VALUES (1), (2));"}
+{"sql":"SELECT a FROM t WHERE a IN (1, (SELECT 2))","shape":"SELECT a FROM t WHERE a IN (1, (SELECT 2));"}
+{"sql":"SELECT a IN (SELECT a FROM u) FROM t","shape":"SELECT a IN (SELECT a FROM u) FROM t;"}
+{"sql":"SELECT a NOT IN (SELECT a FROM u) AS k FROM t","shape":"SELECT a NOT IN (SELECT a FROM u) AS k FROM t;"}
+{"sql":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u)","shape":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u);"}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS (SELECT 1 FROM u)","shape":"SELECT a FROM t WHERE NOT EXISTS (SELECT 1 FROM u);"}
+{"sql":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u WHERE u.a = t.a)","shape":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u WHERE u.a = t.a);"}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS (SELECT 1 FROM u WHERE u.a = t.a AND u.b = t.b)","shape":"SELECT a FROM t WHERE NOT EXISTS (SELECT 1 FROM u WHERE (u.a = t.a) AND (u.b = t.b));"}
+{"sql":"SELECT a FROM t WHERE EXISTS (SELECT * FROM u WHERE EXISTS (SELECT 1 FROM c WHERE c.id = u.a))","shape":"SELECT a FROM t WHERE EXISTS (SELECT * FROM u WHERE EXISTS (SELECT 1 FROM c WHERE c.id = u.a));"}
+{"sql":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u) AND EXISTS (SELECT 1 FROM c)","shape":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u) AND EXISTS (SELECT 1 FROM c);"}
+{"sql":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u) OR a = 1","shape":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u) OR (a = 1);"}
+{"sql":"SELECT EXISTS (SELECT 1 FROM t)","shape":"SELECT EXISTS (SELECT 1 FROM t);"}
+{"sql":"SELECT NOT EXISTS (SELECT 1 FROM t)","shape":"SELECT NOT EXISTS (SELECT 1 FROM t);"}
+{"sql":"SELECT CASE WHEN EXISTS (SELECT 1 FROM t) THEN 1 ELSE 0 END","shape":"SELECT CASE WHEN EXISTS (SELECT 1 FROM t) THEN 1 ELSE 0 END;"}
+{"sql":"SELECT a FROM t WHERE EXISTS (VALUES (1))","shape":"SELECT a FROM t WHERE EXISTS (VALUES (1));"}
+{"sql":"SELECT a FROM t WHERE a = ANY (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a = ANY (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a = SOME (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a = SOME (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a = ALL (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a = ALL (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a <> ALL (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a <> ALL (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a < ANY (SELECT a FROM u)","shape":"SELECT a FROM t WHERE a < ANY (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a >= ALL (SELECT a FROM u WHERE b > 0)","shape":"SELECT a FROM t WHERE a >= ALL (SELECT a FROM u WHERE b > 0);"}
+{"sql":"SELECT a FROM t WHERE a = ANY (ARRAY[1, 2])","shape":"SELECT a FROM t WHERE a = ANY (ARRAY[1, 2]);"}
+{"sql":"SELECT a FROM t WHERE (a, b) = ANY (SELECT a, b FROM u)","shape":"SELECT a FROM t WHERE (a, b) = ANY (SELECT a, b FROM u);"}
+{"sql":"SELECT a FROM t WHERE name LIKE ANY (SELECT name FROM t)","shape":"SELECT a FROM t WHERE name LIKE ANY (SELECT name FROM t);"}
+{"sql":"SELECT a FROM t WHERE (a, b) = (SELECT a, b FROM u LIMIT 1)","shape":"SELECT a FROM t WHERE (a, b) = (SELECT a, b FROM u LIMIT 1);"}
+{"sql":"SELECT a FROM t WHERE (SELECT a, b FROM u LIMIT 1) = (1, 2)","shape":"SELECT a FROM t WHERE (SELECT a, b FROM u LIMIT 1) = (1, 2);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT(*) > (SELECT COUNT(*) FROM u)","shape":"SELECT a FROM t GROUP BY a HAVING COUNT(*) > (SELECT COUNT(*) FROM u);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a IN (SELECT a FROM u)","shape":"SELECT a FROM t GROUP BY a HAVING a IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING EXISTS (SELECT 1 FROM u WHERE u.a = t.a)","shape":"SELECT a FROM t GROUP BY a HAVING EXISTS (SELECT 1 FROM u WHERE u.a = t.a);"}
+{"sql":"SELECT a FROM t GROUP BY (SELECT 1)","shape":"SELECT a FROM t GROUP BY (SELECT 1);"}
+{"sql":"SELECT (SELECT 1) FROM t GROUP BY 1","shape":"SELECT (SELECT 1) FROM t GROUP BY 1;"}
+{"sql":"SELECT a FROM t ORDER BY (SELECT 1)","shape":"SELECT a FROM t ORDER BY (SELECT 1);"}
+{"sql":"SELECT a FROM t ORDER BY (SELECT MAX(b) FROM u WHERE u.a = t.a) DESC","shape":"SELECT a FROM t ORDER BY (SELECT MAX(b) FROM u WHERE u.a = t.a) DESC;"}
+{"sql":"SELECT a FROM t LIMIT (SELECT 1)","shape":"SELECT a FROM t LIMIT (SELECT 1);"}
+{"sql":"SELECT a FROM t LIMIT 1 OFFSET (SELECT 1)","shape":"SELECT a FROM t LIMIT 1 OFFSET (SELECT 1);"}
+{"sql":"SELECT SUM((SELECT 1)) FROM t","shape":"SELECT SUM((SELECT 1)) FROM t;"}
+{"sql":"SELECT COUNT(*) FILTER (WHERE a IN (SELECT a FROM u)) FROM t","shape":"SELECT COUNT(*) FILTER (WHERE a IN (SELECT a FROM u)) FROM t;"}
+{"sql":"SELECT SUM(a) OVER (PARTITION BY (SELECT 1)) FROM t","shape":"SELECT SUM(a) OVER (PARTITION BY (SELECT 1)) FROM t;"}
+{"sql":"SELECT ARRAY(SELECT a FROM t)","shape":"SELECT ARRAY(SELECT a FROM t);"}
+{"sql":"SELECT ARRAY(SELECT a FROM t ORDER BY a)","shape":"SELECT ARRAY(SELECT a FROM t ORDER BY a);"}
+{"sql":"SELECT * FROM t WHERE a = (SELECT MAX(a) FROM (SELECT a FROM u) AS x)","shape":"SELECT * FROM t WHERE a = (SELECT MAX(a) FROM (SELECT a FROM u) AS x);"}
+{"sql":"SELECT * FROM (SELECT a, (SELECT MAX(b) FROM u) AS m FROM t) AS x WHERE m > 0","shape":"SELECT * FROM (SELECT a, (SELECT MAX(b) FROM u) AS m FROM t) AS x WHERE m > 0;"}
+{"sql":"SELECT * FROM t, LATERAL (SELECT a FROM u WHERE u.a = t.a) AS x","shape":"SELECT * FROM t, LATERAL (SELECT a FROM u WHERE u.a = t.a) AS x;"}
+{"sql":"SELECT * FROM t LEFT JOIN LATERAL (SELECT a FROM u WHERE u.a = t.a) AS x ON true","shape":"SELECT * FROM t LEFT JOIN LATERAL (SELECT a FROM u WHERE u.a = t.a) AS x ON TRUE;"}
+{"sql":"SELECT * FROM t CROSS JOIN LATERAL (SELECT a FROM u) AS x","shape":"SELECT * FROM t CROSS JOIN LATERAL (SELECT a FROM u) AS x;"}
+{"sql":"SELECT * FROM t, LATERAL f(t.a)","shape":"SELECT * FROM t, LATERAL f(t.a);"}
+{"sql":"SELECT * FROM t, LATERAL f(t.a) AS x","shape":"SELECT * FROM t, LATERAL f(t.a) AS x;"}
+{"sql":"SELECT * FROM t, LATERAL (SELECT * FROM u, LATERAL (SELECT 1) AS y) AS x","shape":"SELECT * FROM t, LATERAL (SELECT * FROM u, LATERAL (SELECT 1) AS y) AS x;"}
+{"sql":"SELECT * FROM t, LATERAL ROWS FROM (f(t.a)) AS x","shape":"SELECT * FROM t, LATERAL ROWS FROM (f(t.a)) AS x;"}
+{"sql":"SELECT (SELECT","reject":true}
+{"sql":"SELECT (SELECT 1","reject":true}
+{"sql":"SELECT (SELECT 1))","reject":true}
+{"sql":"SELECT (SELECT) FROM t","shape":"SELECT (SELECT) FROM t;"}
+{"sql":"SELECT (FROM t)","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ()","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT)","shape":"SELECT a FROM t WHERE a IN (SELECT);"}
+{"sql":"SELECT a FROM t WHERE a IN SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN (SELECT a FROM u, )","reject":true}
+{"sql":"SELECT a FROM t WHERE a NOT (SELECT a FROM u)","reject":true}
+{"sql":"SELECT a FROM t WHERE (a, b) IN","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS","shape":"SELECT a FROM t WHERE EXISTS;"}
+{"sql":"SELECT a FROM t WHERE EXISTS ()","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS SELECT 1","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS (1)","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS (a)","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS (SELECT 1","reject":true}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS","shape":"SELECT a FROM t WHERE NOT EXISTS;"}
+{"sql":"SELECT a FROM t WHERE a = ANY","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ANY ()","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ANY SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ALL (SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE ANY (SELECT a FROM u) = a","reject":true}
+{"sql":"SELECT a FROM t WHERE a ANY (SELECT a FROM u)","reject":true}
+{"sql":"SELECT * FROM t, LATERAL","reject":true}
+{"sql":"SELECT * FROM t, LATERAL u","reject":true}
+{"sql":"SELECT * FROM LATERAL","reject":true}
+{"sql":"SELECT ARRAY(SELECT","reject":true}
+{"sql":"SELECT ARRAY()","reject":true}
+{"sql":"SELECT 1 SELECT 1 )","reject":true}
+{"sql":"SELECT ( SELECT 1 1 )","reject":true}
+{"sql":"( SELECT SELECT MAX ( a ) FROM t )","reject":true}
+{"sql":"SELECT SELECT ( MAX ( a ) FROM t )","reject":true}
+{"sql":"SELECT ( SELECT MAX ( a ) FROM t","reject":true}
+{"sql":"SELECT ( SELECT MAX FROM a ) FROM t )","reject":true}
+{"sql":"SELECT ( SELECT MAX ( ) a FROM t ) + 1","shape":"SELECT (SELECT MAX() AS a FROM t) + 1;"}
+{"sql":"SELECT ( SELECT MAX ( a ) FROM t ) + 1","shape":"SELECT (SELECT MAX(a) FROM t) + 1;"}
+{"sql":"SELECT ( SELECT MAX ( a ) FROM ) t + 1","reject":true}
+{"sql":"SELECT ( SELECT FROM ( a ) FROM t ) + 1","reject":true}
+{"sql":"SELECT 1 + ( MAX SELECT ( a ) FROM t )","reject":true}
+{"sql":"SELECT 1 + ( ( SELECT MAX ( a ) FROM t )","reject":true}
+{"sql":"b 1 + ( SELECT MAX ( a ) FROM t )","reject":true}
+{"sql":"SELECT 1 + ( SELECT MAX ( a ) t )","shape":"SELECT 1 + (SELECT MAX(a) AS t);"}
+{"sql":"SELECT ( SELECT MAX ( a ) FROM t WHEN AS m , ( SELECT MIN ( a ) FROM t ) AS n","reject":true}
+{"sql":"SELECT ( SELECT MAX ( a ) FROM t ) AS m , ( SELECT MIN ( a ) ) FROM t ) AS n","reject":true}
+{"sql":"SELECT ( SELECT MAX ( a ) FROM t ) m AS , ( SELECT MIN ( a ) FROM t ) AS n","reject":true}
+{"sql":"SELECT ( SELECT MAX MAX ( a ) FROM t ) AS m , ( SELECT MIN ( a ) FROM t ) AS n","reject":true}
+{"sql":"SELECT ( ( SELECT 1 ) )","shape":"SELECT ((SELECT 1));"}
+{"sql":"SELECT ( ( SELECT ( ) )","reject":true}
+{"sql":"SELECT ( ( SELECT 1 ) ) )","reject":true}
+{"sql":"SELECT ( ( SELECT 1 FROM )","reject":true}
+{"sql":"SELECT ( ( ( SELECT 1 ) )","reject":true}
+{"sql":"SELECT ( ( y SELECT 1 ) ) )","reject":true}
+{"sql":"SELECT ( ( ( SELECT 1 ) ) )","shape":"SELECT (((SELECT 1)));"}
+{"sql":"SELECT SELECT ( ( SELECT 1 ) )","reject":true}
+{"sql":"SELECT ( SELECT ( SELECT 1 ) )","shape":"SELECT (SELECT (SELECT 1));"}
+{"sql":"SELECT ( SELECT SELECT 1 ) )","reject":true}
+{"sql":"SELECT ( SELECT ( SELECT SELECT ( 1 ) ) )","reject":true}
+{"sql":"SELECT SELECT ( ( SELECT ( SELECT 1 ) ) )","reject":true}
+{"sql":"SELECT EXISTS SELECT ( SELECT ( SELECT 1 ) ) )","reject":true}
+{"sql":"SELECT ( SELECT ( SELECT u SELECT 1 ) ) )","reject":true}
+{"sql":"SELECT a , ( SELECT COUNT ( * ) FROM u WHERE WHERE u . a = t . a ) FROM t","reject":true}
+{"sql":"SELECT a , ( SELECT COUNT ( * ) FROM u WHERE u . a = t . a ) FROM t","shape":"SELECT a, (SELECT COUNT(*) FROM u WHERE u.a = t.a) FROM t;"}
+{"sql":"SELECT a , ( SELECT COUNT ( * ) FROM u WHERE u . a = t . a FROM FROM t","reject":true}
+{"sql":"SELECT a , ( SELECT COUNT ( * ) FROM u WHERE u . = t . a ) FROM t","reject":true}
+{"sql":"SELECT a ) ( SELECT MAX ( x ) FROM u WHERE u . a = t . a AND u . b > t . b ) AS m FROM t","reject":true}
+{"sql":"SELECT a , ( SELECT MAX ( ) FROM u WHERE u . a = t . a AND u . b > t . b ) AS m FROM t","shape":"SELECT a, (SELECT MAX() FROM u WHERE (u.a = t.a) AND (u.b > t.b)) AS m FROM t;"}
+{"sql":"SELECT a , ( ( SELECT MAX ( x ) FROM u WHERE u . a = t . a AND u . b > t . b ) AS m FROM t","reject":true}
+{"sql":"SELECT a , ( SELECT MAX ( x ) FROM u WHERE u . a = t . a AND u . b > t . b ) AS m FROM FROM t","reject":true}
+{"sql":"SELECT ( WHEN ( SELECT COUNT ( * ) FROM u ) > 0 THEN 1 ELSE 0 END","reject":true}
+{"sql":"SELECT CASE WHEN ( SELECT COUNT ( * ) FROM ) u > 0 THEN 1 ELSE 0 END","reject":true}
+{"sql":"SELECT CASE WHEN ( SELECT SELECT COUNT ( * ) FROM u ) > 0 THEN 1 ELSE 0 END","reject":true}
+{"sql":"SELECT CASE WHEN ( SELECT COUNT ( * ) FROM u ) > 0 THEN 1 0 END","reject":true}
+{"sql":"SELECT COALESCE ( ( ( SELECT MAX ( a ) FROM t ) , 0 )","reject":true}
+{"sql":"SELECT ( COALESCE ( SELECT MAX ( a ) FROM t ) , 0 )","reject":true}
+{"sql":"SELECT COALESCE ( ( SELECT MAX ( a ) FROM FROM t ) , 0 )","reject":true}
+{"sql":"SELECT ABS ( SELECT ( MAX ( a ) FROM t ) )","reject":true}
+{"sql":"SELECT ABS ( ( MAX SELECT ( a ) FROM t ) )","reject":true}
+{"sql":"SELECT ABS ( ( SELECT MAX ( a ) FROM FROM ) )","reject":true}
+{"sql":"SELECT ABS ( ( SELECT MAX ( a ) FROM t t ) )","shape":"SELECT ABS((SELECT MAX(a) FROM t AS t));"}
+{"sql":"SELECT EXISTS ( ( SELECT MAX ( a ) FROM t ) AS TEXT )","reject":true}
+{"sql":"SELECT CAST ( ( SELECT MAX ( a ) FROM t ) a TEXT )","reject":true}
+{"sql":"SELECT CAST ( ( SELECT a ( a ) FROM t ) AS TEXT )","shape":"SELECT CAST((SELECT a(a) FROM t) AS TEXT);"}
+{"sql":"SELECT CAST ( ( SELECT MAX ( a FROM ) t ) AS TEXT )","reject":true}
+{"sql":"f ( SELECT a FROM t ORDER BY a LIMIT 1 )","reject":true}
+{"sql":"SELECT ( SELECT a FROM t ORDER BY a LIMIT 1","reject":true}
+{"sql":"SELECT ( SELECT a t ORDER BY a LIMIT 1 )","shape":"SELECT (SELECT a AS t ORDER BY a LIMIT 1);"}
+{"sql":"SELECT ( SELECT a FROM t UNION SELECT a FROM SELECT ORDER BY a LIMIT 1 )","reject":true}
+{"sql":"UNION ( SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1 )","reject":true}
+{"sql":"SELECT ( SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1 1 )","reject":true}
+{"sql":"SELECT ( SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT LIMIT 1 )","reject":true}
+{"sql":"SELECT ( ( SELECT 1 + ) 1 ) * 2","reject":true}
+{"sql":"SELECT ( ( SELECT 1 ) + 1 ) * 2","shape":"SELECT ((SELECT 1) + 1) * 2;"}
+{"sql":"SELECT ( ( SELECT 1 ) 1 + ) * 2","reject":true}
+{"sql":"t ( ( SELECT 1 ) + 1 ) * 2","reject":true}
+{"sql":"( ( SELECT 1 ) UNION SELECT 2","reject":true}
+{"sql":"SELECT ( SELECT 1 ) UNION 2 SELECT","reject":true}
+{"sql":"SELECT ( SELECT 1 ) UNION SELECT","shape":"SELECT (SELECT 1) UNION SELECT;"}
+{"sql":"( SELECT SELECT 1 ) UNION SELECT 2","reject":true}
+{"sql":"SELECT SELECT FROM t WHERE a = ( SELECT MAX ( a ) FROM t )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ( SELECT MAX ( a ) FROM t )","shape":"SELECT a FROM t WHERE a = (SELECT MAX(a) FROM t);"}
+{"sql":"SELECT a FROM t WHERE a = ( SELECT ( a ) FROM t )","shape":"SELECT a FROM t WHERE a = (SELECT (a) FROM t);"}
+{"sql":"SELECT a FROM t WHERE a = ( SELECT MAX ( a ) FROM t","reject":true}
+{"sql":"SELECT a FROM t WHERE ( SELECT MAX ( a ) FROM t ) = a","shape":"SELECT a FROM t WHERE (SELECT MAX(a) FROM t) = a;"}
+{"sql":"SELECT a FROM t WHERE SELECT ( MAX ( a ) FROM t ) = a","reject":true}
+{"sql":"SELECT a FROM t WHERE ( SELECT MAX ( a ) FROM t = a","reject":true}
+{"sql":"SELECT a FROM t WHERE a > ( SELECT AVG ( a ) FROM t ) b < ( SELECT MAX ( b ) FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a > ( SELECT AVG ( ) a FROM t ) AND b < ( SELECT MAX ( b ) FROM u )","shape":"SELECT a FROM t WHERE (a > (SELECT AVG() AS a FROM t)) AND (b < (SELECT MAX(b) FROM u));"}
+{"sql":"SELECT a FROM t WHERE a > ( SELECT AVG ( a ) FROM t ) AND b < ( MAX ( b ) FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a > ( SELECT AVG ( a ) FROM t ) AND b < ( SELECT MAX ( b ) u )","shape":"SELECT a FROM t WHERE (a > (SELECT AVG(a) FROM t)) AND (b < (SELECT MAX(b) AS u));"}
+{"sql":"SELECT a FROM t WHERE ( a + ( SELECT 1 ) ) ) > 0","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a + ( SELECT 1 ) > 0","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a + ( SELECT 1 ) ) > 0","shape":"SELECT a FROM t WHERE (a + (SELECT 1)) > 0;"}
+{"sql":"SELECT a FROM t WHERE ( a ( SELECT 1 ) ) > 0","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN FROM SELECT a FROM u )","reject":true}
+{"sql":"SELECT FROM a t WHERE a IN ( SELECT a FROM u )","shape":"SELECT FROM a AS t WHERE a IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t ARRAY a IN ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT FROM u )","shape":"SELECT a FROM t WHERE a IN (SELECT FROM u);"}
+{"sql":"SELECT a FROM t WHERE a NOT IN IN ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a NOT IN ( SELECT a FROM u )","shape":"SELECT a FROM t WHERE a NOT IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE NOT a IN ( SELECT a FROM u )","shape":"SELECT a FROM t WHERE NOT (a IN (SELECT a FROM u));"}
+{"sql":"SELECT a t FROM WHERE a NOT IN ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a t WHERE ( a ) IN ( SELECT a FROM u )","shape":"SELECT a AS t WHERE (a) IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a ( ) IN ( SELECT a FROM u )","shape":"SELECT a FROM t WHERE a() IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE ( a ) IN ( ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a ) IN ( a FROM u )","reject":true}
+{"sql":"SELECT FROM a t WHERE ( a , b ) IN ( SELECT a , b FROM u )","shape":"SELECT FROM a AS t WHERE (a, b) IN (SELECT a, b FROM u);"}
+{"sql":"SELECT a FROM t WHERE ( a , b ) IN ( SELECT a b FROM u )","shape":"SELECT a FROM t WHERE (a, b) IN (SELECT a AS b FROM u);"}
+{"sql":"SELECT a FROM t WHERE ( a , b ) IN ( SELECT a , b b FROM u )","shape":"SELECT a FROM t WHERE (a, b) IN (SELECT a, b AS b FROM u);"}
+{"sql":"SELECT a FROM t ( a , b ) IN ( SELECT a , b FROM u )","reject":true}
+{"sql":". a FROM t WHERE ( a , b ) NOT IN ( SELECT a , b FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) NOT IN ( SELECT SELECT a , b FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE WHERE ( a , b ) NOT IN ( SELECT a , b FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b a NOT IN ( SELECT a , b FROM u )","reject":true}
+{"sql":"SELECT a FROM t a IN ( SELECT a FROM u WHERE b IN ( SELECT id FROM c ) )","reject":true}
+{"sql":"SELECT a t WHERE a IN ( SELECT a FROM u WHERE b IN ( SELECT id FROM c ) )","shape":"SELECT a AS t WHERE a IN (SELECT a FROM u WHERE b IN (SELECT id FROM c));"}
+{"sql":"SELECT a FROM t WHERE SELECT IN ( SELECT a FROM u WHERE b IN ( SELECT id FROM c ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE IN a ( SELECT a FROM u UNION SELECT id FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT SELECT a FROM u UNION SELECT id FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT a FROM u UNION SELECT FROM c )","shape":"SELECT a FROM t WHERE a IN (SELECT a FROM u UNION SELECT FROM c);"}
+{"sql":"SELECT a FROM t WHERE a IN ( a FROM u UNION SELECT id FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT a FROM u ORDER BY a LIMIT ( )","reject":true}
+{"sql":"SELECT a FROM WHERE a IN ( SELECT a FROM u ORDER BY a LIMIT 2 )","reject":true}
+{"sql":"SELECT a FROM WHERE t a IN ( SELECT a FROM u ORDER BY a LIMIT 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT a FROM u ORDER BY LIMIT 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( ( SELECT FROM a u ) )","shape":"SELECT a FROM t WHERE a IN ((SELECT FROM a AS u));"}
+{"sql":"SELECT a a FROM t WHERE a IN ( ( SELECT a FROM u ) )","shape":"SELECT a AS a FROM t WHERE a IN ((SELECT a FROM u));"}
+{"sql":"SELECT a FROM t WHERE a IN SELECT ( SELECT a FROM u ) )","reject":true}
+{"sql":"SELECT ) FROM t WHERE a IN ( VALUES ( 1 ) , ( 2 ) )","reject":true}
+{"sql":"SELECT a FROM ( WHERE a IN ( VALUES ( 1 ) , ( 2 ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( ( VALUES 1 ) , ( 2 ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( VALUES ( 1 ) , ( 2 ) )","shape":"SELECT a FROM t WHERE a IN (VALUES (1), (2));"}
+{"sql":"SELECT a FROM WHERE a IN ( 1 , ( SELECT 2 ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( , 1 ( SELECT 2 ) )","reject":true}
+{"sql":"SELECT a FROM t ( a IN ( 1 , ( SELECT 2 ) )","reject":true}
+{"sql":"SELECT a a FROM t WHERE a IN ( 1 , ( SELECT 2 ) )","shape":"SELECT a AS a FROM t WHERE a IN (1, (SELECT 2));"}
+{"sql":"SELECT a IN ( SELECT a FROM u FROM FROM t","reject":true}
+{"sql":"SELECT a a ( SELECT a FROM u ) FROM t","reject":true}
+{"sql":"SELECT a IN ( SELECT a u ) FROM t","shape":"SELECT a IN (SELECT a AS u) FROM t;"}
+{"sql":"SELECT a IN ( SELECT a FROM u ) ) FROM t","reject":true}
+{"sql":"SELECT a NOT IN ( SELECT a FROM u ) ( k FROM t","reject":true}
+{"sql":"SELECT a NOT IN ( SELECT a FROM ANY ) AS k FROM t","reject":true}
+{"sql":"SELECT a NOT IN ( SELECT a FROM ) u AS k FROM t","reject":true}
+{"sql":"SELECT a NOT IN ( SELECT a FROM u ) AS FROM t","reject":true}
+{"sql":"ALL a FROM t WHERE EXISTS ( SELECT 1 FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM u u )","shape":"SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u AS u);"}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM * )","reject":true}
+{"sql":"SELECT FROM t WHERE EXISTS ( SELECT 1 FROM u )","shape":"SELECT FROM t WHERE EXISTS (SELECT 1 FROM u);"}
+{"sql":"SELECT a a FROM t WHERE NOT EXISTS ( SELECT 1 FROM u )","shape":"SELECT a AS a FROM t WHERE NOT EXISTS (SELECT 1 FROM u);"}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS ( SELECT 1 FROM u )","shape":"SELECT a FROM t WHERE NOT EXISTS (SELECT 1 FROM u);"}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS ( SELECT FROM u )","shape":"SELECT a FROM t WHERE NOT EXISTS (SELECT FROM u);"}
+{"sql":"SELECT a a FROM t WHERE EXISTS ( SELECT 1 FROM u WHERE u . a = t . a )","shape":"SELECT a AS a FROM t WHERE EXISTS (SELECT 1 FROM u WHERE u.a = t.a);"}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM u WHERE u . a = t t . a )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS SELECT 1 FROM u WHERE u . a = t . a )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM u WHERE u . a t . a )","reject":true}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS EXISTS ( SELECT 1 FROM u WHERE u . a = t . a AND u . b = t . b )","reject":true}
+{"sql":"SELECT a t FROM WHERE NOT EXISTS ( SELECT 1 FROM u WHERE u . a = t . a AND u . b = t . b )","reject":true}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS ( SELECT 1 FROM u WHERE WHERE u . a = t . a AND u . b = t . b )","reject":true}
+{"sql":"SELECT a FROM t WHERE NOT EXISTS ( SELECT 1 FROM u WHERE u . a = t . a u . b = t . b )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT * FROM u WHERE EXISTS ( SELECT 1 FROM c WHERE c c . id = u . a ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT * FROM u WHERE EXISTS ( SELECT 1 FROM c WHERE c . id = u . a )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT * FROM u WHERE EXISTS ( SELECT 1 FROM c WHERE c . id = u . a ) )","shape":"SELECT a FROM t WHERE EXISTS (SELECT * FROM u WHERE EXISTS (SELECT 1 FROM c WHERE c.id = u.a));"}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT * FROM u WHERE EXISTS SELECT 1 FROM c WHERE c . id = u . a ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM u ) AND ( EXISTS SELECT 1 FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( 1 FROM u ) AND EXISTS ( SELECT 1 FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 1 FROM u ) AND EXISTS ( SELECT 1 FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM u AND ) EXISTS ( SELECT 1 FROM c )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( SELECT 1 FROM ) OR a = 1","reject":true}
+{"sql":"SELECT a FROM WHERE EXISTS ( SELECT 1 FROM u ) OR a = 1","reject":true}
+{"sql":"SELECT a FROM t WHERE ( EXISTS SELECT 1 FROM u ) OR a = 1","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS a SELECT 1 FROM u ) OR a = 1","reject":true}
+{"sql":"SELECT EXISTS ( SELECT 1 FROM c )","shape":"SELECT EXISTS (SELECT 1 FROM c);"}
+{"sql":"SELECT EXISTS ( SELECT 1 1 FROM t )","reject":true}
+{"sql":"SELECT ( EXISTS SELECT 1 FROM t )","reject":true}
+{"sql":"SELECT SELECT NOT EXISTS ( SELECT 1 FROM t )","reject":true}
+{"sql":"SELECT NOT EXISTS ( SELECT 1 t FROM )","reject":true}
+{"sql":"SELECT NOT EXISTS ( SELECT 1 t )","shape":"SELECT NOT EXISTS (SELECT 1 AS t);"}
+{"sql":"NOT EXISTS ( SELECT 1 FROM t )","reject":true}
+{"sql":"SELECT CASE WHEN EXISTS ( SELECT 1 FROM t ) THEN 1 ELSE 0 u","reject":true}
+{"sql":"SELECT CASE WHEN EXISTS ( SELECT 1 FROM t ) THEN 1 ELSE ELSE 0 END","reject":true}
+{"sql":"SELECT CASE WHEN EXISTS ( SELECT 1 FROM t ) THEN 1 ELSE 0 IN","reject":true}
+{"sql":"SELECT CASE WHEN EXISTS ( SELECT 1 FROM t ) THEN 1 ELSE 0 END","shape":"SELECT CASE WHEN EXISTS (SELECT 1 FROM t) THEN 1 ELSE 0 END;"}
+{"sql":"SELECT a FROM t WHERE EXISTS ( VALUES ( IN ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( 1 ( 1 ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( VALUES ( FROM ) )","reject":true}
+{"sql":"SELECT a FROM t EXISTS ( VALUES ( 1 ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ANY ( SELECT a FROM u ) )","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE a = ANY ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE TEXT = ANY ( SELECT a FROM u )","shape":"SELECT a FROM t WHERE TEXT = ANY (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a = ANY ( SELECT a a FROM u )","shape":"SELECT a FROM t WHERE a = ANY (SELECT a AS a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a SOME = ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = SOME ( SELECT a FROM u )","shape":"SELECT a FROM t WHERE a = SOME (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE WHERE a = SOME ( SELECT a FROM u )","reject":true}
+{"sql":"a SELECT FROM t WHERE a = SOME ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ALL ( SELECT a FROM u )","shape":"SELECT a FROM t WHERE a = ALL (SELECT a FROM u);"}
+{"sql":"SELECT a FROM WHERE t a = ALL ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ALL ( SELECT SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ALL ( SELECT a FROM u *","reject":true}
+{"sql":"SELECT a FROM t WHERE a <> ALL ( SELECT FROM a u )","shape":"SELECT a FROM t WHERE a <> ALL (SELECT FROM a AS u);"}
+{"sql":"SELECT a FROM t WHERE a <> ( ALL SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM a WHERE a <> ALL ( SELECT a FROM u )","shape":"SELECT a FROM a WHERE a <> ALL (SELECT a FROM u);"}
+{"sql":"SELECT a FROM FROM t WHERE a <> ALL ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a a FROM t WHERE a < ANY ( SELECT a FROM u )","shape":"SELECT a AS a FROM t WHERE a < ANY (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t WHERE a < ANY ( SELECT a u )","shape":"SELECT a FROM t WHERE a < ANY (SELECT a AS u);"}
+{"sql":"SELECT a FROM t WHERE a ANY < ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE < ANY ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a >= ALL ( SELECT a FROM u WHERE b 0 )","reject":true}
+{"sql":"SELECT a FROM t ( a >= ALL ( SELECT a FROM u WHERE b > 0 )","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE a >= ALL ( SELECT a FROM u WHERE b > 0 )","reject":true}
+{"sql":"SELECT a FROM t WHERE a >= ALL ( SELECT t FROM u WHERE b > 0 )","shape":"SELECT a FROM t WHERE a >= ALL (SELECT t FROM u WHERE b > 0);"}
+{"sql":"SELECT a FROM t WHERE a = = ANY ( ARRAY [ 1 , 2 ] )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ANY ( ARRAY [ 1 , 2 ] )","shape":"SELECT a FROM t WHERE a = ANY (ARRAY[1, 2]);"}
+{"sql":"SELECT a FROM t WHERE a = ( ARRAY [ 1 , 2 ] )","shape":"SELECT a FROM t WHERE a = (ARRAY[1, 2]);"}
+{"sql":"SELECT a FROM t WHERE a = ANY ( ARRAY [ 1 , 2 ] ) )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( WHEN , b ) = ANY ( SELECT a , b FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = ANY ( SELECT , a b FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = ANY ( SELECT a , FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = ( ANY SELECT a , b FROM u )","reject":true}
+{"sql":"SELECT FROM a t WHERE name LIKE ANY ( SELECT name FROM t )","shape":"SELECT FROM a AS t WHERE name LIKE ANY (SELECT name FROM t);"}
+{"sql":"SELECT a FROM t WHERE name name LIKE ANY ( SELECT name FROM t )","reject":true}
+{"sql":"SELECT a FROM t WHERE LIKE name ANY ( SELECT name FROM t )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = ( SELECT a b , FROM u LIMIT 1 )","reject":true}
+{"sql":"a SELECT FROM t WHERE ( a , b ) = ( SELECT a , b FROM u LIMIT 1 )","reject":true}
+{"sql":"SELECT a FROM t WHERE a , b ) = ( SELECT a , b FROM u LIMIT 1 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = ( SELECT a , b u LIMIT 1 )","shape":"SELECT a FROM t WHERE (a, b) = (SELECT a, b AS u LIMIT 1);"}
+{"sql":"SELECT a FROM t WHERE ( SELECT a , b FROM u LIMIT 1 ) FROM ( 1 , 2 )","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE ( SELECT a , b FROM u LIMIT 1 ) = ( 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( SELECT a , b u FROM LIMIT 1 ) = ( 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( SELECT a , b FROM u LIMIT 1 ) = ( 1 , 2 )","shape":"SELECT a FROM t WHERE (SELECT a, b FROM u LIMIT 1) = (1, 2);"}
+{"sql":"SELECT a FROM t t GROUP BY a HAVING COUNT ( * ) > ( SELECT COUNT ( * ) FROM u )","shape":"SELECT a FROM t AS t GROUP BY a HAVING COUNT(*) > (SELECT COUNT(*) FROM u);"}
+{"sql":"SELECT a FROM t BY a HAVING COUNT ( * ) > ( SELECT COUNT ( * ) FROM u )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT ( * ) > SELECT SELECT COUNT ( * ) FROM u )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING COUNT ( * ) > ( a COUNT ( * ) FROM u )","reject":true}
+{"sql":"a FROM t GROUP BY a HAVING a IN ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING a IN ( SELECT a 2 u )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING IN a ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT FROM t GROUP BY a HAVING a IN ( SELECT a FROM u )","shape":"SELECT FROM t GROUP BY a HAVING a IN (SELECT a FROM u);"}
+{"sql":"SELECT a FROM t GROUP BY a HAVING EXISTS ( SELECT 1 FROM u WHERE u . a = t a . )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING EXISTS ( SELECT 1 FROM u WHERE u . ALL = t . a )","shape":"SELECT a FROM t GROUP BY a HAVING EXISTS (SELECT 1 FROM u WHERE u.ALL = t.a);"}
+{"sql":"SELECT = FROM t GROUP BY a HAVING EXISTS ( SELECT 1 FROM u WHERE u . a = t . a )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a HAVING EXISTS ( ( SELECT 1 FROM u WHERE u . a = t . a )","reject":true}
+{"sql":"a SELECT FROM t GROUP BY ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t GROUP BY BY ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t t GROUP BY ( SELECT 1 )","shape":"SELECT a FROM t AS t GROUP BY (SELECT 1);"}
+{"sql":"SELECT a FROM t GROUP BY ( SELECT 1 1 )","reject":true}
+{"sql":"SELECT ( SELECT 1 FROM ) t GROUP BY 1","reject":true}
+{"sql":"SELECT ( SELECT 1 1 ) FROM t GROUP BY 1","reject":true}
+{"sql":"EXISTS ( SELECT 1 ) FROM t GROUP BY 1","reject":true}
+{"sql":"SELECT ( 1 SELECT ) FROM t GROUP BY 1","reject":true}
+{"sql":"SELECT FROM a t ORDER BY ( SELECT 1 )","shape":"SELECT FROM a AS t ORDER BY (SELECT 1);"}
+{"sql":"SELECT LATERAL FROM t ORDER BY ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t ORDER ( SELECT 1 )","reject":true}
+{"sql":"SELECT a u t ORDER BY ( SELECT 1 )","reject":true}
+{"sql":"SELECT FROM t ORDER BY ( SELECT MAX ( b ) FROM u WHERE u . a = t . a ) DESC","shape":"SELECT FROM t ORDER BY (SELECT MAX(b) FROM u WHERE u.a = t.a) DESC;"}
+{"sql":"SELECT a FROM t ORDER BY SELECT ( MAX ( b ) FROM u WHERE u . a = t . a ) DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ( SELECT MAX ( b ) FROM u WHERE WHERE u . a = t . a ) DESC","reject":true}
+{"sql":"SELECT a t FROM ORDER BY ( SELECT MAX ( b ) FROM u WHERE u . a = t . a ) DESC","reject":true}
+{"sql":"SELECT a FROM t ( LIMIT SELECT 1 )","reject":true}
+{"sql":"SELECT a t LIMIT ( SELECT 1 )","shape":"SELECT a AS t LIMIT (SELECT 1);"}
+{"sql":"SELECT a FROM t LIMIT ( SELECT 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 OFFSET ( ( 1 )","reject":true}
+{"sql":"SELECT SELECT a FROM t LIMIT 1 OFFSET ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 1 OFFSET ( SELECT 1 )","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 OFFSET OFFSET ( SELECT 1 )","reject":true}
+{"sql":"SELECT SUM ( ( SELECT 1 ) ) ) FROM t","reject":true}
+{"sql":"SUM SELECT ( ( SELECT 1 ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ( SELECT 1 1 ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ( SELECT 1 ) ) t FROM","reject":true}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a IN ( SELECT a FROM u HAVING ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( ) FILTER ( WHERE a IN ( SELECT a FROM u ) ) FROM t","shape":"SELECT COUNT() FILTER (WHERE a IN (SELECT a FROM u)) FROM t;"}
+{"sql":"SELECT COUNT ( * ) FILTER ( WHERE a IN ( SELECT a FROM u ) ) FROM FROM t","reject":true}
+{"sql":"SELECT COUNT ( * ) b ( WHERE a IN ( SELECT a FROM u ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY ( SELECT 1 1 ) ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY ( SELECT 1 ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( PARTITION BY ( SELECT 1 ) ) FROM t","shape":"SELECT SUM(a) OVER (PARTITION BY (SELECT 1)) FROM t;"}
+{"sql":"SELECT SUM ( a ) OVER SELECT PARTITION BY ( SELECT 1 ) ) FROM t","reject":true}
+{"sql":"SELECT ARRAY ( SELECT FROM a t )","shape":"SELECT ARRAY(SELECT FROM a AS t);"}
+{"sql":"ARRAY ( SELECT a FROM t )","reject":true}
+{"sql":"SELECT ARRAY ( SELECT a FROM ) t","reject":true}
+{"sql":"SELECT ARRAY ( SELECT a FROM t","reject":true}
+{"sql":"SELECT ARRAY ( SELECT a FROM t ORDER BY a )","shape":"SELECT ARRAY(SELECT a FROM t ORDER BY a);"}
+{"sql":"SELECT ARRAY SELECT ( a FROM t ORDER BY a )","reject":true}
+{"sql":"SELECT ARRAY ( a SELECT FROM t ORDER BY a )","reject":true}
+{"sql":"SELECT * FROM t WHERE a ( = SELECT MAX ( a ) FROM ( SELECT a FROM u ) AS x )","reject":true}
+{"sql":"SELECT * FROM t WHERE a = ( SELECT MAX ( a ) FROM ( SELECT a FROM u ) ) AS x )","reject":true}
+{"sql":"SELECT * FROM t WHERE a = ( SELECT MAX ( a ) ( SELECT a FROM u ) AS x )","reject":true}
+{"sql":"SELECT * FROM WHERE t a = ( SELECT MAX ( a ) FROM ( SELECT a FROM u ) AS x )","reject":true}
+{"sql":"SELECT * FROM ( a SELECT , ( SELECT MAX ( b ) FROM u ) AS m FROM t ) AS x WHERE m > 0","reject":true}
+{"sql":"SELECT * FROM ( SELECT SELECT , ( SELECT MAX ( b ) FROM u ) AS m FROM t ) AS x WHERE m > 0","reject":true}
+{"sql":"SELECT * FROM ( SELECT SELECT a , ( SELECT MAX ( b ) FROM u ) AS m FROM t ) AS x WHERE m > 0","reject":true}
+{"sql":"SELECT FROM ( SELECT a , ( SELECT MAX ( b ) FROM u ) AS m FROM t ) AS x WHERE m > 0","shape":"SELECT FROM (SELECT a, (SELECT MAX(b) FROM u) AS m FROM t) AS x WHERE m > 0;"}
+{"sql":"SELECT * SELECT t , LATERAL ( SELECT a FROM u WHERE u . a = t . a ) AS x","reject":true}
+{"sql":"SELECT * FROM t , LATERAL ( SELECT a FROM u WHERE u . a = t . a ) AS (","reject":true}
+{"sql":"SELECT * FROM t , LATERAL ( SELECT FROM u WHERE u . a = t . a ) AS x","shape":"SELECT * FROM t, LATERAL (SELECT FROM u WHERE u.a = t.a) AS x;"}
+{"sql":"SELECT * FROM t , LATERAL ( SELECT a FROM u WHERE u . a = t . ) AS x","reject":true}
+{"sql":"* SELECT FROM t LEFT JOIN LATERAL ( SELECT a FROM u WHERE u . a = t . a ) AS x ON true","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN LATERAL ( ( SELECT a FROM u WHERE u . a = t . a ) AS x ON true","reject":true}
+{"sql":"SELECT * * FROM t LEFT JOIN LATERAL ( SELECT a FROM u WHERE u . a = t . a ) AS x ON true","reject":true}
+{"sql":"SELECT * FROM t LEFT JOIN LATERAL ( SELECT a FROM u WHERE u . a = t . a ) AS x ON true","shape":"SELECT * FROM t LEFT JOIN LATERAL (SELECT a FROM u WHERE u.a = t.a) AS x ON TRUE;"}
+{"sql":"SELECT * FROM t CROSS JOIN LATERAL ( SELECT a SELECT u ) AS x","reject":true}
+{"sql":"SELECT * FROM ( CROSS JOIN LATERAL ( SELECT a FROM u ) AS x","reject":true}
+{"sql":"SELECT * FROM t CROSS JOIN LATERAL ( SELECT a FROM u ) AS x","shape":"SELECT * FROM t CROSS JOIN LATERAL (SELECT a FROM u) AS x;"}
+{"sql":"SELECT * FROM , LATERAL f ( t . a )","reject":true}
+{"sql":"SELECT * FROM t , LATERAL f ( t . a a )","reject":true}
+{"sql":"SELECT * FROM t , LATERAL f ( t . u )","shape":"SELECT * FROM t, LATERAL f(t.u);"}
+{"sql":"SELECT * FROM t , ( f ( t . a )","reject":true}
+{"sql":"SELECT * FROM t , LATERAL f f ( t . a ) AS x","reject":true}
+{"sql":"u * FROM t , LATERAL f ( t . a ) AS x","reject":true}
+{"sql":"SELECT * FROM t , LATERAL f ( t . ) a AS x","reject":true}
+{"sql":"SELECT FROM t , LATERAL f ( t . a ) AS x","shape":"SELECT FROM t, LATERAL f(t.a) AS x;"}
+{"sql":"SELECT * FROM t , LATERAL ( SELECT * FROM u , LATERAL ( SELECT ) AS y ) AS x","shape":"SELECT * FROM t, LATERAL (SELECT * FROM u, LATERAL (SELECT) AS y) AS x;"}
+{"sql":"SELECT * FROM FROM , LATERAL ( SELECT * FROM u , LATERAL ( SELECT 1 ) AS y ) AS x","reject":true}
+{"sql":"SELECT * FROM t , ( SELECT * FROM u , LATERAL ( SELECT 1 ) AS y ) AS x","shape":"SELECT * FROM t, (SELECT * FROM u, LATERAL (SELECT 1) AS y) AS x;"}
+{"sql":"SELECT * FROM t , LATERAL ( SELECT * FROM u , LATERAL ( SELECT 0 ) AS y ) AS x","shape":"SELECT * FROM t, LATERAL (SELECT * FROM u, LATERAL (SELECT 0) AS y) AS x;"}
+{"sql":"SELECT SELECT * FROM t , LATERAL ROWS FROM ( f ( t . a ) ) AS x","reject":true}
+{"sql":"SELECT * FROM t , LATERAL ROWS FROM ( f ( t . a ) ) AS x x","reject":true}
+{"sql":"SELECT * FROM t , LATERAL ROWS FROM ( f ( . a ) ) AS x","reject":true}
+{"sql":"SELECT * FROM t , LATERAL ROWS FROM ( f ( t . AND ) ) AS x","shape":"SELECT * FROM t, LATERAL ROWS FROM (f(t.AND)) AS x;"}
+{"sql":"SELECT (","reject":true}
+{"sql":"SELECT ( SELECT","reject":true}
+{"sql":"SELECT ( SELECT 1 1","reject":true}
+{"sql":"( SELECT SELECT 1","reject":true}
+{"sql":") ( SELECT 1","reject":true}
+{"sql":"SELECT ( 1","reject":true}
+{"sql":"SELECT ( SELECT 1 ) ) )","reject":true}
+{"sql":"SELECT ( 1 ) )","reject":true}
+{"sql":"SELECT BY SELECT 1 ) )","reject":true}
+{"sql":"SELECT SELECT SELECT 1","reject":true}
+{"sql":"SELECT ) 1","reject":true}
+{"sql":"SELECT SELECT ( ) FROM t","reject":true}
+{"sql":"SELECT FROM SELECT ) FROM t","reject":true}
+{"sql":"SELECT ( SELECT ) t FROM","reject":true}
+{"sql":"SELECT ( SELECT FROM t","reject":true}
+{"sql":"SELECT ( FROM t t )","reject":true}
+{"sql":"SELECT ( FROM FROM t )","reject":true}
+{"sql":"( SELECT FROM t )","shape":"(SELECT FROM t);"}
+{"sql":"SELECT * FROM t WHERE a IN ( )","reject":true}
+{"sql":"SELECT a FROM WHERE a IN ( )","reject":true}
+{"sql":"SELECT FILTER FROM t WHERE a IN ( )","reject":true}
+{"sql":"SELECT FROM a t WHERE a IN ( )","reject":true}
+{"sql":"SELECT a FROM t t WHERE a IN ( SELECT )","shape":"SELECT a FROM t AS t WHERE a IN (SELECT);"}
+{"sql":"SELECT a FROM ( WHERE a IN ( SELECT )","reject":true}
+{"sql":"SELECT a t FROM WHERE a IN ( SELECT )","reject":true}
+{"sql":"SELECT a FROM t a WHERE IN SELECT a FROM u","reject":true}
+{"sql":"a FROM t WHERE a IN SELECT a FROM u","reject":true}
+{"sql":"SELECT a t WHERE a IN SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t a IN ( SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT FROM a u","reject":true}
+{"sql":"SELECT a FROM t t WHERE a IN ( SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( SELECT FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE IN ( SELECT a FROM u , )","reject":true}
+{"sql":"SELECT a FROM t WHERE a FROM ( SELECT a FROM u , )","reject":true}
+{"sql":"x a FROM t WHERE a IN ( SELECT a FROM u , )","reject":true}
+{"sql":"SELECT a FROM t a IN ( SELECT a FROM u , )","reject":true}
+{"sql":"SELECT a FROM t WHERE a NOT SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM WHERE a NOT ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT ORDER FROM t WHERE a NOT ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM t WHERE a NOT ( SELECT a FROM u FROM","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE ( a , b ) IN","reject":true}
+{"sql":"SELECT FROM t WHERE ( a , b ) IN","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a b ) IN","reject":true}
+{"sql":"SELECT a FROM t WHERE WHERE ( a , b ) IN","reject":true}
+{"sql":"SELECT a FROM FROM t WHERE EXISTS","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE EXISTS","reject":true}
+{"sql":"SELECT a FROM t WHERE","reject":true}
+{"sql":"SELECT a FROM t t WHERE EXISTS ( )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( t","reject":true}
+{"sql":"SELECT a t FROM WHERE EXISTS ( )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( (","reject":true}
+{"sql":"SELECT FROM t WHERE EXISTS SELECT 1","reject":true}
+{"sql":"SELECT a a FROM t WHERE EXISTS SELECT 1","reject":true}
+{"sql":"SELECT a FROM t t WHERE EXISTS SELECT 1","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS SELECT SELECT 1","reject":true}
+{"sql":"SELECT a FROM t EXISTS ( 1 )","reject":true}
+{"sql":"SELECT a FROM t SELECT EXISTS ( 1 )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( ( 1 )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( 1 1 )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( a","reject":true}
+{"sql":"SELECT a FROM t ( EXISTS ( a )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( a )","reject":true}
+{"sql":"SELECT a FROM t WHERE EXISTS ( ) a","reject":true}
+{"sql":"SELECT a FROM t ( EXISTS ( SELECT 1","reject":true}
+{"sql":"a SELECT FROM t WHERE EXISTS ( SELECT 1","reject":true}
+{"sql":"SELECT a FROM t t WHERE EXISTS ( SELECT 1","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE NOT EXISTS","reject":true}
+{"sql":"SELECT a t FROM WHERE NOT EXISTS","reject":true}
+{"sql":"a SELECT FROM t WHERE NOT EXISTS","reject":true}
+{"sql":"SELECT a t WHERE a = ANY","reject":true}
+{"sql":"SELECT a FROM FROM t WHERE a = ANY","reject":true}
+{"sql":"SELECT a FROM t WHERE a a = ANY","reject":true}
+{"sql":"SELECT a FROM t WHERE ( = ANY","reject":true}
+{"sql":"SELECT a SELECT t WHERE a = ANY ( )","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ANY (","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ( )","reject":true}
+{"sql":"SELECT a FROM t WHERE a ANY = ( )","reject":true}
+{"sql":"SELECT a FROM t WHERE = a ANY SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ANY SELECT a a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ALL ( SELECT a u FROM","reject":true}
+{"sql":"SELECT a FROM t WHERE = ALL ( SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t WHERE a a ALL ( SELECT a FROM u","reject":true}
+{"sql":"SELECT ) FROM t WHERE ANY ( SELECT a FROM u ) = a","reject":true}
+{"sql":"SELECT a FROM t WHERE ANY ( SELECT SELECT a FROM u ) = a","reject":true}
+{"sql":"SELECT a FROM t WHERE ANY ( SELECT a u FROM ) = a","reject":true}
+{"sql":"SELECT a FROM t WHERE ANY ( ( SELECT a FROM u ) = a","reject":true}
+{"sql":"SELECT a FROM t WHERE a ANY ( SELECT FROM a u )","reject":true}
+{"sql":"SELECT a FROM GROUP WHERE a ANY ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT a FROM WHERE t a ANY ( SELECT a FROM u )","reject":true}
+{"sql":"SELECT * FROM t , LATERAL LATERAL","reject":true}
+{"sql":"SELECT SELECT * FROM t , LATERAL","reject":true}
+{"sql":"SELECT * SELECT t , LATERAL","reject":true}
+{"sql":"SELECT * * FROM t , LATERAL u","reject":true}
+{"sql":"SELECT * t , LATERAL u","reject":true}
+{"sql":"SELECT * FROM t LATERAL , u","reject":true}
+{"sql":"SELECT * FROM t , LATERAL u u","reject":true}
+{"sql":"SELECT FROM LATERAL","reject":true}
+{"sql":"SELECT * FROM LATERAL LATERAL","reject":true}
+{"sql":"FROM * FROM LATERAL","reject":true}
+{"sql":"SELECT * LATERAL FROM","reject":true}
+{"sql":"SELECT ARRAY SELECT (","reject":true}
+{"sql":"SELECT ARRAY ( ( SELECT","reject":true}
+{"sql":"SELECT 1 ( SELECT","reject":true}
+{"sql":"SELECT ARRAY ( ) )","reject":true}
+{"sql":"ARRAY SELECT ( )","reject":true}
+{"sql":"SELECT name ( )","shape":"SELECT name();"}

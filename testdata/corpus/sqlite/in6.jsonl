@@ -1,0 +1,17 @@
+{"sql":"SELECT d FROM t1\n  WHERE a=100\n    AND b IN (200,201,202,204)\n    AND c IN (300,302,301,305)\n  ORDER BY +d"}
+{"sql":"CREATE TABLE t2(e INT UNIQUE, f TEXT)"}
+{"sql":"SELECT d, f FROM t1 LEFT JOIN t2 ON (e=d)\n  WHERE a=100\n    AND b IN (200,201,202,204)\n    AND c IN (300,302,301,305)\n  ORDER BY +d"}
+{"sql":"INSERT INTO t1 VALUES(0)"}
+{"sql":"CREATE TABLE t2(b, c, d)"}
+{"sql":"INSERT INTO t2(b,c,d) VALUES(4,5,3),(4,5,4),(4,5,8)"}
+{"sql":"CREATE INDEX t2bcd ON t2(b, c, d)"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON b=NULL AND c=5 AND d IN (2,3,4)"}
+{"sql":"CREATE TABLE v0(v1)"}
+{"sql":"CREATE TABLE v3(v5, v4)"}
+{"sql":"INSERT INTO v0 VALUES(0)"}
+{"sql":"CREATE INDEX v9 ON v3(v4, v4, v5)"}
+{"sql":"SELECT quote(v5) FROM v0 LEFT JOIN v3 ON v4 = NULL AND v5 IN(0)"}
+{"sql":"INSERT INTO t1 VALUES(null,10),(0,10),(10,10)"}
+{"sql":"SELECT quote(a), quote(b), '|' FROM t1 WHERE b in (SELECT a FROM t1) AND a=0"}
+{"sql":"INSERT INTO t2(x) VALUES(NULL),(0),(10)"}
+{"sql":"SELECT quote(x), quote(a), quote(b), 'x'\n    FROM t2 LEFT JOIN t1 ON a=x AND b in (null,0,10)"}

@@ -1,0 +1,65 @@
+{"sql":"CREATE OPERATOR ## (\n   leftarg = path,\n   rightarg = path,\n   function = path_inter,\n   commutator = ##\n)"}
+{"sql":"CREATE OPERATOR @#@ (\n   rightarg = int8,\t\t-- prefix\n   procedure = factorial\n)"}
+{"sql":"CREATE OPERATOR #%# (\n   leftarg = int8,\t\t-- fail, postfix is no longer supported\n   procedure = factorial\n)"}
+{"sql":"SELECT @#@ 24","shape":"SELECT @#@ 24;"}
+{"sql":"COMMENT ON OPERATOR ###### (NONE, int4) IS 'bad prefix'"}
+{"sql":"COMMENT ON OPERATOR ###### (int4, NONE) IS 'bad postfix'"}
+{"sql":"COMMENT ON OPERATOR ###### (int4, int8) IS 'bad infix'"}
+{"sql":"DROP OPERATOR ###### (NONE, int4)"}
+{"sql":"DROP OPERATOR ###### (int4, NONE)"}
+{"sql":"DROP OPERATOR ###### (int4, int8)"}
+{"sql":"CREATE OPERATOR => (\n   rightarg = int8,\n   procedure = factorial\n)","reject":true}
+{"sql":"CREATE OPERATOR !=- (\n   rightarg = int8,\n   procedure = factorial\n)"}
+{"sql":"SELECT !=- 10","shape":"SELECT !=- 10;"}
+{"sql":"SELECT 10 !=-","reject":true}
+{"sql":"SELECT 2 !=/**/ 1, 2 !=/**/ 2","shape":"SELECT 2 != 1, 2 != 2;"}
+{"sql":"SELECT 2 !=-- comment to be removed by psql\n  1","shape":"SELECT 2 != 1;"}
+{"sql":"DO $$ -- use DO to protect -- from psql\n  declare r boolean;\n  begin\n    execute $e$ select 2 !=-- comment\n      1 $e$ into r;\n    raise info 'r = %', r;\n  end;\n$$","shape":"DO ' -- use DO to protect -- from psql\n  declare r boolean;\n  begin\n    execute $e$ select 2 !=-- comment\n      1 $e$ into r;\n    raise info ''r = %'', r;\n  end;\n';"}
+{"sql":"SELECT true<>-1 BETWEEN 1 AND 1","shape":"SELECT TRUE <> ((-1) BETWEEN 1 AND 1);"}
+{"sql":"SELECT false<>/**/1 BETWEEN 1 AND 1","shape":"SELECT FALSE <> (1 BETWEEN 1 AND 1);"}
+{"sql":"SELECT false<=-1 BETWEEN 1 AND 1","shape":"SELECT FALSE <= ((-1) BETWEEN 1 AND 1);"}
+{"sql":"SELECT false>=-1 BETWEEN 1 AND 1","shape":"SELECT FALSE >= ((-1) BETWEEN 1 AND 1);"}
+{"sql":"SELECT 2<=/**/3, 3>=/**/2, 2<>/**/3","shape":"SELECT 2 <= 3, 3 >= 2, 2 <> 3;"}
+{"sql":"SELECT 3<=/**/2, 2>=/**/3, 2<>/**/2","shape":"SELECT 3 <= 2, 2 >= 3, 2 <> 2;"}
+{"sql":"CREATE ROLE regress_rol_op1"}
+{"sql":"CREATE SCHEMA schema_op1","shape":"CREATE SCHEMA schema_op1;"}
+{"sql":"GRANT USAGE ON SCHEMA schema_op1 TO PUBLIC","shape":"GRANT USAGE ON SCHEMA schema_op1 TO PUBLIC;"}
+{"sql":"REVOKE USAGE ON SCHEMA schema_op1 FROM regress_rol_op1","shape":"REVOKE USAGE ON SCHEMA schema_op1 FROM regress_rol_op1;"}
+{"sql":"SET ROLE regress_rol_op1"}
+{"sql":"CREATE OPERATOR schema_op1.#*# (\n   rightarg = int8,\n   procedure = factorial\n)"}
+{"sql":"CREATE OPERATOR #*# (\n   leftarg = SETOF int8,\n   procedure = factorial\n)"}
+{"sql":"CREATE OPERATOR #*# (\n   rightarg = SETOF int8,\n   procedure = factorial\n)"}
+{"sql":"CREATE OR REPLACE FUNCTION fn_op2(boolean, boolean)\nRETURNS boolean AS $$\n    SELECT NULL::BOOLEAN;\n$$ LANGUAGE sql IMMUTABLE","shape":"CREATE OR REPLACE FUNCTION fn_op2(boolean, boolean) RETURNS boolean AS '\n    SELECT NULL::BOOLEAN;\n' LANGUAGE sql IMMUTABLE;"}
+{"sql":"CREATE OPERATOR === (\n    LEFTARG = boolean,\n    RIGHTARG = boolean,\n    PROCEDURE = fn_op2,\n    COMMUTATOR = ===,\n    NEGATOR = !==,\n    RESTRICT = contsel,\n    JOIN = contjoinsel,\n    SORT1, SORT2, LTCMP, GTCMP, HASHES, MERGES\n)"}
+{"sql":"CREATE OPERATOR #@%# (\n   rightarg = int8,\n   procedure = factorial,\n   invalid_att = int8\n)"}
+{"sql":"CREATE OPERATOR #@%# (\n   procedure = factorial\n)"}
+{"sql":"CREATE OPERATOR #@%# (\n   rightarg = int8\n)"}
+{"sql":"CREATE ROLE regress_rol_op3"}
+{"sql":"CREATE TYPE type_op3 AS ENUM ('new', 'open', 'closed')","shape":"CREATE TYPE type_op3 AS ENUM ('new', 'open', 'closed');"}
+{"sql":"CREATE FUNCTION fn_op3(type_op3, int8)\nRETURNS int8 AS $$\n    SELECT NULL::int8;\n$$ LANGUAGE sql IMMUTABLE","shape":"CREATE FUNCTION fn_op3(type_op3, int8) RETURNS int8 AS '\n    SELECT NULL::int8;\n' LANGUAGE sql IMMUTABLE;"}
+{"sql":"REVOKE USAGE ON TYPE type_op3 FROM regress_rol_op3","shape":"REVOKE USAGE ON TYPE type_op3 FROM regress_rol_op3;"}
+{"sql":"REVOKE USAGE ON TYPE type_op3 FROM PUBLIC","shape":"REVOKE USAGE ON TYPE type_op3 FROM PUBLIC;"}
+{"sql":"SET ROLE regress_rol_op3"}
+{"sql":"CREATE OPERATOR #*# (\n   leftarg = type_op3,\n   rightarg = int8,\n   procedure = fn_op3\n)"}
+{"sql":"CREATE ROLE regress_rol_op4"}
+{"sql":"CREATE TYPE type_op4 AS ENUM ('new', 'open', 'closed')","shape":"CREATE TYPE type_op4 AS ENUM ('new', 'open', 'closed');"}
+{"sql":"CREATE FUNCTION fn_op4(int8, type_op4)\nRETURNS int8 AS $$\n    SELECT NULL::int8;\n$$ LANGUAGE sql IMMUTABLE","shape":"CREATE FUNCTION fn_op4(int8, type_op4) RETURNS int8 AS '\n    SELECT NULL::int8;\n' LANGUAGE sql IMMUTABLE;"}
+{"sql":"REVOKE USAGE ON TYPE type_op4 FROM regress_rol_op4","shape":"REVOKE USAGE ON TYPE type_op4 FROM regress_rol_op4;"}
+{"sql":"REVOKE USAGE ON TYPE type_op4 FROM PUBLIC","shape":"REVOKE USAGE ON TYPE type_op4 FROM PUBLIC;"}
+{"sql":"SET ROLE regress_rol_op4"}
+{"sql":"CREATE OPERATOR #*# (\n   leftarg = int8,\n   rightarg = type_op4,\n   procedure = fn_op4\n)"}
+{"sql":"CREATE ROLE regress_rol_op5"}
+{"sql":"CREATE TYPE type_op5 AS ENUM ('new', 'open', 'closed')","shape":"CREATE TYPE type_op5 AS ENUM ('new', 'open', 'closed');"}
+{"sql":"CREATE FUNCTION fn_op5(int8, int8)\nRETURNS int8 AS $$\n    SELECT NULL::int8;\n$$ LANGUAGE sql IMMUTABLE","shape":"CREATE FUNCTION fn_op5(int8, int8) RETURNS int8 AS '\n    SELECT NULL::int8;\n' LANGUAGE sql IMMUTABLE;"}
+{"sql":"REVOKE EXECUTE ON FUNCTION fn_op5(int8, int8) FROM regress_rol_op5"}
+{"sql":"REVOKE EXECUTE ON FUNCTION fn_op5(int8, int8) FROM PUBLIC"}
+{"sql":"SET ROLE regress_rol_op5"}
+{"sql":"CREATE OPERATOR #*# (\n   leftarg = int8,\n   rightarg = int8,\n   procedure = fn_op5\n)"}
+{"sql":"CREATE ROLE regress_rol_op6"}
+{"sql":"CREATE TYPE type_op6 AS ENUM ('new', 'open', 'closed')","shape":"CREATE TYPE type_op6 AS ENUM ('new', 'open', 'closed');"}
+{"sql":"CREATE FUNCTION fn_op6(int8, int8)\nRETURNS type_op6 AS $$\n    SELECT NULL::type_op6;\n$$ LANGUAGE sql IMMUTABLE","shape":"CREATE FUNCTION fn_op6(int8, int8) RETURNS type_op6 AS '\n    SELECT NULL::type_op6;\n' LANGUAGE sql IMMUTABLE;"}
+{"sql":"REVOKE USAGE ON TYPE type_op6 FROM regress_rol_op6","shape":"REVOKE USAGE ON TYPE type_op6 FROM regress_rol_op6;"}
+{"sql":"REVOKE USAGE ON TYPE type_op6 FROM PUBLIC","shape":"REVOKE USAGE ON TYPE type_op6 FROM PUBLIC;"}
+{"sql":"SET ROLE regress_rol_op6"}
+{"sql":"CREATE OPERATOR #*# (\n   leftarg = int8,\n   rightarg = int8,\n   procedure = fn_op6\n)"}
+{"sql":"CREATE OPERATOR ===\n(\n\t\"Leftarg\" = box,\n\t\"Rightarg\" = box,\n\t\"Procedure\" = area_equal_function,\n\t\"Commutator\" = ===,\n\t\"Negator\" = !==,\n\t\"Restrict\" = area_restriction_function,\n\t\"Join\" = area_join_function,\n\t\"Hashes\",\n\t\"Merges\"\n)"}

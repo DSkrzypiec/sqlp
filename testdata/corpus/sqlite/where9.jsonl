@@ -1,0 +1,35 @@
+{"sql":"SELECT t2.a FROM t1, t2\n    WHERE t1.a=80 AND ((t1.c=t2.c AND t1.d=t2.d) OR t1.f=t2.f)"}
+{"sql":"SELECT coalesce(t2.a,9999)\n    FROM t1 LEFT JOIN t2 ON (t1.c+1=t2.c AND t1.d=t2.d) OR (t1.f||'x')=t2.f\n    WHERE t1.a=80"}
+{"sql":"SELECT a FROM t1 INDEXED BY t1b\n     WHERE +b>1000\n       AND (c=31031 OR d IS NULL)\n     ORDER BY +a"}
+{"sql":"SELECT a FROM t1 INDEXED BY t1c\n     WHERE b>1000\n       AND (c=31031 OR d IS NULL)\n     ORDER BY +a"}
+{"sql":"SELECT a FROM t1 INDEXED BY t1d\n     WHERE b>1000\n       AND (c=31031 OR d IS NULL)\n     ORDER BY +a"}
+{"sql":"SELECT a FROM t1 WHERE b>1000 AND (c=31031 OR d IS NULL)"}
+{"sql":"SELECT a FROM t1 WHERE b=1000 AND (c=31031 OR d IS NULL)"}
+{"sql":"SELECT a FROM t1 WHERE b>1000 AND (c>=31031 OR d IS NULL)"}
+{"sql":"DELETE FROM t1 INDEXED BY t1b\n     WHERE (+b IS NULL AND c NOT NULL AND d NOT NULL)\n        OR (b NOT NULL AND c IS NULL AND d NOT NULL)\n        OR (b NOT NULL AND c NOT NULL AND d IS NULL)"}
+{"sql":"UPDATE t1 INDEXED BY t1b SET a=a+100\n     WHERE (+b IS NULL AND c NOT NULL AND d NOT NULL)\n        OR (b NOT NULL AND c IS NULL AND d NOT NULL)\n        OR (b NOT NULL AND c NOT NULL AND d IS NULL)"}
+{"sql":"UPDATE t1 INDEXED BY t1b SET a=a+100\n       WHERE (b IS NULL AND c NOT NULL AND d NOT NULL)\n          OR (b NOT NULL AND c IS NULL AND d NOT NULL)\n          OR (b NOT NULL AND c NOT NULL AND d IS NULL)"}
+{"sql":"DELETE FROM t1 INDEXED BY t1b\n       WHERE (b IS NULL AND c NOT NULL AND d NOT NULL)\n          OR (b NOT NULL AND c IS NULL AND d NOT NULL)\n          OR (b NOT NULL AND c NOT NULL AND d IS NULL)"}
+{"sql":"CREATE TABLE t5(a, b, c, d, e, f, g, x, y)"}
+{"sql":"INSERT INTO t5\n     SELECT a, b, c, e, d, f, g,\n            CASE WHEN (a&1)!=0 THEN 'y' ELSE 'n' END,\n            CASE WHEN (a&2)!=0 THEN 'y' ELSE 'n' END\n       FROM t1"}
+{"sql":"CREATE INDEX t5xb ON t5(x, b)"}
+{"sql":"CREATE INDEX t5xc ON t5(x, c)"}
+{"sql":"CREATE INDEX t5xd ON t5(x, d)"}
+{"sql":"CREATE INDEX t5xe ON t5(x, e)"}
+{"sql":"CREATE INDEX t5xf ON t5(x, f)"}
+{"sql":"CREATE INDEX t5xg ON t5(x, g)"}
+{"sql":"CREATE INDEX t5yb ON t5(y, b)"}
+{"sql":"CREATE INDEX t5yc ON t5(y, c)"}
+{"sql":"CREATE INDEX t5yd ON t5(y, d)"}
+{"sql":"CREATE INDEX t5ye ON t5(y, e)"}
+{"sql":"CREATE INDEX t5yf ON t5(y, f)"}
+{"sql":"CREATE INDEX t5yg ON t5(y, g)"}
+{"sql":"CREATE TABLE t6(a, b, c, e, d, f, g, x, y)"}
+{"sql":"INSERT INTO t6 SELECT * FROM t5"}
+{"sql":"ANALYZE t5"}
+{"sql":"SELECT a FROM t6 WHERE x='y' AND (b=913 OR c=27027) ORDER BY a"}
+{"sql":"SELECT a FROM t6 WHERE x='n' AND (b=913 OR c=27027) ORDER BY a"}
+{"sql":"SELECT a FROM t6 WHERE (x='y' OR y='y') AND b=913 ORDER BY a"}
+{"sql":"SELECT a FROM t6 WHERE (x='y' OR y='y') AND c=27027 ORDER BY a"}
+{"sql":"CREATE VIEW t2 AS SELECT * FROM t2_a UNION ALL SELECT * FROM t2_b"}
+{"sql":"SELECT 1 FROM t1 JOIN t1 USING(a)\n   WHERE (a=1)\n      OR (a=2 AND (SELECT 4 FROM t2,(SELECT 5 FROM t1 ORDER BY a) WHERE a))"}

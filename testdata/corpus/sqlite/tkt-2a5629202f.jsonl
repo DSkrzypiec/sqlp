@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t8(b TEXT, c TEXT)"}
+{"sql":"INSERT INTO t8 VALUES('a',  'one')"}
+{"sql":"INSERT INTO t8 VALUES('b',  'two')"}
+{"sql":"INSERT INTO t8 VALUES(NULL, 'three')"}
+{"sql":"INSERT INTO t8 VALUES(NULL, 'four')"}
+{"sql":"SELECT coalesce(b, 'null') || '/' || c FROM t8 x ORDER BY x.b, x.c"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t8(b)"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t8(b, c)"}
+{"sql":"CREATE TABLE t2(a, b NOT NULL, c)"}
+{"sql":"CREATE UNIQUE INDEX t2ab ON t2(a, b)"}
+{"sql":"CREATE UNIQUE INDEX t2ba ON t2(b, a)"}

@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE t1(a UNIQUE, b UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(a_string(200), a_string(300))"}
+{"sql":"INSERT INTO t1 SELECT a_string(200), a_string(300) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(a_string(201), a_string(301))"}

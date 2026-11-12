@@ -1,0 +1,63 @@
+{"sql":"begin"}
+{"sql":"create table t1(a,b,c)"}
+{"sql":"insert into t1 values(1,0,0)"}
+{"sql":"insert into t1 values(2,0,1)"}
+{"sql":"insert into t1 values(3,1,0)"}
+{"sql":"insert into t1 values(4,1,1)"}
+{"sql":"insert into t1 values(5,null,0)"}
+{"sql":"insert into t1 values(6,null,1)"}
+{"sql":"insert into t1 values(7,null,null)"}
+{"sql":"commit"}
+{"sql":"select ifnull(a+b,99) from t1"}
+{"sql":"select ifnull(b*c,99) from t1"}
+{"sql":"select ifnull(case when b<>0 then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case when not b<>0 then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case when b<>0 and c<>0 then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case when not (b<>0 and c<>0) then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case when b<>0 or c<>0 then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case when not (b<>0 or c<>0) then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case b when c then 1 else 0 end, 99) from t1"}
+{"sql":"select ifnull(case c when b then 1 else 0 end, 99) from t1"}
+{"sql":"select count(*), count(b), count(c), sum(b), sum(c), \n           avg(b), avg(c), min(b), max(b) from t1"}
+{"sql":"SELECT sum(b), total(b) FROM t1 WHERE b<0"}
+{"sql":"select a from t1 where b<10"}
+{"sql":"select a from t1 where not b>10"}
+{"sql":"select a from t1 where b<10 or c=1"}
+{"sql":"select a from t1 where b<10 and c=1"}
+{"sql":"select a from t1 where not (b<10 and c=1)"}
+{"sql":"select distinct b from t1 order by b"}
+{"sql":"select b from t1 union select c from t1 order by b"}
+{"sql":"select b from t1 union select c from t1 order by 1"}
+{"sql":"select b from t1 union select c from t1 order by t1.b"}
+{"sql":"select b from t1 union select c from t1 order by main.t1.b"}
+{"sql":"select b from t1 union select c from t1 order by t1.a"}
+{"sql":"select b from t1 union select c from t1 order by main.t1.a"}
+{"sql":"create table t2(a, b unique on conflict ignore)"}
+{"sql":"insert into t2 values(1,1)"}
+{"sql":"insert into t2 values(2,null)"}
+{"sql":"insert into t2 values(3,null)"}
+{"sql":"insert into t2 values(4,1)"}
+{"sql":"select a from t2"}
+{"sql":"create table t3(a, b, c, unique(b,c) on conflict ignore)"}
+{"sql":"insert into t3 values(1,1,1)"}
+{"sql":"insert into t3 values(2,null,1)"}
+{"sql":"insert into t3 values(3,null,1)"}
+{"sql":"insert into t3 values(4,1,1)"}
+{"sql":"select a from t3"}
+{"sql":"INSERT INTO t4 VALUES(1,11)"}
+{"sql":"INSERT INTO t4 VALUES(2,NULL)"}
+{"sql":"SELECT x FROM t4 WHERE y=NULL"}
+{"sql":"SELECT x FROM t4 WHERE y IN (33,NULL)"}
+{"sql":"SELECT x FROM t4 WHERE y<33 ORDER BY x"}
+{"sql":"SELECT x FROM t4 WHERE y>6 ORDER BY x"}
+{"sql":"SELECT x FROM t4 WHERE y!=33 ORDER BY x"}
+{"sql":"CREATE INDEX t4i1 ON t4(y)"}
+{"sql":"CREATE UNIQUE INDEX t5ab ON t5(a, b)"}
+{"sql":"INSERT INTO t5 VALUES(1, NULL, 'one')"}
+{"sql":"INSERT INTO t5 VALUES(1, NULL, 'i')"}
+{"sql":"INSERT INTO t5 VALUES(NULL, 'x', 'two')"}
+{"sql":"INSERT INTO t5 VALUES(NULL, 'x', 'ii')"}
+{"sql":"SELECT * FROM t5 WHERE a = 1 AND b IS NULL"}
+{"sql":"SELECT * FROM t5 WHERE a IS NULL AND b = 'x'"}
+{"sql":"CREATE TABLE t0(c0 PRIMARY KEY DESC)"}
+{"sql":"SELECT * FROM t0 WHERE t0.c0 > NULL"}

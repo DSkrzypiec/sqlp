@@ -1,0 +1,2 @@
+{"sql":"PRAGMA wal_autocheckpoint=128"}
+{"sql":"PRAGMA journal_size_limit=16384"}

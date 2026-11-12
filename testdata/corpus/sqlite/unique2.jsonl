@@ -1,0 +1,3 @@
+{"sql":"CREATE UNIQUE INDEX t1yz ON t1(y,z)"}
+{"sql":"CREATE TABLE err1(a,b,c,UNIQUE(rowid))"}
+{"sql":"CREATE TABLE err1(a,b,c,PRIMARY KEY(rowid))"}

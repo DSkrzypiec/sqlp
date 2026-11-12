@@ -1,0 +1,840 @@
+{"sql":"create table pkeys (pkey1 int4 not null, pkey2 text not null)","shape":"CREATE TABLE pkeys (pkey1 int4 NOT NULL, pkey2 text NOT NULL);"}
+{"sql":"create table fkeys (fkey1 int4, fkey2 text, fkey3 int)","shape":"CREATE TABLE fkeys (fkey1 int4, fkey2 text, fkey3 int);"}
+{"sql":"create table fkeys2 (fkey21 int4, fkey22 text, pkey23 int not null)","shape":"CREATE TABLE fkeys2 (fkey21 int4, fkey22 text, pkey23 int NOT NULL);"}
+{"sql":"create index fkeys_i on fkeys (fkey1, fkey2)","shape":"CREATE INDEX fkeys_i ON fkeys (fkey1, fkey2);"}
+{"sql":"create index fkeys2_i on fkeys2 (fkey21, fkey22)","shape":"CREATE INDEX fkeys2_i ON fkeys2 (fkey21, fkey22);"}
+{"sql":"create index fkeys2p_i on fkeys2 (pkey23)","shape":"CREATE INDEX fkeys2p_i ON fkeys2 (pkey23);"}
+{"sql":"insert into pkeys values (10, '1')","shape":"INSERT INTO pkeys VALUES (10, '1');"}
+{"sql":"insert into pkeys values (20, '2')","shape":"INSERT INTO pkeys VALUES (20, '2');"}
+{"sql":"insert into pkeys values (30, '3')","shape":"INSERT INTO pkeys VALUES (30, '3');"}
+{"sql":"insert into pkeys values (40, '4')","shape":"INSERT INTO pkeys VALUES (40, '4');"}
+{"sql":"insert into pkeys values (50, '5')","shape":"INSERT INTO pkeys VALUES (50, '5');"}
+{"sql":"insert into pkeys values (60, '6')","shape":"INSERT INTO pkeys VALUES (60, '6');"}
+{"sql":"create unique index pkeys_i on pkeys (pkey1, pkey2)","shape":"CREATE UNIQUE INDEX pkeys_i ON pkeys (pkey1, pkey2);"}
+{"sql":"create trigger check_fkeys_pkey_exist\n\tbefore insert or update on fkeys\n\tfor each row\n\texecute function\n\tcheck_primary_key ('fkey1', 'fkey2', 'pkeys', 'pkey1', 'pkey2')","shape":"CREATE TRIGGER check_fkeys_pkey_exist BEFORE INSERT OR UPDATE ON fkeys FOR EACH ROW EXECUTE FUNCTION check_primary_key('fkey1', 'fkey2', 'pkeys', 'pkey1', 'pkey2');"}
+{"sql":"create trigger check_fkeys_pkey2_exist\n\tbefore insert or update on fkeys\n\tfor each row\n\texecute function check_primary_key ('fkey3', 'fkeys2', 'pkey23')","shape":"CREATE TRIGGER check_fkeys_pkey2_exist BEFORE INSERT OR UPDATE ON fkeys FOR EACH ROW EXECUTE FUNCTION check_primary_key('fkey3', 'fkeys2', 'pkey23');"}
+{"sql":"create trigger check_fkeys2_pkey_exist\n\tbefore insert or update on fkeys2\n\tfor each row\n\texecute procedure\n\tcheck_primary_key ('fkey21', 'fkey22', 'pkeys', 'pkey1', 'pkey2')","shape":"CREATE TRIGGER check_fkeys2_pkey_exist BEFORE INSERT OR UPDATE ON fkeys2 FOR EACH ROW EXECUTE FUNCTION check_primary_key('fkey21', 'fkey22', 'pkeys', 'pkey1', 'pkey2');"}
+{"sql":"COMMENT ON TRIGGER check_fkeys2_pkey_bad ON fkeys2 IS 'wrong'","shape":"COMMENT ON TRIGGER check_fkeys2_pkey_bad ON fkeys2 IS 'wrong';"}
+{"sql":"COMMENT ON TRIGGER check_fkeys2_pkey_exist ON fkeys2 IS 'right'","shape":"COMMENT ON TRIGGER check_fkeys2_pkey_exist ON fkeys2 IS 'right';"}
+{"sql":"COMMENT ON TRIGGER check_fkeys2_pkey_exist ON fkeys2 IS NULL","shape":"COMMENT ON TRIGGER check_fkeys2_pkey_exist ON fkeys2 IS NULL;"}
+{"sql":"create trigger check_pkeys_fkey_cascade\n\tbefore delete or update on pkeys\n\tfor each row\n\texecute procedure\n\tcheck_foreign_key (2, 'cascade', 'pkey1', 'pkey2',\n\t'fkeys', 'fkey1', 'fkey2', 'fkeys2', 'fkey21', 'fkey22')","shape":"CREATE TRIGGER check_pkeys_fkey_cascade BEFORE DELETE OR UPDATE ON pkeys FOR EACH ROW EXECUTE FUNCTION check_foreign_key(2, 'cascade', 'pkey1', 'pkey2', 'fkeys', 'fkey1', 'fkey2', 'fkeys2', 'fkey21', 'fkey22');"}
+{"sql":"create trigger check_fkeys2_fkey_restrict\n\tbefore delete or update on fkeys2\n\tfor each row\n\texecute procedure check_foreign_key (1, 'restrict', 'pkey23', 'fkeys', 'fkey3')","shape":"CREATE TRIGGER check_fkeys2_fkey_restrict BEFORE DELETE OR UPDATE ON fkeys2 FOR EACH ROW EXECUTE FUNCTION check_foreign_key(1, 'restrict', 'pkey23', 'fkeys', 'fkey3');"}
+{"sql":"insert into fkeys2 values (10, '1', 1)","shape":"INSERT INTO fkeys2 VALUES (10, '1', 1);"}
+{"sql":"insert into fkeys2 values (30, '3', 2)","shape":"INSERT INTO fkeys2 VALUES (30, '3', 2);"}
+{"sql":"insert into fkeys2 values (40, '4', 5)","shape":"INSERT INTO fkeys2 VALUES (40, '4', 5);"}
+{"sql":"insert into fkeys2 values (50, '5', 3)","shape":"INSERT INTO fkeys2 VALUES (50, '5', 3);"}
+{"sql":"insert into fkeys2 values (70, '5', 3)","shape":"INSERT INTO fkeys2 VALUES (70, '5', 3);"}
+{"sql":"insert into fkeys values (10, '1', 2)","shape":"INSERT INTO fkeys VALUES (10, '1', 2);"}
+{"sql":"insert into fkeys values (30, '3', 3)","shape":"INSERT INTO fkeys VALUES (30, '3', 3);"}
+{"sql":"insert into fkeys values (40, '4', 2)","shape":"INSERT INTO fkeys VALUES (40, '4', 2);"}
+{"sql":"insert into fkeys values (50, '5', 2)","shape":"INSERT INTO fkeys VALUES (50, '5', 2);"}
+{"sql":"insert into fkeys values (70, '5', 1)","shape":"INSERT INTO fkeys VALUES (70, '5', 1);"}
+{"sql":"insert into fkeys values (60, '6', 4)","shape":"INSERT INTO fkeys VALUES (60, '6', 4);"}
+{"sql":"delete from pkeys where pkey1 = 30 and pkey2 = '3'","shape":"DELETE FROM pkeys WHERE (pkey1 = 30) AND (pkey2 = '3');"}
+{"sql":"delete from pkeys where pkey1 = 40 and pkey2 = '4'","shape":"DELETE FROM pkeys WHERE (pkey1 = 40) AND (pkey2 = '4');"}
+{"sql":"update pkeys set pkey1 = 7, pkey2 = '70' where pkey1 = 50 and pkey2 = '5'","shape":"UPDATE pkeys SET pkey1 = 7, pkey2 = '70' WHERE (pkey1 = 50) AND (pkey2 = '5');"}
+{"sql":"update pkeys set pkey1 = 7, pkey2 = '70' where pkey1 = 10 and pkey2 = '1'","shape":"UPDATE pkeys SET pkey1 = 7, pkey2 = '70' WHERE (pkey1 = 10) AND (pkey2 = '1');"}
+{"sql":"SELECT trigger_name, event_manipulation, event_object_schema, event_object_table,\n       action_order, action_condition, action_orientation, action_timing,\n       action_reference_old_table, action_reference_new_table\n  FROM information_schema.triggers\n  WHERE event_object_table in ('pkeys', 'fkeys', 'fkeys2')\n  ORDER BY trigger_name COLLATE \"C\", 2","shape":"SELECT trigger_name, event_manipulation, event_object_schema, event_object_table, action_order, action_condition, action_orientation, action_timing, action_reference_old_table, action_reference_new_table FROM information_schema.triggers WHERE event_object_table IN ('pkeys', 'fkeys', 'fkeys2') ORDER BY trigger_name COLLATE \"C\", 2;"}
+{"sql":"DROP TABLE pkeys","shape":"DROP TABLE pkeys;"}
+{"sql":"DROP TABLE fkeys","shape":"DROP TABLE fkeys;"}
+{"sql":"DROP TABLE fkeys2","shape":"DROP TABLE fkeys2;"}
+{"sql":"create table trigtest (f1 int, f2 text)","shape":"CREATE TABLE trigtest (f1 int, f2 text);"}
+{"sql":"create trigger trigger_return_old\n\tbefore insert or delete or update on trigtest\n\tfor each row execute procedure trigger_return_old()","shape":"CREATE TRIGGER trigger_return_old BEFORE INSERT OR DELETE OR UPDATE ON trigtest FOR EACH ROW EXECUTE FUNCTION trigger_return_old();"}
+{"sql":"insert into trigtest values(1, 'foo')","shape":"INSERT INTO trigtest VALUES (1, 'foo');"}
+{"sql":"select * from trigtest","shape":"SELECT * FROM trigtest;"}
+{"sql":"update trigtest set f2 = f2 || 'bar'","shape":"UPDATE trigtest SET f2 = f2 || 'bar';"}
+{"sql":"delete from trigtest","shape":"DELETE FROM trigtest;"}
+{"sql":"create function f1_times_10() returns trigger as\n$$ begin new.f1 := new.f1 * 10; return new; end $$ language plpgsql","shape":"CREATE FUNCTION f1_times_10() RETURNS trigger AS ' begin new.f1 := new.f1 * 10; return new; end ' LANGUAGE plpgsql;"}
+{"sql":"create trigger trigger_alpha\n\tbefore insert or update on trigtest\n\tfor each row execute procedure f1_times_10()","shape":"CREATE TRIGGER trigger_alpha BEFORE INSERT OR UPDATE ON trigtest FOR EACH ROW EXECUTE FUNCTION f1_times_10();"}
+{"sql":"create trigger trigger_zed\n\tbefore insert or update on trigtest\n\tfor each row execute procedure f1_times_10()","shape":"CREATE TRIGGER trigger_zed BEFORE INSERT OR UPDATE ON trigtest FOR EACH ROW EXECUTE FUNCTION f1_times_10();"}
+{"sql":"drop trigger trigger_alpha on trigtest","shape":"DROP TRIGGER trigger_alpha ON trigtest;"}
+{"sql":"drop table trigtest","shape":"DROP TABLE trigtest;"}
+{"sql":"create table trigtest (\n  a integer,\n  b bool default true not null,\n  c text default 'xyzzy' not null)","shape":"CREATE TABLE trigtest (a integer, b bool DEFAULT TRUE NOT NULL, c text DEFAULT 'xyzzy' NOT NULL);"}
+{"sql":"insert into trigtest values(1)","shape":"INSERT INTO trigtest VALUES (1);"}
+{"sql":"alter table trigtest add column d integer default 42 not null","shape":"ALTER TABLE trigtest ADD COLUMN d integer DEFAULT 42 NOT NULL;"}
+{"sql":"update trigtest set a = 2 where a = 1 returning *","shape":"UPDATE trigtest SET a = 2 WHERE a = 1 RETURNING *;"}
+{"sql":"alter table trigtest drop column b","shape":"ALTER TABLE trigtest DROP COLUMN b;"}
+{"sql":"create sequence ttdummy_seq increment 10 start 0 minvalue 0","shape":"CREATE SEQUENCE ttdummy_seq INCREMENT BY 10 START WITH 0 MINVALUE 0;"}
+{"sql":"create table tttest (\n\tprice_id\tint4,\n\tprice_val\tint4,\n\tprice_on\tint4,\n\tprice_off\tint4 default 999999\n)","shape":"CREATE TABLE tttest (price_id int4, price_val int4, price_on int4, price_off int4 DEFAULT 999999);"}
+{"sql":"create trigger ttdummy\n\tbefore delete or update on tttest\n\tfor each row\n\texecute procedure\n\tttdummy (price_on, price_off)","shape":"CREATE TRIGGER ttdummy BEFORE DELETE OR UPDATE ON tttest FOR EACH ROW EXECUTE FUNCTION ttdummy(price_on, price_off);"}
+{"sql":"create trigger ttserial\n\tbefore insert or update on tttest\n\tfor each row\n\texecute procedure\n\tautoinc (price_on, ttdummy_seq)","shape":"CREATE TRIGGER ttserial BEFORE INSERT OR UPDATE ON tttest FOR EACH ROW EXECUTE FUNCTION autoinc(price_on, ttdummy_seq);"}
+{"sql":"insert into tttest values (1, 1, null)","shape":"INSERT INTO tttest VALUES (1, 1, NULL);"}
+{"sql":"insert into tttest values (2, 2, null)","shape":"INSERT INTO tttest VALUES (2, 2, NULL);"}
+{"sql":"insert into tttest values (3, 3, 0)","shape":"INSERT INTO tttest VALUES (3, 3, 0);"}
+{"sql":"select * from tttest","shape":"SELECT * FROM tttest;"}
+{"sql":"delete from tttest where price_id = 2","shape":"DELETE FROM tttest WHERE price_id = 2;"}
+{"sql":"select * from tttest where price_off = 999999","shape":"SELECT * FROM tttest WHERE price_off = 999999;"}
+{"sql":"update tttest set price_val = 30 where price_id = 3","shape":"UPDATE tttest SET price_val = 30 WHERE price_id = 3;"}
+{"sql":"update tttest set price_id = 5 where price_id = 3","shape":"UPDATE tttest SET price_id = 5 WHERE price_id = 3;"}
+{"sql":"select set_ttdummy(0)","shape":"SELECT set_ttdummy(0);"}
+{"sql":"delete from tttest where price_id = 5","shape":"DELETE FROM tttest WHERE price_id = 5;"}
+{"sql":"update tttest set price_off = 999999 where price_val = 30","shape":"UPDATE tttest SET price_off = 999999 WHERE price_val = 30;"}
+{"sql":"select set_ttdummy(1)","shape":"SELECT set_ttdummy(1);"}
+{"sql":"update tttest set price_on = -1 where price_id = 1","shape":"UPDATE tttest SET price_on = -1 WHERE price_id = 1;"}
+{"sql":"select * from tttest where price_on <= 35 and price_off > 35 and price_id = 5","shape":"SELECT * FROM tttest WHERE ((price_on <= 35) AND (price_off > 35)) AND (price_id = 5);"}
+{"sql":"drop table tttest","shape":"DROP TABLE tttest;"}
+{"sql":"drop sequence ttdummy_seq","shape":"DROP SEQUENCE ttdummy_seq;"}
+{"sql":"CREATE TABLE log_table (tstamp timestamp default timeofday()::timestamp)","shape":"CREATE TABLE log_table (tstamp timestamp DEFAULT timeofday()::timestamp);"}
+{"sql":"CREATE TABLE main_table (a int unique, b int)","shape":"CREATE TABLE main_table (a int UNIQUE, b int);"}
+{"sql":"COPY main_table (a,b) FROM stdin","shape":"COPY main_table (a, b) FROM STDIN;"}
+{"sql":"CREATE FUNCTION trigger_func() RETURNS trigger LANGUAGE plpgsql AS '\nBEGIN\n\tRAISE NOTICE ''trigger_func(%) called: action = %, when = %, level = %'', TG_ARGV[0], TG_OP, TG_WHEN, TG_LEVEL;\n\tRETURN NULL;\nEND;'","shape":"CREATE FUNCTION trigger_func() RETURNS trigger LANGUAGE plpgsql AS '\nBEGIN\n\tRAISE NOTICE ''trigger_func(%) called: action = %, when = %, level = %'', TG_ARGV[0], TG_OP, TG_WHEN, TG_LEVEL;\n\tRETURN NULL;\nEND;';"}
+{"sql":"CREATE TRIGGER before_ins_stmt_trig BEFORE INSERT ON main_table\nFOR EACH STATEMENT EXECUTE PROCEDURE trigger_func('before_ins_stmt')","shape":"CREATE TRIGGER before_ins_stmt_trig BEFORE INSERT ON main_table FOR EACH STATEMENT EXECUTE FUNCTION trigger_func('before_ins_stmt');"}
+{"sql":"CREATE TRIGGER after_ins_stmt_trig AFTER INSERT ON main_table\nFOR EACH STATEMENT EXECUTE PROCEDURE trigger_func('after_ins_stmt')","shape":"CREATE TRIGGER after_ins_stmt_trig AFTER INSERT ON main_table FOR EACH STATEMENT EXECUTE FUNCTION trigger_func('after_ins_stmt');"}
+{"sql":"CREATE TRIGGER after_upd_stmt_trig AFTER UPDATE ON main_table\nEXECUTE PROCEDURE trigger_func('after_upd_stmt')","shape":"CREATE TRIGGER after_upd_stmt_trig AFTER UPDATE ON main_table EXECUTE FUNCTION trigger_func('after_upd_stmt');"}
+{"sql":"INSERT INTO main_table (a, b) VALUES (5, 10) ON CONFLICT (a)\n  DO UPDATE SET b = EXCLUDED.b","shape":"INSERT INTO main_table (a, b) VALUES (5, 10) ON CONFLICT (a) DO UPDATE SET b = EXCLUDED.b;"}
+{"sql":"CREATE TRIGGER after_upd_row_trig AFTER UPDATE ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('after_upd_row')","shape":"CREATE TRIGGER after_upd_row_trig AFTER UPDATE ON main_table FOR EACH ROW EXECUTE FUNCTION trigger_func('after_upd_row');"}
+{"sql":"INSERT INTO main_table DEFAULT VALUES","shape":"INSERT INTO main_table DEFAULT VALUES;"}
+{"sql":"UPDATE main_table SET a = a + 1 WHERE b < 30","shape":"UPDATE main_table SET a = a + 1 WHERE b < 30;"}
+{"sql":"UPDATE main_table SET a = a + 2 WHERE b > 100","shape":"UPDATE main_table SET a = a + 2 WHERE b > 100;"}
+{"sql":"ALTER TABLE main_table DROP CONSTRAINT main_table_a_key","shape":"ALTER TABLE main_table DROP CONSTRAINT main_table_a_key;"}
+{"sql":"COPY main_table (a, b) FROM stdin","shape":"COPY main_table (a, b) FROM STDIN;"}
+{"sql":"SELECT * FROM main_table ORDER BY a, b","shape":"SELECT * FROM main_table ORDER BY a, b;"}
+{"sql":"CREATE TRIGGER modified_a BEFORE UPDATE OF a ON main_table\nFOR EACH ROW WHEN (OLD.a <> NEW.a) EXECUTE PROCEDURE trigger_func('modified_a')","shape":"CREATE TRIGGER modified_a BEFORE UPDATE OF a ON main_table FOR EACH ROW WHEN (OLD.a <> NEW.a) EXECUTE FUNCTION trigger_func('modified_a');"}
+{"sql":"CREATE TRIGGER modified_any BEFORE UPDATE OF a ON main_table\nFOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE trigger_func('modified_any')","shape":"CREATE TRIGGER modified_any BEFORE UPDATE OF a ON main_table FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE FUNCTION trigger_func('modified_any');"}
+{"sql":"CREATE TRIGGER insert_a AFTER INSERT ON main_table\nFOR EACH ROW WHEN (NEW.a = 123) EXECUTE PROCEDURE trigger_func('insert_a')","shape":"CREATE TRIGGER insert_a AFTER INSERT ON main_table FOR EACH ROW WHEN (NEW.a = 123) EXECUTE FUNCTION trigger_func('insert_a');"}
+{"sql":"CREATE TRIGGER delete_a AFTER DELETE ON main_table\nFOR EACH ROW WHEN (OLD.a = 123) EXECUTE PROCEDURE trigger_func('delete_a')","shape":"CREATE TRIGGER delete_a AFTER DELETE ON main_table FOR EACH ROW WHEN (OLD.a = 123) EXECUTE FUNCTION trigger_func('delete_a');"}
+{"sql":"CREATE TRIGGER insert_when BEFORE INSERT ON main_table\nFOR EACH STATEMENT WHEN (true) EXECUTE PROCEDURE trigger_func('insert_when')","shape":"CREATE TRIGGER insert_when BEFORE INSERT ON main_table FOR EACH STATEMENT WHEN (TRUE) EXECUTE FUNCTION trigger_func('insert_when');"}
+{"sql":"CREATE TRIGGER delete_when AFTER DELETE ON main_table\nFOR EACH STATEMENT WHEN (true) EXECUTE PROCEDURE trigger_func('delete_when')","shape":"CREATE TRIGGER delete_when AFTER DELETE ON main_table FOR EACH STATEMENT WHEN (TRUE) EXECUTE FUNCTION trigger_func('delete_when');"}
+{"sql":"SELECT trigger_name, event_manipulation, event_object_schema, event_object_table,\n       action_order, action_condition, action_orientation, action_timing,\n       action_reference_old_table, action_reference_new_table\n  FROM information_schema.triggers\n  WHERE event_object_table IN ('main_table')\n  ORDER BY trigger_name COLLATE \"C\", 2","shape":"SELECT trigger_name, event_manipulation, event_object_schema, event_object_table, action_order, action_condition, action_orientation, action_timing, action_reference_old_table, action_reference_new_table FROM information_schema.triggers WHERE event_object_table IN ('main_table') ORDER BY trigger_name COLLATE \"C\", 2;"}
+{"sql":"INSERT INTO main_table (a) VALUES (123), (456)","shape":"INSERT INTO main_table (a) VALUES (123), (456);"}
+{"sql":"COPY main_table FROM stdin","shape":"COPY main_table FROM STDIN;"}
+{"sql":"DELETE FROM main_table WHERE a IN (123, 456)","shape":"DELETE FROM main_table WHERE a IN (123, 456);"}
+{"sql":"UPDATE main_table SET a = 50, b = 60","shape":"UPDATE main_table SET a = 50, b = 60;"}
+{"sql":"SELECT pg_get_triggerdef(oid, true) FROM pg_trigger WHERE tgrelid = 'main_table'::regclass AND tgname = 'modified_a'","shape":"SELECT pg_get_triggerdef(oid, TRUE) FROM pg_trigger WHERE (tgrelid = 'main_table'::regclass) AND (tgname = 'modified_a');"}
+{"sql":"SELECT pg_get_triggerdef(oid, false) FROM pg_trigger WHERE tgrelid = 'main_table'::regclass AND tgname = 'modified_a'","shape":"SELECT pg_get_triggerdef(oid, FALSE) FROM pg_trigger WHERE (tgrelid = 'main_table'::regclass) AND (tgname = 'modified_a');"}
+{"sql":"SELECT pg_get_triggerdef(oid, true) FROM pg_trigger WHERE tgrelid = 'main_table'::regclass AND tgname = 'modified_any'","shape":"SELECT pg_get_triggerdef(oid, TRUE) FROM pg_trigger WHERE (tgrelid = 'main_table'::regclass) AND (tgname = 'modified_any');"}
+{"sql":"ALTER TRIGGER modified_a ON main_table RENAME TO modified_modified_a"}
+{"sql":"SELECT count(*) FROM pg_trigger WHERE tgrelid = 'main_table'::regclass AND tgname = 'modified_a'","shape":"SELECT count(*) FROM pg_trigger WHERE (tgrelid = 'main_table'::regclass) AND (tgname = 'modified_a');"}
+{"sql":"SELECT count(*) FROM pg_trigger WHERE tgrelid = 'main_table'::regclass AND tgname = 'modified_modified_a'","shape":"SELECT count(*) FROM pg_trigger WHERE (tgrelid = 'main_table'::regclass) AND (tgname = 'modified_modified_a');"}
+{"sql":"DROP TRIGGER modified_modified_a ON main_table","shape":"DROP TRIGGER modified_modified_a ON main_table;"}
+{"sql":"DROP TRIGGER modified_any ON main_table","shape":"DROP TRIGGER modified_any ON main_table;"}
+{"sql":"DROP TRIGGER insert_a ON main_table","shape":"DROP TRIGGER insert_a ON main_table;"}
+{"sql":"DROP TRIGGER delete_a ON main_table","shape":"DROP TRIGGER delete_a ON main_table;"}
+{"sql":"DROP TRIGGER insert_when ON main_table","shape":"DROP TRIGGER insert_when ON main_table;"}
+{"sql":"DROP TRIGGER delete_when ON main_table","shape":"DROP TRIGGER delete_when ON main_table;"}
+{"sql":"create table table_with_oids(a int)","shape":"CREATE TABLE table_with_oids (a int);"}
+{"sql":"insert into table_with_oids values (1)","shape":"INSERT INTO table_with_oids VALUES (1);"}
+{"sql":"create trigger oid_unchanged_trig after update on table_with_oids\n\tfor each row\n\twhen (new.tableoid = old.tableoid AND new.tableoid <> 0)\n\texecute procedure trigger_func('after_upd_oid_unchanged')","shape":"CREATE TRIGGER oid_unchanged_trig AFTER UPDATE ON table_with_oids FOR EACH ROW WHEN ((new.tableoid = old.tableoid) AND (new.tableoid <> 0)) EXECUTE FUNCTION trigger_func('after_upd_oid_unchanged');"}
+{"sql":"update table_with_oids set a = a + 1","shape":"UPDATE table_with_oids SET a = a + 1;"}
+{"sql":"drop table table_with_oids","shape":"DROP TABLE table_with_oids;"}
+{"sql":"DROP TRIGGER after_upd_row_trig ON main_table","shape":"DROP TRIGGER after_upd_row_trig ON main_table;"}
+{"sql":"CREATE TRIGGER before_upd_a_row_trig BEFORE UPDATE OF a ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_upd_a_row')","shape":"CREATE TRIGGER before_upd_a_row_trig BEFORE UPDATE OF a ON main_table FOR EACH ROW EXECUTE FUNCTION trigger_func('before_upd_a_row');"}
+{"sql":"CREATE TRIGGER after_upd_b_row_trig AFTER UPDATE OF b ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('after_upd_b_row')","shape":"CREATE TRIGGER after_upd_b_row_trig AFTER UPDATE OF b ON main_table FOR EACH ROW EXECUTE FUNCTION trigger_func('after_upd_b_row');"}
+{"sql":"CREATE TRIGGER after_upd_a_b_row_trig AFTER UPDATE OF a, b ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('after_upd_a_b_row')","shape":"CREATE TRIGGER after_upd_a_b_row_trig AFTER UPDATE OF a, b ON main_table FOR EACH ROW EXECUTE FUNCTION trigger_func('after_upd_a_b_row');"}
+{"sql":"CREATE TRIGGER before_upd_a_stmt_trig BEFORE UPDATE OF a ON main_table\nFOR EACH STATEMENT EXECUTE PROCEDURE trigger_func('before_upd_a_stmt')","shape":"CREATE TRIGGER before_upd_a_stmt_trig BEFORE UPDATE OF a ON main_table FOR EACH STATEMENT EXECUTE FUNCTION trigger_func('before_upd_a_stmt');"}
+{"sql":"CREATE TRIGGER after_upd_b_stmt_trig AFTER UPDATE OF b ON main_table\nFOR EACH STATEMENT EXECUTE PROCEDURE trigger_func('after_upd_b_stmt')","shape":"CREATE TRIGGER after_upd_b_stmt_trig AFTER UPDATE OF b ON main_table FOR EACH STATEMENT EXECUTE FUNCTION trigger_func('after_upd_b_stmt');"}
+{"sql":"SELECT pg_get_triggerdef(oid) FROM pg_trigger WHERE tgrelid = 'main_table'::regclass AND tgname = 'after_upd_a_b_row_trig'","shape":"SELECT pg_get_triggerdef(oid) FROM pg_trigger WHERE (tgrelid = 'main_table'::regclass) AND (tgname = 'after_upd_a_b_row_trig');"}
+{"sql":"UPDATE main_table SET a = 50","shape":"UPDATE main_table SET a = 50;"}
+{"sql":"UPDATE main_table SET b = 10","shape":"UPDATE main_table SET b = 10;"}
+{"sql":"CREATE TABLE some_t (some_col boolean NOT NULL)","shape":"CREATE TABLE some_t (some_col boolean NOT NULL);"}
+{"sql":"CREATE FUNCTION dummy_update_func() RETURNS trigger AS $$\nBEGIN\n  RAISE NOTICE 'dummy_update_func(%) called: action = %, old = %, new = %',\n    TG_ARGV[0], TG_OP, OLD, NEW;\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION dummy_update_func() RETURNS trigger AS '\nBEGIN\n  RAISE NOTICE ''dummy_update_func(%) called: action = %, old = %, new = %'',\n    TG_ARGV[0], TG_OP, OLD, NEW;\n  RETURN NEW;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER some_trig_before BEFORE UPDATE ON some_t FOR EACH ROW\n  EXECUTE PROCEDURE dummy_update_func('before')","shape":"CREATE TRIGGER some_trig_before BEFORE UPDATE ON some_t FOR EACH ROW EXECUTE FUNCTION dummy_update_func('before');"}
+{"sql":"CREATE TRIGGER some_trig_aftera AFTER UPDATE ON some_t FOR EACH ROW\n  WHEN (NOT OLD.some_col AND NEW.some_col)\n  EXECUTE PROCEDURE dummy_update_func('aftera')","shape":"CREATE TRIGGER some_trig_aftera AFTER UPDATE ON some_t FOR EACH ROW WHEN ((NOT OLD.some_col) AND NEW.some_col) EXECUTE FUNCTION dummy_update_func('aftera');"}
+{"sql":"CREATE TRIGGER some_trig_afterb AFTER UPDATE ON some_t FOR EACH ROW\n  WHEN (NOT NEW.some_col)\n  EXECUTE PROCEDURE dummy_update_func('afterb')","shape":"CREATE TRIGGER some_trig_afterb AFTER UPDATE ON some_t FOR EACH ROW WHEN (NOT NEW.some_col) EXECUTE FUNCTION dummy_update_func('afterb');"}
+{"sql":"INSERT INTO some_t VALUES (TRUE)","shape":"INSERT INTO some_t VALUES (TRUE);"}
+{"sql":"UPDATE some_t SET some_col = TRUE","shape":"UPDATE some_t SET some_col = TRUE;"}
+{"sql":"UPDATE some_t SET some_col = FALSE","shape":"UPDATE some_t SET some_col = FALSE;"}
+{"sql":"DROP TABLE some_t","shape":"DROP TABLE some_t;"}
+{"sql":"CREATE TRIGGER error_upd_and_col BEFORE UPDATE OR UPDATE OF a ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('error_upd_and_col')","reject":true}
+{"sql":"CREATE TRIGGER error_upd_a_a BEFORE UPDATE OF a, a ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('error_upd_a_a')","shape":"CREATE TRIGGER error_upd_a_a BEFORE UPDATE OF a, a ON main_table FOR EACH ROW EXECUTE FUNCTION trigger_func('error_upd_a_a');"}
+{"sql":"CREATE TRIGGER error_ins_a BEFORE INSERT OF a ON main_table\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('error_ins_a')","reject":true}
+{"sql":"CREATE TRIGGER error_ins_when BEFORE INSERT OR UPDATE ON main_table\nFOR EACH ROW WHEN (OLD.a <> NEW.a)\nEXECUTE PROCEDURE trigger_func('error_ins_old')","shape":"CREATE TRIGGER error_ins_when BEFORE INSERT OR UPDATE ON main_table FOR EACH ROW WHEN (OLD.a <> NEW.a) EXECUTE FUNCTION trigger_func('error_ins_old');"}
+{"sql":"CREATE TRIGGER error_del_when BEFORE DELETE OR UPDATE ON main_table\nFOR EACH ROW WHEN (OLD.a <> NEW.a)\nEXECUTE PROCEDURE trigger_func('error_del_new')","shape":"CREATE TRIGGER error_del_when BEFORE DELETE OR UPDATE ON main_table FOR EACH ROW WHEN (OLD.a <> NEW.a) EXECUTE FUNCTION trigger_func('error_del_new');"}
+{"sql":"CREATE TRIGGER error_del_when BEFORE INSERT OR UPDATE ON main_table\nFOR EACH ROW WHEN (NEW.tableoid <> 0)\nEXECUTE PROCEDURE trigger_func('error_when_sys_column')","shape":"CREATE TRIGGER error_del_when BEFORE INSERT OR UPDATE ON main_table FOR EACH ROW WHEN (NEW.tableoid <> 0) EXECUTE FUNCTION trigger_func('error_when_sys_column');"}
+{"sql":"CREATE TRIGGER error_stmt_when BEFORE UPDATE OF a ON main_table\nFOR EACH STATEMENT WHEN (OLD.* IS DISTINCT FROM NEW.*)\nEXECUTE PROCEDURE trigger_func('error_stmt_when')","shape":"CREATE TRIGGER error_stmt_when BEFORE UPDATE OF a ON main_table FOR EACH STATEMENT WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE FUNCTION trigger_func('error_stmt_when');"}
+{"sql":"ALTER TABLE main_table DROP COLUMN b","shape":"ALTER TABLE main_table DROP COLUMN b;"}
+{"sql":"DROP TRIGGER after_upd_a_b_row_trig ON main_table","shape":"DROP TRIGGER after_upd_a_b_row_trig ON main_table;"}
+{"sql":"DROP TRIGGER after_upd_b_row_trig ON main_table","shape":"DROP TRIGGER after_upd_b_row_trig ON main_table;"}
+{"sql":"DROP TRIGGER after_upd_b_stmt_trig ON main_table","shape":"DROP TRIGGER after_upd_b_stmt_trig ON main_table;"}
+{"sql":"create table trigtest (i serial primary key)","shape":"CREATE TABLE trigtest (i serial PRIMARY KEY);"}
+{"sql":"create table trigtest2 (i int references trigtest(i) on delete cascade)","shape":"CREATE TABLE trigtest2 (i int REFERENCES trigtest (i) ON DELETE CASCADE);"}
+{"sql":"create function trigtest() returns trigger as $$\nbegin\n\traise notice '% % % %', TG_TABLE_NAME, TG_OP, TG_WHEN, TG_LEVEL;\n\treturn new;\nend;$$ language plpgsql","shape":"CREATE FUNCTION trigtest() RETURNS trigger AS '\nbegin\n\traise notice ''% % % %'', TG_TABLE_NAME, TG_OP, TG_WHEN, TG_LEVEL;\n\treturn new;\nend;' LANGUAGE plpgsql;"}
+{"sql":"create trigger trigtest_b_row_tg before insert or update or delete on trigtest\nfor each row execute procedure trigtest()","shape":"CREATE TRIGGER trigtest_b_row_tg BEFORE INSERT OR UPDATE OR DELETE ON trigtest FOR EACH ROW EXECUTE FUNCTION trigtest();"}
+{"sql":"create trigger trigtest_a_row_tg after insert or update or delete on trigtest\nfor each row execute procedure trigtest()","shape":"CREATE TRIGGER trigtest_a_row_tg AFTER INSERT OR UPDATE OR DELETE ON trigtest FOR EACH ROW EXECUTE FUNCTION trigtest();"}
+{"sql":"create trigger trigtest_b_stmt_tg before insert or update or delete on trigtest\nfor each statement execute procedure trigtest()","shape":"CREATE TRIGGER trigtest_b_stmt_tg BEFORE INSERT OR UPDATE OR DELETE ON trigtest FOR EACH STATEMENT EXECUTE FUNCTION trigtest();"}
+{"sql":"create trigger trigtest_a_stmt_tg after insert or update or delete on trigtest\nfor each statement execute procedure trigtest()","shape":"CREATE TRIGGER trigtest_a_stmt_tg AFTER INSERT OR UPDATE OR DELETE ON trigtest FOR EACH STATEMENT EXECUTE FUNCTION trigtest();"}
+{"sql":"insert into trigtest default values","shape":"INSERT INTO trigtest DEFAULT VALUES;"}
+{"sql":"alter table trigtest disable trigger trigtest_b_row_tg"}
+{"sql":"alter table trigtest disable trigger user"}
+{"sql":"alter table trigtest enable trigger trigtest_a_stmt_tg"}
+{"sql":"alter table trigtest enable always trigger trigtest_a_stmt_tg"}
+{"sql":"insert into trigtest2 values(1)","shape":"INSERT INTO trigtest2 VALUES (1);"}
+{"sql":"insert into trigtest2 values(2)","shape":"INSERT INTO trigtest2 VALUES (2);"}
+{"sql":"delete from trigtest where i=2","shape":"DELETE FROM trigtest WHERE i = 2;"}
+{"sql":"select * from trigtest2","shape":"SELECT * FROM trigtest2;"}
+{"sql":"alter table trigtest disable trigger all"}
+{"sql":"delete from trigtest where i=1","shape":"DELETE FROM trigtest WHERE i = 1;"}
+{"sql":"select *  from trigtest","shape":"SELECT * FROM trigtest;"}
+{"sql":"drop table trigtest2","shape":"DROP TABLE trigtest2;"}
+{"sql":"CREATE TABLE trigger_test (\n        i int,\n        v varchar\n)","shape":"CREATE TABLE trigger_test (i int, v varchar);"}
+{"sql":"CREATE OR REPLACE FUNCTION trigger_data()  RETURNS trigger\nLANGUAGE plpgsql AS $$\n\ndeclare\n\n\targstr text;\n\trelid text;\n\nbegin\n\n\trelid := TG_relid::regclass;\n\n\t-- plpgsql can't discover its trigger data in a hash like perl and python\n\t-- can, or by a sort of reflection like tcl can,\n\t-- so we have to hard code the names.\n\traise NOTICE 'TG_NAME: %', TG_name;\n\traise NOTICE 'TG_WHEN: %', TG_when;\n\traise NOTICE 'TG_LEVEL: %', TG_level;\n\traise NOTICE 'TG_OP: %', TG_op;\n\traise NOTICE 'TG_RELID::regclass: %', relid;\n\traise NOTICE 'TG_RELNAME: %', TG_relname;\n\traise NOTICE 'TG_TABLE_NAME: %', TG_table_name;\n\traise NOTICE 'TG_TABLE_SCHEMA: %', TG_table_schema;\n\traise NOTICE 'TG_NARGS: %', TG_nargs;\n\n\targstr := '[';\n\tfor i in 0 .. TG_nargs - 1 loop\n\t\tif i > 0 then\n\t\t\targstr := argstr || ', ';\n\t\tend if;\n\t\targstr := argstr || TG_argv[i];\n\tend loop;\n\targstr := argstr || ']';\n\traise NOTICE 'TG_ARGV: %', argstr;\n\n\tif TG_OP != 'INSERT' then\n\t\traise NOTICE 'OLD: %', OLD;\n\tend if;\n\n\tif TG_OP != 'DELETE' then\n\t\traise NOTICE 'NEW: %', NEW;\n\tend if;\n\n\tif TG_OP = 'DELETE' then\n\t\treturn OLD;\n\telse\n\t\treturn NEW;\n\tend if;\n\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION trigger_data() RETURNS trigger LANGUAGE plpgsql AS '\n\ndeclare\n\n\targstr text;\n\trelid text;\n\nbegin\n\n\trelid := TG_relid::regclass;\n\n\t-- plpgsql can''t discover its trigger data in a hash like perl and python\n\t-- can, or by a sort of reflection like tcl can,\n\t-- so we have to hard code the names.\n\traise NOTICE ''TG_NAME: %'', TG_name;\n\traise NOTICE ''TG_WHEN: %'', TG_when;\n\traise NOTICE ''TG_LEVEL: %'', TG_level;\n\traise NOTICE ''TG_OP: %'', TG_op;\n\traise NOTICE ''TG_RELID::regclass: %'', relid;\n\traise NOTICE ''TG_RELNAME: %'', TG_relname;\n\traise NOTICE ''TG_TABLE_NAME: %'', TG_table_name;\n\traise NOTICE ''TG_TABLE_SCHEMA: %'', TG_table_schema;\n\traise NOTICE ''TG_NARGS: %'', TG_nargs;\n\n\targstr := ''['';\n\tfor i in 0 .. TG_nargs - 1 loop\n\t\tif i > 0 then\n\t\t\targstr := argstr || '', '';\n\t\tend if;\n\t\targstr := argstr || TG_argv[i];\n\tend loop;\n\targstr := argstr || '']'';\n\traise NOTICE ''TG_ARGV: %'', argstr;\n\n\tif TG_OP != ''INSERT'' then\n\t\traise NOTICE ''OLD: %'', OLD;\n\tend if;\n\n\tif TG_OP != ''DELETE'' then\n\t\traise NOTICE ''NEW: %'', NEW;\n\tend if;\n\n\tif TG_OP = ''DELETE'' then\n\t\treturn OLD;\n\telse\n\t\treturn NEW;\n\tend if;\n\nend;\n';"}
+{"sql":"CREATE TRIGGER show_trigger_data_trig\nBEFORE INSERT OR UPDATE OR DELETE ON trigger_test\nFOR EACH ROW EXECUTE PROCEDURE trigger_data(23,'skidoo')","shape":"CREATE TRIGGER show_trigger_data_trig BEFORE INSERT OR UPDATE OR DELETE ON trigger_test FOR EACH ROW EXECUTE FUNCTION trigger_data(23, 'skidoo');"}
+{"sql":"insert into trigger_test values(1,'insert')","shape":"INSERT INTO trigger_test VALUES (1, 'insert');"}
+{"sql":"update trigger_test set v = 'update' where i = 1","shape":"UPDATE trigger_test SET v = 'update' WHERE i = 1;"}
+{"sql":"delete from trigger_test","shape":"DELETE FROM trigger_test;"}
+{"sql":"DROP TRIGGER show_trigger_data_trig on trigger_test","shape":"DROP TRIGGER show_trigger_data_trig ON trigger_test;"}
+{"sql":"DROP FUNCTION trigger_data()"}
+{"sql":"DROP TABLE trigger_test","shape":"DROP TABLE trigger_test;"}
+{"sql":"CREATE TABLE trigger_test (f1 int, f2 text, f3 text)","shape":"CREATE TABLE trigger_test (f1 int, f2 text, f3 text);"}
+{"sql":"CREATE FUNCTION mytrigger() RETURNS trigger LANGUAGE plpgsql as $$\nbegin\n\tif row(old.*) = row(new.*) then\n\t\traise notice 'row % not changed', new.f1;\n\telse\n\t\traise notice 'row % changed', new.f1;\n\tend if;\n\treturn new;\nend$$","shape":"CREATE FUNCTION mytrigger() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n\tif row(old.*) = row(new.*) then\n\t\traise notice ''row % not changed'', new.f1;\n\telse\n\t\traise notice ''row % changed'', new.f1;\n\tend if;\n\treturn new;\nend';"}
+{"sql":"CREATE TRIGGER t\nBEFORE UPDATE ON trigger_test\nFOR EACH ROW EXECUTE PROCEDURE mytrigger()","shape":"CREATE TRIGGER t BEFORE UPDATE ON trigger_test FOR EACH ROW EXECUTE FUNCTION mytrigger();"}
+{"sql":"INSERT INTO trigger_test VALUES(1, 'foo', 'bar')","shape":"INSERT INTO trigger_test VALUES (1, 'foo', 'bar');"}
+{"sql":"INSERT INTO trigger_test VALUES(2, 'baz', 'quux')","shape":"INSERT INTO trigger_test VALUES (2, 'baz', 'quux');"}
+{"sql":"UPDATE trigger_test SET f3 = 'bar'","shape":"UPDATE trigger_test SET f3 = 'bar';"}
+{"sql":"UPDATE trigger_test SET f3 = NULL","shape":"UPDATE trigger_test SET f3 = NULL;"}
+{"sql":"CREATE OR REPLACE FUNCTION mytrigger() RETURNS trigger LANGUAGE plpgsql as $$\nbegin\n\tif row(old.*) is distinct from row(new.*) then\n\t\traise notice 'row % changed', new.f1;\n\telse\n\t\traise notice 'row % not changed', new.f1;\n\tend if;\n\treturn new;\nend$$","shape":"CREATE OR REPLACE FUNCTION mytrigger() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n\tif row(old.*) is distinct from row(new.*) then\n\t\traise notice ''row % changed'', new.f1;\n\telse\n\t\traise notice ''row % not changed'', new.f1;\n\tend if;\n\treturn new;\nend';"}
+{"sql":"DROP FUNCTION mytrigger()"}
+{"sql":"CREATE FUNCTION serializable_update_trig() RETURNS trigger LANGUAGE plpgsql AS\n$$\ndeclare\n\trec record;\nbegin\n\tnew.description = 'updated in trigger';\n\treturn new;\nend;\n$$","shape":"CREATE FUNCTION serializable_update_trig() RETURNS trigger LANGUAGE plpgsql AS '\ndeclare\n\trec record;\nbegin\n\tnew.description = ''updated in trigger'';\n\treturn new;\nend;\n';"}
+{"sql":"CREATE TABLE serializable_update_tab (\n\tid int,\n\tfiller  text,\n\tdescription text\n)","shape":"CREATE TABLE serializable_update_tab (id int, filler text, description text);"}
+{"sql":"CREATE TRIGGER serializable_update_trig BEFORE UPDATE ON serializable_update_tab\n\tFOR EACH ROW EXECUTE PROCEDURE serializable_update_trig()","shape":"CREATE TRIGGER serializable_update_trig BEFORE UPDATE ON serializable_update_tab FOR EACH ROW EXECUTE FUNCTION serializable_update_trig();"}
+{"sql":"INSERT INTO serializable_update_tab SELECT a, repeat('xyzxz', 100), 'new'\n\tFROM generate_series(1, 50) a","shape":"INSERT INTO serializable_update_tab SELECT a, repeat('xyzxz', 100), 'new' FROM generate_series(1, 50) AS a;"}
+{"sql":"UPDATE serializable_update_tab SET description = 'no no', id = 1 WHERE id = 1","shape":"UPDATE serializable_update_tab SET description = 'no no', id = 1 WHERE id = 1;"}
+{"sql":"SELECT description FROM serializable_update_tab WHERE id = 1","shape":"SELECT description FROM serializable_update_tab WHERE id = 1;"}
+{"sql":"DROP TABLE serializable_update_tab","shape":"DROP TABLE serializable_update_tab;"}
+{"sql":"CREATE TABLE min_updates_test (\n\tf1\ttext,\n\tf2 int,\n\tf3 int)","shape":"CREATE TABLE min_updates_test (f1 text, f2 int, f3 int);"}
+{"sql":"INSERT INTO min_updates_test VALUES ('a',1,2),('b','2',null)","shape":"INSERT INTO min_updates_test VALUES ('a', 1, 2), ('b', '2', NULL);"}
+{"sql":"CREATE TRIGGER z_min_update\nBEFORE UPDATE ON min_updates_test\nFOR EACH ROW EXECUTE PROCEDURE suppress_redundant_updates_trigger()","shape":"CREATE TRIGGER z_min_update BEFORE UPDATE ON min_updates_test FOR EACH ROW EXECUTE FUNCTION suppress_redundant_updates_trigger();"}
+{"sql":"UPDATE min_updates_test SET f1 = f1","shape":"UPDATE min_updates_test SET f1 = f1;"}
+{"sql":"UPDATE min_updates_test SET f2 = f2 + 1","shape":"UPDATE min_updates_test SET f2 = f2 + 1;"}
+{"sql":"UPDATE min_updates_test SET f3 = 2 WHERE f3 is null","shape":"UPDATE min_updates_test SET f3 = 2 WHERE f3 IS NULL;"}
+{"sql":"SELECT * FROM min_updates_test","shape":"SELECT * FROM min_updates_test;"}
+{"sql":"DROP TABLE min_updates_test","shape":"DROP TABLE min_updates_test;"}
+{"sql":"CREATE VIEW main_view AS SELECT a, b FROM main_table","shape":"CREATE VIEW main_view AS SELECT a, b FROM main_table;"}
+{"sql":"CREATE OR REPLACE FUNCTION view_trigger() RETURNS trigger\nLANGUAGE plpgsql AS $$\ndeclare\n    argstr text := '';\nbegin\n    for i in 0 .. TG_nargs - 1 loop\n        if i > 0 then\n            argstr := argstr || ', ';\n        end if;\n        argstr := argstr || TG_argv[i];\n    end loop;\n\n    raise notice '% % % % (%)', TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL, argstr;\n\n    if TG_LEVEL = 'ROW' then\n        if TG_OP = 'INSERT' then\n            raise NOTICE 'NEW: %', NEW;\n            INSERT INTO main_table VALUES (NEW.a, NEW.b);\n            RETURN NEW;\n        end if;\n\n        if TG_OP = 'UPDATE' then\n            raise NOTICE 'OLD: %, NEW: %', OLD, NEW;\n            UPDATE main_table SET a = NEW.a, b = NEW.b WHERE a = OLD.a AND b = OLD.b;\n            if NOT FOUND then RETURN NULL; end if;\n            RETURN NEW;\n        end if;\n\n        if TG_OP = 'DELETE' then\n            raise NOTICE 'OLD: %', OLD;\n            DELETE FROM main_table WHERE a = OLD.a AND b = OLD.b;\n            if NOT FOUND then RETURN NULL; end if;\n            RETURN OLD;\n        end if;\n    end if;\n\n    RETURN NULL;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION view_trigger() RETURNS trigger LANGUAGE plpgsql AS '\ndeclare\n    argstr text := '''';\nbegin\n    for i in 0 .. TG_nargs - 1 loop\n        if i > 0 then\n            argstr := argstr || '', '';\n        end if;\n        argstr := argstr || TG_argv[i];\n    end loop;\n\n    raise notice ''% % % % (%)'', TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL, argstr;\n\n    if TG_LEVEL = ''ROW'' then\n        if TG_OP = ''INSERT'' then\n            raise NOTICE ''NEW: %'', NEW;\n            INSERT INTO main_table VALUES (NEW.a, NEW.b);\n            RETURN NEW;\n        end if;\n\n        if TG_OP = ''UPDATE'' then\n            raise NOTICE ''OLD: %, NEW: %'', OLD, NEW;\n            UPDATE main_table SET a = NEW.a, b = NEW.b WHERE a = OLD.a AND b = OLD.b;\n            if NOT FOUND then RETURN NULL; end if;\n            RETURN NEW;\n        end if;\n\n        if TG_OP = ''DELETE'' then\n            raise NOTICE ''OLD: %'', OLD;\n            DELETE FROM main_table WHERE a = OLD.a AND b = OLD.b;\n            if NOT FOUND then RETURN NULL; end if;\n            RETURN OLD;\n        end if;\n    end if;\n\n    RETURN NULL;\nend;\n';"}
+{"sql":"CREATE TRIGGER invalid_trig BEFORE INSERT ON main_view\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_ins_row')","shape":"CREATE TRIGGER invalid_trig BEFORE INSERT ON main_view FOR EACH ROW EXECUTE FUNCTION trigger_func('before_ins_row');"}
+{"sql":"CREATE TRIGGER invalid_trig BEFORE UPDATE ON main_view\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_upd_row')","shape":"CREATE TRIGGER invalid_trig BEFORE UPDATE ON main_view FOR EACH ROW EXECUTE FUNCTION trigger_func('before_upd_row');"}
+{"sql":"CREATE TRIGGER invalid_trig BEFORE DELETE ON main_view\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_del_row')","shape":"CREATE TRIGGER invalid_trig BEFORE DELETE ON main_view FOR EACH ROW EXECUTE FUNCTION trigger_func('before_del_row');"}
+{"sql":"CREATE TRIGGER invalid_trig AFTER INSERT ON main_view\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_ins_row')","shape":"CREATE TRIGGER invalid_trig AFTER INSERT ON main_view FOR EACH ROW EXECUTE FUNCTION trigger_func('before_ins_row');"}
+{"sql":"CREATE TRIGGER invalid_trig AFTER UPDATE ON main_view\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_upd_row')","shape":"CREATE TRIGGER invalid_trig AFTER UPDATE ON main_view FOR EACH ROW EXECUTE FUNCTION trigger_func('before_upd_row');"}
+{"sql":"CREATE TRIGGER invalid_trig AFTER DELETE ON main_view\nFOR EACH ROW EXECUTE PROCEDURE trigger_func('before_del_row')","shape":"CREATE TRIGGER invalid_trig AFTER DELETE ON main_view FOR EACH ROW EXECUTE FUNCTION trigger_func('before_del_row');"}
+{"sql":"CREATE TRIGGER invalid_trig BEFORE TRUNCATE ON main_view\nEXECUTE PROCEDURE trigger_func('before_tru_row')","shape":"CREATE TRIGGER invalid_trig BEFORE TRUNCATE ON main_view EXECUTE FUNCTION trigger_func('before_tru_row');"}
+{"sql":"CREATE TRIGGER invalid_trig AFTER TRUNCATE ON main_view\nEXECUTE PROCEDURE trigger_func('before_tru_row')","shape":"CREATE TRIGGER invalid_trig AFTER TRUNCATE ON main_view EXECUTE FUNCTION trigger_func('before_tru_row');"}
+{"sql":"CREATE TRIGGER invalid_trig INSTEAD OF INSERT ON main_table\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_ins')","shape":"CREATE TRIGGER invalid_trig INSTEAD OF INSERT ON main_table FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_ins');"}
+{"sql":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE ON main_table\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_upd')","shape":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE ON main_table FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_upd');"}
+{"sql":"CREATE TRIGGER invalid_trig INSTEAD OF DELETE ON main_table\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_del')","shape":"CREATE TRIGGER invalid_trig INSTEAD OF DELETE ON main_table FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_del');"}
+{"sql":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE ON main_view\nFOR EACH ROW WHEN (OLD.a <> NEW.a) EXECUTE PROCEDURE view_trigger('instead_of_upd')","shape":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE ON main_view FOR EACH ROW WHEN (OLD.a <> NEW.a) EXECUTE FUNCTION view_trigger('instead_of_upd');"}
+{"sql":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE OF a ON main_view\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_upd')","shape":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE OF a ON main_view FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_upd');"}
+{"sql":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE ON main_view\nEXECUTE PROCEDURE view_trigger('instead_of_upd')","shape":"CREATE TRIGGER invalid_trig INSTEAD OF UPDATE ON main_view EXECUTE FUNCTION view_trigger('instead_of_upd');"}
+{"sql":"CREATE TRIGGER instead_of_insert_trig INSTEAD OF INSERT ON main_view\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_ins')","shape":"CREATE TRIGGER instead_of_insert_trig INSTEAD OF INSERT ON main_view FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_ins');"}
+{"sql":"CREATE TRIGGER instead_of_update_trig INSTEAD OF UPDATE ON main_view\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_upd')","shape":"CREATE TRIGGER instead_of_update_trig INSTEAD OF UPDATE ON main_view FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_upd');"}
+{"sql":"CREATE TRIGGER instead_of_delete_trig INSTEAD OF DELETE ON main_view\nFOR EACH ROW EXECUTE PROCEDURE view_trigger('instead_of_del')","shape":"CREATE TRIGGER instead_of_delete_trig INSTEAD OF DELETE ON main_view FOR EACH ROW EXECUTE FUNCTION view_trigger('instead_of_del');"}
+{"sql":"CREATE TRIGGER before_ins_stmt_trig BEFORE INSERT ON main_view\nFOR EACH STATEMENT EXECUTE PROCEDURE view_trigger('before_view_ins_stmt')","shape":"CREATE TRIGGER before_ins_stmt_trig BEFORE INSERT ON main_view FOR EACH STATEMENT EXECUTE FUNCTION view_trigger('before_view_ins_stmt');"}
+{"sql":"CREATE TRIGGER before_upd_stmt_trig BEFORE UPDATE ON main_view\nFOR EACH STATEMENT EXECUTE PROCEDURE view_trigger('before_view_upd_stmt')","shape":"CREATE TRIGGER before_upd_stmt_trig BEFORE UPDATE ON main_view FOR EACH STATEMENT EXECUTE FUNCTION view_trigger('before_view_upd_stmt');"}
+{"sql":"CREATE TRIGGER before_del_stmt_trig BEFORE DELETE ON main_view\nFOR EACH STATEMENT EXECUTE PROCEDURE view_trigger('before_view_del_stmt')","shape":"CREATE TRIGGER before_del_stmt_trig BEFORE DELETE ON main_view FOR EACH STATEMENT EXECUTE FUNCTION view_trigger('before_view_del_stmt');"}
+{"sql":"CREATE TRIGGER after_ins_stmt_trig AFTER INSERT ON main_view\nFOR EACH STATEMENT EXECUTE PROCEDURE view_trigger('after_view_ins_stmt')","shape":"CREATE TRIGGER after_ins_stmt_trig AFTER INSERT ON main_view FOR EACH STATEMENT EXECUTE FUNCTION view_trigger('after_view_ins_stmt');"}
+{"sql":"CREATE TRIGGER after_upd_stmt_trig AFTER UPDATE ON main_view\nFOR EACH STATEMENT EXECUTE PROCEDURE view_trigger('after_view_upd_stmt')","shape":"CREATE TRIGGER after_upd_stmt_trig AFTER UPDATE ON main_view FOR EACH STATEMENT EXECUTE FUNCTION view_trigger('after_view_upd_stmt');"}
+{"sql":"CREATE TRIGGER after_del_stmt_trig AFTER DELETE ON main_view\nFOR EACH STATEMENT EXECUTE PROCEDURE view_trigger('after_view_del_stmt')","shape":"CREATE TRIGGER after_del_stmt_trig AFTER DELETE ON main_view FOR EACH STATEMENT EXECUTE FUNCTION view_trigger('after_view_del_stmt');"}
+{"sql":"INSERT INTO main_view VALUES (20, 30)","shape":"INSERT INTO main_view VALUES (20, 30);"}
+{"sql":"INSERT INTO main_view VALUES (21, 31) RETURNING a, b","shape":"INSERT INTO main_view VALUES (21, 31) RETURNING a, b;"}
+{"sql":"UPDATE main_view SET b = 31 WHERE a = 20","shape":"UPDATE main_view SET b = 31 WHERE a = 20;"}
+{"sql":"UPDATE main_view SET b = 32 WHERE a = 21 AND b = 31 RETURNING a, b","shape":"UPDATE main_view SET b = 32 WHERE (a = 21) AND (b = 31) RETURNING a, b;"}
+{"sql":"DROP TRIGGER before_upd_a_row_trig ON main_table","shape":"DROP TRIGGER before_upd_a_row_trig ON main_table;"}
+{"sql":"UPDATE main_view SET b = 0 WHERE false","shape":"UPDATE main_view SET b = 0 WHERE FALSE;"}
+{"sql":"DELETE FROM main_view WHERE a IN (20,21)","shape":"DELETE FROM main_view WHERE a IN (20, 21);"}
+{"sql":"DELETE FROM main_view WHERE a = 31 RETURNING a, b","shape":"DELETE FROM main_view WHERE a = 31 RETURNING a, b;"}
+{"sql":"DROP TRIGGER instead_of_insert_trig ON main_view","shape":"DROP TRIGGER instead_of_insert_trig ON main_view;"}
+{"sql":"DROP TRIGGER instead_of_delete_trig ON main_view","shape":"DROP TRIGGER instead_of_delete_trig ON main_view;"}
+{"sql":"DROP VIEW main_view","shape":"DROP VIEW main_view;"}
+{"sql":"CREATE TABLE country_table (\n    country_id        serial primary key,\n    country_name    text unique not null,\n    continent        text not null\n)","shape":"CREATE TABLE country_table (country_id serial PRIMARY KEY, country_name text UNIQUE NOT NULL, continent text NOT NULL);"}
+{"sql":"INSERT INTO country_table (country_name, continent)\n    VALUES ('Japan', 'Asia'),\n           ('UK', 'Europe'),\n           ('USA', 'North America')\n    RETURNING *","shape":"INSERT INTO country_table (country_name, continent) VALUES ('Japan', 'Asia'), ('UK', 'Europe'), ('USA', 'North America') RETURNING *;"}
+{"sql":"CREATE TABLE city_table (\n    city_id        serial primary key,\n    city_name    text not null,\n    population    bigint,\n    country_id    int references country_table\n)","shape":"CREATE TABLE city_table (city_id serial PRIMARY KEY, city_name text NOT NULL, population bigint, country_id int REFERENCES country_table);"}
+{"sql":"CREATE VIEW city_view AS\n    SELECT city_id, city_name, population, country_name, continent\n    FROM city_table ci\n    LEFT JOIN country_table co ON co.country_id = ci.country_id","shape":"CREATE VIEW city_view AS SELECT city_id, city_name, population, country_name, continent FROM city_table AS ci LEFT JOIN country_table AS co ON co.country_id = ci.country_id;"}
+{"sql":"CREATE FUNCTION city_insert() RETURNS trigger LANGUAGE plpgsql AS $$\ndeclare\n    ctry_id int;\nbegin\n    if NEW.country_name IS NOT NULL then\n        SELECT country_id, continent INTO ctry_id, NEW.continent\n            FROM country_table WHERE country_name = NEW.country_name;\n        if NOT FOUND then\n            raise exception 'No such country: \"%\"', NEW.country_name;\n        end if;\n    else\n        NEW.continent := NULL;\n    end if;\n\n    if NEW.city_id IS NOT NULL then\n        INSERT INTO city_table\n            VALUES(NEW.city_id, NEW.city_name, NEW.population, ctry_id);\n    else\n        INSERT INTO city_table(city_name, population, country_id)\n            VALUES(NEW.city_name, NEW.population, ctry_id)\n            RETURNING city_id INTO NEW.city_id;\n    end if;\n\n    RETURN NEW;\nend;\n$$","shape":"CREATE FUNCTION city_insert() RETURNS trigger LANGUAGE plpgsql AS '\ndeclare\n    ctry_id int;\nbegin\n    if NEW.country_name IS NOT NULL then\n        SELECT country_id, continent INTO ctry_id, NEW.continent\n            FROM country_table WHERE country_name = NEW.country_name;\n        if NOT FOUND then\n            raise exception ''No such country: \"%\"'', NEW.country_name;\n        end if;\n    else\n        NEW.continent := NULL;\n    end if;\n\n    if NEW.city_id IS NOT NULL then\n        INSERT INTO city_table\n            VALUES(NEW.city_id, NEW.city_name, NEW.population, ctry_id);\n    else\n        INSERT INTO city_table(city_name, population, country_id)\n            VALUES(NEW.city_name, NEW.population, ctry_id)\n            RETURNING city_id INTO NEW.city_id;\n    end if;\n\n    RETURN NEW;\nend;\n';"}
+{"sql":"CREATE TRIGGER city_insert_trig INSTEAD OF INSERT ON city_view\nFOR EACH ROW EXECUTE PROCEDURE city_insert()","shape":"CREATE TRIGGER city_insert_trig INSTEAD OF INSERT ON city_view FOR EACH ROW EXECUTE FUNCTION city_insert();"}
+{"sql":"CREATE FUNCTION city_delete() RETURNS trigger LANGUAGE plpgsql AS $$\nbegin\n    DELETE FROM city_table WHERE city_id = OLD.city_id;\n    if NOT FOUND then RETURN NULL; end if;\n    RETURN OLD;\nend;\n$$","shape":"CREATE FUNCTION city_delete() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n    DELETE FROM city_table WHERE city_id = OLD.city_id;\n    if NOT FOUND then RETURN NULL; end if;\n    RETURN OLD;\nend;\n';"}
+{"sql":"CREATE TRIGGER city_delete_trig INSTEAD OF DELETE ON city_view\nFOR EACH ROW EXECUTE PROCEDURE city_delete()","shape":"CREATE TRIGGER city_delete_trig INSTEAD OF DELETE ON city_view FOR EACH ROW EXECUTE FUNCTION city_delete();"}
+{"sql":"CREATE FUNCTION city_update() RETURNS trigger LANGUAGE plpgsql AS $$\ndeclare\n    ctry_id int;\nbegin\n    if NEW.country_name IS DISTINCT FROM OLD.country_name then\n        SELECT country_id, continent INTO ctry_id, NEW.continent\n            FROM country_table WHERE country_name = NEW.country_name;\n        if NOT FOUND then\n            raise exception 'No such country: \"%\"', NEW.country_name;\n        end if;\n\n        UPDATE city_table SET city_name = NEW.city_name,\n                              population = NEW.population,\n                              country_id = ctry_id\n            WHERE city_id = OLD.city_id;\n    else\n        UPDATE city_table SET city_name = NEW.city_name,\n                              population = NEW.population\n            WHERE city_id = OLD.city_id;\n        NEW.continent := OLD.continent;\n    end if;\n\n    if NOT FOUND then RETURN NULL; end if;\n    RETURN NEW;\nend;\n$$","shape":"CREATE FUNCTION city_update() RETURNS trigger LANGUAGE plpgsql AS '\ndeclare\n    ctry_id int;\nbegin\n    if NEW.country_name IS DISTINCT FROM OLD.country_name then\n        SELECT country_id, continent INTO ctry_id, NEW.continent\n            FROM country_table WHERE country_name = NEW.country_name;\n        if NOT FOUND then\n            raise exception ''No such country: \"%\"'', NEW.country_name;\n        end if;\n\n        UPDATE city_table SET city_name = NEW.city_name,\n                              population = NEW.population,\n                              country_id = ctry_id\n            WHERE city_id = OLD.city_id;\n    else\n        UPDATE city_table SET city_name = NEW.city_name,\n                              population = NEW.population\n            WHERE city_id = OLD.city_id;\n        NEW.continent := OLD.continent;\n    end if;\n\n    if NOT FOUND then RETURN NULL; end if;\n    RETURN NEW;\nend;\n';"}
+{"sql":"CREATE TRIGGER city_update_trig INSTEAD OF UPDATE ON city_view\nFOR EACH ROW EXECUTE PROCEDURE city_update()","shape":"CREATE TRIGGER city_update_trig INSTEAD OF UPDATE ON city_view FOR EACH ROW EXECUTE FUNCTION city_update();"}
+{"sql":"INSERT INTO city_view(city_name) VALUES('Tokyo') RETURNING *","shape":"INSERT INTO city_view (city_name) VALUES ('Tokyo') RETURNING *;"}
+{"sql":"INSERT INTO city_view(city_name, population) VALUES('London', 7556900) RETURNING *","shape":"INSERT INTO city_view (city_name, population) VALUES ('London', 7556900) RETURNING *;"}
+{"sql":"INSERT INTO city_view(city_name, country_name) VALUES('Washington DC', 'USA') RETURNING *","shape":"INSERT INTO city_view (city_name, country_name) VALUES ('Washington DC', 'USA') RETURNING *;"}
+{"sql":"INSERT INTO city_view(city_id, city_name) VALUES(123456, 'New York') RETURNING *","shape":"INSERT INTO city_view (city_id, city_name) VALUES (123456, 'New York') RETURNING *;"}
+{"sql":"INSERT INTO city_view VALUES(234567, 'Birmingham', 1016800, 'UK', 'EU') RETURNING *","shape":"INSERT INTO city_view VALUES (234567, 'Birmingham', 1016800, 'UK', 'EU') RETURNING *;"}
+{"sql":"UPDATE city_view SET country_name = 'Japon' WHERE city_name = 'Tokyo'","shape":"UPDATE city_view SET country_name = 'Japon' WHERE city_name = 'Tokyo';"}
+{"sql":"UPDATE city_view SET country_name = 'Japan' WHERE city_name = 'Takyo'","shape":"UPDATE city_view SET country_name = 'Japan' WHERE city_name = 'Takyo';"}
+{"sql":"UPDATE city_view SET country_name = 'Japan' WHERE city_name = 'Tokyo' RETURNING *","shape":"UPDATE city_view SET country_name = 'Japan' WHERE city_name = 'Tokyo' RETURNING *;"}
+{"sql":"UPDATE city_view SET population = 13010279 WHERE city_name = 'Tokyo' RETURNING *","shape":"UPDATE city_view SET population = 13010279 WHERE city_name = 'Tokyo' RETURNING *;"}
+{"sql":"UPDATE city_view SET country_name = 'UK' WHERE city_name = 'New York' RETURNING *","shape":"UPDATE city_view SET country_name = 'UK' WHERE city_name = 'New York' RETURNING *;"}
+{"sql":"UPDATE city_view SET country_name = 'USA', population = 8391881 WHERE city_name = 'New York' RETURNING *","shape":"UPDATE city_view SET country_name = 'USA', population = 8391881 WHERE city_name = 'New York' RETURNING *;"}
+{"sql":"UPDATE city_view SET continent = 'EU' WHERE continent = 'Europe' RETURNING *","shape":"UPDATE city_view SET continent = 'EU' WHERE continent = 'Europe' RETURNING *;"}
+{"sql":"UPDATE city_view v1 SET country_name = v2.country_name FROM city_view v2\n    WHERE v2.city_name = 'Birmingham' AND v1.city_name = 'London' RETURNING *","shape":"UPDATE city_view AS v1 SET country_name = v2.country_name FROM city_view AS v2 WHERE (v2.city_name = 'Birmingham') AND (v1.city_name = 'London') RETURNING *;"}
+{"sql":"DELETE FROM city_view WHERE city_name = 'Birmingham' RETURNING *","shape":"DELETE FROM city_view WHERE city_name = 'Birmingham' RETURNING *;"}
+{"sql":"CREATE VIEW european_city_view AS\n    SELECT * FROM city_view WHERE continent = 'Europe'","shape":"CREATE VIEW european_city_view AS SELECT * FROM city_view WHERE continent = 'Europe';"}
+{"sql":"SELECT count(*) FROM european_city_view","shape":"SELECT count(*) FROM european_city_view;"}
+{"sql":"CREATE FUNCTION no_op_trig_fn() RETURNS trigger LANGUAGE plpgsql\nAS 'begin RETURN NULL; end'","shape":"CREATE FUNCTION no_op_trig_fn() RETURNS trigger LANGUAGE plpgsql AS 'begin RETURN NULL; end';"}
+{"sql":"CREATE TRIGGER no_op_trig INSTEAD OF INSERT OR UPDATE OR DELETE\nON european_city_view FOR EACH ROW EXECUTE PROCEDURE no_op_trig_fn()","shape":"CREATE TRIGGER no_op_trig INSTEAD OF INSERT OR UPDATE OR DELETE ON european_city_view FOR EACH ROW EXECUTE FUNCTION no_op_trig_fn();"}
+{"sql":"INSERT INTO european_city_view VALUES (0, 'x', 10000, 'y', 'z')","shape":"INSERT INTO european_city_view VALUES (0, 'x', 10000, 'y', 'z');"}
+{"sql":"UPDATE european_city_view SET population = 10000","shape":"UPDATE european_city_view SET population = 10000;"}
+{"sql":"DELETE FROM european_city_view","shape":"DELETE FROM european_city_view;"}
+{"sql":"CREATE RULE european_city_insert_rule AS ON INSERT TO european_city_view\nDO INSTEAD INSERT INTO city_view\nVALUES (NEW.city_id, NEW.city_name, NEW.population, NEW.country_name, NEW.continent)\nRETURNING *"}
+{"sql":"CREATE RULE european_city_update_rule AS ON UPDATE TO european_city_view\nDO INSTEAD UPDATE city_view SET\n    city_name = NEW.city_name,\n    population = NEW.population,\n    country_name = NEW.country_name\nWHERE city_id = OLD.city_id\nRETURNING NEW.*"}
+{"sql":"CREATE RULE european_city_delete_rule AS ON DELETE TO european_city_view\nDO INSTEAD DELETE FROM city_view WHERE city_id = OLD.city_id RETURNING *"}
+{"sql":"INSERT INTO european_city_view(city_name, country_name)\n    VALUES ('Cambridge', 'USA') RETURNING *","shape":"INSERT INTO european_city_view (city_name, country_name) VALUES ('Cambridge', 'USA') RETURNING *;"}
+{"sql":"UPDATE european_city_view SET country_name = 'UK'\n    WHERE city_name = 'Cambridge'","shape":"UPDATE european_city_view SET country_name = 'UK' WHERE city_name = 'Cambridge';"}
+{"sql":"DELETE FROM european_city_view WHERE city_name = 'Cambridge'","shape":"DELETE FROM european_city_view WHERE city_name = 'Cambridge';"}
+{"sql":"UPDATE city_view SET country_name = 'UK'\n    WHERE city_name = 'Cambridge' RETURNING *","shape":"UPDATE city_view SET country_name = 'UK' WHERE city_name = 'Cambridge' RETURNING *;"}
+{"sql":"UPDATE european_city_view SET population = 122800\n    WHERE city_name = 'Cambridge' RETURNING *","shape":"UPDATE european_city_view SET population = 122800 WHERE city_name = 'Cambridge' RETURNING *;"}
+{"sql":"DELETE FROM european_city_view WHERE city_name = 'Cambridge' RETURNING *","shape":"DELETE FROM european_city_view WHERE city_name = 'Cambridge' RETURNING *;"}
+{"sql":"UPDATE city_view v SET population = 599657\n    FROM city_table ci, country_table co\n    WHERE ci.city_name = 'Washington DC' and co.country_name = 'USA'\n    AND v.city_id = ci.city_id AND v.country_name = co.country_name\n    RETURNING co.country_id, v.country_name,\n              v.city_id, v.city_name, v.population","shape":"UPDATE city_view AS v SET population = 599657 FROM city_table AS ci, country_table AS co WHERE (((ci.city_name = 'Washington DC') AND (co.country_name = 'USA')) AND (v.city_id = ci.city_id)) AND (v.country_name = co.country_name) RETURNING co.country_id, v.country_name, v.city_id, v.city_name, v.population;"}
+{"sql":"SELECT * FROM city_view","shape":"SELECT * FROM city_view;"}
+{"sql":"DROP TABLE city_table CASCADE","shape":"DROP TABLE city_table CASCADE;"}
+{"sql":"DROP TABLE country_table","shape":"DROP TABLE country_table;"}
+{"sql":"create table depth_a (id int not null primary key)","shape":"CREATE TABLE depth_a (id int NOT NULL PRIMARY KEY);"}
+{"sql":"create table depth_b (id int not null primary key)","shape":"CREATE TABLE depth_b (id int NOT NULL PRIMARY KEY);"}
+{"sql":"create table depth_c (id int not null primary key)","shape":"CREATE TABLE depth_c (id int NOT NULL PRIMARY KEY);"}
+{"sql":"create function depth_a_tf() returns trigger\n  language plpgsql as $$\nbegin\n  raise notice '%: depth = %', tg_name, pg_trigger_depth();\n  insert into depth_b values (new.id);\n  raise notice '%: depth = %', tg_name, pg_trigger_depth();\n  return new;\nend;\n$$","shape":"CREATE FUNCTION depth_a_tf() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  raise notice ''%: depth = %'', tg_name, pg_trigger_depth();\n  insert into depth_b values (new.id);\n  raise notice ''%: depth = %'', tg_name, pg_trigger_depth();\n  return new;\nend;\n';"}
+{"sql":"create trigger depth_a_tr before insert on depth_a\n  for each row execute procedure depth_a_tf()","shape":"CREATE TRIGGER depth_a_tr BEFORE INSERT ON depth_a FOR EACH ROW EXECUTE FUNCTION depth_a_tf();"}
+{"sql":"create function depth_b_tf() returns trigger\n  language plpgsql as $$\nbegin\n  raise notice '%: depth = %', tg_name, pg_trigger_depth();\n  begin\n    execute 'insert into depth_c values (' || new.id::text || ')';\n  exception\n    when sqlstate 'U9999' then\n      raise notice 'SQLSTATE = U9999: depth = %', pg_trigger_depth();\n  end;\n  raise notice '%: depth = %', tg_name, pg_trigger_depth();\n  if new.id = 1 then\n    execute 'insert into depth_c values (' || new.id::text || ')';\n  end if;\n  return new;\nend;\n$$","shape":"CREATE FUNCTION depth_b_tf() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  raise notice ''%: depth = %'', tg_name, pg_trigger_depth();\n  begin\n    execute ''insert into depth_c values ('' || new.id::text || '')'';\n  exception\n    when sqlstate ''U9999'' then\n      raise notice ''SQLSTATE = U9999: depth = %'', pg_trigger_depth();\n  end;\n  raise notice ''%: depth = %'', tg_name, pg_trigger_depth();\n  if new.id = 1 then\n    execute ''insert into depth_c values ('' || new.id::text || '')'';\n  end if;\n  return new;\nend;\n';"}
+{"sql":"create trigger depth_b_tr before insert on depth_b\n  for each row execute procedure depth_b_tf()","shape":"CREATE TRIGGER depth_b_tr BEFORE INSERT ON depth_b FOR EACH ROW EXECUTE FUNCTION depth_b_tf();"}
+{"sql":"create function depth_c_tf() returns trigger\n  language plpgsql as $$\nbegin\n  raise notice '%: depth = %', tg_name, pg_trigger_depth();\n  if new.id = 1 then\n    raise exception sqlstate 'U9999';\n  end if;\n  raise notice '%: depth = %', tg_name, pg_trigger_depth();\n  return new;\nend;\n$$","shape":"CREATE FUNCTION depth_c_tf() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  raise notice ''%: depth = %'', tg_name, pg_trigger_depth();\n  if new.id = 1 then\n    raise exception sqlstate ''U9999'';\n  end if;\n  raise notice ''%: depth = %'', tg_name, pg_trigger_depth();\n  return new;\nend;\n';"}
+{"sql":"create trigger depth_c_tr before insert on depth_c\n  for each row execute procedure depth_c_tf()","shape":"CREATE TRIGGER depth_c_tr BEFORE INSERT ON depth_c FOR EACH ROW EXECUTE FUNCTION depth_c_tf();"}
+{"sql":"select pg_trigger_depth()","shape":"SELECT pg_trigger_depth();"}
+{"sql":"insert into depth_a values (1)","shape":"INSERT INTO depth_a VALUES (1);"}
+{"sql":"insert into depth_a values (2)","shape":"INSERT INTO depth_a VALUES (2);"}
+{"sql":"drop table depth_a, depth_b, depth_c","shape":"DROP TABLE depth_a, depth_b, depth_c;"}
+{"sql":"drop function depth_a_tf()"}
+{"sql":"drop function depth_b_tf()"}
+{"sql":"drop function depth_c_tf()"}
+{"sql":"create temp table parent (\n    aid int not null primary key,\n    val1 text,\n    val2 text,\n    val3 text,\n    val4 text,\n    bcnt int not null default 0)","shape":"CREATE TEMPORARY TABLE parent (aid int NOT NULL PRIMARY KEY, val1 text, val2 text, val3 text, val4 text, bcnt int NOT NULL DEFAULT 0);"}
+{"sql":"create temp table child (\n    bid int not null primary key,\n    aid int not null,\n    val1 text)","shape":"CREATE TEMPORARY TABLE child (bid int NOT NULL PRIMARY KEY, aid int NOT NULL, val1 text);"}
+{"sql":"create function parent_upd_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  if old.val1 <> new.val1 then\n    new.val2 = new.val1;\n    delete from child where child.aid = new.aid and child.val1 = new.val1;\n  end if;\n  return new;\nend;\n$$","shape":"CREATE FUNCTION parent_upd_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  if old.val1 <> new.val1 then\n    new.val2 = new.val1;\n    delete from child where child.aid = new.aid and child.val1 = new.val1;\n  end if;\n  return new;\nend;\n';"}
+{"sql":"create trigger parent_upd_trig before update on parent\n  for each row execute procedure parent_upd_func()","shape":"CREATE TRIGGER parent_upd_trig BEFORE UPDATE ON parent FOR EACH ROW EXECUTE FUNCTION parent_upd_func();"}
+{"sql":"create function parent_del_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  delete from child where aid = old.aid;\n  return old;\nend;\n$$","shape":"CREATE FUNCTION parent_del_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  delete from child where aid = old.aid;\n  return old;\nend;\n';"}
+{"sql":"create trigger parent_del_trig before delete on parent\n  for each row execute procedure parent_del_func()","shape":"CREATE TRIGGER parent_del_trig BEFORE DELETE ON parent FOR EACH ROW EXECUTE FUNCTION parent_del_func();"}
+{"sql":"create function child_ins_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  update parent set bcnt = bcnt + 1 where aid = new.aid;\n  return new;\nend;\n$$","shape":"CREATE FUNCTION child_ins_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  update parent set bcnt = bcnt + 1 where aid = new.aid;\n  return new;\nend;\n';"}
+{"sql":"create trigger child_ins_trig after insert on child\n  for each row execute procedure child_ins_func()","shape":"CREATE TRIGGER child_ins_trig AFTER INSERT ON child FOR EACH ROW EXECUTE FUNCTION child_ins_func();"}
+{"sql":"create function child_del_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  update parent set bcnt = bcnt - 1 where aid = old.aid;\n  return old;\nend;\n$$","shape":"CREATE FUNCTION child_del_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  update parent set bcnt = bcnt - 1 where aid = old.aid;\n  return old;\nend;\n';"}
+{"sql":"create trigger child_del_trig after delete on child\n  for each row execute procedure child_del_func()","shape":"CREATE TRIGGER child_del_trig AFTER DELETE ON child FOR EACH ROW EXECUTE FUNCTION child_del_func();"}
+{"sql":"insert into parent values (1, 'a', 'a', 'a', 'a', 0)","shape":"INSERT INTO parent VALUES (1, 'a', 'a', 'a', 'a', 0);"}
+{"sql":"insert into child values (10, 1, 'b')","shape":"INSERT INTO child VALUES (10, 1, 'b');"}
+{"sql":"update parent set val1 = 'b' where aid = 1","shape":"UPDATE parent SET val1 = 'b' WHERE aid = 1;"}
+{"sql":"merge into parent p using (values (1)) as v(id) on p.aid = v.id\n  when matched then update set val1 = 'b'","shape":"MERGE INTO parent AS p USING (VALUES (1)) AS v(id) ON p.aid = v.id WHEN MATCHED THEN UPDATE SET val1 = 'b';"}
+{"sql":"delete from parent where aid = 1","shape":"DELETE FROM parent WHERE aid = 1;"}
+{"sql":"merge into parent p using (values (1)) as v(id) on p.aid = v.id\n  when matched then delete","shape":"MERGE INTO parent AS p USING (VALUES (1)) AS v(id) ON p.aid = v.id WHEN MATCHED THEN DELETE;"}
+{"sql":"create or replace function parent_del_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  delete from child where aid = old.aid;\n  if found then\n    delete from parent where aid = old.aid;\n    return null; -- cancel outer deletion\n  end if;\n  return old;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION parent_del_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  delete from child where aid = old.aid;\n  if found then\n    delete from parent where aid = old.aid;\n    return null; -- cancel outer deletion\n  end if;\n  return old;\nend;\n';"}
+{"sql":"drop table parent, child","shape":"DROP TABLE parent, child;"}
+{"sql":"drop function parent_upd_func()"}
+{"sql":"drop function parent_del_func()"}
+{"sql":"drop function child_ins_func()"}
+{"sql":"drop function child_del_func()"}
+{"sql":"create temp table self_ref_trigger (\n    id int primary key,\n    parent int references self_ref_trigger,\n    data text,\n    nchildren int not null default 0\n)","shape":"CREATE TEMPORARY TABLE self_ref_trigger (id int PRIMARY KEY, parent int REFERENCES self_ref_trigger, data text, nchildren int NOT NULL DEFAULT 0);"}
+{"sql":"create function self_ref_trigger_ins_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  if new.parent is not null then\n    update self_ref_trigger set nchildren = nchildren + 1\n      where id = new.parent;\n  end if;\n  return new;\nend;\n$$","shape":"CREATE FUNCTION self_ref_trigger_ins_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  if new.parent is not null then\n    update self_ref_trigger set nchildren = nchildren + 1\n      where id = new.parent;\n  end if;\n  return new;\nend;\n';"}
+{"sql":"create trigger self_ref_trigger_ins_trig before insert on self_ref_trigger\n  for each row execute procedure self_ref_trigger_ins_func()","shape":"CREATE TRIGGER self_ref_trigger_ins_trig BEFORE INSERT ON self_ref_trigger FOR EACH ROW EXECUTE FUNCTION self_ref_trigger_ins_func();"}
+{"sql":"create function self_ref_trigger_del_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  if old.parent is not null then\n    update self_ref_trigger set nchildren = nchildren - 1\n      where id = old.parent;\n  end if;\n  return old;\nend;\n$$","shape":"CREATE FUNCTION self_ref_trigger_del_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  if old.parent is not null then\n    update self_ref_trigger set nchildren = nchildren - 1\n      where id = old.parent;\n  end if;\n  return old;\nend;\n';"}
+{"sql":"create trigger self_ref_trigger_del_trig before delete on self_ref_trigger\n  for each row execute procedure self_ref_trigger_del_func()","shape":"CREATE TRIGGER self_ref_trigger_del_trig BEFORE DELETE ON self_ref_trigger FOR EACH ROW EXECUTE FUNCTION self_ref_trigger_del_func();"}
+{"sql":"insert into self_ref_trigger values (1, null, 'root')","shape":"INSERT INTO self_ref_trigger VALUES (1, NULL, 'root');"}
+{"sql":"insert into self_ref_trigger values (2, 1, 'root child A')","shape":"INSERT INTO self_ref_trigger VALUES (2, 1, 'root child A');"}
+{"sql":"insert into self_ref_trigger values (3, 1, 'root child B')","shape":"INSERT INTO self_ref_trigger VALUES (3, 1, 'root child B');"}
+{"sql":"insert into self_ref_trigger values (4, 2, 'grandchild 1')","shape":"INSERT INTO self_ref_trigger VALUES (4, 2, 'grandchild 1');"}
+{"sql":"insert into self_ref_trigger values (5, 3, 'grandchild 2')","shape":"INSERT INTO self_ref_trigger VALUES (5, 3, 'grandchild 2');"}
+{"sql":"update self_ref_trigger set data = 'root!' where id = 1","shape":"UPDATE self_ref_trigger SET data = 'root!' WHERE id = 1;"}
+{"sql":"select * from self_ref_trigger","shape":"SELECT * FROM self_ref_trigger;"}
+{"sql":"delete from self_ref_trigger","shape":"DELETE FROM self_ref_trigger;"}
+{"sql":"drop table self_ref_trigger","shape":"DROP TABLE self_ref_trigger;"}
+{"sql":"drop function self_ref_trigger_ins_func()"}
+{"sql":"drop function self_ref_trigger_del_func()"}
+{"sql":"create table stmt_trig_on_empty_upd (a int)","shape":"CREATE TABLE stmt_trig_on_empty_upd (a int);"}
+{"sql":"create table stmt_trig_on_empty_upd1 () inherits (stmt_trig_on_empty_upd)","shape":"CREATE TABLE stmt_trig_on_empty_upd1 () INHERITS (stmt_trig_on_empty_upd);"}
+{"sql":"create function update_stmt_notice() returns trigger as $$\nbegin\n\traise notice 'updating %', TG_TABLE_NAME;\n\treturn null;\nend;\n$$ language plpgsql","shape":"CREATE FUNCTION update_stmt_notice() RETURNS trigger AS '\nbegin\n\traise notice ''updating %'', TG_TABLE_NAME;\n\treturn null;\nend;\n' LANGUAGE plpgsql;"}
+{"sql":"create trigger before_stmt_trigger\n\tbefore update on stmt_trig_on_empty_upd\n\texecute procedure update_stmt_notice()","shape":"CREATE TRIGGER before_stmt_trigger BEFORE UPDATE ON stmt_trig_on_empty_upd EXECUTE FUNCTION update_stmt_notice();"}
+{"sql":"create trigger before_stmt_trigger\n\tbefore update on stmt_trig_on_empty_upd1\n\texecute procedure update_stmt_notice()","shape":"CREATE TRIGGER before_stmt_trigger BEFORE UPDATE ON stmt_trig_on_empty_upd1 EXECUTE FUNCTION update_stmt_notice();"}
+{"sql":"update stmt_trig_on_empty_upd set a = a where false returning a+1 as aa","shape":"UPDATE stmt_trig_on_empty_upd SET a = a WHERE FALSE RETURNING a + 1 AS aa;"}
+{"sql":"update stmt_trig_on_empty_upd1 set a = a where false returning a+1 as aa","shape":"UPDATE stmt_trig_on_empty_upd1 SET a = a WHERE FALSE RETURNING a + 1 AS aa;"}
+{"sql":"drop table stmt_trig_on_empty_upd cascade","shape":"DROP TABLE stmt_trig_on_empty_upd CASCADE;"}
+{"sql":"drop function update_stmt_notice()"}
+{"sql":"create table trigger_ddl_table (\n   col1 integer,\n   col2 integer\n)","shape":"CREATE TABLE trigger_ddl_table (col1 integer, col2 integer);"}
+{"sql":"create function trigger_ddl_func() returns trigger as $$\nbegin\n  alter table trigger_ddl_table add primary key (col1);\n  return new;\nend$$ language plpgsql","shape":"CREATE FUNCTION trigger_ddl_func() RETURNS trigger AS '\nbegin\n  alter table trigger_ddl_table add primary key (col1);\n  return new;\nend' LANGUAGE plpgsql;"}
+{"sql":"create trigger trigger_ddl_func before insert on trigger_ddl_table for each row\n  execute procedure trigger_ddl_func()","shape":"CREATE TRIGGER trigger_ddl_func BEFORE INSERT ON trigger_ddl_table FOR EACH ROW EXECUTE FUNCTION trigger_ddl_func();"}
+{"sql":"insert into trigger_ddl_table values (1, 42)","shape":"INSERT INTO trigger_ddl_table VALUES (1, 42);"}
+{"sql":"create or replace function trigger_ddl_func() returns trigger as $$\nbegin\n  create index on trigger_ddl_table (col2);\n  return new;\nend$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION trigger_ddl_func() RETURNS trigger AS '\nbegin\n  create index on trigger_ddl_table (col2);\n  return new;\nend' LANGUAGE plpgsql;"}
+{"sql":"drop table trigger_ddl_table","shape":"DROP TABLE trigger_ddl_table;"}
+{"sql":"drop function trigger_ddl_func()"}
+{"sql":"create table upsert (key int4 primary key, color text)","shape":"CREATE TABLE upsert (key int4 PRIMARY KEY, color text);"}
+{"sql":"create function upsert_before_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  if (TG_OP = 'UPDATE') then\n    raise warning 'before update (old): %', old.*::text;\n    raise warning 'before update (new): %', new.*::text;\n  elsif (TG_OP = 'INSERT') then\n    raise warning 'before insert (new): %', new.*::text;\n    if new.key % 2 = 0 then\n      new.key := new.key + 1;\n      new.color := new.color || ' trig modified';\n      raise warning 'before insert (new, modified): %', new.*::text;\n    end if;\n  end if;\n  return new;\nend;\n$$","shape":"CREATE FUNCTION upsert_before_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  if (TG_OP = ''UPDATE'') then\n    raise warning ''before update (old): %'', old.*::text;\n    raise warning ''before update (new): %'', new.*::text;\n  elsif (TG_OP = ''INSERT'') then\n    raise warning ''before insert (new): %'', new.*::text;\n    if new.key % 2 = 0 then\n      new.key := new.key + 1;\n      new.color := new.color || '' trig modified'';\n      raise warning ''before insert (new, modified): %'', new.*::text;\n    end if;\n  end if;\n  return new;\nend;\n';"}
+{"sql":"create trigger upsert_before_trig before insert or update on upsert\n  for each row execute procedure upsert_before_func()","shape":"CREATE TRIGGER upsert_before_trig BEFORE INSERT OR UPDATE ON upsert FOR EACH ROW EXECUTE FUNCTION upsert_before_func();"}
+{"sql":"create function upsert_after_func()\n  returns trigger language plpgsql as\n$$\nbegin\n  if (TG_OP = 'UPDATE') then\n    raise warning 'after update (old): %', old.*::text;\n    raise warning 'after update (new): %', new.*::text;\n  elsif (TG_OP = 'INSERT') then\n    raise warning 'after insert (new): %', new.*::text;\n  end if;\n  return null;\nend;\n$$","shape":"CREATE FUNCTION upsert_after_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  if (TG_OP = ''UPDATE'') then\n    raise warning ''after update (old): %'', old.*::text;\n    raise warning ''after update (new): %'', new.*::text;\n  elsif (TG_OP = ''INSERT'') then\n    raise warning ''after insert (new): %'', new.*::text;\n  end if;\n  return null;\nend;\n';"}
+{"sql":"create trigger upsert_after_trig after insert or update on upsert\n  for each row execute procedure upsert_after_func()","shape":"CREATE TRIGGER upsert_after_trig AFTER INSERT OR UPDATE ON upsert FOR EACH ROW EXECUTE FUNCTION upsert_after_func();"}
+{"sql":"insert into upsert values(1, 'black') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (1, 'black') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(2, 'red') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (2, 'red') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(3, 'orange') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (3, 'orange') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(4, 'green') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (4, 'green') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(5, 'purple') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (5, 'purple') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(6, 'white') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (6, 'white') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(7, 'pink') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (7, 'pink') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"insert into upsert values(8, 'yellow') on conflict (key) do update set color = 'updated ' || upsert.color","shape":"INSERT INTO upsert VALUES (8, 'yellow') ON CONFLICT (key) DO UPDATE SET color = 'updated ' || upsert.color;"}
+{"sql":"drop table upsert","shape":"DROP TABLE upsert;"}
+{"sql":"drop function upsert_before_func()"}
+{"sql":"drop function upsert_after_func()"}
+{"sql":"create table my_table (i int)","shape":"CREATE TABLE my_table (i int);"}
+{"sql":"create view my_view as select * from my_table","shape":"CREATE VIEW my_view AS SELECT * FROM my_table;"}
+{"sql":"create function my_trigger_function() returns trigger as $$ begin end; $$ language plpgsql","shape":"CREATE FUNCTION my_trigger_function() RETURNS trigger AS ' begin end; ' LANGUAGE plpgsql;"}
+{"sql":"create trigger my_trigger after update on my_view referencing old table as old_table\n   for each statement execute procedure my_trigger_function()","shape":"CREATE TRIGGER my_trigger AFTER UPDATE ON my_view REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION my_trigger_function();"}
+{"sql":"drop function my_trigger_function()"}
+{"sql":"drop view my_view","shape":"DROP VIEW my_view;"}
+{"sql":"drop table my_table","shape":"DROP TABLE my_table;"}
+{"sql":"create table parted_trig (a int) partition by list (a)","shape":"CREATE TABLE parted_trig (a int) PARTITION BY LIST (a);"}
+{"sql":"create function trigger_nothing() returns trigger\n  language plpgsql as $$ begin end; $$","shape":"CREATE FUNCTION trigger_nothing() RETURNS trigger LANGUAGE plpgsql AS ' begin end; ';"}
+{"sql":"create trigger failed instead of update on parted_trig\n  for each row execute procedure trigger_nothing()","shape":"CREATE TRIGGER failed INSTEAD OF UPDATE ON parted_trig FOR EACH ROW EXECUTE FUNCTION trigger_nothing();"}
+{"sql":"create trigger failed after update on parted_trig\n  referencing old table as old_table\n  for each row execute procedure trigger_nothing()","shape":"CREATE TRIGGER failed AFTER UPDATE ON parted_trig REFERENCING OLD TABLE AS old_table FOR EACH ROW EXECUTE FUNCTION trigger_nothing();"}
+{"sql":"drop table parted_trig","shape":"DROP TABLE parted_trig;"}
+{"sql":"create table trigpart (a int, b int) partition by range (a)","shape":"CREATE TABLE trigpart (a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"create table trigpart1 partition of trigpart for values from (0) to (1000)","shape":"CREATE TABLE trigpart1 PARTITION OF trigpart FOR VALUES FROM (0) TO (1000);"}
+{"sql":"create trigger trg1 after insert on trigpart for each row execute procedure trigger_nothing()","shape":"CREATE TRIGGER trg1 AFTER INSERT ON trigpart FOR EACH ROW EXECUTE FUNCTION trigger_nothing();"}
+{"sql":"create table trigpart2 partition of trigpart for values from (1000) to (2000)","shape":"CREATE TABLE trigpart2 PARTITION OF trigpart FOR VALUES FROM (1000) TO (2000);"}
+{"sql":"create table trigpart3 (like trigpart)","shape":"CREATE TABLE trigpart3 (LIKE trigpart);"}
+{"sql":"alter table trigpart attach partition trigpart3 for values from (2000) to (3000)"}
+{"sql":"create table trigpart4 partition of trigpart for values from (3000) to (4000) partition by range (a)","shape":"CREATE TABLE trigpart4 PARTITION OF trigpart FOR VALUES FROM (3000) TO (4000) PARTITION BY RANGE (a);"}
+{"sql":"create table trigpart41 partition of trigpart4 for values from (3000) to (3500)","shape":"CREATE TABLE trigpart41 PARTITION OF trigpart4 FOR VALUES FROM (3000) TO (3500);"}
+{"sql":"create table trigpart42 (like trigpart)","shape":"CREATE TABLE trigpart42 (LIKE trigpart);"}
+{"sql":"alter table trigpart4 attach partition trigpart42 for values from (3500) to (4000)"}
+{"sql":"select tgrelid::regclass, tgname, tgfoid::regproc from pg_trigger\n  where tgrelid::regclass::text like 'trigpart%' order by tgrelid::regclass::text","shape":"SELECT tgrelid::regclass, tgname, tgfoid::regproc FROM pg_trigger WHERE tgrelid::regclass::text LIKE 'trigpart%' ORDER BY tgrelid::regclass::text;"}
+{"sql":"drop trigger trg1 on trigpart1","shape":"DROP TRIGGER trg1 ON trigpart1;"}
+{"sql":"drop trigger trg1 on trigpart2","shape":"DROP TRIGGER trg1 ON trigpart2;"}
+{"sql":"drop trigger trg1 on trigpart3","shape":"DROP TRIGGER trg1 ON trigpart3;"}
+{"sql":"drop table trigpart2","shape":"DROP TABLE trigpart2;"}
+{"sql":"drop trigger trg1 on trigpart","shape":"DROP TRIGGER trg1 ON trigpart;"}
+{"sql":"alter table trigpart detach partition trigpart3"}
+{"sql":"alter table trigpart detach partition trigpart4"}
+{"sql":"drop trigger trg1 on trigpart41","shape":"DROP TRIGGER trg1 ON trigpart41;"}
+{"sql":"drop table trigpart4","shape":"DROP TABLE trigpart4;"}
+{"sql":"drop table trigpart3","shape":"DROP TABLE trigpart3;"}
+{"sql":"select tgrelid::regclass::text, tgname, tgfoid::regproc, tgenabled, tgisinternal from pg_trigger\n  where tgname ~ '^trg1' order by 1","shape":"SELECT tgrelid::regclass::text, tgname, tgfoid::regproc, tgenabled, tgisinternal FROM pg_trigger WHERE tgname ~ '^trg1' ORDER BY 1;"}
+{"sql":"create trigger trg1 after insert on trigpart3 for each row execute procedure trigger_nothing()","shape":"CREATE TRIGGER trg1 AFTER INSERT ON trigpart3 FOR EACH ROW EXECUTE FUNCTION trigger_nothing();"}
+{"sql":"alter table trigpart attach partition trigpart3 FOR VALUES FROM (2000) to (3000)"}
+{"sql":"create trigger samename after delete on trigpart execute function trigger_nothing()","shape":"CREATE TRIGGER samename AFTER DELETE ON trigpart EXECUTE FUNCTION trigger_nothing();"}
+{"sql":"create trigger samename after delete on trigpart1 execute function trigger_nothing()","shape":"CREATE TRIGGER samename AFTER DELETE ON trigpart1 EXECUTE FUNCTION trigger_nothing();"}
+{"sql":"drop table trigpart","shape":"DROP TABLE trigpart;"}
+{"sql":"drop function trigger_nothing()"}
+{"sql":"create table parted_stmt_trig (a int) partition by list (a)","shape":"CREATE TABLE parted_stmt_trig (a int) PARTITION BY LIST (a);"}
+{"sql":"create table parted_stmt_trig1 partition of parted_stmt_trig for values in (1)","shape":"CREATE TABLE parted_stmt_trig1 PARTITION OF parted_stmt_trig FOR VALUES IN (1);"}
+{"sql":"create table parted_stmt_trig2 partition of parted_stmt_trig for values in (2)","shape":"CREATE TABLE parted_stmt_trig2 PARTITION OF parted_stmt_trig FOR VALUES IN (2);"}
+{"sql":"create table parted2_stmt_trig (a int) partition by list (a)","shape":"CREATE TABLE parted2_stmt_trig (a int) PARTITION BY LIST (a);"}
+{"sql":"create table parted2_stmt_trig1 partition of parted2_stmt_trig for values in (1)","shape":"CREATE TABLE parted2_stmt_trig1 PARTITION OF parted2_stmt_trig FOR VALUES IN (1);"}
+{"sql":"create table parted2_stmt_trig2 partition of parted2_stmt_trig for values in (2)","shape":"CREATE TABLE parted2_stmt_trig2 PARTITION OF parted2_stmt_trig FOR VALUES IN (2);"}
+{"sql":"create or replace function trigger_notice() returns trigger as $$\n  begin\n    raise notice 'trigger % on % % % for %', TG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL;\n    if TG_LEVEL = 'ROW' then\n       return NEW;\n    end if;\n    return null;\n  end;\n  $$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION trigger_notice() RETURNS trigger AS '\n  begin\n    raise notice ''trigger % on % % % for %'', TG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL;\n    if TG_LEVEL = ''ROW'' then\n       return NEW;\n    end if;\n    return null;\n  end;\n  ' LANGUAGE plpgsql;"}
+{"sql":"create trigger trig_ins_before before insert on parted_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_before BEFORE INSERT ON parted_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_ins_after after insert on parted_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_after AFTER INSERT ON parted_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_before before update on parted_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_before BEFORE UPDATE ON parted_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_after after update on parted_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_after AFTER UPDATE ON parted_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_before before delete on parted_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_before BEFORE DELETE ON parted_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_after after delete on parted_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_after AFTER DELETE ON parted_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_ins_after_parent after insert on parted_stmt_trig\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_after_parent AFTER INSERT ON parted_stmt_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_after_parent after update on parted_stmt_trig\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_after_parent AFTER UPDATE ON parted_stmt_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_after_parent after delete on parted_stmt_trig\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_after_parent AFTER DELETE ON parted_stmt_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_ins_before_child before insert on parted_stmt_trig1\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_before_child BEFORE INSERT ON parted_stmt_trig1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_ins_after_child after insert on parted_stmt_trig1\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_after_child AFTER INSERT ON parted_stmt_trig1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_before_child before update on parted_stmt_trig1\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_before_child BEFORE UPDATE ON parted_stmt_trig1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_after_child after update on parted_stmt_trig1\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_after_child AFTER UPDATE ON parted_stmt_trig1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_before_child before delete on parted_stmt_trig1\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_before_child BEFORE DELETE ON parted_stmt_trig1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_after_child after delete on parted_stmt_trig1\n  for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_after_child AFTER DELETE ON parted_stmt_trig1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_ins_before_3 before insert on parted2_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_before_3 BEFORE INSERT ON parted2_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_ins_after_3 after insert on parted2_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_ins_after_3 AFTER INSERT ON parted2_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_before_3 before update on parted2_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_before_3 BEFORE UPDATE ON parted2_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_upd_after_3 after update on parted2_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_upd_after_3 AFTER UPDATE ON parted2_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_before_3 before delete on parted2_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_before_3 BEFORE DELETE ON parted2_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger trig_del_after_3 after delete on parted2_stmt_trig\n  for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER trig_del_after_3 AFTER DELETE ON parted2_stmt_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"with ins (a) as (\n  insert into parted2_stmt_trig values (1), (2) returning a\n) insert into parted_stmt_trig select a from ins returning tableoid::regclass, a","shape":"WITH ins(a) AS (INSERT INTO parted2_stmt_trig VALUES (1), (2) RETURNING a) INSERT INTO parted_stmt_trig SELECT a FROM ins RETURNING tableoid::regclass, a;"}
+{"sql":"with upd as (\n  update parted2_stmt_trig set a = a\n) update parted_stmt_trig  set a = a","shape":"WITH upd AS (UPDATE parted2_stmt_trig SET a = a) UPDATE parted_stmt_trig SET a = a;"}
+{"sql":"delete from parted_stmt_trig","shape":"DELETE FROM parted_stmt_trig;"}
+{"sql":"copy parted_stmt_trig(a) from stdin","shape":"COPY parted_stmt_trig (a) FROM STDIN;"}
+{"sql":"copy parted_stmt_trig1(a) from stdin","shape":"COPY parted_stmt_trig1 (a) FROM STDIN;"}
+{"sql":"alter table parted_stmt_trig disable trigger trig_ins_after_parent"}
+{"sql":"insert into parted_stmt_trig values (1)","shape":"INSERT INTO parted_stmt_trig VALUES (1);"}
+{"sql":"alter table parted_stmt_trig enable trigger trig_ins_after_parent"}
+{"sql":"drop table parted_stmt_trig, parted2_stmt_trig","shape":"DROP TABLE parted_stmt_trig, parted2_stmt_trig;"}
+{"sql":"create table parted_trig (a int) partition by range (a)","shape":"CREATE TABLE parted_trig (a int) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_trig_1 partition of parted_trig for values from (0) to (1000)\n   partition by range (a)","shape":"CREATE TABLE parted_trig_1 PARTITION OF parted_trig FOR VALUES FROM (0) TO (1000) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_trig_1_1 partition of parted_trig_1 for values from (0) to (100)","shape":"CREATE TABLE parted_trig_1_1 PARTITION OF parted_trig_1 FOR VALUES FROM (0) TO (100);"}
+{"sql":"create table parted_trig_2 partition of parted_trig for values from (1000) to (2000)","shape":"CREATE TABLE parted_trig_2 PARTITION OF parted_trig FOR VALUES FROM (1000) TO (2000);"}
+{"sql":"create trigger zzz after insert on parted_trig for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER zzz AFTER INSERT ON parted_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger mmm after insert on parted_trig_1_1 for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER mmm AFTER INSERT ON parted_trig_1_1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger aaa after insert on parted_trig_1 for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER aaa AFTER INSERT ON parted_trig_1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger bbb after insert on parted_trig for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER bbb AFTER INSERT ON parted_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger qqq after insert on parted_trig_1_1 for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER qqq AFTER INSERT ON parted_trig_1_1 FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"insert into parted_trig values (50), (1500)","shape":"INSERT INTO parted_trig VALUES (50), (1500);"}
+{"sql":"create table parted_trig1 partition of parted_trig for values in (1)","shape":"CREATE TABLE parted_trig1 PARTITION OF parted_trig FOR VALUES IN (1);"}
+{"sql":"create table parted_trig2 partition of parted_trig for values in (2)","shape":"CREATE TABLE parted_trig2 PARTITION OF parted_trig FOR VALUES IN (2);"}
+{"sql":"insert into parted_trig values (1)","shape":"INSERT INTO parted_trig VALUES (1);"}
+{"sql":"create or replace function trigger_notice() returns trigger as $$\n  begin\n    raise notice 'trigger % on % % % for %', TG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL;\n    if TG_LEVEL = 'ROW' then\n      if TG_OP = 'DELETE' then\n        return OLD;\n      else\n        return NEW;\n      end if;\n    end if;\n    return null;\n  end;\n  $$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION trigger_notice() RETURNS trigger AS '\n  begin\n    raise notice ''trigger % on % % % for %'', TG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL;\n    if TG_LEVEL = ''ROW'' then\n      if TG_OP = ''DELETE'' then\n        return OLD;\n      else\n        return NEW;\n      end if;\n    end if;\n    return null;\n  end;\n  ' LANGUAGE plpgsql;"}
+{"sql":"create trigger parted_trig_before_stmt before insert or update or delete on parted_trig\n   for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER parted_trig_before_stmt BEFORE INSERT OR UPDATE OR DELETE ON parted_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger parted_trig_before_row before insert or update or delete on parted_trig\n   for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER parted_trig_before_row BEFORE INSERT OR UPDATE OR DELETE ON parted_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger parted_trig_after_row after insert or update or delete on parted_trig\n   for each row execute procedure trigger_notice()","shape":"CREATE TRIGGER parted_trig_after_row AFTER INSERT OR UPDATE OR DELETE ON parted_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice();"}
+{"sql":"create trigger parted_trig_after_stmt after insert or update or delete on parted_trig\n   for each statement execute procedure trigger_notice()","shape":"CREATE TRIGGER parted_trig_after_stmt AFTER INSERT OR UPDATE OR DELETE ON parted_trig FOR EACH STATEMENT EXECUTE FUNCTION trigger_notice();"}
+{"sql":"update parted_trig set a = 2 where a = 1","shape":"UPDATE parted_trig SET a = 2 WHERE a = 1;"}
+{"sql":"merge into parted_trig using (select 1) as ss on true\n  when matched and a = 2 then update set a = 1","shape":"MERGE INTO parted_trig USING (SELECT 1) AS ss ON TRUE WHEN MATCHED AND a = 2 THEN UPDATE SET a = 1;"}
+{"sql":"create or replace function trigger_notice() returns trigger as $$\n  declare\n    arg1 text = TG_ARGV[0];\n    arg2 integer = TG_ARGV[1];\n  begin\n    raise notice 'trigger % on % % % for % args % %',\n\t\tTG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL, arg1, arg2;\n    return null;\n  end;\n  $$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION trigger_notice() RETURNS trigger AS '\n  declare\n    arg1 text = TG_ARGV[0];\n    arg2 integer = TG_ARGV[1];\n  begin\n    raise notice ''trigger % on % % % for % args % %'',\n\t\tTG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL, arg1, arg2;\n    return null;\n  end;\n  ' LANGUAGE plpgsql;"}
+{"sql":"create trigger aaa after insert on parted_trig\n   for each row execute procedure trigger_notice('quirky', 1)","shape":"CREATE TRIGGER aaa AFTER INSERT ON parted_trig FOR EACH ROW EXECUTE FUNCTION trigger_notice('quirky', 1);"}
+{"sql":"create table parted_trig3 (like parted_trig)","shape":"CREATE TABLE parted_trig3 (LIKE parted_trig);"}
+{"sql":"alter table parted_trig attach partition parted_trig3 for values in (3)"}
+{"sql":"insert into parted_trig values (1), (2), (3)","shape":"INSERT INTO parted_trig VALUES (1), (2), (3);"}
+{"sql":"create function bark(text) returns bool language plpgsql immutable\n  as $$ begin raise notice '% <- woof!', $1; return true; end; $$","shape":"CREATE FUNCTION bark(text) RETURNS bool LANGUAGE plpgsql IMMUTABLE AS ' begin raise notice ''% <- woof!'', $1; return true; end; ';"}
+{"sql":"create or replace function trigger_notice_ab() returns trigger as $$\n  begin\n    raise notice 'trigger % on % % % for %: (a,b)=(%,%)',\n\t\tTG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL,\n\t\tNEW.a, NEW.b;\n    if TG_LEVEL = 'ROW' then\n       return NEW;\n    end if;\n    return null;\n  end;\n  $$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION trigger_notice_ab() RETURNS trigger AS '\n  begin\n    raise notice ''trigger % on % % % for %: (a,b)=(%,%)'',\n\t\tTG_NAME, TG_TABLE_NAME, TG_WHEN, TG_OP, TG_LEVEL,\n\t\tNEW.a, NEW.b;\n    if TG_LEVEL = ''ROW'' then\n       return NEW;\n    end if;\n    return null;\n  end;\n  ' LANGUAGE plpgsql;"}
+{"sql":"create table parted_irreg_ancestor (fd text, b text, fd2 int, fd3 int, a int)\n  partition by range (b)","shape":"CREATE TABLE parted_irreg_ancestor (fd text, b text, fd2 int, fd3 int, a int) PARTITION BY RANGE (b);"}
+{"sql":"alter table parted_irreg_ancestor drop column fd,\n  drop column fd2, drop column fd3","shape":"ALTER TABLE parted_irreg_ancestor DROP COLUMN fd, DROP COLUMN fd2, DROP COLUMN fd3;"}
+{"sql":"create table parted_irreg (fd int, a int, fd2 int, b text)\n  partition by range (b)","shape":"CREATE TABLE parted_irreg (fd int, a int, fd2 int, b text) PARTITION BY RANGE (b);"}
+{"sql":"alter table parted_irreg drop column fd, drop column fd2","shape":"ALTER TABLE parted_irreg DROP COLUMN fd, DROP COLUMN fd2;"}
+{"sql":"alter table parted_irreg_ancestor attach partition parted_irreg\n  for values from ('aaaa') to ('zzzz')"}
+{"sql":"create table parted1_irreg (b text, fd int, a int)","shape":"CREATE TABLE parted1_irreg (b text, fd int, a int);"}
+{"sql":"alter table parted1_irreg drop column fd","shape":"ALTER TABLE parted1_irreg DROP COLUMN fd;"}
+{"sql":"alter table parted_irreg attach partition parted1_irreg\n  for values from ('aaaa') to ('bbbb')"}
+{"sql":"create trigger parted_trig after insert on parted_irreg\n  for each row execute procedure trigger_notice_ab()","shape":"CREATE TRIGGER parted_trig AFTER INSERT ON parted_irreg FOR EACH ROW EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"create trigger parted_trig_odd after insert on parted_irreg for each row\n  when (bark(new.b) AND new.a % 2 = 1) execute procedure trigger_notice_ab()","shape":"CREATE TRIGGER parted_trig_odd AFTER INSERT ON parted_irreg FOR EACH ROW WHEN (bark(new.b) AND ((new.a % 2) = 1)) EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"insert into parted_irreg values (1, 'aardvark'), (2, 'aanimals')","shape":"INSERT INTO parted_irreg VALUES (1, 'aardvark'), (2, 'aanimals');"}
+{"sql":"insert into parted1_irreg values ('aardwolf', 2)","shape":"INSERT INTO parted1_irreg VALUES ('aardwolf', 2);"}
+{"sql":"insert into parted_irreg_ancestor values ('aasvogel', 3)","shape":"INSERT INTO parted_irreg_ancestor VALUES ('aasvogel', 3);"}
+{"sql":"drop table parted_irreg_ancestor","shape":"DROP TABLE parted_irreg_ancestor;"}
+{"sql":"create table parted (a int, b int, c text) partition by list (a)","shape":"CREATE TABLE parted (a int, b int, c text) PARTITION BY LIST (a);"}
+{"sql":"create table parted_1 partition of parted for values in (1)\n  partition by list (b)","shape":"CREATE TABLE parted_1 PARTITION OF parted FOR VALUES IN (1) PARTITION BY LIST (b);"}
+{"sql":"create table parted_1_1 partition of parted_1 for values in (1)","shape":"CREATE TABLE parted_1_1 PARTITION OF parted_1 FOR VALUES IN (1);"}
+{"sql":"create function parted_trigfunc() returns trigger language plpgsql as $$\nbegin\n  new.a = new.a + 1;\n  return new;\nend;\n$$","shape":"CREATE FUNCTION parted_trigfunc() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  new.a = new.a + 1;\n  return new;\nend;\n';"}
+{"sql":"insert into parted values (1, 1, 'uno uno v1')","shape":"INSERT INTO parted VALUES (1, 1, 'uno uno v1');"}
+{"sql":"create trigger t before insert or update or delete on parted\n  for each row execute function parted_trigfunc()","shape":"CREATE TRIGGER t BEFORE INSERT OR UPDATE OR DELETE ON parted FOR EACH ROW EXECUTE FUNCTION parted_trigfunc();"}
+{"sql":"insert into parted values (1, 1, 'uno uno v2')","shape":"INSERT INTO parted VALUES (1, 1, 'uno uno v2');"}
+{"sql":"update parted set c = c || 'v3'","shape":"UPDATE parted SET c = c || 'v3';"}
+{"sql":"create or replace function parted_trigfunc() returns trigger language plpgsql as $$\nbegin\n  new.b = new.b + 1;\n  return new;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION parted_trigfunc() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  new.b = new.b + 1;\n  return new;\nend;\n';"}
+{"sql":"insert into parted values (1, 1, 'uno uno v4')","shape":"INSERT INTO parted VALUES (1, 1, 'uno uno v4');"}
+{"sql":"update parted set c = c || 'v5'","shape":"UPDATE parted SET c = c || 'v5';"}
+{"sql":"create or replace function parted_trigfunc() returns trigger language plpgsql as $$\nbegin\n  new.c = new.c || ' did '|| TG_OP;\n  return new;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION parted_trigfunc() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  new.c = new.c || '' did ''|| TG_OP;\n  return new;\nend;\n';"}
+{"sql":"insert into parted values (1, 1, 'uno uno')","shape":"INSERT INTO parted VALUES (1, 1, 'uno uno');"}
+{"sql":"update parted set c = c || ' v6'","shape":"UPDATE parted SET c = c || ' v6';"}
+{"sql":"select tableoid::regclass, * from parted","shape":"SELECT tableoid::regclass, * FROM parted;"}
+{"sql":"truncate table parted","shape":"TRUNCATE TABLE parted;"}
+{"sql":"create table parted_2 partition of parted for values in (2)","shape":"CREATE TABLE parted_2 PARTITION OF parted FOR VALUES IN (2);"}
+{"sql":"insert into parted values (1, 1, 'uno uno v5')","shape":"INSERT INTO parted VALUES (1, 1, 'uno uno v5');"}
+{"sql":"update parted set a = 2","shape":"UPDATE parted SET a = 2;"}
+{"sql":"create or replace function parted_trigfunc2() returns trigger language plpgsql as $$\nbegin\n  new.a = new.a + 1;\n  return new;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION parted_trigfunc2() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  new.a = new.a + 1;\n  return new;\nend;\n';"}
+{"sql":"create trigger t2 before update on parted\n  for each row execute function parted_trigfunc2()","shape":"CREATE TRIGGER t2 BEFORE UPDATE ON parted FOR EACH ROW EXECUTE FUNCTION parted_trigfunc2();"}
+{"sql":"insert into parted values (1, 1, 'uno uno v6')","shape":"INSERT INTO parted VALUES (1, 1, 'uno uno v6');"}
+{"sql":"create table parted_3 partition of parted for values in (3)","shape":"CREATE TABLE parted_3 PARTITION OF parted FOR VALUES IN (3);"}
+{"sql":"update parted set a = a + 1","shape":"UPDATE parted SET a = a + 1;"}
+{"sql":"update parted set a = 0","shape":"UPDATE parted SET a = 0;"}
+{"sql":"drop table parted","shape":"DROP TABLE parted;"}
+{"sql":"create table parted (a int, b int, c text) partition by list ((a + b))","shape":"CREATE TABLE parted (a int, b int, c text) PARTITION BY LIST ((a + b));"}
+{"sql":"create or replace function parted_trigfunc() returns trigger language plpgsql as $$\nbegin\n  new.a = new.a + new.b;\n  return new;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION parted_trigfunc() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  new.a = new.a + new.b;\n  return new;\nend;\n';"}
+{"sql":"create table parted_1 partition of parted for values in (1, 2)","shape":"CREATE TABLE parted_1 PARTITION OF parted FOR VALUES IN (1, 2);"}
+{"sql":"create table parted_2 partition of parted for values in (3, 4)","shape":"CREATE TABLE parted_2 PARTITION OF parted FOR VALUES IN (3, 4);"}
+{"sql":"create trigger t before insert or update on parted\n  for each row execute function parted_trigfunc()","shape":"CREATE TRIGGER t BEFORE INSERT OR UPDATE ON parted FOR EACH ROW EXECUTE FUNCTION parted_trigfunc();"}
+{"sql":"insert into parted values (0, 1, 'zero win')","shape":"INSERT INTO parted VALUES (0, 1, 'zero win');"}
+{"sql":"insert into parted values (1, 1, 'one fail')","shape":"INSERT INTO parted VALUES (1, 1, 'one fail');"}
+{"sql":"insert into parted values (1, 2, 'two fail')","shape":"INSERT INTO parted VALUES (1, 2, 'two fail');"}
+{"sql":"select * from parted","shape":"SELECT * FROM parted;"}
+{"sql":"drop function parted_trigfunc()"}
+{"sql":"create table parted_constr_ancestor (a int, b text)\n  partition by range (b)","shape":"CREATE TABLE parted_constr_ancestor (a int, b text) PARTITION BY RANGE (b);"}
+{"sql":"create table parted_constr (a int, b text)\n  partition by range (b)","shape":"CREATE TABLE parted_constr (a int, b text) PARTITION BY RANGE (b);"}
+{"sql":"alter table parted_constr_ancestor attach partition parted_constr\n  for values from ('aaaa') to ('zzzz')"}
+{"sql":"create table parted1_constr (a int, b text)","shape":"CREATE TABLE parted1_constr (a int, b text);"}
+{"sql":"alter table parted_constr attach partition parted1_constr\n  for values from ('aaaa') to ('bbbb')"}
+{"sql":"create constraint trigger parted_trig after insert on parted_constr_ancestor\n  deferrable\n  for each row execute procedure trigger_notice_ab()","shape":"CREATE CONSTRAINT TRIGGER parted_trig AFTER INSERT ON parted_constr_ancestor DEFERRABLE FOR EACH ROW EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"create constraint trigger parted_trig_two after insert on parted_constr\n  deferrable initially deferred\n  for each row when (bark(new.b) AND new.a % 2 = 1)\n  execute procedure trigger_notice_ab()","shape":"CREATE CONSTRAINT TRIGGER parted_trig_two AFTER INSERT ON parted_constr DEFERRABLE INITIALLY DEFERRED FOR EACH ROW WHEN (bark(new.b) AND ((new.a % 2) = 1)) EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"insert into parted_constr values (1, 'aardvark')","shape":"INSERT INTO parted_constr VALUES (1, 'aardvark');"}
+{"sql":"insert into parted1_constr values (2, 'aardwolf')","shape":"INSERT INTO parted1_constr VALUES (2, 'aardwolf');"}
+{"sql":"insert into parted_constr_ancestor values (3, 'aasvogel')","shape":"INSERT INTO parted_constr_ancestor VALUES (3, 'aasvogel');"}
+{"sql":"set constraints parted_trig deferred"}
+{"sql":"insert into parted1_constr values (2, 'aardwolf'), (3, 'aasvogel')","shape":"INSERT INTO parted1_constr VALUES (2, 'aardwolf'), (3, 'aasvogel');"}
+{"sql":"drop table parted_constr_ancestor","shape":"DROP TABLE parted_constr_ancestor;"}
+{"sql":"drop function bark(text)"}
+{"sql":"create table parted_trigger (a int, b text) partition by range (a)","shape":"CREATE TABLE parted_trigger (a int, b text) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_trigger_1 partition of parted_trigger for values from (0) to (1000)","shape":"CREATE TABLE parted_trigger_1 PARTITION OF parted_trigger FOR VALUES FROM (0) TO (1000);"}
+{"sql":"create table parted_trigger_2 (drp int, a int, b text)","shape":"CREATE TABLE parted_trigger_2 (drp int, a int, b text);"}
+{"sql":"alter table parted_trigger_2 drop column drp","shape":"ALTER TABLE parted_trigger_2 DROP COLUMN drp;"}
+{"sql":"alter table parted_trigger attach partition parted_trigger_2 for values from (1000) to (2000)"}
+{"sql":"create trigger parted_trigger after update on parted_trigger\n  for each row when (new.a % 2 = 1 and length(old.b) >= 2) execute procedure trigger_notice_ab()","shape":"CREATE TRIGGER parted_trigger AFTER UPDATE ON parted_trigger FOR EACH ROW WHEN (((new.a % 2) = 1) AND (length(old.b) >= 2)) EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"create table parted_trigger_3 (b text, a int) partition by range (length(b))","shape":"CREATE TABLE parted_trigger_3 (b text, a int) PARTITION BY RANGE (length(b));"}
+{"sql":"create table parted_trigger_3_1 partition of parted_trigger_3 for values from (1) to (3)","shape":"CREATE TABLE parted_trigger_3_1 PARTITION OF parted_trigger_3 FOR VALUES FROM (1) TO (3);"}
+{"sql":"create table parted_trigger_3_2 partition of parted_trigger_3 for values from (3) to (5)","shape":"CREATE TABLE parted_trigger_3_2 PARTITION OF parted_trigger_3 FOR VALUES FROM (3) TO (5);"}
+{"sql":"alter table parted_trigger attach partition parted_trigger_3 for values from (2000) to (3000)"}
+{"sql":"insert into parted_trigger values\n    (0, 'a'), (1, 'bbb'), (2, 'bcd'), (3, 'c'),\n\t(1000, 'c'), (1001, 'ddd'), (1002, 'efg'), (1003, 'f'),\n\t(2000, 'e'), (2001, 'fff'), (2002, 'ghi'), (2003, 'h')","shape":"INSERT INTO parted_trigger VALUES (0, 'a'), (1, 'bbb'), (2, 'bcd'), (3, 'c'), (1000, 'c'), (1001, 'ddd'), (1002, 'efg'), (1003, 'f'), (2000, 'e'), (2001, 'fff'), (2002, 'ghi'), (2003, 'h');"}
+{"sql":"update parted_trigger set a = a + 2","shape":"UPDATE parted_trigger SET a = a + 2;"}
+{"sql":"drop table parted_trigger","shape":"DROP TABLE parted_trigger;"}
+{"sql":"create table parted_referenced (a int)","shape":"CREATE TABLE parted_referenced (a int);"}
+{"sql":"create table unparted_trigger (a int, b text)","shape":"CREATE TABLE unparted_trigger (a int, b text);"}
+{"sql":"create constraint trigger parted_trigger after update on parted_trigger\n  from parted_referenced\n  for each row execute procedure trigger_notice_ab()","shape":"CREATE CONSTRAINT TRIGGER parted_trigger AFTER UPDATE ON parted_trigger FROM parted_referenced FOR EACH ROW EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"create constraint trigger parted_trigger after update on unparted_trigger\n  from parted_referenced\n  for each row execute procedure trigger_notice_ab()","shape":"CREATE CONSTRAINT TRIGGER parted_trigger AFTER UPDATE ON unparted_trigger FROM parted_referenced FOR EACH ROW EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"select tgname, conname, t.tgrelid::regclass, t.tgconstrrelid::regclass,\n  c.conrelid::regclass, c.confrelid::regclass\n  from pg_trigger t join pg_constraint c on (t.tgconstraint = c.oid)\n  where tgname = 'parted_trigger'\n  order by t.tgrelid::regclass::text","shape":"SELECT tgname, conname, t.tgrelid::regclass, t.tgconstrrelid::regclass, c.conrelid::regclass, c.confrelid::regclass FROM pg_trigger AS t JOIN pg_constraint AS c ON (t.tgconstraint = c.oid) WHERE tgname = 'parted_trigger' ORDER BY t.tgrelid::regclass::text;"}
+{"sql":"drop table parted_referenced, parted_trigger, unparted_trigger","shape":"DROP TABLE parted_referenced, parted_trigger, unparted_trigger;"}
+{"sql":"create trigger parted_trigger after update of b on parted_trigger\n  for each row execute procedure trigger_notice_ab()","shape":"CREATE TRIGGER parted_trigger AFTER UPDATE OF b ON parted_trigger FOR EACH ROW EXECUTE FUNCTION trigger_notice_ab();"}
+{"sql":"create table parted_trigger_3_1 partition of parted_trigger_3 for values from (1) to (4)","shape":"CREATE TABLE parted_trigger_3_1 PARTITION OF parted_trigger_3 FOR VALUES FROM (1) TO (4);"}
+{"sql":"create table parted_trigger_3_2 partition of parted_trigger_3 for values from (4) to (8)","shape":"CREATE TABLE parted_trigger_3_2 PARTITION OF parted_trigger_3 FOR VALUES FROM (4) TO (8);"}
+{"sql":"insert into parted_trigger values (0, 'a'), (1000, 'c'), (2000, 'e'), (2001, 'eeee')","shape":"INSERT INTO parted_trigger VALUES (0, 'a'), (1000, 'c'), (2000, 'e'), (2001, 'eeee');"}
+{"sql":"update parted_trigger set b = b || 'b'","shape":"UPDATE parted_trigger SET b = b || 'b';"}
+{"sql":"drop function trigger_notice_ab()"}
+{"sql":"create table trg_clone (a int) partition by range (a)","shape":"CREATE TABLE trg_clone (a int) PARTITION BY RANGE (a);"}
+{"sql":"create table trg_clone1 partition of trg_clone for values from (0) to (1000)","shape":"CREATE TABLE trg_clone1 PARTITION OF trg_clone FOR VALUES FROM (0) TO (1000);"}
+{"sql":"alter table trg_clone add constraint uniq unique (a) deferrable","shape":"ALTER TABLE trg_clone ADD CONSTRAINT uniq UNIQUE (a) DEFERRABLE;"}
+{"sql":"create table trg_clone2 partition of trg_clone for values from (1000) to (2000)","shape":"CREATE TABLE trg_clone2 PARTITION OF trg_clone FOR VALUES FROM (1000) TO (2000);"}
+{"sql":"create table trg_clone3 partition of trg_clone for values from (2000) to (3000)\n  partition by range (a)","shape":"CREATE TABLE trg_clone3 PARTITION OF trg_clone FOR VALUES FROM (2000) TO (3000) PARTITION BY RANGE (a);"}
+{"sql":"create table trg_clone_3_3 partition of trg_clone3 for values from (2000) to (2100)","shape":"CREATE TABLE trg_clone_3_3 PARTITION OF trg_clone3 FOR VALUES FROM (2000) TO (2100);"}
+{"sql":"select tgrelid::regclass, count(*) from pg_trigger\n  where tgrelid::regclass in ('trg_clone', 'trg_clone1', 'trg_clone2',\n\t'trg_clone3', 'trg_clone_3_3')\n  group by tgrelid::regclass order by tgrelid::regclass","shape":"SELECT tgrelid::regclass, count(*) FROM pg_trigger WHERE tgrelid::regclass IN ('trg_clone', 'trg_clone1', 'trg_clone2', 'trg_clone3', 'trg_clone_3_3') GROUP BY tgrelid::regclass ORDER BY tgrelid::regclass;"}
+{"sql":"drop table trg_clone","shape":"DROP TABLE trg_clone;"}
+{"sql":"create table child1 () inherits (parent)","shape":"CREATE TABLE child1 () INHERITS (parent);"}
+{"sql":"create function trig_nothing() returns trigger language plpgsql\n  as $$ begin return null; end $$","shape":"CREATE FUNCTION trig_nothing() RETURNS trigger LANGUAGE plpgsql AS ' begin return null; end ';"}
+{"sql":"create trigger tg after insert on parent\n  for each row execute function trig_nothing()","shape":"CREATE TRIGGER tg AFTER INSERT ON parent FOR EACH ROW EXECUTE FUNCTION trig_nothing();"}
+{"sql":"create trigger tg after insert on child1\n  for each row execute function trig_nothing()","shape":"CREATE TRIGGER tg AFTER INSERT ON child1 FOR EACH ROW EXECUTE FUNCTION trig_nothing();"}
+{"sql":"alter table parent disable trigger tg"}
+{"sql":"select tgrelid::regclass, tgname, tgenabled from pg_trigger\n  where tgrelid in ('parent'::regclass, 'child1'::regclass)\n  order by tgrelid::regclass::text","shape":"SELECT tgrelid::regclass, tgname, tgenabled FROM pg_trigger WHERE tgrelid IN ('parent'::regclass, 'child1'::regclass) ORDER BY tgrelid::regclass::text;"}
+{"sql":"alter table only parent enable always trigger tg"}
+{"sql":"drop table parent, child1","shape":"DROP TABLE parent, child1;"}
+{"sql":"create table parent (a int) partition by list (a)","shape":"CREATE TABLE parent (a int) PARTITION BY LIST (a);"}
+{"sql":"create table child1 partition of parent for values in (1)","shape":"CREATE TABLE child1 PARTITION OF parent FOR VALUES IN (1);"}
+{"sql":"create trigger tg after insert on parent\n  for each row execute procedure trig_nothing()","shape":"CREATE TRIGGER tg AFTER INSERT ON parent FOR EACH ROW EXECUTE FUNCTION trig_nothing();"}
+{"sql":"create trigger tg_stmt after insert on parent\n  for statement execute procedure trig_nothing()","shape":"CREATE TRIGGER tg_stmt AFTER INSERT ON parent FOR EACH STATEMENT EXECUTE FUNCTION trig_nothing();"}
+{"sql":"select tgrelid::regclass, tgname, tgenabled from pg_trigger\n  where tgrelid in ('parent'::regclass, 'child1'::regclass)\n  order by tgrelid::regclass::text, tgname","shape":"SELECT tgrelid::regclass, tgname, tgenabled FROM pg_trigger WHERE tgrelid IN ('parent'::regclass, 'child1'::regclass) ORDER BY tgrelid::regclass::text, tgname;"}
+{"sql":"alter table parent enable always trigger tg_stmt"}
+{"sql":"alter table parent enable always trigger tg"}
+{"sql":"alter table parent disable trigger user"}
+{"sql":"create table parent (a int primary key, f int references parent)\n  partition by list (a)","shape":"CREATE TABLE parent (a int PRIMARY KEY, f int REFERENCES parent) PARTITION BY LIST (a);"}
+{"sql":"select tgrelid::regclass, rtrim(tgname, '0123456789') as tgname,\n  tgfoid::regproc, tgenabled\n  from pg_trigger where tgrelid in ('parent'::regclass, 'child1'::regclass)\n  order by tgrelid::regclass::text, tgfoid","shape":"SELECT tgrelid::regclass, rtrim(tgname, '0123456789') AS tgname, tgfoid::regproc, tgenabled FROM pg_trigger WHERE tgrelid IN ('parent'::regclass, 'child1'::regclass) ORDER BY tgrelid::regclass::text, tgfoid;"}
+{"sql":"alter table parent disable trigger all"}
+{"sql":"CREATE TABLE trgfire (i int) PARTITION BY RANGE (i)","shape":"CREATE TABLE trgfire (i int) PARTITION BY RANGE (i);"}
+{"sql":"CREATE TABLE trgfire1 PARTITION OF trgfire FOR VALUES FROM (1) TO (10)","shape":"CREATE TABLE trgfire1 PARTITION OF trgfire FOR VALUES FROM (1) TO (10);"}
+{"sql":"CREATE OR REPLACE FUNCTION tgf() RETURNS trigger LANGUAGE plpgsql\n  AS $$ begin raise exception 'except'; end $$","shape":"CREATE OR REPLACE FUNCTION tgf() RETURNS trigger LANGUAGE plpgsql AS ' begin raise exception ''except''; end ';"}
+{"sql":"CREATE TRIGGER tg AFTER INSERT ON trgfire FOR EACH ROW EXECUTE FUNCTION tgf()","shape":"CREATE TRIGGER tg AFTER INSERT ON trgfire FOR EACH ROW EXECUTE FUNCTION tgf();"}
+{"sql":"INSERT INTO trgfire VALUES (1)","shape":"INSERT INTO trgfire VALUES (1);"}
+{"sql":"ALTER TABLE trgfire DISABLE TRIGGER tg"}
+{"sql":"CREATE TABLE trgfire2 PARTITION OF trgfire FOR VALUES FROM (10) TO (20)","shape":"CREATE TABLE trgfire2 PARTITION OF trgfire FOR VALUES FROM (10) TO (20);"}
+{"sql":"INSERT INTO trgfire VALUES (11)","shape":"INSERT INTO trgfire VALUES (11);"}
+{"sql":"CREATE TABLE trgfire3 (LIKE trgfire)","shape":"CREATE TABLE trgfire3 (LIKE trgfire);"}
+{"sql":"ALTER TABLE trgfire ATTACH PARTITION trgfire3 FOR VALUES FROM (20) TO (30)"}
+{"sql":"INSERT INTO trgfire VALUES (21)","shape":"INSERT INTO trgfire VALUES (21);"}
+{"sql":"CREATE TABLE trgfire4 PARTITION OF trgfire FOR VALUES FROM (30) TO (40) PARTITION BY LIST (i)","shape":"CREATE TABLE trgfire4 PARTITION OF trgfire FOR VALUES FROM (30) TO (40) PARTITION BY LIST (i);"}
+{"sql":"CREATE TABLE trgfire4_30 PARTITION OF trgfire4 FOR VALUES IN (30)","shape":"CREATE TABLE trgfire4_30 PARTITION OF trgfire4 FOR VALUES IN (30);"}
+{"sql":"INSERT INTO trgfire VALUES (30)","shape":"INSERT INTO trgfire VALUES (30);"}
+{"sql":"CREATE TABLE trgfire5 (LIKE trgfire) PARTITION BY LIST (i)","shape":"CREATE TABLE trgfire5 (LIKE trgfire) PARTITION BY LIST (i);"}
+{"sql":"CREATE TABLE trgfire5_40 PARTITION OF trgfire5 FOR VALUES IN (40)","shape":"CREATE TABLE trgfire5_40 PARTITION OF trgfire5 FOR VALUES IN (40);"}
+{"sql":"ALTER TABLE trgfire ATTACH PARTITION trgfire5 FOR VALUES FROM (40) TO (50)"}
+{"sql":"INSERT INTO trgfire VALUES (40)","shape":"INSERT INTO trgfire VALUES (40);"}
+{"sql":"SELECT tgrelid::regclass, tgenabled FROM pg_trigger\n  WHERE tgrelid::regclass IN (SELECT oid from pg_class where relname LIKE 'trgfire%')\n  ORDER BY tgrelid::regclass::text","shape":"SELECT tgrelid::regclass, tgenabled FROM pg_trigger WHERE tgrelid::regclass IN (SELECT oid FROM pg_class WHERE relname LIKE 'trgfire%') ORDER BY tgrelid::regclass::text;"}
+{"sql":"ALTER TABLE trgfire ENABLE TRIGGER tg"}
+{"sql":"DROP TABLE trgfire","shape":"DROP TABLE trgfire;"}
+{"sql":"DROP FUNCTION tgf()"}
+{"sql":"create or replace function dump_insert() returns trigger language plpgsql as\n$$\n  begin\n    raise notice 'trigger = %, new table = %',\n                 TG_NAME,\n                 (select string_agg(new_table::text, ', ' order by a) from new_table);\n    return null;\n  end;\n$$","shape":"CREATE OR REPLACE FUNCTION dump_insert() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = %, new table = %'',\n                 TG_NAME,\n                 (select string_agg(new_table::text, '', '' order by a) from new_table);\n    return null;\n  end;\n';"}
+{"sql":"create or replace function dump_update() returns trigger language plpgsql as\n$$\n  begin\n    raise notice 'trigger = %, old table = %, new table = %',\n                 TG_NAME,\n                 (select string_agg(old_table::text, ', ' order by a) from old_table),\n                 (select string_agg(new_table::text, ', ' order by a) from new_table);\n    return null;\n  end;\n$$","shape":"CREATE OR REPLACE FUNCTION dump_update() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = %, old table = %, new table = %'',\n                 TG_NAME,\n                 (select string_agg(old_table::text, '', '' order by a) from old_table),\n                 (select string_agg(new_table::text, '', '' order by a) from new_table);\n    return null;\n  end;\n';"}
+{"sql":"create or replace function dump_delete() returns trigger language plpgsql as\n$$\n  begin\n    raise notice 'trigger = %, old table = %',\n                 TG_NAME,\n                 (select string_agg(old_table::text, ', ' order by a) from old_table);\n    return null;\n  end;\n$$","shape":"CREATE OR REPLACE FUNCTION dump_delete() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = %, old table = %'',\n                 TG_NAME,\n                 (select string_agg(old_table::text, '', '' order by a) from old_table);\n    return null;\n  end;\n';"}
+{"sql":"create table parent (a text, b int) partition by list (a)","shape":"CREATE TABLE parent (a text, b int) PARTITION BY LIST (a);"}
+{"sql":"create table child1 partition of parent for values in ('AAA')","shape":"CREATE TABLE child1 PARTITION OF parent FOR VALUES IN ('AAA');"}
+{"sql":"create table child2 (x int, a text, b int)","shape":"CREATE TABLE child2 (x int, a text, b int);"}
+{"sql":"alter table child2 drop column x","shape":"ALTER TABLE child2 DROP COLUMN x;"}
+{"sql":"alter table parent attach partition child2 for values in ('BBB')"}
+{"sql":"create table child3 (b int, a text)","shape":"CREATE TABLE child3 (b int, a text);"}
+{"sql":"alter table parent attach partition child3 for values in ('CCC')"}
+{"sql":"create trigger parent_insert_trig\n  after insert on parent referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER parent_insert_trig AFTER INSERT ON parent REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger parent_update_trig\n  after update on parent referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER parent_update_trig AFTER UPDATE ON parent REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"create trigger parent_delete_trig\n  after delete on parent referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER parent_delete_trig AFTER DELETE ON parent REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"create trigger child1_insert_trig\n  after insert on child1 referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER child1_insert_trig AFTER INSERT ON child1 REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger child1_update_trig\n  after update on child1 referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER child1_update_trig AFTER UPDATE ON child1 REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"create trigger child1_delete_trig\n  after delete on child1 referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER child1_delete_trig AFTER DELETE ON child1 REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"create trigger child2_insert_trig\n  after insert on child2 referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER child2_insert_trig AFTER INSERT ON child2 REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger child2_update_trig\n  after update on child2 referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER child2_update_trig AFTER UPDATE ON child2 REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"create trigger child2_delete_trig\n  after delete on child2 referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER child2_delete_trig AFTER DELETE ON child2 REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"create trigger child3_insert_trig\n  after insert on child3 referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER child3_insert_trig AFTER INSERT ON child3 REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger child3_update_trig\n  after update on child3 referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER child3_update_trig AFTER UPDATE ON child3 REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"create trigger child3_delete_trig\n  after delete on child3 referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER child3_delete_trig AFTER DELETE ON child3 REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"SELECT trigger_name, event_manipulation, event_object_schema, event_object_table,\n       action_order, action_condition, action_orientation, action_timing,\n       action_reference_old_table, action_reference_new_table\n  FROM information_schema.triggers\n  WHERE event_object_table IN ('parent', 'child1', 'child2', 'child3')\n  ORDER BY trigger_name COLLATE \"C\", 2","shape":"SELECT trigger_name, event_manipulation, event_object_schema, event_object_table, action_order, action_condition, action_orientation, action_timing, action_reference_old_table, action_reference_new_table FROM information_schema.triggers WHERE event_object_table IN ('parent', 'child1', 'child2', 'child3') ORDER BY trigger_name COLLATE \"C\", 2;"}
+{"sql":"insert into child1 values ('AAA', 42)","shape":"INSERT INTO child1 VALUES ('AAA', 42);"}
+{"sql":"insert into child2 values ('BBB', 42)","shape":"INSERT INTO child2 VALUES ('BBB', 42);"}
+{"sql":"insert into child3 values (42, 'CCC')","shape":"INSERT INTO child3 VALUES (42, 'CCC');"}
+{"sql":"update parent set b = b + 1","shape":"UPDATE parent SET b = b + 1;"}
+{"sql":"insert into parent values ('AAA', 42)","shape":"INSERT INTO parent VALUES ('AAA', 42);"}
+{"sql":"insert into parent values ('BBB', 42)","shape":"INSERT INTO parent VALUES ('BBB', 42);"}
+{"sql":"insert into parent values ('CCC', 42)","shape":"INSERT INTO parent VALUES ('CCC', 42);"}
+{"sql":"delete from child1","shape":"DELETE FROM child1;"}
+{"sql":"delete from child2","shape":"DELETE FROM child2;"}
+{"sql":"delete from child3","shape":"DELETE FROM child3;"}
+{"sql":"copy parent (a, b) from stdin","shape":"COPY parent (a, b) FROM STDIN;"}
+{"sql":"alter table parent detach partition child1"}
+{"sql":"alter table parent attach partition child1 for values in ('AAA')"}
+{"sql":"drop trigger child1_insert_trig on child1","shape":"DROP TRIGGER child1_insert_trig ON child1;"}
+{"sql":"drop trigger child1_update_trig on child1","shape":"DROP TRIGGER child1_update_trig ON child1;"}
+{"sql":"drop trigger child1_delete_trig on child1","shape":"DROP TRIGGER child1_delete_trig ON child1;"}
+{"sql":"drop trigger child2_insert_trig on child2","shape":"DROP TRIGGER child2_insert_trig ON child2;"}
+{"sql":"drop trigger child2_update_trig on child2","shape":"DROP TRIGGER child2_update_trig ON child2;"}
+{"sql":"drop trigger child2_delete_trig on child2","shape":"DROP TRIGGER child2_delete_trig ON child2;"}
+{"sql":"drop trigger child3_insert_trig on child3","shape":"DROP TRIGGER child3_insert_trig ON child3;"}
+{"sql":"drop trigger child3_update_trig on child3","shape":"DROP TRIGGER child3_update_trig ON child3;"}
+{"sql":"drop trigger child3_delete_trig on child3","shape":"DROP TRIGGER child3_delete_trig ON child3;"}
+{"sql":"create or replace function intercept_insert() returns trigger language plpgsql as\n$$\n  begin\n    new.b = new.b + 1000;\n    return new;\n  end;\n$$","shape":"CREATE OR REPLACE FUNCTION intercept_insert() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    new.b = new.b + 1000;\n    return new;\n  end;\n';"}
+{"sql":"create trigger intercept_insert_child3\n  before insert on child3\n  for each row execute procedure intercept_insert()","shape":"CREATE TRIGGER intercept_insert_child3 BEFORE INSERT ON child3 FOR EACH ROW EXECUTE FUNCTION intercept_insert();"}
+{"sql":"insert into parent values ('AAA', 42), ('BBB', 42), ('CCC', 66)","shape":"INSERT INTO parent VALUES ('AAA', 42), ('BBB', 42), ('CCC', 66);"}
+{"sql":"drop table child1, child2, child3, parent","shape":"DROP TABLE child1, child2, child3, parent;"}
+{"sql":"drop function intercept_insert()"}
+{"sql":"create table child partition of parent for values in ('AAA')","shape":"CREATE TABLE child PARTITION OF parent FOR VALUES IN ('AAA');"}
+{"sql":"create trigger child_row_trig\n  after insert on child referencing new table as new_table\n  for each row execute procedure dump_insert()","shape":"CREATE TRIGGER child_row_trig AFTER INSERT ON child REFERENCING NEW TABLE AS new_table FOR EACH ROW EXECUTE FUNCTION dump_insert();"}
+{"sql":"alter table parent detach partition child"}
+{"sql":"alter table parent attach partition child for values in ('AAA')"}
+{"sql":"drop trigger child_row_trig on child","shape":"DROP TRIGGER child_row_trig ON child;"}
+{"sql":"drop table child, parent","shape":"DROP TABLE child, parent;"}
+{"sql":"create or replace function dump_update_new() returns trigger language plpgsql as\n$$\n  begin\n    raise notice 'trigger = %, new table = %', TG_NAME,\n                 (select string_agg(new_table::text, ', ' order by a) from new_table);\n    return null;\n  end;\n$$","shape":"CREATE OR REPLACE FUNCTION dump_update_new() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = %, new table = %'', TG_NAME,\n                 (select string_agg(new_table::text, '', '' order by a) from new_table);\n    return null;\n  end;\n';"}
+{"sql":"create or replace function dump_update_old() returns trigger language plpgsql as\n$$\n  begin\n    raise notice 'trigger = %, old table = %', TG_NAME,\n                 (select string_agg(old_table::text, ', ' order by a) from old_table);\n    return null;\n  end;\n$$","shape":"CREATE OR REPLACE FUNCTION dump_update_old() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = %, old table = %'', TG_NAME,\n                 (select string_agg(old_table::text, '', '' order by a) from old_table);\n    return null;\n  end;\n';"}
+{"sql":"create table trans_tab_parent (a text) partition by list (a)","shape":"CREATE TABLE trans_tab_parent (a text) PARTITION BY LIST (a);"}
+{"sql":"create table trans_tab_child1 partition of trans_tab_parent for values in ('AAA1', 'AAA2')","shape":"CREATE TABLE trans_tab_child1 PARTITION OF trans_tab_parent FOR VALUES IN ('AAA1', 'AAA2');"}
+{"sql":"create table trans_tab_child2 partition of trans_tab_parent for values in ('BBB1', 'BBB2')","shape":"CREATE TABLE trans_tab_child2 PARTITION OF trans_tab_parent FOR VALUES IN ('BBB1', 'BBB2');"}
+{"sql":"create trigger trans_tab_parent_update_trig\n  after update on trans_tab_parent referencing old table as old_table\n  for each statement execute procedure dump_update_old()","shape":"CREATE TRIGGER trans_tab_parent_update_trig AFTER UPDATE ON trans_tab_parent REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update_old();"}
+{"sql":"create trigger trans_tab_parent_insert_trig\n  after insert on trans_tab_parent referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER trans_tab_parent_insert_trig AFTER INSERT ON trans_tab_parent REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger trans_tab_parent_delete_trig\n  after delete on trans_tab_parent referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER trans_tab_parent_delete_trig AFTER DELETE ON trans_tab_parent REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"insert into trans_tab_parent values ('AAA1'), ('BBB1')","shape":"INSERT INTO trans_tab_parent VALUES ('AAA1'), ('BBB1');"}
+{"sql":"update trans_tab_parent set a = 'BBB2' where a = 'AAA1'","shape":"UPDATE trans_tab_parent SET a = 'BBB2' WHERE a = 'AAA1';"}
+{"sql":"drop trigger trans_tab_parent_update_trig on trans_tab_parent","shape":"DROP TRIGGER trans_tab_parent_update_trig ON trans_tab_parent;"}
+{"sql":"create trigger trans_tab_parent_update_trig\n  after update on trans_tab_parent referencing new table as new_table\n  for each statement execute procedure dump_update_new()","shape":"CREATE TRIGGER trans_tab_parent_update_trig AFTER UPDATE ON trans_tab_parent REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update_new();"}
+{"sql":"update trans_tab_parent set a = 'AAA2' where a = 'BBB1'","shape":"UPDATE trans_tab_parent SET a = 'AAA2' WHERE a = 'BBB1';"}
+{"sql":"delete from trans_tab_parent","shape":"DELETE FROM trans_tab_parent;"}
+{"sql":"drop table trans_tab_parent, trans_tab_child1, trans_tab_child2","shape":"DROP TABLE trans_tab_parent, trans_tab_child1, trans_tab_child2;"}
+{"sql":"drop function dump_update_new, dump_update_old"}
+{"sql":"create table parent (a text, b int)","shape":"CREATE TABLE parent (a text, b int);"}
+{"sql":"create table child2 (b int, a text)","shape":"CREATE TABLE child2 (b int, a text);"}
+{"sql":"alter table child2 inherit parent"}
+{"sql":"create table child3 (c text) inherits (parent)","shape":"CREATE TABLE child3 (c text) INHERITS (parent);"}
+{"sql":"insert into child2 values (42, 'BBB')","shape":"INSERT INTO child2 VALUES (42, 'BBB');"}
+{"sql":"insert into child3 values ('CCC', 42, 'foo')","shape":"INSERT INTO child3 VALUES ('CCC', 42, 'foo');"}
+{"sql":"create index on parent(b)","shape":"CREATE INDEX ON parent (b);"}
+{"sql":"alter table child1 no inherit parent"}
+{"sql":"alter table child1 inherit parent"}
+{"sql":"create table child () inherits (parent)","shape":"CREATE TABLE child () INHERITS (parent);"}
+{"sql":"alter table child no inherit parent"}
+{"sql":"alter table child inherit parent"}
+{"sql":"create table table1 (a int)","shape":"CREATE TABLE table1 (a int);"}
+{"sql":"create table table2 (a text)","shape":"CREATE TABLE table2 (a text);"}
+{"sql":"create trigger table1_trig\n  after insert on table1 referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER table1_trig AFTER INSERT ON table1 REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger table2_trig\n  after insert on table2 referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER table2_trig AFTER INSERT ON table2 REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"with wcte as (insert into table1 values (42))\n  insert into table2 values ('hello world')","shape":"WITH wcte AS (INSERT INTO table1 VALUES (42)) INSERT INTO table2 VALUES ('hello world');"}
+{"sql":"with wcte as (insert into table1 values (43))\n  insert into table1 values (44)","shape":"WITH wcte AS (INSERT INTO table1 VALUES (43)) INSERT INTO table1 VALUES (44);"}
+{"sql":"select * from table1","shape":"SELECT * FROM table1;"}
+{"sql":"select * from table2","shape":"SELECT * FROM table2;"}
+{"sql":"drop table table1","shape":"DROP TABLE table1;"}
+{"sql":"drop table table2","shape":"DROP TABLE table2;"}
+{"sql":"create table my_table (a int primary key, b text)","shape":"CREATE TABLE my_table (a int PRIMARY KEY, b text);"}
+{"sql":"create trigger my_table_insert_trig\n  after insert on my_table referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER my_table_insert_trig AFTER INSERT ON my_table REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger my_table_update_trig\n  after update on my_table referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER my_table_update_trig AFTER UPDATE ON my_table REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"insert into my_table values (1, 'AAA'), (2, 'BBB')\n  on conflict (a) do\n  update set b = my_table.b || ':' || excluded.b","shape":"INSERT INTO my_table VALUES (1, 'AAA'), (2, 'BBB') ON CONFLICT (a) DO UPDATE SET b = (my_table.b || ':') || excluded.b;"}
+{"sql":"insert into my_table values (1, 'AAA'), (2, 'BBB'), (3, 'CCC'), (4, 'DDD')\n  on conflict (a) do\n  update set b = my_table.b || ':' || excluded.b","shape":"INSERT INTO my_table VALUES (1, 'AAA'), (2, 'BBB'), (3, 'CCC'), (4, 'DDD') ON CONFLICT (a) DO UPDATE SET b = (my_table.b || ':') || excluded.b;"}
+{"sql":"insert into my_table values (3, 'CCC'), (4, 'DDD')\n  on conflict (a) do\n  update set b = my_table.b || ':' || excluded.b","shape":"INSERT INTO my_table VALUES (3, 'CCC'), (4, 'DDD') ON CONFLICT (a) DO UPDATE SET b = (my_table.b || ':') || excluded.b;"}
+{"sql":"create table iocdu_tt_parted (a int primary key, b text) partition by list (a)","shape":"CREATE TABLE iocdu_tt_parted (a int PRIMARY KEY, b text) PARTITION BY LIST (a);"}
+{"sql":"create table iocdu_tt_parted1 partition of iocdu_tt_parted for values in (1)","shape":"CREATE TABLE iocdu_tt_parted1 PARTITION OF iocdu_tt_parted FOR VALUES IN (1);"}
+{"sql":"create table iocdu_tt_parted2 partition of iocdu_tt_parted for values in (2)","shape":"CREATE TABLE iocdu_tt_parted2 PARTITION OF iocdu_tt_parted FOR VALUES IN (2);"}
+{"sql":"create table iocdu_tt_parted3 partition of iocdu_tt_parted for values in (3)","shape":"CREATE TABLE iocdu_tt_parted3 PARTITION OF iocdu_tt_parted FOR VALUES IN (3);"}
+{"sql":"create table iocdu_tt_parted4 partition of iocdu_tt_parted for values in (4)","shape":"CREATE TABLE iocdu_tt_parted4 PARTITION OF iocdu_tt_parted FOR VALUES IN (4);"}
+{"sql":"create trigger iocdu_tt_parted_insert_trig\n  after insert on iocdu_tt_parted referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER iocdu_tt_parted_insert_trig AFTER INSERT ON iocdu_tt_parted REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger iocdu_tt_parted_update_trig\n  after update on iocdu_tt_parted referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER iocdu_tt_parted_update_trig AFTER UPDATE ON iocdu_tt_parted REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"insert into iocdu_tt_parted values (1, 'AAA'), (2, 'BBB')\n  on conflict (a) do\n  update set b = iocdu_tt_parted.b || ':' || excluded.b","shape":"INSERT INTO iocdu_tt_parted VALUES (1, 'AAA'), (2, 'BBB') ON CONFLICT (a) DO UPDATE SET b = (iocdu_tt_parted.b || ':') || excluded.b;"}
+{"sql":"insert into iocdu_tt_parted values (1, 'AAA'), (2, 'BBB'), (3, 'CCC'), (4, 'DDD')\n  on conflict (a) do\n  update set b = iocdu_tt_parted.b || ':' || excluded.b","shape":"INSERT INTO iocdu_tt_parted VALUES (1, 'AAA'), (2, 'BBB'), (3, 'CCC'), (4, 'DDD') ON CONFLICT (a) DO UPDATE SET b = (iocdu_tt_parted.b || ':') || excluded.b;"}
+{"sql":"insert into iocdu_tt_parted values (3, 'CCC'), (4, 'DDD')\n  on conflict (a) do\n  update set b = iocdu_tt_parted.b || ':' || excluded.b","shape":"INSERT INTO iocdu_tt_parted VALUES (3, 'CCC'), (4, 'DDD') ON CONFLICT (a) DO UPDATE SET b = (iocdu_tt_parted.b || ':') || excluded.b;"}
+{"sql":"drop table iocdu_tt_parted","shape":"DROP TABLE iocdu_tt_parted;"}
+{"sql":"create trigger my_table_multievent_trig\n  after insert or update on my_table referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER my_table_multievent_trig AFTER INSERT OR UPDATE ON my_table REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger my_table_col_update_trig\n  after update of b on my_table referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER my_table_col_update_trig AFTER UPDATE OF b ON my_table REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create table refd_table (a int primary key, b text)","shape":"CREATE TABLE refd_table (a int PRIMARY KEY, b text);"}
+{"sql":"create table trig_table (a int, b text,\n  foreign key (a) references refd_table on update cascade on delete cascade\n)","shape":"CREATE TABLE trig_table (a int, b text, FOREIGN KEY (a) REFERENCES refd_table ON DELETE CASCADE ON UPDATE CASCADE);"}
+{"sql":"create trigger trig_table_before_trig\n  before insert or update or delete on trig_table\n  for each statement execute procedure trigger_func('trig_table')","shape":"CREATE TRIGGER trig_table_before_trig BEFORE INSERT OR UPDATE OR DELETE ON trig_table FOR EACH STATEMENT EXECUTE FUNCTION trigger_func('trig_table');"}
+{"sql":"create trigger trig_table_insert_trig\n  after insert on trig_table referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER trig_table_insert_trig AFTER INSERT ON trig_table REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger trig_table_update_trig\n  after update on trig_table referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER trig_table_update_trig AFTER UPDATE ON trig_table REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"create trigger trig_table_delete_trig\n  after delete on trig_table referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER trig_table_delete_trig AFTER DELETE ON trig_table REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"insert into refd_table values\n  (1, 'one'),\n  (2, 'two'),\n  (3, 'three')","shape":"INSERT INTO refd_table VALUES (1, 'one'), (2, 'two'), (3, 'three');"}
+{"sql":"insert into trig_table values\n  (1, 'one a'),\n  (1, 'one b'),\n  (2, 'two a'),\n  (2, 'two b'),\n  (3, 'three a'),\n  (3, 'three b')","shape":"INSERT INTO trig_table VALUES (1, 'one a'), (1, 'one b'), (2, 'two a'), (2, 'two b'), (3, 'three a'), (3, 'three b');"}
+{"sql":"update refd_table set a = 11 where b = 'one'","shape":"UPDATE refd_table SET a = 11 WHERE b = 'one';"}
+{"sql":"select * from trig_table","shape":"SELECT * FROM trig_table;"}
+{"sql":"delete from refd_table where length(b) = 3","shape":"DELETE FROM refd_table WHERE length(b) = 3;"}
+{"sql":"drop table refd_table, trig_table","shape":"DROP TABLE refd_table, trig_table;"}
+{"sql":"create table refd_table (id int primary key)","shape":"CREATE TABLE refd_table (id int PRIMARY KEY);"}
+{"sql":"create table trig_table (fk int references refd_table initially deferred)","shape":"CREATE TABLE trig_table (fk int REFERENCES refd_table INITIALLY DEFERRED);"}
+{"sql":"insert into trig_table values (1)","shape":"INSERT INTO trig_table VALUES (1);"}
+{"sql":"drop table refd_table cascade","shape":"DROP TABLE refd_table CASCADE;"}
+{"sql":"drop table trig_table","shape":"DROP TABLE trig_table;"}
+{"sql":"create table self_ref (a int primary key,\n                       b int references self_ref(a) on delete cascade)","shape":"CREATE TABLE self_ref (a int PRIMARY KEY, b int REFERENCES self_ref (a) ON DELETE CASCADE);"}
+{"sql":"create trigger self_ref_before_trig\n  before delete on self_ref\n  for each statement execute procedure trigger_func('self_ref')","shape":"CREATE TRIGGER self_ref_before_trig BEFORE DELETE ON self_ref FOR EACH STATEMENT EXECUTE FUNCTION trigger_func('self_ref');"}
+{"sql":"create trigger self_ref_r_trig\n  after delete on self_ref referencing old table as old_table\n  for each row execute procedure dump_delete()","shape":"CREATE TRIGGER self_ref_r_trig AFTER DELETE ON self_ref REFERENCING OLD TABLE AS old_table FOR EACH ROW EXECUTE FUNCTION dump_delete();"}
+{"sql":"create trigger self_ref_s_trig\n  after delete on self_ref referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER self_ref_s_trig AFTER DELETE ON self_ref REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"insert into self_ref values (1, null), (2, 1), (3, 2)","shape":"INSERT INTO self_ref VALUES (1, NULL), (2, 1), (3, 2);"}
+{"sql":"delete from self_ref where a = 1","shape":"DELETE FROM self_ref WHERE a = 1;"}
+{"sql":"drop trigger self_ref_r_trig on self_ref","shape":"DROP TRIGGER self_ref_r_trig ON self_ref;"}
+{"sql":"insert into self_ref values (1, null), (2, 1), (3, 2), (4, 3)","shape":"INSERT INTO self_ref VALUES (1, NULL), (2, 1), (3, 2), (4, 3);"}
+{"sql":"drop table self_ref","shape":"DROP TABLE self_ref;"}
+{"sql":"create table merge_target_table (a int primary key, b text)","shape":"CREATE TABLE merge_target_table (a int PRIMARY KEY, b text);"}
+{"sql":"create trigger merge_target_table_insert_trig\n  after insert on merge_target_table referencing new table as new_table\n  for each statement execute procedure dump_insert()","shape":"CREATE TRIGGER merge_target_table_insert_trig AFTER INSERT ON merge_target_table REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_insert();"}
+{"sql":"create trigger merge_target_table_update_trig\n  after update on merge_target_table referencing old table as old_table new table as new_table\n  for each statement execute procedure dump_update()","shape":"CREATE TRIGGER merge_target_table_update_trig AFTER UPDATE ON merge_target_table REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION dump_update();"}
+{"sql":"create trigger merge_target_table_delete_trig\n  after delete on merge_target_table referencing old table as old_table\n  for each statement execute procedure dump_delete()","shape":"CREATE TRIGGER merge_target_table_delete_trig AFTER DELETE ON merge_target_table REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION dump_delete();"}
+{"sql":"create table merge_source_table (a int, b text)","shape":"CREATE TABLE merge_source_table (a int, b text);"}
+{"sql":"insert into merge_source_table\n  values (1, 'initial1'), (2, 'initial2'),\n\t\t (3, 'initial3'), (4, 'initial4')","shape":"INSERT INTO merge_source_table VALUES (1, 'initial1'), (2, 'initial2'), (3, 'initial3'), (4, 'initial4');"}
+{"sql":"merge into merge_target_table t\nusing merge_source_table s\non t.a = s.a\nwhen not matched then\n  insert values (a, b)","shape":"MERGE INTO merge_target_table AS t USING merge_source_table AS s ON t.a = s.a WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"merge into merge_target_table t\nusing merge_source_table s\non t.a = s.a\nwhen matched and s.a <= 2 then\n\tupdate set b = t.b || ' updated by merge'\nwhen matched and s.a > 2 then\n\tdelete\nwhen not matched then\n  insert values (a, b)","shape":"MERGE INTO merge_target_table AS t USING merge_source_table AS s ON t.a = s.a WHEN MATCHED AND s.a <= 2 THEN UPDATE SET b = t.b || ' updated by merge' WHEN MATCHED AND s.a > 2 THEN DELETE WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"merge into merge_target_table t\nusing merge_source_table s\non t.a = s.a\nwhen matched and s.a <= 2 then\n\tupdate set b = t.b || ' updated again by merge'\nwhen matched and s.a > 2 then\n\tdelete\nwhen not matched then\n  insert values (a, b)","shape":"MERGE INTO merge_target_table AS t USING merge_source_table AS s ON t.a = s.a WHEN MATCHED AND s.a <= 2 THEN UPDATE SET b = t.b || ' updated again by merge' WHEN MATCHED AND s.a > 2 THEN DELETE WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"drop table merge_source_table, merge_target_table","shape":"DROP TABLE merge_source_table, merge_target_table;"}
+{"sql":"drop function dump_insert()"}
+{"sql":"drop function dump_update()"}
+{"sql":"drop function dump_delete()"}
+{"sql":"create table my_table (id integer)","shape":"CREATE TABLE my_table (id integer);"}
+{"sql":"create function funcA() returns trigger as $$\nbegin\n  raise notice 'hello from funcA';\n  return null;\nend; $$ language plpgsql","shape":"CREATE FUNCTION funcA() RETURNS trigger AS '\nbegin\n  raise notice ''hello from funcA'';\n  return null;\nend; ' LANGUAGE plpgsql;"}
+{"sql":"create function funcB() returns trigger as $$\nbegin\n  raise notice 'hello from funcB';\n  return null;\nend; $$ language plpgsql","shape":"CREATE FUNCTION funcB() RETURNS trigger AS '\nbegin\n  raise notice ''hello from funcB'';\n  return null;\nend; ' LANGUAGE plpgsql;"}
+{"sql":"create trigger my_trig\n  after insert on my_table\n  for each row execute procedure funcA()","shape":"CREATE TRIGGER my_trig AFTER INSERT ON my_table FOR EACH ROW EXECUTE FUNCTION funcA();"}
+{"sql":"create trigger my_trig\n  before insert on my_table\n  for each row execute procedure funcB()","shape":"CREATE TRIGGER my_trig BEFORE INSERT ON my_table FOR EACH ROW EXECUTE FUNCTION funcB();"}
+{"sql":"insert into my_table values (1)","shape":"INSERT INTO my_table VALUES (1);"}
+{"sql":"create or replace trigger my_trig\n  before insert on my_table\n  for each row execute procedure funcB()","shape":"CREATE OR REPLACE TRIGGER my_trig BEFORE INSERT ON my_table FOR EACH ROW EXECUTE FUNCTION funcB();"}
+{"sql":"insert into my_table values (2)","shape":"INSERT INTO my_table VALUES (2);"}
+{"sql":"table my_table","shape":"TABLE my_table;"}
+{"sql":"create table parted_trig_1 partition of parted_trig\n       for values from (0) to (1000) partition by range (a)","shape":"CREATE TABLE parted_trig_1 PARTITION OF parted_trig FOR VALUES FROM (0) TO (1000) PARTITION BY RANGE (a);"}
+{"sql":"create table default_parted_trig partition of parted_trig default","shape":"CREATE TABLE default_parted_trig PARTITION OF parted_trig DEFAULT;"}
+{"sql":"create or replace trigger my_trig\n  after insert on parted_trig\n  for each row execute procedure funcA()","shape":"CREATE OR REPLACE TRIGGER my_trig AFTER INSERT ON parted_trig FOR EACH ROW EXECUTE FUNCTION funcA();"}
+{"sql":"insert into parted_trig (a) values (50)","shape":"INSERT INTO parted_trig (a) VALUES (50);"}
+{"sql":"create or replace trigger my_trig\n  after insert on parted_trig\n  for each row execute procedure funcB()","shape":"CREATE OR REPLACE TRIGGER my_trig AFTER INSERT ON parted_trig FOR EACH ROW EXECUTE FUNCTION funcB();"}
+{"sql":"create or replace trigger my_trig\n  after insert on parted_trig_1\n  for each row execute procedure funcB()","shape":"CREATE OR REPLACE TRIGGER my_trig AFTER INSERT ON parted_trig_1 FOR EACH ROW EXECUTE FUNCTION funcB();"}
+{"sql":"drop trigger my_trig on parted_trig","shape":"DROP TRIGGER my_trig ON parted_trig;"}
+{"sql":"create trigger my_trig\n  after insert on parted_trig_1\n  for each row execute procedure funcA()","shape":"CREATE TRIGGER my_trig AFTER INSERT ON parted_trig_1 FOR EACH ROW EXECUTE FUNCTION funcA();"}
+{"sql":"create trigger my_trig\n  after insert on parted_trig\n  for each row execute procedure funcB()","shape":"CREATE TRIGGER my_trig AFTER INSERT ON parted_trig FOR EACH ROW EXECUTE FUNCTION funcB();"}
+{"sql":"drop function funcA()"}
+{"sql":"drop function funcB()"}
+{"sql":"create table trigger_parted (a int primary key) partition by list (a)","shape":"CREATE TABLE trigger_parted (a int PRIMARY KEY) PARTITION BY LIST (a);"}
+{"sql":"create function trigger_parted_trigfunc() returns trigger language plpgsql as\n  $$ begin end; $$","shape":"CREATE FUNCTION trigger_parted_trigfunc() RETURNS trigger LANGUAGE plpgsql AS ' begin end; ';"}
+{"sql":"create trigger aft_row after insert or update on trigger_parted\n  for each row execute function trigger_parted_trigfunc()","shape":"CREATE TRIGGER aft_row AFTER INSERT OR UPDATE ON trigger_parted FOR EACH ROW EXECUTE FUNCTION trigger_parted_trigfunc();"}
+{"sql":"create table trigger_parted_p1 partition of trigger_parted for values in (1)\n  partition by list (a)","shape":"CREATE TABLE trigger_parted_p1 PARTITION OF trigger_parted FOR VALUES IN (1) PARTITION BY LIST (a);"}
+{"sql":"create table trigger_parted_p1_1 partition of trigger_parted_p1 for values in (1)","shape":"CREATE TABLE trigger_parted_p1_1 PARTITION OF trigger_parted_p1 FOR VALUES IN (1);"}
+{"sql":"create table trigger_parted_p2 partition of trigger_parted for values in (2)\n  partition by list (a)","shape":"CREATE TABLE trigger_parted_p2 PARTITION OF trigger_parted FOR VALUES IN (2) PARTITION BY LIST (a);"}
+{"sql":"create table trigger_parted_p2_2 partition of trigger_parted_p2 for values in (2)","shape":"CREATE TABLE trigger_parted_p2_2 PARTITION OF trigger_parted_p2 FOR VALUES IN (2);"}
+{"sql":"alter table only trigger_parted_p2 disable trigger aft_row"}
+{"sql":"alter table trigger_parted_p2_2 enable always trigger aft_row"}
+{"sql":"create table convslot_test_parent (col1 text primary key)","shape":"CREATE TABLE convslot_test_parent (col1 text PRIMARY KEY);"}
+{"sql":"create table convslot_test_child (col1 text primary key,\n\tforeign key (col1) references convslot_test_parent(col1) on delete cascade on update cascade\n)","shape":"CREATE TABLE convslot_test_child (col1 text PRIMARY KEY, FOREIGN KEY (col1) REFERENCES convslot_test_parent (col1) ON DELETE CASCADE ON UPDATE CASCADE);"}
+{"sql":"alter table convslot_test_child add column col2 text not null default 'tutu'","shape":"ALTER TABLE convslot_test_child ADD COLUMN col2 text NOT NULL DEFAULT 'tutu';"}
+{"sql":"insert into convslot_test_parent(col1) values ('1')","shape":"INSERT INTO convslot_test_parent (col1) VALUES ('1');"}
+{"sql":"insert into convslot_test_child(col1) values ('1')","shape":"INSERT INTO convslot_test_child (col1) VALUES ('1');"}
+{"sql":"insert into convslot_test_parent(col1) values ('3')","shape":"INSERT INTO convslot_test_parent (col1) VALUES ('3');"}
+{"sql":"insert into convslot_test_child(col1) values ('3')","shape":"INSERT INTO convslot_test_child (col1) VALUES ('3');"}
+{"sql":"create function convslot_trig1()\nreturns trigger\nlanguage plpgsql\nAS $$\nbegin\nraise notice 'trigger = %, old_table = %',\n          TG_NAME,\n          (select string_agg(old_table::text, ', ' order by col1) from old_table);\nreturn null;\nend; $$","shape":"CREATE FUNCTION convslot_trig1() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\nraise notice ''trigger = %, old_table = %'',\n          TG_NAME,\n          (select string_agg(old_table::text, '', '' order by col1) from old_table);\nreturn null;\nend; ';"}
+{"sql":"create function convslot_trig2()\nreturns trigger\nlanguage plpgsql\nAS $$\nbegin\nraise notice 'trigger = %, new table = %',\n          TG_NAME,\n          (select string_agg(new_table::text, ', ' order by col1) from new_table);\nreturn null;\nend; $$","shape":"CREATE FUNCTION convslot_trig2() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\nraise notice ''trigger = %, new table = %'',\n          TG_NAME,\n          (select string_agg(new_table::text, '', '' order by col1) from new_table);\nreturn null;\nend; ';"}
+{"sql":"create trigger but_trigger after update on convslot_test_child\nreferencing new table as new_table\nfor each statement execute function convslot_trig2()","shape":"CREATE TRIGGER but_trigger AFTER UPDATE ON convslot_test_child REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION convslot_trig2();"}
+{"sql":"update convslot_test_parent set col1 = col1 || '1'","shape":"UPDATE convslot_test_parent SET col1 = col1 || '1';"}
+{"sql":"create function convslot_trig3()\nreturns trigger\nlanguage plpgsql\nAS $$\nbegin\nraise notice 'trigger = %, old_table = %, new table = %',\n          TG_NAME,\n          (select string_agg(old_table::text, ', ' order by col1) from old_table),\n          (select string_agg(new_table::text, ', ' order by col1) from new_table);\nreturn null;\nend; $$","shape":"CREATE FUNCTION convslot_trig3() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\nraise notice ''trigger = %, old_table = %, new table = %'',\n          TG_NAME,\n          (select string_agg(old_table::text, '', '' order by col1) from old_table),\n          (select string_agg(new_table::text, '', '' order by col1) from new_table);\nreturn null;\nend; ';"}
+{"sql":"create trigger but_trigger2 after update on convslot_test_child\nreferencing old table as old_table new table as new_table\nfor each statement execute function convslot_trig3()","shape":"CREATE TRIGGER but_trigger2 AFTER UPDATE ON convslot_test_child REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION convslot_trig3();"}
+{"sql":"create trigger bdt_trigger after delete on convslot_test_child\nreferencing old table as old_table\nfor each statement execute function convslot_trig1()","shape":"CREATE TRIGGER bdt_trigger AFTER DELETE ON convslot_test_child REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION convslot_trig1();"}
+{"sql":"delete from convslot_test_parent","shape":"DELETE FROM convslot_test_parent;"}
+{"sql":"drop table convslot_test_child, convslot_test_parent","shape":"DROP TABLE convslot_test_child, convslot_test_parent;"}
+{"sql":"drop function convslot_trig1()"}
+{"sql":"drop function convslot_trig2()"}
+{"sql":"drop function convslot_trig3()"}
+{"sql":"create table convslot_test_parent (id int primary key, val int)\npartition by range (id)","shape":"CREATE TABLE convslot_test_parent (id int PRIMARY KEY, val int) PARTITION BY RANGE (id);"}
+{"sql":"create table convslot_test_part (val int, id int not null)","shape":"CREATE TABLE convslot_test_part (val int, id int NOT NULL);"}
+{"sql":"alter table convslot_test_parent\n  attach partition convslot_test_part for values from (1) to (1000)"}
+{"sql":"create function convslot_trig4() returns trigger as\n$$begin raise exception 'BOOM!'; end$$ language plpgsql","shape":"CREATE FUNCTION convslot_trig4() RETURNS trigger AS 'begin raise exception ''BOOM!''; end' LANGUAGE plpgsql;"}
+{"sql":"create trigger convslot_test_parent_update\n    after update on convslot_test_parent\n    referencing old table as old_rows new table as new_rows\n    for each statement execute procedure convslot_trig4()","shape":"CREATE TRIGGER convslot_test_parent_update AFTER UPDATE ON convslot_test_parent REFERENCING OLD TABLE AS old_rows NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION convslot_trig4();"}
+{"sql":"insert into convslot_test_parent (id, val) values (1, 2)","shape":"INSERT INTO convslot_test_parent (id, val) VALUES (1, 2);"}
+{"sql":"savepoint svp","shape":"SAVEPOINT svp;"}
+{"sql":"update convslot_test_parent set val = 3","shape":"UPDATE convslot_test_parent SET val = 3;"}
+{"sql":"rollback to savepoint svp","shape":"ROLLBACK TO SAVEPOINT svp;"}
+{"sql":"drop table convslot_test_parent","shape":"DROP TABLE convslot_test_parent;"}
+{"sql":"drop function convslot_trig4()"}
+{"sql":"create table grandparent (id int, primary key (id)) partition by range (id)","shape":"CREATE TABLE grandparent (id int, PRIMARY KEY (id)) PARTITION BY RANGE (id);"}
+{"sql":"create table middle partition of grandparent for values from (1) to (10)\npartition by range (id)","shape":"CREATE TABLE middle PARTITION OF grandparent FOR VALUES FROM (1) TO (10) PARTITION BY RANGE (id);"}
+{"sql":"create table chi partition of middle for values from (1) to (5)","shape":"CREATE TABLE chi PARTITION OF middle FOR VALUES FROM (1) TO (5);"}
+{"sql":"create table cho partition of middle for values from (6) to (10)","shape":"CREATE TABLE cho PARTITION OF middle FOR VALUES FROM (6) TO (10);"}
+{"sql":"create function f () returns trigger as\n$$ begin return new; end; $$\nlanguage plpgsql","shape":"CREATE FUNCTION f() RETURNS trigger AS ' begin return new; end; ' LANGUAGE plpgsql;"}
+{"sql":"create trigger a after insert on grandparent\nfor each row execute procedure f()","shape":"CREATE TRIGGER a AFTER INSERT ON grandparent FOR EACH ROW EXECUTE FUNCTION f();"}
+{"sql":"alter trigger a on grandparent rename to b"}
+{"sql":"select tgrelid::regclass, tgname,\n(select tgname from pg_trigger tr where tr.oid = pg_trigger.tgparentid) parent_tgname\nfrom pg_trigger where tgrelid in (select relid from pg_partition_tree('grandparent'))\norder by tgname, tgrelid::regclass::text COLLATE \"C\"","shape":"SELECT tgrelid::regclass, tgname, (SELECT tgname FROM pg_trigger AS tr WHERE tr.oid = pg_trigger.tgparentid) AS parent_tgname FROM pg_trigger WHERE tgrelid IN (SELECT relid FROM pg_partition_tree('grandparent')) ORDER BY tgname, tgrelid::regclass::text COLLATE \"C\";"}
+{"sql":"alter trigger a on only grandparent rename to b","reject":true}
+{"sql":"alter trigger b on middle rename to c"}
+{"sql":"create trigger c after insert on middle\nfor each row execute procedure f()","shape":"CREATE TRIGGER c AFTER INSERT ON middle FOR EACH ROW EXECUTE FUNCTION f();"}
+{"sql":"alter trigger b on grandparent rename to c"}
+{"sql":"create trigger p after insert on grandparent for each statement execute function f()","shape":"CREATE TRIGGER p AFTER INSERT ON grandparent FOR EACH STATEMENT EXECUTE FUNCTION f();"}
+{"sql":"create trigger p after insert on middle for each statement execute function f()","shape":"CREATE TRIGGER p AFTER INSERT ON middle FOR EACH STATEMENT EXECUTE FUNCTION f();"}
+{"sql":"alter trigger p on grandparent rename to q"}
+{"sql":"drop table grandparent","shape":"DROP TABLE grandparent;"}
+{"sql":"create trigger parenttrig after insert on parent\nfor each row execute procedure f()","shape":"CREATE TRIGGER parenttrig AFTER INSERT ON parent FOR EACH ROW EXECUTE FUNCTION f();"}
+{"sql":"create trigger parenttrig after insert on child\nfor each row execute procedure f()","shape":"CREATE TRIGGER parenttrig AFTER INSERT ON child FOR EACH ROW EXECUTE FUNCTION f();"}
+{"sql":"alter trigger parenttrig on parent rename to anothertrig"}
+{"sql":"drop function f()"}

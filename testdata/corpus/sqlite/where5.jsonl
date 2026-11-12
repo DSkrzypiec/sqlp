@@ -1,0 +1,50 @@
+{"sql":"SELECT * FROM t1 WHERE x<0"}
+{"sql":"SELECT * FROM t1 WHERE x<=0"}
+{"sql":"SELECT * FROM t1 WHERE x=0"}
+{"sql":"SELECT * FROM t1 WHERE x>=0"}
+{"sql":"SELECT * FROM t1 WHERE x>0"}
+{"sql":"SELECT * FROM t1 WHERE x<>0"}
+{"sql":"SELECT * FROM t1 WHERE x<NULL"}
+{"sql":"SELECT * FROM t1 WHERE x<=NULL"}
+{"sql":"SELECT * FROM t1 WHERE x=NULL"}
+{"sql":"SELECT * FROM t1 WHERE x>=NULL"}
+{"sql":"SELECT * FROM t1 WHERE x>NULL"}
+{"sql":"SELECT * FROM t1 WHERE x!=NULL"}
+{"sql":"SELECT * FROM t1 WHERE x IS NULL"}
+{"sql":"SELECT * FROM t1 WHERE x IS NOT NULL"}
+{"sql":"SELECT * FROM t2 WHERE x<0"}
+{"sql":"SELECT * FROM t2 WHERE x<=0"}
+{"sql":"SELECT * FROM t2 WHERE x=0"}
+{"sql":"SELECT * FROM t2 WHERE x>=0"}
+{"sql":"SELECT * FROM t2 WHERE x>0"}
+{"sql":"SELECT * FROM t2 WHERE x<>0"}
+{"sql":"SELECT * FROM t2 WHERE x<NULL"}
+{"sql":"SELECT * FROM t2 WHERE x<=NULL"}
+{"sql":"SELECT * FROM t2 WHERE x=NULL"}
+{"sql":"SELECT * FROM t2 WHERE x>=NULL"}
+{"sql":"SELECT * FROM t2 WHERE x>NULL"}
+{"sql":"SELECT * FROM t2 WHERE x!=NULL"}
+{"sql":"SELECT * FROM t2 WHERE x IS NULL"}
+{"sql":"SELECT * FROM t2 WHERE x IS NOT NULL"}
+{"sql":"SELECT * FROM t3 WHERE x<0"}
+{"sql":"SELECT * FROM t3 WHERE x<=0"}
+{"sql":"SELECT * FROM t3 WHERE x=0"}
+{"sql":"SELECT * FROM t3 WHERE x>=0"}
+{"sql":"SELECT * FROM t3 WHERE x>0"}
+{"sql":"SELECT * FROM t3 WHERE x<>0"}
+{"sql":"SELECT * FROM t3 WHERE x<NULL"}
+{"sql":"SELECT * FROM t3 WHERE x<=NULL"}
+{"sql":"SELECT * FROM t3 WHERE x=NULL"}
+{"sql":"SELECT * FROM t3 WHERE x>=NULL"}
+{"sql":"SELECT * FROM t3 WHERE x>NULL"}
+{"sql":"SELECT * FROM t3 WHERE x!=NULL"}
+{"sql":"SELECT * FROM t3 WHERE x IS NULL"}
+{"sql":"SELECT * FROM t3 WHERE x IS NOT NULL"}
+{"sql":"SELECT x<NULL FROM t3"}
+{"sql":"SELECT x<=NULL FROM t3"}
+{"sql":"SELECT x==NULL FROM t3"}
+{"sql":"SELECT x>NULL FROM t3"}
+{"sql":"SELECT x>=NULL FROM t3"}
+{"sql":"SELECT x!=NULL FROM t3"}
+{"sql":"SELECT x IS NULL FROM t3"}
+{"sql":"SELECT x IS NOT NULL FROM t3"}

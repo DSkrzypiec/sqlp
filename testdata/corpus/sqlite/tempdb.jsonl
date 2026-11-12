@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1\n    SELECT CASE WHEN y IS NULL THEN test_error('oops', 11) ELSE y END\n      FROM t2"}
+{"sql":"CREATE TABLE t1 (a PRIMARY KEY, b, c)"}
+{"sql":"CREATE TABLE t2 (a, b, c)"}
+{"sql":"PRAGMA temp_store = 'memory'"}

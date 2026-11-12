@@ -1,0 +1,5 @@
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3(x)"}
+{"sql":"INSERT INTO ft VALUES(NULL)"}
+{"sql":"INSERT INTO ft SELECT * FROM ft"}
+{"sql":"UPDATE ft SET x = 'abc' || rowid"}
+{"sql":"SELECT count(*) FROM ft WHERE x MATCH 'abc*'"}

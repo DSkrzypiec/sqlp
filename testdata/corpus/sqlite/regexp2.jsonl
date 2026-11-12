@@ -1,0 +1,42 @@
+{"sql":"CREATE TABLE x1(x, y, z)"}
+{"sql":"CREATE TABLE x2(x, y, z)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO x1 VALUES(\n        new.a REGEXP 'abc',\n        new.b REGEXP 'abc',\n        new.c REGEXP 'abc'\n    );\n  END"}
+{"sql":"CREATE TRIGGER tr2 AFTER INSERT ON t1 BEGIN\n    INSERT INTO x2 VALUES(\n        new.a REGEXP 'def',\n        new.b REGEXP 'def',\n        new.c REGEXP 'def'\n    );\n  END"}
+{"sql":"INSERT INTO t1 VALUES('abc', 'def', 'abc')"}
+{"sql":"CREATE TABLE t4(e, f)"}
+{"sql":"CREATE TRIGGER t2_tr1 AFTER UPDATE ON t2 BEGIN\n    UPDATE t3 SET d = new.b WHERE c = old.a;\n  END"}
+{"sql":"CREATE TRIGGER t3_tr1 AFTER UPDATE ON t3 BEGIN\n    UPDATE t4 SET f = new.d WHERE e = old.c AND new.d REGEXP 'a.*';\n  END"}
+{"sql":"CREATE TRIGGER t4_tr1 AFTER UPDATE ON t4 BEGIN\n    SELECT CASE WHEN new.f REGEXP '.*y.*' THEN error() ELSE 1 END;\n  END"}
+{"sql":"INSERT INTO t2 VALUES(1, 'a_x_1')"}
+{"sql":"INSERT INTO t2 VALUES(2, 'a_y_1')"}
+{"sql":"INSERT INTO t3 VALUES(1, 'b1')"}
+{"sql":"INSERT INTO t3 VALUES(2, 'b2')"}
+{"sql":"INSERT INTO t4 VALUES(1, 'b1')"}
+{"sql":"INSERT INTO t4 VALUES(2, 'b2')"}
+{"sql":"UPDATE t2 SET a=a+1 WHERE b REGEXP 'a.*' AND b REGEXP '.*1'"}
+{"sql":"UPDATE t2 SET b = 'a_abc_1'"}
+{"sql":"CREATE TRIGGER t5tr AFTER DELETE ON t5 BEGIN\n    DELETE FROM t6 WHERE t6.x REGEXP old.a;\n  END"}
+{"sql":"INSERT INTO t5 VALUES ('^a.*'), ('^b.*'), ('^c.*')"}
+{"sql":"INSERT INTO t6 VALUES ('eab'), ('abc'), ('bcd'), ('cde'), ('dea')"}
+{"sql":"SELECT 'abc' REGEXP '\\W'"}
+{"sql":"SELECT 'a c' REGEXP '\\W'"}
+{"sql":"SELECT '   ' REGEXP '\\W'"}
+{"sql":"SELECT 'abc' REGEXP '\\w'"}
+{"sql":"SELECT 'a c' REGEXP '\\w'"}
+{"sql":"SELECT '   ' REGEXP '\\w'"}
+{"sql":"SELECT 'abc' REGEXP '\\D'"}
+{"sql":"SELECT 'abc' REGEXP '[^a-z]'"}
+{"sql":"SELECT 'a c' REGEXP '[^a-z]'"}
+{"sql":"SELECT '   ' REGEXP '[^a-z]'"}
+{"sql":"SELECT 'abc' REGEXP '[a-z]'"}
+{"sql":"SELECT 'a c' REGEXP '[a-z]'"}
+{"sql":"SELECT '   ' REGEXP '[a-z]'"}
+{"sql":"SELECT 'abc' REGEXP '[^a-z]{2}'"}
+{"sql":"SELECT 'a c' REGEXP '[^a-z]{2}'"}
+{"sql":"SELECT '   ' REGEXP '[^a-z]{2}'"}
+{"sql":"SELECT 'abc' REGEXP '\\W{1,1}'"}
+{"sql":"SELECT 'abc' REGEXP '\\W{1}'"}
+{"sql":"SELECT 'abc' REGEXP 'a{1,999}bc'"}
+{"sql":"SELECT 'abc' REGEXP 'a{1,25000}bc'"}
+{"sql":"SELECT 'abc' REGEXP 'a{999}bc'"}
+{"sql":"SELECT 'abc' REGEXP 'a{25000}bc'"}

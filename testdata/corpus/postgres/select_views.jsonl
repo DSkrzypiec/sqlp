@@ -1,0 +1,47 @@
+{"sql":"SELECT * FROM street","shape":"SELECT * FROM street;"}
+{"sql":"SELECT name, #thepath FROM iexit ORDER BY name COLLATE \"C\", 2","shape":"SELECT name, # thepath FROM iexit ORDER BY name COLLATE \"C\", 2;"}
+{"sql":"SELECT * FROM toyemp WHERE name = 'sharon'","shape":"SELECT * FROM toyemp WHERE name = 'sharon';"}
+{"sql":"CREATE ROLE regress_alice"}
+{"sql":"CREATE FUNCTION f_leak (text)\n       RETURNS bool LANGUAGE 'plpgsql' COST 0.0000001\n       AS 'BEGIN RAISE NOTICE ''f_leak => %'', $1; RETURN true; END'","shape":"CREATE FUNCTION f_leak(text) RETURNS bool LANGUAGE 'plpgsql' COST 0.0000001 AS 'BEGIN RAISE NOTICE ''f_leak => %'', $1; RETURN true; END';"}
+{"sql":"CREATE TABLE customer (\n       cid      int primary key,\n       name     text not null,\n       tel      text,\n       passwd\ttext\n)","shape":"CREATE TABLE customer (cid int PRIMARY KEY, name text NOT NULL, tel text, passwd text);"}
+{"sql":"CREATE TABLE credit_card (\n       cid      int references customer(cid),\n       cnum     text,\n       climit   int\n)","shape":"CREATE TABLE credit_card (cid int REFERENCES customer (cid), cnum text, climit int);"}
+{"sql":"CREATE TABLE credit_usage (\n       cid      int references customer(cid),\n       ymd      date,\n       usage    int\n)","shape":"CREATE TABLE credit_usage (cid int REFERENCES customer (cid), ymd date, usage int);"}
+{"sql":"INSERT INTO customer\n       VALUES (101, 'regress_alice', '+81-12-3456-7890', 'passwd123'),\n              (102, 'regress_bob',   '+01-234-567-8901', 'beafsteak'),\n              (103, 'regress_eve',   '+49-8765-43210',   'hamburger')","shape":"INSERT INTO customer VALUES (101, 'regress_alice', '+81-12-3456-7890', 'passwd123'), (102, 'regress_bob', '+01-234-567-8901', 'beafsteak'), (103, 'regress_eve', '+49-8765-43210', 'hamburger');"}
+{"sql":"INSERT INTO credit_card\n       VALUES (101, '1111-2222-3333-4444', 4000),\n              (102, '5555-6666-7777-8888', 3000),\n              (103, '9801-2345-6789-0123', 2000)","shape":"INSERT INTO credit_card VALUES (101, '1111-2222-3333-4444', 4000), (102, '5555-6666-7777-8888', 3000), (103, '9801-2345-6789-0123', 2000);"}
+{"sql":"INSERT INTO credit_usage\n       VALUES (101, '2011-09-15', 120),\n\t      (101, '2011-10-05',  90),\n\t      (101, '2011-10-18', 110),\n\t      (101, '2011-10-21', 200),\n\t      (101, '2011-11-10',  80),\n\t      (102, '2011-09-22', 300),\n\t      (102, '2011-10-12', 120),\n\t      (102, '2011-10-28', 200),\n\t      (103, '2011-10-15', 480)","shape":"INSERT INTO credit_usage VALUES (101, '2011-09-15', 120), (101, '2011-10-05', 90), (101, '2011-10-18', 110), (101, '2011-10-21', 200), (101, '2011-11-10', 80), (102, '2011-09-22', 300), (102, '2011-10-12', 120), (102, '2011-10-28', 200), (103, '2011-10-15', 480);"}
+{"sql":"CREATE VIEW my_property_normal AS\n       SELECT * FROM customer WHERE name = current_user","shape":"CREATE VIEW my_property_normal AS SELECT * FROM customer WHERE name = current_user;"}
+{"sql":"CREATE VIEW my_property_secure WITH (security_barrier) AS\n       SELECT * FROM customer WHERE name = current_user","shape":"CREATE VIEW my_property_secure WITH (security_barrier) AS SELECT * FROM customer WHERE name = current_user;"}
+{"sql":"CREATE VIEW my_credit_card_normal AS\n       SELECT * FROM customer l NATURAL JOIN credit_card r\n       WHERE l.name = current_user","shape":"CREATE VIEW my_credit_card_normal AS SELECT * FROM customer AS l NATURAL JOIN credit_card AS r WHERE l.name = current_user;"}
+{"sql":"CREATE VIEW my_credit_card_secure WITH (security_barrier) AS\n       SELECT * FROM customer l NATURAL JOIN credit_card r\n       WHERE l.name = current_user","shape":"CREATE VIEW my_credit_card_secure WITH (security_barrier) AS SELECT * FROM customer AS l NATURAL JOIN credit_card AS r WHERE l.name = current_user;"}
+{"sql":"CREATE VIEW my_credit_card_usage_normal AS\n       SELECT * FROM my_credit_card_secure l NATURAL JOIN credit_usage r","shape":"CREATE VIEW my_credit_card_usage_normal AS SELECT * FROM my_credit_card_secure AS l NATURAL JOIN credit_usage AS r;"}
+{"sql":"CREATE VIEW my_credit_card_usage_secure WITH (security_barrier) AS\n       SELECT * FROM my_credit_card_secure l NATURAL JOIN credit_usage r","shape":"CREATE VIEW my_credit_card_usage_secure WITH (security_barrier) AS SELECT * FROM my_credit_card_secure AS l NATURAL JOIN credit_usage AS r;"}
+{"sql":"GRANT SELECT ON my_property_normal TO public","shape":"GRANT SELECT ON my_property_normal TO PUBLIC;"}
+{"sql":"GRANT SELECT ON my_property_secure TO public","shape":"GRANT SELECT ON my_property_secure TO PUBLIC;"}
+{"sql":"GRANT SELECT ON my_credit_card_normal TO public","shape":"GRANT SELECT ON my_credit_card_normal TO PUBLIC;"}
+{"sql":"GRANT SELECT ON my_credit_card_secure TO public","shape":"GRANT SELECT ON my_credit_card_secure TO PUBLIC;"}
+{"sql":"GRANT SELECT ON my_credit_card_usage_normal TO public","shape":"GRANT SELECT ON my_credit_card_usage_normal TO PUBLIC;"}
+{"sql":"GRANT SELECT ON my_credit_card_usage_secure TO public","shape":"GRANT SELECT ON my_credit_card_usage_secure TO PUBLIC;"}
+{"sql":"SET SESSION AUTHORIZATION regress_alice"}
+{"sql":"SELECT * FROM my_property_normal WHERE f_leak(passwd)","shape":"SELECT * FROM my_property_normal WHERE f_leak(passwd);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_normal WHERE f_leak(passwd)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_normal WHERE f_leak(passwd);"}
+{"sql":"SELECT * FROM my_property_secure WHERE f_leak(passwd)","shape":"SELECT * FROM my_property_secure WHERE f_leak(passwd);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_secure WHERE f_leak(passwd)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_secure WHERE f_leak(passwd);"}
+{"sql":"SELECT * FROM my_property_normal v\n\t\tWHERE f_leak('passwd') AND f_leak(passwd)","shape":"SELECT * FROM my_property_normal AS v WHERE f_leak('passwd') AND f_leak(passwd);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_normal v\n\t\tWHERE f_leak('passwd') AND f_leak(passwd)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_normal AS v WHERE f_leak('passwd') AND f_leak(passwd);"}
+{"sql":"SELECT * FROM my_property_secure v\n\t\tWHERE f_leak('passwd') AND f_leak(passwd)","shape":"SELECT * FROM my_property_secure AS v WHERE f_leak('passwd') AND f_leak(passwd);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_secure v\n\t\tWHERE f_leak('passwd') AND f_leak(passwd)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_property_secure AS v WHERE f_leak('passwd') AND f_leak(passwd);"}
+{"sql":"SELECT * FROM my_credit_card_normal WHERE f_leak(cnum)","shape":"SELECT * FROM my_credit_card_normal WHERE f_leak(cnum);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_normal WHERE f_leak(cnum)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_normal WHERE f_leak(cnum);"}
+{"sql":"SELECT * FROM my_credit_card_secure WHERE f_leak(cnum)","shape":"SELECT * FROM my_credit_card_secure WHERE f_leak(cnum);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_secure WHERE f_leak(cnum)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_secure WHERE f_leak(cnum);"}
+{"sql":"SELECT * FROM my_credit_card_usage_normal\n       WHERE f_leak(cnum) AND ymd >= '2011-10-01' AND ymd < '2011-11-01'","shape":"SELECT * FROM my_credit_card_usage_normal WHERE (f_leak(cnum) AND (ymd >= '2011-10-01')) AND (ymd < '2011-11-01');"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_usage_normal\n       WHERE f_leak(cnum) AND ymd >= '2011-10-01' AND ymd < '2011-11-01'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_usage_normal WHERE (f_leak(cnum) AND (ymd >= '2011-10-01')) AND (ymd < '2011-11-01');"}
+{"sql":"SELECT * FROM my_credit_card_usage_secure\n       WHERE f_leak(cnum) AND ymd >= '2011-10-01' AND ymd < '2011-11-01'","shape":"SELECT * FROM my_credit_card_usage_secure WHERE (f_leak(cnum) AND (ymd >= '2011-10-01')) AND (ymd < '2011-11-01');"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_usage_secure\n       WHERE f_leak(cnum) AND ymd >= '2011-10-01' AND ymd < '2011-11-01'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM my_credit_card_usage_secure WHERE (f_leak(cnum) AND (ymd >= '2011-10-01')) AND (ymd < '2011-11-01');"}
+{"sql":"PREPARE p1 AS SELECT * FROM my_property_normal WHERE f_leak(passwd)","shape":"PREPARE p1 AS SELECT * FROM my_property_normal WHERE f_leak(passwd);"}
+{"sql":"PREPARE p2 AS SELECT * FROM my_property_secure WHERE f_leak(passwd)","shape":"PREPARE p2 AS SELECT * FROM my_property_secure WHERE f_leak(passwd);"}
+{"sql":"EXECUTE p1","shape":"EXECUTE p1;"}
+{"sql":"EXECUTE p2","shape":"EXECUTE p2;"}
+{"sql":"ALTER VIEW my_property_normal SET (security_barrier=true)"}
+{"sql":"ALTER VIEW my_property_secure SET (security_barrier=false)"}
+{"sql":"DROP ROLE regress_alice","shape":"DROP ROLE regress_alice;"}

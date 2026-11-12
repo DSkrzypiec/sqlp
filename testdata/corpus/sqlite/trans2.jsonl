@@ -1,0 +1,2 @@
+{"sql":"PRAGMA cache_size=100"}
+{"sql":"CREATE TABLE t1(\n      id INTEGER PRIMARY KEY,\n      u1 TEXT UNIQUE,\n      z BLOB NOT NULL,\n      u2 TEXT UNIQUE\n    )"}

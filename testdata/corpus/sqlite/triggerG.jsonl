@@ -1,0 +1,9 @@
+{"sql":"INSERT INTO t1(a) VALUES(0),(2),(3),(8),(9)"}
+{"sql":"CREATE TRIGGER tr AFTER INSERT ON t3 BEGIN\n    INSERT INTO t3 SELECT new.c+1 WHERE new.c<5;\n    INSERT INTO t2 SELECT new.c*100+a FROM t1 WHERE a IN (1, 2, 3, 4);\n  END"}
+{"sql":"SELECT c FROM t3 ORDER BY c"}
+{"sql":"CREATE TRIGGER tr AFTER INSERT ON t3 BEGIN\n    INSERT INTO t3 SELECT new.c+1 WHERE new.c<5;\n    INSERT INTO t2 SELECT new.c*10000+xx.a*100+yy.a\n                     FROM t1 AS xx, t1 AS yy\n                    WHERE xx.a IN (1,2,3,4)\n                      AND yy.a IN (2,3,4,5);\n  END"}
+{"sql":"CREATE TRIGGER tr4 AFTER INSERT ON t4 BEGIN\n    SELECT 0x2147483648e0e0099 AS y WHERE y;\n  END"}
+{"sql":"CREATE VIEW v0(a) AS SELECT 1234"}
+{"sql":"CREATE TRIGGER t0001 INSTEAD OF DELETE ON v0 BEGIN\n    SELECT old.a;\n  END"}
+{"sql":"SELECT a FROM v0"}
+{"sql":"DELETE FROM v0"}

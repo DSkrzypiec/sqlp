@@ -1,0 +1,51 @@
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,3,4,5)\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"SELECT a,b,c,d,e FROM t1"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,4,5)\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,4,5)\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,3,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,3,4,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,4,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,4,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(a) DO UPDATE SET b='a'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'\n      ON CONFLICT(a) DO UPDATE SET b='a'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'\n      ON CONFLICT(a) DO UPDATE SET b='a'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(e) DO UPDATE SET b='e'\n      ON CONFLICT(a) DO UPDATE SET b='a'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(a) DO UPDATE SET b='a1'\n      ON CONFLICT(a) DO UPDATE SET b='a2'\n      ON CONFLICT(a) DO UPDATE SET b='a3'\n      ON CONFLICT(a) DO UPDATE SET b='a4'\n      ON CONFLICT(a) DO UPDATE SET b='a5'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT(a) DO UPDATE SET b='a1'\n      ON CONFLICT(a) DO UPDATE SET b='a2'\n      ON CONFLICT(a) DO UPDATE SET b='a3'\n      ON CONFLICT(a) DO UPDATE SET b='a4'\n      ON CONFLICT(a) DO UPDATE SET b='a5'\n      ON CONFLICT(e) DO UPDATE SET b='e'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,4,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,4,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,4,95)\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,94,95)\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO NOTHING\n      ON CONFLICT(d) DO NOTHING\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(c) DO NOTHING\n      ON CONFLICT(d) DO NOTHING\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,4,95)\n      ON CONFLICT(c) DO NOTHING\n      ON CONFLICT(d) DO NOTHING\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,94,95)\n      ON CONFLICT(c) DO NOTHING\n      ON CONFLICT(d) DO NOTHING\n      ON CONFLICT DO UPDATE set b='x'"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,93,94,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,94,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(91,NULL,3,4,95)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,NULL,93,4,5)\n      ON CONFLICT(c) DO UPDATE SET b='c'\n      ON CONFLICT(d) DO UPDATE SET b='d'\n      ON CONFLICT DO NOTHING"}
+{"sql":"CREATE TABLE t2(a, b, c REAL, d, e, PRIMARY KEY(a,b)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t2(a,b,c,e,d) VALUES(1,2,3,4,5)\n      ON CONFLICT(c) DO UPDATE SET b=''\n      ON CONFLICT((SELECT t2 FROM nosuchtable)) DO NOTHING"}
+{"sql":"CREATE TABLE t1(aa INTEGER PRIMARY KEY, bb INT)"}
+{"sql":"CREATE UNIQUE INDEX t1bb ON t1(bb)"}
+{"sql":"REPLACE INTO t1 VALUES(11,33)\n    ON CONFLICT(bb) DO UPDATE SET aa = 44\n    ON CONFLICT(bb) DO UPDATE SET aa = 44"}
+{"sql":"SELECT * FROM t1 NOT INDEXED"}
+{"sql":"SELECT * FROM t1 INDEXED BY t1bb"}
+{"sql":"CREATE TABLE t1(aa INTEGER PRIMARY KEY, bb INT, cc INT)"}
+{"sql":"INSERT INTO t1 VALUES(10,21,32),(11,22,33),(12,23,34)"}
+{"sql":"CREATE UNIQUE INDEX t1cc ON t1(cc)"}
+{"sql":"REPLACE INTO t1 VALUES(11,44,55)\n    ON CONFLICT(bb) DO UPDATE SET aa = 99\n    ON CONFLICT(cc) DO UPDATE SET aa = 99\n    ON CONFLICT(bb) DO UPDATE SET aa = 99"}
+{"sql":"SELECT * FROM t1 NOT INDEXED ORDER BY +aa"}
+{"sql":"SELECT * FROM t1 INDEXED BY t1bb ORDER BY +aa"}
+{"sql":"SELECT * FROM t1 INDEXED BY t1cc ORDER BY +aa"}

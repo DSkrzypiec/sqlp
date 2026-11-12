@@ -1,0 +1,81 @@
+{"sql":"CREATE TABLE collate_test1 (\n    a int,\n    b text COLLATE \"C\" NOT NULL\n)","shape":"CREATE TABLE collate_test1 (a int, b text COLLATE \"C\" NOT NULL);"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int COLLATE \"C\",\n    b text\n)","shape":"CREATE TABLE collate_test_fail (a int COLLATE \"C\", b text);"}
+{"sql":"CREATE TABLE collate_test2 (\n    a int,\n    b text COLLATE \"POSIX\"\n)","shape":"CREATE TABLE collate_test2 (a int, b text COLLATE \"POSIX\");"}
+{"sql":"INSERT INTO collate_test1 VALUES (1, 'abc'), (2, 'Abc'), (3, 'bbc'), (4, 'ABD')","shape":"INSERT INTO collate_test1 VALUES (1, 'abc'), (2, 'Abc'), (3, 'bbc'), (4, 'ABD');"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'abc'","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= 'abc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b >= 'abc' COLLATE \"C\"","shape":"SELECT * FROM collate_test1 WHERE b >= ('abc' COLLATE \"C\");"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'abc' COLLATE \"C\"","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= ('abc' COLLATE \"C\");"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'bbc' COLLATE \"POSIX\"","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= ('bbc' COLLATE \"POSIX\");"}
+{"sql":"CREATE DOMAIN testdomain_p AS text COLLATE \"POSIX\"","shape":"CREATE DOMAIN testdomain_p AS text COLLATE \"POSIX\";"}
+{"sql":"CREATE DOMAIN testdomain_i AS int COLLATE \"POSIX\"","shape":"CREATE DOMAIN testdomain_i AS int COLLATE \"POSIX\";"}
+{"sql":"CREATE TABLE collate_test4 (\n    a int,\n    b testdomain_p\n)","shape":"CREATE TABLE collate_test4 (a int, b testdomain_p);"}
+{"sql":"CREATE TABLE collate_test5 (\n    a int,\n    b testdomain_p COLLATE \"C\"\n)","shape":"CREATE TABLE collate_test5 (a int, b testdomain_p COLLATE \"C\");"}
+{"sql":"SELECT 'bbc' COLLATE \"C\" > 'Abc' COLLATE \"C\" AS \"true\"","shape":"SELECT ('bbc' COLLATE \"C\") > ('Abc' COLLATE \"C\") AS \"true\";"}
+{"sql":"SELECT 'bbc' COLLATE \"POSIX\" < 'Abc' COLLATE \"POSIX\" AS \"false\"","shape":"SELECT ('bbc' COLLATE \"POSIX\") < ('Abc' COLLATE \"POSIX\") AS \"false\";"}
+{"sql":"CREATE TABLE collate_test10 (\n    a int,\n    x text COLLATE \"C\",\n    y text COLLATE \"POSIX\"\n)","shape":"CREATE TABLE collate_test10 (a int, x text COLLATE \"C\", y text COLLATE \"POSIX\");"}
+{"sql":"CREATE VIEW collview3 AS SELECT a, lower((x || x) COLLATE \"POSIX\") FROM collate_test10","shape":"CREATE VIEW collview3 AS SELECT a, lower((x || x) COLLATE \"POSIX\") FROM collate_test10;"}
+{"sql":"SELECT a, b::testdomain_p FROM collate_test2 ORDER BY 2","shape":"SELECT a, b::testdomain_p FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT string_agg(x COLLATE \"C\", y COLLATE \"POSIX\") FROM collate_test10","shape":"SELECT string_agg(x COLLATE \"C\", y COLLATE \"POSIX\") FROM collate_test10;"}
+{"sql":"SELECT array_agg(x COLLATE \"C\" ORDER BY y COLLATE \"POSIX\") FROM collate_test10","shape":"SELECT array_agg(x COLLATE \"C\" ORDER BY y COLLATE \"POSIX\") FROM collate_test10;"}
+{"sql":"SELECT array_agg(a ORDER BY x COLLATE \"C\", y COLLATE \"POSIX\") FROM collate_test10","shape":"SELECT array_agg(a ORDER BY x COLLATE \"C\", y COLLATE \"POSIX\") FROM collate_test10;"}
+{"sql":"SELECT array_agg(a ORDER BY x||y) FROM collate_test10","shape":"SELECT array_agg(a ORDER BY x || y) FROM collate_test10;"}
+{"sql":"SELECT a, b FROM collate_test2 WHERE a < 4 INTERSECT SELECT a, b FROM collate_test2 WHERE a > 1 ORDER BY 2","shape":"SELECT a, b FROM collate_test2 WHERE a < 4 INTERSECT SELECT a, b FROM collate_test2 WHERE a > 1 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test2 EXCEPT SELECT a, b FROM collate_test2 WHERE a < 2 ORDER BY 2","shape":"SELECT a, b FROM collate_test2 EXCEPT SELECT a, b FROM collate_test2 WHERE a < 2 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test2 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test2","shape":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test2;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION SELECT a, b FROM collate_test2 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 UNION SELECT a, b FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, b COLLATE \"C\" FROM collate_test1 UNION SELECT a, b FROM collate_test2 ORDER BY 2","shape":"SELECT a, b COLLATE \"C\" FROM collate_test1 UNION SELECT a, b FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 INTERSECT SELECT a, b FROM collate_test2 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 INTERSECT SELECT a, b FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 EXCEPT SELECT a, b FROM collate_test2 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 EXCEPT SELECT a, b FROM collate_test2 ORDER BY 2;"}
+{"sql":"CREATE TABLE test_u AS SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test2","shape":"CREATE TABLE test_u AS SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test2;"}
+{"sql":"WITH RECURSIVE foo(x) AS\n   (SELECT x FROM (VALUES('a' COLLATE \"C\"),('b')) t(x)\n   UNION ALL\n   SELECT (x || 'c') COLLATE \"POSIX\" FROM foo WHERE length(x) < 10)\nSELECT * FROM foo","shape":"WITH RECURSIVE foo(x) AS (SELECT x FROM (VALUES ('a' COLLATE \"C\"), ('b')) AS t(x) UNION ALL SELECT (x || 'c') COLLATE \"POSIX\" FROM foo WHERE length(x) < 10) SELECT * FROM foo;"}
+{"sql":"SELECT a, b, a < b as lt FROM\n  (VALUES ('a', 'B'), ('A', 'b' COLLATE \"C\")) v(a,b)","shape":"SELECT a, b, a < b AS lt FROM (VALUES ('a', 'B'), ('A', 'b' COLLATE \"C\")) AS v(a, b);"}
+{"sql":"SELECT * FROM collate_test10 WHERE (x, y) NOT IN (SELECT y, x FROM collate_test10)","shape":"SELECT * FROM collate_test10 WHERE (x, y) NOT IN (SELECT y, x FROM collate_test10);"}
+{"sql":"SELECT * FROM collate_test10 WHERE (x COLLATE \"POSIX\", y COLLATE \"C\") NOT IN (SELECT y, x FROM collate_test10)","shape":"SELECT * FROM collate_test10 WHERE (x COLLATE \"POSIX\", y COLLATE \"C\") NOT IN (SELECT y, x FROM collate_test10);"}
+{"sql":"SELECT * FROM collate_test10 WHERE (x, y) NOT IN (SELECT y COLLATE \"C\", x COLLATE \"POSIX\" FROM collate_test10)","shape":"SELECT * FROM collate_test10 WHERE (x, y) NOT IN (SELECT y COLLATE \"C\", x COLLATE \"POSIX\" FROM collate_test10);"}
+{"sql":"CREATE FUNCTION vc (text) RETURNS text LANGUAGE sql\n    AS 'select $1::varchar'","shape":"CREATE FUNCTION vc(text) RETURNS text LANGUAGE sql AS 'select $1::varchar';"}
+{"sql":"SELECT a, b FROM collate_test1 ORDER BY a, vc(b)","shape":"SELECT a, b FROM collate_test1 ORDER BY a, vc(b);"}
+{"sql":"CREATE INDEX collate_test1_idx2 ON collate_test1 (b COLLATE \"POSIX\")","shape":"CREATE INDEX collate_test1_idx2 ON collate_test1 (b COLLATE \"POSIX\");"}
+{"sql":"CREATE INDEX collate_test1_idx3 ON collate_test1 ((b COLLATE \"POSIX\"))","shape":"CREATE INDEX collate_test1_idx3 ON collate_test1 ((b COLLATE \"POSIX\"));"}
+{"sql":"CREATE INDEX collate_test1_idx5 ON collate_test1 (a COLLATE \"POSIX\")","shape":"CREATE INDEX collate_test1_idx5 ON collate_test1 (a COLLATE \"POSIX\");"}
+{"sql":"CREATE INDEX collate_test1_idx6 ON collate_test1 ((a COLLATE \"POSIX\"))","shape":"CREATE INDEX collate_test1_idx6 ON collate_test1 ((a COLLATE \"POSIX\"));"}
+{"sql":"SET enable_seqscan TO 0","shape":"SET enable_seqscan TO 0;"}
+{"sql":"SET enable_hashjoin TO 0","shape":"SET enable_hashjoin TO 0;"}
+{"sql":"SET enable_nestloop TO 0","shape":"SET enable_nestloop TO 0;"}
+{"sql":"CREATE TABLE collate_test20 (f1 text COLLATE \"C\" PRIMARY KEY)","shape":"CREATE TABLE collate_test20 (f1 text COLLATE \"C\" PRIMARY KEY);"}
+{"sql":"INSERT INTO collate_test20 VALUES ('foo'), ('bar')","shape":"INSERT INTO collate_test20 VALUES ('foo'), ('bar');"}
+{"sql":"CREATE TABLE collate_test21 (f2 text COLLATE \"POSIX\" REFERENCES collate_test20)","shape":"CREATE TABLE collate_test21 (f2 text COLLATE \"POSIX\" REFERENCES collate_test20);"}
+{"sql":"INSERT INTO collate_test21 VALUES ('foo'), ('bar')","shape":"INSERT INTO collate_test21 VALUES ('foo'), ('bar');"}
+{"sql":"INSERT INTO collate_test21 VALUES ('baz')","shape":"INSERT INTO collate_test21 VALUES ('baz');"}
+{"sql":"CREATE TABLE collate_test22 (f2 text COLLATE \"POSIX\")","shape":"CREATE TABLE collate_test22 (f2 text COLLATE \"POSIX\");"}
+{"sql":"INSERT INTO collate_test22 VALUES ('foo'), ('bar'), ('baz')","shape":"INSERT INTO collate_test22 VALUES ('foo'), ('bar'), ('baz');"}
+{"sql":"ALTER TABLE collate_test22 ADD FOREIGN KEY (f2) REFERENCES collate_test20","shape":"ALTER TABLE collate_test22 ADD FOREIGN KEY (f2) REFERENCES collate_test20;"}
+{"sql":"DELETE FROM collate_test22 WHERE f2 = 'baz'","shape":"DELETE FROM collate_test22 WHERE f2 = 'baz';"}
+{"sql":"RESET enable_hashjoin","shape":"RESET enable_hashjoin;"}
+{"sql":"RESET enable_nestloop","shape":"RESET enable_nestloop;"}
+{"sql":"EXPLAIN (COSTS OFF)\n  SELECT * FROM collate_test10 ORDER BY x, y","shape":"EXPLAIN (COSTS OFF) SELECT * FROM collate_test10 ORDER BY x, y;"}
+{"sql":"EXPLAIN (COSTS OFF)\n  SELECT * FROM collate_test10 ORDER BY x DESC, y COLLATE \"C\" ASC NULLS FIRST","shape":"EXPLAIN (COSTS OFF) SELECT * FROM collate_test10 ORDER BY x DESC, y COLLATE \"C\" ASC NULLS FIRST;"}
+{"sql":"CREATE COLLATION mycoll1 FROM \"C\""}
+{"sql":"CREATE COLLATION mycoll2 ( LC_COLLATE = \"POSIX\", LC_CTYPE = \"POSIX\" )"}
+{"sql":"CREATE COLLATION mycoll3 FROM \"default\""}
+{"sql":"DROP COLLATION mycoll1"}
+{"sql":"CREATE TABLE collate_test23 (f1 text collate mycoll2)","shape":"CREATE TABLE collate_test23 (f1 text COLLATE mycoll2);"}
+{"sql":"DROP COLLATION mycoll2"}
+{"sql":"CREATE COLLATION case_coll (\"Lc_Collate\" = \"POSIX\", \"Lc_Ctype\" = \"POSIX\")"}
+{"sql":"CREATE TEMP TABLE vctable (f1 varchar(25))","shape":"CREATE TEMPORARY TABLE vctable (f1 varchar(25));"}
+{"sql":"INSERT INTO vctable VALUES ('foo' COLLATE \"C\")","shape":"INSERT INTO vctable VALUES ('foo' COLLATE \"C\");"}
+{"sql":"SELECT collation for ('foo')","shape":"SELECT COLLATION FOR ('foo');"}
+{"sql":"SELECT collation for ('foo'::text)","shape":"SELECT COLLATION FOR ('foo'::text);"}
+{"sql":"SELECT collation for ((SELECT a FROM collate_test1 LIMIT 1))","shape":"SELECT COLLATION FOR ((SELECT a FROM collate_test1 LIMIT 1));"}
+{"sql":"SELECT collation for ((SELECT b FROM collate_test1 LIMIT 1))","shape":"SELECT COLLATION FOR ((SELECT b FROM collate_test1 LIMIT 1));"}
+{"sql":"CREATE VIEW collate_on_int AS\nSELECT c1+1 AS c1p FROM\n  (SELECT ('4' COLLATE \"C\")::INT AS c1) ss","shape":"CREATE VIEW collate_on_int AS SELECT c1 + 1 AS c1p FROM (SELECT ('4' COLLATE \"C\")::INT AS c1) AS ss;"}
+{"sql":"CREATE COLLATION coll_dup_chk (LC_COLLATE = \"POSIX\", LC_COLLATE = \"NONSENSE\", LC_CTYPE = \"POSIX\")"}
+{"sql":"CREATE COLLATION coll_dup_chk (LC_CTYPE = \"POSIX\", LC_CTYPE = \"NONSENSE\", LC_COLLATE = \"POSIX\")"}
+{"sql":"CREATE COLLATION coll_dup_chk (PROVIDER = icu, PROVIDER = NONSENSE, LC_COLLATE = \"POSIX\", LC_CTYPE = \"POSIX\")"}
+{"sql":"CREATE COLLATION case_sensitive (LOCALE = '', LOCALE = \"NONSENSE\")"}
+{"sql":"CREATE COLLATION coll_dup_chk (DETERMINISTIC = TRUE, DETERMINISTIC = NONSENSE, LOCALE = '')"}
+{"sql":"CREATE COLLATION coll_dup_chk (VERSION = '1', VERSION = \"NONSENSE\", LOCALE = '')"}
+{"sql":"CREATE COLLATION coll_dup_chk (LC_COLLATE = \"POSIX\", LC_CTYPE = \"POSIX\", LOCALE = '')"}
+{"sql":"CREATE COLLATION coll_dup_chk (LC_COLLATE = \"POSIX\", LOCALE = '')"}
+{"sql":"CREATE COLLATION coll_dup_chk (LC_CTYPE = \"POSIX\", LOCALE = '')"}
+{"sql":"CREATE COLLATION coll_dup_chk (FROM = \"C\", VERSION = \"1\")"}

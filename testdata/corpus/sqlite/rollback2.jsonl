@@ -1,0 +1,6 @@
+{"sql":"SELECT int2hex(0), int2hex(100), int2hex(255)"}
+{"sql":"CREATE TABLE t1(i, h)"}
+{"sql":"CREATE INDEX i1 ON t1(h)"}
+{"sql":"WITH data(a, b) AS (\n    SELECT 1, int2hex(1)\n      UNION ALL\n    SELECT a+1, int2hex(a+1) FROM data WHERE a<40\n  )\n  INSERT INTO t1 SELECT * FROM data"}
+{"sql":"SELECT i FROM t1 WHERE (i%2)==0 ORDER BY h DESC"}
+{"sql":"SELECT i FROM t1 WHERE (i%2)==0 ORDER BY h ASC"}

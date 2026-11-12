@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES( randomblob(500) )"}
+{"sql":"UPDATE t1 SET a=randomblob(500)"}
+{"sql":"RELEASE abc"}

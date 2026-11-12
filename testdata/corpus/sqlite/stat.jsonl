@@ -1,0 +1,50 @@
+{"sql":"PRAGMA table_info(dbstat)"}
+{"sql":"DROP TABLE dbstat"}
+{"sql":"PRAGMA table_info=dbstat"}
+{"sql":"SELECT * FROM stat"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n      FROM stat"}
+{"sql":"INSERT INTO t1(rowid, a, b) VALUES(2, 2, 3)"}
+{"sql":"INSERT INTO t1(rowid, a, b) VALUES(3, 4, 5)"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n      FROM stat WHERE name = 't1'"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n      FROM stat WHERE name = 'i1'"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n      FROM stat WHERE name = 'sqlite_schema'"}
+{"sql":"CREATE TABLE t3(a PRIMARY KEY, b)"}
+{"sql":"INSERT INTO t3(rowid, a, b) VALUES(2, a_string(111), a_string(222))"}
+{"sql":"INSERT INTO t3 SELECT a_string(110+rowid), a_string(221+rowid) FROM t3\n   ORDER BY rowid"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n    FROM stat WHERE name != 'sqlite_schema' ORDER BY name"}
+{"sql":"SELECT * FROM dbstat WHERE aggregate=TRUE ORDER BY name"}
+{"sql":"UPDATE t3 SET a=a||hex(randomblob(700))"}
+{"sql":"SELECT pageno FROM stat EXCEPT SELECT pageno-1 FROM stat"}
+{"sql":"CREATE INDEX i4 ON t4(x)"}
+{"sql":"INSERT INTO t4(rowid, x) VALUES(2, a_string(7777))"}
+{"sql":"SELECT *, '|' FROM dbstat WHERE aggregate=TRUE ORDER BY name"}
+{"sql":"CREATE INDEX i5 ON t5(x)"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n    FROM stat WHERE name = 't5' OR name = 'i5'"}
+{"sql":"CREATE TABLE tx(y)"}
+{"sql":"CREATE VIRTUAL TABLE temp.stat USING dbstat(aux1)"}
+{"sql":"CREATE TABLE aux1.t1(x)"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(1513))"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(1514))"}
+{"sql":"SELECT name, path, pageno, pagetype, ncell, payload, unused, mx_payload\n    FROM stat WHERE name = 't1'"}
+{"sql":"SELECT name, quote(path), pageno, quote(pagetype), ncell, payload,\n         unused, mx_payload, '|' FROM dbstat('main',1)"}
+{"sql":"SELECT name, quote(path), pageno, quote(pagetype), ncell, payload,\n         unused, mx_payload, '|' FROM dbstat('aux1',1)"}
+{"sql":"CREATE VIRTUAL TABLE temp.s2 USING dbstat(mainx)"}
+{"sql":"ATTACH 'test.db2' AS '123'"}
+{"sql":"PRAGMA \"123\".auto_vacuum = OFF"}
+{"sql":"CREATE TABLE \"123\".x1(a, b)"}
+{"sql":"SELECT * FROM dbstat('123')"}
+{"sql":"SELECT * FROM dbstat(123)"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING dbstat('123')"}
+{"sql":"CREATE VIRTUAL TABLE x3 USING dbstat(123)"}
+{"sql":"DETACH 123"}
+{"sql":"DROP TABLE x2"}
+{"sql":"ATTACH 'test.db2' AS '123corp'"}
+{"sql":"SELECT * FROM dbstat('123corp')"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING dbstat('123corp')"}
+{"sql":"CREATE VIRTUAL TABLE st4 USING dbstat"}
+{"sql":"SELECT * FROM st4 WHERE st4.aggregate = NULL"}
+{"sql":"SELECT aggregate=1 FROM st4 WHERE aggregate = 5"}
+{"sql":"SELECT * FROM st4 WHERE name = NULL"}
+{"sql":"SELECT * FROM st4 WHERE schema = NULL"}
+{"sql":"CREATE TABLE dbstat(x, y)"}
+{"sql":"DROP TABLE nosuchdb.dbstat"}

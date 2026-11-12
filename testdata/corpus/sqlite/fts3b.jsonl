@@ -1,0 +1,21 @@
+{"sql":"SELECT rowid FROM t1 WHERE c MATCH 'this'"}
+{"sql":"SELECT rowid FROM t2 WHERE c MATCH 'lorem'"}
+{"sql":"SELECT snippet(t3) FROM t3 WHERE t3 MATCH 'test'"}
+{"sql":"SELECT * FROM t3 WHERE rowid = 1"}
+{"sql":"INSERT INTO t3 VALUES ('another test')"}
+{"sql":"SELECT rowid FROM t4 WHERE rowid <> docid"}
+{"sql":"SELECT * FROM t4 WHERE rowid = 1"}
+{"sql":"SELECT docid, * FROM t4 WHERE rowid = 1"}
+{"sql":"SELECT docid, * FROM t4 WHERE docid = 1"}
+{"sql":"INSERT INTO t4 VALUES ('another test')"}
+{"sql":"INSERT INTO t4 (docid, c) VALUES (10, 'yet another test')"}
+{"sql":"SELECT * FROM t4 WHERE docid = 10"}
+{"sql":"INSERT INTO t4 (docid, c) VALUES (12, 'still testing')"}
+{"sql":"SELECT * FROM t4 WHERE docid = 12"}
+{"sql":"INSERT INTO t4 (rowid, docid, c) VALUES (14, 15, 'bad test')"}
+{"sql":"SELECT * FROM t4 WHERE docid = 14"}
+{"sql":"SELECT docid FROM t4 WHERE t4 MATCH 'testing'"}
+{"sql":"UPDATE t4 SET docid = 14 WHERE docid = 12"}
+{"sql":"SELECT * FROM t4 WHERE rowid = 14"}
+{"sql":"SELECT * FROM t4 WHERE rowid = 12"}
+{"sql":"SELECT docid FROM t4 WHERE t4 MATCH 'still'"}

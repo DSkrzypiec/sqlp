@@ -1,0 +1,429 @@
+{"sql":"CREATE INDEX onek_unique1 ON onek USING btree(unique1 int4_ops)","shape":"CREATE INDEX onek_unique1 ON onek USING btree (unique1 int4_ops);"}
+{"sql":"CREATE INDEX IF NOT EXISTS onek_unique1 ON onek USING btree(unique1 int4_ops)","shape":"CREATE INDEX IF NOT EXISTS onek_unique1 ON onek USING btree (unique1 int4_ops);"}
+{"sql":"CREATE INDEX IF NOT EXISTS ON onek USING btree(unique1 int4_ops)","reject":true}
+{"sql":"CREATE INDEX onek_unique2 ON onek USING btree(unique2 int4_ops)","shape":"CREATE INDEX onek_unique2 ON onek USING btree (unique2 int4_ops);"}
+{"sql":"CREATE INDEX onek_hundred ON onek USING btree(hundred int4_ops)","shape":"CREATE INDEX onek_hundred ON onek USING btree (hundred int4_ops);"}
+{"sql":"CREATE INDEX onek_stringu1 ON onek USING btree(stringu1 name_ops)","shape":"CREATE INDEX onek_stringu1 ON onek USING btree (stringu1 name_ops);"}
+{"sql":"CREATE INDEX tenk1_unique1 ON tenk1 USING btree(unique1 int4_ops)","shape":"CREATE INDEX tenk1_unique1 ON tenk1 USING btree (unique1 int4_ops);"}
+{"sql":"CREATE INDEX tenk1_unique2 ON tenk1 USING btree(unique2 int4_ops)","shape":"CREATE INDEX tenk1_unique2 ON tenk1 USING btree (unique2 int4_ops);"}
+{"sql":"CREATE INDEX tenk1_hundred ON tenk1 USING btree(hundred int4_ops)","shape":"CREATE INDEX tenk1_hundred ON tenk1 USING btree (hundred int4_ops);"}
+{"sql":"CREATE INDEX tenk1_thous_tenthous ON tenk1 (thousand, tenthous)","shape":"CREATE INDEX tenk1_thous_tenthous ON tenk1 (thousand, tenthous);"}
+{"sql":"CREATE INDEX tenk2_unique1 ON tenk2 USING btree(unique1 int4_ops)","shape":"CREATE INDEX tenk2_unique1 ON tenk2 USING btree (unique1 int4_ops);"}
+{"sql":"CREATE INDEX tenk2_unique2 ON tenk2 USING btree(unique2 int4_ops)","shape":"CREATE INDEX tenk2_unique2 ON tenk2 USING btree (unique2 int4_ops);"}
+{"sql":"CREATE INDEX tenk2_hundred ON tenk2 USING btree(hundred int4_ops)","shape":"CREATE INDEX tenk2_hundred ON tenk2 USING btree (hundred int4_ops);"}
+{"sql":"CREATE INDEX rix ON road USING btree (name text_ops)","shape":"CREATE INDEX rix ON road USING btree (name text_ops);"}
+{"sql":"CREATE INDEX iix ON ihighway USING btree (name text_ops)","shape":"CREATE INDEX iix ON ihighway USING btree (name text_ops);"}
+{"sql":"CREATE INDEX six ON shighway USING btree (name text_ops)","shape":"CREATE INDEX six ON shighway USING btree (name text_ops);"}
+{"sql":"COMMENT ON INDEX six_wrong IS 'bad index'","shape":"COMMENT ON INDEX six_wrong IS 'bad index';"}
+{"sql":"COMMENT ON INDEX six IS 'good index'","shape":"COMMENT ON INDEX six IS 'good index';"}
+{"sql":"COMMENT ON INDEX six IS NULL","shape":"COMMENT ON INDEX six IS NULL;"}
+{"sql":"CREATE INDEX onek2_u1_prtl ON onek2 USING btree(unique1 int4_ops)\n\twhere unique1 < 20 or unique1 > 980","shape":"CREATE INDEX onek2_u1_prtl ON onek2 USING btree (unique1 int4_ops) WHERE (unique1 < 20) OR (unique1 > 980);"}
+{"sql":"CREATE INDEX onek2_u2_prtl ON onek2 USING btree(unique2 int4_ops)\n\twhere stringu1 < 'B'","shape":"CREATE INDEX onek2_u2_prtl ON onek2 USING btree (unique2 int4_ops) WHERE stringu1 < 'B';"}
+{"sql":"CREATE INDEX onek2_stu1_prtl ON onek2 USING btree(stringu1 name_ops)\n\twhere onek2.stringu1 >= 'J' and onek2.stringu1 < 'K'","shape":"CREATE INDEX onek2_stu1_prtl ON onek2 USING btree (stringu1 name_ops) WHERE (onek2.stringu1 >= 'J') AND (onek2.stringu1 < 'K');"}
+{"sql":"CREATE TABLE slow_emp4000 (\n\thome_base\t box\n)","shape":"CREATE TABLE slow_emp4000 (home_base box);"}
+{"sql":"CREATE TABLE fast_emp4000 (\n\thome_base\t box\n)","shape":"CREATE TABLE fast_emp4000 (home_base box);"}
+{"sql":"INSERT INTO fast_emp4000 SELECT * FROM slow_emp4000","shape":"INSERT INTO fast_emp4000 SELECT * FROM slow_emp4000;"}
+{"sql":"ANALYZE slow_emp4000","shape":"ANALYZE slow_emp4000;"}
+{"sql":"ANALYZE fast_emp4000","shape":"ANALYZE fast_emp4000;"}
+{"sql":"CREATE INDEX grect2ind ON fast_emp4000 USING gist (home_base)","shape":"CREATE INDEX grect2ind ON fast_emp4000 USING gist (home_base);"}
+{"sql":"CREATE INDEX gpointind ON point_tbl USING gist (f1)","shape":"CREATE INDEX gpointind ON point_tbl USING gist (f1);"}
+{"sql":"CREATE TEMP TABLE gpolygon_tbl AS\n    SELECT polygon(home_base) AS f1 FROM slow_emp4000","shape":"CREATE TEMPORARY TABLE gpolygon_tbl AS SELECT polygon(home_base) AS f1 FROM slow_emp4000;"}
+{"sql":"INSERT INTO gpolygon_tbl VALUES ( '(1000,0,0,1000)' )","shape":"INSERT INTO gpolygon_tbl VALUES ('(1000,0,0,1000)');"}
+{"sql":"INSERT INTO gpolygon_tbl VALUES ( '(0,1000,1000,1000)' )","shape":"INSERT INTO gpolygon_tbl VALUES ('(0,1000,1000,1000)');"}
+{"sql":"CREATE TEMP TABLE gcircle_tbl AS\n    SELECT circle(home_base) AS f1 FROM slow_emp4000","shape":"CREATE TEMPORARY TABLE gcircle_tbl AS SELECT circle(home_base) AS f1 FROM slow_emp4000;"}
+{"sql":"CREATE INDEX ggpolygonind ON gpolygon_tbl USING gist (f1)","shape":"CREATE INDEX ggpolygonind ON gpolygon_tbl USING gist (f1);"}
+{"sql":"CREATE INDEX ggcircleind ON gcircle_tbl USING gist (f1)","shape":"CREATE INDEX ggcircleind ON gcircle_tbl USING gist (f1);"}
+{"sql":"SELECT count(*) FROM gpolygon_tbl WHERE f1 && '(1000,1000,0,0)'::polygon","shape":"SELECT count(*) FROM gpolygon_tbl WHERE f1 && '(1000,1000,0,0)'::polygon;"}
+{"sql":"SELECT count(*) FROM gcircle_tbl WHERE f1 && '<(500,500),500>'::circle","shape":"SELECT count(*) FROM gcircle_tbl WHERE f1 && '<(500,500),500>'::circle;"}
+{"sql":"SELECT count(*) FROM point_tbl WHERE f1 <@ box '(0,0,100,100)'","shape":"SELECT count(*) FROM point_tbl WHERE f1 <@ box '(0,0,100,100)';"}
+{"sql":"SELECT count(*) FROM point_tbl WHERE box '(0,0,100,100)' @> f1","shape":"SELECT count(*) FROM point_tbl WHERE box '(0,0,100,100)' @> f1;"}
+{"sql":"SELECT count(*) FROM point_tbl WHERE f1 <@ polygon '(0,0),(0,100),(100,100),(50,50),(100,0),(0,0)'","shape":"SELECT count(*) FROM point_tbl WHERE f1 <@ polygon '(0,0),(0,100),(100,100),(50,50),(100,0),(0,0)';"}
+{"sql":"SELECT count(*) FROM point_tbl WHERE f1 <@ circle '<(50,50),50>'","shape":"SELECT count(*) FROM point_tbl WHERE f1 <@ circle '<(50,50),50>';"}
+{"sql":"SELECT count(*) FROM point_tbl p WHERE p.f1 << '(0.0, 0.0)'","shape":"SELECT count(*) FROM point_tbl AS p WHERE p.f1 << '(0.0, 0.0)';"}
+{"sql":"SELECT count(*) FROM point_tbl p WHERE p.f1 >> '(0.0, 0.0)'","shape":"SELECT count(*) FROM point_tbl AS p WHERE p.f1 >> '(0.0, 0.0)';"}
+{"sql":"SELECT count(*) FROM point_tbl p WHERE p.f1 <<| '(0.0, 0.0)'","shape":"SELECT count(*) FROM point_tbl AS p WHERE p.f1 <<| '(0.0, 0.0)';"}
+{"sql":"SELECT count(*) FROM point_tbl p WHERE p.f1 |>> '(0.0, 0.0)'","shape":"SELECT count(*) FROM point_tbl AS p WHERE p.f1 |>> '(0.0, 0.0)';"}
+{"sql":"SELECT count(*) FROM point_tbl p WHERE p.f1 ~= '(-5, -12)'","shape":"SELECT count(*) FROM point_tbl AS p WHERE p.f1 ~= '(-5, -12)';"}
+{"sql":"SELECT * FROM point_tbl ORDER BY f1 <-> '0,1'","shape":"SELECT * FROM point_tbl ORDER BY f1 <-> '0,1';"}
+{"sql":"SELECT * FROM point_tbl WHERE f1 IS NULL","shape":"SELECT * FROM point_tbl WHERE f1 IS NULL;"}
+{"sql":"SELECT * FROM point_tbl WHERE f1 IS NOT NULL ORDER BY f1 <-> '0,1'","shape":"SELECT * FROM point_tbl WHERE f1 IS NOT NULL ORDER BY f1 <-> '0,1';"}
+{"sql":"SELECT * FROM point_tbl WHERE f1 <@ '(-10,-10),(10,10)':: box ORDER BY f1 <-> '0,1'","shape":"SELECT * FROM point_tbl WHERE f1 <@ '(-10,-10),(10,10)'::box ORDER BY f1 <-> '0,1';"}
+{"sql":"SELECT * FROM gpolygon_tbl ORDER BY f1 <-> '(0,0)'::point LIMIT 10","shape":"SELECT * FROM gpolygon_tbl ORDER BY f1 <-> '(0,0)'::point LIMIT 10;"}
+{"sql":"SELECT circle_center(f1), round(radius(f1)) as radius FROM gcircle_tbl ORDER BY f1 <-> '(200,300)'::point LIMIT 10","shape":"SELECT circle_center(f1), round(radius(f1)) AS radius FROM gcircle_tbl ORDER BY f1 <-> '(200,300)'::point LIMIT 10;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM gpolygon_tbl WHERE f1 && '(1000,1000,0,0)'::polygon","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM gpolygon_tbl WHERE f1 && '(1000,1000,0,0)'::polygon;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM gcircle_tbl WHERE f1 && '<(500,500),500>'::circle","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM gcircle_tbl WHERE f1 && '<(500,500),500>'::circle;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl WHERE f1 <@ box '(0,0,100,100)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl WHERE f1 <@ box '(0,0,100,100)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl WHERE box '(0,0,100,100)' @> f1","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl WHERE box '(0,0,100,100)' @> f1;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl WHERE f1 <@ polygon '(0,0),(0,100),(100,100),(50,50),(100,0),(0,0)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl WHERE f1 <@ polygon '(0,0),(0,100),(100,100),(50,50),(100,0),(0,0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl WHERE f1 <@ circle '<(50,50),50>'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl WHERE f1 <@ circle '<(50,50),50>';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl p WHERE p.f1 << '(0.0, 0.0)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl AS p WHERE p.f1 << '(0.0, 0.0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl p WHERE p.f1 >> '(0.0, 0.0)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl AS p WHERE p.f1 >> '(0.0, 0.0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl p WHERE p.f1 <<| '(0.0, 0.0)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl AS p WHERE p.f1 <<| '(0.0, 0.0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl p WHERE p.f1 |>> '(0.0, 0.0)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl AS p WHERE p.f1 |>> '(0.0, 0.0)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM point_tbl p WHERE p.f1 ~= '(-5, -12)'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM point_tbl AS p WHERE p.f1 ~= '(-5, -12)';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT * FROM point_tbl ORDER BY f1 <-> '0,1'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM point_tbl ORDER BY f1 <-> '0,1';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT * FROM point_tbl WHERE f1 IS NULL","shape":"EXPLAIN (COSTS OFF) SELECT * FROM point_tbl WHERE f1 IS NULL;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT * FROM point_tbl WHERE f1 IS NOT NULL ORDER BY f1 <-> '0,1'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM point_tbl WHERE f1 IS NOT NULL ORDER BY f1 <-> '0,1';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT * FROM point_tbl WHERE f1 <@ '(-10,-10),(10,10)':: box ORDER BY f1 <-> '0,1'","shape":"EXPLAIN (COSTS OFF) SELECT * FROM point_tbl WHERE f1 <@ '(-10,-10),(10,10)'::box ORDER BY f1 <-> '0,1';"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT * FROM gpolygon_tbl ORDER BY f1 <-> '(0,0)'::point LIMIT 10","shape":"EXPLAIN (COSTS OFF) SELECT * FROM gpolygon_tbl ORDER BY f1 <-> '(0,0)'::point LIMIT 10;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT circle_center(f1), round(radius(f1)) as radius FROM gcircle_tbl ORDER BY f1 <-> '(200,300)'::point LIMIT 10","shape":"EXPLAIN (COSTS OFF) SELECT circle_center(f1), round(radius(f1)) AS radius FROM gcircle_tbl ORDER BY f1 <-> '(200,300)'::point LIMIT 10;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT point(x,x), (SELECT f1 FROM gpolygon_tbl ORDER BY f1 <-> point(x,x) LIMIT 1) as c FROM generate_series(0,10,1) x","shape":"EXPLAIN (COSTS OFF) SELECT point(x, x), (SELECT f1 FROM gpolygon_tbl ORDER BY f1 <-> point(x, x) LIMIT 1) AS c FROM generate_series(0, 10, 1) AS x;"}
+{"sql":"SELECT point(x,x), (SELECT f1 FROM gpolygon_tbl ORDER BY f1 <-> point(x,x) LIMIT 1) as c FROM generate_series(0,10,1) x","shape":"SELECT point(x, x), (SELECT f1 FROM gpolygon_tbl ORDER BY f1 <-> point(x, x) LIMIT 1) AS c FROM generate_series(0, 10, 1) AS x;"}
+{"sql":"CREATE TABLE array_index_op_test (\n\tseqno\t\tint4,\n\ti\t\t\tint4[],\n\tt\t\t\ttext[]\n)","shape":"CREATE TABLE array_index_op_test (seqno int4, i int4[], t text[]);"}
+{"sql":"ANALYZE array_index_op_test","shape":"ANALYZE array_index_op_test;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i = '{NULL}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i = '{NULL}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i @> '{NULL}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i @> '{NULL}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i && '{NULL}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i && '{NULL}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i <@ '{NULL}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i <@ '{NULL}' ORDER BY seqno;"}
+{"sql":"CREATE INDEX intarrayidx ON array_index_op_test USING gin (i)","shape":"CREATE INDEX intarrayidx ON array_index_op_test USING gin (i);"}
+{"sql":"explain (costs off)\nSELECT * FROM array_index_op_test WHERE i @> '{32}' ORDER BY seqno","shape":"EXPLAIN (COSTS off) SELECT * FROM array_index_op_test WHERE i @> '{32}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i @> '{32}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i @> '{32}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i && '{32}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i && '{32}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i @> '{17}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i @> '{17}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i && '{17}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i && '{17}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i @> '{32,17}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i @> '{32,17}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i && '{32,17}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i && '{32,17}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i <@ '{38,34,32,89}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i <@ '{38,34,32,89}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i = '{47,77}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i = '{47,77}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i = '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i = '{}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i @> '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i @> '{}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i && '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i && '{}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i <@ '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE i <@ '{}' ORDER BY seqno;"}
+{"sql":"CREATE INDEX textarrayidx ON array_index_op_test USING gin (t)","shape":"CREATE INDEX textarrayidx ON array_index_op_test USING gin (t);"}
+{"sql":"explain (costs off)\nSELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAA72908}' ORDER BY seqno","shape":"EXPLAIN (COSTS off) SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAA72908}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAA72908}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAA72908}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAAA72908}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAAA72908}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAAAA646}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAAAA646}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAAAAA646}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAAAAA646}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAA72908,AAAAAAAAAA646}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAAA72908,AAAAAAAAAA646}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAAA72908,AAAAAAAAAA646}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAAA72908,AAAAAAAAAA646}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t <@ '{AAAAAAAA72908,AAAAAAAAAAAAAAAAAAA17075,AA88409,AAAAAAAAAAAAAAAAAA36842,AAAAAAA48038,AAAAAAAAAAAAAA10611}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t <@ '{AAAAAAAA72908,AAAAAAAAAAAAAAAAAAA17075,AA88409,AAAAAAAAAAAAAAAAAA36842,AAAAAAA48038,AAAAAAAAAAAAAA10611}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t = '{AAAAAAAAAA646,A87088}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t = '{AAAAAAAAAA646,A87088}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t = '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t = '{}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t @> '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t @> '{}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t && '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t && '{}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t <@ '{}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t <@ '{}' ORDER BY seqno;"}
+{"sql":"DROP INDEX intarrayidx, textarrayidx","shape":"DROP INDEX intarrayidx, textarrayidx;"}
+{"sql":"CREATE INDEX botharrayidx ON array_index_op_test USING gin (i, t)","shape":"CREATE INDEX botharrayidx ON array_index_op_test USING gin (i, t);"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAA80240}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t @> '{AAAAAAA80240}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAA80240}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE t && '{AAAAAAA80240}' ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i @> '{32}' AND t && '{AAAAAAA80240}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE (i @> '{32}') AND (t && '{AAAAAAA80240}') ORDER BY seqno;"}
+{"sql":"SELECT * FROM array_index_op_test WHERE i && '{32}' AND t @> '{AAAAAAA80240}' ORDER BY seqno","shape":"SELECT * FROM array_index_op_test WHERE (i && '{32}') AND (t @> '{AAAAAAA80240}') ORDER BY seqno;"}
+{"sql":"CREATE TABLE array_gin_test (a int[])","shape":"CREATE TABLE array_gin_test (a int[]);"}
+{"sql":"INSERT INTO array_gin_test SELECT ARRAY[1, g%5, g] FROM generate_series(1, 10000) g","shape":"INSERT INTO array_gin_test SELECT ARRAY[1, g % 5, g] FROM generate_series(1, 10000) AS g;"}
+{"sql":"CREATE INDEX array_gin_test_idx ON array_gin_test USING gin (a)","shape":"CREATE INDEX array_gin_test_idx ON array_gin_test USING gin (a);"}
+{"sql":"SELECT COUNT(*) FROM array_gin_test WHERE a @> '{2}'","shape":"SELECT COUNT(*) FROM array_gin_test WHERE a @> '{2}';"}
+{"sql":"DROP TABLE array_gin_test","shape":"DROP TABLE array_gin_test;"}
+{"sql":"CREATE INDEX gin_relopts_test ON array_index_op_test USING gin (i)\n  WITH (FASTUPDATE=on, GIN_PENDING_LIST_LIMIT=128)","shape":"CREATE INDEX gin_relopts_test ON array_index_op_test USING gin (i) WITH (FASTUPDATE = on, GIN_PENDING_LIST_LIMIT = 128);"}
+{"sql":"CREATE UNLOGGED TABLE unlogged_hash_table (id int4)","shape":"CREATE UNLOGGED TABLE unlogged_hash_table (id int4);"}
+{"sql":"CREATE INDEX unlogged_hash_index ON unlogged_hash_table USING hash (id int4_ops)","shape":"CREATE INDEX unlogged_hash_index ON unlogged_hash_table USING hash (id int4_ops);"}
+{"sql":"DROP TABLE unlogged_hash_table","shape":"DROP TABLE unlogged_hash_table;"}
+{"sql":"SET maintenance_work_mem = '1MB'","shape":"SET maintenance_work_mem TO '1MB';"}
+{"sql":"CREATE INDEX hash_tuplesort_idx ON tenk1 USING hash (stringu1 name_ops) WITH (fillfactor = 10)","shape":"CREATE INDEX hash_tuplesort_idx ON tenk1 USING hash (stringu1 name_ops) WITH (fillfactor = 10);"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM tenk1 WHERE stringu1 = 'TVAAAA'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM tenk1 WHERE stringu1 = 'TVAAAA';"}
+{"sql":"SELECT count(*) FROM tenk1 WHERE stringu1 = 'TVAAAA'","shape":"SELECT count(*) FROM tenk1 WHERE stringu1 = 'TVAAAA';"}
+{"sql":"DROP INDEX hash_tuplesort_idx","shape":"DROP INDEX hash_tuplesort_idx;"}
+{"sql":"RESET maintenance_work_mem","shape":"RESET maintenance_work_mem;"}
+{"sql":"CREATE TABLE unique_tbl (i int, t text)","shape":"CREATE TABLE unique_tbl (i int, t text);"}
+{"sql":"CREATE UNIQUE INDEX unique_idx1 ON unique_tbl (i) NULLS DISTINCT","shape":"CREATE UNIQUE INDEX unique_idx1 ON unique_tbl (i);"}
+{"sql":"CREATE UNIQUE INDEX unique_idx2 ON unique_tbl (i) NULLS NOT DISTINCT","shape":"CREATE UNIQUE INDEX unique_idx2 ON unique_tbl (i) NULLS NOT DISTINCT;"}
+{"sql":"INSERT INTO unique_tbl VALUES (1, 'one')","shape":"INSERT INTO unique_tbl VALUES (1, 'one');"}
+{"sql":"INSERT INTO unique_tbl VALUES (2, 'two')","shape":"INSERT INTO unique_tbl VALUES (2, 'two');"}
+{"sql":"INSERT INTO unique_tbl VALUES (4, 'four')","shape":"INSERT INTO unique_tbl VALUES (4, 'four');"}
+{"sql":"INSERT INTO unique_tbl (t) VALUES ('six')","shape":"INSERT INTO unique_tbl (t) VALUES ('six');"}
+{"sql":"INSERT INTO unique_tbl (t) VALUES ('seven')","shape":"INSERT INTO unique_tbl (t) VALUES ('seven');"}
+{"sql":"DROP INDEX unique_idx1, unique_idx2","shape":"DROP INDEX unique_idx1, unique_idx2;"}
+{"sql":"CREATE UNIQUE INDEX unique_idx3 ON unique_tbl (i) NULLS DISTINCT","shape":"CREATE UNIQUE INDEX unique_idx3 ON unique_tbl (i);"}
+{"sql":"CREATE UNIQUE INDEX unique_idx4 ON unique_tbl (i) NULLS NOT DISTINCT","shape":"CREATE UNIQUE INDEX unique_idx4 ON unique_tbl (i) NULLS NOT DISTINCT;"}
+{"sql":"DELETE FROM unique_tbl WHERE t = 'seven'","shape":"DELETE FROM unique_tbl WHERE t = 'seven';"}
+{"sql":"SELECT pg_get_indexdef('unique_idx3'::regclass)","shape":"SELECT pg_get_indexdef('unique_idx3'::regclass);"}
+{"sql":"SELECT pg_get_indexdef('unique_idx4'::regclass)","shape":"SELECT pg_get_indexdef('unique_idx4'::regclass);"}
+{"sql":"CREATE TABLE func_index_heap (f1 text, f2 text)","shape":"CREATE TABLE func_index_heap (f1 text, f2 text);"}
+{"sql":"CREATE UNIQUE INDEX func_index_index on func_index_heap (textcat(f1,f2))","shape":"CREATE UNIQUE INDEX func_index_index ON func_index_heap (textcat(f1, f2));"}
+{"sql":"INSERT INTO func_index_heap VALUES('ABC','DEF')","shape":"INSERT INTO func_index_heap VALUES ('ABC', 'DEF');"}
+{"sql":"INSERT INTO func_index_heap VALUES('AB','CDEFG')","shape":"INSERT INTO func_index_heap VALUES ('AB', 'CDEFG');"}
+{"sql":"INSERT INTO func_index_heap VALUES('QWE','RTY')","shape":"INSERT INTO func_index_heap VALUES ('QWE', 'RTY');"}
+{"sql":"INSERT INTO func_index_heap VALUES('ABCD', 'EF')","shape":"INSERT INTO func_index_heap VALUES ('ABCD', 'EF');"}
+{"sql":"INSERT INTO func_index_heap VALUES('QWERTY')","shape":"INSERT INTO func_index_heap VALUES ('QWERTY');"}
+{"sql":"DROP TABLE func_index_heap","shape":"DROP TABLE func_index_heap;"}
+{"sql":"CREATE UNIQUE INDEX func_index_index on func_index_heap ((f1 || f2) text_ops)","shape":"CREATE UNIQUE INDEX func_index_index ON func_index_heap ((f1 || f2) text_ops);"}
+{"sql":"create index on func_index_heap ((f1 || f2), (row(f1, f2)))","shape":"CREATE INDEX ON func_index_heap ((f1 || f2), (ROW(f1, f2)));"}
+{"sql":"CREATE TABLE covering_index_heap (f1 int, f2 int, f3 text)","shape":"CREATE TABLE covering_index_heap (f1 int, f2 int, f3 text);"}
+{"sql":"CREATE UNIQUE INDEX covering_index_index on covering_index_heap (f1,f2) INCLUDE(f3)","shape":"CREATE UNIQUE INDEX covering_index_index ON covering_index_heap (f1, f2) INCLUDE (f3);"}
+{"sql":"INSERT INTO covering_index_heap VALUES(1,1,'AAA')","shape":"INSERT INTO covering_index_heap VALUES (1, 1, 'AAA');"}
+{"sql":"INSERT INTO covering_index_heap VALUES(1,2,'AAA')","shape":"INSERT INTO covering_index_heap VALUES (1, 2, 'AAA');"}
+{"sql":"INSERT INTO covering_index_heap VALUES(1,2,'BBB')","shape":"INSERT INTO covering_index_heap VALUES (1, 2, 'BBB');"}
+{"sql":"INSERT INTO covering_index_heap VALUES(1,4,'AAA')","shape":"INSERT INTO covering_index_heap VALUES (1, 4, 'AAA');"}
+{"sql":"CREATE UNIQUE INDEX covering_pkey on covering_index_heap (f1,f2) INCLUDE(f3)","shape":"CREATE UNIQUE INDEX covering_pkey ON covering_index_heap (f1, f2) INCLUDE (f3);"}
+{"sql":"ALTER TABLE covering_index_heap ADD CONSTRAINT covering_pkey PRIMARY KEY USING INDEX\ncovering_pkey","shape":"ALTER TABLE covering_index_heap ADD CONSTRAINT covering_pkey PRIMARY KEY USING INDEX covering_pkey;"}
+{"sql":"DROP TABLE covering_index_heap","shape":"DROP TABLE covering_index_heap;"}
+{"sql":"CREATE TABLE concur_heap (f1 text, f2 text)","shape":"CREATE TABLE concur_heap (f1 text, f2 text);"}
+{"sql":"CREATE INDEX CONCURRENTLY concur_index1 ON concur_heap(f2,f1)","shape":"CREATE INDEX CONCURRENTLY concur_index1 ON concur_heap (f2, f1);"}
+{"sql":"CREATE INDEX CONCURRENTLY IF NOT EXISTS concur_index1 ON concur_heap(f2,f1)","shape":"CREATE INDEX CONCURRENTLY IF NOT EXISTS concur_index1 ON concur_heap (f2, f1);"}
+{"sql":"INSERT INTO concur_heap VALUES  ('a','b')","shape":"INSERT INTO concur_heap VALUES ('a', 'b');"}
+{"sql":"INSERT INTO concur_heap VALUES  ('b','b')","shape":"INSERT INTO concur_heap VALUES ('b', 'b');"}
+{"sql":"CREATE UNIQUE INDEX CONCURRENTLY concur_index2 ON concur_heap(f1)","shape":"CREATE UNIQUE INDEX CONCURRENTLY concur_index2 ON concur_heap (f1);"}
+{"sql":"CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS concur_index2 ON concur_heap(f1)","shape":"CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS concur_index2 ON concur_heap (f1);"}
+{"sql":"INSERT INTO concur_heap VALUES ('b','x')","shape":"INSERT INTO concur_heap VALUES ('b', 'x');"}
+{"sql":"CREATE UNIQUE INDEX CONCURRENTLY concur_index3 ON concur_heap(f2)","shape":"CREATE UNIQUE INDEX CONCURRENTLY concur_index3 ON concur_heap (f2);"}
+{"sql":"CREATE INDEX CONCURRENTLY concur_index4 on concur_heap(f2) WHERE f1='a'","shape":"CREATE INDEX CONCURRENTLY concur_index4 ON concur_heap (f2) WHERE f1 = 'a';"}
+{"sql":"CREATE INDEX CONCURRENTLY concur_index5 on concur_heap(f2) WHERE f1='x'","shape":"CREATE INDEX CONCURRENTLY concur_index5 ON concur_heap (f2) WHERE f1 = 'x';"}
+{"sql":"CREATE INDEX CONCURRENTLY on concur_heap((f2||f1))","shape":"CREATE INDEX CONCURRENTLY ON concur_heap ((f2 || f1));"}
+{"sql":"CREATE INDEX CONCURRENTLY concur_index7 ON concur_heap(f1)","shape":"CREATE INDEX CONCURRENTLY concur_index7 ON concur_heap (f1);"}
+{"sql":"CREATE FUNCTION predicate_stable() RETURNS bool IMMUTABLE\nLANGUAGE plpgsql AS $$\nBEGIN\n  EXECUTE 'SELECT txid_current()';\n  RETURN true;\nEND; $$","shape":"CREATE FUNCTION predicate_stable() RETURNS bool IMMUTABLE LANGUAGE plpgsql AS '\nBEGIN\n  EXECUTE ''SELECT txid_current()'';\n  RETURN true;\nEND; ';"}
+{"sql":"CREATE INDEX CONCURRENTLY concur_index8 ON concur_heap (f1)\n  WHERE predicate_stable()","shape":"CREATE INDEX CONCURRENTLY concur_index8 ON concur_heap (f1) WHERE predicate_stable();"}
+{"sql":"DROP INDEX concur_index8","shape":"DROP INDEX concur_index8;"}
+{"sql":"DROP FUNCTION predicate_stable()"}
+{"sql":"CREATE INDEX std_index on concur_heap(f2)","shape":"CREATE INDEX std_index ON concur_heap (f2);"}
+{"sql":"VACUUM FULL concur_heap","shape":"VACUUM FULL concur_heap;"}
+{"sql":"REINDEX TABLE concur_heap","shape":"REINDEX TABLE concur_heap;"}
+{"sql":"DELETE FROM concur_heap WHERE f1 = 'b'","shape":"DELETE FROM concur_heap WHERE f1 = 'b';"}
+{"sql":"CREATE TEMP TABLE concur_temp (f1 int, f2 text)\n  ON COMMIT PRESERVE ROWS","shape":"CREATE TEMPORARY TABLE concur_temp (f1 int, f2 text) ON COMMIT PRESERVE ROWS;"}
+{"sql":"INSERT INTO concur_temp VALUES (1, 'foo'), (2, 'bar')","shape":"INSERT INTO concur_temp VALUES (1, 'foo'), (2, 'bar');"}
+{"sql":"CREATE INDEX CONCURRENTLY concur_temp_ind ON concur_temp(f1)","shape":"CREATE INDEX CONCURRENTLY concur_temp_ind ON concur_temp (f1);"}
+{"sql":"DROP INDEX CONCURRENTLY concur_temp_ind","shape":"DROP INDEX CONCURRENTLY concur_temp_ind;"}
+{"sql":"DROP TABLE concur_temp","shape":"DROP TABLE concur_temp;"}
+{"sql":"CREATE TEMP TABLE concur_temp (f1 int, f2 text)\n  ON COMMIT DROP","shape":"CREATE TEMPORARY TABLE concur_temp (f1 int, f2 text) ON COMMIT DROP;"}
+{"sql":"CREATE TEMP TABLE concur_temp (f1 int, f2 text)\n  ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE concur_temp (f1 int, f2 text) ON COMMIT DELETE ROWS;"}
+{"sql":"DROP INDEX CONCURRENTLY \"concur_index2\"","shape":"DROP INDEX CONCURRENTLY \"concur_index2\";"}
+{"sql":"DROP INDEX CONCURRENTLY IF EXISTS \"concur_index2\"","shape":"DROP INDEX CONCURRENTLY IF EXISTS \"concur_index2\";"}
+{"sql":"DROP INDEX CONCURRENTLY \"concur_index2\", \"concur_index3\"","shape":"DROP INDEX CONCURRENTLY \"concur_index2\", \"concur_index3\";"}
+{"sql":"DROP INDEX CONCURRENTLY \"concur_index5\"","shape":"DROP INDEX CONCURRENTLY \"concur_index5\";"}
+{"sql":"DROP INDEX CONCURRENTLY IF EXISTS \"concur_index3\"","shape":"DROP INDEX CONCURRENTLY IF EXISTS \"concur_index3\";"}
+{"sql":"DROP INDEX CONCURRENTLY \"concur_index4\"","shape":"DROP INDEX CONCURRENTLY \"concur_index4\";"}
+{"sql":"DROP INDEX CONCURRENTLY \"concur_index1\"","shape":"DROP INDEX CONCURRENTLY \"concur_index1\";"}
+{"sql":"DROP INDEX CONCURRENTLY \"concur_heap_expr_idx\"","shape":"DROP INDEX CONCURRENTLY \"concur_heap_expr_idx\";"}
+{"sql":"DROP TABLE concur_heap","shape":"DROP TABLE concur_heap;"}
+{"sql":"CREATE TABLE cwi_test( a int , b varchar(10), c char)","shape":"CREATE TABLE cwi_test (a int, b varchar(10), c char);"}
+{"sql":"INSERT INTO cwi_test VALUES(1, 2), (3, 4), (5, 6)","shape":"INSERT INTO cwi_test VALUES (1, 2), (3, 4), (5, 6);"}
+{"sql":"CREATE UNIQUE INDEX cwi_uniq_idx ON cwi_test(a , b)","shape":"CREATE UNIQUE INDEX cwi_uniq_idx ON cwi_test (a, b);"}
+{"sql":"ALTER TABLE cwi_test ADD primary key USING INDEX cwi_uniq_idx","shape":"ALTER TABLE cwi_test ADD PRIMARY KEY USING INDEX cwi_uniq_idx;"}
+{"sql":"CREATE UNIQUE INDEX cwi_uniq2_idx ON cwi_test(b , a)","shape":"CREATE UNIQUE INDEX cwi_uniq2_idx ON cwi_test (b, a);"}
+{"sql":"ALTER TABLE cwi_test DROP CONSTRAINT cwi_uniq_idx,\n\tADD CONSTRAINT cwi_replaced_pkey PRIMARY KEY\n\t\tUSING INDEX cwi_uniq2_idx","shape":"ALTER TABLE cwi_test DROP CONSTRAINT cwi_uniq_idx, ADD CONSTRAINT cwi_replaced_pkey PRIMARY KEY USING INDEX cwi_uniq2_idx;"}
+{"sql":"DROP INDEX cwi_replaced_pkey","shape":"DROP INDEX cwi_replaced_pkey;"}
+{"sql":"CREATE UNIQUE INDEX cwi_uniq3_idx ON cwi_test(a desc)","shape":"CREATE UNIQUE INDEX cwi_uniq3_idx ON cwi_test (a DESC);"}
+{"sql":"ALTER TABLE cwi_test ADD UNIQUE USING INDEX cwi_uniq3_idx","shape":"ALTER TABLE cwi_test ADD UNIQUE USING INDEX cwi_uniq3_idx;"}
+{"sql":"CREATE UNIQUE INDEX cwi_uniq4_idx ON cwi_test(b collate \"POSIX\")","shape":"CREATE UNIQUE INDEX cwi_uniq4_idx ON cwi_test (b COLLATE \"POSIX\");"}
+{"sql":"ALTER TABLE cwi_test ADD UNIQUE USING INDEX cwi_uniq4_idx","shape":"ALTER TABLE cwi_test ADD UNIQUE USING INDEX cwi_uniq4_idx;"}
+{"sql":"DROP TABLE cwi_test","shape":"DROP TABLE cwi_test;"}
+{"sql":"CREATE TABLE cwi_test(a int) PARTITION BY hash (a)","shape":"CREATE TABLE cwi_test (a int) PARTITION BY HASH (a);"}
+{"sql":"create unique index on cwi_test (a)","shape":"CREATE UNIQUE INDEX ON cwi_test (a);"}
+{"sql":"alter table cwi_test add primary key using index cwi_test_a_idx","shape":"ALTER TABLE cwi_test ADD PRIMARY KEY USING INDEX cwi_test_a_idx;"}
+{"sql":"CREATE TABLE cwi_test(a int, b int)","shape":"CREATE TABLE cwi_test (a int, b int);"}
+{"sql":"CREATE UNIQUE INDEX cwi_a_nnd ON cwi_test (a) NULLS NOT DISTINCT","shape":"CREATE UNIQUE INDEX cwi_a_nnd ON cwi_test (a) NULLS NOT DISTINCT;"}
+{"sql":"ALTER TABLE cwi_test ADD PRIMARY KEY USING INDEX cwi_a_nnd","shape":"ALTER TABLE cwi_test ADD PRIMARY KEY USING INDEX cwi_a_nnd;"}
+{"sql":"CREATE TABLE syscol_table (a INT)","shape":"CREATE TABLE syscol_table (a INT);"}
+{"sql":"CREATE INDEX ON syscol_table (ctid)","shape":"CREATE INDEX ON syscol_table (ctid);"}
+{"sql":"CREATE INDEX ON syscol_table ((ctid >= '(1000,0)'))","shape":"CREATE INDEX ON syscol_table ((ctid >= '(1000,0)'));"}
+{"sql":"CREATE INDEX ON syscol_table (a) WHERE ctid >= '(1000,0)'","shape":"CREATE INDEX ON syscol_table (a) WHERE ctid >= '(1000,0)';"}
+{"sql":"DROP TABLE syscol_table","shape":"DROP TABLE syscol_table;"}
+{"sql":"CREATE TABLE onek_with_null AS SELECT unique1, unique2 FROM onek","shape":"CREATE TABLE onek_with_null AS SELECT unique1, unique2 FROM onek;"}
+{"sql":"INSERT INTO onek_with_null (unique1,unique2) VALUES (NULL, -1), (NULL, NULL)","shape":"INSERT INTO onek_with_null (unique1, unique2) VALUES (NULL, -1), (NULL, NULL);"}
+{"sql":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2,unique1)","shape":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2, unique1);"}
+{"sql":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NULL","shape":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NULL;"}
+{"sql":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NULL AND unique2 IS NULL","shape":"SELECT count(*) FROM onek_with_null WHERE (unique1 IS NULL) AND (unique2 IS NULL);"}
+{"sql":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NOT NULL","shape":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NOT NULL;"}
+{"sql":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NULL AND unique2 IS NOT NULL","shape":"SELECT count(*) FROM onek_with_null WHERE (unique1 IS NULL) AND (unique2 IS NOT NULL);"}
+{"sql":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NOT NULL AND unique1 > 500","shape":"SELECT count(*) FROM onek_with_null WHERE (unique1 IS NOT NULL) AND (unique1 > 500);"}
+{"sql":"SELECT count(*) FROM onek_with_null WHERE unique1 IS NULL AND unique1 > 500","shape":"SELECT count(*) FROM onek_with_null WHERE (unique1 IS NULL) AND (unique1 > 500);"}
+{"sql":"DROP INDEX onek_nulltest","shape":"DROP INDEX onek_nulltest;"}
+{"sql":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2 desc,unique1)","shape":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2 DESC, unique1);"}
+{"sql":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2 desc nulls last,unique1)","shape":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2 DESC NULLS LAST, unique1);"}
+{"sql":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2  nulls first,unique1)","shape":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2 NULLS FIRST, unique1);"}
+{"sql":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2)","shape":"CREATE UNIQUE INDEX onek_nulltest ON onek_with_null (unique2);"}
+{"sql":"SELECT unique1, unique2 FROM onek_with_null\n  ORDER BY unique2 LIMIT 2","shape":"SELECT unique1, unique2 FROM onek_with_null ORDER BY unique2 LIMIT 2;"}
+{"sql":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 >= -1\n  ORDER BY unique2 LIMIT 2","shape":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 >= (-1) ORDER BY unique2 LIMIT 2;"}
+{"sql":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 >= 0\n  ORDER BY unique2 LIMIT 2","shape":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 >= 0 ORDER BY unique2 LIMIT 2;"}
+{"sql":"SELECT unique1, unique2 FROM onek_with_null\n  ORDER BY unique2 DESC LIMIT 2","shape":"SELECT unique1, unique2 FROM onek_with_null ORDER BY unique2 DESC LIMIT 2;"}
+{"sql":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 >= -1\n  ORDER BY unique2 DESC LIMIT 2","shape":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 >= (-1) ORDER BY unique2 DESC LIMIT 2;"}
+{"sql":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 < 999\n  ORDER BY unique2 DESC LIMIT 2","shape":"SELECT unique1, unique2 FROM onek_with_null WHERE unique2 < 999 ORDER BY unique2 DESC LIMIT 2;"}
+{"sql":"DROP TABLE onek_with_null","shape":"DROP TABLE onek_with_null;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT * FROM tenk1\n  WHERE thousand = 42 AND (tenthous = 1 OR tenthous = 3 OR tenthous = 42)","shape":"EXPLAIN (COSTS OFF) SELECT * FROM tenk1 WHERE (thousand = 42) AND (((tenthous = 1) OR (tenthous = 3)) OR (tenthous = 42));"}
+{"sql":"SELECT * FROM tenk1\n  WHERE thousand = 42 AND (tenthous = 1 OR tenthous = 3 OR tenthous = 42)","shape":"SELECT * FROM tenk1 WHERE (thousand = 42) AND (((tenthous = 1) OR (tenthous = 3)) OR (tenthous = 42));"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT count(*) FROM tenk1\n  WHERE hundred = 42 AND (thousand = 42 OR thousand = 99)","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM tenk1 WHERE (hundred = 42) AND ((thousand = 42) OR (thousand = 99));"}
+{"sql":"SELECT count(*) FROM tenk1\n  WHERE hundred = 42 AND (thousand = 42 OR thousand = 99)","shape":"SELECT count(*) FROM tenk1 WHERE (hundred = 42) AND ((thousand = 42) OR (thousand = 99));"}
+{"sql":"CREATE TABLE dupindexcols AS\n  SELECT unique1 as id, stringu2::text as f1 FROM tenk1","shape":"CREATE TABLE dupindexcols AS SELECT unique1 AS id, stringu2::text AS f1 FROM tenk1;"}
+{"sql":"CREATE INDEX dupindexcols_i ON dupindexcols (f1, id, f1 text_pattern_ops)","shape":"CREATE INDEX dupindexcols_i ON dupindexcols (f1, id, f1 text_pattern_ops);"}
+{"sql":"ANALYZE dupindexcols","shape":"ANALYZE dupindexcols;"}
+{"sql":"EXPLAIN (COSTS OFF)\n  SELECT count(*) FROM dupindexcols\n    WHERE f1 BETWEEN 'WA' AND 'ZZZ' and id < 1000 and f1 ~<~ 'YX'","shape":"EXPLAIN (COSTS OFF) SELECT count(*) FROM dupindexcols WHERE ((f1 BETWEEN 'WA' AND 'ZZZ') AND (id < 1000)) AND (f1 ~<~ 'YX');"}
+{"sql":"SELECT count(*) FROM dupindexcols\n  WHERE f1 BETWEEN 'WA' AND 'ZZZ' and id < 1000 and f1 ~<~ 'YX'","shape":"SELECT count(*) FROM dupindexcols WHERE ((f1 BETWEEN 'WA' AND 'ZZZ') AND (id < 1000)) AND (f1 ~<~ 'YX');"}
+{"sql":"explain (costs off)\nSELECT unique1 FROM tenk1\nWHERE unique1 IN (1,42,7)\nORDER BY unique1","shape":"EXPLAIN (COSTS off) SELECT unique1 FROM tenk1 WHERE unique1 IN (1, 42, 7) ORDER BY unique1;"}
+{"sql":"SELECT unique1 FROM tenk1\nWHERE unique1 IN (1,42,7)\nORDER BY unique1","shape":"SELECT unique1 FROM tenk1 WHERE unique1 IN (1, 42, 7) ORDER BY unique1;"}
+{"sql":"explain (costs off)\nSELECT thousand, tenthous FROM tenk1\nWHERE thousand < 2 AND tenthous IN (1001,3000)\nORDER BY thousand","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous FROM tenk1 WHERE (thousand < 2) AND (tenthous IN (1001, 3000)) ORDER BY thousand;"}
+{"sql":"SELECT thousand, tenthous FROM tenk1\nWHERE thousand < 2 AND tenthous IN (1001,3000)\nORDER BY thousand","shape":"SELECT thousand, tenthous FROM tenk1 WHERE (thousand < 2) AND (tenthous IN (1001, 3000)) ORDER BY thousand;"}
+{"sql":"SET enable_indexonlyscan = OFF","shape":"SET enable_indexonlyscan TO OFF;"}
+{"sql":"RESET enable_indexonlyscan","shape":"RESET enable_indexonlyscan;"}
+{"sql":"explain (costs off)\n  select * from tenk1 where (thousand, tenthous) in ((1,1001), (null,null))","shape":"EXPLAIN (COSTS off) SELECT * FROM tenk1 WHERE (thousand, tenthous) IN ((1, 1001), (NULL, NULL));"}
+{"sql":"create temp table boolindex (b bool, i int, unique(b, i), junk float)"}
+{"sql":"explain (costs off)\n  select * from boolindex order by b, i limit 10","shape":"EXPLAIN (COSTS off) SELECT * FROM boolindex ORDER BY b, i LIMIT 10;"}
+{"sql":"explain (costs off)\n  select * from boolindex where b order by i limit 10","shape":"EXPLAIN (COSTS off) SELECT * FROM boolindex WHERE b ORDER BY i LIMIT 10;"}
+{"sql":"explain (costs off)\n  select * from boolindex where b = true order by i desc limit 10","shape":"EXPLAIN (COSTS off) SELECT * FROM boolindex WHERE b = TRUE ORDER BY i DESC LIMIT 10;"}
+{"sql":"explain (costs off)\n  select * from boolindex where not b order by i limit 10","shape":"EXPLAIN (COSTS off) SELECT * FROM boolindex WHERE NOT b ORDER BY i LIMIT 10;"}
+{"sql":"explain (costs off)\n  select * from boolindex where b is true order by i desc limit 10","shape":"EXPLAIN (COSTS off) SELECT * FROM boolindex WHERE b IS TRUE ORDER BY i DESC LIMIT 10;"}
+{"sql":"explain (costs off)\n  select * from boolindex where b is false order by i desc limit 10","shape":"EXPLAIN (COSTS off) SELECT * FROM boolindex WHERE b IS FALSE ORDER BY i DESC LIMIT 10;"}
+{"sql":"CREATE TABLE reindex_verbose(id integer primary key)","shape":"CREATE TABLE reindex_verbose (id integer PRIMARY KEY);"}
+{"sql":"REINDEX (VERBOSE) TABLE reindex_verbose","shape":"REINDEX (VERBOSE) TABLE reindex_verbose;"}
+{"sql":"DROP TABLE reindex_verbose","shape":"DROP TABLE reindex_verbose;"}
+{"sql":"CREATE TABLE concur_reindex_tab (c1 int)","shape":"CREATE TABLE concur_reindex_tab (c1 int);"}
+{"sql":"REINDEX TABLE concur_reindex_tab","shape":"REINDEX TABLE concur_reindex_tab;"}
+{"sql":"REINDEX (CONCURRENTLY) TABLE concur_reindex_tab","shape":"REINDEX (CONCURRENTLY) TABLE concur_reindex_tab;"}
+{"sql":"ALTER TABLE concur_reindex_tab ADD COLUMN c2 text","shape":"ALTER TABLE concur_reindex_tab ADD COLUMN c2 text;"}
+{"sql":"CREATE UNIQUE INDEX concur_reindex_ind1 ON concur_reindex_tab(c1)","shape":"CREATE UNIQUE INDEX concur_reindex_ind1 ON concur_reindex_tab (c1);"}
+{"sql":"CREATE INDEX concur_reindex_ind2 ON concur_reindex_tab(c2)","shape":"CREATE INDEX concur_reindex_ind2 ON concur_reindex_tab (c2);"}
+{"sql":"CREATE UNIQUE INDEX concur_reindex_ind3 ON concur_reindex_tab(abs(c1))","shape":"CREATE UNIQUE INDEX concur_reindex_ind3 ON concur_reindex_tab (abs(c1));"}
+{"sql":"CREATE INDEX concur_reindex_ind4 ON concur_reindex_tab(c1, c1, c2)","shape":"CREATE INDEX concur_reindex_ind4 ON concur_reindex_tab (c1, c1, c2);"}
+{"sql":"ALTER TABLE concur_reindex_tab ADD PRIMARY KEY USING INDEX concur_reindex_ind1","shape":"ALTER TABLE concur_reindex_tab ADD PRIMARY KEY USING INDEX concur_reindex_ind1;"}
+{"sql":"CREATE TABLE concur_reindex_tab2 (c1 int REFERENCES concur_reindex_tab)","shape":"CREATE TABLE concur_reindex_tab2 (c1 int REFERENCES concur_reindex_tab);"}
+{"sql":"INSERT INTO concur_reindex_tab VALUES  (1, 'a')","shape":"INSERT INTO concur_reindex_tab VALUES (1, 'a');"}
+{"sql":"INSERT INTO concur_reindex_tab VALUES  (2, 'a')","shape":"INSERT INTO concur_reindex_tab VALUES (2, 'a');"}
+{"sql":"CREATE TABLE concur_reindex_tab3 (c1 int, c2 int4range, EXCLUDE USING gist (c2 WITH &&))","shape":"CREATE TABLE concur_reindex_tab3 (c1 int, c2 int4range, EXCLUDE USING gist (c2 WITH &&));"}
+{"sql":"INSERT INTO concur_reindex_tab3 VALUES  (3, '[1,2]')","shape":"INSERT INTO concur_reindex_tab3 VALUES (3, '[1,2]');"}
+{"sql":"REINDEX INDEX CONCURRENTLY  concur_reindex_tab3_c2_excl","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_tab3_c2_excl;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_tab3","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_tab3;"}
+{"sql":"INSERT INTO concur_reindex_tab3 VALUES  (4, '[2,4]')","shape":"INSERT INTO concur_reindex_tab3 VALUES (4, '[2,4]');"}
+{"sql":"CREATE MATERIALIZED VIEW concur_reindex_matview AS SELECT * FROM concur_reindex_tab","shape":"CREATE MATERIALIZED VIEW concur_reindex_matview AS SELECT * FROM concur_reindex_tab;"}
+{"sql":"SELECT pg_describe_object(classid, objid, objsubid) as obj,\n       pg_describe_object(refclassid,refobjid,refobjsubid) as objref,\n       deptype\nFROM pg_depend\nWHERE classid = 'pg_class'::regclass AND\n  objid in ('concur_reindex_tab'::regclass,\n            'concur_reindex_ind1'::regclass,\n\t    'concur_reindex_ind2'::regclass,\n\t    'concur_reindex_ind3'::regclass,\n\t    'concur_reindex_ind4'::regclass,\n\t    'concur_reindex_matview'::regclass)\n  ORDER BY 1, 2","shape":"SELECT pg_describe_object(classid, objid, objsubid) AS obj, pg_describe_object(refclassid, refobjid, refobjsubid) AS objref, deptype FROM pg_depend WHERE (classid = 'pg_class'::regclass) AND (objid IN ('concur_reindex_tab'::regclass, 'concur_reindex_ind1'::regclass, 'concur_reindex_ind2'::regclass, 'concur_reindex_ind3'::regclass, 'concur_reindex_ind4'::regclass, 'concur_reindex_matview'::regclass)) ORDER BY 1, 2;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_ind1","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_ind1;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_tab","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_tab;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_matview","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_matview;"}
+{"sql":"CREATE TABLE testcomment (i int)","shape":"CREATE TABLE testcomment (i int);"}
+{"sql":"CREATE INDEX testcomment_idx1 ON testcomment (i)","shape":"CREATE INDEX testcomment_idx1 ON testcomment (i);"}
+{"sql":"COMMENT ON INDEX testcomment_idx1 IS 'test comment'","shape":"COMMENT ON INDEX testcomment_idx1 IS 'test comment';"}
+{"sql":"SELECT obj_description('testcomment_idx1'::regclass, 'pg_class')","shape":"SELECT obj_description('testcomment_idx1'::regclass, 'pg_class');"}
+{"sql":"REINDEX TABLE testcomment","shape":"REINDEX TABLE testcomment;"}
+{"sql":"REINDEX TABLE CONCURRENTLY testcomment","shape":"REINDEX TABLE CONCURRENTLY testcomment;"}
+{"sql":"DROP TABLE testcomment","shape":"DROP TABLE testcomment;"}
+{"sql":"CREATE TABLE concur_clustered(i int)","shape":"CREATE TABLE concur_clustered (i int);"}
+{"sql":"CREATE INDEX concur_clustered_i_idx ON concur_clustered(i)","shape":"CREATE INDEX concur_clustered_i_idx ON concur_clustered (i);"}
+{"sql":"ALTER TABLE concur_clustered CLUSTER ON concur_clustered_i_idx"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_clustered","shape":"REINDEX TABLE CONCURRENTLY concur_clustered;"}
+{"sql":"SELECT indexrelid::regclass, indisclustered FROM pg_index\n  WHERE indrelid = 'concur_clustered'::regclass","shape":"SELECT indexrelid::regclass, indisclustered FROM pg_index WHERE indrelid = 'concur_clustered'::regclass;"}
+{"sql":"DROP TABLE concur_clustered","shape":"DROP TABLE concur_clustered;"}
+{"sql":"CREATE TABLE concur_replident(i int NOT NULL)","shape":"CREATE TABLE concur_replident (i int NOT NULL);"}
+{"sql":"CREATE UNIQUE INDEX concur_replident_i_idx ON concur_replident(i)","shape":"CREATE UNIQUE INDEX concur_replident_i_idx ON concur_replident (i);"}
+{"sql":"ALTER TABLE concur_replident REPLICA IDENTITY\n  USING INDEX concur_replident_i_idx"}
+{"sql":"SELECT indexrelid::regclass, indisreplident FROM pg_index\n  WHERE indrelid = 'concur_replident'::regclass","shape":"SELECT indexrelid::regclass, indisreplident FROM pg_index WHERE indrelid = 'concur_replident'::regclass;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_replident","shape":"REINDEX TABLE CONCURRENTLY concur_replident;"}
+{"sql":"DROP TABLE concur_replident","shape":"DROP TABLE concur_replident;"}
+{"sql":"CREATE TABLE concur_appclass_tab(i tsvector, j tsvector, k tsvector)","shape":"CREATE TABLE concur_appclass_tab (i tsvector, j tsvector, k tsvector);"}
+{"sql":"CREATE INDEX concur_appclass_ind on concur_appclass_tab\n  USING gist (i tsvector_ops (siglen='1000'), j tsvector_ops (siglen='500'))","shape":"CREATE INDEX concur_appclass_ind ON concur_appclass_tab USING gist (i tsvector_ops(siglen = '1000'), j tsvector_ops(siglen = '500'));"}
+{"sql":"CREATE INDEX concur_appclass_ind_2 on concur_appclass_tab\n  USING gist (k tsvector_ops (siglen='300'), j tsvector_ops)","shape":"CREATE INDEX concur_appclass_ind_2 ON concur_appclass_tab USING gist (k tsvector_ops(siglen = '300'), j tsvector_ops);"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_appclass_tab","shape":"REINDEX TABLE CONCURRENTLY concur_appclass_tab;"}
+{"sql":"DROP TABLE concur_appclass_tab","shape":"DROP TABLE concur_appclass_tab;"}
+{"sql":"CREATE TABLE concur_reindex_part (c1 int, c2 int) PARTITION BY RANGE (c1)","shape":"CREATE TABLE concur_reindex_part (c1 int, c2 int) PARTITION BY RANGE (c1);"}
+{"sql":"CREATE TABLE concur_reindex_part_0 PARTITION OF concur_reindex_part\n  FOR VALUES FROM (0) TO (10) PARTITION BY list (c2)","shape":"CREATE TABLE concur_reindex_part_0 PARTITION OF concur_reindex_part FOR VALUES FROM (0) TO (10) PARTITION BY LIST (c2);"}
+{"sql":"CREATE TABLE concur_reindex_part_0_1 PARTITION OF concur_reindex_part_0\n  FOR VALUES IN (1)","shape":"CREATE TABLE concur_reindex_part_0_1 PARTITION OF concur_reindex_part_0 FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE concur_reindex_part_0_2 PARTITION OF concur_reindex_part_0\n  FOR VALUES IN (2)","shape":"CREATE TABLE concur_reindex_part_0_2 PARTITION OF concur_reindex_part_0 FOR VALUES IN (2);"}
+{"sql":"CREATE TABLE concur_reindex_part_10 PARTITION OF concur_reindex_part\n  FOR VALUES FROM (10) TO (20) PARTITION BY list (c2)","shape":"CREATE TABLE concur_reindex_part_10 PARTITION OF concur_reindex_part FOR VALUES FROM (10) TO (20) PARTITION BY LIST (c2);"}
+{"sql":"CREATE INDEX concur_reindex_part_index ON ONLY concur_reindex_part (c1)","shape":"CREATE INDEX concur_reindex_part_index ON ONLY concur_reindex_part (c1);"}
+{"sql":"CREATE INDEX concur_reindex_part_index_0 ON ONLY concur_reindex_part_0 (c1)","shape":"CREATE INDEX concur_reindex_part_index_0 ON ONLY concur_reindex_part_0 (c1);"}
+{"sql":"ALTER INDEX concur_reindex_part_index ATTACH PARTITION concur_reindex_part_index_0"}
+{"sql":"CREATE INDEX concur_reindex_part_index_10 ON ONLY concur_reindex_part_10 (c1)","shape":"CREATE INDEX concur_reindex_part_index_10 ON ONLY concur_reindex_part_10 (c1);"}
+{"sql":"ALTER INDEX concur_reindex_part_index ATTACH PARTITION concur_reindex_part_index_10"}
+{"sql":"CREATE INDEX concur_reindex_part_index_0_1 ON ONLY concur_reindex_part_0_1 (c1)","shape":"CREATE INDEX concur_reindex_part_index_0_1 ON ONLY concur_reindex_part_0_1 (c1);"}
+{"sql":"ALTER INDEX concur_reindex_part_index_0 ATTACH PARTITION concur_reindex_part_index_0_1"}
+{"sql":"CREATE INDEX concur_reindex_part_index_0_2 ON ONLY concur_reindex_part_0_2 (c1)","shape":"CREATE INDEX concur_reindex_part_index_0_2 ON ONLY concur_reindex_part_0_2 (c1);"}
+{"sql":"ALTER INDEX concur_reindex_part_index_0 ATTACH PARTITION concur_reindex_part_index_0_2"}
+{"sql":"SELECT relid, parentrelid, level FROM pg_partition_tree('concur_reindex_part_index')\n  ORDER BY relid, level","shape":"SELECT relid, parentrelid, level FROM pg_partition_tree('concur_reindex_part_index') ORDER BY relid, level;"}
+{"sql":"SELECT pg_describe_object(classid, objid, objsubid) as obj,\n       pg_describe_object(refclassid,refobjid,refobjsubid) as objref,\n       deptype\nFROM pg_depend\nWHERE classid = 'pg_class'::regclass AND\n  objid in ('concur_reindex_part'::regclass,\n            'concur_reindex_part_0'::regclass,\n            'concur_reindex_part_0_1'::regclass,\n            'concur_reindex_part_0_2'::regclass,\n            'concur_reindex_part_index'::regclass,\n            'concur_reindex_part_index_0'::regclass,\n            'concur_reindex_part_index_0_1'::regclass,\n            'concur_reindex_part_index_0_2'::regclass)\n  ORDER BY 1, 2","shape":"SELECT pg_describe_object(classid, objid, objsubid) AS obj, pg_describe_object(refclassid, refobjid, refobjsubid) AS objref, deptype FROM pg_depend WHERE (classid = 'pg_class'::regclass) AND (objid IN ('concur_reindex_part'::regclass, 'concur_reindex_part_0'::regclass, 'concur_reindex_part_0_1'::regclass, 'concur_reindex_part_0_2'::regclass, 'concur_reindex_part_index'::regclass, 'concur_reindex_part_index_0'::regclass, 'concur_reindex_part_index_0_1'::regclass, 'concur_reindex_part_index_0_2'::regclass)) ORDER BY 1, 2;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_part_index_0_1","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_part_index_0_1;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_part_index_0_2","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_part_index_0_2;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_part_0_1","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_part_0_1;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_part_0_2","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_part_0_2;"}
+{"sql":"REINDEX TABLE concur_reindex_part_index","shape":"REINDEX TABLE concur_reindex_part_index;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_part_index","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_part_index;"}
+{"sql":"REINDEX TABLE concur_reindex_part_index_10","shape":"REINDEX TABLE concur_reindex_part_index_10;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_part_index_10","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_part_index_10;"}
+{"sql":"REINDEX INDEX concur_reindex_part_index","shape":"REINDEX INDEX concur_reindex_part_index;"}
+{"sql":"CREATE OR REPLACE FUNCTION create_relfilenode_part(relname text, indname text)\n  RETURNS VOID AS\n  $func$\n  BEGIN\n  EXECUTE format('\n    CREATE TABLE %I AS\n      SELECT oid, relname, relfilenode, relkind, reltoastrelid\n      FROM pg_class\n      WHERE oid IN\n         (SELECT relid FROM pg_partition_tree(''%I''));',\n\t relname, indname);\n  END\n  $func$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION create_relfilenode_part(relname text, indname text) RETURNS VOID AS '\n  BEGIN\n  EXECUTE format(''\n    CREATE TABLE %I AS\n      SELECT oid, relname, relfilenode, relkind, reltoastrelid\n      FROM pg_class\n      WHERE oid IN\n         (SELECT relid FROM pg_partition_tree(''''%I''''));'',\n\t relname, indname);\n  END\n  ' LANGUAGE plpgsql;"}
+{"sql":"CREATE OR REPLACE FUNCTION compare_relfilenode_part(tabname text)\n  RETURNS TABLE (relname name, relkind \"char\", state text) AS\n  $func$\n  BEGIN\n    RETURN QUERY EXECUTE\n      format(\n        'SELECT  b.relname,\n                 b.relkind,\n                 CASE WHEN a.relfilenode = b.relfilenode THEN ''relfilenode is unchanged''\n                 ELSE ''relfilenode has changed'' END\n           -- Do not join with OID here as CONCURRENTLY changes it.\n           FROM %I b JOIN pg_class a ON b.relname = a.relname\n           ORDER BY 1;', tabname);\n  END\n  $func$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION compare_relfilenode_part(tabname text) RETURNS TABLE (relname name, relkind \"char\", state text) AS '\n  BEGIN\n    RETURN QUERY EXECUTE\n      format(\n        ''SELECT  b.relname,\n                 b.relkind,\n                 CASE WHEN a.relfilenode = b.relfilenode THEN ''''relfilenode is unchanged''''\n                 ELSE ''''relfilenode has changed'''' END\n           -- Do not join with OID here as CONCURRENTLY changes it.\n           FROM %I b JOIN pg_class a ON b.relname = a.relname\n           ORDER BY 1;'', tabname);\n  END\n  ' LANGUAGE plpgsql;"}
+{"sql":"SELECT create_relfilenode_part('reindex_index_status', 'concur_reindex_part_index')","shape":"SELECT create_relfilenode_part('reindex_index_status', 'concur_reindex_part_index');"}
+{"sql":"SELECT * FROM compare_relfilenode_part('reindex_index_status')","shape":"SELECT * FROM compare_relfilenode_part('reindex_index_status');"}
+{"sql":"DROP TABLE reindex_index_status","shape":"DROP TABLE reindex_index_status;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_part_index","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_part_index;"}
+{"sql":"REINDEX INDEX concur_reindex_part","shape":"REINDEX INDEX concur_reindex_part;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_part","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_part;"}
+{"sql":"REINDEX INDEX concur_reindex_part_10","shape":"REINDEX INDEX concur_reindex_part_10;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_part_10","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_part_10;"}
+{"sql":"REINDEX TABLE concur_reindex_part","shape":"REINDEX TABLE concur_reindex_part;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_part","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_part;"}
+{"sql":"DROP FUNCTION create_relfilenode_part"}
+{"sql":"DROP FUNCTION compare_relfilenode_part"}
+{"sql":"DROP TABLE concur_reindex_part","shape":"DROP TABLE concur_reindex_part;"}
+{"sql":"REINDEX TABLE CONCURRENTLY pg_class","shape":"REINDEX TABLE CONCURRENTLY pg_class;"}
+{"sql":"REINDEX INDEX CONCURRENTLY pg_class_oid_index","shape":"REINDEX INDEX CONCURRENTLY pg_class_oid_index;"}
+{"sql":"REINDEX TABLE CONCURRENTLY pg_toast.pg_toast_1260","shape":"REINDEX TABLE CONCURRENTLY pg_toast.pg_toast_1260;"}
+{"sql":"REINDEX INDEX CONCURRENTLY pg_toast.pg_toast_1260_index","shape":"REINDEX INDEX CONCURRENTLY pg_toast.pg_toast_1260_index;"}
+{"sql":"REINDEX SYSTEM CONCURRENTLY postgres","shape":"REINDEX SYSTEM CONCURRENTLY postgres;"}
+{"sql":"REINDEX (CONCURRENTLY) SYSTEM postgres","shape":"REINDEX (CONCURRENTLY) SYSTEM postgres;"}
+{"sql":"REINDEX (CONCURRENTLY) SYSTEM","shape":"REINDEX (CONCURRENTLY) SYSTEM;"}
+{"sql":"REINDEX SCHEMA CONCURRENTLY pg_catalog","shape":"REINDEX SCHEMA CONCURRENTLY pg_catalog;"}
+{"sql":"REINDEX DATABASE not_current_database","shape":"REINDEX DATABASE not_current_database;"}
+{"sql":"DROP MATERIALIZED VIEW concur_reindex_matview","shape":"DROP MATERIALIZED VIEW concur_reindex_matview;"}
+{"sql":"DROP TABLE concur_reindex_tab, concur_reindex_tab2, concur_reindex_tab3","shape":"DROP TABLE concur_reindex_tab, concur_reindex_tab2, concur_reindex_tab3;"}
+{"sql":"CREATE TABLE concur_reindex_tab4 (c1 int)","shape":"CREATE TABLE concur_reindex_tab4 (c1 int);"}
+{"sql":"INSERT INTO concur_reindex_tab4 VALUES (1), (1), (2)","shape":"INSERT INTO concur_reindex_tab4 VALUES (1), (1), (2);"}
+{"sql":"CREATE UNIQUE INDEX CONCURRENTLY concur_reindex_ind5 ON concur_reindex_tab4 (c1)","shape":"CREATE UNIQUE INDEX CONCURRENTLY concur_reindex_ind5 ON concur_reindex_tab4 (c1);"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_reindex_ind5","shape":"REINDEX INDEX CONCURRENTLY concur_reindex_ind5;"}
+{"sql":"DROP INDEX concur_reindex_ind5_ccnew","shape":"DROP INDEX concur_reindex_ind5_ccnew;"}
+{"sql":"DELETE FROM concur_reindex_tab4 WHERE c1 = 1","shape":"DELETE FROM concur_reindex_tab4 WHERE c1 = 1;"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_reindex_tab4","shape":"REINDEX TABLE CONCURRENTLY concur_reindex_tab4;"}
+{"sql":"DROP TABLE concur_reindex_tab4","shape":"DROP TABLE concur_reindex_tab4;"}
+{"sql":"CREATE TABLE concur_exprs_tab (c1 int , c2 boolean)","shape":"CREATE TABLE concur_exprs_tab (c1 int, c2 boolean);"}
+{"sql":"INSERT INTO concur_exprs_tab (c1, c2) VALUES (1369652450, FALSE),\n  (414515746, TRUE),\n  (897778963, FALSE)","shape":"INSERT INTO concur_exprs_tab (c1, c2) VALUES (1369652450, FALSE), (414515746, TRUE), (897778963, FALSE);"}
+{"sql":"CREATE UNIQUE INDEX concur_exprs_index_expr\n  ON concur_exprs_tab ((c1::text COLLATE \"C\"))","shape":"CREATE UNIQUE INDEX concur_exprs_index_expr ON concur_exprs_tab ((c1::text COLLATE \"C\"));"}
+{"sql":"CREATE UNIQUE INDEX concur_exprs_index_pred ON concur_exprs_tab (c1)\n  WHERE (c1::text > 500000000::text COLLATE \"C\")","shape":"CREATE UNIQUE INDEX concur_exprs_index_pred ON concur_exprs_tab (c1) WHERE (c1::text > (500000000::text COLLATE \"C\"));"}
+{"sql":"CREATE UNIQUE INDEX concur_exprs_index_pred_2\n  ON concur_exprs_tab ((1 / c1))\n  WHERE ('-H') >= (c2::TEXT) COLLATE \"C\"","shape":"CREATE UNIQUE INDEX concur_exprs_index_pred_2 ON concur_exprs_tab ((1 / c1)) WHERE ('-H') >= ((c2::TEXT) COLLATE \"C\");"}
+{"sql":"ALTER INDEX concur_exprs_index_expr ALTER COLUMN 1 SET STATISTICS 100"}
+{"sql":"ANALYZE concur_exprs_tab","shape":"ANALYZE concur_exprs_tab;"}
+{"sql":"SELECT starelid::regclass, count(*) FROM pg_statistic WHERE starelid IN (\n  'concur_exprs_index_expr'::regclass,\n  'concur_exprs_index_pred'::regclass,\n  'concur_exprs_index_pred_2'::regclass)\n  GROUP BY starelid ORDER BY starelid::regclass::text","shape":"SELECT starelid::regclass, count(*) FROM pg_statistic WHERE starelid IN ('concur_exprs_index_expr'::regclass, 'concur_exprs_index_pred'::regclass, 'concur_exprs_index_pred_2'::regclass) GROUP BY starelid ORDER BY starelid::regclass::text;"}
+{"sql":"SELECT pg_get_indexdef('concur_exprs_index_expr'::regclass)","shape":"SELECT pg_get_indexdef('concur_exprs_index_expr'::regclass);"}
+{"sql":"SELECT pg_get_indexdef('concur_exprs_index_pred'::regclass)","shape":"SELECT pg_get_indexdef('concur_exprs_index_pred'::regclass);"}
+{"sql":"SELECT pg_get_indexdef('concur_exprs_index_pred_2'::regclass)","shape":"SELECT pg_get_indexdef('concur_exprs_index_pred_2'::regclass);"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_exprs_tab","shape":"REINDEX TABLE CONCURRENTLY concur_exprs_tab;"}
+{"sql":"ALTER TABLE concur_exprs_tab ALTER c2 TYPE TEXT","shape":"ALTER TABLE concur_exprs_tab ALTER COLUMN c2 SET DATA TYPE TEXT;"}
+{"sql":"SELECT attrelid::regclass, attnum, attstattarget\n  FROM pg_attribute WHERE attrelid IN (\n    'concur_exprs_index_expr'::regclass,\n    'concur_exprs_index_pred'::regclass,\n    'concur_exprs_index_pred_2'::regclass)\n  ORDER BY attrelid::regclass::text, attnum","shape":"SELECT attrelid::regclass, attnum, attstattarget FROM pg_attribute WHERE attrelid IN ('concur_exprs_index_expr'::regclass, 'concur_exprs_index_pred'::regclass, 'concur_exprs_index_pred_2'::regclass) ORDER BY attrelid::regclass::text, attnum;"}
+{"sql":"DROP TABLE concur_exprs_tab","shape":"DROP TABLE concur_exprs_tab;"}
+{"sql":"CREATE TEMP TABLE concur_temp_tab_1 (c1 int, c2 text)\n  ON COMMIT PRESERVE ROWS","shape":"CREATE TEMPORARY TABLE concur_temp_tab_1 (c1 int, c2 text) ON COMMIT PRESERVE ROWS;"}
+{"sql":"INSERT INTO concur_temp_tab_1 VALUES (1, 'foo'), (2, 'bar')","shape":"INSERT INTO concur_temp_tab_1 VALUES (1, 'foo'), (2, 'bar');"}
+{"sql":"CREATE INDEX concur_temp_ind_1 ON concur_temp_tab_1(c2)","shape":"CREATE INDEX concur_temp_ind_1 ON concur_temp_tab_1 (c2);"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_temp_tab_1","shape":"REINDEX TABLE CONCURRENTLY concur_temp_tab_1;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_temp_ind_1","shape":"REINDEX INDEX CONCURRENTLY concur_temp_ind_1;"}
+{"sql":"CREATE TEMP TABLE concur_temp_tab_2 (c1 int, c2 text)\n  ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE concur_temp_tab_2 (c1 int, c2 text) ON COMMIT DELETE ROWS;"}
+{"sql":"CREATE INDEX concur_temp_ind_2 ON concur_temp_tab_2(c2)","shape":"CREATE INDEX concur_temp_ind_2 ON concur_temp_tab_2 (c2);"}
+{"sql":"REINDEX TABLE CONCURRENTLY concur_temp_tab_2","shape":"REINDEX TABLE CONCURRENTLY concur_temp_tab_2;"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_temp_ind_2","shape":"REINDEX INDEX CONCURRENTLY concur_temp_ind_2;"}
+{"sql":"CREATE TEMP TABLE concur_temp_tab_3 (c1 int, c2 text)\n  ON COMMIT PRESERVE ROWS","shape":"CREATE TEMPORARY TABLE concur_temp_tab_3 (c1 int, c2 text) ON COMMIT PRESERVE ROWS;"}
+{"sql":"INSERT INTO concur_temp_tab_3 VALUES (1, 'foo'), (2, 'bar')","shape":"INSERT INTO concur_temp_tab_3 VALUES (1, 'foo'), (2, 'bar');"}
+{"sql":"CREATE INDEX concur_temp_ind_3 ON concur_temp_tab_3(c2)","shape":"CREATE INDEX concur_temp_ind_3 ON concur_temp_tab_3 (c2);"}
+{"sql":"REINDEX INDEX CONCURRENTLY concur_temp_ind_3","shape":"REINDEX INDEX CONCURRENTLY concur_temp_ind_3;"}
+{"sql":"CREATE TABLE reindex_temp_before AS\nSELECT oid, relname, relfilenode, relkind, reltoastrelid\n  FROM pg_class\n  WHERE relname IN ('concur_temp_ind_1', 'concur_temp_ind_2')","shape":"CREATE TABLE reindex_temp_before AS SELECT oid, relname, relfilenode, relkind, reltoastrelid FROM pg_class WHERE relname IN ('concur_temp_ind_1', 'concur_temp_ind_2');"}
+{"sql":"SELECT pg_my_temp_schema()::regnamespace as temp_schema_name","shape":"SELECT pg_my_temp_schema()::regnamespace AS temp_schema_name;"}
+{"sql":"SELECT  b.relname,\n        b.relkind,\n        CASE WHEN a.relfilenode = b.relfilenode THEN 'relfilenode is unchanged'\n        ELSE 'relfilenode has changed' END\n  FROM reindex_temp_before b JOIN pg_class a ON b.oid = a.oid\n  ORDER BY 1","shape":"SELECT b.relname, b.relkind, CASE WHEN a.relfilenode = b.relfilenode THEN 'relfilenode is unchanged' ELSE 'relfilenode has changed' END FROM reindex_temp_before AS b JOIN pg_class AS a ON b.oid = a.oid ORDER BY 1;"}
+{"sql":"DROP TABLE concur_temp_tab_1, concur_temp_tab_2, reindex_temp_before","shape":"DROP TABLE concur_temp_tab_1, concur_temp_tab_2, reindex_temp_before;"}
+{"sql":"REINDEX SCHEMA schema_to_reindex","shape":"REINDEX SCHEMA schema_to_reindex;"}
+{"sql":"CREATE SCHEMA schema_to_reindex","shape":"CREATE SCHEMA schema_to_reindex;"}
+{"sql":"SET search_path = 'schema_to_reindex'","shape":"SET search_path TO 'schema_to_reindex';"}
+{"sql":"CREATE TABLE table1(col1 SERIAL PRIMARY KEY)","shape":"CREATE TABLE table1 (col1 SERIAL PRIMARY KEY);"}
+{"sql":"INSERT INTO table1 SELECT generate_series(1,400)","shape":"INSERT INTO table1 SELECT generate_series(1, 400);"}
+{"sql":"CREATE TABLE table2(col1 SERIAL PRIMARY KEY, col2 TEXT NOT NULL)","shape":"CREATE TABLE table2 (col1 SERIAL PRIMARY KEY, col2 TEXT NOT NULL);"}
+{"sql":"INSERT INTO table2 SELECT generate_series(1,400), 'abc'","shape":"INSERT INTO table2 SELECT generate_series(1, 400), 'abc';"}
+{"sql":"CREATE INDEX ON table2(col2)","shape":"CREATE INDEX ON table2 (col2);"}
+{"sql":"CREATE MATERIALIZED VIEW matview AS SELECT col1 FROM table2","shape":"CREATE MATERIALIZED VIEW matview AS SELECT col1 FROM table2;"}
+{"sql":"CREATE INDEX ON matview(col1)","shape":"CREATE INDEX ON matview (col1);"}
+{"sql":"CREATE VIEW view AS SELECT col2 FROM table2","shape":"CREATE VIEW view AS SELECT col2 FROM table2;"}
+{"sql":"CREATE TABLE reindex_before AS\nSELECT oid, relname, relfilenode, relkind, reltoastrelid\n\tFROM pg_class\n\twhere relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'schema_to_reindex')","shape":"CREATE TABLE reindex_before AS SELECT oid, relname, relfilenode, relkind, reltoastrelid FROM pg_class WHERE relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'schema_to_reindex');"}
+{"sql":"INSERT INTO reindex_before\nSELECT oid, 'pg_toast_TABLE', relfilenode, relkind, reltoastrelid\nFROM pg_class WHERE oid IN\n\t(SELECT reltoastrelid FROM reindex_before WHERE reltoastrelid > 0)","shape":"INSERT INTO reindex_before SELECT oid, 'pg_toast_TABLE', relfilenode, relkind, reltoastrelid FROM pg_class WHERE oid IN (SELECT reltoastrelid FROM reindex_before WHERE reltoastrelid > 0);"}
+{"sql":"INSERT INTO reindex_before\nSELECT oid, 'pg_toast_TABLE_index', relfilenode, relkind, reltoastrelid\nFROM pg_class where oid in\n\t(select indexrelid from pg_index where indrelid in\n\t\t(select reltoastrelid from reindex_before where reltoastrelid > 0))","shape":"INSERT INTO reindex_before SELECT oid, 'pg_toast_TABLE_index', relfilenode, relkind, reltoastrelid FROM pg_class WHERE oid IN (SELECT indexrelid FROM pg_index WHERE indrelid IN (SELECT reltoastrelid FROM reindex_before WHERE reltoastrelid > 0));"}
+{"sql":"CREATE TABLE reindex_after AS SELECT oid, relname, relfilenode, relkind\n\tFROM pg_class\n\twhere relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'schema_to_reindex')","shape":"CREATE TABLE reindex_after AS SELECT oid, relname, relfilenode, relkind FROM pg_class WHERE relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'schema_to_reindex');"}
+{"sql":"SELECT  b.relname,\n        b.relkind,\n        CASE WHEN a.relfilenode = b.relfilenode THEN 'relfilenode is unchanged'\n        ELSE 'relfilenode has changed' END\n  FROM reindex_before b JOIN pg_class a ON b.oid = a.oid\n  ORDER BY 1","shape":"SELECT b.relname, b.relkind, CASE WHEN a.relfilenode = b.relfilenode THEN 'relfilenode is unchanged' ELSE 'relfilenode has changed' END FROM reindex_before AS b JOIN pg_class AS a ON b.oid = a.oid ORDER BY 1;"}
+{"sql":"END","shape":"COMMIT;"}
+{"sql":"REINDEX SCHEMA CONCURRENTLY schema_to_reindex","shape":"REINDEX SCHEMA CONCURRENTLY schema_to_reindex;"}
+{"sql":"CREATE ROLE regress_reindexuser NOLOGIN"}
+{"sql":"SET SESSION ROLE regress_reindexuser"}
+{"sql":"GRANT USAGE ON SCHEMA pg_toast TO regress_reindexuser","shape":"GRANT USAGE ON SCHEMA pg_toast TO regress_reindexuser;"}
+{"sql":"REINDEX TABLE pg_toast.pg_toast_1260","shape":"REINDEX TABLE pg_toast.pg_toast_1260;"}
+{"sql":"REINDEX INDEX pg_toast.pg_toast_1260_index","shape":"REINDEX INDEX pg_toast.pg_toast_1260_index;"}
+{"sql":"REVOKE USAGE ON SCHEMA pg_toast FROM regress_reindexuser","shape":"REVOKE USAGE ON SCHEMA pg_toast FROM regress_reindexuser;"}
+{"sql":"DROP ROLE regress_reindexuser","shape":"DROP ROLE regress_reindexuser;"}
+{"sql":"DROP SCHEMA schema_to_reindex CASCADE","shape":"DROP SCHEMA schema_to_reindex CASCADE;"}

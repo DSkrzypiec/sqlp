@@ -1,0 +1,161 @@
+{"sql":"create event trigger regress_event_trigger\n   on ddl_command_start\n   execute procedure pg_backend_pid()"}
+{"sql":"create function test_event_trigger() returns event_trigger as $$\nBEGIN\n    RAISE NOTICE 'test_event_trigger: % %', tg_event, tg_tag;\nEND\n$$ language plpgsql","shape":"CREATE FUNCTION test_event_trigger() RETURNS event_trigger AS '\nBEGIN\n    RAISE NOTICE ''test_event_trigger: % %'', tg_event, tg_tag;\nEND\n' LANGUAGE plpgsql;"}
+{"sql":"SELECT test_event_trigger()","shape":"SELECT test_event_trigger();"}
+{"sql":"create function test_event_trigger_arg(name text)\nreturns event_trigger as $$ BEGIN RETURN 1; END $$ language plpgsql","shape":"CREATE FUNCTION test_event_trigger_arg(name text) RETURNS event_trigger AS ' BEGIN RETURN 1; END ' LANGUAGE plpgsql;"}
+{"sql":"create function test_event_trigger_sql() returns event_trigger as $$\nSELECT 1 $$ language sql","shape":"CREATE FUNCTION test_event_trigger_sql() RETURNS event_trigger AS '\nSELECT 1 ' LANGUAGE sql;"}
+{"sql":"create event trigger regress_event_trigger on elephant_bootstrap\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger on ddl_command_start\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger_end on ddl_command_end\n   execute function test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when food in ('sandwich')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('sandwich')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('create table', 'create skunkcabbage')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('DROP EVENT TRIGGER')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('CREATE ROLE')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('CREATE DATABASE')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('CREATE TABLESPACE')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('create table') and tag in ('CREATE FUNCTION')\n   execute procedure test_event_trigger()"}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   execute procedure test_event_trigger('argument not allowed')","reject":true}
+{"sql":"create event trigger regress_event_trigger2 on ddl_command_start\n   when tag in ('create table', 'CREATE FUNCTION')\n   execute procedure test_event_trigger()"}
+{"sql":"comment on event trigger regress_event_trigger is 'test comment'"}
+{"sql":"create role regress_evt_user"}
+{"sql":"set role regress_evt_user"}
+{"sql":"create event trigger regress_event_trigger_noperms on ddl_command_start\n   execute procedure test_event_trigger()"}
+{"sql":"reset role","shape":"RESET role;"}
+{"sql":"alter event trigger regress_event_trigger disable"}
+{"sql":"create table event_trigger_fire1 (a int)","shape":"CREATE TABLE event_trigger_fire1 (a int);"}
+{"sql":"alter event trigger regress_event_trigger enable"}
+{"sql":"set session_replication_role = replica","shape":"SET session_replication_role TO replica;"}
+{"sql":"create table event_trigger_fire2 (a int)","shape":"CREATE TABLE event_trigger_fire2 (a int);"}
+{"sql":"alter event trigger regress_event_trigger enable replica"}
+{"sql":"create table event_trigger_fire3 (a int)","shape":"CREATE TABLE event_trigger_fire3 (a int);"}
+{"sql":"alter event trigger regress_event_trigger enable always"}
+{"sql":"create table event_trigger_fire4 (a int)","shape":"CREATE TABLE event_trigger_fire4 (a int);"}
+{"sql":"reset session_replication_role","shape":"RESET session_replication_role;"}
+{"sql":"create table event_trigger_fire5 (a int)","shape":"CREATE TABLE event_trigger_fire5 (a int);"}
+{"sql":"create function f1() returns int\nlanguage plpgsql\nas $$\nbegin\n  create table event_trigger_fire6 (a int);\n  return 0;\nend $$","shape":"CREATE FUNCTION f1() RETURNS int LANGUAGE plpgsql AS '\nbegin\n  create table event_trigger_fire6 (a int);\n  return 0;\nend ';"}
+{"sql":"select f1()","shape":"SELECT f1();"}
+{"sql":"create procedure p1()\nlanguage plpgsql\nas $$\nbegin\n  create table event_trigger_fire7 (a int);\nend $$","shape":"CREATE PROCEDURE p1() LANGUAGE plpgsql AS '\nbegin\n  create table event_trigger_fire7 (a int);\nend ';"}
+{"sql":"call p1()","shape":"CALL p1();"}
+{"sql":"drop table event_trigger_fire2, event_trigger_fire3, event_trigger_fire4, event_trigger_fire5, event_trigger_fire6, event_trigger_fire7","shape":"DROP TABLE event_trigger_fire2, event_trigger_fire3, event_trigger_fire4, event_trigger_fire5, event_trigger_fire6, event_trigger_fire7;"}
+{"sql":"drop routine f1(), p1()"}
+{"sql":"grant all on table event_trigger_fire1 to public","shape":"GRANT ALL PRIVILEGES ON TABLE event_trigger_fire1 TO PUBLIC;"}
+{"sql":"comment on table event_trigger_fire1 is 'here is a comment'","shape":"COMMENT ON TABLE event_trigger_fire1 IS 'here is a comment';"}
+{"sql":"revoke all on table event_trigger_fire1 from public","shape":"REVOKE ALL PRIVILEGES ON TABLE event_trigger_fire1 FROM PUBLIC;"}
+{"sql":"drop table event_trigger_fire1","shape":"DROP TABLE event_trigger_fire1;"}
+{"sql":"create foreign data wrapper useless"}
+{"sql":"create server useless_server foreign data wrapper useless"}
+{"sql":"create user mapping for regress_evt_user server useless_server"}
+{"sql":"alter default privileges for role regress_evt_user\n revoke delete on tables from regress_evt_user"}
+{"sql":"alter event trigger regress_event_trigger owner to regress_evt_user"}
+{"sql":"alter role regress_evt_user superuser"}
+{"sql":"alter event trigger regress_event_trigger rename to regress_event_trigger2"}
+{"sql":"alter event trigger regress_event_trigger rename to regress_event_trigger3"}
+{"sql":"drop event trigger regress_event_trigger"}
+{"sql":"drop role regress_evt_user","shape":"DROP ROLE regress_evt_user;"}
+{"sql":"drop event trigger if exists regress_event_trigger2"}
+{"sql":"drop event trigger regress_event_trigger3"}
+{"sql":"drop event trigger regress_event_trigger_end"}
+{"sql":"CREATE SCHEMA schema_one authorization regress_evt_user","shape":"CREATE SCHEMA schema_one AUTHORIZATION regress_evt_user;"}
+{"sql":"CREATE SCHEMA schema_two authorization regress_evt_user","shape":"CREATE SCHEMA schema_two AUTHORIZATION regress_evt_user;"}
+{"sql":"CREATE SCHEMA audit_tbls authorization regress_evt_user","shape":"CREATE SCHEMA audit_tbls AUTHORIZATION regress_evt_user;"}
+{"sql":"CREATE TEMP TABLE a_temp_tbl ()","shape":"CREATE TEMPORARY TABLE a_temp_tbl ();"}
+{"sql":"SET SESSION AUTHORIZATION regress_evt_user"}
+{"sql":"CREATE TABLE schema_one.table_one(a int)","shape":"CREATE TABLE schema_one.table_one (a int);"}
+{"sql":"CREATE TABLE schema_one.\"table two\"(a int)","shape":"CREATE TABLE schema_one.\"table two\" (a int);"}
+{"sql":"CREATE TABLE schema_one.table_three(a int)","shape":"CREATE TABLE schema_one.table_three (a int);"}
+{"sql":"CREATE TABLE audit_tbls.schema_one_table_two(the_value text)","shape":"CREATE TABLE audit_tbls.schema_one_table_two (the_value text);"}
+{"sql":"CREATE TABLE schema_two.table_two(a int)","shape":"CREATE TABLE schema_two.table_two (a int);"}
+{"sql":"CREATE TABLE schema_two.table_three(a int, b text)","shape":"CREATE TABLE schema_two.table_three (a int, b text);"}
+{"sql":"CREATE TABLE audit_tbls.schema_two_table_three(the_value text)","shape":"CREATE TABLE audit_tbls.schema_two_table_three (the_value text);"}
+{"sql":"CREATE OR REPLACE FUNCTION schema_two.add(int, int) RETURNS int LANGUAGE plpgsql\n  CALLED ON NULL INPUT\n  AS $$ BEGIN RETURN coalesce($1,0) + coalesce($2,0); END; $$","shape":"CREATE OR REPLACE FUNCTION schema_two.add(int, int) RETURNS int LANGUAGE plpgsql CALLED ON NULL INPUT AS ' BEGIN RETURN coalesce($1,0) + coalesce($2,0); END; ';"}
+{"sql":"CREATE AGGREGATE schema_two.newton\n  (BASETYPE = int, SFUNC = schema_two.add, STYPE = int)"}
+{"sql":"CREATE TABLE undroppable_objs (\n\tobject_type text,\n\tobject_identity text\n)","shape":"CREATE TABLE undroppable_objs (object_type text, object_identity text);"}
+{"sql":"INSERT INTO undroppable_objs VALUES\n('table', 'schema_one.table_three'),\n('table', 'audit_tbls.schema_two_table_three')","shape":"INSERT INTO undroppable_objs VALUES ('table', 'schema_one.table_three'), ('table', 'audit_tbls.schema_two_table_three');"}
+{"sql":"CREATE TABLE dropped_objects (\n\tobject_type text,\n\tschema_name text,\n\tobject_name text,\n\tobject_identity text,\n\taddress_names text[],\n\taddress_args text[],\n\tis_temporary bool,\n\toriginal bool,\n\tnormal bool\n)","shape":"CREATE TABLE dropped_objects (object_type text, schema_name text, object_name text, object_identity text, address_names text[], address_args text[], is_temporary bool, original bool, normal bool);"}
+{"sql":"CREATE OR REPLACE FUNCTION undroppable() RETURNS event_trigger\nLANGUAGE plpgsql AS $$\nDECLARE\n\tobj record;\nBEGIN\n\tPERFORM 1 FROM pg_tables WHERE tablename = 'undroppable_objs';\n\tIF NOT FOUND THEN\n\t\tRAISE NOTICE 'table undroppable_objs not found, skipping';\n\t\tRETURN;\n\tEND IF;\n\tFOR obj IN\n\t\tSELECT * FROM pg_event_trigger_dropped_objects() JOIN\n\t\t\tundroppable_objs USING (object_type, object_identity)\n\tLOOP\n\t\tRAISE EXCEPTION 'object % of type % cannot be dropped',\n\t\t\tobj.object_identity, obj.object_type;\n\tEND LOOP;\nEND;\n$$","shape":"CREATE OR REPLACE FUNCTION undroppable() RETURNS event_trigger LANGUAGE plpgsql AS '\nDECLARE\n\tobj record;\nBEGIN\n\tPERFORM 1 FROM pg_tables WHERE tablename = ''undroppable_objs'';\n\tIF NOT FOUND THEN\n\t\tRAISE NOTICE ''table undroppable_objs not found, skipping'';\n\t\tRETURN;\n\tEND IF;\n\tFOR obj IN\n\t\tSELECT * FROM pg_event_trigger_dropped_objects() JOIN\n\t\t\tundroppable_objs USING (object_type, object_identity)\n\tLOOP\n\t\tRAISE EXCEPTION ''object % of type % cannot be dropped'',\n\t\t\tobj.object_identity, obj.object_type;\n\tEND LOOP;\nEND;\n';"}
+{"sql":"CREATE EVENT TRIGGER undroppable ON sql_drop\n\tEXECUTE PROCEDURE undroppable()"}
+{"sql":"CREATE OR REPLACE FUNCTION test_evtrig_dropped_objects() RETURNS event_trigger\nLANGUAGE plpgsql AS $$\nDECLARE\n    obj record;\nBEGIN\n    FOR obj IN SELECT * FROM pg_event_trigger_dropped_objects()\n    LOOP\n        IF obj.object_type = 'table' THEN\n                EXECUTE format('DROP TABLE IF EXISTS audit_tbls.%I',\n\t\t\t\t\tformat('%s_%s', obj.schema_name, obj.object_name));\n        END IF;\n\n\tINSERT INTO dropped_objects\n\t\t(object_type, schema_name, object_name,\n\t\t object_identity, address_names, address_args,\n\t\t is_temporary, original, normal) VALUES\n\t\t(obj.object_type, obj.schema_name, obj.object_name,\n\t\t obj.object_identity, obj.address_names, obj.address_args,\n\t\t obj.is_temporary, obj.original, obj.normal);\n    END LOOP;\nEND\n$$","shape":"CREATE OR REPLACE FUNCTION test_evtrig_dropped_objects() RETURNS event_trigger LANGUAGE plpgsql AS '\nDECLARE\n    obj record;\nBEGIN\n    FOR obj IN SELECT * FROM pg_event_trigger_dropped_objects()\n    LOOP\n        IF obj.object_type = ''table'' THEN\n                EXECUTE format(''DROP TABLE IF EXISTS audit_tbls.%I'',\n\t\t\t\t\tformat(''%s_%s'', obj.schema_name, obj.object_name));\n        END IF;\n\n\tINSERT INTO dropped_objects\n\t\t(object_type, schema_name, object_name,\n\t\t object_identity, address_names, address_args,\n\t\t is_temporary, original, normal) VALUES\n\t\t(obj.object_type, obj.schema_name, obj.object_name,\n\t\t obj.object_identity, obj.address_names, obj.address_args,\n\t\t obj.is_temporary, obj.original, obj.normal);\n    END LOOP;\nEND\n';"}
+{"sql":"CREATE EVENT TRIGGER regress_event_trigger_drop_objects ON sql_drop\n\tWHEN TAG IN ('drop table', 'drop function', 'drop view',\n\t\t'drop owned', 'drop schema', 'alter table')\n\tEXECUTE PROCEDURE test_evtrig_dropped_objects()"}
+{"sql":"ALTER TABLE schema_one.table_one DROP COLUMN a","shape":"ALTER TABLE schema_one.table_one DROP COLUMN a;"}
+{"sql":"DROP SCHEMA schema_one, schema_two CASCADE","shape":"DROP SCHEMA schema_one, schema_two CASCADE;"}
+{"sql":"DELETE FROM undroppable_objs WHERE object_identity = 'audit_tbls.schema_two_table_three'","shape":"DELETE FROM undroppable_objs WHERE object_identity = 'audit_tbls.schema_two_table_three';"}
+{"sql":"DELETE FROM undroppable_objs WHERE object_identity = 'schema_one.table_three'","shape":"DELETE FROM undroppable_objs WHERE object_identity = 'schema_one.table_three';"}
+{"sql":"SELECT * FROM dropped_objects\n  WHERE schema_name IS NULL OR schema_name <> 'pg_toast'","shape":"SELECT * FROM dropped_objects WHERE (schema_name IS NULL) OR (schema_name <> 'pg_toast');"}
+{"sql":"DROP OWNED BY regress_evt_user"}
+{"sql":"SELECT * FROM dropped_objects WHERE object_type = 'schema'","shape":"SELECT * FROM dropped_objects WHERE object_type = 'schema';"}
+{"sql":"DROP ROLE regress_evt_user","shape":"DROP ROLE regress_evt_user;"}
+{"sql":"DROP EVENT TRIGGER regress_event_trigger_drop_objects"}
+{"sql":"DROP EVENT TRIGGER undroppable"}
+{"sql":"CREATE OR REPLACE FUNCTION event_trigger_report_dropped()\n RETURNS event_trigger\n LANGUAGE plpgsql\nAS $$\nDECLARE r record;\nBEGIN\n    FOR r IN SELECT * from pg_event_trigger_dropped_objects()\n    LOOP\n    IF NOT r.normal AND NOT r.original THEN\n        CONTINUE;\n    END IF;\n    RAISE NOTICE 'NORMAL: orig=% normal=% istemp=% type=% identity=% schema=% name=% addr=% args=%',\n        r.original, r.normal, r.is_temporary, r.object_type,\n        r.object_identity, r.schema_name, r.object_name,\n        r.address_names, r.address_args;\n    END LOOP;\nEND; $$","shape":"CREATE OR REPLACE FUNCTION event_trigger_report_dropped() RETURNS event_trigger LANGUAGE plpgsql AS '\nDECLARE r record;\nBEGIN\n    FOR r IN SELECT * from pg_event_trigger_dropped_objects()\n    LOOP\n    IF NOT r.normal AND NOT r.original THEN\n        CONTINUE;\n    END IF;\n    RAISE NOTICE ''NORMAL: orig=% normal=% istemp=% type=% identity=% schema=% name=% addr=% args=%'',\n        r.original, r.normal, r.is_temporary, r.object_type,\n        r.object_identity, r.schema_name, r.object_name,\n        r.address_names, r.address_args;\n    END LOOP;\nEND; ';"}
+{"sql":"CREATE EVENT TRIGGER regress_event_trigger_report_dropped ON sql_drop\n    EXECUTE PROCEDURE event_trigger_report_dropped()"}
+{"sql":"CREATE OR REPLACE FUNCTION event_trigger_report_end()\n RETURNS event_trigger\n LANGUAGE plpgsql\nAS $$\nDECLARE r RECORD;\nBEGIN\n    FOR r IN SELECT * FROM pg_event_trigger_ddl_commands()\n    LOOP\n        RAISE NOTICE 'END: command_tag=% type=% identity=%',\n            r.command_tag, r.object_type, r.object_identity;\n    END LOOP;\nEND; $$","shape":"CREATE OR REPLACE FUNCTION event_trigger_report_end() RETURNS event_trigger LANGUAGE plpgsql AS '\nDECLARE r RECORD;\nBEGIN\n    FOR r IN SELECT * FROM pg_event_trigger_ddl_commands()\n    LOOP\n        RAISE NOTICE ''END: command_tag=% type=% identity=%'',\n            r.command_tag, r.object_type, r.object_identity;\n    END LOOP;\nEND; ';"}
+{"sql":"CREATE EVENT TRIGGER regress_event_trigger_report_end ON ddl_command_end\n  EXECUTE PROCEDURE event_trigger_report_end()"}
+{"sql":"CREATE SCHEMA evttrig\n\tCREATE TABLE one (col_a SERIAL PRIMARY KEY, col_b text DEFAULT 'forty two', col_c SERIAL)\n\tCREATE INDEX one_idx ON one (col_b)\n\tCREATE TABLE two (col_c INTEGER CHECK (col_c > 0) REFERENCES one DEFAULT 42)\n\tCREATE TABLE id (col_d int NOT NULL GENERATED ALWAYS AS IDENTITY)","shape":"CREATE SCHEMA evttrig CREATE TABLE one (col_a SERIAL PRIMARY KEY, col_b text DEFAULT 'forty two', col_c SERIAL) CREATE INDEX one_idx ON one (col_b) CREATE TABLE two (col_c INTEGER CHECK (col_c > 0) REFERENCES one DEFAULT 42) CREATE TABLE id (col_d int NOT NULL GENERATED ALWAYS AS IDENTITY);"}
+{"sql":"CREATE TABLE evttrig.parted (\n    id int PRIMARY KEY)\n    PARTITION BY RANGE (id)","shape":"CREATE TABLE evttrig.parted (id int PRIMARY KEY) PARTITION BY RANGE (id);"}
+{"sql":"CREATE TABLE evttrig.part_1_10 PARTITION OF evttrig.parted (id)\n  FOR VALUES FROM (1) TO (10)","shape":"CREATE TABLE evttrig.part_1_10 PARTITION OF evttrig.parted (id) FOR VALUES FROM (1) TO (10);"}
+{"sql":"CREATE TABLE evttrig.part_10_20 PARTITION OF evttrig.parted (id)\n  FOR VALUES FROM (10) TO (20) PARTITION BY RANGE (id)","shape":"CREATE TABLE evttrig.part_10_20 PARTITION OF evttrig.parted (id) FOR VALUES FROM (10) TO (20) PARTITION BY RANGE (id);"}
+{"sql":"CREATE TABLE evttrig.part_10_15 PARTITION OF evttrig.part_10_20 (id)\n  FOR VALUES FROM (10) TO (15)","shape":"CREATE TABLE evttrig.part_10_15 PARTITION OF evttrig.part_10_20 (id) FOR VALUES FROM (10) TO (15);"}
+{"sql":"CREATE TABLE evttrig.part_15_20 PARTITION OF evttrig.part_10_20 (id)\n  FOR VALUES FROM (15) TO (20)","shape":"CREATE TABLE evttrig.part_15_20 PARTITION OF evttrig.part_10_20 (id) FOR VALUES FROM (15) TO (20);"}
+{"sql":"ALTER TABLE evttrig.two DROP COLUMN col_c","shape":"ALTER TABLE evttrig.two DROP COLUMN col_c;"}
+{"sql":"ALTER TABLE evttrig.one ALTER COLUMN col_b DROP DEFAULT","shape":"ALTER TABLE evttrig.one ALTER COLUMN col_b DROP DEFAULT;"}
+{"sql":"ALTER TABLE evttrig.one DROP CONSTRAINT one_pkey","shape":"ALTER TABLE evttrig.one DROP CONSTRAINT one_pkey;"}
+{"sql":"ALTER TABLE evttrig.one DROP COLUMN col_c","shape":"ALTER TABLE evttrig.one DROP COLUMN col_c;"}
+{"sql":"ALTER TABLE evttrig.id ALTER COLUMN col_d SET DATA TYPE bigint","shape":"ALTER TABLE evttrig.id ALTER COLUMN col_d SET DATA TYPE bigint;"}
+{"sql":"ALTER TABLE evttrig.id ALTER COLUMN col_d DROP IDENTITY,\n  ALTER COLUMN col_d SET DATA TYPE int"}
+{"sql":"DROP INDEX evttrig.one_idx","shape":"DROP INDEX evttrig.one_idx;"}
+{"sql":"DROP SCHEMA evttrig CASCADE","shape":"DROP SCHEMA evttrig CASCADE;"}
+{"sql":"DROP TABLE a_temp_tbl","shape":"DROP TABLE a_temp_tbl;"}
+{"sql":"CREATE OR REPLACE FUNCTION event_trigger_report_dropped()\n RETURNS event_trigger\n LANGUAGE plpgsql\nAS $$\nDECLARE r record;\nBEGIN\n    FOR r IN SELECT * from pg_event_trigger_dropped_objects()\n    LOOP\n    RAISE NOTICE 'DROP: orig=% normal=% istemp=% type=% identity=% schema=% name=% addr=% args=%',\n        r.original, r.normal, r.is_temporary, r.object_type,\n        r.object_identity, r.schema_name, r.object_name,\n        r.address_names, r.address_args;\n    END LOOP;\nEND; $$","shape":"CREATE OR REPLACE FUNCTION event_trigger_report_dropped() RETURNS event_trigger LANGUAGE plpgsql AS '\nDECLARE r record;\nBEGIN\n    FOR r IN SELECT * from pg_event_trigger_dropped_objects()\n    LOOP\n    RAISE NOTICE ''DROP: orig=% normal=% istemp=% type=% identity=% schema=% name=% addr=% args=%'',\n        r.original, r.normal, r.is_temporary, r.object_type,\n        r.object_identity, r.schema_name, r.object_name,\n        r.address_names, r.address_args;\n    END LOOP;\nEND; ';"}
+{"sql":"CREATE FUNCTION event_trigger_dummy_trigger()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $$\nBEGIN\n    RETURN new;\nEND; $$","shape":"CREATE FUNCTION event_trigger_dummy_trigger() RETURNS trigger LANGUAGE plpgsql AS '\nBEGIN\n    RETURN new;\nEND; ';"}
+{"sql":"CREATE TABLE evtrg_nontemp_table (f1 int primary key, f2 int default 42)","shape":"CREATE TABLE evtrg_nontemp_table (f1 int PRIMARY KEY, f2 int DEFAULT 42);"}
+{"sql":"CREATE TRIGGER evtrg_nontemp_trig\n  BEFORE INSERT ON evtrg_nontemp_table\n  EXECUTE FUNCTION event_trigger_dummy_trigger()","shape":"CREATE TRIGGER evtrg_nontemp_trig BEFORE INSERT ON evtrg_nontemp_table EXECUTE FUNCTION event_trigger_dummy_trigger();"}
+{"sql":"CREATE POLICY evtrg_nontemp_pol ON evtrg_nontemp_table USING (f2 > 0)"}
+{"sql":"DROP TABLE evtrg_nontemp_table","shape":"DROP TABLE evtrg_nontemp_table;"}
+{"sql":"CREATE TEMP TABLE a_temp_tbl (f1 int primary key, f2 int default 42)","shape":"CREATE TEMPORARY TABLE a_temp_tbl (f1 int PRIMARY KEY, f2 int DEFAULT 42);"}
+{"sql":"CREATE TRIGGER a_temp_trig\n  BEFORE INSERT ON a_temp_tbl\n  EXECUTE FUNCTION event_trigger_dummy_trigger()","shape":"CREATE TRIGGER a_temp_trig BEFORE INSERT ON a_temp_tbl EXECUTE FUNCTION event_trigger_dummy_trigger();"}
+{"sql":"CREATE POLICY a_temp_pol ON a_temp_tbl USING (f2 > 0)"}
+{"sql":"DROP FUNCTION event_trigger_dummy_trigger()"}
+{"sql":"CREATE OPERATOR CLASS evttrigopclass FOR TYPE int USING btree AS STORAGE int"}
+{"sql":"DROP EVENT TRIGGER regress_event_trigger_report_dropped"}
+{"sql":"DROP EVENT TRIGGER regress_event_trigger_report_end"}
+{"sql":"select pg_event_trigger_table_rewrite_oid()","shape":"SELECT pg_event_trigger_table_rewrite_oid();"}
+{"sql":"CREATE OR REPLACE FUNCTION test_evtrig_no_rewrite() RETURNS event_trigger\nLANGUAGE plpgsql AS $$\nBEGIN\n  RAISE EXCEPTION 'rewrites not allowed';\nEND;\n$$","shape":"CREATE OR REPLACE FUNCTION test_evtrig_no_rewrite() RETURNS event_trigger LANGUAGE plpgsql AS '\nBEGIN\n  RAISE EXCEPTION ''rewrites not allowed'';\nEND;\n';"}
+{"sql":"create event trigger no_rewrite_allowed on table_rewrite\n  execute procedure test_evtrig_no_rewrite()"}
+{"sql":"create table rewriteme (id serial primary key, foo float, bar timestamptz)","shape":"CREATE TABLE rewriteme (id serial PRIMARY KEY, foo float, bar timestamptz);"}
+{"sql":"insert into rewriteme\n     select x * 1.001 from generate_series(1, 500) as t(x)","shape":"INSERT INTO rewriteme SELECT x * 1.001 FROM generate_series(1, 500) AS t(x);"}
+{"sql":"alter table rewriteme alter column foo type numeric","shape":"ALTER TABLE rewriteme ALTER COLUMN foo SET DATA TYPE numeric;"}
+{"sql":"alter table rewriteme add column baz int default 0","shape":"ALTER TABLE rewriteme ADD COLUMN baz int DEFAULT 0;"}
+{"sql":"CREATE OR REPLACE FUNCTION test_evtrig_no_rewrite() RETURNS event_trigger\nLANGUAGE plpgsql AS $$\nBEGIN\n  RAISE NOTICE 'Table ''%'' is being rewritten (reason = %)',\n               pg_event_trigger_table_rewrite_oid()::regclass,\n               pg_event_trigger_table_rewrite_reason();\nEND;\n$$","shape":"CREATE OR REPLACE FUNCTION test_evtrig_no_rewrite() RETURNS event_trigger LANGUAGE plpgsql AS '\nBEGIN\n  RAISE NOTICE ''Table ''''%'''' is being rewritten (reason = %)'',\n               pg_event_trigger_table_rewrite_oid()::regclass,\n               pg_event_trigger_table_rewrite_reason();\nEND;\n';"}
+{"sql":"alter table rewriteme\n add column onemore int default 0,\n add column another int default -1,\n alter column foo type numeric(10,4)","shape":"ALTER TABLE rewriteme ADD COLUMN onemore int DEFAULT 0, ADD COLUMN another int DEFAULT -1, ALTER COLUMN foo SET DATA TYPE numeric(10, 4);"}
+{"sql":"CREATE MATERIALIZED VIEW heapmv USING heap AS SELECT 1 AS a","shape":"CREATE MATERIALIZED VIEW heapmv USING heap AS SELECT 1 AS a;"}
+{"sql":"alter table rewriteme alter column foo type numeric(12,4)","shape":"ALTER TABLE rewriteme ALTER COLUMN foo SET DATA TYPE numeric(12, 4);"}
+{"sql":"set timezone to 'UTC'","shape":"SET timezone TO 'UTC';"}
+{"sql":"alter table rewriteme alter column bar type timestamp","shape":"ALTER TABLE rewriteme ALTER COLUMN bar SET DATA TYPE timestamp;"}
+{"sql":"set timezone to '0'","shape":"SET timezone TO '0';"}
+{"sql":"alter table rewriteme alter column bar type timestamptz","shape":"ALTER TABLE rewriteme ALTER COLUMN bar SET DATA TYPE timestamptz;"}
+{"sql":"set timezone to 'Europe/London'","shape":"SET timezone TO 'Europe/London';"}
+{"sql":"CREATE OR REPLACE FUNCTION test_evtrig_no_rewrite() RETURNS event_trigger\nLANGUAGE plpgsql AS $$\nBEGIN\n  RAISE NOTICE 'Table is being rewritten (reason = %)',\n               pg_event_trigger_table_rewrite_reason();\nEND;\n$$","shape":"CREATE OR REPLACE FUNCTION test_evtrig_no_rewrite() RETURNS event_trigger LANGUAGE plpgsql AS '\nBEGIN\n  RAISE NOTICE ''Table is being rewritten (reason = %)'',\n               pg_event_trigger_table_rewrite_reason();\nEND;\n';"}
+{"sql":"create type rewritetype as (a int)","shape":"CREATE TYPE rewritetype AS (a int);"}
+{"sql":"create table rewritemetoo1 of rewritetype","shape":"CREATE TABLE rewritemetoo1 OF rewritetype;"}
+{"sql":"create table rewritemetoo2 of rewritetype","shape":"CREATE TABLE rewritemetoo2 OF rewritetype;"}
+{"sql":"alter type rewritetype alter attribute a type text cascade"}
+{"sql":"create table rewritemetoo3 (a rewritetype)","shape":"CREATE TABLE rewritemetoo3 (a rewritetype);"}
+{"sql":"alter type rewritetype alter attribute a type varchar cascade"}
+{"sql":"drop table rewriteme","shape":"DROP TABLE rewriteme;"}
+{"sql":"drop event trigger no_rewrite_allowed"}
+{"sql":"drop function test_evtrig_no_rewrite()"}
+{"sql":"CREATE TABLE event_trigger_test (a integer, b text)","shape":"CREATE TABLE event_trigger_test (a integer, b text);"}
+{"sql":"CREATE OR REPLACE FUNCTION start_command()\nRETURNS event_trigger AS $$\nBEGIN\nRAISE NOTICE '% - ddl_command_start', tg_tag;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION start_command() RETURNS event_trigger AS '\nBEGIN\nRAISE NOTICE ''% - ddl_command_start'', tg_tag;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE OR REPLACE FUNCTION end_command()\nRETURNS event_trigger AS $$\nBEGIN\nRAISE NOTICE '% - ddl_command_end', tg_tag;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION end_command() RETURNS event_trigger AS '\nBEGIN\nRAISE NOTICE ''% - ddl_command_end'', tg_tag;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE OR REPLACE FUNCTION drop_sql_command()\nRETURNS event_trigger AS $$\nBEGIN\nRAISE NOTICE '% - sql_drop', tg_tag;\nEND;\n$$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION drop_sql_command() RETURNS event_trigger AS '\nBEGIN\nRAISE NOTICE ''% - sql_drop'', tg_tag;\nEND;\n' LANGUAGE plpgsql;"}
+{"sql":"CREATE EVENT TRIGGER start_rls_command ON ddl_command_start\n    WHEN TAG IN ('CREATE POLICY', 'ALTER POLICY', 'DROP POLICY') EXECUTE PROCEDURE start_command()"}
+{"sql":"CREATE EVENT TRIGGER end_rls_command ON ddl_command_end\n    WHEN TAG IN ('CREATE POLICY', 'ALTER POLICY', 'DROP POLICY') EXECUTE PROCEDURE end_command()"}
+{"sql":"CREATE EVENT TRIGGER sql_drop_command ON sql_drop\n    WHEN TAG IN ('DROP POLICY') EXECUTE PROCEDURE drop_sql_command()"}
+{"sql":"CREATE POLICY p1 ON event_trigger_test USING (FALSE)"}
+{"sql":"ALTER POLICY p1 ON event_trigger_test USING (TRUE)"}
+{"sql":"ALTER POLICY p1 ON event_trigger_test RENAME TO p2"}
+{"sql":"DROP POLICY p2 ON event_trigger_test"}
+{"sql":"SELECT\n    e.evtname,\n    pg_describe_object('pg_event_trigger'::regclass, e.oid, 0) as descr,\n    b.type, b.object_names, b.object_args,\n    pg_identify_object(a.classid, a.objid, a.objsubid) as ident\n  FROM pg_event_trigger as e,\n    LATERAL pg_identify_object_as_address('pg_event_trigger'::regclass, e.oid, 0) as b,\n    LATERAL pg_get_object_address(b.type, b.object_names, b.object_args) as a\n  ORDER BY e.evtname","shape":"SELECT e.evtname, pg_describe_object('pg_event_trigger'::regclass, e.oid, 0) AS descr, b.type, b.object_names, b.object_args, pg_identify_object(a.classid, a.objid, a.objsubid) AS ident FROM pg_event_trigger AS e, LATERAL pg_identify_object_as_address('pg_event_trigger'::regclass, e.oid, 0) AS b, LATERAL pg_get_object_address(b.type, b.object_names, b.object_args) AS a ORDER BY e.evtname;"}
+{"sql":"DROP EVENT TRIGGER start_rls_command"}
+{"sql":"DROP EVENT TRIGGER end_rls_command"}
+{"sql":"DROP EVENT TRIGGER sql_drop_command"}

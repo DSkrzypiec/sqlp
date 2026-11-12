@@ -1,0 +1,128 @@
+{"sql":"CREATE TABLE t1(\n       n int,\n       v varchar(10),\n       log int,\n       roman varchar(10),\n       flt real\n    )"}
+{"sql":"INSERT INTO t1 VALUES(1,'one',0,'I',3.141592653)"}
+{"sql":"INSERT INTO t1 VALUES(2,'two',1,'II',2.15)"}
+{"sql":"INSERT INTO t1 VALUES(3,'three',1,'III',4221.0)"}
+{"sql":"INSERT INTO t1 VALUES(4,'four',2,'IV',-0.0013442)"}
+{"sql":"INSERT INTO t1 VALUES(5,'five',2,'V',-11)"}
+{"sql":"INSERT INTO t1 VALUES(6,'six',2,'VI',0.123)"}
+{"sql":"INSERT INTO t1 VALUES(7,'seven',2,'VII',123.0)"}
+{"sql":"INSERT INTO t1 VALUES(8,'eight',3,'VIII',-1.6)"}
+{"sql":"SELECT n FROM t1 ORDER BY n"}
+{"sql":"SELECT n FROM t1 ORDER BY n ASC"}
+{"sql":"SELECT ALL n FROM t1 ORDER BY n ASC"}
+{"sql":"SELECT n FROM t1 ORDER BY n DESC"}
+{"sql":"SELECT v FROM t1 ORDER BY v"}
+{"sql":"SELECT n FROM t1 ORDER BY v"}
+{"sql":"SELECT n FROM t1 ORDER BY v DESC"}
+{"sql":"SELECT flt FROM t1 ORDER BY flt"}
+{"sql":"SELECT flt FROM t1 ORDER BY flt DESC"}
+{"sql":"SELECT roman FROM t1 ORDER BY roman"}
+{"sql":"SELECT n FROM t1 ORDER BY log, flt"}
+{"sql":"SELECT n FROM t1 ORDER BY log asc, flt"}
+{"sql":"SELECT n FROM t1 ORDER BY log, flt ASC"}
+{"sql":"SELECT n FROM t1 ORDER BY log ASC, flt asc"}
+{"sql":"SELECT n FROM t1 ORDER BY log, flt DESC"}
+{"sql":"SELECT n FROM t1 ORDER BY log ASC, flt DESC"}
+{"sql":"SELECT n FROM t1 ORDER BY log DESC, flt"}
+{"sql":"SELECT n FROM t1 ORDER BY log DESC, flt DESC"}
+{"sql":"UPDATE t1 SET v='x' || -flt"}
+{"sql":"UPDATE t1 SET v='x-2b' where v=='x-0.123'"}
+{"sql":"SELECT v FROM t1 ORDER BY substr(v,2,999)"}
+{"sql":"SELECT v FROM t1 ORDER BY substr(v,2,999)+0.0"}
+{"sql":"SELECT v FROM t1 ORDER BY substr(v,2,999) DESC"}
+{"sql":"SELECT v FROM t1 ORDER BY substr(v,2,999)+0.0 DESC"}
+{"sql":"INSERT INTO t2 VALUES('AGLIENTU',1)"}
+{"sql":"INSERT INTO t2 VALUES('AGLIE`',2)"}
+{"sql":"INSERT INTO t2 VALUES('AGNA',3)"}
+{"sql":"SELECT a, b FROM t2 ORDER BY a"}
+{"sql":"SELECT a, b FROM t2 ORDER BY a DESC"}
+{"sql":"INSERT INTO t2 VALUES('aglientu',1)"}
+{"sql":"INSERT INTO t2 VALUES('aglie`',2)"}
+{"sql":"INSERT INTO t2 VALUES('agna',3)"}
+{"sql":"INSERT INTO t1 VALUES(9,'x2.7',3,'IX',4.0e5)"}
+{"sql":"INSERT INTO t1 VALUES(10,'x5.0e10',3,'X',-4.0e5)"}
+{"sql":"INSERT INTO t1 VALUES(11,'x-4.0e9',3,'XI',4.1e4)"}
+{"sql":"INSERT INTO t1 VALUES(12,'x01234567890123456789',3,'XII',-4.2e3)"}
+{"sql":"SELECT n||'' FROM t1 ORDER BY 1"}
+{"sql":"SELECT n+0 FROM t1 ORDER BY 1"}
+{"sql":"SELECT n||'' FROM t1 ORDER BY 1 DESC"}
+{"sql":"SELECT n+0 FROM t1 ORDER BY 1 DESC"}
+{"sql":"SELECT v FROM t1 ORDER BY 1"}
+{"sql":"SELECT v FROM t1 ORDER BY 1 DESC"}
+{"sql":"SELECT substr(v,2,99) FROM t1 ORDER BY 1"}
+{"sql":"#    SELECT substr(v,2,99)+0.0 FROM t1 ORDER BY 1","reject":true}
+{"sql":"create table t3(a,b)"}
+{"sql":"insert into t3 values(5,NULL)"}
+{"sql":"insert into t3 values(6,NULL)"}
+{"sql":"insert into t3 values(3,NULL)"}
+{"sql":"insert into t3 values(4,'cd')"}
+{"sql":"insert into t3 values(1,'ab')"}
+{"sql":"insert into t3 values(2,NULL)"}
+{"sql":"select a from t3 order by b, a"}
+{"sql":"select a from t3 order by b, a desc"}
+{"sql":"select a from t3 order by b desc, a"}
+{"sql":"select a from t3 order by b desc, a desc"}
+{"sql":"create index i3 on t3(b,a)"}
+{"sql":"CREATE TABLE t4(\n      a INTEGER,\n      b VARCHAR(30)\n    )"}
+{"sql":"INSERT INTO t4 VALUES(1,1)"}
+{"sql":"INSERT INTO t4 VALUES(2,2)"}
+{"sql":"INSERT INTO t4 VALUES(11,11)"}
+{"sql":"INSERT INTO t4 VALUES(12,12)"}
+{"sql":"SELECT a FROM t4 ORDER BY 1"}
+{"sql":"SELECT b FROM t4 ORDER BY 1"}
+{"sql":"SELECT a FROM v4 ORDER BY 1"}
+{"sql":"SELECT b FROM v4 ORDER BY 1"}
+{"sql":"SELECT a FROM t4 UNION SELECT a FROM v4 ORDER BY 1"}
+{"sql":"SELECT b FROM t4 UNION SELECT a FROM v4 ORDER BY 1"}
+{"sql":"SELECT a FROM t4 UNION SELECT b FROM v4 ORDER BY 1"}
+{"sql":"SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1"}
+{"sql":"#    SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1 COLLATE numeric","reject":true}
+{"sql":"#    SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1 COLLATE integer","reject":true}
+{"sql":"#    SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1 COLLATE text","reject":true}
+{"sql":"#    SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1 COLLATE blob","reject":true}
+{"sql":"#    SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1 COLLATE clob","reject":true}
+{"sql":"#    SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1 COLLATE varchar","reject":true}
+{"sql":"CREATE TABLE t5(a real, b text)"}
+{"sql":"INSERT INTO t5 VALUES(100,'A1')"}
+{"sql":"INSERT INTO t5 VALUES(100.0,'A2')"}
+{"sql":"SELECT * FROM t5 ORDER BY a, b"}
+{"sql":"INSERT INTO t6 VALUES(2,'1')"}
+{"sql":"INSERT INTO t6 VALUES(3,x'31')"}
+{"sql":"INSERT INTO t6 VALUES(4,NULL)"}
+{"sql":"SELECT x FROM t6 ORDER BY y"}
+{"sql":"SELECT x FROM t6 ORDER BY y DESC"}
+{"sql":"SELECT x FROM t6 WHERE y<1"}
+{"sql":"SELECT x FROM t6 WHERE y<'1'"}
+{"sql":"SELECT x FROM t6 WHERE y<x'31'"}
+{"sql":"SELECT x FROM t6 WHERE y>1"}
+{"sql":"SELECT x FROM t6 WHERE y>'1'"}
+{"sql":"CREATE TABLE t7(c INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t7 VALUES(3)"}
+{"sql":"INSERT INTO t7 VALUES(4)"}
+{"sql":"SELECT c FROM t7 WHERE c<=3 ORDER BY c DESC"}
+{"sql":"SELECT c FROM t7 WHERE c<3 ORDER BY c DESC"}
+{"sql":"create table t8(a unique, b, c)"}
+{"sql":"insert into t8 values(1,2,3)"}
+{"sql":"insert into t8 values(2,3,4)"}
+{"sql":"create table t9(x,y)"}
+{"sql":"insert into t9 values(2,4)"}
+{"sql":"insert into t9 values(2,3)"}
+{"sql":"select y from t8, t9 where a=1 order by a, y"}
+{"sql":"create table a (id integer primary key)"}
+{"sql":"create table b (id integer primary key, aId integer, text)"}
+{"sql":"insert into a values (1)"}
+{"sql":"insert into b values (2, 1, 'xxx')"}
+{"sql":"insert into b values (1, 1, 'zzz')"}
+{"sql":"insert into b values (3, 1, 'yyy')"}
+{"sql":"select a.id, b.id, b.text from a join b on (a.id = b.aId)\n      order by a.id, b.text"}
+{"sql":"SELECT a, b FROM t10 ORDER BY a"}
+{"sql":"INSERT INTO t1 VALUES(1, NULL, 3)"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 2, 3)"}
+{"sql":"INSERT INTO t1 VALUES(1, 2, NULL)"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(b, a, c)"}
+{"sql":"SELECT * FROM sqlite_master ORDER BY sql"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<50)\n                           -- increase to 5000 for actual test data ----^^\n    INSERT INTO t1(a,b,c) SELECT x, random()%5000, random()%5000 FROM c"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<500)\n                         -- increase to 50000 for actual test data -----^^^\n    INSERT INTO t2(d,e,f) SELECT\n       NULLIF(0, random()%2), random()%5000, random()%5000\n       FROM c"}
+{"sql":"UPDATE sqlite_stat1 SET stat='50000' WHERE tbl='t2'"}
+{"sql":"UPDATE sqlite_stat1 SET stat='5000' WHERE tbl='t1'"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT a FROM t1 JOIN t2\n   WHERE a IN (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)\n     AND a=CASE WHEN d IS NOT NULL THEN e ELSE f END\n   ORDER BY a"}

@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE t1(i, x)"}
+{"sql":"INSERT INTO t1 VALUES(2, zeroblob(248*1020 + 100))"}
+{"sql":"INSERT INTO t1 VALUES(3, zeroblob(2*1020 + 100))"}
+{"sql":"DELETE FROM t1 WHERE i = 2"}
+{"sql":"DELETE FROM t1 WHERE i = 1"}
+{"sql":"DELETE FROM t1 WHERE i = 3"}

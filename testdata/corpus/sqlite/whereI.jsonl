@@ -1,0 +1,23 @@
+{"sql":"CREATE TABLE t1(a, b, c, PRIMARY KEY(a)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(1, 'a', 'z')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'b', 'y')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'c', 'x')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'd', 'w')"}
+{"sql":"SELECT a FROM t1 WHERE b='b' OR c='x'"}
+{"sql":"SELECT a FROM t1 WHERE b='a' OR c='z'"}
+{"sql":"CREATE TABLE t2(a, b, c, PRIMARY KEY(a)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t2 VALUES('i', 'a', 'z')"}
+{"sql":"INSERT INTO t2 VALUES('ii', 'b', 'y')"}
+{"sql":"INSERT INTO t2 VALUES('iii', 'c', 'x')"}
+{"sql":"INSERT INTO t2 VALUES('iv', 'd', 'w')"}
+{"sql":"CREATE INDEX i3 ON t2(b)"}
+{"sql":"SELECT a FROM t2 WHERE b='b' OR c='x'"}
+{"sql":"SELECT a FROM t2 WHERE b='a' OR c='z'"}
+{"sql":"CREATE TABLE t3(a, b, c, d, PRIMARY KEY(c, b)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t3 VALUES('f', 1, 1, 'o')"}
+{"sql":"INSERT INTO t3 VALUES('o', 2, 1, 't')"}
+{"sql":"INSERT INTO t3 VALUES('t', 1, 2, 't')"}
+{"sql":"INSERT INTO t3 VALUES('t', 2, 2, 'f')"}
+{"sql":"CREATE INDEX t3i1 ON t3(d)"}
+{"sql":"CREATE INDEX t3i2 ON t3(a)"}
+{"sql":"SELECT c||'.'||b FROM t3 WHERE a='t' OR d='t'"}

@@ -1,0 +1,8 @@
+{"sql":"CREATE VIEW v1 AS SELECT * FROM sqlite_master"}
+{"sql":"CREATE TRIGGER abc_trig AFTER INSERT ON abc BEGIN\n        SELECT 1, 2, 3;\n      END"}
+{"sql":"DROP TRIGGER abc_trig"}
+{"sql":"CREATE INDEX abc_index ON abc(a)"}
+{"sql":"DROP INDEX abc_index"}
+{"sql":"CREATE VIEW abcview AS SELECT * FROM abc"}
+{"sql":"DROP VIEW abcview"}
+{"sql":"SELECT * FROM abcview"}

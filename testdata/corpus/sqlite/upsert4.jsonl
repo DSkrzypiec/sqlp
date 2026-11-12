@@ -1,0 +1,47 @@
+{"sql":"INSERT INTO t1 VALUES(1, NULL, 'one')"}
+{"sql":"INSERT INTO t1 VALUES(2, NULL, 'two')"}
+{"sql":"INSERT INTO t1 VALUES(3, NULL, 'three')"}
+{"sql":"INSERT INTO t1 VALUES(1, NULL, 'xyz') ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(4, NULL, 'two') ON CONFLICT DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(4, NULL, 'two') ON CONFLICT (c) DO UPDATE SET b = 1"}
+{"sql":"INSERT INTO t1 VALUES(2, NULL, 'zero') ON CONFLICT (a) DO UPDATE SET b=2"}
+{"sql":"INSERT INTO t1 VALUES(2, NULL, 'zero') ON CONFLICT (a) \n      DO UPDATE SET c = 'one'"}
+{"sql":"INSERT INTO t1 VALUES(2, NULL, 'zero') ON CONFLICT (a) \n      DO UPDATE SET (b, c) = (SELECT 'x', 'y')"}
+{"sql":"INSERT INTO t1 VALUES(1, NULL, NULL) ON CONFLICT (a) \n      DO UPDATE SET (c, a) = ('four', 4)"}
+{"sql":"SELECT * FROM t1 ORDER BY 1"}
+{"sql":"INSERT INTO xyz VALUES(10, 1, 1, 'one')"}
+{"sql":"INSERT INTO abc VALUES(1, 'one', 'two')"}
+{"sql":"INSERT INTO abc VALUES(1, 'one', 1)"}
+{"sql":"INSERT INTO abc VALUES(2, 'two', 2)"}
+{"sql":"INSERT INTO abc VALUES(3, 'xyz', 3)"}
+{"sql":"INSERT INTO abc VALUES(4, 'XYZ', 4)"}
+{"sql":"CREATE TABLE w1(a INT PRIMARY KEY, x, y)"}
+{"sql":"CREATE UNIQUE INDEX w1expr ON w1(('x' || x))"}
+{"sql":"INSERT INTO w1 VALUES(2, 'one', NULL)\n    ON CONFLICT (('x' || x) COLLATE nocase) DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(1, 1, 'one')"}
+{"sql":"INSERT INTO t1 VALUES(2, 2, 'two')"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(1, 2, 'two') ON CONFLICT(b) DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(2, 2, 2)"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(3, 1, 1) ON CONFLICT(b) DO NOTHING"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(3, 2, 2) ON CONFLICT(c) DO NOTHING"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(3, 1, 1) ON CONFLICT(b) \n      DO UPDATE SET b=b||'x'"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(3, 2, 2) ON CONFLICT(c) \n      DO UPDATE SET c=c||'x'"}
+{"sql":"INSERT INTO t1 VALUES('a', 1, 1, 1)"}
+{"sql":"INSERT INTO t1 VALUES('b', 2, 2, 2)"}
+{"sql":"INSERT INTO t1 VALUES('c', 3, 3, 1) ON CONFLICT(z) \n      DO UPDATE SET w = excluded.w"}
+{"sql":"INSERT INTO t1 VALUES('c', 2, 2, 3) ON CONFLICT(y, x) \n      DO UPDATE SET w = w||w"}
+{"sql":"INSERT INTO t1 VALUES('c', 2, 2, 3) ON CONFLICT(y, x) \n      DO UPDATE SET w = w||t1.w"}
+{"sql":"INSERT INTO t1 AS tbl VALUES('c', 2, 2, 3) ON CONFLICT(y, x) \n      DO UPDATE SET w = w||tbl.w"}
+{"sql":"INSERT INTO excluded VALUES('a', 1, 1, 1)"}
+{"sql":"INSERT INTO excluded VALUES('b', 2, 2, 2)"}
+{"sql":"INSERT INTO excluded VALUES('hello', 1, 1, NULL) ON CONFLICT(x, \"a b\")\n      DO UPDATE SET w=excluded.w"}
+{"sql":"SELECT * FROM excluded"}
+{"sql":"INSERT INTO excluded AS x1 VALUES('hello', 1, 1, NULL) ON CONFLICT(x, [a b])\n      DO UPDATE SET w=excluded.w"}
+{"sql":"INSERT INTO excluded AS x1 VALUES('hello', 1, 1, NULL) ON CONFLICT(x, [a b])\n      DO UPDATE SET w=w||w WHERE excluded.w!='hello'"}
+{"sql":"INSERT INTO excluded AS x1 VALUES('hello', 1, 1, NULL) ON CONFLICT(x, [a b])\n      DO UPDATE SET w=w||w WHERE excluded.x=1"}
+{"sql":"INSERT INTO excluded AS x1 VALUES('hello', 1, 1, NULL) \n      ON CONFLICT(x, [a b]) WHERE y=1\n      DO UPDATE SET w=w||w WHERE excluded.x=1"}
+{"sql":"CREATE TABLE v(x INTEGER)"}
+{"sql":"CREATE TABLE hist(x INTEGER PRIMARY KEY, cnt INTEGER)"}
+{"sql":"CREATE TRIGGER vt AFTER INSERT ON v BEGIN\n    INSERT INTO hist VALUES(new.x, 1) ON CONFLICT(x) DO\n      UPDATE SET cnt=cnt+1;\n  END"}
+{"sql":"INSERT INTO v VALUES(1), (4), (1), (5), (5), (8), (9), (1)"}
+{"sql":"SELECT * FROM hist"}

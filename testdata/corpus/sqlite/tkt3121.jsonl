@@ -1,0 +1,8 @@
+{"sql":"CREATE TABLE r1(field)"}
+{"sql":"CREATE TABLE r2(col PRIMARY KEY, descr)"}
+{"sql":"INSERT INTO r1 VALUES('abcd')"}
+{"sql":"INSERT INTO r2 VALUES('abcd', 'A nice description')"}
+{"sql":"INSERT INTO r2 VALUES('efgh', 'Another description')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING echo(r1)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING echo(r2)"}
+{"sql":"select\n      t1.field as Field,\n      t2.descr as Descr\n    from t1 inner join t2 on t1.field = t2.col order by t1.field"}

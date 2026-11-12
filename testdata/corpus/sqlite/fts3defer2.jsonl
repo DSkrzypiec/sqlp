@@ -1,0 +1,26 @@
+{"sql":"INSERT INTO t1 VALUES('a b c d e f a x y')"}
+{"sql":"UPDATE t1_segments SET block = zeroblob(length(block)) WHERE length(block)>10000"}
+{"sql":"SELECT content FROM t1 WHERE t1 MATCH 'f (e a)'"}
+{"sql":"SELECT content FROM t1 WHERE t1 MATCH 'f (e NEAR/2 a)'"}
+{"sql":"SELECT snippet(t1, '[', ']'), offsets(t1), mit(matchinfo(t1, 'pcxnal'))\n  FROM t1 WHERE t1 MATCH 'f (e NEAR/2 a)'"}
+{"sql":"SELECT snippet(t1, '[', ']'), offsets(t1), mit(matchinfo(t1, 'pcxnal'))\n  FROM t1 WHERE t1 MATCH 'f (e NEAR/3 a)'"}
+{"sql":"INSERT INTO t2 VALUES('a b c d e f g z')"}
+{"sql":"INSERT INTO t2 VALUES('a b c d e f g')"}
+{"sql":"SELECT mit(matchinfo(t2, 'pcxnal')) FROM t2 WHERE t2 MATCH 'a b'"}
+{"sql":"SELECT mit(matchinfo(t2, 'x')) FROM t2 WHERE t2 MATCH 'g z'"}
+{"sql":"SELECT mit(matchinfo(t2, 'x')) FROM t2 WHERE t2 MATCH 'g OR (g z)'"}
+{"sql":"SELECT mit(matchinfo(t2, 'x')) FROM t2 WHERE t2 MATCH 'e \"g z\"'"}
+{"sql":"INSERT INTO t3 VALUES('a b c d e f')"}
+{"sql":"INSERT INTO t3 VALUES('x b c d e f')"}
+{"sql":"INSERT INTO t3 VALUES('d e f a b c')"}
+{"sql":"INSERT INTO t3 VALUES('b c d e f')"}
+{"sql":"INSERT INTO t3 VALUES('')"}
+{"sql":"SELECT docid, mit(matchinfo(t3, 'pcxnal')) FROM t3 WHERE t3 MATCH '\"a b c\"'"}
+{"sql":"INSERT INTO t3(t3) VALUES('rebuild')"}
+{"sql":"SELECT rowid, length(offsets(t3)) FROM t3 WHERE t3 MATCH '(a NEAR a)'"}
+{"sql":"SELECT rowid, length(offsets(t3)) FROM t3 WHERE t3 MATCH '(a NEAR b NEAR a)'"}
+{"sql":"SELECT rowid, length(offsets(t3)) FROM t3 WHERE t3 MATCH '(a NEAR b)'"}
+{"sql":"SELECT rowid, length(matchinfo(t3)) FROM t3 WHERE t3 MATCH '(a NEAR a)'"}
+{"sql":"SELECT rowid, length(matchinfo(t3)) FROM t3 WHERE t3 MATCH '(a NEAR b NEAR a)'"}
+{"sql":"SELECT rowid, length(matchinfo(t3)) FROM t3 WHERE t3 MATCH '(a NEAR b)'"}
+{"sql":"SELECT rowid, length(matchinfo(t3)) FROM t3 \n  WHERE t3 MATCH '(a NEAR b NEAR a NEAR b NEAR a)'"}

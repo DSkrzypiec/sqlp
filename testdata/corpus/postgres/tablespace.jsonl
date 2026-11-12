@@ -1,0 +1,167 @@
+{"sql":"CREATE TABLESPACE regress_tblspace LOCATION 'relative'"}
+{"sql":"CREATE TABLESPACE regress_tblspace LOCATION ''"}
+{"sql":"SET allow_in_place_tablespaces = true","shape":"SET allow_in_place_tablespaces TO TRUE;"}
+{"sql":"CREATE TABLESPACE regress_tblspacewith LOCATION '' WITH (some_nonexistent_parameter = true)"}
+{"sql":"CREATE TABLESPACE regress_tblspacewith LOCATION '' WITH (random_page_cost = 3.0)"}
+{"sql":"SELECT spcoptions FROM pg_tablespace WHERE spcname = 'regress_tblspacewith'","shape":"SELECT spcoptions FROM pg_tablespace WHERE spcname = 'regress_tblspacewith';"}
+{"sql":"DROP TABLESPACE regress_tblspacewith"}
+{"sql":"SELECT regexp_replace(pg_tablespace_location(oid), '(pg_tblspc)/(\\d+)', '\\1/NNN')\n  FROM pg_tablespace  WHERE spcname = 'regress_tblspace'","shape":"SELECT regexp_replace(pg_tablespace_location(oid), '(pg_tblspc)/(\\d+)', '\\1/NNN') FROM pg_tablespace WHERE spcname = 'regress_tblspace';"}
+{"sql":"ALTER TABLESPACE regress_tblspace SET (random_page_cost = 1.0, seq_page_cost = 1.1)"}
+{"sql":"ALTER TABLESPACE regress_tblspace SET (some_nonexistent_parameter = true)"}
+{"sql":"ALTER TABLESPACE regress_tblspace RESET (random_page_cost = 2.0)"}
+{"sql":"ALTER TABLESPACE regress_tblspace RESET (random_page_cost, effective_io_concurrency)"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE pg_am","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE pg_am;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE CONCURRENTLY pg_am","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE CONCURRENTLY pg_am;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE pg_authid","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE pg_authid;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE CONCURRENTLY pg_authid","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE CONCURRENTLY pg_authid;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) INDEX pg_toast.pg_toast_1260_index","shape":"REINDEX (TABLESPACE regress_tblspace) INDEX pg_toast.pg_toast_1260_index;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) INDEX CONCURRENTLY pg_toast.pg_toast_1260_index","shape":"REINDEX (TABLESPACE regress_tblspace) INDEX CONCURRENTLY pg_toast.pg_toast_1260_index;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE pg_toast.pg_toast_1260","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE pg_toast.pg_toast_1260;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE CONCURRENTLY pg_toast.pg_toast_1260","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE CONCURRENTLY pg_toast.pg_toast_1260;"}
+{"sql":"REINDEX (TABLESPACE pg_global) TABLE pg_authid","shape":"REINDEX (TABLESPACE pg_global) TABLE pg_authid;"}
+{"sql":"REINDEX (TABLESPACE pg_global) TABLE CONCURRENTLY pg_authid","shape":"REINDEX (TABLESPACE pg_global) TABLE CONCURRENTLY pg_authid;"}
+{"sql":"CREATE TABLE regress_tblspace_test_tbl (num1 bigint, num2 double precision, t text)","shape":"CREATE TABLE regress_tblspace_test_tbl (num1 bigint, num2 double precision, t text);"}
+{"sql":"INSERT INTO regress_tblspace_test_tbl (num1, num2, t)\n  SELECT round(random()*100), random(), 'text'\n  FROM generate_series(1, 10) s(i)","shape":"INSERT INTO regress_tblspace_test_tbl (num1, num2, t) SELECT round(random() * 100), random(), 'text' FROM generate_series(1, 10) AS s(i);"}
+{"sql":"CREATE INDEX regress_tblspace_test_tbl_idx ON regress_tblspace_test_tbl (num1)","shape":"CREATE INDEX regress_tblspace_test_tbl_idx ON regress_tblspace_test_tbl (num1);"}
+{"sql":"REINDEX (TABLESPACE pg_global) INDEX regress_tblspace_test_tbl_idx","shape":"REINDEX (TABLESPACE pg_global) INDEX regress_tblspace_test_tbl_idx;"}
+{"sql":"REINDEX (TABLESPACE pg_global) INDEX CONCURRENTLY regress_tblspace_test_tbl_idx","shape":"REINDEX (TABLESPACE pg_global) INDEX CONCURRENTLY regress_tblspace_test_tbl_idx;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) INDEX regress_tblspace_test_tbl_idx","shape":"REINDEX (TABLESPACE regress_tblspace) INDEX regress_tblspace_test_tbl_idx;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE regress_tblspace_test_tbl","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE regress_tblspace_test_tbl;"}
+{"sql":"SELECT c.relname FROM pg_class c, pg_tablespace s\n  WHERE c.reltablespace = s.oid AND s.spcname = 'regress_tblspace'","shape":"SELECT c.relname FROM pg_class AS c, pg_tablespace AS s WHERE (c.reltablespace = s.oid) AND (s.spcname = 'regress_tblspace');"}
+{"sql":"SELECT relfilenode as main_filenode FROM pg_class\n  WHERE relname = 'regress_tblspace_test_tbl_idx'","shape":"SELECT relfilenode AS main_filenode FROM pg_class WHERE relname = 'regress_tblspace_test_tbl_idx';"}
+{"sql":"SELECT relfilenode as toast_filenode FROM pg_class\n  WHERE oid =\n    (SELECT i.indexrelid\n       FROM pg_class c,\n            pg_index i\n       WHERE i.indrelid = c.reltoastrelid AND\n             c.relname = 'regress_tblspace_test_tbl')","shape":"SELECT relfilenode AS toast_filenode FROM pg_class WHERE oid = (SELECT i.indexrelid FROM pg_class AS c, pg_index AS i WHERE (i.indrelid = c.reltoastrelid) AND (c.relname = 'regress_tblspace_test_tbl'));"}
+{"sql":"SELECT c.relname FROM pg_class c, pg_tablespace s\n  WHERE c.reltablespace = s.oid AND s.spcname = 'regress_tblspace'\n  ORDER BY c.relname","shape":"SELECT c.relname FROM pg_class AS c, pg_tablespace AS s WHERE (c.reltablespace = s.oid) AND (s.spcname = 'regress_tblspace') ORDER BY c.relname;"}
+{"sql":"ALTER TABLE regress_tblspace_test_tbl SET TABLESPACE regress_tblspace"}
+{"sql":"ALTER TABLE regress_tblspace_test_tbl SET TABLESPACE pg_default"}
+{"sql":"ALTER INDEX regress_tblspace_test_tbl_idx SET TABLESPACE pg_default"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace, CONCURRENTLY) TABLE regress_tblspace_test_tbl","shape":"REINDEX (TABLESPACE regress_tblspace, CONCURRENTLY) TABLE regress_tblspace_test_tbl;"}
+{"sql":"DROP TABLE regress_tblspace_test_tbl","shape":"DROP TABLE regress_tblspace_test_tbl;"}
+{"sql":"CREATE TABLE tbspace_reindex_part (c1 int, c2 int) PARTITION BY RANGE (c1)","shape":"CREATE TABLE tbspace_reindex_part (c1 int, c2 int) PARTITION BY RANGE (c1);"}
+{"sql":"CREATE TABLE tbspace_reindex_part_0 PARTITION OF tbspace_reindex_part\n  FOR VALUES FROM (0) TO (10) PARTITION BY list (c2)","shape":"CREATE TABLE tbspace_reindex_part_0 PARTITION OF tbspace_reindex_part FOR VALUES FROM (0) TO (10) PARTITION BY LIST (c2);"}
+{"sql":"CREATE TABLE tbspace_reindex_part_0_1 PARTITION OF tbspace_reindex_part_0\n  FOR VALUES IN (1)","shape":"CREATE TABLE tbspace_reindex_part_0_1 PARTITION OF tbspace_reindex_part_0 FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE tbspace_reindex_part_0_2 PARTITION OF tbspace_reindex_part_0\n  FOR VALUES IN (2)","shape":"CREATE TABLE tbspace_reindex_part_0_2 PARTITION OF tbspace_reindex_part_0 FOR VALUES IN (2);"}
+{"sql":"CREATE TABLE tbspace_reindex_part_10 PARTITION OF tbspace_reindex_part\n   FOR VALUES FROM (10) TO (20) PARTITION BY list (c2)","shape":"CREATE TABLE tbspace_reindex_part_10 PARTITION OF tbspace_reindex_part FOR VALUES FROM (10) TO (20) PARTITION BY LIST (c2);"}
+{"sql":"CREATE INDEX tbspace_reindex_part_index ON ONLY tbspace_reindex_part (c1)","shape":"CREATE INDEX tbspace_reindex_part_index ON ONLY tbspace_reindex_part (c1);"}
+{"sql":"CREATE INDEX tbspace_reindex_part_index_0 ON ONLY tbspace_reindex_part_0 (c1)","shape":"CREATE INDEX tbspace_reindex_part_index_0 ON ONLY tbspace_reindex_part_0 (c1);"}
+{"sql":"ALTER INDEX tbspace_reindex_part_index ATTACH PARTITION tbspace_reindex_part_index_0"}
+{"sql":"CREATE INDEX tbspace_reindex_part_index_10 ON ONLY tbspace_reindex_part_10 (c1)","shape":"CREATE INDEX tbspace_reindex_part_index_10 ON ONLY tbspace_reindex_part_10 (c1);"}
+{"sql":"ALTER INDEX tbspace_reindex_part_index ATTACH PARTITION tbspace_reindex_part_index_10"}
+{"sql":"CREATE INDEX tbspace_reindex_part_index_0_1 ON ONLY tbspace_reindex_part_0_1 (c1)","shape":"CREATE INDEX tbspace_reindex_part_index_0_1 ON ONLY tbspace_reindex_part_0_1 (c1);"}
+{"sql":"ALTER INDEX tbspace_reindex_part_index_0 ATTACH PARTITION tbspace_reindex_part_index_0_1"}
+{"sql":"CREATE INDEX tbspace_reindex_part_index_0_2 ON ONLY tbspace_reindex_part_0_2 (c1)","shape":"CREATE INDEX tbspace_reindex_part_index_0_2 ON ONLY tbspace_reindex_part_0_2 (c1);"}
+{"sql":"ALTER INDEX tbspace_reindex_part_index_0 ATTACH PARTITION tbspace_reindex_part_index_0_2"}
+{"sql":"SELECT relid, parentrelid, level FROM pg_partition_tree('tbspace_reindex_part_index')\n  ORDER BY relid, level","shape":"SELECT relid, parentrelid, level FROM pg_partition_tree('tbspace_reindex_part_index') ORDER BY relid, level;"}
+{"sql":"CREATE TEMP TABLE reindex_temp_before AS\n  SELECT oid, relname, relfilenode, reltablespace\n  FROM pg_class\n    WHERE relname ~ 'tbspace_reindex_part_index'","shape":"CREATE TEMPORARY TABLE reindex_temp_before AS SELECT oid, relname, relfilenode, reltablespace FROM pg_class WHERE relname ~ 'tbspace_reindex_part_index';"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace, CONCURRENTLY) TABLE tbspace_reindex_part","shape":"REINDEX (TABLESPACE regress_tblspace, CONCURRENTLY) TABLE tbspace_reindex_part;"}
+{"sql":"SELECT b.relname,\n       CASE WHEN a.relfilenode = b.relfilenode THEN 'relfilenode is unchanged'\n       ELSE 'relfilenode has changed' END AS filenode,\n       CASE WHEN a.reltablespace = b.reltablespace THEN 'reltablespace is unchanged'\n       ELSE 'reltablespace has changed' END AS tbspace\n  FROM reindex_temp_before b JOIN pg_class a ON b.relname = a.relname\n  ORDER BY 1","shape":"SELECT b.relname, CASE WHEN a.relfilenode = b.relfilenode THEN 'relfilenode is unchanged' ELSE 'relfilenode has changed' END AS filenode, CASE WHEN a.reltablespace = b.reltablespace THEN 'reltablespace is unchanged' ELSE 'reltablespace has changed' END AS tbspace FROM reindex_temp_before AS b JOIN pg_class AS a ON b.relname = a.relname ORDER BY 1;"}
+{"sql":"DROP TABLE tbspace_reindex_part","shape":"DROP TABLE tbspace_reindex_part;"}
+{"sql":"CREATE SCHEMA testschema","shape":"CREATE SCHEMA testschema;"}
+{"sql":"CREATE TABLE testschema.foo (i int) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.foo (i int) TABLESPACE regress_tblspace;"}
+{"sql":"SELECT relname, spcname FROM pg_catalog.pg_tablespace t, pg_catalog.pg_class c\n    where c.reltablespace = t.oid AND c.relname = 'foo'","shape":"SELECT relname, spcname FROM pg_catalog.pg_tablespace AS t, pg_catalog.pg_class AS c WHERE (c.reltablespace = t.oid) AND (c.relname = 'foo');"}
+{"sql":"INSERT INTO testschema.foo VALUES(1)","shape":"INSERT INTO testschema.foo VALUES (1);"}
+{"sql":"INSERT INTO testschema.foo VALUES(2)","shape":"INSERT INTO testschema.foo VALUES (2);"}
+{"sql":"CREATE TABLE testschema.asselect TABLESPACE regress_tblspace AS SELECT 1","shape":"CREATE TABLE testschema.asselect TABLESPACE regress_tblspace AS SELECT 1;"}
+{"sql":"SELECT relname, spcname FROM pg_catalog.pg_tablespace t, pg_catalog.pg_class c\n    where c.reltablespace = t.oid AND c.relname = 'asselect'","shape":"SELECT relname, spcname FROM pg_catalog.pg_tablespace AS t, pg_catalog.pg_class AS c WHERE (c.reltablespace = t.oid) AND (c.relname = 'asselect');"}
+{"sql":"PREPARE selectsource(int) AS SELECT $1","shape":"PREPARE selectsource (int) AS SELECT $1;"}
+{"sql":"CREATE TABLE testschema.asexecute TABLESPACE regress_tblspace\n    AS EXECUTE selectsource(2)","shape":"CREATE TABLE testschema.asexecute TABLESPACE regress_tblspace AS EXECUTE selectsource(2);"}
+{"sql":"SELECT relname, spcname FROM pg_catalog.pg_tablespace t, pg_catalog.pg_class c\n    where c.reltablespace = t.oid AND c.relname = 'asexecute'","shape":"SELECT relname, spcname FROM pg_catalog.pg_tablespace AS t, pg_catalog.pg_class AS c WHERE (c.reltablespace = t.oid) AND (c.relname = 'asexecute');"}
+{"sql":"CREATE INDEX foo_idx on testschema.foo(i) TABLESPACE regress_tblspace","shape":"CREATE INDEX foo_idx ON testschema.foo (i) TABLESPACE regress_tblspace;"}
+{"sql":"SELECT relname, spcname FROM pg_catalog.pg_tablespace t, pg_catalog.pg_class c\n    where c.reltablespace = t.oid AND c.relname = 'foo_idx'","shape":"SELECT relname, spcname FROM pg_catalog.pg_tablespace AS t, pg_catalog.pg_class AS c WHERE (c.reltablespace = t.oid) AND (c.relname = 'foo_idx');"}
+{"sql":"CREATE TABLE testschema.part (a int) PARTITION BY LIST (a)","shape":"CREATE TABLE testschema.part (a int) PARTITION BY LIST (a);"}
+{"sql":"SET default_tablespace TO pg_global","shape":"SET default_tablespace TO pg_global;"}
+{"sql":"CREATE TABLE testschema.part_1 PARTITION OF testschema.part FOR VALUES IN (1)","shape":"CREATE TABLE testschema.part_1 PARTITION OF testschema.part FOR VALUES IN (1);"}
+{"sql":"RESET default_tablespace","shape":"RESET default_tablespace;"}
+{"sql":"SET default_tablespace TO regress_tblspace","shape":"SET default_tablespace TO regress_tblspace;"}
+{"sql":"CREATE TABLE testschema.part_2 PARTITION OF testschema.part FOR VALUES IN (2)","shape":"CREATE TABLE testschema.part_2 PARTITION OF testschema.part FOR VALUES IN (2);"}
+{"sql":"CREATE TABLE testschema.part_3 PARTITION OF testschema.part FOR VALUES IN (3)","shape":"CREATE TABLE testschema.part_3 PARTITION OF testschema.part FOR VALUES IN (3);"}
+{"sql":"ALTER TABLE testschema.part SET TABLESPACE regress_tblspace"}
+{"sql":"CREATE TABLE testschema.part_4 PARTITION OF testschema.part FOR VALUES IN (4)\n  TABLESPACE pg_default","shape":"CREATE TABLE testschema.part_4 PARTITION OF testschema.part FOR VALUES IN (4) TABLESPACE pg_default;"}
+{"sql":"CREATE TABLE testschema.part_56 PARTITION OF testschema.part FOR VALUES IN (5, 6)\n  PARTITION BY LIST (a)","shape":"CREATE TABLE testschema.part_56 PARTITION OF testschema.part FOR VALUES IN (5, 6) PARTITION BY LIST (a);"}
+{"sql":"ALTER TABLE testschema.part SET TABLESPACE pg_default"}
+{"sql":"CREATE TABLE testschema.part_78 PARTITION OF testschema.part FOR VALUES IN (7, 8)\n  PARTITION BY LIST (a)","shape":"CREATE TABLE testschema.part_78 PARTITION OF testschema.part FOR VALUES IN (7, 8) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE testschema.part_910 PARTITION OF testschema.part FOR VALUES IN (9, 10)\n  PARTITION BY LIST (a) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.part_910 PARTITION OF testschema.part FOR VALUES IN (9, 10) PARTITION BY LIST (a) TABLESPACE regress_tblspace;"}
+{"sql":"SELECT relname, spcname FROM pg_catalog.pg_class c\n    JOIN pg_catalog.pg_namespace n ON (c.relnamespace = n.oid)\n    LEFT JOIN pg_catalog.pg_tablespace t ON c.reltablespace = t.oid\n    where c.relname LIKE 'part%' AND n.nspname = 'testschema' order by relname","shape":"SELECT relname, spcname FROM (pg_catalog.pg_class AS c JOIN pg_catalog.pg_namespace AS n ON (c.relnamespace = n.oid)) LEFT JOIN pg_catalog.pg_tablespace AS t ON c.reltablespace = t.oid WHERE (c.relname LIKE 'part%') AND (n.nspname = 'testschema') ORDER BY relname;"}
+{"sql":"DROP TABLE testschema.part","shape":"DROP TABLE testschema.part;"}
+{"sql":"CREATE TABLE testschema.part1 PARTITION OF testschema.part FOR VALUES IN (1)","shape":"CREATE TABLE testschema.part1 PARTITION OF testschema.part FOR VALUES IN (1);"}
+{"sql":"CREATE INDEX part_a_idx ON testschema.part (a) TABLESPACE regress_tblspace","shape":"CREATE INDEX part_a_idx ON testschema.part (a) TABLESPACE regress_tblspace;"}
+{"sql":"CREATE TABLE testschema.part2 PARTITION OF testschema.part FOR VALUES IN (2)","shape":"CREATE TABLE testschema.part2 PARTITION OF testschema.part FOR VALUES IN (2);"}
+{"sql":"SELECT relname, spcname FROM pg_catalog.pg_tablespace t, pg_catalog.pg_class c\n    where c.reltablespace = t.oid AND c.relname LIKE 'part%_idx' ORDER BY relname","shape":"SELECT relname, spcname FROM pg_catalog.pg_tablespace AS t, pg_catalog.pg_class AS c WHERE (c.reltablespace = t.oid) AND (c.relname LIKE 'part%_idx') ORDER BY relname;"}
+{"sql":"CREATE TABLE testschema.dflt (a int PRIMARY KEY) PARTITION BY LIST (a) TABLESPACE pg_default","shape":"CREATE TABLE testschema.dflt (a int PRIMARY KEY) PARTITION BY LIST (a) TABLESPACE pg_default;"}
+{"sql":"CREATE TABLE testschema.dflt (a int PRIMARY KEY USING INDEX TABLESPACE pg_default) PARTITION BY LIST (a)","shape":"CREATE TABLE testschema.dflt (a int PRIMARY KEY USING INDEX TABLESPACE pg_default) PARTITION BY LIST (a);"}
+{"sql":"SET default_tablespace TO 'pg_default'","shape":"SET default_tablespace TO 'pg_default';"}
+{"sql":"CREATE TABLE testschema.dflt (a int PRIMARY KEY) PARTITION BY LIST (a) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.dflt (a int PRIMARY KEY) PARTITION BY LIST (a) TABLESPACE regress_tblspace;"}
+{"sql":"CREATE TABLE testschema.dflt (a int PRIMARY KEY USING INDEX TABLESPACE regress_tblspace) PARTITION BY LIST (a)","shape":"CREATE TABLE testschema.dflt (a int PRIMARY KEY USING INDEX TABLESPACE regress_tblspace) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE testschema.dflt (a int PRIMARY KEY USING INDEX TABLESPACE regress_tblspace) PARTITION BY LIST (a) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.dflt (a int PRIMARY KEY USING INDEX TABLESPACE regress_tblspace) PARTITION BY LIST (a) TABLESPACE regress_tblspace;"}
+{"sql":"SET default_tablespace TO ''","shape":"SET default_tablespace TO '';"}
+{"sql":"CREATE TABLE testschema.dflt2 (a int PRIMARY KEY) PARTITION BY LIST (a)","shape":"CREATE TABLE testschema.dflt2 (a int PRIMARY KEY) PARTITION BY LIST (a);"}
+{"sql":"DROP TABLE testschema.dflt, testschema.dflt2","shape":"DROP TABLE testschema.dflt, testschema.dflt2;"}
+{"sql":"CREATE TABLE testschema.test_default_tab(id bigint) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.test_default_tab (id bigint) TABLESPACE regress_tblspace;"}
+{"sql":"INSERT INTO testschema.test_default_tab VALUES (1)","shape":"INSERT INTO testschema.test_default_tab VALUES (1);"}
+{"sql":"CREATE INDEX test_index1 on testschema.test_default_tab (id)","shape":"CREATE INDEX test_index1 ON testschema.test_default_tab (id);"}
+{"sql":"CREATE INDEX test_index2 on testschema.test_default_tab (id) TABLESPACE regress_tblspace","shape":"CREATE INDEX test_index2 ON testschema.test_default_tab (id) TABLESPACE regress_tblspace;"}
+{"sql":"ALTER TABLE testschema.test_default_tab ADD CONSTRAINT test_index3 PRIMARY KEY (id)","shape":"ALTER TABLE testschema.test_default_tab ADD CONSTRAINT test_index3 PRIMARY KEY (id);"}
+{"sql":"ALTER TABLE testschema.test_default_tab ADD CONSTRAINT test_index4 UNIQUE (id) USING INDEX TABLESPACE regress_tblspace","shape":"ALTER TABLE testschema.test_default_tab ADD CONSTRAINT test_index4 UNIQUE (id) USING INDEX TABLESPACE regress_tblspace;"}
+{"sql":"ALTER TABLE testschema.test_default_tab ALTER id TYPE bigint","shape":"ALTER TABLE testschema.test_default_tab ALTER COLUMN id SET DATA TYPE bigint;"}
+{"sql":"SELECT * FROM testschema.test_default_tab","shape":"SELECT * FROM testschema.test_default_tab;"}
+{"sql":"ALTER TABLE testschema.test_default_tab ALTER id TYPE int","shape":"ALTER TABLE testschema.test_default_tab ALTER COLUMN id SET DATA TYPE int;"}
+{"sql":"DROP TABLE testschema.test_default_tab","shape":"DROP TABLE testschema.test_default_tab;"}
+{"sql":"CREATE TABLE testschema.test_default_tab_p(id bigint, val bigint)\n    PARTITION BY LIST (id) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.test_default_tab_p (id bigint, val bigint) PARTITION BY LIST (id) TABLESPACE regress_tblspace;"}
+{"sql":"CREATE TABLE testschema.test_default_tab_p1 PARTITION OF testschema.test_default_tab_p\n    FOR VALUES IN (1)","shape":"CREATE TABLE testschema.test_default_tab_p1 PARTITION OF testschema.test_default_tab_p FOR VALUES IN (1);"}
+{"sql":"INSERT INTO testschema.test_default_tab_p VALUES (1)","shape":"INSERT INTO testschema.test_default_tab_p VALUES (1);"}
+{"sql":"CREATE INDEX test_index1 on testschema.test_default_tab_p (val)","shape":"CREATE INDEX test_index1 ON testschema.test_default_tab_p (val);"}
+{"sql":"CREATE INDEX test_index2 on testschema.test_default_tab_p (val) TABLESPACE regress_tblspace","shape":"CREATE INDEX test_index2 ON testschema.test_default_tab_p (val) TABLESPACE regress_tblspace;"}
+{"sql":"ALTER TABLE testschema.test_default_tab_p ADD CONSTRAINT test_index3 PRIMARY KEY (id)","shape":"ALTER TABLE testschema.test_default_tab_p ADD CONSTRAINT test_index3 PRIMARY KEY (id);"}
+{"sql":"ALTER TABLE testschema.test_default_tab_p ADD CONSTRAINT test_index4 UNIQUE (id) USING INDEX TABLESPACE regress_tblspace","shape":"ALTER TABLE testschema.test_default_tab_p ADD CONSTRAINT test_index4 UNIQUE (id) USING INDEX TABLESPACE regress_tblspace;"}
+{"sql":"ALTER TABLE testschema.test_default_tab_p ALTER val TYPE bigint","shape":"ALTER TABLE testschema.test_default_tab_p ALTER COLUMN val SET DATA TYPE bigint;"}
+{"sql":"SELECT * FROM testschema.test_default_tab_p","shape":"SELECT * FROM testschema.test_default_tab_p;"}
+{"sql":"ALTER TABLE testschema.test_default_tab_p ALTER val TYPE int","shape":"ALTER TABLE testschema.test_default_tab_p ALTER COLUMN val SET DATA TYPE int;"}
+{"sql":"DROP TABLE testschema.test_default_tab_p","shape":"DROP TABLE testschema.test_default_tab_p;"}
+{"sql":"CREATE TABLE testschema.test_tab(id int) TABLESPACE regress_tblspace","shape":"CREATE TABLE testschema.test_tab (id int) TABLESPACE regress_tblspace;"}
+{"sql":"INSERT INTO testschema.test_tab VALUES (1)","shape":"INSERT INTO testschema.test_tab VALUES (1);"}
+{"sql":"ALTER TABLE testschema.test_tab ADD CONSTRAINT test_tab_unique UNIQUE (id)","shape":"ALTER TABLE testschema.test_tab ADD CONSTRAINT test_tab_unique UNIQUE (id);"}
+{"sql":"ALTER TABLE testschema.test_tab ADD CONSTRAINT test_tab_pkey PRIMARY KEY (id)","shape":"ALTER TABLE testschema.test_tab ADD CONSTRAINT test_tab_pkey PRIMARY KEY (id);"}
+{"sql":"SELECT * FROM testschema.test_tab","shape":"SELECT * FROM testschema.test_tab;"}
+{"sql":"DROP TABLE testschema.test_tab","shape":"DROP TABLE testschema.test_tab;"}
+{"sql":"CREATE TABLE testschema.test_tab(a int, b int, c int)","shape":"CREATE TABLE testschema.test_tab (a int, b int, c int);"}
+{"sql":"ALTER TABLE testschema.test_tab ADD CONSTRAINT test_tab_unique UNIQUE (a)","shape":"ALTER TABLE testschema.test_tab ADD CONSTRAINT test_tab_unique UNIQUE (a);"}
+{"sql":"CREATE INDEX test_tab_a_idx ON testschema.test_tab (a)","shape":"CREATE INDEX test_tab_a_idx ON testschema.test_tab (a);"}
+{"sql":"CREATE INDEX test_tab_b_idx ON testschema.test_tab (b)","shape":"CREATE INDEX test_tab_b_idx ON testschema.test_tab (b);"}
+{"sql":"ALTER TABLE testschema.test_tab ALTER b TYPE bigint, ADD UNIQUE (c)","shape":"ALTER TABLE testschema.test_tab ALTER COLUMN b SET DATA TYPE bigint, ADD UNIQUE (c);"}
+{"sql":"CREATE TABLE testschema.atable AS VALUES (1), (2)","shape":"CREATE TABLE testschema.atable AS VALUES (1), (2);"}
+{"sql":"CREATE UNIQUE INDEX anindex ON testschema.atable(column1)","shape":"CREATE UNIQUE INDEX anindex ON testschema.atable (column1);"}
+{"sql":"ALTER TABLE testschema.atable SET TABLESPACE regress_tblspace"}
+{"sql":"ALTER INDEX testschema.anindex SET TABLESPACE regress_tblspace"}
+{"sql":"ALTER INDEX testschema.part_a_idx SET TABLESPACE pg_global"}
+{"sql":"ALTER INDEX testschema.part_a_idx SET TABLESPACE pg_default"}
+{"sql":"ALTER INDEX testschema.part_a_idx SET TABLESPACE regress_tblspace"}
+{"sql":"INSERT INTO testschema.atable VALUES(3)","shape":"INSERT INTO testschema.atable VALUES (3);"}
+{"sql":"INSERT INTO testschema.atable VALUES(1)","shape":"INSERT INTO testschema.atable VALUES (1);"}
+{"sql":"SELECT COUNT(*) FROM testschema.atable","shape":"SELECT COUNT(*) FROM testschema.atable;"}
+{"sql":"CREATE MATERIALIZED VIEW testschema.amv AS SELECT * FROM testschema.atable","shape":"CREATE MATERIALIZED VIEW testschema.amv AS SELECT * FROM testschema.atable;"}
+{"sql":"ALTER MATERIALIZED VIEW testschema.amv SET TABLESPACE regress_tblspace"}
+{"sql":"REFRESH MATERIALIZED VIEW testschema.amv","shape":"REFRESH MATERIALIZED VIEW testschema.amv;"}
+{"sql":"SELECT COUNT(*) FROM testschema.amv","shape":"SELECT COUNT(*) FROM testschema.amv;"}
+{"sql":"CREATE TABLESPACE regress_badspace LOCATION '/no/such/location'"}
+{"sql":"CREATE TABLE bar (i int) TABLESPACE regress_nosuchspace","shape":"CREATE TABLE bar (i int) TABLESPACE regress_nosuchspace;"}
+{"sql":"DROP TABLESPACE regress_tblspace"}
+{"sql":"GRANT ALL ON TABLESPACE regress_tblspace TO PUBLIC","shape":"GRANT ALL PRIVILEGES ON TABLESPACE regress_tblspace TO PUBLIC;"}
+{"sql":"CREATE ROLE regress_tablespace_user1 login"}
+{"sql":"CREATE ROLE regress_tablespace_user2 login"}
+{"sql":"GRANT USAGE ON SCHEMA testschema TO regress_tablespace_user2","shape":"GRANT USAGE ON SCHEMA testschema TO regress_tablespace_user2;"}
+{"sql":"ALTER TABLESPACE regress_tblspace OWNER TO regress_tablespace_user1"}
+{"sql":"CREATE TABLE testschema.tablespace_acl (c int)","shape":"CREATE TABLE testschema.tablespace_acl (c int);"}
+{"sql":"CREATE INDEX k ON testschema.tablespace_acl (c) TABLESPACE regress_tblspace","shape":"CREATE INDEX k ON testschema.tablespace_acl (c) TABLESPACE regress_tblspace;"}
+{"sql":"ALTER TABLE testschema.tablespace_acl OWNER TO regress_tablespace_user2"}
+{"sql":"SET SESSION ROLE regress_tablespace_user2"}
+{"sql":"CREATE TABLE tablespace_table (i int) TABLESPACE regress_tblspace","shape":"CREATE TABLE tablespace_table (i int) TABLESPACE regress_tblspace;"}
+{"sql":"ALTER TABLE testschema.tablespace_acl ALTER c TYPE bigint","shape":"ALTER TABLE testschema.tablespace_acl ALTER COLUMN c SET DATA TYPE bigint;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace) TABLE tablespace_table","shape":"REINDEX (TABLESPACE regress_tblspace) TABLE tablespace_table;"}
+{"sql":"REINDEX (TABLESPACE regress_tblspace, CONCURRENTLY) TABLE tablespace_table","shape":"REINDEX (TABLESPACE regress_tblspace, CONCURRENTLY) TABLE tablespace_table;"}
+{"sql":"ALTER TABLESPACE regress_tblspace RENAME TO regress_tblspace_renamed"}
+{"sql":"ALTER TABLE ALL IN TABLESPACE regress_tblspace_renamed SET TABLESPACE pg_default"}
+{"sql":"ALTER INDEX ALL IN TABLESPACE regress_tblspace_renamed SET TABLESPACE pg_default"}
+{"sql":"ALTER MATERIALIZED VIEW ALL IN TABLESPACE regress_tblspace_renamed SET TABLESPACE pg_default"}
+{"sql":"DROP TABLESPACE regress_tblspace_renamed"}
+{"sql":"DROP SCHEMA testschema CASCADE","shape":"DROP SCHEMA testschema CASCADE;"}
+{"sql":"DROP ROLE regress_tablespace_user1","shape":"DROP ROLE regress_tablespace_user1;"}
+{"sql":"DROP ROLE regress_tablespace_user2","shape":"DROP ROLE regress_tablespace_user2;"}

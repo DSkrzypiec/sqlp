@@ -1,0 +1,39 @@
+{"sql":"CREATE TABLE z1(x, y, z)"}
+{"sql":"CREATE TABLE kk(a, b)"}
+{"sql":"INSERT INTO z1 VALUES('a', 'b', 'c')"}
+{"sql":"INSERT INTO z1 VALUES('d', 'e', 'f')"}
+{"sql":"INSERT INTO z1 VALUES('g', 'h', 'i')"}
+{"sql":"INSERT INTO kk VALUES('d', 'e')"}
+{"sql":"SELECT * FROM z1 WHERE x IN (SELECT a FROM kk)"}
+{"sql":"SELECT * FROM z1 WHERE (x,y) IN (SELECT a, b FROM kk)"}
+{"sql":"SELECT * FROM z1 WHERE (x, +y) IN (SELECT a, b FROM kk)"}
+{"sql":"SELECT * FROM z1 WHERE (x, +y) IN (SELECT a, b||'x' FROM kk)"}
+{"sql":"SELECT * FROM z1 WHERE (+x, y) IN (SELECT a, b FROM kk)"}
+{"sql":"CREATE TABLE c1(a, b, c, d)"}
+{"sql":"INSERT INTO c1(rowid, a, b) VALUES(1,   NULL, 1)"}
+{"sql":"INSERT INTO c1(rowid, a, b) VALUES(2,   2, NULL)"}
+{"sql":"INSERT INTO c1(rowid, a, b) VALUES(3,   2, 2)"}
+{"sql":"INSERT INTO c1(rowid, a, b) VALUES(4,   3, 3)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(101, 'a', 'b', 1, 1)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(102, 'a', 'b', 1, 2)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(103, 'a', 'b', 1, 3)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(104, 'a', 'b', 2, 1)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(105, 'a', 'b', 2, 2)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(106, 'a', 'b', 2, 3)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(107, 'a', 'b', 3, 1)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(108, 'a', 'b', 3, 2)"}
+{"sql":"INSERT INTO c1(rowid, a, b, c, d) VALUES(109, 'a', 'b', 3, 3)"}
+{"sql":"INSERT INTO hh VALUES('a', 'a', 1)"}
+{"sql":"INSERT INTO hh VALUES('a', 'b', 2)"}
+{"sql":"INSERT INTO hh VALUES('b', 'a', 3)"}
+{"sql":"INSERT INTO hh VALUES('b', 'b', 4)"}
+{"sql":"CREATE TABLE k1(x, y)"}
+{"sql":"INSERT INTO k1 VALUES('a', 'a')"}
+{"sql":"INSERT INTO k1 VALUES('b', 'b')"}
+{"sql":"INSERT INTO k1 VALUES('a', 'b')"}
+{"sql":"INSERT INTO k1 VALUES('b', 'a')"}
+{"sql":"CREATE TABLE T1(a TEXT)"}
+{"sql":"INSERT INTO T1(a) VALUES ('aaa')"}
+{"sql":"CREATE TABLE T2(a TEXT PRIMARY KEY,n INT)"}
+{"sql":"INSERT INTO T2(a, n) VALUES('aaa',0)"}
+{"sql":"SELECT * FROM T2\n   WHERE (a,n) IN (SELECT T1.a, V.n\n                     FROM T1, (SELECT * FROM (SELECT 0 n) T3) V)"}

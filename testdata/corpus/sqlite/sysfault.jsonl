@@ -1,0 +1,5 @@
+{"sql":"CREATE TABLE t1(a, b, c, PRIMARY KEY(a))"}
+{"sql":"INSERT INTO t1 VALUES('abc', 'def', 'ghi')"}
+{"sql":"ATTACH 'test.db2' AS 'aux'"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(10000), randomblob(10000))"}
+{"sql":"SELECT length(a) + length(b) FROM t1"}

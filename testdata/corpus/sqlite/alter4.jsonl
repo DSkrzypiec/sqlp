@@ -1,0 +1,31 @@
+{"sql":"CREATE TEMP TABLE abc(a, b, c)"}
+{"sql":"SELECT sql FROM sqlite_temp_master"}
+{"sql":"SELECT sql FROM temp.sqlite_master"}
+{"sql":"CREATE TABLE temp.t1(a, b)"}
+{"sql":"SELECT sql FROM sqlite_temp_master WHERE tbl_name = 't1'"}
+{"sql":"SELECT sql FROM temp.sqlite_master WHERE tbl_name = 't1'"}
+{"sql":"CREATE TEMP TABLE t2(a, b, UNIQUE(a, b))"}
+{"sql":"SELECT sql FROM sqlite_temp_master\n       WHERE tbl_name = 't2' AND type = 'table'"}
+{"sql":"CREATE TEMPORARY TABLE t3(a, b, UNIQUE(a, b))"}
+{"sql":"SELECT sql FROM sqlite_temp_master\n     WHERE tbl_name = 't3' AND type = 'table'"}
+{"sql":"CREATE TEMPORARY VIEW v1 AS SELECT * FROM t1"}
+{"sql":"alter table t1 add column d default (-5+1)"}
+{"sql":"CREATE TEMP TABLE t1(a, b)"}
+{"sql":"CREATE TEMP TABLE log(trig, a, b)"}
+{"sql":"SELECT * FROM log ORDER BY trig, a, b"}
+{"sql":"CREATE TEMP TABLE t4(c1)"}
+{"sql":"SELECT sql FROM sqlite_temp_master WHERE name = 't4'"}
+{"sql":"CREATE TABLE t5(\n    a INTEGER DEFAULT -9223372036854775808,\n    b INTEGER DEFAULT (-(-9223372036854775808))\n  )"}
+{"sql":"INSERT INTO t5 DEFAULT VALUES"}
+{"sql":"SELECT typeof(a), a, typeof(b), b FROM t5"}
+{"sql":"ALTER TABLE t5 ADD COLUMN c INTEGER DEFAULT (-(-9223372036854775808))"}
+{"sql":"SELECT typeof(c), c FROM t5"}
+{"sql":"CREATE TABLE t1(c INTEGER PRIMARY KEY, d)"}
+{"sql":"INSERT INTO t1(c,d) VALUES(1,2)"}
+{"sql":"PRAGMA foreign_keys = on"}
+{"sql":"ALTER TABLE t1 ADD COLUMN e"}
+{"sql":"ALTER TABLE t1 ADD COLUMN f REFERENCES t1"}
+{"sql":"ALTER TABLE t1 ADD COLUMN g REFERENCES t1 DEFAULT 4"}
+{"sql":"ALTER TABLE t2 ADD COLUMN g"}
+{"sql":"CREATE VIRTUAL TABLE fff USING fts5(f)"}
+{"sql":"ALTER TABLE fff ADD COLUMN g"}

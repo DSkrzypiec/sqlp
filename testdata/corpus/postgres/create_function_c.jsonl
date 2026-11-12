@@ -1,0 +1,2 @@
+{"sql":"CREATE FUNCTION test1 (int) RETURNS int LANGUAGE C\n    AS 'nosuchfile'","shape":"CREATE FUNCTION test1(int) RETURNS int LANGUAGE C AS 'nosuchfile';"}
+{"sql":"CREATE FUNCTION test1 (int) RETURNS int LANGUAGE internal\n    AS 'nosuch'","shape":"CREATE FUNCTION test1(int) RETURNS int LANGUAGE internal AS 'nosuch';"}

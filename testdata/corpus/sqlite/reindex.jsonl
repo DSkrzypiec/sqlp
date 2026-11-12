@@ -1,0 +1,19 @@
+{"sql":"REINDEX i1"}
+{"sql":"REINDEX main.t1"}
+{"sql":"REINDEX main.i1"}
+{"sql":"REINDEX bogus"}
+{"sql":"CREATE TABLE t2(\n      a TEXT PRIMARY KEY COLLATE c1,\n      b TEXT UNIQUE COLLATE c2,\n      c TEXT COLLATE nocase,\n      d TEST COLLATE binary\n    )"}
+{"sql":"INSERT INTO t2 VALUES('abc','abc','abc','abc')"}
+{"sql":"INSERT INTO t2 VALUES('ABCD','ABCD','ABCD','ABCD')"}
+{"sql":"INSERT INTO t2 VALUES('bcd','bcd','bcd','bcd')"}
+{"sql":"INSERT INTO t2 VALUES('BCDE','BCDE','BCDE','BCDE')"}
+{"sql":"SELECT a FROM t2 ORDER BY a"}
+{"sql":"SELECT b FROM t2 ORDER BY b"}
+{"sql":"SELECT c FROM t2 ORDER BY c"}
+{"sql":"SELECT d FROM t2 ORDER BY d"}
+{"sql":"REINDEX c2"}
+{"sql":"REINDEX c1"}
+{"sql":"CREATE TABLE t0 (\n        c0 INTEGER PRIMARY KEY DESC, \n        c1 UNIQUE DEFAULT NULL\n      ) %without_rowid%","reject":true}
+{"sql":"INSERT INTO t0(c0) VALUES (1), (2), (3), (4), (5)"}
+{"sql":"SELECT c0 FROM t0 WHERE c1 IS NULL ORDER BY 1"}
+{"sql":"SELECT c0 FROM t0 WHERE c1 IS NULL AND c0 IN (1,2,3,4,5)"}

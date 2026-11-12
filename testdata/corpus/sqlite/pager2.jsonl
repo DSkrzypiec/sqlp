@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE t1(i INTEGER PRIMARY KEY, j blob)"}
+{"sql":"SELECT COALESCE(max(i), 0) FROM t1"}
+{"sql":"INSERT INTO t1(j) VALUES(randomblob(1500))"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(5000), zeroblob(5000))"}

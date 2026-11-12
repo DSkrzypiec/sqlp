@@ -1,0 +1,189 @@
+{"sql":"SHOW track_counts","shape":"SHOW track_counts;"}
+{"sql":"SET enable_indexscan TO on","shape":"SET enable_indexscan TO on;"}
+{"sql":"SET enable_indexonlyscan TO off","shape":"SET enable_indexonlyscan TO off;"}
+{"sql":"SET track_functions TO 'all'","shape":"SET track_functions TO 'all';"}
+{"sql":"SELECT oid AS dboid from pg_database where datname = current_database()","shape":"SELECT oid AS dboid FROM pg_database WHERE datname = current_database();"}
+{"sql":"SET LOCAL stats_fetch_consistency = snapshot","shape":"SET LOCAL stats_fetch_consistency TO snapshot;"}
+{"sql":"CREATE TABLE prevstats AS\nSELECT t.seq_scan, t.seq_tup_read, t.idx_scan, t.idx_tup_fetch,\n       (b.heap_blks_read + b.heap_blks_hit) AS heap_blks,\n       (b.idx_blks_read + b.idx_blks_hit) AS idx_blks,\n       pg_stat_get_snapshot_timestamp() as snap_ts\n  FROM pg_catalog.pg_stat_user_tables AS t,\n       pg_catalog.pg_statio_user_tables AS b\n WHERE t.relname='tenk2' AND b.relname='tenk2'","shape":"CREATE TABLE prevstats AS SELECT t.seq_scan, t.seq_tup_read, t.idx_scan, t.idx_tup_fetch, (b.heap_blks_read + b.heap_blks_hit) AS heap_blks, (b.idx_blks_read + b.idx_blks_hit) AS idx_blks, pg_stat_get_snapshot_timestamp() AS snap_ts FROM pg_catalog.pg_stat_user_tables AS t, pg_catalog.pg_statio_user_tables AS b WHERE (t.relname = 'tenk2') AND (b.relname = 'tenk2');"}
+{"sql":"CREATE TABLE trunc_stats_test(id serial)","shape":"CREATE TABLE trunc_stats_test (id serial);"}
+{"sql":"CREATE TABLE trunc_stats_test1(id serial, stuff text)","shape":"CREATE TABLE trunc_stats_test1 (id serial, stuff text);"}
+{"sql":"CREATE TABLE trunc_stats_test2(id serial)","shape":"CREATE TABLE trunc_stats_test2 (id serial);"}
+{"sql":"CREATE TABLE trunc_stats_test3(id serial, stuff text)","shape":"CREATE TABLE trunc_stats_test3 (id serial, stuff text);"}
+{"sql":"CREATE TABLE trunc_stats_test4(id serial)","shape":"CREATE TABLE trunc_stats_test4 (id serial);"}
+{"sql":"INSERT INTO trunc_stats_test DEFAULT VALUES","shape":"INSERT INTO trunc_stats_test DEFAULT VALUES;"}
+{"sql":"TRUNCATE trunc_stats_test","shape":"TRUNCATE TABLE trunc_stats_test;"}
+{"sql":"INSERT INTO trunc_stats_test1 DEFAULT VALUES","shape":"INSERT INTO trunc_stats_test1 DEFAULT VALUES;"}
+{"sql":"UPDATE trunc_stats_test1 SET id = id + 10 WHERE id IN (1, 2)","shape":"UPDATE trunc_stats_test1 SET id = id + 10 WHERE id IN (1, 2);"}
+{"sql":"DELETE FROM trunc_stats_test1 WHERE id = 3","shape":"DELETE FROM trunc_stats_test1 WHERE id = 3;"}
+{"sql":"UPDATE trunc_stats_test1 SET id = id + 100","shape":"UPDATE trunc_stats_test1 SET id = id + 100;"}
+{"sql":"TRUNCATE trunc_stats_test1","shape":"TRUNCATE TABLE trunc_stats_test1;"}
+{"sql":"INSERT INTO trunc_stats_test2 DEFAULT VALUES","shape":"INSERT INTO trunc_stats_test2 DEFAULT VALUES;"}
+{"sql":"SAVEPOINT p1","shape":"SAVEPOINT p1;"}
+{"sql":"TRUNCATE trunc_stats_test2","shape":"TRUNCATE TABLE trunc_stats_test2;"}
+{"sql":"RELEASE SAVEPOINT p1","shape":"RELEASE SAVEPOINT p1;"}
+{"sql":"INSERT INTO trunc_stats_test3 DEFAULT VALUES","shape":"INSERT INTO trunc_stats_test3 DEFAULT VALUES;"}
+{"sql":"TRUNCATE trunc_stats_test3","shape":"TRUNCATE TABLE trunc_stats_test3;"}
+{"sql":"ROLLBACK TO SAVEPOINT p1","shape":"ROLLBACK TO SAVEPOINT p1;"}
+{"sql":"INSERT INTO trunc_stats_test4 DEFAULT VALUES","shape":"INSERT INTO trunc_stats_test4 DEFAULT VALUES;"}
+{"sql":"TRUNCATE trunc_stats_test4","shape":"TRUNCATE TABLE trunc_stats_test4;"}
+{"sql":"SELECT count(*) FROM tenk2","shape":"SELECT count(*) FROM tenk2;"}
+{"sql":"SELECT count(*) FROM tenk2 WHERE unique1 = 1","shape":"SELECT count(*) FROM tenk2 WHERE unique1 = 1;"}
+{"sql":"SELECT pg_stat_force_next_flush()","shape":"SELECT pg_stat_force_next_flush();"}
+{"sql":"SELECT relname, n_tup_ins, n_tup_upd, n_tup_del, n_live_tup, n_dead_tup\n  FROM pg_stat_user_tables\n WHERE relname like 'trunc_stats_test%' order by relname","shape":"SELECT relname, n_tup_ins, n_tup_upd, n_tup_del, n_live_tup, n_dead_tup FROM pg_stat_user_tables WHERE relname LIKE 'trunc_stats_test%' ORDER BY relname;"}
+{"sql":"SELECT st.seq_scan >= pr.seq_scan + 1,\n       st.seq_tup_read >= pr.seq_tup_read + cl.reltuples,\n       st.idx_scan >= pr.idx_scan + 1,\n       st.idx_tup_fetch >= pr.idx_tup_fetch + 1\n  FROM pg_stat_user_tables AS st, pg_class AS cl, prevstats AS pr\n WHERE st.relname='tenk2' AND cl.relname='tenk2'","shape":"SELECT st.seq_scan >= (pr.seq_scan + 1), st.seq_tup_read >= (pr.seq_tup_read + cl.reltuples), st.idx_scan >= (pr.idx_scan + 1), st.idx_tup_fetch >= (pr.idx_tup_fetch + 1) FROM pg_stat_user_tables AS st, pg_class AS cl, prevstats AS pr WHERE (st.relname = 'tenk2') AND (cl.relname = 'tenk2');"}
+{"sql":"SELECT st.heap_blks_read + st.heap_blks_hit >= pr.heap_blks + cl.relpages,\n       st.idx_blks_read + st.idx_blks_hit >= pr.idx_blks + 1\n  FROM pg_statio_user_tables AS st, pg_class AS cl, prevstats AS pr\n WHERE st.relname='tenk2' AND cl.relname='tenk2'","shape":"SELECT (st.heap_blks_read + st.heap_blks_hit) >= (pr.heap_blks + cl.relpages), (st.idx_blks_read + st.idx_blks_hit) >= (pr.idx_blks + 1) FROM pg_statio_user_tables AS st, pg_class AS cl, prevstats AS pr WHERE (st.relname = 'tenk2') AND (cl.relname = 'tenk2');"}
+{"sql":"SELECT pr.snap_ts < pg_stat_get_snapshot_timestamp() as snapshot_newer\nFROM prevstats AS pr","shape":"SELECT pr.snap_ts < pg_stat_get_snapshot_timestamp() AS snapshot_newer FROM prevstats AS pr;"}
+{"sql":"CREATE FUNCTION stats_test_func1() RETURNS VOID LANGUAGE plpgsql AS $$BEGIN END;$$","shape":"CREATE FUNCTION stats_test_func1() RETURNS VOID LANGUAGE plpgsql AS 'BEGIN END;';"}
+{"sql":"SELECT 'stats_test_func1()'::regprocedure::oid AS stats_test_func1_oid","shape":"SELECT 'stats_test_func1()'::regprocedure::oid AS stats_test_func1_oid;"}
+{"sql":"CREATE FUNCTION stats_test_func2() RETURNS VOID LANGUAGE plpgsql AS $$BEGIN END;$$","shape":"CREATE FUNCTION stats_test_func2() RETURNS VOID LANGUAGE plpgsql AS 'BEGIN END;';"}
+{"sql":"SELECT 'stats_test_func2()'::regprocedure::oid AS stats_test_func2_oid","shape":"SELECT 'stats_test_func2()'::regprocedure::oid AS stats_test_func2_oid;"}
+{"sql":"SET LOCAL stats_fetch_consistency = none","shape":"SET LOCAL stats_fetch_consistency TO none;"}
+{"sql":"SELECT stats_test_func1()","shape":"SELECT stats_test_func1();"}
+{"sql":"SELECT stats_test_func2()","shape":"SELECT stats_test_func2();"}
+{"sql":"SAVEPOINT foo","shape":"SAVEPOINT foo;"}
+{"sql":"ROLLBACK TO SAVEPOINT foo","shape":"ROLLBACK TO SAVEPOINT foo;"}
+{"sql":"DROP FUNCTION stats_test_func1()"}
+{"sql":"DROP FUNCTION stats_test_func2()"}
+{"sql":"CREATE TABLE drop_stats_test()","shape":"CREATE TABLE drop_stats_test ();"}
+{"sql":"INSERT INTO drop_stats_test DEFAULT VALUES","shape":"INSERT INTO drop_stats_test DEFAULT VALUES;"}
+{"sql":"SELECT 'drop_stats_test'::regclass::oid AS drop_stats_test_oid","shape":"SELECT 'drop_stats_test'::regclass::oid AS drop_stats_test_oid;"}
+{"sql":"CREATE TABLE drop_stats_test_xact()","shape":"CREATE TABLE drop_stats_test_xact ();"}
+{"sql":"INSERT INTO drop_stats_test_xact DEFAULT VALUES","shape":"INSERT INTO drop_stats_test_xact DEFAULT VALUES;"}
+{"sql":"SELECT 'drop_stats_test_xact'::regclass::oid AS drop_stats_test_xact_oid","shape":"SELECT 'drop_stats_test_xact'::regclass::oid AS drop_stats_test_xact_oid;"}
+{"sql":"CREATE TABLE drop_stats_test_subxact()","shape":"CREATE TABLE drop_stats_test_subxact ();"}
+{"sql":"INSERT INTO drop_stats_test_subxact DEFAULT VALUES","shape":"INSERT INTO drop_stats_test_subxact DEFAULT VALUES;"}
+{"sql":"SELECT 'drop_stats_test_subxact'::regclass::oid AS drop_stats_test_subxact_oid","shape":"SELECT 'drop_stats_test_subxact'::regclass::oid AS drop_stats_test_subxact_oid;"}
+{"sql":"DROP TABLE drop_stats_test","shape":"DROP TABLE drop_stats_test;"}
+{"sql":"DROP TABLE drop_stats_test_xact","shape":"DROP TABLE drop_stats_test_xact;"}
+{"sql":"SAVEPOINT sp1","shape":"SAVEPOINT sp1;"}
+{"sql":"SAVEPOINT sp2","shape":"SAVEPOINT sp2;"}
+{"sql":"DROP TABLE drop_stats_test_subxact","shape":"DROP TABLE drop_stats_test_subxact;"}
+{"sql":"ROLLBACK TO SAVEPOINT sp2","shape":"ROLLBACK TO SAVEPOINT sp2;"}
+{"sql":"ROLLBACK TO SAVEPOINT sp1","shape":"ROLLBACK TO SAVEPOINT sp1;"}
+{"sql":"RELEASE SAVEPOINT sp1","shape":"RELEASE SAVEPOINT sp1;"}
+{"sql":"DROP TABLE trunc_stats_test, trunc_stats_test1, trunc_stats_test2, trunc_stats_test3, trunc_stats_test4","shape":"DROP TABLE trunc_stats_test, trunc_stats_test1, trunc_stats_test2, trunc_stats_test3, trunc_stats_test4;"}
+{"sql":"DROP TABLE prevstats","shape":"DROP TABLE prevstats;"}
+{"sql":"CREATE TEMPORARY TABLE test_last_scan(idx_col int primary key, noidx_col int)","shape":"CREATE TEMPORARY TABLE test_last_scan (idx_col int PRIMARY KEY, noidx_col int);"}
+{"sql":"INSERT INTO test_last_scan(idx_col, noidx_col) VALUES(1, 1)","shape":"INSERT INTO test_last_scan (idx_col, noidx_col) VALUES (1, 1);"}
+{"sql":"SELECT last_seq_scan, last_idx_scan FROM pg_stat_all_tables WHERE relid = 'test_last_scan'::regclass","shape":"SELECT last_seq_scan, last_idx_scan FROM pg_stat_all_tables WHERE relid = 'test_last_scan'::regclass;"}
+{"sql":"SELECT pg_stat_reset_single_table_counters('test_last_scan'::regclass)","shape":"SELECT pg_stat_reset_single_table_counters('test_last_scan'::regclass);"}
+{"sql":"SELECT seq_scan, idx_scan FROM pg_stat_all_tables WHERE relid = 'test_last_scan'::regclass","shape":"SELECT seq_scan, idx_scan FROM pg_stat_all_tables WHERE relid = 'test_last_scan'::regclass;"}
+{"sql":"SET LOCAL enable_seqscan TO on","shape":"SET LOCAL enable_seqscan TO on;"}
+{"sql":"SET LOCAL enable_indexscan TO on","shape":"SET LOCAL enable_indexscan TO on;"}
+{"sql":"SET LOCAL enable_bitmapscan TO off","shape":"SET LOCAL enable_bitmapscan TO off;"}
+{"sql":"EXPLAIN (COSTS off) SELECT count(*) FROM test_last_scan WHERE noidx_col = 1","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM test_last_scan WHERE noidx_col = 1;"}
+{"sql":"SELECT count(*) FROM test_last_scan WHERE noidx_col = 1","shape":"SELECT count(*) FROM test_last_scan WHERE noidx_col = 1;"}
+{"sql":"SET LOCAL enable_seqscan TO off","shape":"SET LOCAL enable_seqscan TO off;"}
+{"sql":"EXPLAIN (COSTS off) SELECT count(*) FROM test_last_scan WHERE idx_col = 1","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM test_last_scan WHERE idx_col = 1;"}
+{"sql":"SELECT count(*) FROM test_last_scan WHERE idx_col = 1","shape":"SELECT count(*) FROM test_last_scan WHERE idx_col = 1;"}
+{"sql":"SELECT last_seq_scan AS test_last_seq, last_idx_scan AS test_last_idx\nFROM pg_stat_all_tables WHERE relid = 'test_last_scan'::regclass","shape":"SELECT last_seq_scan AS test_last_seq, last_idx_scan AS test_last_idx FROM pg_stat_all_tables WHERE relid = 'test_last_scan'::regclass;"}
+{"sql":"SELECT pg_sleep(0.1)","shape":"SELECT pg_sleep(0.1);"}
+{"sql":"SET LOCAL enable_indexscan TO off","shape":"SET LOCAL enable_indexscan TO off;"}
+{"sql":"SET LOCAL enable_bitmapscan TO on","shape":"SET LOCAL enable_bitmapscan TO on;"}
+{"sql":"SELECT shobj_description(d.oid, 'pg_database') as description_before\n  FROM pg_database d WHERE datname = current_database()","shape":"SELECT shobj_description(d.oid, 'pg_database') AS description_before FROM pg_database AS d WHERE datname = current_database();"}
+{"sql":"SELECT current_database() as datname","shape":"SELECT current_database() AS datname;"}
+{"sql":"SELECT (n_tup_ins + n_tup_upd) > 0 AS has_data FROM pg_stat_all_tables\n  WHERE relid = 'pg_shdescription'::regclass","shape":"SELECT (n_tup_ins + n_tup_upd) > 0 AS has_data FROM pg_stat_all_tables WHERE relid = 'pg_shdescription'::regclass;"}
+{"sql":"SELECT pg_stat_reset_single_table_counters('pg_shdescription'::regclass)","shape":"SELECT pg_stat_reset_single_table_counters('pg_shdescription'::regclass);"}
+{"sql":"SELECT sessions AS db_stat_sessions FROM pg_stat_database WHERE datname = (SELECT current_database())","shape":"SELECT sessions AS db_stat_sessions FROM pg_stat_database WHERE datname = (SELECT current_database());"}
+{"sql":"SELECT checkpoints_req AS rqst_ckpts_before FROM pg_stat_bgwriter","shape":"SELECT checkpoints_req AS rqst_ckpts_before FROM pg_stat_bgwriter;"}
+{"sql":"SELECT wal_bytes AS wal_bytes_before FROM pg_stat_wal","shape":"SELECT wal_bytes AS wal_bytes_before FROM pg_stat_wal;"}
+{"sql":"CREATE TEMP TABLE test_stats_temp AS SELECT 17","shape":"CREATE TEMPORARY TABLE test_stats_temp AS SELECT 17;"}
+{"sql":"DROP TABLE test_stats_temp","shape":"DROP TABLE test_stats_temp;"}
+{"sql":"CHECKPOINT","shape":"CHECKPOINT;"}
+{"sql":"SELECT (current_schemas(true))[1] = ('pg_temp_' || beid::text) AS match\nFROM pg_stat_get_backend_idset() beid\nWHERE pg_stat_get_backend_pid(beid) = pg_backend_pid()","shape":"SELECT (current_schemas(TRUE))[1] = ('pg_temp_' || beid::text) AS match FROM pg_stat_get_backend_idset() AS beid WHERE pg_stat_get_backend_pid(beid) = pg_backend_pid();"}
+{"sql":"SELECT stats_reset AS slru_commit_ts_reset_ts FROM pg_stat_slru WHERE name = 'CommitTs'","shape":"SELECT stats_reset AS slru_commit_ts_reset_ts FROM pg_stat_slru WHERE name = 'CommitTs';"}
+{"sql":"SELECT stats_reset AS slru_notify_reset_ts FROM pg_stat_slru WHERE name = 'Notify'","shape":"SELECT stats_reset AS slru_notify_reset_ts FROM pg_stat_slru WHERE name = 'Notify';"}
+{"sql":"SELECT pg_stat_reset_slru('CommitTs')","shape":"SELECT pg_stat_reset_slru('CommitTs');"}
+{"sql":"SELECT pg_stat_reset_slru(NULL)","shape":"SELECT pg_stat_reset_slru(NULL);"}
+{"sql":"SELECT stats_reset AS archiver_reset_ts FROM pg_stat_archiver","shape":"SELECT stats_reset AS archiver_reset_ts FROM pg_stat_archiver;"}
+{"sql":"SELECT pg_stat_reset_shared('archiver')","shape":"SELECT pg_stat_reset_shared('archiver');"}
+{"sql":"SELECT stats_reset AS bgwriter_reset_ts FROM pg_stat_bgwriter","shape":"SELECT stats_reset AS bgwriter_reset_ts FROM pg_stat_bgwriter;"}
+{"sql":"SELECT pg_stat_reset_shared('bgwriter')","shape":"SELECT pg_stat_reset_shared('bgwriter');"}
+{"sql":"SELECT stats_reset AS wal_reset_ts FROM pg_stat_wal","shape":"SELECT stats_reset AS wal_reset_ts FROM pg_stat_wal;"}
+{"sql":"SELECT pg_stat_reset_shared('wal')","shape":"SELECT pg_stat_reset_shared('wal');"}
+{"sql":"SELECT pg_stat_reset_shared(NULL)","shape":"SELECT pg_stat_reset_shared(NULL);"}
+{"sql":"SELECT pg_stat_reset()","shape":"SELECT pg_stat_reset();"}
+{"sql":"SELECT stats_reset AS db_reset_ts FROM pg_stat_database WHERE datname = (SELECT current_database())","shape":"SELECT stats_reset AS db_reset_ts FROM pg_stat_database WHERE datname = (SELECT current_database());"}
+{"sql":"SELECT pg_stat_get_snapshot_timestamp()","shape":"SELECT pg_stat_get_snapshot_timestamp();"}
+{"sql":"SELECT pg_stat_get_function_calls(0)","shape":"SELECT pg_stat_get_function_calls(0);"}
+{"sql":"SELECT pg_stat_get_snapshot_timestamp() >= NOW()","shape":"SELECT pg_stat_get_snapshot_timestamp() >= NOW();"}
+{"sql":"SELECT pg_stat_clear_snapshot()","shape":"SELECT pg_stat_clear_snapshot();"}
+{"sql":"SET LOCAL stats_fetch_consistency = cache","shape":"SET LOCAL stats_fetch_consistency TO cache;"}
+{"sql":"SELECT pg_stat_get_snapshot_timestamp() IS NOT NULL AS snapshot_ok","shape":"SELECT pg_stat_get_snapshot_timestamp() IS NOT NULL AS snapshot_ok;"}
+{"sql":"SELECT pg_stat_have_stats('bgwriter', 0, 0)","shape":"SELECT pg_stat_have_stats('bgwriter', 0, 0);"}
+{"sql":"SELECT pg_stat_have_stats('zaphod', 0, 0)","shape":"SELECT pg_stat_have_stats('zaphod', 0, 0);"}
+{"sql":"CREATE table stats_test_tab1 as select generate_series(1,10) a","shape":"CREATE TABLE stats_test_tab1 AS SELECT generate_series(1, 10) AS a;"}
+{"sql":"CREATE index stats_test_idx1 on stats_test_tab1(a)","shape":"CREATE INDEX stats_test_idx1 ON stats_test_tab1 (a);"}
+{"sql":"SELECT 'stats_test_idx1'::regclass::oid AS stats_test_idx1_oid","shape":"SELECT 'stats_test_idx1'::regclass::oid AS stats_test_idx1_oid;"}
+{"sql":"select a from stats_test_tab1 where a = 3","shape":"SELECT a FROM stats_test_tab1 WHERE a = 3;"}
+{"sql":"DROP index stats_test_idx1","shape":"DROP INDEX stats_test_idx1;"}
+{"sql":"REINDEX index CONCURRENTLY stats_test_idx1","shape":"REINDEX INDEX CONCURRENTLY stats_test_idx1;"}
+{"sql":"SELECT pg_stat_get_replication_slot(NULL)","shape":"SELECT pg_stat_get_replication_slot(NULL);"}
+{"sql":"SELECT pg_stat_get_subscription_stats(NULL)","shape":"SELECT pg_stat_get_subscription_stats(NULL);"}
+{"sql":"SELECT sum(extends) AS io_sum_shared_before_extends\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'relation'","shape":"SELECT sum(extends) AS io_sum_shared_before_extends FROM pg_stat_io WHERE (context = 'normal') AND (object = 'relation');"}
+{"sql":"SELECT sum(writes) AS writes, sum(fsyncs) AS fsyncs\n  FROM pg_stat_io\n  WHERE object = 'relation'","shape":"SELECT sum(writes) AS writes, sum(fsyncs) AS fsyncs FROM pg_stat_io WHERE object = 'relation';"}
+{"sql":"CREATE TABLE test_io_shared(a int)","shape":"CREATE TABLE test_io_shared (a int);"}
+{"sql":"INSERT INTO test_io_shared SELECT i FROM generate_series(1,100)i","shape":"INSERT INTO test_io_shared SELECT i FROM generate_series(1, 100) AS i;"}
+{"sql":"SELECT sum(extends) AS io_sum_shared_after_extends\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'relation'","shape":"SELECT sum(extends) AS io_sum_shared_after_extends FROM pg_stat_io WHERE (context = 'normal') AND (object = 'relation');"}
+{"sql":"SELECT sum(reads) AS io_sum_shared_before_reads\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'relation'","shape":"SELECT sum(reads) AS io_sum_shared_before_reads FROM pg_stat_io WHERE (context = 'normal') AND (object = 'relation');"}
+{"sql":"ALTER TABLE test_io_shared SET TABLESPACE regress_tblspace"}
+{"sql":"SELECT COUNT(*) FROM test_io_shared","shape":"SELECT COUNT(*) FROM test_io_shared;"}
+{"sql":"SELECT sum(reads) AS io_sum_shared_after_reads\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'relation'","shape":"SELECT sum(reads) AS io_sum_shared_after_reads FROM pg_stat_io WHERE (context = 'normal') AND (object = 'relation');"}
+{"sql":"SELECT sum(hits) AS io_sum_shared_before_hits\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'relation'","shape":"SELECT sum(hits) AS io_sum_shared_before_hits FROM pg_stat_io WHERE (context = 'normal') AND (object = 'relation');"}
+{"sql":"SET LOCAL enable_nestloop TO on","shape":"SET LOCAL enable_nestloop TO on;"}
+{"sql":"SET LOCAL enable_mergejoin TO off","shape":"SET LOCAL enable_mergejoin TO off;"}
+{"sql":"SET LOCAL enable_hashjoin TO off","shape":"SET LOCAL enable_hashjoin TO off;"}
+{"sql":"SET LOCAL enable_material TO off","shape":"SET LOCAL enable_material TO off;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM test_io_shared t1 INNER JOIN test_io_shared t2 USING (a)","shape":"EXPLAIN (COSTS OFF) SELECT COUNT(*) FROM test_io_shared AS t1 JOIN test_io_shared AS t2 USING (a);"}
+{"sql":"SELECT COUNT(*) FROM test_io_shared t1 INNER JOIN test_io_shared t2 USING (a)","shape":"SELECT COUNT(*) FROM test_io_shared AS t1 JOIN test_io_shared AS t2 USING (a);"}
+{"sql":"SELECT sum(hits) AS io_sum_shared_after_hits\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'relation'","shape":"SELECT sum(hits) AS io_sum_shared_after_hits FROM pg_stat_io WHERE (context = 'normal') AND (object = 'relation');"}
+{"sql":"DROP TABLE test_io_shared","shape":"DROP TABLE test_io_shared;"}
+{"sql":"SET temp_buffers TO 100","shape":"SET temp_buffers TO 100;"}
+{"sql":"CREATE TEMPORARY TABLE test_io_local(a int, b TEXT)","shape":"CREATE TEMPORARY TABLE test_io_local (a int, b TEXT);"}
+{"sql":"SELECT sum(extends) AS extends, sum(evictions) AS evictions, sum(writes) AS writes\n  FROM pg_stat_io\n  WHERE context = 'normal' AND object = 'temp relation'","shape":"SELECT sum(extends) AS extends, sum(evictions) AS evictions, sum(writes) AS writes FROM pg_stat_io WHERE (context = 'normal') AND (object = 'temp relation');"}
+{"sql":"INSERT INTO test_io_local SELECT generate_series(1, 5000) as id, repeat('a', 200)","shape":"INSERT INTO test_io_local SELECT generate_series(1, 5000) AS id, repeat('a', 200);"}
+{"sql":"SELECT pg_relation_size('test_io_local') / current_setting('block_size')::int8 > 100","shape":"SELECT (pg_relation_size('test_io_local') / current_setting('block_size')::int8) > 100;"}
+{"sql":"SELECT sum(reads) AS io_sum_local_before_reads\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'temp relation'","shape":"SELECT sum(reads) AS io_sum_local_before_reads FROM pg_stat_io WHERE (context = 'normal') AND (object = 'temp relation');"}
+{"sql":"SELECT COUNT(*) FROM test_io_local","shape":"SELECT COUNT(*) FROM test_io_local;"}
+{"sql":"SELECT sum(evictions) AS evictions,\n       sum(reads) AS reads,\n       sum(writes) AS writes,\n       sum(extends) AS extends\n  FROM pg_stat_io\n  WHERE context = 'normal' AND object = 'temp relation'","shape":"SELECT sum(evictions) AS evictions, sum(reads) AS reads, sum(writes) AS writes, sum(extends) AS extends FROM pg_stat_io WHERE (context = 'normal') AND (object = 'temp relation');"}
+{"sql":"ALTER TABLE test_io_local SET TABLESPACE regress_tblspace"}
+{"sql":"SELECT sum(writes) AS io_sum_local_new_tblspc_writes\n  FROM pg_stat_io WHERE context = 'normal' AND object = 'temp relation'","shape":"SELECT sum(writes) AS io_sum_local_new_tblspc_writes FROM pg_stat_io WHERE (context = 'normal') AND (object = 'temp relation');"}
+{"sql":"RESET temp_buffers","shape":"RESET temp_buffers;"}
+{"sql":"SET wal_skip_threshold = '1 kB'","shape":"SET wal_skip_threshold TO '1 kB';"}
+{"sql":"SELECT sum(reuses) AS reuses, sum(reads) AS reads, sum(evictions) AS evictions\n  FROM pg_stat_io WHERE context = 'vacuum'","shape":"SELECT sum(reuses) AS reuses, sum(reads) AS reads, sum(evictions) AS evictions FROM pg_stat_io WHERE context = 'vacuum';"}
+{"sql":"CREATE TABLE test_io_vac_strategy(a int, b int) WITH (autovacuum_enabled = 'false')","shape":"CREATE TABLE test_io_vac_strategy (a int, b int) WITH (autovacuum_enabled = 'false');"}
+{"sql":"INSERT INTO test_io_vac_strategy SELECT i, i from generate_series(1, 4500)i","shape":"INSERT INTO test_io_vac_strategy SELECT i, i FROM generate_series(1, 4500) AS i;"}
+{"sql":"VACUUM (FULL) test_io_vac_strategy","shape":"VACUUM (FULL) test_io_vac_strategy;"}
+{"sql":"VACUUM (PARALLEL 0, BUFFER_USAGE_LIMIT 128) test_io_vac_strategy","shape":"VACUUM (PARALLEL 0, BUFFER_USAGE_LIMIT 128) test_io_vac_strategy;"}
+{"sql":"RESET wal_skip_threshold","shape":"RESET wal_skip_threshold;"}
+{"sql":"SELECT sum(extends) AS io_sum_bulkwrite_strategy_extends_before\n  FROM pg_stat_io WHERE context = 'bulkwrite'","shape":"SELECT sum(extends) AS io_sum_bulkwrite_strategy_extends_before FROM pg_stat_io WHERE context = 'bulkwrite';"}
+{"sql":"CREATE TABLE test_io_bulkwrite_strategy AS SELECT i FROM generate_series(1,100)i","shape":"CREATE TABLE test_io_bulkwrite_strategy AS SELECT i FROM generate_series(1, 100) AS i;"}
+{"sql":"SELECT sum(extends) AS io_sum_bulkwrite_strategy_extends_after\n  FROM pg_stat_io WHERE context = 'bulkwrite'","shape":"SELECT sum(extends) AS io_sum_bulkwrite_strategy_extends_after FROM pg_stat_io WHERE context = 'bulkwrite';"}
+{"sql":"SELECT pg_stat_have_stats('io', 0, 0)","shape":"SELECT pg_stat_have_stats('io', 0, 0);"}
+{"sql":"SELECT sum(evictions) + sum(reuses) + sum(extends) + sum(fsyncs) + sum(reads) + sum(writes) + sum(writebacks) + sum(hits) AS io_stats_pre_reset\n  FROM pg_stat_io","shape":"SELECT ((((((sum(evictions) + sum(reuses)) + sum(extends)) + sum(fsyncs)) + sum(reads)) + sum(writes)) + sum(writebacks)) + sum(hits) AS io_stats_pre_reset FROM pg_stat_io;"}
+{"sql":"SELECT pg_stat_reset_shared('io')","shape":"SELECT pg_stat_reset_shared('io');"}
+{"sql":"SELECT sum(evictions) + sum(reuses) + sum(extends) + sum(fsyncs) + sum(reads) + sum(writes) + sum(writebacks) + sum(hits) AS io_stats_post_reset\n  FROM pg_stat_io","shape":"SELECT ((((((sum(evictions) + sum(reuses)) + sum(extends)) + sum(fsyncs)) + sum(reads)) + sum(writes)) + sum(writebacks)) + sum(hits) AS io_stats_post_reset FROM pg_stat_io;"}
+{"sql":"CREATE TABLE brin_hot (\n  id  integer PRIMARY KEY,\n  val integer NOT NULL\n) WITH (autovacuum_enabled = off, fillfactor = 70)","shape":"CREATE TABLE brin_hot (id integer PRIMARY KEY, val integer NOT NULL) WITH (autovacuum_enabled = off, fillfactor = 70);"}
+{"sql":"INSERT INTO brin_hot SELECT *, 0 FROM generate_series(1, 235)","shape":"INSERT INTO brin_hot SELECT *, 0 FROM generate_series(1, 235);"}
+{"sql":"CREATE INDEX val_brin ON brin_hot using brin(val)","shape":"CREATE INDEX val_brin ON brin_hot USING brin (val);"}
+{"sql":"CREATE FUNCTION wait_for_hot_stats() RETURNS void AS $$\nDECLARE\n  start_time timestamptz := clock_timestamp();\n  updated bool;\nBEGIN\n  -- we don't want to wait forever; loop will exit after 30 seconds\n  FOR i IN 1 .. 300 LOOP\n    SELECT (pg_stat_get_tuples_hot_updated('brin_hot'::regclass::oid) > 0) INTO updated;\n    EXIT WHEN updated;\n\n    -- wait a little\n    PERFORM pg_sleep_for('100 milliseconds');\n    -- reset stats snapshot so we can test again\n    PERFORM pg_stat_clear_snapshot();\n  END LOOP;\n  -- report time waited in postmaster log (where it won't change test output)\n  RAISE log 'wait_for_hot_stats delayed % seconds',\n    EXTRACT(epoch FROM clock_timestamp() - start_time);\nEND\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION wait_for_hot_stats() RETURNS void AS '\nDECLARE\n  start_time timestamptz := clock_timestamp();\n  updated bool;\nBEGIN\n  -- we don''t want to wait forever; loop will exit after 30 seconds\n  FOR i IN 1 .. 300 LOOP\n    SELECT (pg_stat_get_tuples_hot_updated(''brin_hot''::regclass::oid) > 0) INTO updated;\n    EXIT WHEN updated;\n\n    -- wait a little\n    PERFORM pg_sleep_for(''100 milliseconds'');\n    -- reset stats snapshot so we can test again\n    PERFORM pg_stat_clear_snapshot();\n  END LOOP;\n  -- report time waited in postmaster log (where it won''t change test output)\n  RAISE log ''wait_for_hot_stats delayed % seconds'',\n    EXTRACT(epoch FROM clock_timestamp() - start_time);\nEND\n' LANGUAGE plpgsql;"}
+{"sql":"UPDATE brin_hot SET val = -3 WHERE id = 42","shape":"UPDATE brin_hot SET val = -3 WHERE id = 42;"}
+{"sql":"SELECT wait_for_hot_stats()","shape":"SELECT wait_for_hot_stats();"}
+{"sql":"SELECT pg_stat_get_tuples_hot_updated('brin_hot'::regclass::oid)","shape":"SELECT pg_stat_get_tuples_hot_updated('brin_hot'::regclass::oid);"}
+{"sql":"DROP TABLE brin_hot","shape":"DROP TABLE brin_hot;"}
+{"sql":"DROP FUNCTION wait_for_hot_stats()"}
+{"sql":"CREATE TABLE brin_hot_2 (a int, b int)","shape":"CREATE TABLE brin_hot_2 (a int, b int);"}
+{"sql":"INSERT INTO brin_hot_2 VALUES (1, 100)","shape":"INSERT INTO brin_hot_2 VALUES (1, 100);"}
+{"sql":"CREATE INDEX ON brin_hot_2 USING brin (b) WHERE a = 2","shape":"CREATE INDEX ON brin_hot_2 USING brin (b) WHERE a = 2;"}
+{"sql":"UPDATE brin_hot_2 SET a = 2","shape":"UPDATE brin_hot_2 SET a = 2;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM brin_hot_2 WHERE a = 2 AND b = 100","shape":"EXPLAIN (COSTS OFF) SELECT * FROM brin_hot_2 WHERE (a = 2) AND (b = 100);"}
+{"sql":"SELECT COUNT(*) FROM brin_hot_2 WHERE a = 2 AND b = 100","shape":"SELECT COUNT(*) FROM brin_hot_2 WHERE (a = 2) AND (b = 100);"}
+{"sql":"DROP TABLE brin_hot_2","shape":"DROP TABLE brin_hot_2;"}
+{"sql":"CREATE TABLE brin_hot_3 (a int, filler text) WITH (fillfactor = 10)","shape":"CREATE TABLE brin_hot_3 (a int, filler text) WITH (fillfactor = 10);"}
+{"sql":"INSERT INTO brin_hot_3 SELECT 1, repeat(' ', 500) FROM generate_series(1, 20)","shape":"INSERT INTO brin_hot_3 SELECT 1, repeat(' ', 500) FROM generate_series(1, 20);"}
+{"sql":"CREATE INDEX ON brin_hot_3 USING brin (a) WITH (pages_per_range = 1)","shape":"CREATE INDEX ON brin_hot_3 USING brin (a) WITH (pages_per_range = 1);"}
+{"sql":"UPDATE brin_hot_3 SET a = 2","shape":"UPDATE brin_hot_3 SET a = 2;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM brin_hot_3 WHERE a = 2","shape":"EXPLAIN (COSTS OFF) SELECT * FROM brin_hot_3 WHERE a = 2;"}
+{"sql":"SELECT COUNT(*) FROM brin_hot_3 WHERE a = 2","shape":"SELECT COUNT(*) FROM brin_hot_3 WHERE a = 2;"}
+{"sql":"DROP TABLE brin_hot_3","shape":"DROP TABLE brin_hot_3;"}
+{"sql":"SET enable_seqscan = on","shape":"SET enable_seqscan TO on;"}

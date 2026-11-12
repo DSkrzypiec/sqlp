@@ -1,0 +1,425 @@
+{"sql":"CREATE TABLE p(i PRIMARY KEY)"}
+{"sql":"CREATE TABLE c(j REFERENCES p ON UPDATE CASCADE)"}
+{"sql":"INSERT INTO p VALUES('hello')"}
+{"sql":"INSERT INTO c VALUES('hello')"}
+{"sql":"UPDATE p SET i = 'world'"}
+{"sql":"PRAGMA foreign_key_list(c)"}
+{"sql":"PRAGMA foreign_keys"}
+{"sql":"CREATE TABLE c(j REFERENCES p)"}
+{"sql":"PRAGMA table_info(c)"}
+{"sql":"DELETE FROM c"}
+{"sql":"DELETE FROM p"}
+{"sql":"PRAGMA foreign_keys = OFF"}
+{"sql":"CREATE TABLE t1(a UNIQUE, b)"}
+{"sql":"CREATE TABLE t2(c, d REFERENCES t1(a))"}
+{"sql":"INSERT INTO t2 VALUES(2, 1)"}
+{"sql":"CREATE TABLE artist(\n      artistid    INTEGER PRIMARY KEY, \n      artistname  TEXT\n    )"}
+{"sql":"CREATE TABLE track(\n      trackid     INTEGER, \n      trackname   TEXT, \n      trackartist INTEGER,\n      FOREIGN KEY(trackartist) REFERENCES artist(artistid)\n    )"}
+{"sql":"INSERT INTO track VALUES(1, 'track 1', 1)"}
+{"sql":"INSERT INTO artist VALUES(2, 'artist 1')"}
+{"sql":"INSERT INTO track VALUES(1, 'track 1', 2)"}
+{"sql":"DELETE FROM artist WHERE artistid = 2"}
+{"sql":"DELETE FROM track WHERE trackartist = 2"}
+{"sql":"INSERT INTO track VALUES(1, 'track 1', NULL)"}
+{"sql":"INSERT INTO track VALUES(2, 'track 2', NULL)"}
+{"sql":"SELECT * FROM artist"}
+{"sql":"UPDATE track SET trackartist = 5 WHERE trackid = 1"}
+{"sql":"INSERT INTO artist VALUES(5, 'artist 5')"}
+{"sql":"DELETE FROM artist WHERE artistid = 5"}
+{"sql":"UPDATE track SET trackartist = NULL WHERE trackid = 1"}
+{"sql":"SELECT count(*) FROM track WHERE NOT (\n        trackartist IS NULL OR \n        EXISTS(SELECT 1 FROM artist WHERE artistid=trackartist)\n      )"}
+{"sql":"CREATE TABLE track(\n      trackid     INTEGER, \n      trackname   TEXT, \n      trackartist INTEGER NOT NULL,\n      FOREIGN KEY(trackartist) REFERENCES artist(artistid)\n    )"}
+{"sql":"INSERT INTO track VALUES(14, 'Mr. Bojangles', NULL)"}
+{"sql":"INSERT INTO artist VALUES(1, 'Dean Martin')"}
+{"sql":"INSERT INTO artist VALUES(2, 'Frank Sinatra')"}
+{"sql":"INSERT INTO track VALUES(11, 'That''s Amore', 1)"}
+{"sql":"INSERT INTO track VALUES(12, 'Christmas Blues', 1)"}
+{"sql":"INSERT INTO track VALUES(13, 'My Way', 2)"}
+{"sql":"INSERT INTO track VALUES(14, 'Mr. Bojangles', 3)"}
+{"sql":"UPDATE track SET trackartist = 3 WHERE trackname = 'Mr. Bojangles'"}
+{"sql":"INSERT INTO artist VALUES(3, 'Sammy Davis Jr.')"}
+{"sql":"INSERT INTO track VALUES(15, 'Boogie Woogie', 3)"}
+{"sql":"DELETE FROM artist WHERE artistname = 'Frank Sinatra'"}
+{"sql":"DELETE FROM track WHERE trackname = 'My Way'"}
+{"sql":"UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin'"}
+{"sql":"DELETE FROM track WHERE trackname IN('That''s Amore', 'Christmas Blues')"}
+{"sql":"CREATE TABLE par(p PRIMARY KEY)"}
+{"sql":"CREATE TABLE chi(c REFERENCES par)"}
+{"sql":"INSERT INTO par VALUES(1)"}
+{"sql":"INSERT INTO par VALUES('1')"}
+{"sql":"INSERT INTO par VALUES(X'31')"}
+{"sql":"SELECT typeof(p) FROM par"}
+{"sql":"SELECT * FROM chi WHERE c IS NOT NULL AND c NOT IN (SELECT p FROM par)"}
+{"sql":"CREATE TABLE t1(a COLLATE nocase PRIMARY KEY)"}
+{"sql":"CREATE TABLE t2(b REFERENCES t1)"}
+{"sql":"INSERT INTO t1 VALUES('oNe')"}
+{"sql":"INSERT INTO t2 VALUES('one')"}
+{"sql":"INSERT INTO t2 VALUES('ONE')"}
+{"sql":"UPDATE t2 SET b = 'OnE'"}
+{"sql":"UPDATE t1 SET a = 'ONE'"}
+{"sql":"UPDATE t2 SET b = 'two' WHERE rowid = 1"}
+{"sql":"DELETE FROM t1 WHERE rowid = 1"}
+{"sql":"CREATE TABLE t1(a NUMERIC PRIMARY KEY)"}
+{"sql":"CREATE TABLE t2(b TEXT REFERENCES t1)"}
+{"sql":"INSERT INTO t2 VALUES('2.0')"}
+{"sql":"SELECT b, typeof(b) FROM t2"}
+{"sql":"SELECT typeof(a) FROM t1"}
+{"sql":"DELETE FROM t1 WHERE rowid = 2"}
+{"sql":"CREATE TABLE t2(a REFERENCES t1(x))"}
+{"sql":"INSERT INTO t2 VALUES(NULL)"}
+{"sql":"CREATE TABLE parent(a PRIMARY KEY, b UNIQUE, c, d, e, f)"}
+{"sql":"CREATE UNIQUE INDEX i1 ON parent(c, d)"}
+{"sql":"CREATE INDEX i2 ON parent(e)"}
+{"sql":"CREATE UNIQUE INDEX i3 ON parent(f COLLATE nocase)"}
+{"sql":"CREATE TABLE child1(f, g REFERENCES parent(a))"}
+{"sql":"CREATE TABLE child2(h, i REFERENCES parent(b))"}
+{"sql":"CREATE TABLE child3(j, k, FOREIGN KEY(j, k) REFERENCES parent(c, d))"}
+{"sql":"CREATE TABLE child4(l, m REFERENCES parent(e))"}
+{"sql":"CREATE TABLE child5(n, o REFERENCES parent(f))"}
+{"sql":"CREATE TABLE child6(p, q, FOREIGN KEY(p,q) REFERENCES parent(b, c))"}
+{"sql":"CREATE TABLE child7(r REFERENCES parent(c))"}
+{"sql":"INSERT INTO parent VALUES(1, 2, 3, 4, 5, 6)"}
+{"sql":"INSERT INTO child1 VALUES('xxx', 1)"}
+{"sql":"INSERT INTO child2 VALUES('xxx', 2)"}
+{"sql":"INSERT INTO child3 VALUES(3, 4)"}
+{"sql":"INSERT INTO child4 VALUES('xxx', 5)"}
+{"sql":"INSERT INTO child5 VALUES('xxx', 6)"}
+{"sql":"INSERT INTO child6 VALUES(2, 3)"}
+{"sql":"INSERT INTO child7 VALUES(3)"}
+{"sql":"CREATE TABLE c1(c REFERENCES nosuchtable, d)"}
+{"sql":"CREATE TABLE p2(a, b, UNIQUE(a, b))"}
+{"sql":"CREATE TABLE c2(c, d, FOREIGN KEY(c, d) REFERENCES p2(a, x))"}
+{"sql":"CREATE TABLE p3(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE c3(c REFERENCES p3(b), d)"}
+{"sql":"CREATE TABLE p4(a PRIMARY KEY, b)"}
+{"sql":"CREATE UNIQUE INDEX p4i ON p4(b COLLATE nocase)"}
+{"sql":"CREATE TABLE c4(c REFERENCES p4(b), d)"}
+{"sql":"CREATE TABLE p5(a PRIMARY KEY, b COLLATE nocase)"}
+{"sql":"CREATE UNIQUE INDEX p5i ON p5(b COLLATE binary)"}
+{"sql":"CREATE TABLE c5(c REFERENCES p5(b), d)"}
+{"sql":"CREATE TABLE p6(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE c6(c, d, FOREIGN KEY(c, d) REFERENCES p6)"}
+{"sql":"CREATE TABLE p7(a, b, PRIMARY KEY(a, b))"}
+{"sql":"CREATE TABLE c7(c, d REFERENCES p7)"}
+{"sql":"CREATE TABLE parent2(a, b, PRIMARY KEY(a,b))"}
+{"sql":"CREATE TABLE child8(x, y, FOREIGN KEY(x,y) REFERENCES parent2)"}
+{"sql":"CREATE TABLE child9(x REFERENCES parent2)"}
+{"sql":"CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2)"}
+{"sql":"INSERT INTO parent2 VALUES('I', 'II')"}
+{"sql":"INSERT INTO child8 VALUES('I', 'II')"}
+{"sql":"INSERT INTO child9 VALUES('I')"}
+{"sql":"INSERT INTO child9 VALUES('II')"}
+{"sql":"INSERT INTO child9 VALUES(NULL)"}
+{"sql":"INSERT INTO child10 VALUES('I', 'II', 'III')"}
+{"sql":"INSERT INTO child10 VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO child10 VALUES(NULL, NULL, NULL)"}
+{"sql":"CREATE TABLE p1(a, b, PRIMARY KEY(a, b))"}
+{"sql":"CREATE TABLE p2(a, b PRIMARY KEY)"}
+{"sql":"CREATE TABLE c1(c, d, FOREIGN KEY(c, d) REFERENCES p1)"}
+{"sql":"CREATE TABLE c2(a, b REFERENCES p2)"}
+{"sql":"CREATE TABLE parent(x, y, UNIQUE(y, x))"}
+{"sql":"CREATE TABLE c1(a, b, FOREIGN KEY(a, b) REFERENCES parent(x, y))"}
+{"sql":"CREATE TABLE c2(a, b, FOREIGN KEY(a, b) REFERENCES parent(x, y))"}
+{"sql":"CREATE TABLE c3(a, b, FOREIGN KEY(a, b) REFERENCES parent(x, y))"}
+{"sql":"CREATE INDEX c2i ON c2(a, b)"}
+{"sql":"CREATE UNIQUE INDEX c3i ON c2(b, a)"}
+{"sql":"INSERT INTO artist VALUES(6, 'artist 6')"}
+{"sql":"INSERT INTO artist VALUES(7, 'artist 7')"}
+{"sql":"INSERT INTO track VALUES(1, 'track 1', 5)"}
+{"sql":"INSERT INTO track VALUES(2, 'track 2', 6)"}
+{"sql":"SELECT rowid FROM track WHERE trackartist = 5"}
+{"sql":"SELECT rowid FROM track WHERE trackartist = 7"}
+{"sql":"DELETE FROM artist WHERE artistid = 7"}
+{"sql":"SELECT rowid FROM track WHERE trackartist = 6"}
+{"sql":"DELETE FROM artist WHERE artistid = 6"}
+{"sql":"DROP TABLE child"}
+{"sql":"CREATE TABLE track(\n      trackid     INTEGER,\n      trackname   TEXT, \n      trackartist INTEGER REFERENCES artist\n    )"}
+{"sql":"CREATE INDEX trackindex ON track(trackartist)"}
+{"sql":"CREATE TABLE p(x PRIMARY KEY)"}
+{"sql":"CREATE TABLE c(a, b, FOREIGN KEY(a,b) REFERENCES p)"}
+{"sql":"CREATE TABLE p(x, y, PRIMARY KEY(x,y))"}
+{"sql":"CREATE TABLE c(a REFERENCES p)"}
+{"sql":"CREATE TABLE album(\n      albumartist TEXT,\n      albumname TEXT,\n      albumcover BINARY,\n      PRIMARY KEY(albumartist, albumname)\n    )"}
+{"sql":"CREATE TABLE song(\n      songid INTEGER,\n      songartist TEXT,\n      songalbum TEXT,\n      songname TEXT,\n      FOREIGN KEY(songartist, songalbum) REFERENCES album(albumartist,albumname)\n    )"}
+{"sql":"INSERT INTO album VALUES('Elvis Presley', 'Elvis'' Christmas Album', NULL)"}
+{"sql":"INSERT INTO song VALUES(\n      1, 'Elvis Presley', 'Elvis'' Christmas Album', 'Here Comes Santa Clause'\n    )"}
+{"sql":"INSERT INTO song VALUES(2, 'Elvis Presley', 'Elvis Is Back!', 'Fever')"}
+{"sql":"INSERT INTO song VALUES(2, 'Elvis Presley', NULL, 'Fever')"}
+{"sql":"INSERT INTO song VALUES(3, NULL, 'Elvis Is Back', 'Soldier Boy')"}
+{"sql":"CREATE TABLE king(a, b, PRIMARY KEY(a))"}
+{"sql":"CREATE TABLE prince(c REFERENCES king, d)"}
+{"sql":"INSERT INTO prince VALUES(1, 2)"}
+{"sql":"CREATE TRIGGER kt AFTER INSERT ON prince WHEN\n      NOT EXISTS (SELECT a FROM king WHERE a = new.c)\n    BEGIN\n      INSERT INTO king VALUES(new.c, NULL);\n    END"}
+{"sql":"INSERT INTO prince VALUES(2, 3)"}
+{"sql":"DROP TRIGGER kt"}
+{"sql":"INSERT INTO prince VALUES(3, 4)"}
+{"sql":"SELECT * FROM king"}
+{"sql":"CREATE TABLE parent(x, y)"}
+{"sql":"CREATE UNIQUE INDEX pi ON parent(x, y)"}
+{"sql":"CREATE TABLE child(a, b,\n      FOREIGN KEY(a, b) REFERENCES parent(x, y) DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE parent(x, y, z, PRIMARY KEY(x,y,z))"}
+{"sql":"CREATE TABLE c1(a, b, c,\n      FOREIGN KEY(a, b, c) REFERENCES parent NOT DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE c2(a, b, c,\n      FOREIGN KEY(a, b, c) REFERENCES parent NOT DEFERRABLE INITIALLY IMMEDIATE\n    )"}
+{"sql":"CREATE TABLE c3(a, b, c,\n      FOREIGN KEY(a, b, c) REFERENCES parent NOT DEFERRABLE\n    )"}
+{"sql":"CREATE TABLE c4(a, b, c,\n      FOREIGN KEY(a, b, c) REFERENCES parent DEFERRABLE INITIALLY IMMEDIATE\n    )"}
+{"sql":"CREATE TABLE c5(a, b, c,\n      FOREIGN KEY(a, b, c) REFERENCES parent DEFERRABLE\n    )"}
+{"sql":"CREATE TABLE c6(a, b, c, FOREIGN KEY(a, b, c) REFERENCES parent)"}
+{"sql":"CREATE TABLE c7(a, b, c,\n      FOREIGN KEY(a, b, c) REFERENCES parent DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"INSERT INTO parent VALUES('a', 'b', 'c')"}
+{"sql":"INSERT INTO parent VALUES('d', 'e', 'f')"}
+{"sql":"INSERT INTO parent VALUES('g', 'h', 'i')"}
+{"sql":"INSERT INTO parent VALUES('j', 'k', 'l')"}
+{"sql":"INSERT INTO parent VALUES('m', 'n', 'o')"}
+{"sql":"INSERT INTO parent VALUES('p', 'q', 'r')"}
+{"sql":"INSERT INTO parent VALUES('s', 't', 'u')"}
+{"sql":"INSERT INTO c1 VALUES('a', 'b', 'c')"}
+{"sql":"INSERT INTO c2 VALUES('d', 'e', 'f')"}
+{"sql":"INSERT INTO c3 VALUES('g', 'h', 'i')"}
+{"sql":"INSERT INTO c4 VALUES('j', 'k', 'l')"}
+{"sql":"INSERT INTO c5 VALUES('m', 'n', 'o')"}
+{"sql":"INSERT INTO c6 VALUES('p', 'q', 'r')"}
+{"sql":"INSERT INTO c7 VALUES('s', 't', 'u')"}
+{"sql":"CREATE TABLE track(\n      trackid     INTEGER,\n      trackname   TEXT, \n      trackartist INTEGER REFERENCES artist(artistid) DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"INSERT INTO track VALUES(1, 'White Christmas', 5)"}
+{"sql":"INSERT INTO artist VALUES(5, 'Bing Crosby')"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY,\n      b REFERENCES t1 DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"INSERT INTO t1 VALUES(4, 5)"}
+{"sql":"RELEASE one"}
+{"sql":"UPDATE t1 SET a = 5 WHERE a = 4"}
+{"sql":"INSERT INTO t1 VALUES(6, 7)"}
+{"sql":"RELEASE two"}
+{"sql":"UPDATE t1 SET a = 7 WHERE a = 6"}
+{"sql":"DELETE FROM t1 WHERE a>3"}
+{"sql":"SAVEPOINT a"}
+{"sql":"SAVEPOINT b"}
+{"sql":"SAVEPOINT c"}
+{"sql":"RELEASE a"}
+{"sql":"ROLLBACK TO c"}
+{"sql":"ROLLBACK TO b"}
+{"sql":"CREATE TABLE p(a, b PRIMARY KEY, c)"}
+{"sql":"CREATE TABLE c1(d, e, f DEFAULT 'k0' REFERENCES p \n      ON UPDATE SET DEFAULT\n      ON DELETE SET NULL\n    )"}
+{"sql":"INSERT INTO p VALUES(0, 'k0', '')"}
+{"sql":"INSERT INTO p VALUES(1, 'k1', 'I')"}
+{"sql":"INSERT INTO p VALUES(2, 'k2', 'II')"}
+{"sql":"INSERT INTO p VALUES(3, 'k3', 'III')"}
+{"sql":"INSERT INTO c1 VALUES(1, 'xx', 'k1')"}
+{"sql":"INSERT INTO c1 VALUES(2, 'xx', 'k2')"}
+{"sql":"INSERT INTO c1 VALUES(3, 'xx', 'k3')"}
+{"sql":"UPDATE p SET b = 'k4' WHERE a = 1"}
+{"sql":"DELETE FROM p WHERE a = 2"}
+{"sql":"CREATE UNIQUE INDEX pi ON p(c)"}
+{"sql":"REPLACE INTO p VALUES(5, 'k5', 'III')"}
+{"sql":"CREATE TABLE parent(x PRIMARY KEY, y)"}
+{"sql":"CREATE TABLE child1(a, \n      b REFERENCES parent ON UPDATE NO ACTION ON DELETE RESTRICT\n    )"}
+{"sql":"CREATE TABLE child2(a, \n      b REFERENCES parent ON UPDATE RESTRICT ON DELETE SET NULL\n    )"}
+{"sql":"CREATE TABLE child3(a, \n      b REFERENCES parent ON UPDATE SET NULL ON DELETE SET DEFAULT\n    )"}
+{"sql":"CREATE TABLE child4(a, \n      b REFERENCES parent ON UPDATE SET DEFAULT ON DELETE CASCADE\n    )"}
+{"sql":"CREATE TABLE child5(a, b REFERENCES parent ON UPDATE CASCADE)"}
+{"sql":"CREATE TABLE child6(a, b REFERENCES parent ON DELETE RESTRICT)"}
+{"sql":"CREATE TABLE child7(a, b REFERENCES parent ON DELETE NO ACTION)"}
+{"sql":"CREATE TABLE child8(a, b REFERENCES parent ON UPDATE NO ACTION)"}
+{"sql":"CREATE TABLE parent(p1, p2, PRIMARY KEY(p1, p2))"}
+{"sql":"CREATE TABLE child(c1, c2, \n      FOREIGN KEY(c1, c2) REFERENCES parent\n      ON UPDATE NO ACTION\n      ON DELETE NO ACTION\n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"INSERT INTO parent VALUES('j', 'k')"}
+{"sql":"INSERT INTO parent VALUES('l', 'm')"}
+{"sql":"INSERT INTO child VALUES('j', 'k')"}
+{"sql":"INSERT INTO child VALUES('l', 'm')"}
+{"sql":"UPDATE parent SET p1='k' WHERE p1='j'"}
+{"sql":"DELETE FROM parent WHERE p1='l'"}
+{"sql":"SELECT * FROM child"}
+{"sql":"CREATE TABLE parent(p1, p2)"}
+{"sql":"CREATE UNIQUE INDEX parent_i ON parent(p1, p2)"}
+{"sql":"CREATE TABLE child1(c1, c2, \n      FOREIGN KEY(c2, c1) REFERENCES parent(p1, p2) ON DELETE RESTRICT\n    )"}
+{"sql":"CREATE TABLE child2(c1, c2, \n      FOREIGN KEY(c2, c1) REFERENCES parent(p1, p2) ON UPDATE RESTRICT\n    )"}
+{"sql":"INSERT INTO parent VALUES('a', 'b')"}
+{"sql":"INSERT INTO parent VALUES('c', 'd')"}
+{"sql":"INSERT INTO child1 VALUES('b', 'a')"}
+{"sql":"INSERT INTO child2 VALUES('d', 'c')"}
+{"sql":"DELETE FROM parent WHERE p1 = 'a'"}
+{"sql":"UPDATE parent SET p2 = 'e' WHERE p1 = 'c'"}
+{"sql":"CREATE TABLE parent(x PRIMARY KEY)"}
+{"sql":"CREATE TABLE child1(c REFERENCES parent ON UPDATE RESTRICT)"}
+{"sql":"CREATE TABLE child2(c REFERENCES parent ON UPDATE NO ACTION)"}
+{"sql":"INSERT INTO parent VALUES('key1')"}
+{"sql":"INSERT INTO parent VALUES('key2')"}
+{"sql":"INSERT INTO child1 VALUES('key1')"}
+{"sql":"INSERT INTO child2 VALUES('key2')"}
+{"sql":"CREATE TRIGGER parent_t AFTER UPDATE ON parent BEGIN\n      UPDATE child1 set c = new.x WHERE c = old.x;\n      UPDATE child2 set c = new.x WHERE c = old.x;\n    END"}
+{"sql":"UPDATE parent SET x = 'key one' WHERE x = 'key1'"}
+{"sql":"UPDATE parent SET x = 'key two' WHERE x = 'key2'"}
+{"sql":"SELECT * FROM child2"}
+{"sql":"CREATE TABLE child1(c REFERENCES parent ON DELETE RESTRICT)"}
+{"sql":"CREATE TABLE child2(c REFERENCES parent ON DELETE NO ACTION)"}
+{"sql":"CREATE TRIGGER parent_t AFTER DELETE ON parent BEGIN\n      UPDATE child1 SET c = NULL WHERE c = old.x;\n      UPDATE child2 SET c = NULL WHERE c = old.x;\n    END"}
+{"sql":"DELETE FROM parent WHERE x = 'key1'"}
+{"sql":"DELETE FROM parent WHERE x = 'key2'"}
+{"sql":"REPLACE INTO parent VALUES('key1')"}
+{"sql":"REPLACE INTO parent VALUES('key2')"}
+{"sql":"CREATE TABLE child1(c REFERENCES parent ON UPDATE RESTRICT\n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE child2(c REFERENCES parent ON UPDATE NO ACTION\n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"UPDATE child2 SET c = 'key two'"}
+{"sql":"CREATE TABLE child1(c REFERENCES parent ON DELETE RESTRICT\n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE child2(c REFERENCES parent ON DELETE NO ACTION\n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"UPDATE child2 SET c = NULL"}
+{"sql":"CREATE TABLE pA(x PRIMARY KEY)"}
+{"sql":"CREATE TABLE cA(c REFERENCES pA ON DELETE SET NULL)"}
+{"sql":"CREATE TABLE cB(c REFERENCES pA ON UPDATE SET NULL)"}
+{"sql":"INSERT INTO pA VALUES(X'ABCD')"}
+{"sql":"INSERT INTO pA VALUES(X'1234')"}
+{"sql":"INSERT INTO cA VALUES(X'ABCD')"}
+{"sql":"INSERT INTO cB VALUES(X'1234')"}
+{"sql":"DELETE FROM pA WHERE rowid = 1"}
+{"sql":"SELECT quote(x) FROM pA"}
+{"sql":"SELECT quote(c) FROM cA"}
+{"sql":"UPDATE pA SET x = X'8765' WHERE rowid = 2"}
+{"sql":"SELECT quote(c) FROM cB"}
+{"sql":"CREATE TABLE cA(c DEFAULT X'0000' REFERENCES pA ON DELETE SET DEFAULT)"}
+{"sql":"CREATE TABLE cB(c DEFAULT X'9999' REFERENCES pA ON UPDATE SET DEFAULT)"}
+{"sql":"INSERT INTO pA(rowid, x) VALUES(1, X'0000')"}
+{"sql":"INSERT INTO pA(rowid, x) VALUES(2, X'9999')"}
+{"sql":"INSERT INTO pA(rowid, x) VALUES(3, X'ABCD')"}
+{"sql":"INSERT INTO pA(rowid, x) VALUES(4, X'1234')"}
+{"sql":"DELETE FROM pA WHERE rowid = 3"}
+{"sql":"SELECT quote(x) FROM pA ORDER BY rowid"}
+{"sql":"UPDATE pA SET x = X'8765' WHERE rowid = 4"}
+{"sql":"CREATE TABLE p1(a, b UNIQUE)"}
+{"sql":"CREATE TABLE c1(c REFERENCES p1(b) ON DELETE CASCADE, d)"}
+{"sql":"INSERT INTO p1 VALUES(NULL, NULL)"}
+{"sql":"INSERT INTO p1 VALUES(4, 4)"}
+{"sql":"INSERT INTO p1 VALUES(5, 5)"}
+{"sql":"INSERT INTO c1 VALUES(NULL, NULL)"}
+{"sql":"INSERT INTO c1 VALUES(4, 4)"}
+{"sql":"INSERT INTO c1 VALUES(5, 5)"}
+{"sql":"SELECT count(*) FROM c1"}
+{"sql":"DELETE FROM p1 WHERE a = 4"}
+{"sql":"SELECT d, c FROM c1"}
+{"sql":"CREATE TABLE c1(c REFERENCES p1(b) ON UPDATE CASCADE, d)"}
+{"sql":"UPDATE p1 SET b = 10 WHERE b = 5"}
+{"sql":"UPDATE p1 SET b = 11 WHERE b = 4"}
+{"sql":"UPDATE p1 SET b = 6 WHERE b IS NULL"}
+{"sql":"CREATE TABLE track(\n      trackid     INTEGER,\n      trackname   TEXT, \n      trackartist INTEGER REFERENCES artist(artistid) ON UPDATE CASCADE\n    )"}
+{"sql":"UPDATE artist SET artistid = 100 WHERE artistname = 'Dean Martin'"}
+{"sql":"SELECT * FROM track"}
+{"sql":"CREATE TABLE parent(a COLLATE nocase, b, c, PRIMARY KEY(c, a))"}
+{"sql":"CREATE TABLE child(d DEFAULT 'a', e, f DEFAULT 'c',\n      FOREIGN KEY(f, d) REFERENCES parent ON UPDATE SET DEFAULT\n    )"}
+{"sql":"INSERT INTO parent VALUES('A', 'b', 'c')"}
+{"sql":"INSERT INTO parent VALUES('ONE', 'two', 'three')"}
+{"sql":"INSERT INTO child VALUES('one', 'two', 'three')"}
+{"sql":"UPDATE parent SET a = '' WHERE a = 'oNe'"}
+{"sql":"DELETE FROM parent WHERE a = 'A'"}
+{"sql":"SELECT * FROM parent"}
+{"sql":"CREATE TABLE track(\n      trackid     INTEGER,\n      trackname   TEXT, \n      trackartist INTEGER DEFAULT 0 REFERENCES artist(artistid) ON DELETE SET DEFAULT\n    )"}
+{"sql":"DELETE FROM artist WHERE artistname = 'Sammy Davis Jr.'"}
+{"sql":"INSERT INTO artist VALUES(0, 'Unknown Artist')"}
+{"sql":"CREATE TRIGGER bu BEFORE UPDATE ON parent BEGIN\n      INSERT INTO parent VALUES(new.x-old.x);\n    END"}
+{"sql":"CREATE TABLE child(\n      a DEFAULT (maxparent()) REFERENCES parent ON UPDATE SET DEFAULT\n    )"}
+{"sql":"CREATE TRIGGER au AFTER UPDATE ON parent BEGIN\n      INSERT INTO parent VALUES(new.x+old.x);\n    END"}
+{"sql":"INSERT INTO parent VALUES(1)"}
+{"sql":"INSERT INTO child VALUES(1)"}
+{"sql":"UPDATE parent SET x = 22"}
+{"sql":"SELECT * FROM parent ORDER BY rowid"}
+{"sql":"SELECT 'xxx'"}
+{"sql":"SELECT a FROM child"}
+{"sql":"DELETE FROM child"}
+{"sql":"DELETE FROM parent"}
+{"sql":"INSERT INTO parent VALUES(-1)"}
+{"sql":"INSERT INTO child VALUES(-1)"}
+{"sql":"CREATE TABLE zeus(a INTEGER COLLATE NOCASE, b, PRIMARY KEY(a, b))"}
+{"sql":"CREATE TABLE apollo(c, d, \n      FOREIGN KEY(c, d) REFERENCES zeus ON UPDATE CASCADE\n    )"}
+{"sql":"INSERT INTO zeus VALUES('abc', 'xyz')"}
+{"sql":"INSERT INTO apollo VALUES('ABC', 'xyz')"}
+{"sql":"UPDATE zeus SET a = 'aBc'"}
+{"sql":"SELECT * FROM apollo"}
+{"sql":"UPDATE zeus SET a = 1, b = 1"}
+{"sql":"SELECT typeof(c), c, typeof(d), d FROM apollo"}
+{"sql":"UPDATE zeus SET a = '1'"}
+{"sql":"UPDATE zeus SET b = '1'"}
+{"sql":"UPDATE zeus SET b = NULL"}
+{"sql":"CREATE TABLE child(y REFERENCES parent ON UPDATE SET NULL)"}
+{"sql":"INSERT INTO parent VALUES('key')"}
+{"sql":"INSERT INTO child VALUES('key')"}
+{"sql":"UPDATE parent SET x = 'key'"}
+{"sql":"SELECT IFNULL(y, 'null') FROM child"}
+{"sql":"UPDATE parent SET x = 'key2'"}
+{"sql":"CREATE TABLE tbl(a, b)"}
+{"sql":"INSERT INTO tbl VALUES(1, 2)"}
+{"sql":"CREATE TABLE 'p 1 \"parent one\"'(a REFERENCES 'p 1 \"parent one\"', b, PRIMARY KEY(b))"}
+{"sql":"CREATE TABLE c1(c, d REFERENCES 'p 1 \"parent one\"' ON UPDATE CASCADE)"}
+{"sql":"CREATE TABLE c2(e, f, FOREIGN KEY(f) REFERENCES 'p 1 \"parent one\"' ON UPDATE CASCADE)"}
+{"sql":"CREATE TABLE c3(e, 'f col 2', FOREIGN KEY('f col 2') REFERENCES 'p 1 \"parent one\"' ON UPDATE CASCADE)"}
+{"sql":"INSERT INTO 'p 1 \"parent one\"' VALUES(1, 1)"}
+{"sql":"INSERT INTO c1 VALUES(1, 1)"}
+{"sql":"INSERT INTO c2 VALUES(1, 1)"}
+{"sql":"INSERT INTO c3 VALUES(1, 1)"}
+{"sql":"ALTER TABLE 'p 1 \"parent one\"' RENAME TO p"}
+{"sql":"UPDATE p SET a = 'xxx', b = 'xxx'"}
+{"sql":"SELECT * FROM p"}
+{"sql":"SELECT sql FROM sqlite_master WHERE type = 'table'"}
+{"sql":"CREATE TABLE p(a, b, PRIMARY KEY(a, b))"}
+{"sql":"CREATE TABLE c1(c, d, FOREIGN KEY(c, d) REFERENCES p ON DELETE SET NULL)"}
+{"sql":"CREATE TABLE c2(c, d, FOREIGN KEY(c, d) REFERENCES p ON DELETE SET DEFAULT)"}
+{"sql":"CREATE TABLE c3(c, d, FOREIGN KEY(c, d) REFERENCES p ON DELETE CASCADE)"}
+{"sql":"CREATE TABLE c4(c, d, FOREIGN KEY(c, d) REFERENCES p ON DELETE RESTRICT)"}
+{"sql":"CREATE TABLE c5(c, d, FOREIGN KEY(c, d) REFERENCES p ON DELETE NO ACTION)"}
+{"sql":"CREATE TABLE c6(c, d, \n      FOREIGN KEY(c, d) REFERENCES p ON DELETE RESTRICT \n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE c7(c, d, \n      FOREIGN KEY(c, d) REFERENCES p ON DELETE NO ACTION\n      DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE log(msg)"}
+{"sql":"CREATE TRIGGER tt AFTER DELETE ON p BEGIN\n      INSERT INTO log VALUES('delete ' || old.rowid);\n    END"}
+{"sql":"INSERT INTO p VALUES('a', 'b')"}
+{"sql":"INSERT INTO c1 VALUES('a', 'b')"}
+{"sql":"INSERT INTO c2 VALUES('a', 'b')"}
+{"sql":"INSERT INTO c3 VALUES('a', 'b')"}
+{"sql":"DROP TABLE p"}
+{"sql":"DELETE FROM c1"}
+{"sql":"DELETE FROM c2"}
+{"sql":"DELETE FROM c3"}
+{"sql":"INSERT INTO c5 VALUES('a', 'b')"}
+{"sql":"DELETE FROM c4"}
+{"sql":"DELETE FROM c5"}
+{"sql":"DELETE FROM c6"}
+{"sql":"DELETE FROM c7"}
+{"sql":"INSERT INTO c7 VALUES('a', 'b')"}
+{"sql":"CREATE TABLE p(a PRIMARY KEY, b REFERENCES nosuchtable)"}
+{"sql":"CREATE TABLE c1(c, d, FOREIGN KEY(c, d) REFERENCES a)"}
+{"sql":"CREATE TABLE c2(c REFERENCES p(b), d)"}
+{"sql":"CREATE TABLE c3(c REFERENCES p ON DELETE SET NULL, d)"}
+{"sql":"INSERT INTO p VALUES(1, 2)"}
+{"sql":"INSERT INTO c2 VALUES(1, 2)"}
+{"sql":"INSERT INTO c3 VALUES(1, 2)"}
+{"sql":"CREATE TABLE nosuchtable(x PRIMARY KEY)"}
+{"sql":"DROP TABLE c1"}
+{"sql":"DROP TABLE c2"}
+{"sql":"ALTER TABLE t1 ADD COLUMN c DEFAULT 'xxx' REFERENCES t2"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 't1'"}
+{"sql":"CREATE TABLE p(a UNIQUE)"}
+{"sql":"CREATE TABLE c(b REFERENCES p(a))"}
+{"sql":"ALTER TABLE p RENAME TO parent"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'c'"}
+{"sql":"PRAGMA legacy_alter_table = ON"}
+{"sql":"PRAGMA legacy_alter_table = OFF"}
+{"sql":"CREATE TABLE c(b REFERENCES p(a) ON DELETE SET NULL)"}
+{"sql":"INSERT INTO p VALUES('x')"}
+{"sql":"INSERT INTO c VALUES('x')"}
+{"sql":"INSERT INTO p VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO c VALUES('w', 2, 3)"}
+{"sql":"INSERT INTO c VALUES('x', 'x', NULL)"}
+{"sql":"INSERT INTO c VALUES('y', NULL, 'x')"}
+{"sql":"INSERT INTO c VALUES('z', NULL, NULL)"}
+{"sql":"INSERT INTO c VALUES('a', 2, 4)"}
+{"sql":"SET CONSTRAINTS ALL IMMEDIATE","reject":true}
+{"sql":"SET CONSTRAINTS ALL DEFERRED","reject":true}
+{"sql":"CREATE TABLE cd(c, d, \n      FOREIGN KEY(c, d) REFERENCES p DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"CREATE TABLE ci(c, d, \n      FOREIGN KEY(c, d) REFERENCES p DEFERRABLE INITIALLY IMMEDIATE)"}
+{"sql":"INSERT INTO ci VALUES('x', 'y')"}
+{"sql":"INSERT INTO cd VALUES('x', 'y')"}
+{"sql":"DELETE FROM cd"}
+{"sql":"CREATE TABLE t0(a PRIMARY KEY, b)"}
+{"sql":"INSERT INTO t0 VALUES('x0', NULL)"}
+{"sql":"CREATE TABLE t0(a PRIMARY KEY)"}
+{"sql":"INSERT INTO t0 VALUES('xxx')"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b REFERENCES t1 ON DELETE CASCADE)"}
+{"sql":"INSERT INTO t1 VALUES(3, 2)"}
+{"sql":"INSERT INTO t1 VALUES(4, 3)"}
+{"sql":"INSERT INTO t1 VALUES(5, 4)"}
+{"sql":"SELECT count(*) FROM t1 WHERE a = 1"}
+{"sql":"DELETE FROM t1 WHERE a = 1"}

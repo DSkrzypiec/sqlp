@@ -1,0 +1,16 @@
+{"sql":"CREATE TABLE tablename(x)"}
+{"sql":"CREATE TABLE t1(a VARINT, b BLOB, c VARCHAR(16))"}
+{"sql":"INSERT INTO t1 VALUES('one', 'two', NULL)"}
+{"sql":"INSERT INTO t1 VALUES(1.2, 1.3, 1.4)"}
+{"sql":"INSERT INTO sqlite_master VALUES(NULL,NULL,NULL,NULL,NULL)"}
+{"sql":"INSERT INTO sqlite_master VALUES('table',NULL,NULL,NULL,NULL)"}
+{"sql":"select * from sqlite_master"}
+{"sql":"select * from sqlite_master where rowid>5"}
+{"sql":"INSERT INTO t1 VALUES(1, 'int')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'notatype')"}
+{"sql":"SELECT a FROM t2"}
+{"sql":"INSERT INTO t1 VALUES(3, NULL)"}
+{"sql":"INSERT INTO t2 VALUES(4)"}
+{"sql":"INSERT INTO t1 VALUES(4, NULL)"}
+{"sql":"SELECT a FROM t1"}
+{"sql":"INSERT INTO t4 VALUES('abcdefghij')"}

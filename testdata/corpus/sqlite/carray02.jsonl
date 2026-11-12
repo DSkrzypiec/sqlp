@@ -1,0 +1,5 @@
+{"sql":"SELECT * FROM carray"}
+{"sql":"SELECT * FROM carray('0xFFFF', 5)"}
+{"sql":"SELECT * FROM carray('0xFFFF')"}
+{"sql":"INSERT INTO t1 VALUES('0xFFFF')"}
+{"sql":"SELECT * FROM t1, carray WHERE carray.pointer = t1.x"}

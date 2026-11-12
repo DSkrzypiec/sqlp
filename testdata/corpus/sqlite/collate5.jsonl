@@ -1,0 +1,63 @@
+{"sql":"CREATE TABLE collate5t1(a COLLATE nocase, b COLLATE text)"}
+{"sql":"INSERT INTO collate5t1 VALUES('a', 'apple')"}
+{"sql":"INSERT INTO collate5t1 VALUES('A', 'Apple')"}
+{"sql":"INSERT INTO collate5t1 VALUES('b', 'banana')"}
+{"sql":"INSERT INTO collate5t1 VALUES('B', 'banana')"}
+{"sql":"INSERT INTO collate5t1 VALUES('n', NULL)"}
+{"sql":"INSERT INTO collate5t1 VALUES('N', NULL)"}
+{"sql":"SELECT DISTINCT a FROM collate5t1"}
+{"sql":"SELECT DISTINCT b FROM collate5t1"}
+{"sql":"SELECT DISTINCT a, b FROM collate5t1"}
+{"sql":"CREATE TABLE tkt3376(a COLLATE nocase PRIMARY KEY)"}
+{"sql":"INSERT INTO tkt3376 VALUES('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz')"}
+{"sql":"INSERT INTO tkt3376 VALUES('ABXYZ012234567890123456789ABXYZ012234567890123456789ABXYZ012234567890123456789ABXYZ012234567890123456789ABXYZ012234567890123456789ABXYZ012234567890123456789ABXYZ012234567890123456789')"}
+{"sql":"SELECT DISTINCT a FROM tkt3376"}
+{"sql":"CREATE TABLE collate5t2(a COLLATE text, b COLLATE nocase)"}
+{"sql":"INSERT INTO collate5t2 VALUES('a', 'apple')"}
+{"sql":"INSERT INTO collate5t2 VALUES('A', 'apple')"}
+{"sql":"INSERT INTO collate5t2 VALUES('b', 'banana')"}
+{"sql":"INSERT INTO collate5t2 VALUES('B', 'Banana')"}
+{"sql":"SELECT a FROM collate5t1 UNION select a FROM collate5t2"}
+{"sql":"SELECT a FROM collate5t2 UNION select a FROM collate5t1"}
+{"sql":"SELECT a, b FROM collate5t1 UNION select a, b FROM collate5t2"}
+{"sql":"SELECT a, b FROM collate5t2 UNION select a, b FROM collate5t1"}
+{"sql":"SELECT a FROM collate5t1 EXCEPT select a FROM collate5t2"}
+{"sql":"SELECT a FROM collate5t2 EXCEPT select a FROM collate5t1 WHERE a != 'a'"}
+{"sql":"SELECT a, b FROM collate5t1 EXCEPT select a, b FROM collate5t2"}
+{"sql":"SELECT a, b FROM collate5t2 EXCEPT select a, b FROM collate5t1 \n      where a != 'a'"}
+{"sql":"SELECT a FROM collate5t1 INTERSECT select a FROM collate5t2"}
+{"sql":"SELECT a FROM collate5t2 INTERSECT select a FROM collate5t1 WHERE a != 'a'"}
+{"sql":"SELECT a, b FROM collate5t1 INTERSECT select a, b FROM collate5t2"}
+{"sql":"SELECT a, b FROM collate5t2 INTERSECT select a, b FROM collate5t1"}
+{"sql":"CREATE TABLE collate5t3(a, b)"}
+{"sql":"SELECT * FROM collate5t3 UNION SELECT * FROM collate5t3"}
+{"sql":"DROP TABLE collate5t3"}
+{"sql":"SELECT a FROM collate5t1 UNION ALL SELECT a FROM collate5t2 ORDER BY 1"}
+{"sql":"SELECT a FROM collate5t2 UNION ALL SELECT a FROM collate5t1 ORDER BY 1"}
+{"sql":"SELECT a FROM collate5t1 UNION ALL SELECT a FROM collate5t2 \n      ORDER BY 1 COLLATE TEXT"}
+{"sql":"CREATE TABLE collate5t_cn(a COLLATE NUMERIC)"}
+{"sql":"CREATE TABLE collate5t_ct(a COLLATE TEXT)"}
+{"sql":"INSERT INTO collate5t_cn VALUES('1')"}
+{"sql":"INSERT INTO collate5t_cn VALUES('11')"}
+{"sql":"INSERT INTO collate5t_cn VALUES('101')"}
+{"sql":"INSERT INTO collate5t_ct SELECT * FROM collate5t_cn"}
+{"sql":"SELECT a FROM collate5t_cn INTERSECT SELECT a FROM collate5t_ct ORDER BY 1"}
+{"sql":"SELECT a FROM collate5t_ct INTERSECT SELECT a FROM collate5t_cn ORDER BY 1"}
+{"sql":"DROP TABLE collate5t_cn"}
+{"sql":"DROP TABLE collate5t_ct"}
+{"sql":"DROP TABLE collate5t1"}
+{"sql":"DROP TABLE collate5t2"}
+{"sql":"CREATE TABLE collate5t1(a COLLATE NOCASE, b COLLATE NUMERIC)"}
+{"sql":"INSERT INTO collate5t1 VALUES('a', '1')"}
+{"sql":"INSERT INTO collate5t1 VALUES('A', '1.0')"}
+{"sql":"INSERT INTO collate5t1 VALUES('b', '2')"}
+{"sql":"INSERT INTO collate5t1 VALUES('B', '3')"}
+{"sql":"SELECT a, count(*) FROM collate5t1 GROUP BY a"}
+{"sql":"SELECT a, b, count(*) FROM collate5t1 GROUP BY a, b ORDER BY a, b"}
+{"sql":"CREATE TABLE t1(a, b COLLATE nocase)"}
+{"sql":"INSERT INTO t2 VALUES(1, 'bbb')"}
+{"sql":"SELECT * FROM (\n      SELECT a, b FROM t1 UNION ALL SELECT c, d FROM t2\n  ) WHERE b='BbB'"}
+{"sql":"CREATE TABLE t1(a,b,c COLLATE NOCASE)"}
+{"sql":"INSERT INTO t1 VALUES(NULL,'C','c')"}
+{"sql":"CREATE VIEW v2 AS\n    SELECT a,b,c FROM t1 INTERSECT SELECT a,b,b FROM t1\n    WHERE 'eT\"3qRkL+oJMJjQ9z0'>=b\n    ORDER BY a,b,c"}
+{"sql":"SELECT * FROM v2 WHERE c='c'"}

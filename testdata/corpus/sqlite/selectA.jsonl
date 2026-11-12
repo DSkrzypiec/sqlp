@@ -1,0 +1,157 @@
+{"sql":"INSERT INTO t1 VALUES(1,'a','a')"}
+{"sql":"INSERT INTO t1 VALUES(9.9, 'b', 'B')"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 'C', 'c')"}
+{"sql":"INSERT INTO t1 VALUES('hello', 'd', 'D')"}
+{"sql":"INSERT INTO t1 VALUES(x'616263', 'e', 'e')"}
+{"sql":"CREATE TABLE t2(x,y,z COLLATE NOCASE)"}
+{"sql":"INSERT INTO t2 VALUES(NULL,'U','u')"}
+{"sql":"INSERT INTO t2 VALUES('mad', 'Z', 'z')"}
+{"sql":"INSERT INTO t2 VALUES(x'68617265', 'm', 'M')"}
+{"sql":"INSERT INTO t2 VALUES(5.2e6, 'X', 'x')"}
+{"sql":"INSERT INTO t2 VALUES(-23, 'Y', 'y')"}
+{"sql":"CREATE TABLE t3(a,b,c COLLATE NOCASE)"}
+{"sql":"INSERT INTO t3 SELECT * FROM t1"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY a,b,c"}
+{"sql":"SELECT t1.a, t1.b, t1.c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY t1.a, t1.b, t1.c"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY a DESC,b,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY a,c,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY b,a,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY b COLLATE NOCASE,a,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY b COLLATE NOCASE DESC,a,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY c,b,a"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY c,a,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY c DESC,a,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY c COLLATE BINARY DESC,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY a,b,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY a DESC,b,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY a,c,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY b,a,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY b COLLATE NOCASE,a,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY b COLLATE NOCASE DESC,a,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY c,b,a"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY c,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY c DESC,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION ALL SELECT a,b,c FROM t1\n    ORDER BY c COLLATE BINARY DESC,a,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY a DESC,b,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY a,c,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY b,a,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY b COLLATE NOCASE,a,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY b COLLATE NOCASE DESC,a,c"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY c,b,a"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY c,a,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY c DESC,a,b"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT x,y,z FROM t2\n    ORDER BY c COLLATE BINARY DESC,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY a,b,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY a DESC,b,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY a,c,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY b,a,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY y COLLATE NOCASE,x,z"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY y COLLATE NOCASE DESC,x,z"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY c,b,a"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY c,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY c DESC,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t1\n    ORDER BY z COLLATE BINARY DESC,x,y"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY a DESC"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY a DESC"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY a DESC"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY a DESC"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY a DESC"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY a DESC"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY b, a DESC"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY b"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY b DESC, c"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY b, c DESC, a"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY b COLLATE NOCASE"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY b"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY c, a DESC"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b>='d'\n    ORDER BY c"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b>='d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY c COLLATE BINARY, b DESC, c, a, b, c, a, b, c"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY c DESC, a"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY c COLLATE NOCASE"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1\n    ORDER BY c"}
+{"sql":"SELECT a,b,c FROM t3 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'\n    ORDER BY c COLLATE NOCASE"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t3\n    ORDER BY c"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t3 WHERE b<'d'\n    ORDER BY c DESC, a"}
+{"sql":"SELECT a,b,c FROM t1 EXCEPT SELECT a,b,c FROM t1 WHERE b<'d'\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT b,c,a FROM t3\n    ORDER BY c DESC, a"}
+{"sql":"SELECT a,b,c FROM t1 INTERSECT SELECT a,b,c FROM t1 WHERE b<'d'\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT b,c,a FROM t3\n    ORDER BY c COLLATE NOCASE"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d' INTERSECT SELECT a,b,c FROM t1\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT b,c,a FROM t3\n    ORDER BY c"}
+{"sql":"SELECT a,b,c FROM t1 WHERE b<'d'\n    INTERSECT SELECT a,b,c FROM t1\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT b,c,a FROM t3\n    INTERSECT SELECT a,b,c FROM t1\n    EXCEPT SELECT x,y,z FROM t2\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT y,x,z FROM t2\n    INTERSECT SELECT a,b,c FROM t1\n    EXCEPT SELECT c,b,a FROM t3\n    ORDER BY c"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY a,b,c"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY a DESC,b,c"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY a,c,b"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY b,a,c"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY b COLLATE NOCASE,a,c"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY b COLLATE NOCASE DESC,a,c"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY c,b,a"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY c,a,b"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY c DESC,a,b"}
+{"sql":"SELECT a,b,c FROM t3 UNION SELECT x,y,z FROM t2\n    ORDER BY c COLLATE BINARY DESC,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY a,b,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY a DESC,b,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY a,c,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY b,a,c"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY y COLLATE NOCASE,x,z"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY y COLLATE NOCASE DESC,x,z"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY c,b,a"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY c,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY c DESC,a,b"}
+{"sql":"SELECT x,y,z FROM t2 UNION SELECT a,b,c FROM t3\n    ORDER BY z COLLATE BINARY DESC,x,y"}
+{"sql":"SELECT x,y,z FROM t2\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT c,b,a FROM t1\n    UNION SELECT a,b,c FROM t3\n    INTERSECT SELECT a,b,c FROM t3\n    EXCEPT SELECT c,b,a FROM t1\n    UNION SELECT a,b,c FROM t3\n    ORDER BY y COLLATE NOCASE DESC,x,z"}
+{"sql":"SELECT upper((SELECT c FROM t1 UNION SELECT z FROM t2 ORDER BY 1))"}
+{"sql":"SELECT lower((SELECT c FROM t1 UNION ALL SELECT z FROM t2 ORDER BY 1))"}
+{"sql":"SELECT lower((SELECT c FROM t1 INTERSECT SELECT z FROM t2 ORDER BY 1))"}
+{"sql":"SELECT lower((SELECT z FROM t2 EXCEPT SELECT c FROM t1 ORDER BY 1))"}
+{"sql":"CREATE UNIQUE INDEX t1b ON t1(b)"}
+{"sql":"CREATE UNIQUE INDEX t2x ON t2(x)"}
+{"sql":"CREATE UNIQUE INDEX t2y ON t2(y)"}
+{"sql":"CREATE UNIQUE INDEX t2z ON t2(z)"}
+{"sql":"SELECT name FROM sqlite_master WHERE type='index'"}
+{"sql":"SELECT t1.a,b,t1.c FROM t1 UNION ALL SELECT x,y,z FROM t2\n    ORDER BY a,t1.b,t1.c"}
+{"sql":"SELECT upper((SELECT x FROM (\n      SELECT x,y,z FROM t2\n      INTERSECT SELECT a,b,c FROM t3\n      EXCEPT SELECT c,b,a FROM t1\n      UNION SELECT a,b,c FROM t3\n      INTERSECT SELECT a,b,c FROM t3\n      EXCEPT SELECT c,b,a FROM t1\n      UNION SELECT a,b,c FROM t3\n      ORDER BY y COLLATE NOCASE DESC,x,z)))"}
+{"sql":"WITH RECURSIVE\n    xyz(n) AS (\n      SELECT upper((SELECT x FROM (\n        SELECT x,y,z FROM t2\n        INTERSECT SELECT a,b,c FROM t3\n        EXCEPT SELECT c,b,a FROM t1\n        UNION SELECT a,b,c FROM t3\n        INTERSECT SELECT a,b,c FROM t3\n        EXCEPT SELECT c,b,a FROM t1\n        UNION SELECT a,b,c FROM t3\n        ORDER BY y COLLATE NOCASE DESC,x,z)))\n      UNION ALL\n      SELECT n || '+' FROM xyz WHERE length(n)<5\n    )\n  SELECT n FROM xyz ORDER BY +n"}
+{"sql":"CREATE TABLE t5(c, d)"}
+{"sql":"INSERT INTO t5 VALUES(1, 'x')"}
+{"sql":"INSERT INTO t5 VALUES(2, 'x')"}
+{"sql":"INSERT INTO t4 VALUES(3, 'x')"}
+{"sql":"INSERT INTO t4 VALUES(4, 'x')"}
+{"sql":"CREATE INDEX i1 ON t4(a)"}
+{"sql":"CREATE INDEX i2 ON t5(c)"}
+{"sql":"SELECT c, d FROM t5 \n  UNION ALL\n  SELECT a, b FROM t4 WHERE f()==f()\n  ORDER BY 1,2"}
+{"sql":"CREATE TABLE t7(c, d)"}
+{"sql":"INSERT INTO t7 VALUES(2, 9)"}
+{"sql":"INSERT INTO t6 VALUES(3, 0)"}
+{"sql":"INSERT INTO t6 VALUES(4, 1)"}
+{"sql":"INSERT INTO t7 VALUES(5, 6)"}
+{"sql":"INSERT INTO t6 VALUES(6, 0)"}
+{"sql":"INSERT INTO t7 VALUES(7, 6)"}
+{"sql":"CREATE INDEX i6 ON t6(a)"}
+{"sql":"CREATE INDEX i7 ON t7(c)"}
+{"sql":"SELECT c, f(d,c,d,c,d) FROM t7\n  UNION ALL\n  SELECT a, b FROM t6 \n  ORDER BY 1,2"}
+{"sql":"CREATE TABLE t9(c, d)"}
+{"sql":"SELECT * FROM t8 UNION SELECT * FROM t9 ORDER BY a+b COLLATE NOCASE"}
+{"sql":"INSERT INTO t2(b) VALUES('12345')"}
+{"sql":"SELECT * FROM (SELECT a FROM t1 UNION SELECT b FROM t2) WHERE a=a"}
+{"sql":"INSERT INTO t1 VALUES(12),(123),(1234),(NULL),('abc')"}
+{"sql":"CREATE TABLE t2(c2)"}
+{"sql":"INSERT INTO t2 VALUES(44),(55),(123)"}
+{"sql":"CREATE TABLE t3(c3,c4)"}
+{"sql":"INSERT INTO t3 VALUES(66,1),(123,2),(77,3)"}
+{"sql":"CREATE VIEW t4 AS SELECT c3 FROM t3"}
+{"sql":"CREATE VIEW t5 AS SELECT c3 FROM t3 ORDER BY c4"}
+{"sql":"SELECT * FROM t1, t2 WHERE c1=(SELECT 123 INTERSECT SELECT c2 FROM t4) AND c1=123"}
+{"sql":"SELECT * FROM t1, t2 WHERE c1=(SELECT 123 INTERSECT SELECT c2 FROM t5) AND c1=123"}
+{"sql":"CREATE VIEW c(d) AS SELECT b FROM a ORDER BY b"}
+{"sql":"SELECT sum(d) OVER( PARTITION BY(SELECT 0 FROM c JOIN a WHERE b =(SELECT b INTERSECT SELECT d FROM c) AND b = 123)) FROM c"}
+{"sql":"SELECT 'ABCD' FROM t1 \n      WHERE (a=? OR b=?) \n      AND (0 OR (SELECT 'xyz' INTERSECT SELECT a ORDER BY 1))"}
+{"sql":"CREATE TABLE t2(b COLLATE nocase)"}
+{"sql":"INSERT INTO t1 VALUES('ABC')"}
+{"sql":"SELECT a FROM t1 INTERSECT SELECT b FROM t2"}
+{"sql":"SELECT * FROM (\n      SELECT a FROM t1 INTERSECT SELECT b FROM t2\n  ) WHERE a||'' = 'ABC'"}

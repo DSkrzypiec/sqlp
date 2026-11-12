@@ -1,0 +1,6 @@
+{"sql":"CREATE TEMP TABLE swarm(id, tbl, minval, maxval)"}
+{"sql":"DROP TABLE IF EXISTS s"}
+{"sql":"SELECT b FROM s WHERE a<10"}
+{"sql":"SELECT b FROM s WHERE (b%10)=0"}
+{"sql":"DROP TABLE IF EXISTS swarm"}
+{"sql":"CREATE TEMP TABLE swarm(file, tbl, minval, maxval, ctx)"}

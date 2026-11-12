@@ -1,0 +1,55 @@
+{"sql":"CREATE VIRTUAL TABLE x1 USING fts3"}
+{"sql":"SELECT end_block, length(root) FROM x1_segdir"}
+{"sql":"SELECT level, end_block, length(root) FROM x1_segdir"}
+{"sql":"INSERT INTO x1(x1) VALUES('merge=4,4')"}
+{"sql":"SELECT length(block) FROM x1_segments"}
+{"sql":"SELECT sum(length(block)) FROM x1_segments WHERE blockid IN (224,225,226)"}
+{"sql":"CREATE TABLE t1(docid, words)"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING fts4"}
+{"sql":"SELECT count(*) FROM x2_segdir WHERE level=2"}
+{"sql":"SELECT count(*) FROM x2_segdir WHERE level=3"}
+{"sql":"INSERT INTO x2(x2) VALUES('merge=4,4')"}
+{"sql":"SELECT end_block FROM x2_segdir WHERE level=3"}
+{"sql":"SELECT sum(length(block)) FROM x2_segdir, x2_segments WHERE \n    blockid BETWEEN start_block AND leaves_end_block\n    AND level=3"}
+{"sql":"INSERT INTO x2(x2) VALUES('merge=1000,4')"}
+{"sql":"CREATE VIRTUAL TABLE x3 USING fts4"}
+{"sql":"SELECT level, idx, second(end_block) FROM x3_segdir"}
+{"sql":"SELECT count(*) FROM x3_segdir"}
+{"sql":"INSERT INTO x3(x3) VALUES('optimize')"}
+{"sql":"DELETE FROM x3"}
+{"sql":"INSERT INTO x3(x3) VALUES('merge=500,10')"}
+{"sql":"SELECT level, idx, second(end_block) FROM x3_segdir WHERE level=1"}
+{"sql":"DROP TABLE IF EXISTS x4"}
+{"sql":"CREATE VIRTUAL TABLE x4 USING fts4(words)"}
+{"sql":"INSERT INTO x4 SELECT words FROM t1"}
+{"sql":"SELECT level, idx, second(end_block) FROM x4_segdir"}
+{"sql":"INSERT INTO x4(x4) VALUES('merge=10,2')"}
+{"sql":"SELECT count(*) FROM x4_segdir"}
+{"sql":"INSERT INTO x4(x4) VALUES('merge=1000,2')"}
+{"sql":"DROP TABLE IF EXISTS x2"}
+{"sql":"SELECT level, idx, end_block FROM x2_segdir"}
+{"sql":"UPDATE x2_segdir SET end_block = CAST( first(end_block) AS INTEGER )"}
+{"sql":"SELECT end_block, typeof(end_block) FROM x2_segdir"}
+{"sql":"INSERT INTO x2 SELECT words FROM t1 LIMIT 50"}
+{"sql":"UPDATE x2_segdir SET end_block = end_block || ' 1926' WHERE level=2"}
+{"sql":"INSERT INTO x2 SELECT words FROM t1 LIMIT 40"}
+{"sql":"CREATE VIRTUAL TABLE x5 USING fts4"}
+{"sql":"INSERT INTO x5 SELECT words FROM t1 LIMIT 100 OFFSET 0"}
+{"sql":"INSERT INTO x5 SELECT words FROM t1 LIMIT 100 OFFSET 25"}
+{"sql":"INSERT INTO x5 SELECT words FROM t1 LIMIT 100 OFFSET 50"}
+{"sql":"INSERT INTO x5 SELECT words FROM t1 LIMIT 100 OFFSET 75"}
+{"sql":"SELECT count(*) FROM x5_segdir"}
+{"sql":"INSERT INTO x5(x5) VALUES('merge=2,4')"}
+{"sql":"SELECT level, idx, end_block FROM x5_segdir"}
+{"sql":"INSERT INTO x5 SELECT words FROM t1 LIMIT 100 OFFSET 100"}
+{"sql":"INSERT INTO x5(x5) VALUES('merge=200,4')"}
+{"sql":"INSERT INTO x5 SELECT words FROM t1"}
+{"sql":"CREATE VIRTUAL TABLE x6 USING fts4"}
+{"sql":"INSERT INTO x6 SELECT words FROM t1"}
+{"sql":"SELECT level, idx, end_block FROM x6_segdir"}
+{"sql":"INSERT INTO x6(x6) VALUES('merge=25,4')"}
+{"sql":"UPDATE x6_segdir SET end_block = first(end_block) WHERE level=1"}
+{"sql":"INSERT INTO x6(x6) VALUES('merge=2500,4')"}
+{"sql":"SELECT level, idx, start_block, leaves_end_block, end_block FROM x6_segdir"}
+{"sql":"INSERT INTO x6(x6) VALUES('merge=2500,2')"}
+{"sql":"SELECT sum(length(block)) FROM x6_segments"}

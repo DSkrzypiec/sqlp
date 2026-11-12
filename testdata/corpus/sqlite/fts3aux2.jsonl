@@ -1,0 +1,28 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, b, languageid=l)"}
+{"sql":"INSERT INTO t1(a, b, l) VALUES\n    ('zero zero', 'zero zero', 0),\n    ('one two', 'three four', 1),\n    ('five six', 'seven eight', 2)"}
+{"sql":"SELECT term, documents, occurrences, languageid FROM terms WHERE col = '*'"}
+{"sql":"SELECT * FROM terms"}
+{"sql":"SELECT * FROM terms WHERE languageid=''"}
+{"sql":"SELECT * FROM terms WHERE languageid=-1"}
+{"sql":"SELECT * FROM terms WHERE languageid=9223372036854775807"}
+{"sql":"SELECT * FROM terms WHERE languageid=-9223372036854775808"}
+{"sql":"SELECT * FROM terms WHERE languageid=NULL"}
+{"sql":"SELECT term, documents, occurrences, languageid \n  FROM terms WHERE col = '*' AND languageid=1"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE languageid=1"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE languageid=1 AND term='zero'"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE languageid='1' AND term='two'"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE languageid='+1' AND term>'four'"}
+{"sql":"SELECT term, documents, occurrences, languageid \n  FROM terms WHERE col = '*' AND languageid=2"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE languageid=2"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE languageid=2 AND term='five'"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE term='five' AND languageid=2"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE term>='seven' AND languageid=2"}
+{"sql":"SELECT term, col, documents, occurrences, languageid \n  FROM terms WHERE term>='e' AND term<'seven' AND languageid=2"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3()"}
+{"sql":"INSERT INTO ft VALUES('a_234567890123456789')"}
+{"sql":"INSERT INTO ft VALUES('b_234567890123456789')"}
+{"sql":"INSERT INTO ft VALUES('c_234567890123456789')"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4aux(ft)"}
+{"sql":"SELECT term FROM t2 WHERE term=X'625f323334353637383930313233343536373839'"}
+{"sql":"SELECT term FROM t2 WHERE term<X'625f003334353637383930313233343536373839'"}
+{"sql":"SELECT term FROM t2 WHERE term=X'625f003334353637383930313233343536373839'"}

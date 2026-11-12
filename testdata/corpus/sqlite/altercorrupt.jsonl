@@ -1,0 +1,3 @@
+{"sql":"ALTER TABLE t2 DROP COLUMN e"}
+{"sql":"ALTER TABLE t1 DROP COLUMN f"}
+{"sql":"ALTER TABLE t1 DROP COLUMN a"}

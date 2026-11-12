@@ -1,0 +1,11 @@
+{"sql":"SELECT pg_notify('notify_async1','sample message1')","shape":"SELECT pg_notify('notify_async1', 'sample message1');"}
+{"sql":"SELECT pg_notify('notify_async1','')","shape":"SELECT pg_notify('notify_async1', '');"}
+{"sql":"SELECT pg_notify('notify_async1',NULL)","shape":"SELECT pg_notify('notify_async1', NULL);"}
+{"sql":"SELECT pg_notify('','sample message1')","shape":"SELECT pg_notify('', 'sample message1');"}
+{"sql":"SELECT pg_notify(NULL,'sample message1')","shape":"SELECT pg_notify(NULL, 'sample message1');"}
+{"sql":"SELECT pg_notify('notify_async_channel_name_too_long______________________________','sample_message1')","shape":"SELECT pg_notify('notify_async_channel_name_too_long______________________________', 'sample_message1');"}
+{"sql":"NOTIFY notify_async2","shape":"NOTIFY notify_async2;"}
+{"sql":"LISTEN notify_async2","shape":"LISTEN notify_async2;"}
+{"sql":"UNLISTEN notify_async2","shape":"UNLISTEN notify_async2;"}
+{"sql":"UNLISTEN *","shape":"UNLISTEN *;"}
+{"sql":"SELECT pg_notification_queue_usage()","shape":"SELECT pg_notification_queue_usage();"}

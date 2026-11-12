@@ -1,0 +1,94 @@
+{"sql":"CREATE ROLE regress_regrole_test"}
+{"sql":"SELECT regoper('||/')","shape":"SELECT regoper('||/');"}
+{"sql":"SELECT regoperator('+(int4,int4)')","shape":"SELECT regoperator('+(int4,int4)');"}
+{"sql":"SELECT regproc('now')","shape":"SELECT regproc('now');"}
+{"sql":"SELECT regprocedure('abs(numeric)')","shape":"SELECT regprocedure('abs(numeric)');"}
+{"sql":"SELECT regclass('pg_class')","shape":"SELECT regclass('pg_class');"}
+{"sql":"SELECT regtype('int4')","shape":"SELECT regtype('int4');"}
+{"sql":"SELECT regcollation('\"POSIX\"')","shape":"SELECT regcollation('\"POSIX\"');"}
+{"sql":"SELECT to_regoper('||/')","shape":"SELECT to_regoper('||/');"}
+{"sql":"SELECT to_regoperator('+(int4,int4)')","shape":"SELECT to_regoperator('+(int4,int4)');"}
+{"sql":"SELECT to_regproc('now')","shape":"SELECT to_regproc('now');"}
+{"sql":"SELECT to_regprocedure('abs(numeric)')","shape":"SELECT to_regprocedure('abs(numeric)');"}
+{"sql":"SELECT to_regclass('pg_class')","shape":"SELECT to_regclass('pg_class');"}
+{"sql":"SELECT to_regtype('int4')","shape":"SELECT to_regtype('int4');"}
+{"sql":"SELECT to_regcollation('\"POSIX\"')","shape":"SELECT to_regcollation('\"POSIX\"');"}
+{"sql":"SELECT regoper('pg_catalog.||/')","shape":"SELECT regoper('pg_catalog.||/');"}
+{"sql":"SELECT regoperator('pg_catalog.+(int4,int4)')","shape":"SELECT regoperator('pg_catalog.+(int4,int4)');"}
+{"sql":"SELECT regproc('pg_catalog.now')","shape":"SELECT regproc('pg_catalog.now');"}
+{"sql":"SELECT regprocedure('pg_catalog.abs(numeric)')","shape":"SELECT regprocedure('pg_catalog.abs(numeric)');"}
+{"sql":"SELECT regclass('pg_catalog.pg_class')","shape":"SELECT regclass('pg_catalog.pg_class');"}
+{"sql":"SELECT regtype('pg_catalog.int4')","shape":"SELECT regtype('pg_catalog.int4');"}
+{"sql":"SELECT regcollation('pg_catalog.\"POSIX\"')","shape":"SELECT regcollation('pg_catalog.\"POSIX\"');"}
+{"sql":"SELECT to_regoper('pg_catalog.||/')","shape":"SELECT to_regoper('pg_catalog.||/');"}
+{"sql":"SELECT to_regproc('pg_catalog.now')","shape":"SELECT to_regproc('pg_catalog.now');"}
+{"sql":"SELECT to_regprocedure('pg_catalog.abs(numeric)')","shape":"SELECT to_regprocedure('pg_catalog.abs(numeric)');"}
+{"sql":"SELECT to_regclass('pg_catalog.pg_class')","shape":"SELECT to_regclass('pg_catalog.pg_class');"}
+{"sql":"SELECT to_regtype('pg_catalog.int4')","shape":"SELECT to_regtype('pg_catalog.int4');"}
+{"sql":"SELECT to_regcollation('pg_catalog.\"POSIX\"')","shape":"SELECT to_regcollation('pg_catalog.\"POSIX\"');"}
+{"sql":"SELECT regrole('regress_regrole_test')","shape":"SELECT regrole('regress_regrole_test');"}
+{"sql":"SELECT regrole('\"regress_regrole_test\"')","shape":"SELECT regrole('\"regress_regrole_test\"');"}
+{"sql":"SELECT regnamespace('pg_catalog')","shape":"SELECT regnamespace('pg_catalog');"}
+{"sql":"SELECT regnamespace('\"pg_catalog\"')","shape":"SELECT regnamespace('\"pg_catalog\"');"}
+{"sql":"SELECT to_regrole('regress_regrole_test')","shape":"SELECT to_regrole('regress_regrole_test');"}
+{"sql":"SELECT to_regrole('\"regress_regrole_test\"')","shape":"SELECT to_regrole('\"regress_regrole_test\"');"}
+{"sql":"SELECT to_regnamespace('pg_catalog')","shape":"SELECT to_regnamespace('pg_catalog');"}
+{"sql":"SELECT to_regnamespace('\"pg_catalog\"')","shape":"SELECT to_regnamespace('\"pg_catalog\"');"}
+{"sql":"DROP ROLE regress_regrole_test","shape":"DROP ROLE regress_regrole_test;"}
+{"sql":"SELECT regoper('||//')","shape":"SELECT regoper('||//');"}
+{"sql":"SELECT regoperator('++(int4,int4)')","shape":"SELECT regoperator('++(int4,int4)');"}
+{"sql":"SELECT regproc('know')","shape":"SELECT regproc('know');"}
+{"sql":"SELECT regprocedure('absinthe(numeric)')","shape":"SELECT regprocedure('absinthe(numeric)');"}
+{"sql":"SELECT regclass('pg_classes')","shape":"SELECT regclass('pg_classes');"}
+{"sql":"SELECT regtype('int3')","shape":"SELECT regtype('int3');"}
+{"sql":"SELECT regoper('ng_catalog.||/')","shape":"SELECT regoper('ng_catalog.||/');"}
+{"sql":"SELECT regoperator('ng_catalog.+(int4,int4)')","shape":"SELECT regoperator('ng_catalog.+(int4,int4)');"}
+{"sql":"SELECT regproc('ng_catalog.now')","shape":"SELECT regproc('ng_catalog.now');"}
+{"sql":"SELECT regprocedure('ng_catalog.abs(numeric)')","shape":"SELECT regprocedure('ng_catalog.abs(numeric)');"}
+{"sql":"SELECT regclass('ng_catalog.pg_class')","shape":"SELECT regclass('ng_catalog.pg_class');"}
+{"sql":"SELECT regtype('ng_catalog.int4')","shape":"SELECT regtype('ng_catalog.int4');"}
+{"sql":"SELECT regcollation('ng_catalog.\"POSIX\"')","shape":"SELECT regcollation('ng_catalog.\"POSIX\"');"}
+{"sql":"SELECT regrole('Nonexistent')","shape":"SELECT regrole('Nonexistent');"}
+{"sql":"SELECT regrole('\"Nonexistent\"')","shape":"SELECT regrole('\"Nonexistent\"');"}
+{"sql":"SELECT regrole('foo.bar')","shape":"SELECT regrole('foo.bar');"}
+{"sql":"SELECT regnamespace('Nonexistent')","shape":"SELECT regnamespace('Nonexistent');"}
+{"sql":"SELECT regnamespace('\"Nonexistent\"')","shape":"SELECT regnamespace('\"Nonexistent\"');"}
+{"sql":"SELECT regnamespace('foo.bar')","shape":"SELECT regnamespace('foo.bar');"}
+{"sql":"SELECT to_regoper('||//')","shape":"SELECT to_regoper('||//');"}
+{"sql":"SELECT to_regoperator('++(int4,int4)')","shape":"SELECT to_regoperator('++(int4,int4)');"}
+{"sql":"SELECT to_regproc('know')","shape":"SELECT to_regproc('know');"}
+{"sql":"SELECT to_regprocedure('absinthe(numeric)')","shape":"SELECT to_regprocedure('absinthe(numeric)');"}
+{"sql":"SELECT to_regclass('pg_classes')","shape":"SELECT to_regclass('pg_classes');"}
+{"sql":"SELECT to_regtype('int3')","shape":"SELECT to_regtype('int3');"}
+{"sql":"SELECT to_regcollation('notacollation')","shape":"SELECT to_regcollation('notacollation');"}
+{"sql":"SELECT to_regoper('ng_catalog.||/')","shape":"SELECT to_regoper('ng_catalog.||/');"}
+{"sql":"SELECT to_regoperator('ng_catalog.+(int4,int4)')","shape":"SELECT to_regoperator('ng_catalog.+(int4,int4)');"}
+{"sql":"SELECT to_regproc('ng_catalog.now')","shape":"SELECT to_regproc('ng_catalog.now');"}
+{"sql":"SELECT to_regprocedure('ng_catalog.abs(numeric)')","shape":"SELECT to_regprocedure('ng_catalog.abs(numeric)');"}
+{"sql":"SELECT to_regclass('ng_catalog.pg_class')","shape":"SELECT to_regclass('ng_catalog.pg_class');"}
+{"sql":"SELECT to_regtype('ng_catalog.int4')","shape":"SELECT to_regtype('ng_catalog.int4');"}
+{"sql":"SELECT to_regcollation('ng_catalog.\"POSIX\"')","shape":"SELECT to_regcollation('ng_catalog.\"POSIX\"');"}
+{"sql":"SELECT to_regrole('foo.bar')","shape":"SELECT to_regrole('foo.bar');"}
+{"sql":"SELECT to_regrole('Nonexistent')","shape":"SELECT to_regrole('Nonexistent');"}
+{"sql":"SELECT to_regrole('\"Nonexistent\"')","shape":"SELECT to_regrole('\"Nonexistent\"');"}
+{"sql":"SELECT to_regnamespace('Nonexistent')","shape":"SELECT to_regnamespace('Nonexistent');"}
+{"sql":"SELECT to_regnamespace('\"Nonexistent\"')","shape":"SELECT to_regnamespace('\"Nonexistent\"');"}
+{"sql":"SELECT to_regnamespace('foo.bar')","shape":"SELECT to_regnamespace('foo.bar');"}
+{"sql":"SELECT * FROM pg_input_error_info('ng_catalog.pg_class', 'regclass')","shape":"SELECT * FROM pg_input_error_info('ng_catalog.pg_class', 'regclass');"}
+{"sql":"SELECT pg_input_is_valid('ng_catalog.\"POSIX\"', 'regcollation')","shape":"SELECT pg_input_is_valid('ng_catalog.\"POSIX\"', 'regcollation');"}
+{"sql":"SELECT * FROM pg_input_error_info('no_such_config', 'regconfig')","shape":"SELECT * FROM pg_input_error_info('no_such_config', 'regconfig');"}
+{"sql":"SELECT * FROM pg_input_error_info('no_such_dictionary', 'regdictionary')","shape":"SELECT * FROM pg_input_error_info('no_such_dictionary', 'regdictionary');"}
+{"sql":"SELECT * FROM pg_input_error_info('Nonexistent', 'regnamespace')","shape":"SELECT * FROM pg_input_error_info('Nonexistent', 'regnamespace');"}
+{"sql":"SELECT * FROM pg_input_error_info('ng_catalog.||/', 'regoper')","shape":"SELECT * FROM pg_input_error_info('ng_catalog.||/', 'regoper');"}
+{"sql":"SELECT * FROM pg_input_error_info('-', 'regoper')","shape":"SELECT * FROM pg_input_error_info('-', 'regoper');"}
+{"sql":"SELECT * FROM pg_input_error_info('ng_catalog.+(int4,int4)', 'regoperator')","shape":"SELECT * FROM pg_input_error_info('ng_catalog.+(int4,int4)', 'regoperator');"}
+{"sql":"SELECT * FROM pg_input_error_info('-', 'regoperator')","shape":"SELECT * FROM pg_input_error_info('-', 'regoperator');"}
+{"sql":"SELECT * FROM pg_input_error_info('ng_catalog.now', 'regproc')","shape":"SELECT * FROM pg_input_error_info('ng_catalog.now', 'regproc');"}
+{"sql":"SELECT * FROM pg_input_error_info('ng_catalog.abs(numeric)', 'regprocedure')","shape":"SELECT * FROM pg_input_error_info('ng_catalog.abs(numeric)', 'regprocedure');"}
+{"sql":"SELECT * FROM pg_input_error_info('ng_catalog.abs(numeric', 'regprocedure')","shape":"SELECT * FROM pg_input_error_info('ng_catalog.abs(numeric', 'regprocedure');"}
+{"sql":"SELECT * FROM pg_input_error_info('regress_regrole_test', 'regrole')","shape":"SELECT * FROM pg_input_error_info('regress_regrole_test', 'regrole');"}
+{"sql":"SELECT * FROM pg_input_error_info('no_such_type', 'regtype')","shape":"SELECT * FROM pg_input_error_info('no_such_type', 'regtype');"}
+{"sql":"SELECT * FROM pg_input_error_info('incorrect type name syntax', 'regtype')","shape":"SELECT * FROM pg_input_error_info('incorrect type name syntax', 'regtype');"}
+{"sql":"SELECT * FROM pg_input_error_info('numeric(1,2,3)', 'regtype')","shape":"SELECT * FROM pg_input_error_info('numeric(1,2,3)', 'regtype');"}
+{"sql":"SELECT * FROM pg_input_error_info('way.too.many.names', 'regtype')","shape":"SELECT * FROM pg_input_error_info('way.too.many.names', 'regtype');"}
+{"sql":"SELECT * FROM pg_input_error_info('no_such_catalog.schema.name', 'regtype')","shape":"SELECT * FROM pg_input_error_info('no_such_catalog.schema.name', 'regtype');"}

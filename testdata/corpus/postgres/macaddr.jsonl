@@ -1,0 +1,35 @@
+{"sql":"CREATE TABLE macaddr_data (a int, b macaddr)","shape":"CREATE TABLE macaddr_data (a int, b macaddr);"}
+{"sql":"INSERT INTO macaddr_data VALUES (1, '08:00:2b:01:02:03')","shape":"INSERT INTO macaddr_data VALUES (1, '08:00:2b:01:02:03');"}
+{"sql":"INSERT INTO macaddr_data VALUES (2, '08-00-2b-01-02-03')","shape":"INSERT INTO macaddr_data VALUES (2, '08-00-2b-01-02-03');"}
+{"sql":"INSERT INTO macaddr_data VALUES (3, '08002b:010203')","shape":"INSERT INTO macaddr_data VALUES (3, '08002b:010203');"}
+{"sql":"INSERT INTO macaddr_data VALUES (4, '08002b-010203')","shape":"INSERT INTO macaddr_data VALUES (4, '08002b-010203');"}
+{"sql":"INSERT INTO macaddr_data VALUES (5, '0800.2b01.0203')","shape":"INSERT INTO macaddr_data VALUES (5, '0800.2b01.0203');"}
+{"sql":"INSERT INTO macaddr_data VALUES (6, '0800-2b01-0203')","shape":"INSERT INTO macaddr_data VALUES (6, '0800-2b01-0203');"}
+{"sql":"INSERT INTO macaddr_data VALUES (7, '08002b010203')","shape":"INSERT INTO macaddr_data VALUES (7, '08002b010203');"}
+{"sql":"INSERT INTO macaddr_data VALUES (8, '0800:2b01:0203')","shape":"INSERT INTO macaddr_data VALUES (8, '0800:2b01:0203');"}
+{"sql":"INSERT INTO macaddr_data VALUES (9, 'not even close')","shape":"INSERT INTO macaddr_data VALUES (9, 'not even close');"}
+{"sql":"INSERT INTO macaddr_data VALUES (10, '08:00:2b:01:02:04')","shape":"INSERT INTO macaddr_data VALUES (10, '08:00:2b:01:02:04');"}
+{"sql":"INSERT INTO macaddr_data VALUES (11, '08:00:2b:01:02:02')","shape":"INSERT INTO macaddr_data VALUES (11, '08:00:2b:01:02:02');"}
+{"sql":"INSERT INTO macaddr_data VALUES (12, '08:00:2a:01:02:03')","shape":"INSERT INTO macaddr_data VALUES (12, '08:00:2a:01:02:03');"}
+{"sql":"INSERT INTO macaddr_data VALUES (13, '08:00:2c:01:02:03')","shape":"INSERT INTO macaddr_data VALUES (13, '08:00:2c:01:02:03');"}
+{"sql":"INSERT INTO macaddr_data VALUES (14, '08:00:2a:01:02:04')","shape":"INSERT INTO macaddr_data VALUES (14, '08:00:2a:01:02:04');"}
+{"sql":"SELECT * FROM macaddr_data","shape":"SELECT * FROM macaddr_data;"}
+{"sql":"CREATE INDEX macaddr_data_btree ON macaddr_data USING btree (b)","shape":"CREATE INDEX macaddr_data_btree ON macaddr_data USING btree (b);"}
+{"sql":"CREATE INDEX macaddr_data_hash ON macaddr_data USING hash (b)","shape":"CREATE INDEX macaddr_data_hash ON macaddr_data USING hash (b);"}
+{"sql":"SELECT a, b, trunc(b) FROM macaddr_data ORDER BY 2, 1","shape":"SELECT a, b, trunc(b) FROM macaddr_data ORDER BY 2, 1;"}
+{"sql":"SELECT b <  '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1","shape":"SELECT b < '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b >  '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1","shape":"SELECT b > '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b >  '08:00:2b:01:02:03' FROM macaddr_data WHERE a = 1","shape":"SELECT b > '08:00:2b:01:02:03' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b <= '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1","shape":"SELECT b <= '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b >= '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1","shape":"SELECT b >= '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b =  '08:00:2b:01:02:03' FROM macaddr_data WHERE a = 1","shape":"SELECT b = '08:00:2b:01:02:03' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b <> '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1","shape":"SELECT b <> '08:00:2b:01:02:04' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT b <> '08:00:2b:01:02:03' FROM macaddr_data WHERE a = 1","shape":"SELECT b <> '08:00:2b:01:02:03' FROM macaddr_data WHERE a = 1;"}
+{"sql":"SELECT ~b                       FROM macaddr_data","shape":"SELECT ~b FROM macaddr_data;"}
+{"sql":"SELECT  b & '00:00:00:ff:ff:ff' FROM macaddr_data","shape":"SELECT b & '00:00:00:ff:ff:ff' FROM macaddr_data;"}
+{"sql":"SELECT  b | '01:02:03:04:05:06' FROM macaddr_data","shape":"SELECT b | '01:02:03:04:05:06' FROM macaddr_data;"}
+{"sql":"DROP TABLE macaddr_data","shape":"DROP TABLE macaddr_data;"}
+{"sql":"SELECT pg_input_is_valid('08:00:2b:01:02:ZZ', 'macaddr')","shape":"SELECT pg_input_is_valid('08:00:2b:01:02:ZZ', 'macaddr');"}
+{"sql":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:ZZ', 'macaddr')","shape":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:ZZ', 'macaddr');"}
+{"sql":"SELECT pg_input_is_valid('08:00:2b:01:02:', 'macaddr')","shape":"SELECT pg_input_is_valid('08:00:2b:01:02:', 'macaddr');"}
+{"sql":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:', 'macaddr')","shape":"SELECT * FROM pg_input_error_info('08:00:2b:01:02:', 'macaddr');"}

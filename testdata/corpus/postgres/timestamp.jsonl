@@ -1,0 +1,145 @@
+{"sql":"CREATE TABLE TIMESTAMP_TBL (d1 timestamp(2) without time zone)","shape":"CREATE TABLE TIMESTAMP_TBL (d1 timestamp(2) WITHOUT TIME ZONE);"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('today')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('today');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('yesterday')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('yesterday');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('tomorrow')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('tomorrow');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('tomorrow EST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('tomorrow EST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('tomorrow zulu')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('tomorrow zulu');"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMP_TBL WHERE d1 = timestamp without time zone 'today'","shape":"SELECT count(*) AS One FROM TIMESTAMP_TBL WHERE d1 = timestamp WITHOUT TIME ZONE 'today';"}
+{"sql":"SELECT count(*) AS Three FROM TIMESTAMP_TBL WHERE d1 = timestamp without time zone 'tomorrow'","shape":"SELECT count(*) AS Three FROM TIMESTAMP_TBL WHERE d1 = timestamp WITHOUT TIME ZONE 'tomorrow';"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMP_TBL WHERE d1 = timestamp without time zone 'yesterday'","shape":"SELECT count(*) AS One FROM TIMESTAMP_TBL WHERE d1 = timestamp WITHOUT TIME ZONE 'yesterday';"}
+{"sql":"DELETE FROM TIMESTAMP_TBL","shape":"DELETE FROM TIMESTAMP_TBL;"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('now')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('now');"}
+{"sql":"SELECT count(*) AS two FROM TIMESTAMP_TBL WHERE d1 = timestamp(2) without time zone 'now'","shape":"SELECT count(*) AS two FROM TIMESTAMP_TBL WHERE d1 = timestamp(2) WITHOUT TIME ZONE 'now';"}
+{"sql":"SELECT count(d1) AS three, count(DISTINCT d1) AS two FROM TIMESTAMP_TBL","shape":"SELECT count(d1) AS three, count(DISTINCT d1) AS two FROM TIMESTAMP_TBL;"}
+{"sql":"TRUNCATE TIMESTAMP_TBL","shape":"TRUNCATE TABLE TIMESTAMP_TBL;"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('-infinity')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('-infinity');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('infinity')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('infinity');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('epoch')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('epoch');"}
+{"sql":"SELECT timestamp 'infinity' = timestamp '+infinity' AS t","shape":"SELECT timestamp 'infinity' = timestamp '+infinity' AS t;"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01 1997 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.000001 1997 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.000001 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.999999 1997 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.999999 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.4 1997 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.4 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.5 1997 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.5 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.6 1997 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mon Feb 10 17:32:01.6 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-01-02')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-01-02');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-01-02 03:04:05')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-01-02 03:04:05');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01-08')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01-08');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01-0800')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01-0800');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01 -08:00')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01 -08:00');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('19970210 173201 -0800')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('19970210 173201 -0800');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-06-10 17:32:01 -07:00')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-06-10 17:32:01 -07:00');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('2001-09-22T18:19:20')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('2001-09-22T18:19:20');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 08:14:01 GMT+8')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 08:14:01 GMT+8');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 13:14:02 GMT-1')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 13:14:02 GMT-1');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 12:14:03 GMT-2')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 12:14:03 GMT-2');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 03:14:04 PST+8')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 03:14:04 PST+8');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 02:14:05 MST+7:00')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('2000-03-15 02:14:05 MST+7:00');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 10 17:32:01 1997 -0800')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 10 17:32:01 1997 -0800');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 10 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 10 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 10 5:32PM 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 10 5:32PM 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997/02/10 17:32:01-0800')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997/02/10 17:32:01-0800');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-02-10 17:32:01 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb-10-1997 17:32:01 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb-10-1997 17:32:01 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('02-10-1997 17:32:01 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('02-10-1997 17:32:01 PST');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('19970210 173201 PST')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('19970210 173201 PST');"}
+{"sql":"set datestyle to ymd","shape":"SET datestyle TO ymd;"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('97FEB10 5:32:01PM UTC')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('97FEB10 5:32:01PM UTC');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('97/02/10 17:32:01 UTC')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('97/02/10 17:32:01 UTC');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997.041 17:32:01 UTC')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997.041 17:32:01 UTC');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('19970210 173201 America/New_York')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('19970210 173201 America/New_York');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('19970710 173201 America/Does_not_exist')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('19970710 173201 America/Does_not_exist');"}
+{"sql":"SELECT pg_input_is_valid('now', 'timestamp')","shape":"SELECT pg_input_is_valid('now', 'timestamp');"}
+{"sql":"SELECT pg_input_is_valid('garbage', 'timestamp')","shape":"SELECT pg_input_is_valid('garbage', 'timestamp');"}
+{"sql":"SELECT pg_input_is_valid('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamp')","shape":"SELECT pg_input_is_valid('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamp');"}
+{"sql":"SELECT * FROM pg_input_error_info('garbage', 'timestamp')","shape":"SELECT * FROM pg_input_error_info('garbage', 'timestamp');"}
+{"sql":"SELECT * FROM pg_input_error_info('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamp')","shape":"SELECT * FROM pg_input_error_info('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamp');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-06-10 18:32:01 PDT')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('1997-06-10 18:32:01 PDT');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 11 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 11 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 12 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 12 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 13 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 13 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 14 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 14 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 15 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 15 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 0097 BC')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 0097 BC');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 0097')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 0097');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 0597')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 0597');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1097')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1097');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1697')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1697');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1797')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1797');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1897')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 1897');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 2097')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 2097');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 28 17:32:01 1996')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 28 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 29 17:32:01 1996')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 29 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mar 01 17:32:01 1996')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mar 01 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 30 17:32:01 1996')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 30 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 1996')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Jan 01 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Jan 01 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 28 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 28 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 29 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 29 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Mar 01 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Mar 01 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 30 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 30 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 1997')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 1999')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 1999');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Jan 01 17:32:01 2000')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Jan 01 17:32:01 2000');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 2000')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Dec 31 17:32:01 2000');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Jan 01 17:32:01 2001')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Jan 01 17:32:01 2001');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 -0097')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 -0097');"}
+{"sql":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 5097 BC')","shape":"INSERT INTO TIMESTAMP_TBL VALUES ('Feb 16 17:32:01 5097 BC');"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL","shape":"SELECT d1 FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT '4714-11-24 00:00:00 BC'::timestamp","shape":"SELECT '4714-11-24 00:00:00 BC'::timestamp;"}
+{"sql":"SELECT '4714-11-23 23:59:59 BC'::timestamp","shape":"SELECT '4714-11-23 23:59:59 BC'::timestamp;"}
+{"sql":"SELECT '294276-12-31 23:59:59'::timestamp","shape":"SELECT '294276-12-31 23:59:59'::timestamp;"}
+{"sql":"SELECT '294277-01-01 00:00:00'::timestamp","shape":"SELECT '294277-01-01 00:00:00'::timestamp;"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL\n   WHERE d1 > timestamp without time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMP_TBL WHERE d1 > timestamp WITHOUT TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL\n   WHERE d1 < timestamp without time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMP_TBL WHERE d1 < timestamp WITHOUT TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL\n   WHERE d1 = timestamp without time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMP_TBL WHERE d1 = timestamp WITHOUT TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL\n   WHERE d1 != timestamp without time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMP_TBL WHERE d1 != timestamp WITHOUT TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL\n   WHERE d1 <= timestamp without time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMP_TBL WHERE d1 <= timestamp WITHOUT TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMP_TBL\n   WHERE d1 >= timestamp without time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMP_TBL WHERE d1 >= timestamp WITHOUT TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 - timestamp without time zone '1997-01-02' AS diff\n   FROM TIMESTAMP_TBL WHERE d1 BETWEEN '1902-01-01' AND '2038-01-01'","shape":"SELECT d1 - timestamp WITHOUT TIME ZONE '1997-01-02' AS diff FROM TIMESTAMP_TBL WHERE d1 BETWEEN '1902-01-01' AND '2038-01-01';"}
+{"sql":"SELECT date_trunc( 'week', timestamp '2004-02-29 15:44:17.71393' ) AS week_trunc","shape":"SELECT date_trunc('week', timestamp '2004-02-29 15:44:17.71393') AS week_trunc;"}
+{"sql":"SELECT\n  str,\n  interval,\n  date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '2001-01-01') AS equal\nFROM (\n  VALUES\n  ('week', '7 d'),\n  ('day', '1 d'),\n  ('hour', '1 h'),\n  ('minute', '1 m'),\n  ('second', '1 s'),\n  ('millisecond', '1 ms'),\n  ('microsecond', '1 us')\n) intervals (str, interval),\n(VALUES (timestamp '2020-02-29 15:44:17.71393')) ts (ts)","shape":"SELECT str, interval, date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '2001-01-01') AS equal FROM (VALUES ('week', '7 d'), ('day', '1 d'), ('hour', '1 h'), ('minute', '1 m'), ('second', '1 s'), ('millisecond', '1 ms'), ('microsecond', '1 us')) AS intervals(str, interval), (VALUES (timestamp '2020-02-29 15:44:17.71393')) AS ts(ts);"}
+{"sql":"SELECT\n  str,\n  interval,\n  date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '2000-01-01 BC') AS equal\nFROM (\n  VALUES\n  ('week', '7 d'),\n  ('day', '1 d'),\n  ('hour', '1 h'),\n  ('minute', '1 m'),\n  ('second', '1 s'),\n  ('millisecond', '1 ms'),\n  ('microsecond', '1 us')\n) intervals (str, interval),\n(VALUES (timestamp '0055-6-10 15:44:17.71393 BC')) ts (ts)","shape":"SELECT str, interval, date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '2000-01-01 BC') AS equal FROM (VALUES ('week', '7 d'), ('day', '1 d'), ('hour', '1 h'), ('minute', '1 m'), ('second', '1 s'), ('millisecond', '1 ms'), ('microsecond', '1 us')) AS intervals(str, interval), (VALUES (timestamp '0055-6-10 15:44:17.71393 BC')) AS ts(ts);"}
+{"sql":"SELECT\n  str,\n  interval,\n  date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '2020-03-02') AS equal\nFROM (\n  VALUES\n  ('week', '7 d'),\n  ('day', '1 d'),\n  ('hour', '1 h'),\n  ('minute', '1 m'),\n  ('second', '1 s'),\n  ('millisecond', '1 ms'),\n  ('microsecond', '1 us')\n) intervals (str, interval),\n(VALUES (timestamp '2020-02-29 15:44:17.71393')) ts (ts)","shape":"SELECT str, interval, date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '2020-03-02') AS equal FROM (VALUES ('week', '7 d'), ('day', '1 d'), ('hour', '1 h'), ('minute', '1 m'), ('second', '1 s'), ('millisecond', '1 ms'), ('microsecond', '1 us')) AS intervals(str, interval), (VALUES (timestamp '2020-02-29 15:44:17.71393')) AS ts(ts);"}
+{"sql":"SELECT\n  str,\n  interval,\n  date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '0055-06-17 BC') AS equal\nFROM (\n  VALUES\n  ('week', '7 d'),\n  ('day', '1 d'),\n  ('hour', '1 h'),\n  ('minute', '1 m'),\n  ('second', '1 s'),\n  ('millisecond', '1 ms'),\n  ('microsecond', '1 us')\n) intervals (str, interval),\n(VALUES (timestamp '0055-6-10 15:44:17.71393 BC')) ts (ts)","shape":"SELECT str, interval, date_trunc(str, ts) = date_bin(interval::interval, ts, timestamp '0055-06-17 BC') AS equal FROM (VALUES ('week', '7 d'), ('day', '1 d'), ('hour', '1 h'), ('minute', '1 m'), ('second', '1 s'), ('millisecond', '1 ms'), ('microsecond', '1 us')) AS intervals(str, interval), (VALUES (timestamp '0055-6-10 15:44:17.71393 BC')) AS ts(ts);"}
+{"sql":"SELECT\n  interval,\n  ts,\n  origin,\n  date_bin(interval::interval, ts, origin)\nFROM (\n  VALUES\n  ('15 days'),\n  ('2 hours'),\n  ('1 hour 30 minutes'),\n  ('15 minutes'),\n  ('10 seconds'),\n  ('100 milliseconds'),\n  ('250 microseconds')\n) intervals (interval),\n(VALUES (timestamp '2020-02-11 15:44:17.71393')) ts (ts),\n(VALUES (timestamp '2001-01-01')) origin (origin)","shape":"SELECT interval, ts, origin, date_bin(interval::interval, ts, origin) FROM (VALUES ('15 days'), ('2 hours'), ('1 hour 30 minutes'), ('15 minutes'), ('10 seconds'), ('100 milliseconds'), ('250 microseconds')) AS intervals(interval), (VALUES (timestamp '2020-02-11 15:44:17.71393')) AS ts(ts), (VALUES (timestamp '2001-01-01')) AS origin(origin);"}
+{"sql":"SELECT date_bin('5 min'::interval, timestamp '2020-02-01 01:01:01', timestamp '2020-02-01 00:02:30')","shape":"SELECT date_bin('5 min'::interval, timestamp '2020-02-01 01:01:01', timestamp '2020-02-01 00:02:30');"}
+{"sql":"SELECT date_bin('30 minutes'::interval, timestamp '2024-02-01 15:00:00', timestamp '2024-02-01 17:00:00')","shape":"SELECT date_bin('30 minutes'::interval, timestamp '2024-02-01 15:00:00', timestamp '2024-02-01 17:00:00');"}
+{"sql":"SELECT date_bin('5 months'::interval, timestamp '2020-02-01 01:01:01', timestamp '2001-01-01')","shape":"SELECT date_bin('5 months'::interval, timestamp '2020-02-01 01:01:01', timestamp '2001-01-01');"}
+{"sql":"SELECT date_bin('5 years'::interval,  timestamp '2020-02-01 01:01:01', timestamp '2001-01-01')","shape":"SELECT date_bin('5 years'::interval, timestamp '2020-02-01 01:01:01', timestamp '2001-01-01');"}
+{"sql":"SELECT date_bin('0 days'::interval, timestamp '1970-01-01 01:00:00' , timestamp '1970-01-01 00:00:00')","shape":"SELECT date_bin('0 days'::interval, timestamp '1970-01-01 01:00:00', timestamp '1970-01-01 00:00:00');"}
+{"sql":"SELECT date_bin('-2 days'::interval, timestamp '1970-01-01 01:00:00' , timestamp '1970-01-01 00:00:00')","shape":"SELECT date_bin('-2 days'::interval, timestamp '1970-01-01 01:00:00', timestamp '1970-01-01 00:00:00');"}
+{"sql":"select date_bin('15 minutes'::interval, timestamp '294276-12-30', timestamp '4000-12-20 BC')","shape":"SELECT date_bin('15 minutes'::interval, timestamp '294276-12-30', timestamp '4000-12-20 BC');"}
+{"sql":"select date_bin('200000000 days'::interval, '2024-02-01'::timestamp, '2024-01-01'::timestamp)","shape":"SELECT date_bin('200000000 days'::interval, '2024-02-01'::timestamp, '2024-01-01'::timestamp);"}
+{"sql":"select date_bin('365000 days'::interval, '4400-01-01 BC'::timestamp, '4000-01-01 BC'::timestamp)","shape":"SELECT date_bin('365000 days'::interval, '4400-01-01 BC'::timestamp, '4000-01-01 BC'::timestamp);"}
+{"sql":"SELECT d1 - timestamp without time zone '1997-01-02' AS diff\n  FROM TIMESTAMP_TBL\n  WHERE d1 BETWEEN timestamp without time zone '1902-01-01'\n   AND timestamp without time zone '2038-01-01'","shape":"SELECT d1 - timestamp WITHOUT TIME ZONE '1997-01-02' AS diff FROM TIMESTAMP_TBL WHERE d1 BETWEEN timestamp WITHOUT TIME ZONE '1902-01-01' AND timestamp WITHOUT TIME ZONE '2038-01-01';"}
+{"sql":"SELECT d1 as \"timestamp\",\n   date_part( 'year', d1) AS year, date_part( 'month', d1) AS month,\n   date_part( 'day', d1) AS day, date_part( 'hour', d1) AS hour,\n   date_part( 'minute', d1) AS minute, date_part( 'second', d1) AS second\n   FROM TIMESTAMP_TBL","shape":"SELECT d1 AS \"timestamp\", date_part('year', d1) AS year, date_part('month', d1) AS month, date_part('day', d1) AS day, date_part('hour', d1) AS hour, date_part('minute', d1) AS minute, date_part('second', d1) AS second FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT d1 as \"timestamp\",\n   date_part( 'quarter', d1) AS quarter, date_part( 'msec', d1) AS msec,\n   date_part( 'usec', d1) AS usec\n   FROM TIMESTAMP_TBL","shape":"SELECT d1 AS \"timestamp\", date_part('quarter', d1) AS quarter, date_part('msec', d1) AS msec, date_part('usec', d1) AS usec FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT d1 as \"timestamp\",\n   date_part( 'isoyear', d1) AS isoyear, date_part( 'week', d1) AS week,\n   date_part( 'isodow', d1) AS isodow, date_part( 'dow', d1) AS dow,\n   date_part( 'doy', d1) AS doy\n   FROM TIMESTAMP_TBL","shape":"SELECT d1 AS \"timestamp\", date_part('isoyear', d1) AS isoyear, date_part('week', d1) AS week, date_part('isodow', d1) AS isodow, date_part('dow', d1) AS dow, date_part('doy', d1) AS doy FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT d1 as \"timestamp\",\n   date_part( 'decade', d1) AS decade,\n   date_part( 'century', d1) AS century,\n   date_part( 'millennium', d1) AS millennium,\n   round(date_part( 'julian', d1)) AS julian,\n   date_part( 'epoch', d1) AS epoch\n   FROM TIMESTAMP_TBL","shape":"SELECT d1 AS \"timestamp\", date_part('decade', d1) AS decade, date_part('century', d1) AS century, date_part('millennium', d1) AS millennium, round(date_part('julian', d1)) AS julian, date_part('epoch', d1) AS epoch FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT d1 as \"timestamp\",\n   extract(microseconds from d1) AS microseconds,\n   extract(milliseconds from d1) AS milliseconds,\n   extract(seconds from d1) AS seconds,\n   round(extract(julian from d1)) AS julian,\n   extract(epoch from d1) AS epoch\n   FROM TIMESTAMP_TBL","shape":"SELECT d1 AS \"timestamp\", EXTRACT(MICROSECONDS FROM d1) AS microseconds, EXTRACT(MILLISECONDS FROM d1) AS milliseconds, EXTRACT(SECONDS FROM d1) AS seconds, round(EXTRACT(JULIAN FROM d1)) AS julian, EXTRACT(EPOCH FROM d1) AS epoch FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT date_part('epoch', '294270-01-01 00:00:00'::timestamp)","shape":"SELECT date_part('epoch', '294270-01-01 00:00:00'::timestamp);"}
+{"sql":"SELECT extract(epoch from '294270-01-01 00:00:00'::timestamp)","shape":"SELECT EXTRACT(EPOCH FROM '294270-01-01 00:00:00'::timestamp);"}
+{"sql":"SELECT extract(epoch from '5000-01-01 00:00:00'::timestamp)","shape":"SELECT EXTRACT(EPOCH FROM '5000-01-01 00:00:00'::timestamp);"}
+{"sql":"SELECT timestamp '294276-12-31 23:59:59' - timestamp '1999-12-23 19:59:04.224193' AS ok","shape":"SELECT timestamp '294276-12-31 23:59:59' - timestamp '1999-12-23 19:59:04.224193' AS ok;"}
+{"sql":"SELECT timestamp '294276-12-31 23:59:59' - timestamp '1999-12-23 19:59:04.224192' AS overflows","shape":"SELECT timestamp '294276-12-31 23:59:59' - timestamp '1999-12-23 19:59:04.224192' AS overflows;"}
+{"sql":"SELECT to_char(d1, 'DAY Day day DY Dy dy MONTH Month month RM MON Mon mon')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'DAY Day day DY Dy dy MONTH Month month RM MON Mon mon') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'FMDAY FMDay FMday FMMONTH FMMonth FMmonth FMRM')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'FMDAY FMDay FMday FMMONTH FMMonth FMmonth FMRM') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'Y,YYY YYYY YYY YY Y CC Q MM WW DDD DD D J')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'Y,YYY YYYY YYY YY Y CC Q MM WW DDD DD D J') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'FMY,YYY FMYYYY FMYYY FMYY FMY FMCC FMQ FMMM FMWW FMDDD FMDD FMD FMJ')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'FMY,YYY FMYYYY FMYYY FMYY FMY FMCC FMQ FMMM FMWW FMDDD FMDD FMD FMJ') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'HH HH12 HH24 MI SS SSSS')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'HH HH12 HH24 MI SS SSSS') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, E'\"HH:MI:SS is\" HH:MI:SS \"\\\\\"text between quote marks\\\\\"\"')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, E'\"HH:MI:SS is\" HH:MI:SS \"\\\\\"text between quote marks\\\\\"\"') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'HH24--text--MI--text--SS')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'HH24--text--MI--text--SS') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'YYYYTH YYYYth Jth')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'YYYYTH YYYYth Jth') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'YYYY A.D. YYYY a.d. YYYY bc HH:MI:SS P.M. HH:MI:SS p.m. HH:MI:SS pm')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'YYYY A.D. YYYY a.d. YYYY bc HH:MI:SS P.M. HH:MI:SS p.m. HH:MI:SS pm') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'IYYY IYY IY I IW IDDD ID')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'IYYY IYY IY I IW IDDD ID') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d1, 'FMIYYY FMIYY FMIY FMI FMIW FMIDDD FMID')\n   FROM TIMESTAMP_TBL","shape":"SELECT to_char(d1, 'FMIYYY FMIYY FMIY FMI FMIW FMIDDD FMID') FROM TIMESTAMP_TBL;"}
+{"sql":"SELECT to_char(d, 'FF1 FF2 FF3 FF4 FF5 FF6  ff1 ff2 ff3 ff4 ff5 ff6  MS US')\n   FROM (VALUES\n       ('2018-11-02 12:34:56'::timestamp),\n       ('2018-11-02 12:34:56.78'),\n       ('2018-11-02 12:34:56.78901'),\n       ('2018-11-02 12:34:56.78901234')\n   ) d(d)","shape":"SELECT to_char(d, 'FF1 FF2 FF3 FF4 FF5 FF6  ff1 ff2 ff3 ff4 ff5 ff6  MS US') FROM (VALUES ('2018-11-02 12:34:56'::timestamp), ('2018-11-02 12:34:56.78'), ('2018-11-02 12:34:56.78901'), ('2018-11-02 12:34:56.78901234')) AS d(d);"}
+{"sql":"SELECT i,\n       to_char(i * interval '1mon', 'rm'),\n       to_char(i * interval '1mon', 'RM')\n    FROM generate_series(-13, 13) i","shape":"SELECT i, to_char(i * interval '1mon', 'rm'), to_char(i * interval '1mon', 'RM') FROM generate_series(-13, 13) AS i;"}
+{"sql":"SELECT make_timestamp(2014, 12, 28, 6, 30, 45.887)","shape":"SELECT make_timestamp(2014, 12, 28, 6, 30, 45.887);"}
+{"sql":"SELECT make_timestamp(-44, 3, 15, 12, 30, 15)","shape":"SELECT make_timestamp(-44, 3, 15, 12, 30, 15);"}
+{"sql":"select make_timestamp(0, 7, 15, 12, 30, 15)","shape":"SELECT make_timestamp(0, 7, 15, 12, 30, 15);"}
+{"sql":"select * from generate_series('2020-01-01 00:00'::timestamp,\n                              '2020-01-02 03:00'::timestamp,\n                              '1 hour'::interval)","shape":"SELECT * FROM generate_series('2020-01-01 00:00'::timestamp, '2020-01-02 03:00'::timestamp, '1 hour'::interval);"}
+{"sql":"select generate_series('2022-01-01 00:00'::timestamp,\n                       'infinity'::timestamp,\n                       '1 month'::interval) limit 10","shape":"SELECT generate_series('2022-01-01 00:00'::timestamp, 'infinity'::timestamp, '1 month'::interval) LIMIT 10;"}
+{"sql":"select * from generate_series('2020-01-01 00:00'::timestamp,\n                              '2020-01-02 03:00'::timestamp,\n                              '0 hour'::interval)","shape":"SELECT * FROM generate_series('2020-01-01 00:00'::timestamp, '2020-01-02 03:00'::timestamp, '0 hour'::interval);"}

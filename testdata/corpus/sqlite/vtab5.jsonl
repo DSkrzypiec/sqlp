@@ -1,0 +1,19 @@
+{"sql":"CREATE TABLE treal(a VARCHAR(16), b INTEGER, c FLOAT)"}
+{"sql":"INSERT INTO treal VALUES('a', 'b', 'c')"}
+{"sql":"INSERT INTO techo VALUES('c', 'd', 'e')"}
+{"sql":"DELETE FROM techo WHERE b > 'c'"}
+{"sql":"CREATE TABLE strings(str COLLATE NOCASE)"}
+{"sql":"INSERT INTO strings VALUES('abc1')"}
+{"sql":"INSERT INTO strings VALUES('Abc3')"}
+{"sql":"INSERT INTO strings VALUES('ABc2')"}
+{"sql":"INSERT INTO strings VALUES('aBc4')"}
+{"sql":"SELECT str FROM strings ORDER BY 1"}
+{"sql":"CREATE VIRTUAL TABLE echo_strings USING echo(strings)"}
+{"sql":"SELECT str FROM echo_strings ORDER BY 1"}
+{"sql":"SELECT str||'' FROM echo_strings ORDER BY 1"}
+{"sql":"CREATE TRIGGER trig INSTEAD OF INSERT ON echo_strings BEGIN\n        SELECT 1, 2, 3;\n      END"}
+{"sql":"CREATE TRIGGER trig AFTER INSERT ON echo_strings BEGIN\n        SELECT 1, 2, 3;\n      END"}
+{"sql":"CREATE TRIGGER trig BEFORE INSERT ON echo_strings BEGIN\n        SELECT 1, 2, 3;\n      END"}
+{"sql":"CREATE INDEX echo_strings_i ON echo_strings(str)"}
+{"sql":"ALTER TABLE echo_strings ADD COLUMN col2"}
+{"sql":"#     ALTER TABLE echo_strings RENAME TO echo_strings2","reject":true}

@@ -1,0 +1,375 @@
+{"sql":"create function polyf(x anyelement) returns anyelement as $$\n  select x + 1\n$$ language sql","shape":"CREATE FUNCTION polyf(x anyelement) RETURNS anyelement AS '\n  select x + 1\n' LANGUAGE sql;"}
+{"sql":"select polyf(42) as int, polyf(4.5) as num","shape":"SELECT polyf(42) AS int, polyf(4.5) AS num;"}
+{"sql":"select polyf(point(3,4))","shape":"SELECT polyf(point(3, 4));"}
+{"sql":"drop function polyf(x anyelement)"}
+{"sql":"create function polyf(x anyelement) returns anyarray as $$\n  select array[x + 1, x + 2]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anyelement) RETURNS anyarray AS '\n  select array[x + 1, x + 2]\n' LANGUAGE sql;"}
+{"sql":"create function polyf(x anyarray) returns anyelement as $$\n  select x[1]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anyarray) RETURNS anyelement AS '\n  select x[1]\n' LANGUAGE sql;"}
+{"sql":"select polyf(array[2,4]) as int, polyf(array[4.5, 7.7]) as num","shape":"SELECT polyf(ARRAY[2, 4]) AS int, polyf(ARRAY[4.5, 7.7]) AS num;"}
+{"sql":"select polyf(stavalues1) from pg_statistic","shape":"SELECT polyf(stavalues1) FROM pg_statistic;"}
+{"sql":"drop function polyf(x anyarray)"}
+{"sql":"create function polyf(x anyarray) returns anyarray as $$\n  select x\n$$ language sql","shape":"CREATE FUNCTION polyf(x anyarray) RETURNS anyarray AS '\n  select x\n' LANGUAGE sql;"}
+{"sql":"create function polyf(x anyelement) returns anyrange as $$\n  select array[x + 1, x + 2]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anyelement) RETURNS anyrange AS '\n  select array[x + 1, x + 2]\n' LANGUAGE sql;"}
+{"sql":"create function polyf(x anyrange) returns anyarray as $$\n  select array[lower(x), upper(x)]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anyrange) RETURNS anyarray AS '\n  select array[lower(x), upper(x)]\n' LANGUAGE sql;"}
+{"sql":"select polyf(int4range(42, 49)) as int, polyf(float8range(4.5, 7.8)) as num","shape":"SELECT polyf(int4range(42, 49)) AS int, polyf(float8range(4.5, 7.8)) AS num;"}
+{"sql":"drop function polyf(x anyrange)"}
+{"sql":"create function polyf(x anycompatible, y anycompatible) returns anycompatiblearray as $$\n  select array[x, y]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatible, y anycompatible) RETURNS anycompatiblearray AS '\n  select array[x, y]\n' LANGUAGE sql;"}
+{"sql":"select polyf(2, 4) as int, polyf(2, 4.5) as num","shape":"SELECT polyf(2, 4) AS int, polyf(2, 4.5) AS num;"}
+{"sql":"drop function polyf(x anycompatible, y anycompatible)"}
+{"sql":"create function polyf(x anycompatiblerange, y anycompatible, z anycompatible) returns anycompatiblearray as $$\n  select array[lower(x), upper(x), y, z]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatiblerange, y anycompatible, z anycompatible) RETURNS anycompatiblearray AS '\n  select array[lower(x), upper(x), y, z]\n' LANGUAGE sql;"}
+{"sql":"select polyf(int4range(42, 49), 11, 2::smallint) as int, polyf(float8range(4.5, 7.8), 7.8, 11::real) as num","shape":"SELECT polyf(int4range(42, 49), 11, 2::smallint) AS int, polyf(float8range(4.5, 7.8), 7.8, 11::real) AS num;"}
+{"sql":"select polyf(int4range(42, 49), 11, 4.5) as fail","shape":"SELECT polyf(int4range(42, 49), 11, 4.5) AS fail;"}
+{"sql":"drop function polyf(x anycompatiblerange, y anycompatible, z anycompatible)"}
+{"sql":"create function polyf(x anycompatiblemultirange, y anycompatible, z anycompatible) returns anycompatiblearray as $$\n  select array[lower(x), upper(x), y, z]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatiblemultirange, y anycompatible, z anycompatible) RETURNS anycompatiblearray AS '\n  select array[lower(x), upper(x), y, z]\n' LANGUAGE sql;"}
+{"sql":"select polyf(multirange(int4range(42, 49)), 11, 2::smallint) as int, polyf(multirange(float8range(4.5, 7.8)), 7.8, 11::real) as num","shape":"SELECT polyf(multirange(int4range(42, 49)), 11, 2::smallint) AS int, polyf(multirange(float8range(4.5, 7.8)), 7.8, 11::real) AS num;"}
+{"sql":"select polyf(multirange(int4range(42, 49)), 11, 4.5) as fail","shape":"SELECT polyf(multirange(int4range(42, 49)), 11, 4.5) AS fail;"}
+{"sql":"drop function polyf(x anycompatiblemultirange, y anycompatible, z anycompatible)"}
+{"sql":"create function polyf(x anycompatible) returns anycompatiblerange as $$\n  select array[x + 1, x + 2]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatible) RETURNS anycompatiblerange AS '\n  select array[x + 1, x + 2]\n' LANGUAGE sql;"}
+{"sql":"create function polyf(x anycompatiblerange, y anycompatiblearray) returns anycompatiblerange as $$\n  select x\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatiblerange, y anycompatiblearray) RETURNS anycompatiblerange AS '\n  select x\n' LANGUAGE sql;"}
+{"sql":"select polyf(int4range(42, 49), array[11]) as int, polyf(float8range(4.5, 7.8), array[7]) as num","shape":"SELECT polyf(int4range(42, 49), ARRAY[11]) AS int, polyf(float8range(4.5, 7.8), ARRAY[7]) AS num;"}
+{"sql":"drop function polyf(x anycompatiblerange, y anycompatiblearray)"}
+{"sql":"create function polyf(x anycompatible) returns anycompatiblemultirange as $$\n  select array[x + 1, x + 2]\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatible) RETURNS anycompatiblemultirange AS '\n  select array[x + 1, x + 2]\n' LANGUAGE sql;"}
+{"sql":"create function polyf(x anycompatiblemultirange, y anycompatiblearray) returns anycompatiblemultirange as $$\n  select x\n$$ language sql","shape":"CREATE FUNCTION polyf(x anycompatiblemultirange, y anycompatiblearray) RETURNS anycompatiblemultirange AS '\n  select x\n' LANGUAGE sql;"}
+{"sql":"select polyf(multirange(int4range(42, 49)), array[11]) as int, polyf(multirange(float8range(4.5, 7.8)), array[7]) as num","shape":"SELECT polyf(multirange(int4range(42, 49)), ARRAY[11]) AS int, polyf(multirange(float8range(4.5, 7.8)), ARRAY[7]) AS num;"}
+{"sql":"drop function polyf(x anycompatiblemultirange, y anycompatiblearray)"}
+{"sql":"create function polyf(a anyelement, b anyarray,\n                      c anycompatible, d anycompatible,\n                      OUT x anyarray, OUT y anycompatiblearray)\nas $$\n  select a || b, array[c, d]\n$$ language sql","shape":"CREATE FUNCTION polyf(a anyelement, b anyarray, c anycompatible, d anycompatible, OUT x anyarray, OUT y anycompatiblearray) AS '\n  select a || b, array[c, d]\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x), y, pg_typeof(y)\n  from polyf(11, array[1, 2], 42, 34.5)","shape":"SELECT x, pg_typeof(x), y, pg_typeof(y) FROM polyf(11, ARRAY[1, 2], 42, 34.5);"}
+{"sql":"select x, pg_typeof(x), y, pg_typeof(y)\n  from polyf(11, array[1, 2], point(1,2), point(3,4))","shape":"SELECT x, pg_typeof(x), y, pg_typeof(y) FROM polyf(11, ARRAY[1, 2], point(1, 2), point(3, 4));"}
+{"sql":"select x, pg_typeof(x), y, pg_typeof(y)\n  from polyf(11, '{1,2}', point(1,2), '(3,4)')","shape":"SELECT x, pg_typeof(x), y, pg_typeof(y) FROM polyf(11, '{1,2}', point(1, 2), '(3,4)');"}
+{"sql":"select x, pg_typeof(x), y, pg_typeof(y)\n  from polyf(11, array[1, 2.2], 42, 34.5)","shape":"SELECT x, pg_typeof(x), y, pg_typeof(y) FROM polyf(11, ARRAY[1, 2.2], 42, 34.5);"}
+{"sql":"drop function polyf(a anyelement, b anyarray,\n                    c anycompatible, d anycompatible)"}
+{"sql":"create function polyf(anyrange) returns anymultirange\nas 'select multirange($1);' language sql","shape":"CREATE FUNCTION polyf(anyrange) RETURNS anymultirange AS 'select multirange($1);' LANGUAGE sql;"}
+{"sql":"select polyf(int4range(1,10))","shape":"SELECT polyf(int4range(1, 10));"}
+{"sql":"select polyf(null)","shape":"SELECT polyf(NULL);"}
+{"sql":"drop function polyf(anyrange)"}
+{"sql":"create function polyf(anymultirange) returns anyelement\nas 'select lower($1);' language sql","shape":"CREATE FUNCTION polyf(anymultirange) RETURNS anyelement AS 'select lower($1);' LANGUAGE sql;"}
+{"sql":"select polyf(int4multirange(int4range(1,10), int4range(20,30)))","shape":"SELECT polyf(int4multirange(int4range(1, 10), int4range(20, 30)));"}
+{"sql":"drop function polyf(anymultirange)"}
+{"sql":"create function polyf(anycompatiblerange) returns anycompatiblemultirange\nas 'select multirange($1);' language sql","shape":"CREATE FUNCTION polyf(anycompatiblerange) RETURNS anycompatiblemultirange AS 'select multirange($1);' LANGUAGE sql;"}
+{"sql":"drop function polyf(anycompatiblerange)"}
+{"sql":"create function polyf(anymultirange) returns anyrange\nas 'select range_merge($1);' language sql","shape":"CREATE FUNCTION polyf(anymultirange) RETURNS anyrange AS 'select range_merge($1);' LANGUAGE sql;"}
+{"sql":"create function polyf(anycompatiblemultirange) returns anycompatiblerange\nas 'select range_merge($1);' language sql","shape":"CREATE FUNCTION polyf(anycompatiblemultirange) RETURNS anycompatiblerange AS 'select range_merge($1);' LANGUAGE sql;"}
+{"sql":"drop function polyf(anycompatiblemultirange)"}
+{"sql":"create function polyf(anycompatiblemultirange) returns anycompatible\nas 'select lower($1);' language sql","shape":"CREATE FUNCTION polyf(anycompatiblemultirange) RETURNS anycompatible AS 'select lower($1);' LANGUAGE sql;"}
+{"sql":"CREATE FUNCTION stfp(anyarray) RETURNS anyarray AS\n'select $1' LANGUAGE SQL","shape":"CREATE FUNCTION stfp(anyarray) RETURNS anyarray AS 'select $1' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION stfnp(int[]) RETURNS int[] AS\n'select $1' LANGUAGE SQL","shape":"CREATE FUNCTION stfnp(int[]) RETURNS int[] AS 'select $1' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION tfp(anyarray,anyelement) RETURNS anyarray AS\n'select $1 || $2' LANGUAGE SQL","shape":"CREATE FUNCTION tfp(anyarray, anyelement) RETURNS anyarray AS 'select $1 || $2' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION tfnp(int[],int) RETURNS int[] AS\n'select $1 || $2' LANGUAGE SQL","shape":"CREATE FUNCTION tfnp(int[], int) RETURNS int[] AS 'select $1 || $2' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION tf1p(anyarray,int) RETURNS anyarray AS\n'select $1' LANGUAGE SQL","shape":"CREATE FUNCTION tf1p(anyarray, int) RETURNS anyarray AS 'select $1' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION tf2p(int[],anyelement) RETURNS int[] AS\n'select $1' LANGUAGE SQL","shape":"CREATE FUNCTION tf2p(int[], anyelement) RETURNS int[] AS 'select $1' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION sum3(anyelement,anyelement,anyelement) returns anyelement AS\n'select $1+$2+$3' language sql strict","shape":"CREATE FUNCTION sum3(anyelement, anyelement, anyelement) RETURNS anyelement AS 'select $1+$2+$3' LANGUAGE sql STRICT;"}
+{"sql":"CREATE FUNCTION ffp(anyarray) RETURNS anyarray AS\n'select $1' LANGUAGE SQL","shape":"CREATE FUNCTION ffp(anyarray) RETURNS anyarray AS 'select $1' LANGUAGE SQL;"}
+{"sql":"CREATE FUNCTION ffnp(int[]) returns int[] as\n'select $1' LANGUAGE SQL","shape":"CREATE FUNCTION ffnp(int[]) RETURNS int[] AS 'select $1' LANGUAGE SQL;"}
+{"sql":"CREATE AGGREGATE myaggp01a(*) (SFUNC = stfnp, STYPE = int4[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp02a(*) (SFUNC = stfnp, STYPE = anyarray,\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp03a(*) (SFUNC = stfp, STYPE = int4[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp03b(*) (SFUNC = stfp, STYPE = int4[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp04a(*) (SFUNC = stfp, STYPE = anyarray,\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp04b(*) (SFUNC = stfp, STYPE = anyarray,\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp05a(BASETYPE = int, SFUNC = tfnp, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp06a(BASETYPE = int, SFUNC = tf2p, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp07a(BASETYPE = anyelement, SFUNC = tfnp, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp08a(BASETYPE = anyelement, SFUNC = tf2p, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp09a(BASETYPE = int, SFUNC = tf1p, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp09b(BASETYPE = int, SFUNC = tf1p, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp10a(BASETYPE = int, SFUNC = tfp, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp10b(BASETYPE = int, SFUNC = tfp, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp11a(BASETYPE = anyelement, SFUNC = tf1p, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp11b(BASETYPE = anyelement, SFUNC = tf1p, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp12a(BASETYPE = anyelement, SFUNC = tfp, STYPE = int[],\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp12b(BASETYPE = anyelement, SFUNC = tfp, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp13a(BASETYPE = int, SFUNC = tfnp, STYPE = anyarray,\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp14a(BASETYPE = int, SFUNC = tf2p, STYPE = anyarray,\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp15a(BASETYPE = anyelement, SFUNC = tfnp,\n  STYPE = anyarray, FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp16a(BASETYPE = anyelement, SFUNC = tf2p,\n  STYPE = anyarray, FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp17a(BASETYPE = int, SFUNC = tf1p, STYPE = anyarray,\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp17b(BASETYPE = int, SFUNC = tf1p, STYPE = anyarray,\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp18a(BASETYPE = int, SFUNC = tfp, STYPE = anyarray,\n  FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp18b(BASETYPE = int, SFUNC = tfp, STYPE = anyarray,\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp19a(BASETYPE = anyelement, SFUNC = tf1p,\n  STYPE = anyarray, FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp19b(BASETYPE = anyelement, SFUNC = tf1p,\n  STYPE = anyarray, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp20a(BASETYPE = anyelement, SFUNC = tfp,\n  STYPE = anyarray, FINALFUNC = ffp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggp20b(BASETYPE = anyelement, SFUNC = tfp,\n  STYPE = anyarray, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn01a(*) (SFUNC = stfnp, STYPE = int4[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn01b(*) (SFUNC = stfnp, STYPE = int4[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn02a(*) (SFUNC = stfnp, STYPE = anyarray,\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn02b(*) (SFUNC = stfnp, STYPE = anyarray,\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn03a(*) (SFUNC = stfp, STYPE = int4[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn04a(*) (SFUNC = stfp, STYPE = anyarray,\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn05a(BASETYPE = int, SFUNC = tfnp, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn05b(BASETYPE = int, SFUNC = tfnp, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn06a(BASETYPE = int, SFUNC = tf2p, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn06b(BASETYPE = int, SFUNC = tf2p, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn07a(BASETYPE = anyelement, SFUNC = tfnp, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn07b(BASETYPE = anyelement, SFUNC = tfnp, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn08a(BASETYPE = anyelement, SFUNC = tf2p, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn08b(BASETYPE = anyelement, SFUNC = tf2p, STYPE = int[],\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn09a(BASETYPE = int, SFUNC = tf1p, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn10a(BASETYPE = int, SFUNC = tfp, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn11a(BASETYPE = anyelement, SFUNC = tf1p, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn12a(BASETYPE = anyelement, SFUNC = tfp, STYPE = int[],\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn13a(BASETYPE = int, SFUNC = tfnp, STYPE = anyarray,\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn13b(BASETYPE = int, SFUNC = tfnp, STYPE = anyarray,\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn14a(BASETYPE = int, SFUNC = tf2p, STYPE = anyarray,\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn14b(BASETYPE = int, SFUNC = tf2p, STYPE = anyarray,\n  INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn15a(BASETYPE = anyelement, SFUNC = tfnp,\n  STYPE = anyarray, FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn15b(BASETYPE = anyelement, SFUNC = tfnp,\n  STYPE = anyarray, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn16a(BASETYPE = anyelement, SFUNC = tf2p,\n  STYPE = anyarray, FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn16b(BASETYPE = anyelement, SFUNC = tf2p,\n  STYPE = anyarray, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn17a(BASETYPE = int, SFUNC = tf1p, STYPE = anyarray,\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn18a(BASETYPE = int, SFUNC = tfp, STYPE = anyarray,\n  FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn19a(BASETYPE = anyelement, SFUNC = tf1p,\n  STYPE = anyarray, FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE myaggn20a(BASETYPE = anyelement, SFUNC = tfp,\n  STYPE = anyarray, FINALFUNC = ffnp, INITCOND = '{}')"}
+{"sql":"CREATE AGGREGATE mysum2(anyelement,anyelement) (SFUNC = sum3,\n  STYPE = anyelement, INITCOND = '0')"}
+{"sql":"create temp table t(f1 int, f2 int[], f3 text)","shape":"CREATE TEMPORARY TABLE t (f1 int, f2 int[], f3 text);"}
+{"sql":"insert into t values(1,array[1],'a')","shape":"INSERT INTO t VALUES (1, ARRAY[1], 'a');"}
+{"sql":"insert into t values(1,array[11],'b')","shape":"INSERT INTO t VALUES (1, ARRAY[11], 'b');"}
+{"sql":"insert into t values(1,array[111],'c')","shape":"INSERT INTO t VALUES (1, ARRAY[111], 'c');"}
+{"sql":"insert into t values(2,array[2],'a')","shape":"INSERT INTO t VALUES (2, ARRAY[2], 'a');"}
+{"sql":"insert into t values(2,array[22],'b')","shape":"INSERT INTO t VALUES (2, ARRAY[22], 'b');"}
+{"sql":"insert into t values(2,array[222],'c')","shape":"INSERT INTO t VALUES (2, ARRAY[222], 'c');"}
+{"sql":"insert into t values(3,array[3],'a')","shape":"INSERT INTO t VALUES (3, ARRAY[3], 'a');"}
+{"sql":"insert into t values(3,array[3],'b')","shape":"INSERT INTO t VALUES (3, ARRAY[3], 'b');"}
+{"sql":"select f3, myaggp01a(*) from t group by f3 order by f3","shape":"SELECT f3, myaggp01a(*) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp03a(*) from t group by f3 order by f3","shape":"SELECT f3, myaggp03a(*) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp03b(*) from t group by f3 order by f3","shape":"SELECT f3, myaggp03b(*) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp05a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp05a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp06a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp06a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp08a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp08a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp09a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp09a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp09b(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp09b(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp10a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp10a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp10b(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp10b(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp20a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp20a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggp20b(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggp20b(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn01a(*) from t group by f3 order by f3","shape":"SELECT f3, myaggn01a(*) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn01b(*) from t group by f3 order by f3","shape":"SELECT f3, myaggn01b(*) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn03a(*) from t group by f3 order by f3","shape":"SELECT f3, myaggn03a(*) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn05a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn05a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn05b(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn05b(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn06a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn06a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn06b(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn06b(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn08a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn08a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn08b(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn08b(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn09a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn09a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select f3, myaggn10a(f1) from t group by f3 order by f3","shape":"SELECT f3, myaggn10a(f1) FROM t GROUP BY f3 ORDER BY f3;"}
+{"sql":"select mysum2(f1, f1 + 1) from t","shape":"SELECT mysum2(f1, f1 + 1) FROM t;"}
+{"sql":"create function bleat(int) returns int as $$\nbegin\n  raise notice 'bleat %', $1;\n  return $1;\nend$$ language plpgsql","shape":"CREATE FUNCTION bleat(int) RETURNS int AS '\nbegin\n  raise notice ''bleat %'', $1;\n  return $1;\nend' LANGUAGE plpgsql;"}
+{"sql":"create function sql_if(bool, anyelement, anyelement) returns anyelement as $$\nselect case when $1 then $2 else $3 end $$ language sql","shape":"CREATE FUNCTION sql_if(bool, anyelement, anyelement) RETURNS anyelement AS '\nselect case when $1 then $2 else $3 end ' LANGUAGE sql;"}
+{"sql":"select f1, sql_if(f1 > 0, bleat(f1), bleat(f1 + 1)) from int4_tbl","shape":"SELECT f1, sql_if(f1 > 0, bleat(f1), bleat(f1 + 1)) FROM int4_tbl;"}
+{"sql":"select q2, sql_if(q2 > 0, q2, q2 + 1) from int8_tbl","shape":"SELECT q2, sql_if(q2 > 0, q2, q2 + 1) FROM int8_tbl;"}
+{"sql":"CREATE AGGREGATE array_larger_accum (anyarray)\n(\n    sfunc = array_larger,\n    stype = anyarray,\n    initcond = '{}'\n)"}
+{"sql":"SELECT array_larger_accum(i)\nFROM (VALUES (ARRAY[1,2]), (ARRAY[3,4])) as t(i)","shape":"SELECT array_larger_accum(i) FROM (VALUES (ARRAY[1, 2]), (ARRAY[3, 4])) AS t(i);"}
+{"sql":"SELECT array_larger_accum(i)\nFROM (VALUES (ARRAY[row(1,2),row(3,4)]), (ARRAY[row(5,6),row(7,8)])) as t(i)","shape":"SELECT array_larger_accum(i) FROM (VALUES (ARRAY[ROW(1, 2), ROW(3, 4)]), (ARRAY[ROW(5, 6), ROW(7, 8)])) AS t(i);"}
+{"sql":"create function add_group(grp anyarray, ad anyelement, size integer)\n  returns anyarray\n  as $$\nbegin\n  if grp is null then\n    return array[ad];\n  end if;\n  if array_upper(grp, 1) < size then\n    return grp || ad;\n  end if;\n  return grp;\nend;\n$$\n  language plpgsql immutable","shape":"CREATE FUNCTION add_group(grp anyarray, ad anyelement, size integer) RETURNS anyarray AS '\nbegin\n  if grp is null then\n    return array[ad];\n  end if;\n  if array_upper(grp, 1) < size then\n    return grp || ad;\n  end if;\n  return grp;\nend;\n' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"create aggregate build_group(anyelement, integer) (\n  SFUNC = add_group,\n  STYPE = anyarray\n)"}
+{"sql":"select build_group(q1,3) from int8_tbl","shape":"SELECT build_group(q1, 3) FROM int8_tbl;"}
+{"sql":"create aggregate build_group(int8, integer) (\n  SFUNC = add_group,\n  STYPE = int2[]\n)"}
+{"sql":"create aggregate build_group(int8, integer) (\n  SFUNC = add_group,\n  STYPE = int8[]\n)"}
+{"sql":"create function first_el_transfn(anyarray, anyelement) returns anyarray as\n'select $1 || $2' language sql immutable","shape":"CREATE FUNCTION first_el_transfn(anyarray, anyelement) RETURNS anyarray AS 'select $1 || $2' LANGUAGE sql IMMUTABLE;"}
+{"sql":"create function first_el(anyarray) returns anyelement as\n'select $1[1]' language sql strict immutable","shape":"CREATE FUNCTION first_el(anyarray) RETURNS anyelement AS 'select $1[1]' LANGUAGE sql STRICT IMMUTABLE;"}
+{"sql":"create aggregate first_el_agg_f8(float8) (\n  SFUNC = array_append,\n  STYPE = float8[],\n  FINALFUNC = first_el\n)"}
+{"sql":"create aggregate first_el_agg_any(anyelement) (\n  SFUNC = first_el_transfn,\n  STYPE = anyarray,\n  FINALFUNC = first_el\n)"}
+{"sql":"select first_el_agg_f8(x::float8) from generate_series(1,10) x","shape":"SELECT first_el_agg_f8(x::float8) FROM generate_series(1, 10) AS x;"}
+{"sql":"select first_el_agg_any(x) from generate_series(1,10) x","shape":"SELECT first_el_agg_any(x) FROM generate_series(1, 10) AS x;"}
+{"sql":"select first_el_agg_f8(x::float8) over(order by x) from generate_series(1,10) x","shape":"SELECT first_el_agg_f8(x::float8) OVER (ORDER BY x) FROM generate_series(1, 10) AS x;"}
+{"sql":"select first_el_agg_any(x) over(order by x) from generate_series(1,10) x","shape":"SELECT first_el_agg_any(x) OVER (ORDER BY x) FROM generate_series(1, 10) AS x;"}
+{"sql":"select distinct array_ndims(histogram_bounds) from pg_stats\nwhere histogram_bounds is not null","shape":"SELECT DISTINCT array_ndims(histogram_bounds) FROM pg_stats WHERE histogram_bounds IS NOT NULL;"}
+{"sql":"select max(histogram_bounds) from pg_stats where tablename = 'pg_am'","shape":"SELECT max(histogram_bounds) FROM pg_stats WHERE tablename = 'pg_am';"}
+{"sql":"select array_in('{1,2,3}','int4'::regtype,-1)","shape":"SELECT array_in('{1,2,3}', 'int4'::regtype, -1);"}
+{"sql":"select * from array_in('{1,2,3}','int4'::regtype,-1)","shape":"SELECT * FROM array_in('{1,2,3}', 'int4'::regtype, -1);"}
+{"sql":"select anyrange_in('[10,20)','int4range'::regtype,-1)","shape":"SELECT anyrange_in('[10,20)', 'int4range'::regtype, -1);"}
+{"sql":"create function myleast(variadic anyarray) returns anyelement as $$\n  select min($1[i]) from generate_subscripts($1,1) g(i)\n$$ language sql immutable strict","shape":"CREATE FUNCTION myleast(VARIADIC anyarray) RETURNS anyelement AS '\n  select min($1[i]) from generate_subscripts($1,1) g(i)\n' LANGUAGE sql IMMUTABLE STRICT;"}
+{"sql":"select myleast(10, 1, 20, 33)","shape":"SELECT myleast(10, 1, 20, 33);"}
+{"sql":"select myleast(1.1, 0.22, 0.55)","shape":"SELECT myleast(1.1, 0.22, 0.55);"}
+{"sql":"select myleast('z'::text)","shape":"SELECT myleast('z'::text);"}
+{"sql":"select myleast()","shape":"SELECT myleast();"}
+{"sql":"select myleast(variadic array[1,2,3,4,-1])","shape":"SELECT myleast(VARIADIC ARRAY[1, 2, 3, 4, -1]);"}
+{"sql":"select myleast(variadic array[1.1, -5.5])","shape":"SELECT myleast(VARIADIC ARRAY[1.1, -5.5]);"}
+{"sql":"select myleast(variadic array[]::int[])","shape":"SELECT myleast(VARIADIC ARRAY[]::int[]);"}
+{"sql":"create function concat(text, variadic anyarray) returns text as $$\n  select array_to_string($2, $1);\n$$ language sql immutable strict","shape":"CREATE FUNCTION concat(text, VARIADIC anyarray) RETURNS text AS '\n  select array_to_string($2, $1);\n' LANGUAGE sql IMMUTABLE STRICT;"}
+{"sql":"select concat('%', 1, 2, 3, 4, 5)","shape":"SELECT concat('%', 1, 2, 3, 4, 5);"}
+{"sql":"select concat('|', 'a'::text, 'b', 'c')","shape":"SELECT concat('|', 'a'::text, 'b', 'c');"}
+{"sql":"select concat('|', variadic array[1,2,33])","shape":"SELECT concat('|', VARIADIC ARRAY[1, 2, 33]);"}
+{"sql":"select concat('|', variadic array[]::int[])","shape":"SELECT concat('|', VARIADIC ARRAY[]::int[]);"}
+{"sql":"drop function concat(text, anyarray)"}
+{"sql":"create function formarray(anyelement, variadic anyarray) returns anyarray as $$\n  select array_prepend($1, $2);\n$$ language sql immutable strict","shape":"CREATE FUNCTION formarray(anyelement, VARIADIC anyarray) RETURNS anyarray AS '\n  select array_prepend($1, $2);\n' LANGUAGE sql IMMUTABLE STRICT;"}
+{"sql":"select formarray(1,2,3,4,5)","shape":"SELECT formarray(1, 2, 3, 4, 5);"}
+{"sql":"select formarray(1.1, variadic array[1.2,55.5])","shape":"SELECT formarray(1.1, VARIADIC ARRAY[1.2, 55.5]);"}
+{"sql":"select formarray(1.1, array[1.2,55.5])","shape":"SELECT formarray(1.1, ARRAY[1.2, 55.5]);"}
+{"sql":"select formarray(1, 'x'::text)","shape":"SELECT formarray(1, 'x'::text);"}
+{"sql":"select formarray(1, variadic array['x'::text])","shape":"SELECT formarray(1, VARIADIC ARRAY['x'::text]);"}
+{"sql":"drop function formarray(anyelement, variadic anyarray)"}
+{"sql":"select pg_typeof(null)","shape":"SELECT pg_typeof(NULL);"}
+{"sql":"select pg_typeof(0)","shape":"SELECT pg_typeof(0);"}
+{"sql":"select pg_typeof(0.0)","shape":"SELECT pg_typeof(0.0);"}
+{"sql":"select pg_typeof(1+1 = 2)","shape":"SELECT pg_typeof((1 + 1) = 2);"}
+{"sql":"select pg_typeof('x')","shape":"SELECT pg_typeof('x');"}
+{"sql":"select pg_typeof('' || '')","shape":"SELECT pg_typeof('' || '');"}
+{"sql":"select pg_typeof(pg_typeof(0))","shape":"SELECT pg_typeof(pg_typeof(0));"}
+{"sql":"select pg_typeof(array[1.2,55.5])","shape":"SELECT pg_typeof(ARRAY[1.2, 55.5]);"}
+{"sql":"select pg_typeof(myleast(10, 1, 20, 33))","shape":"SELECT pg_typeof(myleast(10, 1, 20, 33));"}
+{"sql":"create function dfunc(a int = 1, int = 2) returns int as $$\n  select $1 + $2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a int DEFAULT 1, int DEFAULT 2) RETURNS int AS '\n  select $1 + $2;\n' LANGUAGE sql;"}
+{"sql":"select dfunc()","shape":"SELECT dfunc();"}
+{"sql":"select dfunc(10)","shape":"SELECT dfunc(10);"}
+{"sql":"select dfunc(10, 20)","shape":"SELECT dfunc(10, 20);"}
+{"sql":"select dfunc(10, 20, 30)","shape":"SELECT dfunc(10, 20, 30);"}
+{"sql":"drop function dfunc()"}
+{"sql":"drop function dfunc(int)"}
+{"sql":"drop function dfunc(int, int)"}
+{"sql":"create function dfunc(a int = 1, b int) returns int as $$\n  select $1 + $2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a int DEFAULT 1, b int) RETURNS int AS '\n  select $1 + $2;\n' LANGUAGE sql;"}
+{"sql":"create function dfunc(a int = 1, out sum int, b int = 2) as $$\n  select $1 + $2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a int DEFAULT 1, OUT sum int, b int DEFAULT 2) AS '\n  select $1 + $2;\n' LANGUAGE sql;"}
+{"sql":"create function dfunc(a int DEFAULT 1.0, int DEFAULT '-1') returns int as $$\n  select $1 + $2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a int DEFAULT 1.0, int DEFAULT '-1') RETURNS int AS '\n  select $1 + $2;\n' LANGUAGE sql;"}
+{"sql":"create function dfunc(a text DEFAULT 'Hello', b text DEFAULT 'World') returns text as $$\n  select $1 || ', ' || $2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a text DEFAULT 'Hello', b text DEFAULT 'World') RETURNS text AS '\n  select $1 || '', '' || $2;\n' LANGUAGE sql;"}
+{"sql":"select dfunc('Hi')","shape":"SELECT dfunc('Hi');"}
+{"sql":"select dfunc('Hi', 'City')","shape":"SELECT dfunc('Hi', 'City');"}
+{"sql":"select dfunc(0)","shape":"SELECT dfunc(0);"}
+{"sql":"drop function dfunc(text, text)"}
+{"sql":"create function dfunc(int = 1, int = 2) returns int as $$\n  select 2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(int DEFAULT 1, int DEFAULT 2) RETURNS int AS '\n  select 2;\n' LANGUAGE sql;"}
+{"sql":"create function dfunc(int = 1, int = 2, int = 3, int = 4) returns int as $$\n  select 4;\n$$ language sql","shape":"CREATE FUNCTION dfunc(int DEFAULT 1, int DEFAULT 2, int DEFAULT 3, int DEFAULT 4) RETURNS int AS '\n  select 4;\n' LANGUAGE sql;"}
+{"sql":"select dfunc(1)","shape":"SELECT dfunc(1);"}
+{"sql":"select dfunc(1, 2)","shape":"SELECT dfunc(1, 2);"}
+{"sql":"select dfunc(1, 2, 3)","shape":"SELECT dfunc(1, 2, 3);"}
+{"sql":"select dfunc(1, 2, 3, 4)","shape":"SELECT dfunc(1, 2, 3, 4);"}
+{"sql":"drop function dfunc(int, int, int, int)"}
+{"sql":"create function dfunc(out int = 20) returns int as $$\n  select 1;\n$$ language sql","shape":"CREATE FUNCTION dfunc(OUT int DEFAULT 20) RETURNS int AS '\n  select 1;\n' LANGUAGE sql;"}
+{"sql":"create function dfunc(anyelement = 'World'::text) returns text as $$\n  select 'Hello, ' || $1::text;\n$$ language sql","shape":"CREATE FUNCTION dfunc(anyelement DEFAULT 'World'::text) RETURNS text AS '\n  select ''Hello, '' || $1::text;\n' LANGUAGE sql;"}
+{"sql":"select dfunc(to_date('20081215','YYYYMMDD'))","shape":"SELECT dfunc(to_date('20081215', 'YYYYMMDD'));"}
+{"sql":"select dfunc('City'::text)","shape":"SELECT dfunc('City'::text);"}
+{"sql":"drop function dfunc(anyelement)"}
+{"sql":"create function dfunc(a variadic int[]) returns int as\n$$ select array_upper($1, 1) $$ language sql","shape":"CREATE FUNCTION dfunc(VARIADIC a int[]) RETURNS int AS ' select array_upper($1, 1) ' LANGUAGE sql;"}
+{"sql":"select dfunc(10,20)","shape":"SELECT dfunc(10, 20);"}
+{"sql":"create or replace function dfunc(a variadic int[] default array[]::int[]) returns int as\n$$ select array_upper($1, 1) $$ language sql","shape":"CREATE OR REPLACE FUNCTION dfunc(VARIADIC a int[] DEFAULT ARRAY[]::int[]) RETURNS int AS ' select array_upper($1, 1) ' LANGUAGE sql;"}
+{"sql":"create or replace function dfunc(a variadic int[]) returns int as\n$$ select array_upper($1, 1) $$ language sql","shape":"CREATE OR REPLACE FUNCTION dfunc(VARIADIC a int[]) RETURNS int AS ' select array_upper($1, 1) ' LANGUAGE sql;"}
+{"sql":"drop function dfunc(a variadic int[])"}
+{"sql":"create function dfunc(int = 1, int = 2, int = 3) returns int as $$\n  select 3;\n$$ language sql","shape":"CREATE FUNCTION dfunc(int DEFAULT 1, int DEFAULT 2, int DEFAULT 3) RETURNS int AS '\n  select 3;\n' LANGUAGE sql;"}
+{"sql":"create function dfunc(text) returns text as $$\n  select $1;\n$$ language sql","shape":"CREATE FUNCTION dfunc(text) RETURNS text AS '\n  select $1;\n' LANGUAGE sql;"}
+{"sql":"drop function dfunc(int, int, int)"}
+{"sql":"drop function dfunc(text)"}
+{"sql":"create function dfunc(a int, b int, c int = 0, d int = 0)\n  returns table (a int, b int, c int, d int) as $$\n  select $1, $2, $3, $4;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a int, b int, c int DEFAULT 0, d int DEFAULT 0) RETURNS TABLE (a int, b int, c int, d int) AS '\n  select $1, $2, $3, $4;\n' LANGUAGE sql;"}
+{"sql":"select (dfunc(10,20,30)).*","shape":"SELECT (dfunc(10, 20, 30)).*;"}
+{"sql":"select (dfunc(a := 10, b := 20, c := 30)).*","shape":"SELECT (dfunc(a => 10, b => 20, c => 30)).*;"}
+{"sql":"select * from dfunc(a := 10, b := 20)","shape":"SELECT * FROM dfunc(a => 10, b => 20);"}
+{"sql":"select * from dfunc(b := 10, a := 20)","shape":"SELECT * FROM dfunc(b => 10, a => 20);"}
+{"sql":"select * from dfunc(0)","shape":"SELECT * FROM dfunc(0);"}
+{"sql":"select * from dfunc(1,2)","shape":"SELECT * FROM dfunc(1, 2);"}
+{"sql":"select * from dfunc(1,2,c := 3)","shape":"SELECT * FROM dfunc(1, 2, c => 3);"}
+{"sql":"select * from dfunc(1,2,d := 3)","shape":"SELECT * FROM dfunc(1, 2, d => 3);"}
+{"sql":"select * from dfunc(x := 20, b := 10, x := 30)","shape":"SELECT * FROM dfunc(x => 20, b => 10, x => 30);"}
+{"sql":"select * from dfunc(10, b := 20, 30)","shape":"SELECT * FROM dfunc(10, b => 20, 30);"}
+{"sql":"select * from dfunc(x := 10, b := 20, c := 30)","shape":"SELECT * FROM dfunc(x => 10, b => 20, c => 30);"}
+{"sql":"select * from dfunc(10, 10, a := 20)","shape":"SELECT * FROM dfunc(10, 10, a => 20);"}
+{"sql":"select * from dfunc(1,c := 2,d := 3)","shape":"SELECT * FROM dfunc(1, c => 2, d => 3);"}
+{"sql":"create function dfunc(a varchar, b numeric, c date = current_date)\n  returns table (a varchar, b numeric, c date) as $$\n  select $1, $2, $3;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a varchar, b numeric, c date DEFAULT current_date) RETURNS TABLE (a varchar, b numeric, c date) AS '\n  select $1, $2, $3;\n' LANGUAGE sql;"}
+{"sql":"select (dfunc('Hello World', 20, '2009-07-25'::date)).*","shape":"SELECT (dfunc('Hello World', 20, '2009-07-25'::date)).*;"}
+{"sql":"select * from dfunc('Hello World', 20, '2009-07-25'::date)","shape":"SELECT * FROM dfunc('Hello World', 20, '2009-07-25'::date);"}
+{"sql":"select * from dfunc(c := '2009-07-25'::date, a := 'Hello World', b := 20)","shape":"SELECT * FROM dfunc(c => '2009-07-25'::date, a => 'Hello World', b => 20);"}
+{"sql":"select * from dfunc('Hello World', b := 20, c := '2009-07-25'::date)","shape":"SELECT * FROM dfunc('Hello World', b => 20, c => '2009-07-25'::date);"}
+{"sql":"select * from dfunc('Hello World', c := '2009-07-25'::date, b := 20)","shape":"SELECT * FROM dfunc('Hello World', c => '2009-07-25'::date, b => 20);"}
+{"sql":"select * from dfunc('Hello World', c := 20, b := '2009-07-25'::date)","shape":"SELECT * FROM dfunc('Hello World', c => 20, b => '2009-07-25'::date);"}
+{"sql":"drop function dfunc(varchar, numeric, date)"}
+{"sql":"create function dfunc(a varchar = 'def a', out _a varchar, c numeric = NULL, out _c numeric)\nreturns record as $$\n  select $1, $2;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a varchar DEFAULT 'def a', OUT _a varchar, c numeric DEFAULT NULL, OUT _c numeric) RETURNS record AS '\n  select $1, $2;\n' LANGUAGE sql;"}
+{"sql":"select (dfunc()).*","shape":"SELECT (dfunc()).*;"}
+{"sql":"select * from dfunc()","shape":"SELECT * FROM dfunc();"}
+{"sql":"select * from dfunc('Hello', 100)","shape":"SELECT * FROM dfunc('Hello', 100);"}
+{"sql":"select * from dfunc(a := 'Hello', c := 100)","shape":"SELECT * FROM dfunc(a => 'Hello', c => 100);"}
+{"sql":"select * from dfunc(c := 100, a := 'Hello')","shape":"SELECT * FROM dfunc(c => 100, a => 'Hello');"}
+{"sql":"select * from dfunc('Hello')","shape":"SELECT * FROM dfunc('Hello');"}
+{"sql":"select * from dfunc('Hello', c := 100)","shape":"SELECT * FROM dfunc('Hello', c => 100);"}
+{"sql":"select * from dfunc(c := 100)","shape":"SELECT * FROM dfunc(c => 100);"}
+{"sql":"create or replace function dfunc(a varchar = 'def a', out _a varchar, x numeric = NULL, out _c numeric)\nreturns record as $$\n  select $1, $2;\n$$ language sql","shape":"CREATE OR REPLACE FUNCTION dfunc(a varchar DEFAULT 'def a', OUT _a varchar, x numeric DEFAULT NULL, OUT _c numeric) RETURNS record AS '\n  select $1, $2;\n' LANGUAGE sql;"}
+{"sql":"create or replace function dfunc(a varchar = 'def a', out _a varchar, numeric = NULL, out _c numeric)\nreturns record as $$\n  select $1, $2;\n$$ language sql","shape":"CREATE OR REPLACE FUNCTION dfunc(a varchar DEFAULT 'def a', OUT _a varchar, numeric DEFAULT NULL, OUT _c numeric) RETURNS record AS '\n  select $1, $2;\n' LANGUAGE sql;"}
+{"sql":"drop function dfunc(varchar, numeric)"}
+{"sql":"create function testpolym(a int, a int) returns int as $$ select 1;$$ language sql","shape":"CREATE FUNCTION testpolym(a int, a int) RETURNS int AS ' select 1;' LANGUAGE sql;"}
+{"sql":"create function testpolym(int, out a int, out a int) returns int as $$ select 1;$$ language sql","shape":"CREATE FUNCTION testpolym(int, OUT a int, OUT a int) RETURNS int AS ' select 1;' LANGUAGE sql;"}
+{"sql":"create function testpolym(out a int, inout a int) returns int as $$ select 1;$$ language sql","shape":"CREATE FUNCTION testpolym(OUT a int, INOUT a int) RETURNS int AS ' select 1;' LANGUAGE sql;"}
+{"sql":"create function testpolym(a int, inout a int) returns int as $$ select 1;$$ language sql","shape":"CREATE FUNCTION testpolym(a int, INOUT a int) RETURNS int AS ' select 1;' LANGUAGE sql;"}
+{"sql":"create function testpolym(a int, out a int) returns int as $$ select $1;$$ language sql","shape":"CREATE FUNCTION testpolym(a int, OUT a int) RETURNS int AS ' select $1;' LANGUAGE sql;"}
+{"sql":"select testpolym(37)","shape":"SELECT testpolym(37);"}
+{"sql":"drop function testpolym(int)"}
+{"sql":"create function testpolym(a int) returns table(a int) as $$ select $1;$$ language sql","shape":"CREATE FUNCTION testpolym(a int) RETURNS TABLE (a int) AS ' select $1;' LANGUAGE sql;"}
+{"sql":"select * from testpolym(37)","shape":"SELECT * FROM testpolym(37);"}
+{"sql":"create function dfunc(a anyelement, b anyelement = null, flag bool = true)\nreturns anyelement as $$\n  select case when $3 then $1 else $2 end;\n$$ language sql","shape":"CREATE FUNCTION dfunc(a anyelement, b anyelement DEFAULT NULL, flag bool DEFAULT TRUE) RETURNS anyelement AS '\n  select case when $3 then $1 else $2 end;\n' LANGUAGE sql;"}
+{"sql":"select dfunc(1,2)","shape":"SELECT dfunc(1, 2);"}
+{"sql":"select dfunc('a'::text, 'b')","shape":"SELECT dfunc('a'::text, 'b');"}
+{"sql":"select dfunc(a := 1, b := 2)","shape":"SELECT dfunc(a => 1, b => 2);"}
+{"sql":"select dfunc(a := 'a'::text, b := 'b')","shape":"SELECT dfunc(a => 'a'::text, b => 'b');"}
+{"sql":"select dfunc(a := 'a'::text, b := 'b', flag := false)","shape":"SELECT dfunc(a => 'a'::text, b => 'b', flag => FALSE);"}
+{"sql":"select dfunc(b := 'b'::text, a := 'a')","shape":"SELECT dfunc(b => 'b'::text, a => 'a');"}
+{"sql":"select dfunc(a := 'a'::text, flag := true)","shape":"SELECT dfunc(a => 'a'::text, flag => TRUE);"}
+{"sql":"select dfunc(a := 'a'::text, flag := false)","shape":"SELECT dfunc(a => 'a'::text, flag => FALSE);"}
+{"sql":"select dfunc(b := 'b'::text, a := 'a', flag := true)","shape":"SELECT dfunc(b => 'b'::text, a => 'a', flag => TRUE);"}
+{"sql":"select dfunc('a'::text, 'b', false)","shape":"SELECT dfunc('a'::text, 'b', FALSE);"}
+{"sql":"select dfunc('a'::text, 'b', flag := false)","shape":"SELECT dfunc('a'::text, 'b', flag => FALSE);"}
+{"sql":"select dfunc('a'::text, 'b', true)","shape":"SELECT dfunc('a'::text, 'b', TRUE);"}
+{"sql":"select dfunc('a'::text, 'b', flag := true)","shape":"SELECT dfunc('a'::text, 'b', flag => TRUE);"}
+{"sql":"select dfunc(a => 1, b => 2)","shape":"SELECT dfunc(a => 1, b => 2);"}
+{"sql":"select dfunc(a => 'a'::text, b => 'b')","shape":"SELECT dfunc(a => 'a'::text, b => 'b');"}
+{"sql":"select dfunc(a => 'a'::text, b => 'b', flag => false)","shape":"SELECT dfunc(a => 'a'::text, b => 'b', flag => FALSE);"}
+{"sql":"select dfunc(b => 'b'::text, a => 'a')","shape":"SELECT dfunc(b => 'b'::text, a => 'a');"}
+{"sql":"select dfunc(a => 'a'::text, flag => true)","shape":"SELECT dfunc(a => 'a'::text, flag => TRUE);"}
+{"sql":"select dfunc(a => 'a'::text, flag => false)","shape":"SELECT dfunc(a => 'a'::text, flag => FALSE);"}
+{"sql":"select dfunc(b => 'b'::text, a => 'a', flag => true)","shape":"SELECT dfunc(b => 'b'::text, a => 'a', flag => TRUE);"}
+{"sql":"select dfunc('a'::text, 'b', flag => false)","shape":"SELECT dfunc('a'::text, 'b', flag => FALSE);"}
+{"sql":"select dfunc('a'::text, 'b', flag => true)","shape":"SELECT dfunc('a'::text, 'b', flag => TRUE);"}
+{"sql":"select dfunc(a =>-1)","shape":"SELECT dfunc(a => -1);"}
+{"sql":"select dfunc(a =>+1)","shape":"SELECT dfunc(a => +1);"}
+{"sql":"select dfunc(a =>/**/1)","shape":"SELECT dfunc(a => 1);"}
+{"sql":"select dfunc(a =>--comment to be removed by psql\n  1)","shape":"SELECT dfunc(a => 1);"}
+{"sql":"do $$\n  declare r integer;\n  begin\n    select dfunc(a=>-- comment\n      1) into r;\n    raise info 'r = %', r;\n  end;\n$$","shape":"DO '\n  declare r integer;\n  begin\n    select dfunc(a=>-- comment\n      1) into r;\n    raise info ''r = %'', r;\n  end;\n';"}
+{"sql":"CREATE VIEW dfview AS\n   SELECT q1, q2,\n     dfunc(q1,q2, flag := q1>q2) as c3,\n     dfunc(q1, flag := q1<q2, b := q2) as c4\n     FROM int8_tbl","shape":"CREATE VIEW dfview AS SELECT q1, q2, dfunc(q1, q2, flag => q1 > q2) AS c3, dfunc(q1, flag => q1 < q2, b => q2) AS c4 FROM int8_tbl;"}
+{"sql":"select * from dfview","shape":"SELECT * FROM dfview;"}
+{"sql":"drop view dfview","shape":"DROP VIEW dfview;"}
+{"sql":"drop function dfunc(anyelement, anyelement, bool)"}
+{"sql":"create function anyctest(anycompatible, anycompatible)\nreturns anycompatible as $$\n  select greatest($1, $2)\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible, anycompatible) RETURNS anycompatible AS '\n  select greatest($1, $2)\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, 12) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, 12) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, 12.3) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, 12.3) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, point(1,2)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, point(1, 2)) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest('11', '12.3') x","shape":"SELECT x, pg_typeof(x) FROM anyctest('11', '12.3') AS x;"}
+{"sql":"drop function anyctest(anycompatible, anycompatible)"}
+{"sql":"create function anyctest(anycompatible, anycompatible)\nreturns anycompatiblearray as $$\n  select array[$1, $2]\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible, anycompatible) RETURNS anycompatiblearray AS '\n  select array[$1, $2]\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[1,2]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[1, 2]) AS x;"}
+{"sql":"create function anyctest(anycompatible, anycompatiblearray)\nreturns anycompatiblearray as $$\n  select array[$1] || $2\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible, anycompatiblearray) RETURNS anycompatiblearray AS '\n  select array[$1] || $2\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[12]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[12]) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[12.3]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[12.3]) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(12.3, array[13]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(12.3, ARRAY[13]) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(12.3, '{13,14.4}') x","shape":"SELECT x, pg_typeof(x) FROM anyctest(12.3, '{13,14.4}') AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[point(1,2)]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[point(1, 2)]) AS x;"}
+{"sql":"drop function anyctest(anycompatible, anycompatiblearray)"}
+{"sql":"create function anyctest(anycompatible, anycompatiblerange)\nreturns anycompatiblerange as $$\n  select $2\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible, anycompatiblerange) RETURNS anycompatiblerange AS '\n  select $2\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, int4range(4,7)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, int4range(4, 7)) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, numrange(4,7)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, numrange(4, 7)) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11.2, int4range(4,7)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11.2, int4range(4, 7)) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11.2, '[4,7)') x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11.2, '[4,7)') AS x;"}
+{"sql":"drop function anyctest(anycompatible, anycompatiblerange)"}
+{"sql":"create function anyctest(anycompatiblerange, anycompatiblerange)\nreturns anycompatible as $$\n  select lower($1) + upper($2)\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatiblerange, anycompatiblerange) RETURNS anycompatible AS '\n  select lower($1) + upper($2)\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(int4range(11,12), int4range(4,7)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(int4range(11, 12), int4range(4, 7)) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(int4range(11,12), numrange(4,7)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(int4range(11, 12), numrange(4, 7)) AS x;"}
+{"sql":"drop function anyctest(anycompatiblerange, anycompatiblerange)"}
+{"sql":"create function anyctest(anycompatible)\nreturns anycompatiblerange as $$\n  select $1\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible) RETURNS anycompatiblerange AS '\n  select $1\n' LANGUAGE sql;"}
+{"sql":"create function anyctest(anycompatible, anycompatiblemultirange)\nreturns anycompatiblemultirange as $$\n  select $2\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible, anycompatiblemultirange) RETURNS anycompatiblemultirange AS '\n  select $2\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, multirange(int4range(4,7))) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, multirange(int4range(4, 7))) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, multirange(numrange(4,7))) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, multirange(numrange(4, 7))) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11.2, multirange(int4range(4,7))) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11.2, multirange(int4range(4, 7))) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11.2, '{[4,7)}') x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11.2, '{[4,7)}') AS x;"}
+{"sql":"drop function anyctest(anycompatible, anycompatiblemultirange)"}
+{"sql":"create function anyctest(anycompatiblemultirange, anycompatiblemultirange)\nreturns anycompatible as $$\n  select lower($1) + upper($2)\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatiblemultirange, anycompatiblemultirange) RETURNS anycompatible AS '\n  select lower($1) + upper($2)\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(multirange(int4range(11,12)), multirange(int4range(4,7))) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(multirange(int4range(11, 12)), multirange(int4range(4, 7))) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(multirange(int4range(11,12)), multirange(numrange(4,7))) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(multirange(int4range(11, 12)), multirange(numrange(4, 7))) AS x;"}
+{"sql":"drop function anyctest(anycompatiblemultirange, anycompatiblemultirange)"}
+{"sql":"create function anyctest(anycompatible)\nreturns anycompatiblemultirange as $$\n  select $1\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatible) RETURNS anycompatiblemultirange AS '\n  select $1\n' LANGUAGE sql;"}
+{"sql":"create function anyctest(anycompatiblenonarray, anycompatiblenonarray)\nreturns anycompatiblearray as $$\n  select array[$1, $2]\n$$ language sql","shape":"CREATE FUNCTION anyctest(anycompatiblenonarray, anycompatiblenonarray) RETURNS anycompatiblearray AS '\n  select array[$1, $2]\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(array[11], array[1,2]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(ARRAY[11], ARRAY[1, 2]) AS x;"}
+{"sql":"drop function anyctest(anycompatiblenonarray, anycompatiblenonarray)"}
+{"sql":"create function anyctest(a anyelement, b anyarray,\n                         c anycompatible, d anycompatible)\nreturns anycompatiblearray as $$\n  select array[c, d]\n$$ language sql","shape":"CREATE FUNCTION anyctest(a anyelement, b anyarray, c anycompatible, d anycompatible) RETURNS anycompatiblearray AS '\n  select array[c, d]\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[1, 2], 42, 34.5) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[1, 2], 42, 34.5) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[1, 2], point(1,2), point(3,4)) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[1, 2], point(1, 2), point(3, 4)) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, '{1,2}', point(1,2), '(3,4)') x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, '{1,2}', point(1, 2), '(3,4)') AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, array[1, 2.2], 42, 34.5) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, ARRAY[1, 2.2], 42, 34.5) AS x;"}
+{"sql":"drop function anyctest(a anyelement, b anyarray,\n                       c anycompatible, d anycompatible)"}
+{"sql":"create function anyctest(variadic anycompatiblearray)\nreturns anycompatiblearray as $$\n  select $1\n$$ language sql","shape":"CREATE FUNCTION anyctest(VARIADIC anycompatiblearray) RETURNS anycompatiblearray AS '\n  select $1\n' LANGUAGE sql;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, 12.2) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, 12.2) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, '12') x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, '12') AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(11, '12.2') x","shape":"SELECT x, pg_typeof(x) FROM anyctest(11, '12.2') AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(variadic array[11, 12]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(VARIADIC ARRAY[11, 12]) AS x;"}
+{"sql":"select x, pg_typeof(x) from anyctest(variadic array[11, 12.2]) x","shape":"SELECT x, pg_typeof(x) FROM anyctest(VARIADIC ARRAY[11, 12.2]) AS x;"}
+{"sql":"drop function anyctest(variadic anycompatiblearray)"}

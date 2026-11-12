@@ -1,0 +1,56 @@
+{"sql":"SELECT regexpi('abc','ABC')"}
+{"sql":"SELECT regexpi('ABC','ABC')"}
+{"sql":"SELECT regexpi('ABC','abc')"}
+{"sql":"SELECT regexpi('ABC.','ABC')"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'by|in' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'by|Christ' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE regexp('by|christ',y) ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE regexpi('by|christ',y) ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE regexpi('BY|CHRIST',y) ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'shal+ al+' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'shall x*y*z*all' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE regexp('shall x*y*z*all',y) ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE regexp('SHALL x*y*z*all',y) ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE regexpi('SHALL x*y*z*all',y) ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'shallx?y? ?z?all' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'r{2}' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'r{3}' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'r{1}' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'ur{2,10}e' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '[Aa]dam' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '[^Aa]dam' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '[^b-zB-Z]dam' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'alive' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '^alive' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'ma[nd]' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '\\bma[nd]' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'ma[nd]\\b' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'ma\\w' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP 'ma\\W' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '\\sma\\w' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP '\\Sma\\w' ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE y REGEXP\n          '\\b(unto|us|son|given|his|name|called|' ||\n          'wonderful|councelor|mighty|god|everlasting|father|' ||\n          'prince|peace|alive)\\b'"}
+{"sql":"SELECT 'aaaabbbbcccc' REGEXP 'ab*c', \n         'aaaacccc' REGEXP 'ab*c'"}
+{"sql":"SELECT 'aaaabbbbcccc' REGEXP 'ab+c',\n         'aaaacccc' REGEXP 'ab+c'"}
+{"sql":"SELECT 'aaaabbbbcccc' REGEXP 'ab?c',\n         'aaaacccc' REGEXP 'ab?c'"}
+{"sql":"SELECT 'aaaabbbbbbcccc' REGEXP 'ab{3,5}c',\n         'aaaabbbbbcccc' REGEXP 'ab{3,5}c',\n         'aaaabbbbcccc' REGEXP 'ab{3,5}c',\n         'aaaabbbcccc' REGEXP 'ab{3,5}c',\n         'aaaabbcccc' REGEXP 'ab{3,5}c',\n         'aaaabcccc' REGEXP 'ab{3,5}c'"}
+{"sql":"SELECT 'abc*def+ghi.jkl[mno]pqr' REGEXP 'c.d',\n         'abc*def+ghi.jkl[mno]pqr' REGEXP 'c\\*d',\n         'abc*def+ghi.jkl[mno]pqr' REGEXP 'f\\+g',\n         'abc*def+ghi.jkl[mno]pqr' REGEXP 'i\\.j',\n         'abc*def+ghi.jkl[mno]pqr' REGEXP 'l\\[mno\\]p'"}
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY, a TEXT)"}
+{"sql":"INSERT INTO t1(id, a) VALUES(1, '日本語')"}
+{"sql":"SELECT a, hex(a), length(a) FROM t1"}
+{"sql":"SELECT * FROM t1 WHERE a='日本語'"}
+{"sql":"SELECT * FROM t1 WHERE a LIKE '日本語'"}
+{"sql":"SELECT * FROM t1 wHERE a REGEXP '日本語'"}
+{"sql":"SELECT 'foo' REGEXP '[a-z]'"}
+{"sql":"SELECT 'abc' REGEXP '(^abc|def)'"}
+{"sql":"SELECT 'xabc' REGEXP '(^abc|def)'"}
+{"sql":"SELECT 'def' REGEXP '(^abc|def)'"}
+{"sql":"SELECT 'xdef' REGEXP '(^abc|def)'"}
+{"sql":"SELECT char(0x61,0x7ff,0x62) REGEXP char(0x7ff)"}
+{"sql":"SELECT char(0x61,0x800,0x62) REGEXP char(0x800)"}
+{"sql":"SELECT char(0x61,0xabc,0x62) REGEXP char(0xabc)"}
+{"sql":"SELECT char(0x61,0xfff,0x62) REGEXP char(0xfff)"}
+{"sql":"SELECT char(0x61,0x1000,0x62) REGEXP char(0x1000)"}
+{"sql":"SELECT char(0x61,0xffff,0x62) REGEXP char(0xffff)"}
+{"sql":"SELECT char(0x61,0x10000,0x62) REGEXP char(0x10000)"}
+{"sql":"SELECT char(0x61,0x10ffff,0x62) REGEXP char(0x10ffff)"}

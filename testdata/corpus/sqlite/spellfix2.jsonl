@@ -1,0 +1,14 @@
+{"sql":"CREATE VIRTUAL TABLE demo USING spellfix1"}
+{"sql":"INSERT INTO demo(word) VALUES ('amsterdam')"}
+{"sql":"INSERT INTO demo(word) VALUES ('amsterdammetje')"}
+{"sql":"INSERT INTO demo(word) VALUES ('amsterdamania')"}
+{"sql":"INSERT INTO demo(word) VALUES ('amsterdamweg')"}
+{"sql":"INSERT INTO demo(word) VALUES ('amsterdamsestraat')"}
+{"sql":"INSERT INTO demo(word) VALUES ('amsterdamlaan')"}
+{"sql":"SELECT word, distance, matchlen FROM demo \n  WHERE word MATCH 'amstedam*' AND top=3\n  ORDER BY +word"}
+{"sql":"SELECT word, distance, matchlen FROM demo WHERE \n  word MATCH 'amstedam*' AND top=3 AND distance <= 100\n  ORDER BY +word"}
+{"sql":"SELECT word, distance, matchlen FROM demo WHERE \n  word MATCH 'amstedam*' AND distance <= 100\n  ORDER BY +word"}
+{"sql":"SELECT count(*) FROM demo WHERE word MATCH 'amstedam*' AND distance <= 100"}
+{"sql":"SELECT count(*) FROM demo \n  WHERE word MATCH 'amstedam*' AND distance <= 100 AND top=20"}
+{"sql":"SELECT word, distance, matchlen FROM demo \n  WHERE word MATCH 'amstedam*' AND distance <= 100\n  ORDER BY distance, word"}
+{"sql":"SELECT word, distance, matchlen FROM demo \n  WHERE word MATCH 'amstedam*' AND distance <= 100 AND top=20\n  ORDER BY distance, word"}

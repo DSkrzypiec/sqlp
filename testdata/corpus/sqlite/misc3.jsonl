@@ -1,0 +1,85 @@
+{"sql":"CREATE TABLE t1(a UNIQUE,b)"}
+{"sql":"INSERT INTO t1\n        VALUES(1,'a23456789_b23456789_c23456789_d23456789_e23456789_')"}
+{"sql":"INSERT INTO t1 VALUES(2,'x')"}
+{"sql":"UPDATE t1 SET b=substr(b,1,500)"}
+{"sql":"UPDATE t1 SET a=CASE a WHEN 2 THEN 1 ELSE a END, b='y'"}
+{"sql":"INSERT INTO t1\n      VALUES(1,'a23456789_b23456789_c23456789_d23456789_e23456789_')"}
+{"sql":"INSERT INTO t1 SELECT a+1, b||b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+2, b||b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+4, b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+8, b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+16, b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+32, b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+64, b FROM t1"}
+{"sql":"UPDATE t1 SET a=CASE a WHEN 128 THEN 127 ELSE a END, b=''"}
+{"sql":"INSERT INTO t1 VALUES(200,'hello out there')"}
+{"sql":"SELECT 2e-25*0.5e25"}
+{"sql":"SELECT 2.0e-25*000000.500000000000000000000000000000e+00025"}
+{"sql":"SELECT 000000000002e-0000000025*0.5e25"}
+{"sql":"SELECT 2e-25*0.5e250"}
+{"sql":"SELECT format('%.15e',2.0e-250*0.5e25)"}
+{"sql":"SELECT '-2.0e-127' * '-0.5e27'"}
+{"sql":"SELECT '+2.0e-127' * '-0.5e27'"}
+{"sql":"SELECT 2.0e-27 * '+0.5e+127'"}
+{"sql":"SELECT 2.0e-27 * '+0.000005e+132'"}
+{"sql":"CREATE TABLE t2(a INT UNIQUE)"}
+{"sql":"INSERT INTO t2 VALUES(2147483648)"}
+{"sql":"INSERT INTO t2 VALUES(-2147483649)"}
+{"sql":"INSERT INTO t2 VALUES(+2147483649)"}
+{"sql":"INSERT INTO t2 VALUES(+2147483647)"}
+{"sql":"INSERT INTO t2 VALUES(-2147483648)"}
+{"sql":"INSERT INTO t2 VALUES(-2147483647)"}
+{"sql":"INSERT INTO t2 VALUES(2147483646)"}
+{"sql":"SELECT * FROM t2 WHERE a>=-2147483648 ORDER BY a"}
+{"sql":"SELECT * FROM t2 WHERE a>-2147483648 ORDER BY a"}
+{"sql":"SELECT * FROM t2 WHERE a>-2147483649 ORDER BY a"}
+{"sql":"SELECT * FROM t2 WHERE a>=0 AND a<2147483649 ORDER BY a DESC"}
+{"sql":"SELECT * FROM t2 WHERE a>=0 AND a<=2147483648 ORDER BY a DESC"}
+{"sql":"SELECT * FROM t2 WHERE a>=0 AND a<2147483648 ORDER BY a DESC"}
+{"sql":"SELECT * FROM t2 WHERE a>=0 AND a<=2147483647 ORDER BY a DESC"}
+{"sql":"SELECT * FROM t2 WHERE a>=0 AND a<2147483647 ORDER BY a DESC"}
+{"sql":"INSERT INTO t3(b) VALUES('abc')"}
+{"sql":"INSERT INTO t3(b) VALUES('xyz')"}
+{"sql":"INSERT INTO t3(b) VALUES(NULL)"}
+{"sql":"INSERT INTO t3(b) SELECT b||'d' FROM t3"}
+{"sql":"INSERT INTO t3(b) SELECT b||'e' FROM t3"}
+{"sql":"INSERT INTO t3(b) SELECT b||'f' FROM t3"}
+{"sql":"INSERT INTO t3(b) SELECT b||'g' FROM t3"}
+{"sql":"INSERT INTO t3(b) SELECT b||'h' FROM t3"}
+{"sql":"SELECT count(a), count(b) FROM t3"}
+{"sql":"SELECT count(a) FROM t3 WHERE b IN (SELECT b FROM t3)"}
+{"sql":"SELECT count(a) FROM t3 WHERE b IN (SELECT b FROM t3 ORDER BY a+1)"}
+{"sql":"CREATE TABLE x1 (b, c)"}
+{"sql":"INSERT INTO x1 VALUES('dog',3)"}
+{"sql":"INSERT INTO x1 VALUES('cat',1)"}
+{"sql":"INSERT INTO x1 VALUES('dog',4)"}
+{"sql":"CREATE TABLE x2 (c, e)"}
+{"sql":"INSERT INTO x2 VALUES(1,'one')"}
+{"sql":"INSERT INTO x2 VALUES(2,'two')"}
+{"sql":"INSERT INTO x2 VALUES(3,'three')"}
+{"sql":"INSERT INTO x2 VALUES(4,'four')"}
+{"sql":"SELECT x2.c AS c, e, b FROM x2 LEFT JOIN\n         (SELECT b, max(c)+0 AS c FROM x1 GROUP BY b)\n         USING(c)"}
+{"sql":"SELECT * FROM (\n        SELECT x2.c AS c, e, b FROM x2 LEFT JOIN\n           (SELECT b, max(c)+0 AS c FROM x1 GROUP BY b)\n           USING(c)\n      )"}
+{"sql":"EXPLAIN BEGIN"}
+{"sql":"EXPLAIN COMMIT"}
+{"sql":"EXPLAIN ROLLBACK"}
+{"sql":"CREATE TABLE ex1(\n        a INTEGER DEFAULT 54321,\n        b TEXT DEFAULT \"hello\",\n        c REAL DEFAULT 3.1415926\n      )"}
+{"sql":"CREATE UNIQUE INDEX ex1i1 ON ex1(a)"}
+{"sql":"EXPLAIN REINDEX"}
+{"sql":"EXPLAIN SELECT a+123456789012, b*4.5678, c FROM ex1 ORDER BY +a, b DESC"}
+{"sql":"CREATE TABLE y1(a)"}
+{"sql":"CREATE TABLE y2(b)"}
+{"sql":"CREATE TABLE y3(c)"}
+{"sql":"CREATE TRIGGER r1 AFTER DELETE ON y1 FOR EACH ROW BEGIN\n      INSERT INTO y3(c) SELECT b FROM y2 ORDER BY b LIMIT 1;\n    END"}
+{"sql":"INSERT INTO y1 VALUES(1)"}
+{"sql":"INSERT INTO y1 VALUES(2)"}
+{"sql":"INSERT INTO y1 SELECT a+2 FROM y1"}
+{"sql":"INSERT INTO y1 SELECT a+4 FROM y1"}
+{"sql":"INSERT INTO y1 SELECT a+8 FROM y1"}
+{"sql":"INSERT INTO y1 SELECT a+16 FROM y1"}
+{"sql":"INSERT INTO y2 SELECT a FROM y1"}
+{"sql":"SELECT count(*) FROM y1"}
+{"sql":"DELETE FROM y1"}
+{"sql":"SELECT count(*) FROM y3"}
+{"sql":"SELECT count(CASE WHEN b IN ('abc','xyz') THEN 'x' END) FROM t3"}
+{"sql":"SELECT count(*) FROM t3 WHERE 1+(b IN ('abc','xyz'))==2"}

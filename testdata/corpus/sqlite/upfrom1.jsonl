@@ -1,0 +1,41 @@
+{"sql":"CREATE TABLE t2(a INTEGER PRIMARY KEY, b INTEGER, c INTEGER) WITHOUT ROWID"}
+{"sql":"INSERT INTO t2 VALUES(4, 5, 6)"}
+{"sql":"DROP TABLE IF EXISTS chng"}
+{"sql":"CREATE TABLE chng(a INTEGER, b INTEGER, c INTEGER)"}
+{"sql":"INSERT INTO chng VALUES(1, 100, 1000)"}
+{"sql":"INSERT INTO chng VALUES(7, 700, 7000)"}
+{"sql":"UPDATE t2 SET b = chng.b, c = chng.c FROM chng WHERE chng.a = t2.a"}
+{"sql":"UPDATE t2 SET (b, c) = (SELECT b, c FROM chng WHERE a=t2.a) \n    WHERE a IN (SELECT a FROM chng)"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY, b INTEGER, c TEXT) WITHOUT ROWID"}
+{"sql":"INSERT INTO t3 VALUES(2, 2, 'two')"}
+{"sql":"INSERT INTO t3 VALUES(3, 3, 'three')"}
+{"sql":"INSERT INTO t4 VALUES('five')"}
+{"sql":"UPDATE t3 SET c=x FROM t4"}
+{"sql":"CREATE TABLE t2(a INTEGER PRIMARY KEY, b INTEGER, c INTEGER)"}
+{"sql":"DROP TABLE IF EXISTS m1"}
+{"sql":"DROP TABLE IF EXISTS m2"}
+{"sql":"CREATE TABLE t5(a INTEGER PRIMARY KEY, b TEXT, c TEXT)"}
+{"sql":"CREATE TABLE m1(x INTEGER PRIMARY KEY, y TEXT)"}
+{"sql":"CREATE TABLE m2(u INTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"INSERT INTO t5 VALUES(1, 'one', 'ONE')"}
+{"sql":"INSERT INTO t5 VALUES(2, 'two', 'TWO')"}
+{"sql":"INSERT INTO t5 VALUES(3, 'three', 'THREE')"}
+{"sql":"INSERT INTO t5 VALUES(4, 'four', 'FOUR')"}
+{"sql":"INSERT INTO m1 VALUES(1, 'i')"}
+{"sql":"INSERT INTO m1 VALUES(2, 'ii')"}
+{"sql":"INSERT INTO m1 VALUES(3, 'iii')"}
+{"sql":"INSERT INTO m2 VALUES(1, 'I')"}
+{"sql":"INSERT INTO m2 VALUES(3, 'II')"}
+{"sql":"INSERT INTO m2 VALUES(4, 'III')"}
+{"sql":"UPDATE t5 SET b=y, c=v FROM m1 LEFT JOIN m2 ON (x=u) WHERE x=a"}
+{"sql":"UPDATE t5 SET b=1 FROM t5"}
+{"sql":"UPDATE t5 AS apples SET b=1 FROM t5 AS apples"}
+{"sql":"UPDATE t1 SET b=sum(a) FROM t0"}
+{"sql":"SELECT * FROM t0, t1"}
+{"sql":"WITH t1 AS (SELECT y+100 AS x FROM t2) \n    UPDATE t1 SET x=(SELECT x FROM t1)"}
+{"sql":"SELECT x, y FROM t1, t2"}
+{"sql":"WITH t1 AS (SELECT y+100 AS x FROM t2)\n    UPDATE t1 SET x=x+y FROM t2"}
+{"sql":"CREATE VIEW t2 AS SELECT a FROM t1 UNION ALL SELECT a FROM t1"}
+{"sql":"CREATE TABLE t3(b,c)"}
+{"sql":"INSERT INTO t3(b,c) VALUES(1,2)"}
+{"sql":"UPDATE t3 SET (c,b) = (SELECT 3,4) FROM t1, t2"}

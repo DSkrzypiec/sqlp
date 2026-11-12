@@ -1,0 +1,4 @@
+{"sql":"SELECT instr(h, n) FROM t1"}
+{"sql":"INSERT INTO h1 VALUES('abcdefg%200hijkl', randomblob(200))"}
+{"sql":"INSERT INTO h1 SELECT b, a FROM h1"}
+{"sql":"SELECT rowid FROM h1 WHERE instr(a,b)"}

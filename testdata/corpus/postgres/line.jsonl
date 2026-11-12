@@ -1,0 +1,35 @@
+{"sql":"CREATE TABLE LINE_TBL (s line)","shape":"CREATE TABLE LINE_TBL (s line);"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0,-1,5}')","shape":"INSERT INTO LINE_TBL VALUES ('{0,-1,5}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{1,0,5}')","shape":"INSERT INTO LINE_TBL VALUES ('{1,0,5}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0,3,0}')","shape":"INSERT INTO LINE_TBL VALUES ('{0,3,0}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES (' (0,0), (6,6)')","shape":"INSERT INTO LINE_TBL VALUES (' (0,0), (6,6)');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('10,-10 ,-5,-4')","shape":"INSERT INTO LINE_TBL VALUES ('10,-10 ,-5,-4');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('[-1e6,2e2,3e5, -4e1]')","shape":"INSERT INTO LINE_TBL VALUES ('[-1e6,2e2,3e5, -4e1]');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{3,NaN,5}')","shape":"INSERT INTO LINE_TBL VALUES ('{3,NaN,5}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{NaN,NaN,NaN}')","shape":"INSERT INTO LINE_TBL VALUES ('{NaN,NaN,NaN}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('[(1,3),(2,3)]')","shape":"INSERT INTO LINE_TBL VALUES ('[(1,3),(2,3)]');"}
+{"sql":"INSERT INTO LINE_TBL VALUES (line(point '(3,1)', point '(3,2)'))","shape":"INSERT INTO LINE_TBL VALUES (line(point '(3,1)', point '(3,2)'));"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{}')","shape":"INSERT INTO LINE_TBL VALUES ('{}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0')","shape":"INSERT INTO LINE_TBL VALUES ('{0');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0,0}')","shape":"INSERT INTO LINE_TBL VALUES ('{0,0}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0,0,1')","shape":"INSERT INTO LINE_TBL VALUES ('{0,0,1');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0,0,1}')","shape":"INSERT INTO LINE_TBL VALUES ('{0,0,1}');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('{0,0,1} x')","shape":"INSERT INTO LINE_TBL VALUES ('{0,0,1} x');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('(3asdf,2 ,3,4r2)')","shape":"INSERT INTO LINE_TBL VALUES ('(3asdf,2 ,3,4r2)');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('[1,2,3, 4')","shape":"INSERT INTO LINE_TBL VALUES ('[1,2,3, 4');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('[(,2),(3,4)]')","shape":"INSERT INTO LINE_TBL VALUES ('[(,2),(3,4)]');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('[(1,2),(3,4)')","shape":"INSERT INTO LINE_TBL VALUES ('[(1,2),(3,4)');"}
+{"sql":"INSERT INTO LINE_TBL VALUES ('[(1,2),(1,2)]')","shape":"INSERT INTO LINE_TBL VALUES ('[(1,2),(1,2)]');"}
+{"sql":"INSERT INTO LINE_TBL VALUES (line(point '(1,0)', point '(1,0)'))","shape":"INSERT INTO LINE_TBL VALUES (line(point '(1,0)', point '(1,0)'));"}
+{"sql":"select * from LINE_TBL","shape":"SELECT * FROM LINE_TBL;"}
+{"sql":"select '{nan, 1, nan}'::line = '{nan, 1, nan}'::line as true,\n\t   '{nan, 1, nan}'::line = '{nan, 2, nan}'::line as false","shape":"SELECT '{nan, 1, nan}'::line = '{nan, 1, nan}'::line AS true, '{nan, 1, nan}'::line = '{nan, 2, nan}'::line AS false;"}
+{"sql":"SELECT pg_input_is_valid('{1, 1}', 'line')","shape":"SELECT pg_input_is_valid('{1, 1}', 'line');"}
+{"sql":"SELECT * FROM pg_input_error_info('{1, 1}', 'line')","shape":"SELECT * FROM pg_input_error_info('{1, 1}', 'line');"}
+{"sql":"SELECT pg_input_is_valid('{0, 0, 0}', 'line')","shape":"SELECT pg_input_is_valid('{0, 0, 0}', 'line');"}
+{"sql":"SELECT * FROM pg_input_error_info('{0, 0, 0}', 'line')","shape":"SELECT * FROM pg_input_error_info('{0, 0, 0}', 'line');"}
+{"sql":"SELECT pg_input_is_valid('{1, 1, a}', 'line')","shape":"SELECT pg_input_is_valid('{1, 1, a}', 'line');"}
+{"sql":"SELECT * FROM pg_input_error_info('{1, 1, a}', 'line')","shape":"SELECT * FROM pg_input_error_info('{1, 1, a}', 'line');"}
+{"sql":"SELECT pg_input_is_valid('{1, 1, 1e400}', 'line')","shape":"SELECT pg_input_is_valid('{1, 1, 1e400}', 'line');"}
+{"sql":"SELECT * FROM pg_input_error_info('{1, 1, 1e400}', 'line')","shape":"SELECT * FROM pg_input_error_info('{1, 1, 1e400}', 'line');"}
+{"sql":"SELECT pg_input_is_valid('(1, 1), (1, 1e400)', 'line')","shape":"SELECT pg_input_is_valid('(1, 1), (1, 1e400)', 'line');"}
+{"sql":"SELECT * FROM pg_input_error_info('(1, 1), (1, 1e400)', 'line')","shape":"SELECT * FROM pg_input_error_info('(1, 1), (1, 1e400)', 'line');"}

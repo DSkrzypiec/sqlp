@@ -1,0 +1,25 @@
+{"sql":"SELECT upper(char(0xfb04,0xfb04,0xfb04,0xfb04))"}
+{"sql":"CREATE TABLE fruit(name)"}
+{"sql":"INSERT INTO fruit VALUES('plum')"}
+{"sql":"INSERT INTO fruit VALUES('cherry')"}
+{"sql":"INSERT INTO fruit VALUES('apricot')"}
+{"sql":"INSERT INTO fruit VALUES('peach')"}
+{"sql":"INSERT INTO fruit VALUES('chokecherry')"}
+{"sql":"INSERT INTO fruit VALUES('yamot')"}
+{"sql":"SELECT icu_load_collation('en_US', 'AmericanEnglish')"}
+{"sql":"SELECT icu_load_collation('lt_LT', 'Lithuanian')"}
+{"sql":"SELECT name FROM fruit ORDER BY name COLLATE AmericanEnglish ASC"}
+{"sql":"SELECT name FROM fruit ORDER BY name COLLATE Lithuanian ASC"}
+{"sql":"SELECT regexp('a[abc]c.*', 'abc')"}
+{"sql":"SELECT regexp('a[abc]c.*')"}
+{"sql":"SELECT regexp('a[abc]c.*', 'abc', 'c')"}
+{"sql":"SELECT 'abc' REGEXP 'a[abc]c.*'"}
+{"sql":"SELECT 'abc' REGEXP","reject":true}
+{"sql":"SELECT 'abc' REGEXP, 1","reject":true}
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY, x TEXT)"}
+{"sql":"INSERT INTO t1 VALUES\n    (1,'abcde'),\n    (2,'abc_'),\n    (3,'abc__'),\n    (4,'abc%'),\n    (5,'abc%%')"}
+{"sql":"SELECT id FROM t1 WHERE x LIKE 'abc%%' ESCAPE '%'"}
+{"sql":"SELECT id FROM t1 WHERE x LIKE 'abc__' ESCAPE '_'"}
+{"sql":"SELECT icu_load_collation('en_US','error','xyzzy')"}
+{"sql":"SELECT icu_load_collation('en_US','prim','PRIMARY'),\n         icu_load_collation('en_US','dflt','DEFAULT')"}
+{"sql":"SELECT char(0x100)=='a', char(0x100)=='a' COLLATE dflt, char(0x100)=='a' COLLATE prim"}

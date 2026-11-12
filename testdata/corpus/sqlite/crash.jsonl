@@ -1,0 +1,6 @@
+{"sql":"SELECT sum(a), sum(b), sum(c) from abc"}
+{"sql":"INSERT INTO abc SELECT * FROM abc"}
+{"sql":"PRAGMA aux.default_cache_size = 10"}
+{"sql":"CREATE TABLE aux.abc2 AS SELECT 2*a as a, 2*b as b, 2*c as c FROM abc"}
+{"sql":"INSERT INTO abc VALUES(randstr(1500,1500), 0, 0)"}
+{"sql":"pragma auto_vacuum"}

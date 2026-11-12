@@ -1,0 +1,4 @@
+{"sql":"CREATE VIRTUAL TABLE t2 USING FTS3(a, b)"}
+{"sql":"INSERT INTO t2(t2) VALUES('nodesize=32')"}
+{"sql":"SELECT count(*) FROM t2_segments"}
+{"sql":"SELECT * FROM t2 WHERE t2 MATCH 'a*'"}

@@ -1,0 +1,14 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, c, d)"}
+{"sql":"CREATE UNIQUE INDEX t1bc ON t1(b,c)"}
+{"sql":"CREATE INDEX t1d ON t1(d)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n    INSERT INTO t1(a,b,c,d) SELECT x, x, x, x FROM c"}
+{"sql":"SELECT idx, flgs FROM pragma_stats\n   WHERE idx IS NOT NULL\n   ORDER BY idx"}
+{"sql":"SELECT tbl, (flgs & 0x10)!=0 FROM pragma_stats WHERE tbl='t1' AND idx IS NULL"}
+{"sql":"SELECT (flgs & 0x0100)!=0 FROM pragma_stats WHERE tbl='t1' AND idx IS NULL"}
+{"sql":"SELECT * FROM t1 WHERE a=55"}
+{"sql":"SELECT * FROM t1 WHERE a IN (55,199,299)"}
+{"sql":"SELECT * FROM t1 WHERE (b,c)=(45,45)"}
+{"sql":"SELECT * FROM t1 WHERE d=45"}
+{"sql":"SELECT * FROM t1 WHERE d=45 AND a=45"}
+{"sql":"SELECT * FROM t1 WHERE d=45 AND a IN (45,46)"}
+{"sql":"SELECT * FROM t1 WHERE b=45"}

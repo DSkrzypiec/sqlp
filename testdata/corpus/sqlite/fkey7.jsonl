@@ -1,0 +1,19 @@
+{"sql":"CREATE TABLE s1(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE par(a, b REFERENCES s1, c UNIQUE, PRIMARY KEY(a))"}
+{"sql":"CREATE TABLE c1(a, b REFERENCES par)"}
+{"sql":"CREATE TABLE c2(a, b REFERENCES par)"}
+{"sql":"CREATE TABLE c3(a, b REFERENCES par(c))"}
+{"sql":"CREATE TABLE pX(x PRIMARY KEY)"}
+{"sql":"CREATE TABLE cX(a INTEGER PRIMARY KEY, b REFERENCES pX)"}
+{"sql":"INSERT INTO cX VALUES(11, zeroblob(40))"}
+{"sql":"CREATE TABLE p4 (id INTEGER NOT NULL PRIMARY KEY)"}
+{"sql":"INSERT INTO p4 VALUES(1), (2), (3)"}
+{"sql":"CREATE TABLE c4(x INTEGER REFERENCES p4(id) DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"CREATE INDEX c4_x ON c4(x)"}
+{"sql":"INSERT INTO c4 VALUES(1), (2), (3)"}
+{"sql":"INSERT INTO p4(id) VALUES(4)"}
+{"sql":"PRAGMA foreign_keys = true"}
+{"sql":"CREATE TABLE parent(\n    p PRIMARY KEY\n  )"}
+{"sql":"CREATE TABLE child(\n    c UNIQUE REFERENCES parent(p)\n  )"}
+{"sql":"INSERT OR FAIL INTO child VALUES(123), (123)"}
+{"sql":"INSERT INTO parent VALUES(123)"}

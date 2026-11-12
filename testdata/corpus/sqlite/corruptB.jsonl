@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(randomblob(200))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(200) FROM t1"}
+{"sql":"SELECT rootpage FROM sqlite_master"}
+{"sql":"SELECT rootpage FROM sqlite_master WHERE name = 't2'"}

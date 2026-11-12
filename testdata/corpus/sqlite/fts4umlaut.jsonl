@@ -1,0 +1,2 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(x, tokenize=unicode61)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(\n      x, \n      tokenize=unicode61 \"remove_diacritics=2\"\n  )"}

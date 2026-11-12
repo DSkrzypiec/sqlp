@@ -1,0 +1,19 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING tcl(\"vtab_cmd 0\")"}
+{"sql":"SELECT * FROM t1 WHERE a LIKE 'abc'"}
+{"sql":"SELECT * FROM t1 WHERE a = 'abc' OR b = 'def'"}
+{"sql":"SELECT * FROM t1 WHERE a LIKE 'abc%' OR b = 'def'"}
+{"sql":"CREATE TABLE ttt(a, b, c)"}
+{"sql":"INSERT INTO ttt VALUES(1, 'two',   'three')"}
+{"sql":"INSERT INTO ttt VALUES(2, 'one',   'two')"}
+{"sql":"INSERT INTO ttt VALUES(3, 'three', 'one')"}
+{"sql":"INSERT INTO ttt VALUES(4, 'y',     'one')"}
+{"sql":"INSERT INTO ttt VALUES(5, 'x',     'two')"}
+{"sql":"INSERT INTO ttt VALUES(6, 'y',     'three')"}
+{"sql":"SELECT rowid FROM t1 WHERE c LIKE 'o%'"}
+{"sql":"SELECT rowid FROM t1 WHERE c LIKE 'o%' OR b='y'"}
+{"sql":"SELECT rowid FROM t1 WHERE c = 'three' OR c LIKE 'o%'"}
+{"sql":"CREATE TABLE t2(x TEXT COLLATE nocase, y TEXT)"}
+{"sql":"CREATE INDEX t2x ON t2(x COLLATE nocase)"}
+{"sql":"SELECT * FROM t2 WHERE x LIKE 'abc%' OR y = 'def'"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING tcl('vvv_command')"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING tcl('yyy_command')"}

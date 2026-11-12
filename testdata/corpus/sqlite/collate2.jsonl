@@ -1,0 +1,143 @@
+{"sql":"CREATE TABLE collate2t1(\n      a COLLATE BINARY, \n      b COLLATE NOCASE, \n      c COLLATE BACKWARDS\n    )"}
+{"sql":"INSERT INTO collate2t1 VALUES( NULL, NULL, NULL )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'aa', 'aa', 'aa' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'ab', 'ab', 'ab' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'ba', 'ba', 'ba' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'bb', 'bb', 'bb' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'aA', 'aA', 'aA' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'aB', 'aB', 'aB' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'bA', 'bA', 'bA' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'bB', 'bB', 'bB' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'Aa', 'Aa', 'Aa' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'Ab', 'Ab', 'Ab' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'Ba', 'Ba', 'Ba' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'Bb', 'Bb', 'Bb' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'AA', 'AA', 'AA' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'AB', 'AB', 'AB' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'BA', 'BA', 'BA' )"}
+{"sql":"INSERT INTO collate2t1 VALUES( 'BB', 'BB', 'BB' )"}
+{"sql":"CREATE INDEX collate2t1_i1 ON collate2t1(a)"}
+{"sql":"CREATE INDEX collate2t1_i2 ON collate2t1(b)"}
+{"sql":"CREATE INDEX collate2t1_i3 ON collate2t1(c)"}
+{"sql":"SELECT a FROM collate2t1 WHERE a > 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE a COLLATE binary > 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE b COLLATE binary > 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE c COLLATE binary > 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE b > 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE a COLLATE nocase > 'aa'\n     ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE b COLLATE nocase > 'aa'\n     ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE c COLLATE nocase > 'aa'\n     ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE b > 'aa' ORDER BY +b"}
+{"sql":"SELECT b FROM collate2t1 WHERE a COLLATE nocase > 'aa' ORDER BY +b"}
+{"sql":"SELECT b FROM collate2t1 WHERE b COLLATE nocase > 'aa' ORDER BY +b"}
+{"sql":"SELECT b FROM collate2t1 WHERE c COLLATE nocase > 'aa' ORDER BY +b"}
+{"sql":"SELECT c FROM collate2t1 WHERE c > 'aa' ORDER BY 1"}
+{"sql":"SELECT c FROM collate2t1 WHERE a COLLATE backwards > 'aa'\n    ORDER BY 1"}
+{"sql":"SELECT c FROM collate2t1 WHERE b COLLATE backwards > 'aa'\n    ORDER BY 1"}
+{"sql":"SELECT c FROM collate2t1 WHERE c COLLATE backwards > 'aa'\n    ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE a < 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE b < 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE b < 'aa' ORDER BY +b"}
+{"sql":"SELECT c FROM collate2t1 WHERE c < 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE a = 'aa'"}
+{"sql":"SELECT b FROM collate2t1 WHERE b = 'aa' ORDER BY oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE c = 'aa'"}
+{"sql":"SELECT a FROM collate2t1 WHERE a >= 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE b >= 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE c >= 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE a <= 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE b <= 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE c <= 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE a BETWEEN 'Aa' AND 'Bb' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE b BETWEEN 'Aa' AND 'Bb' ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE b BETWEEN 'Aa' AND 'Bb' ORDER BY +b"}
+{"sql":"SELECT c FROM collate2t1 WHERE c BETWEEN 'Aa' AND 'Bb' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE \n      CASE a WHEN 'aa' THEN 1 ELSE 0 END\n        ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE \n      CASE b WHEN 'aa' THEN 1 ELSE 0 END\n        ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE \n      CASE c WHEN 'aa' THEN 1 ELSE 0 END\n        ORDER BY 1, oid"}
+{"sql":"SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb') ORDER BY 1, oid"}
+{"sql":"SELECT b FROM collate2t1 WHERE b IN ('aa', 'bb') ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE c IN ('aa', 'bb') ORDER BY 1, oid"}
+{"sql":"SELECT a FROM collate2t1 \n        WHERE a IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb'))"}
+{"sql":"SELECT b FROM collate2t1 \n        WHERE b IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb'))"}
+{"sql":"SELECT c FROM collate2t1 \n        WHERE c IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb'))"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT a > 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT b > 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT c > 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT a < 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT b < 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT c < 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT a = 'aa'"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT b = 'aa'"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT c = 'aa'"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT a >= 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT b >= 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT c >= 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT a <= 'aa' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT b <= 'aa' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT c <= 'aa' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE a NOT BETWEEN 'Aa' AND 'Bb' ORDER BY 1"}
+{"sql":"SELECT b FROM collate2t1 WHERE b NOT BETWEEN 'Aa' AND 'Bb' ORDER BY 1, oid"}
+{"sql":"SELECT c FROM collate2t1 WHERE c NOT BETWEEN 'Aa' AND 'Bb' ORDER BY 1"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT CASE a WHEN 'aa' THEN 1 ELSE 0 END"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT CASE b WHEN 'aa' THEN 1 ELSE 0 END"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT CASE c WHEN 'aa' THEN 1 ELSE 0 END"}
+{"sql":"SELECT a FROM collate2t1 WHERE NOT a IN ('aa', 'bb')"}
+{"sql":"SELECT b FROM collate2t1 WHERE NOT b IN ('aa', 'bb')"}
+{"sql":"SELECT c FROM collate2t1 WHERE NOT c IN ('aa', 'bb')"}
+{"sql":"SELECT a FROM collate2t1 \n        WHERE NOT a IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb'))"}
+{"sql":"SELECT b FROM collate2t1 \n        WHERE NOT b IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb'))"}
+{"sql":"SELECT c FROM collate2t1 \n        WHERE NOT c IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb'))"}
+{"sql":"SELECT a > 'aa' FROM collate2t1"}
+{"sql":"SELECT b > 'aa' FROM collate2t1"}
+{"sql":"SELECT c > 'aa' FROM collate2t1"}
+{"sql":"SELECT a < 'aa' FROM collate2t1"}
+{"sql":"SELECT b < 'aa' FROM collate2t1"}
+{"sql":"SELECT c < 'aa' FROM collate2t1"}
+{"sql":"SELECT a = 'aa' FROM collate2t1"}
+{"sql":"SELECT b = 'aa' FROM collate2t1"}
+{"sql":"SELECT c = 'aa' FROM collate2t1"}
+{"sql":"SELECT a <= 'aa' FROM collate2t1"}
+{"sql":"SELECT b <= 'aa' FROM collate2t1"}
+{"sql":"SELECT c <= 'aa' FROM collate2t1"}
+{"sql":"SELECT a >= 'aa' FROM collate2t1"}
+{"sql":"SELECT b >= 'aa' FROM collate2t1"}
+{"sql":"SELECT c >= 'aa' FROM collate2t1"}
+{"sql":"SELECT a BETWEEN 'Aa' AND 'Bb' FROM collate2t1"}
+{"sql":"SELECT b BETWEEN 'Aa' AND 'Bb' FROM collate2t1"}
+{"sql":"SELECT c BETWEEN 'Aa' AND 'Bb' FROM collate2t1"}
+{"sql":"SELECT CASE a WHEN 'aa' THEN 1 ELSE 0 END FROM collate2t1"}
+{"sql":"SELECT CASE b WHEN 'aa' THEN 1 ELSE 0 END FROM collate2t1"}
+{"sql":"SELECT CASE c WHEN 'aa' THEN 1 ELSE 0 END FROM collate2t1"}
+{"sql":"SELECT a IN ('aa', 'bb') FROM collate2t1"}
+{"sql":"SELECT b IN ('aa', 'bb') FROM collate2t1"}
+{"sql":"SELECT c IN ('aa', 'bb') FROM collate2t1"}
+{"sql":"SELECT a IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb')) \n        FROM collate2t1"}
+{"sql":"SELECT b IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb')) \n        FROM collate2t1"}
+{"sql":"SELECT c IN (SELECT a FROM collate2t1 WHERE a IN ('aa', 'bb')) \n        FROM collate2t1"}
+{"sql":"CREATE TABLE collate2t2(b COLLATE binary)"}
+{"sql":"CREATE TABLE collate2t3(b text)"}
+{"sql":"INSERT INTO collate2t2 VALUES('aa')"}
+{"sql":"INSERT INTO collate2t3 VALUES('aa')"}
+{"sql":"SELECT collate2t1.a FROM collate2t1, collate2t2 \n      WHERE collate2t1.b = collate2t2.b"}
+{"sql":"SELECT collate2t1.a FROM collate2t1, collate2t2 \n      WHERE collate2t2.b = collate2t1.b"}
+{"sql":"SELECT collate2t1.a FROM collate2t1, collate2t3 \n      WHERE collate2t1.b = collate2t3.b||''\n      ORDER BY +collate2t1.a DESC"}
+{"sql":"SELECT collate2t1.a FROM collate2t1, collate2t3 \n      WHERE collate2t3.b||'' = collate2t1.b\n      ORDER BY +collate2t1.a DESC"}
+{"sql":"DROP TABLE collate2t3"}
+{"sql":"SELECT collate2t1.b FROM collate2t1 JOIN collate2t2 USING (b)"}
+{"sql":"SELECT collate2t1.b FROM collate2t2 JOIN collate2t1 USING (b)"}
+{"sql":"SELECT collate2t1.b FROM collate2t1 NATURAL JOIN collate2t2"}
+{"sql":"SELECT collate2t1.b FROM collate2t2 NATURAL JOIN collate2t1"}
+{"sql":"SELECT collate2t2.b FROM collate2t1 LEFT JOIN collate2t2 USING (b) order by collate2t1.oid"}
+{"sql":"SELECT collate2t2.b FROM collate2t2 RIGHT JOIN collate2t1 ON collate2t1.b=collate2t2.b\n     ORDER BY collate2t1.oid"}
+{"sql":"SELECT collate2t2.b FROM collate2t1 LEFT JOIN collate2t2 ON collate2t2.b=collate2t1.b\n     ORDER BY collate2t1.oid"}
+{"sql":"SELECT collate2t1.b, collate2t2.b FROM collate2t2 LEFT OUTER JOIN collate2t1 USING (b)"}
+{"sql":"SELECT collate2t1.b, collate2t2.b\n      FROM collate2t1 RIGHT JOIN collate2t2 ON collate2t2.b=collate2t1.b"}
+{"sql":"INSERT INTO t1 VALUES('b')"}
+{"sql":"INSERT INTO t1 VALUES('B')"}
+{"sql":"SELECT * FROM t1 WHERE x COLLATE nocase BETWEEN 'a' AND 'c'"}
+{"sql":"SELECT * FROM t1 WHERE x BETWEEN 'a' COLLATE nocase AND 'c' COLLATE nocase"}
+{"sql":"SELECT * FROM t1 \n  WHERE x COLLATE nocase BETWEEN 'a' COLLATE nocase AND 'c' COLLATE nocase"}
+{"sql":"SELECT * FROM t1 WHERE +x COLLATE nocase BETWEEN 'a' AND 'c'"}
+{"sql":"SELECT * FROM t1 WHERE +x BETWEEN 'a' COLLATE nocase AND 'c' COLLATE nocase"}
+{"sql":"SELECT * FROM t1 \n  WHERE +x COLLATE nocase BETWEEN 'a' COLLATE nocase AND 'c' COLLATE nocase"}

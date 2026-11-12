@@ -1,0 +1,44 @@
+{"sql":"CREATE TABLE t3(a TEXT, b TEXT COLLATE utf16_aligned, c)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.....', 0)"}
+{"sql":"INSERT INTO t3 VALUES('one', '....x', 1)"}
+{"sql":"INSERT INTO t3 VALUES('one', '...x.', 2)"}
+{"sql":"INSERT INTO t3 VALUES('one', '...xx', 3)"}
+{"sql":"INSERT INTO t3 VALUES('one', '..x..', 4)"}
+{"sql":"INSERT INTO t3 VALUES('one', '..x.x', 5)"}
+{"sql":"INSERT INTO t3 VALUES('one', '..xx.', 6)"}
+{"sql":"INSERT INTO t3 VALUES('one', '..xxx', 7)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.x...', 8)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.x..x', 9)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.x.x.', 10)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.x.xx', 11)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.xx..', 12)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.xx.x', 13)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.xxx.', 14)"}
+{"sql":"INSERT INTO t3 VALUES('one', '.xxxx', 15)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x....', 16)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x...x', 17)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x..x.', 18)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x..xx', 19)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x.x..', 20)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x.x.x', 21)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x.xx.', 22)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'x.xxx', 23)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xx...', 24)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xx..x', 25)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xx.x.', 26)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xx.xx', 27)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xxx..', 28)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xxx.x', 29)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xxxx.', 30)"}
+{"sql":"INSERT INTO t3 VALUES('two', 'xxxxx', 31)"}
+{"sql":"INSERT INTO t3 SELECT * FROM t3"}
+{"sql":"CREATE INDEX i3 ON t3(a, b)"}
+{"sql":"SELECT 'x' > '.'"}
+{"sql":"SELECT DISTINCT c FROM t3 WHERE b BETWEEN '.xx..' AND '.xxxx'"}
+{"sql":"SELECT * FROM x1 WHERE a = (SELECT 1)"}
+{"sql":"CREATE TABLE x2(x TEXT, y TEXT)"}
+{"sql":"WITH data(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM data\n  )\n  INSERT INTO x2 SELECT isqrt(i), isqrt(i) FROM data LIMIT 400"}
+{"sql":"CREATE INDEX x2x ON x2(x)"}
+{"sql":"CREATE INDEX x2y ON x2(y)"}
+{"sql":"DELETE FROM x2"}
+{"sql":"SELECT * FROM x2 WHERE x = str('19') AND y = str('4')"}

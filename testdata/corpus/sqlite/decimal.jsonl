@@ -1,0 +1,45 @@
+{"sql":"SELECT decimal(1)"}
+{"sql":"SELECT decimal('+0'), decimal('-0')"}
+{"sql":"SELECT decimal('1.0')"}
+{"sql":"SELECT decimal('0001.0')"}
+{"sql":"SELECT decimal('+0001.0')"}
+{"sql":"SELECT decimal('-0001.0')"}
+{"sql":"SELECT decimal('-0000.0')"}
+{"sql":"SELECT decimal(0.0)==decimal(-0.0)"}
+{"sql":"SELECT decimal('1.0e72')"}
+{"sql":"SELECT decimal('1.0e-72')"}
+{"sql":"SELECT decimal('-123e-4')"}
+{"sql":"SELECT decimal('+123e+4')"}
+{"sql":"SELECT decimal_exp('+123e+4')"}
+{"sql":"CREATE TABLE t1(seq INTEGER PRIMARY KEY, val TEXT)"}
+{"sql":"INSERT INTO t1 VALUES\n    (1, '-9999e99'),\n    (2, '-9998.000e+99'),\n    (3, '-9999.0'),\n    (4, '-1'),\n    (5, '-9999e-20'),\n    (6, '0'),\n    (7, '1e-30'),\n    (8, '1e-29'),\n    (9, '1'),\n    (10,'1.00000000000000001'),\n    (11,'+1.00001'),\n    (12,'99e+99')"}
+{"sql":"SELECT *, '|'\n    FROM t1 AS a, t1 AS b\n   WHERE a.seq<b.seq\n     AND decimal_cmp(a.val,b.val)>=0"}
+{"sql":"WITH vx(a,b) AS (VALUES\n    ('-0','+0'),\n    ('-000.000','0'),\n    ('1.2','1.2000')\n  )\n  SELECT *, '|' FROM vx \n   WHERE decimal_cmp(a,b)!=0\n      OR decimal_cmp(b,a)!=0"}
+{"sql":"SELECT *, '|'\n    FROM t1 AS a, t1 AS b\n   WHERE a.seq<>b.seq\n     AND decimal_cmp(a.val,b.val)==0"}
+{"sql":"SELECT *, '|'\n    FROM t1 AS a, t1 AS b\n   WHERE a.seq>b.seq\n     AND decimal_cmp(a.val,b.val)<=0"}
+{"sql":"SELECT seq FROM t1 ORDER BY val COLLATE decimal"}
+{"sql":"SELECT seq FROM t1 ORDER BY val COLLATE decimal DESC"}
+{"sql":"CREATE TABLE t3(seq INTEGER PRIMARY KEY, val TEXT)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION SELECT x+1 FROM c WHERE x<10)\n    INSERT INTO t3(seq, val) SELECT x, x FROM c"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION SELECT x+1 FROM c WHERE x<5)\n    INSERT INTO t3(seq, val) SELECT x+10, x*1000 FROM c"}
+{"sql":"SELECT decimal(val) FROM t3 ORDER BY seq"}
+{"sql":"SELECT decimal_add(val,'0.5') FROM t3 WHERE seq>5 ORDER BY seq"}
+{"sql":"SELECT decimal_add(val,'-10') FROM t3 ORDER BY seq"}
+{"sql":"SELECT decimal_sum(val) FROM t3"}
+{"sql":"SELECT decimal_sum(decimal_add(val,val||'e+10')) FROM t3"}
+{"sql":"SELECT decimal_sum(decimal_add(val||'e+20',decimal_add(val,val||'e-20')))\n    FROM t3"}
+{"sql":"WITH RECURSIVE c(x,y,z) AS (\n    VALUES(0,'1','1')\n    UNION ALL\n    SELECT x+1, decimal_mul(y,'2'), decimal_mul(z,'0.5')\n      FROM c WHERE x<32\n  )\n  SELECT count(*) FROM c WHERE decimal_mul(y,z)='1'"}
+{"sql":"SELECT decimal_mul('1234.00','2.00')"}
+{"sql":"SELECT decimal_mul('1234.00','2.0000')"}
+{"sql":"SELECT decimal_mul('1234.0000','2.000')"}
+{"sql":"SELECT decimal_mul('1234.0000','2')"}
+{"sql":"CREATE TABLE pow2(x INTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"WITH RECURSIVE c(x,v) AS (\n    VALUES(0,'1')\n    UNION ALL\n    SELECT x+1, decimal_mul(v,'2') FROM c WHERE x+1<=971\n  ) INSERT INTO pow2(x,v) SELECT x, v FROM c"}
+{"sql":"WITH RECURSIVE c(x,v) AS (\n    VALUES(-1,'0.5')\n    UNION ALL\n    SELECT x-1, decimal_mul(v,'0.5') FROM c WHERE x-1>=-1075\n  ) INSERT INTO pow2(x,v) SELECT x, v FROM c"}
+{"sql":"WITH c(n) AS (SELECT ieee754_from_blob(x'0000000000000001'))\nSELECT decimal_mul(ieee754_mantissa(c.n),pow2.v)\n  FROM pow2, c WHERE pow2.x=ieee754_exponent(c.n)"}
+{"sql":"WITH c(n) AS (SELECT ieee754_from_blob(x'0000000000000001'))\nSELECT decimal(c.n) FROM c"}
+{"sql":"WITH c(n) AS (SELECT ieee754_from_blob(x'7fefffffffffffff'))\nSELECT decimal_mul(ieee754_mantissa(c.n),pow2.v)\n  FROM pow2, c WHERE pow2.x=ieee754_exponent(c.n)"}
+{"sql":"SELECT ieee754(ieee754_from_blob(x'0000000000000001'))"}
+{"sql":"SELECT ieee754(ieee754_from_blob(x'7fefffffffffffff'))"}
+{"sql":"SELECT printf('%.8e',ieee754_from_blob(x'0000000000000001'))"}
+{"sql":"SELECT printf('%.8e',ieee754_from_blob(x'ffefffffffffffff'))"}

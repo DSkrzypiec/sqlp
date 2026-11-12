@@ -1,0 +1,53 @@
+{"sql":"INSERT INTO def VALUES('IV', 'V', 'VI')"}
+{"sql":"INSERT INTO def VALUES('VII', 'VIII', 'IX')"}
+{"sql":"INSERT INTO def VALUES('X', 'XI', 'XII')"}
+{"sql":"PRAGMA read_uncommitted = 1"}
+{"sql":"SELECT max(i) FROM seq"}
+{"sql":"SELECT * FROM seq"}
+{"sql":"ATTACH 'test2.db' AS test2"}
+{"sql":"ATTACH 'test.db' AS test"}
+{"sql":"INSERT INTO abc VALUES('i', 'ii', 'iii')"}
+{"sql":"INSERT INTO def VALUES('I', 'II', 'III')"}
+{"sql":"SELECT * FROM test.abc"}
+{"sql":"INSERT INTO abc VALUES('iv', 'v', 'vi')"}
+{"sql":"CREATE TABLE ghi(g, h, i)"}
+{"sql":"CREATE TABLE test2.ghi(g, h, i)"}
+{"sql":"SELECT 'test.db:'||name FROM sqlite_master \n      UNION ALL\n      SELECT 'test2.db:'||name FROM test2.sqlite_master"}
+{"sql":"SELECT 'test2.db:'||name FROM sqlite_master \n      UNION ALL\n      SELECT 'test.db:'||name FROM test.sqlite_master"}
+{"sql":"CREATE TABLE jkl(j, k, l)"}
+{"sql":"ATTACH 'test1.db' AS test1"}
+{"sql":"ATTACH 'test3.db' AS test3"}
+{"sql":"CREATE TABLE test1.t1(a, b)"}
+{"sql":"CREATE INDEX test1.i1 ON t1(a, b)"}
+{"sql":"CREATE VIEW test1.v1 AS SELECT * FROM t1"}
+{"sql":"CREATE TRIGGER test1.trig1 AFTER INSERT ON t1 BEGIN\n        INSERT INTO t1 VALUES(new.a, new.b);\n      END"}
+{"sql":"SELECT * FROM sqlite_master UNION ALL SELECT * FROM test1.sqlite_master"}
+{"sql":"SELECT * FROM aux.sqlite_master"}
+{"sql":"CREATE TABLE abc_mirror(a, b, c)"}
+{"sql":"CREATE TEMP TRIGGER BEFORE INSERT ON abc BEGIN \n      INSERT INTO abc_mirror(a, b, c) VALUES(new.a, new.b, new.c);\n    END"}
+{"sql":"SELECT * FROM abc_mirror"}
+{"sql":"CREATE TABLE de(d PRIMARY KEY, e)"}
+{"sql":"INSERT INTO ab VALUES('Chiang Mai', 100000)"}
+{"sql":"INSERT INTO ab VALUES('Bangkok', 8000000)"}
+{"sql":"INSERT INTO de VALUES('Ubon', 120000)"}
+{"sql":"INSERT INTO de VALUES('Khon Kaen', 200000)"}
+{"sql":"INSERT INTO de VALUES('Pataya', 30000)"}
+{"sql":"SELECT * FROM de"}
+{"sql":"SELECT * FROM abc2"}
+{"sql":"INSERT INTO abc2 VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO abc2 VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO abc2 VALUES(7, 8, 9)"}
+{"sql":"DELETE FROM abc WHERE 1"}
+{"sql":"ATTACH 'test4.db' AS aux4"}
+{"sql":"ATTACH 'test5.db' AS aux5"}
+{"sql":"DETACH aux4"}
+{"sql":"CREATE TABLE aux2.t2(a, b, c)"}
+{"sql":"CREATE TABLE aux3.t3(a, b, c)"}
+{"sql":"CREATE TABLE aux4.t4(a, b, c)"}
+{"sql":"CREATE TABLE aux5.t5(a, b, c)"}
+{"sql":"SELECT count(*) FROM \n      aux2.sqlite_master, \n      aux3.sqlite_master, \n      aux4.sqlite_master, \n      aux5.sqlite_master"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM t1, v1 \n                      WHERE t1.c=v1.c GROUP BY t1.a ORDER BY v1.b"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 \n      WHEN new.a!=1\n    BEGIN\n      DELETE FROM t1 WHERE a=5;\n      INSERT INTO t1 VALUES(1, 2, 3);\n      UPDATE t1 SET c=c+1;\n    END"}
+{"sql":"INSERT INTO t1 VALUES(5, 6, 7)"}
+{"sql":"INSERT INTO t1 VALUES(8, 9, 10)"}
+{"sql":"INSERT INTO t1 VALUES(11, 12, 13)"}

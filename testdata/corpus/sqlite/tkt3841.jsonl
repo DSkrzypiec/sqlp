@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE table2 (key TEXT, x TEXT)"}
+{"sql":"CREATE TABLE list (key TEXT, value TEXT)"}
+{"sql":"INSERT INTO table2 VALUES (\"a\", \"alist\")"}
+{"sql":"INSERT INTO table2 VALUES (\"b\", \"blist\")"}
+{"sql":"INSERT INTO list VALUES (\"a\", 1)"}
+{"sql":"INSERT INTO list VALUES (\"a\", 2)"}
+{"sql":"INSERT INTO list VALUES (\"a\", 3)"}
+{"sql":"INSERT INTO list VALUES (\"b\", 4)"}
+{"sql":"INSERT INTO list VALUES (\"b\", 5)"}
+{"sql":"INSERT INTO list VALUES (\"b\", 6)"}
+{"sql":"SELECT\n      table2.x,\n      (SELECT group_concat(list.value)\n        FROM list\n        WHERE list.key = table2.key)\n    FROM table2"}

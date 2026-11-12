@@ -1,0 +1,27 @@
+{"sql":"UPDATE sqlite_schema \n      SET sql = 'CREATE TABLE sqlite_sequence(name-seq)' \n      WHERE name = 'sqlite_sequence'"}
+{"sql":"INSERT INTO t1(y) VALUES('abc')"}
+{"sql":"CREATE TABLE x1(a INTEGER PRIMARY KEY, b UNIQUE, c UNIQUE)"}
+{"sql":"INSERT INTO x1 VALUES(1, 1, 2)"}
+{"sql":"INSERT INTO x1 VALUES(2, 2, 3)"}
+{"sql":"INSERT INTO x1 VALUES(3, 3, 4)"}
+{"sql":"INSERT INTO x1 VALUES(4, 5, 6)"}
+{"sql":"UPDATE sqlite_schema SET rootpage = (\n      SELECT rootpage FROM sqlite_schema WHERE name = 'sqlite_autoindex_x1_2'\n    ) WHERE name = 'sqlite_autoindex_x1_1'"}
+{"sql":"REPLACE INTO x1 VALUES(5, 2, 3)"}
+{"sql":"UPDATE sqlite_schema \n      SET sql = strreplace(sql, 't1', 'json_each') \n      WHERE type='index'"}
+{"sql":"INSERT INTO t1(b) VALUES(zeroblob(300)),(zeroblob(300)),(zeroblob(300)),(zeroblob(300))"}
+{"sql":"CREATE TRIGGER t1tr BEFORE UPDATE ON t1 BEGIN DELETE FROM t2; END"}
+{"sql":"UPDATE sqlite_schema SET rootpage=3 WHERE rowid=2"}
+{"sql":"PRAGMA writable_schema=RESET"}
+{"sql":"INSERT INTO t2 VALUES('active'),('boomer'),('atom'),('atomic'),\n         ('alpha channel backup abandon test aback boomer atom alpha active')"}
+{"sql":"UPDATE t1 SET b=zeroblob(299)"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<500\n  )\n  INSERT INTO t1 SELECT zeroblob(300) FROM s"}
+{"sql":"CREATE TRIGGER tr BEFORE UPDATE ON t1 BEGIN\n    DELETE FROM t2;\n  END"}
+{"sql":"UPDATE sqlite_schema SET rootpage = 137 WHERE name='t2'"}
+{"sql":"PRAGMA writable_schema = RESET"}
+{"sql":"UPDATE t1 SET x='hello world' WHERE rowid=1"}
+{"sql":"CREATE TABLE p1(x PRIMARY KEY)"}
+{"sql":"CREATE TABLE c1(y)"}
+{"sql":"PRAGMA schema_version = 0"}
+{"sql":"INSERT INTO c1 VALUES(1000)"}
+{"sql":"PRAGMA table_info = p1"}
+{"sql":"SELECT * FROM p1"}

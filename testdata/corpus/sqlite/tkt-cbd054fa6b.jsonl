@@ -1,0 +1,2 @@
+{"sql":"SELECT tbl,idx,string_agg(s(sample),' ') \n    FROM vvv \n    WHERE idx = 't1_x' \n    GROUP BY tbl,idx"}
+{"sql":"SELECT tbl,idx,group_concat(s(sample),' ') \n    FROM vvv \n    WHERE idx = 't1_x' \n    GROUP BY tbl,idx"}

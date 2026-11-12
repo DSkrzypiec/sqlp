@@ -1,0 +1,30 @@
+{"sql":"INSERT INTO t1 VALUES(1,  'one',   'I')"}
+{"sql":"INSERT INTO t1 VALUES(3,  NULL,    NULL)"}
+{"sql":"INSERT INTO t1 VALUES(5,  'five',  'V')"}
+{"sql":"INSERT INTO t1 VALUES(7,  'seven', 'VII')"}
+{"sql":"INSERT INTO t1 VALUES(9,  NULL,    NULL)"}
+{"sql":"INSERT INTO t1 VALUES(2,  'two',   'II')"}
+{"sql":"INSERT INTO t1 VALUES(4,  'four',  'IV')"}
+{"sql":"INSERT INTO t1 VALUES(6,  NULL,    NULL)"}
+{"sql":"INSERT INTO t1 VALUES(8,  'eight', 'VIII')"}
+{"sql":"INSERT INTO t1 VALUES(10, 'ten',   'X')"}
+{"sql":"INSERT INTO t2 VALUES(1,  'two',      'IV')"}
+{"sql":"INSERT INTO t2 VALUES(2,  'four',     'VIII')"}
+{"sql":"INSERT INTO t2 VALUES(3,  NULL,       NULL)"}
+{"sql":"INSERT INTO t2 VALUES(4,  'eight',    'XVI')"}
+{"sql":"INSERT INTO t2 VALUES(5,  'ten',      'XX')"}
+{"sql":"INSERT INTO t2 VALUES(6,  NULL,       NULL)"}
+{"sql":"INSERT INTO t2 VALUES(7,  'fourteen', 'XXVIII')"}
+{"sql":"INSERT INTO t2 VALUES(8,  'sixteen',  'XXXII')"}
+{"sql":"INSERT INTO t2 VALUES(9,  NULL,       NULL)"}
+{"sql":"INSERT INTO t2 VALUES(10, 'twenty',   'XL')"}
+{"sql":"CREATE INDEX i2 ON t2(d)"}
+{"sql":"CREATE VIEW v1 AS SELECT a FROM t1 UNION ALL SELECT d FROM t2"}
+{"sql":"CREATE VIEW v1 AS SELECT a FROM t1 UNION SELECT d FROM t2"}
+{"sql":"CREATE TABLE t61(a)"}
+{"sql":"CREATE TABLE t62(b)"}
+{"sql":"INSERT INTO t61 VALUES(111)"}
+{"sql":"INSERT INTO t62 VALUES(222)"}
+{"sql":"SELECT a FROM t61 WHERE 0 UNION SELECT b FROM t62"}
+{"sql":"SELECT a FROM t61 WHERE 0 UNION ALL SELECT b FROM t62"}
+{"sql":"SELECT a FROM t61 UNION SELECT b FROM t62 WHERE 0"}

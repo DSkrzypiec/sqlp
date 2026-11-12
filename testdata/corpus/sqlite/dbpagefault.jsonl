@@ -1,0 +1,9 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING sqlite_dbpage()"}
+{"sql":"PRAGMA journal_mode = off"}
+{"sql":"UPDATE t1 SET data=zeroblob(1024) WHERE pgno=1 AND schema='aux'"}
+{"sql":"CREATE TABLE x1(z, b)"}
+{"sql":"CREATE TRIGGER BEFORE INSERT ON x1 BEGIN\n    DELETE FROM sqlite_dbpage WHERE pgno=100;\n    UPDATE sqlite_dbpage SET data=null WHERE pgno=100;\n  END"}
+{"sql":"PRAGMA trusted_schema = 1"}
+{"sql":"INSERT INTO x1 DEFAULT VALUES"}
+{"sql":"INSERT INTO t2 VALUES('two')"}
+{"sql":"CREATE TABLE aux.x1(x)"}

@@ -1,0 +1,32 @@
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts4(x)"}
+{"sql":"INSERT INTO ft1 VALUES('aaa aaa')"}
+{"sql":"INSERT INTO ft1 VALUES('aaa bbb')"}
+{"sql":"INSERT INTO ft1 VALUES('bbb aaa')"}
+{"sql":"INSERT INTO ft1 VALUES('bbb bbb')"}
+{"sql":"CREATE TABLE t1(id, y)"}
+{"sql":"INSERT INTO t1 VALUES(1, 'aaa')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'bbb')"}
+{"sql":"SELECT docid FROM ft1, t1 WHERE ft1 MATCH y AND id=1"}
+{"sql":"SELECT docid FROM ft1, t1 WHERE ft1 MATCH y AND id=1 ORDER BY docid"}
+{"sql":"CREATE VIRTUAL TABLE ft2 USING fts4(x)"}
+{"sql":"CREATE VIRTUAL TABLE ft3 USING fts4(y)"}
+{"sql":"INSERT INTO ft2 VALUES('abc')"}
+{"sql":"INSERT INTO ft2 VALUES('def')"}
+{"sql":"INSERT INTO ft3 VALUES('ghi')"}
+{"sql":"INSERT INTO ft3 VALUES('abc')"}
+{"sql":"SELECT * FROM ft2, ft3 WHERE x MATCH y"}
+{"sql":"SELECT * FROM ft2, ft3 WHERE y MATCH x"}
+{"sql":"SELECT * FROM ft3, ft2 WHERE x MATCH y"}
+{"sql":"SELECT * FROM ft3, ft2 WHERE y MATCH x"}
+{"sql":"SELECT * FROM ft3, ft2 WHERE y MATCH x AND x MATCH y"}
+{"sql":"CREATE VIRTUAL TABLE vt USING fts3(x)"}
+{"sql":"INSERT INTO vt VALUES('abc')"}
+{"sql":"INSERT INTO vt VALUES('xyz')"}
+{"sql":"CREATE TABLE tt(a INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO tt VALUES(1), (2)"}
+{"sql":"SELECT * FROM tt LEFT JOIN (\n    SELECT rowid AS rrr, * FROM vt WHERE vt MATCH 'abc'\n  ) ON tt.a = rrr"}
+{"sql":"SELECT * FROM tt LEFT JOIN vt ON (vt MATCH 'abc')"}
+{"sql":"CREATE VIRTUAL TABLE ft4 USING fts3(x)"}
+{"sql":"CREATE TABLE t4(y, z)"}
+{"sql":"CREATE INDEX t4y ON t1(y)"}
+{"sql":"SELECT * FROM t4 LEFT JOIN (\n      SELECT docid, * FROM ft4 WHERE ft4 MATCH ?\n  ) AS rr ON t4.rowid=rr.docid \n  WHERE t4.y = ?"}

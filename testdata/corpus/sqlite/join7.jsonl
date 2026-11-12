@@ -1,0 +1,28 @@
+{"sql":"SELECT b, d FROM t1 FULL OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT a, c FROM t1 FULL OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT * FROM t1 FULL OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c\n     WHERE b=c\n     ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c\n     WHERE b>0\n     ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c\n     WHERE b>0 OR b IS NULL\n     ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c AND b>3 AND c>4\n     ORDER BY coalesce(b,c,0)"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c AND b>3 WHERE c>4\n     ORDER BY coalesce(b,c,0)"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c WHERE b>3 AND c>4\n     ORDER BY coalesce(b,c,0)"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c WHERE b>3 OR c>4\n     ORDER BY coalesce(b,c,0)"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c AND (b>3 OR c>4)\n     ORDER BY coalesce(b,c,0)"}
+{"sql":"SELECT * FROM t1 RIGHT OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT * FROM dual JOIN t1 ON true RIGHT OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* \n      FROM t2 LEFT JOIN (dual JOIN t1 ON true) ON b=c ORDER BY +b"}
+{"sql":"SELECT * FROM dual CROSS JOIN t1 RIGHT OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT dual.*, t1.*, t2.*\n      FROM t1 CROSS JOIN dual RIGHT OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT * FROM t1 LEFT OUTER JOIN t2 ON b=c ORDER BY +b"}
+{"sql":"SELECT * FROM t1 FULL OUTER JOIN t2 ON b=c AND a=1 ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c AND a=1 ORDER BY +b"}
+{"sql":"SELECT * FROM t1 FULL OUTER JOIN t2 ON b=c WHERE a=1 ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c WHERE a=1 ORDER BY +b"}
+{"sql":"SELECT * FROM t1 FULL OUTER JOIN t2 ON b=c\n     WHERE a=1 OR a IS NULL ORDER BY +b"}
+{"sql":"SELECT t1.*, t2.* FROM t2 FULL OUTER JOIN t1 ON b=c\n     WHERE a=1 OR a IS NULL ORDER BY +b"}
+{"sql":"SELECT * FROM t1 FULL OUTER JOIN t2 ON b=c WHERE a IS NULL ORDER BY +d"}
+{"sql":"SELECT * FROM t1 FULL OUTER JOIN t2 ON b=c AND d<=0 ORDER BY +b, +d"}
+{"sql":"SELECT a, b, c, d\n      FROM t2 FULL OUTER JOIN t1 ON b=c AND d<=0 ORDER BY +b, +d"}
+{"sql":"SELECT a, b, c, d\n      FROM t2 FULL OUTER JOIN t1 ON b=c AND d<=0\n     ORDER BY +b, +d LIMIT 2 OFFSET 2"}

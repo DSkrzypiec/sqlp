@@ -1,0 +1,817 @@
+{"sql":"DROP ROLE IF EXISTS regress_priv_group1","shape":"DROP ROLE IF EXISTS regress_priv_group1;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_group2","shape":"DROP ROLE IF EXISTS regress_priv_group2;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user1","shape":"DROP ROLE IF EXISTS regress_priv_user1;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user2","shape":"DROP ROLE IF EXISTS regress_priv_user2;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user3","shape":"DROP ROLE IF EXISTS regress_priv_user3;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user4","shape":"DROP ROLE IF EXISTS regress_priv_user4;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user5","shape":"DROP ROLE IF EXISTS regress_priv_user5;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user6","shape":"DROP ROLE IF EXISTS regress_priv_user6;"}
+{"sql":"DROP ROLE IF EXISTS regress_priv_user7","shape":"DROP ROLE IF EXISTS regress_priv_user7;"}
+{"sql":"SELECT lo_unlink(oid) FROM pg_largeobject_metadata WHERE oid >= 1000 AND oid < 3000 ORDER BY oid","shape":"SELECT lo_unlink(oid) FROM pg_largeobject_metadata WHERE (oid >= 1000) AND (oid < 3000) ORDER BY oid;"}
+{"sql":"CREATE USER regress_priv_user1"}
+{"sql":"CREATE USER regress_priv_user2"}
+{"sql":"CREATE USER regress_priv_user3"}
+{"sql":"CREATE USER regress_priv_user4"}
+{"sql":"CREATE USER regress_priv_user5"}
+{"sql":"CREATE USER regress_priv_user6"}
+{"sql":"CREATE USER regress_priv_user7"}
+{"sql":"CREATE USER regress_priv_user8"}
+{"sql":"CREATE USER regress_priv_user9"}
+{"sql":"CREATE USER regress_priv_user10"}
+{"sql":"CREATE ROLE regress_priv_role"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user2 WITH ADMIN OPTION","shape":"GRANT regress_priv_user1 TO regress_priv_user2 WITH ADMIN OPTION;"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user3 WITH ADMIN OPTION GRANTED BY regress_priv_user2","shape":"GRANT regress_priv_user1 TO regress_priv_user3 WITH ADMIN OPTION GRANTED BY regress_priv_user2;"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user2 WITH ADMIN OPTION GRANTED BY regress_priv_user3","shape":"GRANT regress_priv_user1 TO regress_priv_user2 WITH ADMIN OPTION GRANTED BY regress_priv_user3;"}
+{"sql":"REVOKE ADMIN OPTION FOR regress_priv_user1 FROM regress_priv_user2","shape":"REVOKE ADMIN OPTION FOR regress_priv_user1 FROM regress_priv_user2;"}
+{"sql":"REVOKE regress_priv_user1 FROM regress_priv_user2","shape":"REVOKE regress_priv_user1 FROM regress_priv_user2;"}
+{"sql":"SELECT member::regrole, admin_option FROM pg_auth_members WHERE roleid = 'regress_priv_user1'::regrole","shape":"SELECT member::regrole, admin_option FROM pg_auth_members WHERE roleid = 'regress_priv_user1'::regrole;"}
+{"sql":"REVOKE ADMIN OPTION FOR regress_priv_user1 FROM regress_priv_user2 CASCADE","shape":"REVOKE ADMIN OPTION FOR regress_priv_user1 FROM regress_priv_user2 CASCADE;"}
+{"sql":"REVOKE regress_priv_user1 FROM regress_priv_user2 CASCADE","shape":"REVOKE regress_priv_user1 FROM regress_priv_user2 CASCADE;"}
+{"sql":"GRANT regress_priv_user2 TO regress_priv_user3","shape":"GRANT regress_priv_user2 TO regress_priv_user3;"}
+{"sql":"SET ROLE regress_priv_user3"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user4","shape":"GRANT regress_priv_user1 TO regress_priv_user4;"}
+{"sql":"SELECT grantor::regrole FROM pg_auth_members WHERE roleid = 'regress_priv_user1'::regrole and member = 'regress_priv_user4'::regrole","shape":"SELECT grantor::regrole FROM pg_auth_members WHERE (roleid = 'regress_priv_user1'::regrole) AND (member = 'regress_priv_user4'::regrole);"}
+{"sql":"REVOKE regress_priv_user2 FROM regress_priv_user3","shape":"REVOKE regress_priv_user2 FROM regress_priv_user3;"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user3 GRANTED BY regress_priv_user2","shape":"GRANT regress_priv_user1 TO regress_priv_user3 GRANTED BY regress_priv_user2;"}
+{"sql":"DROP ROLE regress_priv_user2","shape":"DROP ROLE regress_priv_user2;"}
+{"sql":"REASSIGN OWNED BY regress_priv_user2 TO regress_priv_user4","shape":"REASSIGN OWNED BY regress_priv_user2 TO regress_priv_user4;"}
+{"sql":"DROP OWNED BY regress_priv_user2"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user3 WITH ADMIN OPTION","shape":"GRANT regress_priv_user1 TO regress_priv_user3 WITH ADMIN OPTION;"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user4 GRANTED BY regress_priv_user3","shape":"GRANT regress_priv_user1 TO regress_priv_user4 GRANTED BY regress_priv_user3;"}
+{"sql":"DROP ROLE regress_priv_user3","shape":"DROP ROLE regress_priv_user3;"}
+{"sql":"DROP ROLE regress_priv_user4","shape":"DROP ROLE regress_priv_user4;"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user5 WITH ADMIN OPTION","shape":"GRANT regress_priv_user1 TO regress_priv_user5 WITH ADMIN OPTION;"}
+{"sql":"GRANT regress_priv_user1 TO regress_priv_user6 GRANTED BY regress_priv_user5","shape":"GRANT regress_priv_user1 TO regress_priv_user6 GRANTED BY regress_priv_user5;"}
+{"sql":"DROP ROLE regress_priv_user5","shape":"DROP ROLE regress_priv_user5;"}
+{"sql":"DROP ROLE regress_priv_user1, regress_priv_user5","shape":"DROP ROLE regress_priv_user1, regress_priv_user5;"}
+{"sql":"GRANT pg_read_all_data TO regress_priv_user6","shape":"GRANT pg_read_all_data TO regress_priv_user6;"}
+{"sql":"GRANT pg_write_all_data TO regress_priv_user7","shape":"GRANT pg_write_all_data TO regress_priv_user7;"}
+{"sql":"GRANT pg_read_all_settings TO regress_priv_user8 WITH ADMIN OPTION","shape":"GRANT pg_read_all_settings TO regress_priv_user8 WITH ADMIN OPTION;"}
+{"sql":"GRANT regress_priv_user9 TO regress_priv_user8","shape":"GRANT regress_priv_user9 TO regress_priv_user8;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user8"}
+{"sql":"GRANT pg_read_all_settings TO regress_priv_user9 WITH ADMIN OPTION","shape":"GRANT pg_read_all_settings TO regress_priv_user9 WITH ADMIN OPTION;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user9"}
+{"sql":"GRANT pg_read_all_settings TO regress_priv_user10","shape":"GRANT pg_read_all_settings TO regress_priv_user10;"}
+{"sql":"REVOKE pg_read_all_settings FROM regress_priv_user10 GRANTED BY regress_priv_user9","shape":"REVOKE pg_read_all_settings FROM regress_priv_user10 GRANTED BY regress_priv_user9;"}
+{"sql":"REVOKE ADMIN OPTION FOR pg_read_all_settings FROM regress_priv_user9","shape":"REVOKE ADMIN OPTION FOR pg_read_all_settings FROM regress_priv_user9;"}
+{"sql":"REVOKE pg_read_all_settings FROM regress_priv_user9","shape":"REVOKE pg_read_all_settings FROM regress_priv_user9;"}
+{"sql":"REVOKE regress_priv_user9 FROM regress_priv_user8","shape":"REVOKE regress_priv_user9 FROM regress_priv_user8;"}
+{"sql":"REVOKE ADMIN OPTION FOR pg_read_all_settings FROM regress_priv_user8","shape":"REVOKE ADMIN OPTION FOR pg_read_all_settings FROM regress_priv_user8;"}
+{"sql":"SET ROLE pg_read_all_settings"}
+{"sql":"REVOKE SET OPTION FOR pg_read_all_settings FROM regress_priv_user8","shape":"REVOKE SET OPTION FOR pg_read_all_settings FROM regress_priv_user8;"}
+{"sql":"GRANT pg_read_all_stats TO regress_priv_user8 WITH SET FALSE","shape":"GRANT pg_read_all_stats TO regress_priv_user8 WITH SET FALSE;"}
+{"sql":"SET ROLE pg_read_all_stats"}
+{"sql":"SET ROLE regress_priv_user9"}
+{"sql":"SET debug_parallel_query = 0","shape":"SET debug_parallel_query TO 0;"}
+{"sql":"SELECT session_user, current_role, current_user, current_setting('role') as role","shape":"SELECT session_user, current_role, current_user, current_setting('role') AS role;"}
+{"sql":"SET debug_parallel_query = 1","shape":"SET debug_parallel_query TO 1;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user10"}
+{"sql":"SELECT session_user = current_role as c_r_ok, session_user = current_user as c_u_ok, current_setting('role') as role","shape":"SELECT session_user = current_role AS c_r_ok, session_user = current_user AS c_u_ok, current_setting('role') AS role;"}
+{"sql":"RESET debug_parallel_query","shape":"RESET debug_parallel_query;"}
+{"sql":"REVOKE pg_read_all_settings FROM regress_priv_user8","shape":"REVOKE pg_read_all_settings FROM regress_priv_user8;"}
+{"sql":"DROP USER regress_priv_user10","shape":"DROP USER regress_priv_user10;"}
+{"sql":"DROP USER regress_priv_user9","shape":"DROP USER regress_priv_user9;"}
+{"sql":"DROP USER regress_priv_user8","shape":"DROP USER regress_priv_user8;"}
+{"sql":"CREATE GROUP regress_priv_group1"}
+{"sql":"CREATE GROUP regress_priv_group2 WITH ADMIN regress_priv_user1 USER regress_priv_user2"}
+{"sql":"ALTER GROUP regress_priv_group1 ADD USER regress_priv_user4"}
+{"sql":"GRANT regress_priv_group2 TO regress_priv_user2 GRANTED BY regress_priv_user1","shape":"GRANT regress_priv_group2 TO regress_priv_user2 GRANTED BY regress_priv_user1;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user3"}
+{"sql":"ALTER GROUP regress_priv_group2 ADD USER regress_priv_user2"}
+{"sql":"ALTER GROUP regress_priv_group2 DROP USER regress_priv_user2"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user1"}
+{"sql":"ALTER USER regress_priv_user2 PASSWORD 'verysecret'"}
+{"sql":"REVOKE ADMIN OPTION FOR regress_priv_group2 FROM regress_priv_user1","shape":"REVOKE ADMIN OPTION FOR regress_priv_group2 FROM regress_priv_user1;"}
+{"sql":"GRANT regress_priv_group2 TO regress_priv_user4 WITH ADMIN OPTION","shape":"GRANT regress_priv_group2 TO regress_priv_user4 WITH ADMIN OPTION;"}
+{"sql":"CREATE FUNCTION leak(integer,integer) RETURNS boolean\n  AS 'int4lt'\n  LANGUAGE internal IMMUTABLE STRICT","shape":"CREATE FUNCTION leak(integer, integer) RETURNS boolean AS 'int4lt' LANGUAGE internal IMMUTABLE STRICT;"}
+{"sql":"ALTER FUNCTION leak(integer,integer) OWNER TO regress_priv_user1"}
+{"sql":"GRANT regress_priv_role TO regress_priv_user1 WITH ADMIN OPTION GRANTED BY regress_priv_role","shape":"GRANT regress_priv_role TO regress_priv_user1 WITH ADMIN OPTION GRANTED BY regress_priv_role;"}
+{"sql":"GRANT regress_priv_role TO regress_priv_user1 WITH ADMIN OPTION GRANTED BY CURRENT_ROLE","shape":"GRANT regress_priv_role TO regress_priv_user1 WITH ADMIN OPTION GRANTED BY CURRENT_ROLE;"}
+{"sql":"REVOKE ADMIN OPTION FOR regress_priv_role FROM regress_priv_user1 GRANTED BY foo","shape":"REVOKE ADMIN OPTION FOR regress_priv_role FROM regress_priv_user1 GRANTED BY foo;"}
+{"sql":"REVOKE ADMIN OPTION FOR regress_priv_role FROM regress_priv_user1 GRANTED BY regress_priv_user2","shape":"REVOKE ADMIN OPTION FOR regress_priv_role FROM regress_priv_user1 GRANTED BY regress_priv_user2;"}
+{"sql":"REVOKE ADMIN OPTION FOR regress_priv_role FROM regress_priv_user1 GRANTED BY CURRENT_USER","shape":"REVOKE ADMIN OPTION FOR regress_priv_role FROM regress_priv_user1 GRANTED BY CURRENT_USER;"}
+{"sql":"REVOKE regress_priv_role FROM regress_priv_user1 GRANTED BY CURRENT_ROLE","shape":"REVOKE regress_priv_role FROM regress_priv_user1 GRANTED BY CURRENT_ROLE;"}
+{"sql":"DROP ROLE regress_priv_role","shape":"DROP ROLE regress_priv_role;"}
+{"sql":"SELECT session_user, current_user","shape":"SELECT session_user, current_user;"}
+{"sql":"CREATE TABLE atest1 ( a int, b text )","shape":"CREATE TABLE atest1 (a int, b text);"}
+{"sql":"SELECT * FROM atest1","shape":"SELECT * FROM atest1;"}
+{"sql":"INSERT INTO atest1 VALUES (1, 'one')","shape":"INSERT INTO atest1 VALUES (1, 'one');"}
+{"sql":"DELETE FROM atest1","shape":"DELETE FROM atest1;"}
+{"sql":"UPDATE atest1 SET a = 1 WHERE b = 'blech'","shape":"UPDATE atest1 SET a = 1 WHERE b = 'blech';"}
+{"sql":"TRUNCATE atest1","shape":"TRUNCATE TABLE atest1;"}
+{"sql":"LOCK atest1 IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE atest1 IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"REVOKE ALL ON atest1 FROM PUBLIC","shape":"REVOKE ALL PRIVILEGES ON atest1 FROM PUBLIC;"}
+{"sql":"GRANT ALL ON atest1 TO regress_priv_user2","shape":"GRANT ALL PRIVILEGES ON atest1 TO regress_priv_user2;"}
+{"sql":"GRANT SELECT ON atest1 TO regress_priv_user3, regress_priv_user4","shape":"GRANT SELECT ON atest1 TO regress_priv_user3, regress_priv_user4;"}
+{"sql":"CREATE TABLE atest2 (col1 varchar(10), col2 boolean)","shape":"CREATE TABLE atest2 (col1 varchar(10), col2 boolean);"}
+{"sql":"GRANT SELECT ON atest2 TO regress_priv_user2","shape":"GRANT SELECT ON atest2 TO regress_priv_user2;"}
+{"sql":"GRANT UPDATE ON atest2 TO regress_priv_user3","shape":"GRANT UPDATE ON atest2 TO regress_priv_user3;"}
+{"sql":"GRANT INSERT ON atest2 TO regress_priv_user4 GRANTED BY CURRENT_USER","shape":"GRANT INSERT ON atest2 TO regress_priv_user4 GRANTED BY CURRENT_USER;"}
+{"sql":"GRANT TRUNCATE ON atest2 TO regress_priv_user5 GRANTED BY CURRENT_ROLE","shape":"GRANT TRUNCATE ON atest2 TO regress_priv_user5 GRANTED BY CURRENT_ROLE;"}
+{"sql":"GRANT TRUNCATE ON atest2 TO regress_priv_user4 GRANTED BY regress_priv_user5","shape":"GRANT TRUNCATE ON atest2 TO regress_priv_user4 GRANTED BY regress_priv_user5;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user2"}
+{"sql":"SELECT * FROM atest2","shape":"SELECT * FROM atest2;"}
+{"sql":"INSERT INTO atest1 VALUES (2, 'two')","shape":"INSERT INTO atest1 VALUES (2, 'two');"}
+{"sql":"INSERT INTO atest2 VALUES ('foo', true)","shape":"INSERT INTO atest2 VALUES ('foo', TRUE);"}
+{"sql":"INSERT INTO atest1 SELECT 1, b FROM atest1","shape":"INSERT INTO atest1 SELECT 1, b FROM atest1;"}
+{"sql":"UPDATE atest1 SET a = 1 WHERE a = 2","shape":"UPDATE atest1 SET a = 1 WHERE a = 2;"}
+{"sql":"UPDATE atest2 SET col2 = NOT col2","shape":"UPDATE atest2 SET col2 = NOT col2;"}
+{"sql":"SELECT * FROM atest1 FOR UPDATE","shape":"SELECT * FROM atest1 FOR UPDATE;"}
+{"sql":"SELECT * FROM atest2 FOR UPDATE","shape":"SELECT * FROM atest2 FOR UPDATE;"}
+{"sql":"DELETE FROM atest2","shape":"DELETE FROM atest2;"}
+{"sql":"TRUNCATE atest2","shape":"TRUNCATE TABLE atest2;"}
+{"sql":"LOCK atest2 IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE atest2 IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"COPY atest2 FROM stdin","shape":"COPY atest2 FROM STDIN;"}
+{"sql":"CREATE TABLE atest12 as\n  SELECT x AS a, 10001 - x AS b FROM generate_series(1,10000) x","shape":"CREATE TABLE atest12 AS SELECT x AS a, 10001 - x AS b FROM generate_series(1, 10000) AS x;"}
+{"sql":"CREATE INDEX ON atest12 (a)","shape":"CREATE INDEX ON atest12 (a);"}
+{"sql":"CREATE INDEX ON atest12 (abs(a))","shape":"CREATE INDEX ON atest12 (abs(a));"}
+{"sql":"ALTER TABLE atest12 SET (autovacuum_enabled = off)"}
+{"sql":"SET default_statistics_target = 10000","shape":"SET default_statistics_target TO 10000;"}
+{"sql":"VACUUM ANALYZE atest12","shape":"VACUUM ANALYZE atest12;"}
+{"sql":"RESET default_statistics_target","shape":"RESET default_statistics_target;"}
+{"sql":"CREATE OPERATOR <<< (procedure = leak, leftarg = integer, rightarg = integer,\n                     restrict = scalarltsel)"}
+{"sql":"CREATE VIEW atest12v AS\n  SELECT * FROM atest12 WHERE b <<< 5","shape":"CREATE VIEW atest12v AS SELECT * FROM atest12 WHERE b <<< 5;"}
+{"sql":"CREATE VIEW atest12sbv WITH (security_barrier=true) AS\n  SELECT * FROM atest12 WHERE b <<< 5","shape":"CREATE VIEW atest12sbv WITH (security_barrier = TRUE) AS SELECT * FROM atest12 WHERE b <<< 5;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12v x, atest12v y WHERE x.a = y.b","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12v AS x, atest12v AS y WHERE x.a = y.b;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12 x, atest12 y\n  WHERE x.a = y.b and abs(y.a) <<< 5","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12 AS x, atest12 AS y WHERE (x.a = y.b) AND (abs(y.a) <<< 5);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12sbv x, atest12sbv y WHERE x.a = y.b","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12sbv AS x, atest12sbv AS y WHERE x.a = y.b;"}
+{"sql":"CREATE FUNCTION leak2(integer,integer) RETURNS boolean\n  AS $$begin raise notice 'leak % %', $1, $2; return $1 > $2; end$$\n  LANGUAGE plpgsql immutable","shape":"CREATE FUNCTION leak2(integer, integer) RETURNS boolean AS 'begin raise notice ''leak % %'', $1, $2; return $1 > $2; end' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"CREATE OPERATOR >>> (procedure = leak2, leftarg = integer, rightarg = integer,\n                     restrict = scalargtsel)"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12 WHERE a >>> 0","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12 WHERE a >>> 0;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12v WHERE a >>> 0","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12v WHERE a >>> 0;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12sbv WHERE a >>> 0","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12sbv WHERE a >>> 0;"}
+{"sql":"GRANT SELECT ON atest12v TO PUBLIC","shape":"GRANT SELECT ON atest12v TO PUBLIC;"}
+{"sql":"GRANT SELECT ON atest12sbv TO PUBLIC","shape":"GRANT SELECT ON atest12sbv TO PUBLIC;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12v x, atest12v y\n  WHERE x.a = y.b and abs(y.a) <<< 5","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12v AS x, atest12v AS y WHERE (x.a = y.b) AND (abs(y.a) <<< 5);"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT * FROM atest12sbv x, atest12sbv y\n  WHERE x.a = y.b and abs(y.a) <<< 5","shape":"EXPLAIN (COSTS OFF) SELECT * FROM atest12sbv AS x, atest12sbv AS y WHERE (x.a = y.b) AND (abs(y.a) <<< 5);"}
+{"sql":"GRANT SELECT (a, b) ON atest12 TO PUBLIC","shape":"GRANT SELECT (a, b) ON atest12 TO PUBLIC;"}
+{"sql":"DROP FUNCTION leak2(integer, integer) CASCADE"}
+{"sql":"CREATE TABLE atest3 (one int, two int, three int)","shape":"CREATE TABLE atest3 (one int, two int, three int);"}
+{"sql":"GRANT DELETE ON atest3 TO GROUP regress_priv_group2","shape":"GRANT DELETE ON atest3 TO regress_priv_group2;"}
+{"sql":"SELECT * FROM atest3","shape":"SELECT * FROM atest3;"}
+{"sql":"DELETE FROM atest3","shape":"DELETE FROM atest3;"}
+{"sql":"ALTER ROLE regress_priv_user1 NOINHERIT"}
+{"sql":"GRANT regress_priv_group2 TO regress_priv_user1 WITH INHERIT FALSE","shape":"GRANT regress_priv_group2 TO regress_priv_user1 WITH INHERIT FALSE;"}
+{"sql":"REVOKE INHERIT OPTION FOR regress_priv_group2 FROM regress_priv_user1","shape":"REVOKE INHERIT OPTION FOR regress_priv_group2 FROM regress_priv_user1;"}
+{"sql":"CREATE VIEW atestv1 AS SELECT * FROM atest1","shape":"CREATE VIEW atestv1 AS SELECT * FROM atest1;"}
+{"sql":"CREATE VIEW atestv2 AS SELECT * FROM atest2","shape":"CREATE VIEW atestv2 AS SELECT * FROM atest2;"}
+{"sql":"CREATE VIEW atestv3 AS SELECT * FROM atest3","shape":"CREATE VIEW atestv3 AS SELECT * FROM atest3;"}
+{"sql":"CREATE VIEW atestv0 AS SELECT 0 as x WHERE false","shape":"CREATE VIEW atestv0 AS SELECT 0 AS x WHERE FALSE;"}
+{"sql":"SELECT * FROM atestv1","shape":"SELECT * FROM atestv1;"}
+{"sql":"SELECT * FROM atestv2","shape":"SELECT * FROM atestv2;"}
+{"sql":"GRANT SELECT ON atestv1, atestv3 TO regress_priv_user4","shape":"GRANT SELECT ON atestv1, atestv3 TO regress_priv_user4;"}
+{"sql":"GRANT SELECT ON atestv2 TO regress_priv_user2","shape":"GRANT SELECT ON atestv2 TO regress_priv_user2;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user4"}
+{"sql":"SELECT * FROM atestv3","shape":"SELECT * FROM atestv3;"}
+{"sql":"SELECT * FROM atestv0","shape":"SELECT * FROM atestv0;"}
+{"sql":"select * from\n  ((select a.q1 as x from int8_tbl a offset 0)\n   union all\n   (select b.q2 as x from int8_tbl b offset 0)) ss\nwhere false","shape":"SELECT * FROM ((SELECT a.q1 AS x FROM int8_tbl AS a OFFSET 0) UNION ALL (SELECT b.q2 AS x FROM int8_tbl AS b OFFSET 0)) AS ss WHERE FALSE;"}
+{"sql":"set constraint_exclusion = on","shape":"SET constraint_exclusion TO on;"}
+{"sql":"select * from\n  ((select a.q1 as x, random() from int8_tbl a where q1 > 0)\n   union all\n   (select b.q2 as x, random() from int8_tbl b where q2 > 0)) ss\nwhere x < 0","shape":"SELECT * FROM ((SELECT a.q1 AS x, random() FROM int8_tbl AS a WHERE q1 > 0) UNION ALL (SELECT b.q2 AS x, random() FROM int8_tbl AS b WHERE q2 > 0)) AS ss WHERE x < 0;"}
+{"sql":"CREATE VIEW atestv4 AS SELECT * FROM atestv3","shape":"CREATE VIEW atestv4 AS SELECT * FROM atestv3;"}
+{"sql":"SELECT * FROM atestv4","shape":"SELECT * FROM atestv4;"}
+{"sql":"GRANT SELECT ON atestv4 TO regress_priv_user2","shape":"GRANT SELECT ON atestv4 TO regress_priv_user2;"}
+{"sql":"CREATE TABLE atest5 (one int, two int unique, three int, four int unique)","shape":"CREATE TABLE atest5 (one int, two int UNIQUE, three int, four int UNIQUE);"}
+{"sql":"CREATE TABLE atest6 (one int, two int, blue int)","shape":"CREATE TABLE atest6 (one int, two int, blue int);"}
+{"sql":"GRANT SELECT (one), INSERT (two), UPDATE (three) ON atest5 TO regress_priv_user4","shape":"GRANT SELECT (one), INSERT (two), UPDATE (three) ON atest5 TO regress_priv_user4;"}
+{"sql":"GRANT ALL (one) ON atest5 TO regress_priv_user3","shape":"GRANT ALL PRIVILEGES (one) ON atest5 TO regress_priv_user3;"}
+{"sql":"INSERT INTO atest5 VALUES (1,2,3)","shape":"INSERT INTO atest5 VALUES (1, 2, 3);"}
+{"sql":"SELECT * FROM atest5","shape":"SELECT * FROM atest5;"}
+{"sql":"SELECT one FROM atest5","shape":"SELECT one FROM atest5;"}
+{"sql":"COPY atest5 (one) TO stdout","shape":"COPY atest5 (one) TO STDOUT;"}
+{"sql":"SELECT two FROM atest5","shape":"SELECT two FROM atest5;"}
+{"sql":"COPY atest5 (two) TO stdout","shape":"COPY atest5 (two) TO STDOUT;"}
+{"sql":"SELECT atest5 FROM atest5","shape":"SELECT atest5 FROM atest5;"}
+{"sql":"COPY atest5 (one,two) TO stdout","shape":"COPY atest5 (one, two) TO STDOUT;"}
+{"sql":"SELECT 1 FROM atest5","shape":"SELECT 1 FROM atest5;"}
+{"sql":"SELECT 1 FROM atest5 a JOIN atest5 b USING (one)","shape":"SELECT 1 FROM atest5 AS a JOIN atest5 AS b USING (one);"}
+{"sql":"SELECT 1 FROM atest5 a JOIN atest5 b USING (two)","shape":"SELECT 1 FROM atest5 AS a JOIN atest5 AS b USING (two);"}
+{"sql":"SELECT 1 FROM atest5 a NATURAL JOIN atest5 b","shape":"SELECT 1 FROM atest5 AS a NATURAL JOIN atest5 AS b;"}
+{"sql":"SELECT * FROM (atest5 a JOIN atest5 b USING (one)) j","shape":"SELECT * FROM (atest5 AS a JOIN atest5 AS b USING (one)) AS j;"}
+{"sql":"SELECT j.* FROM (atest5 a JOIN atest5 b USING (one)) j","shape":"SELECT j.* FROM (atest5 AS a JOIN atest5 AS b USING (one)) AS j;"}
+{"sql":"SELECT (j.*) IS NULL FROM (atest5 a JOIN atest5 b USING (one)) j","shape":"SELECT (j.*) IS NULL FROM (atest5 AS a JOIN atest5 AS b USING (one)) AS j;"}
+{"sql":"SELECT one FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one)) j","shape":"SELECT one FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one)) AS j;"}
+{"sql":"SELECT j.one FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one)) j","shape":"SELECT j.one FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one)) AS j;"}
+{"sql":"SELECT two FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one)) j","shape":"SELECT two FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one)) AS j;"}
+{"sql":"SELECT j.two FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one)) j","shape":"SELECT j.two FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one)) AS j;"}
+{"sql":"SELECT y FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one)) j","shape":"SELECT y FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one)) AS j;"}
+{"sql":"SELECT j.y FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one)) j","shape":"SELECT j.y FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one)) AS j;"}
+{"sql":"SELECT * FROM (atest5 a JOIN atest5 b USING (one))","shape":"SELECT * FROM (atest5 AS a JOIN atest5 AS b USING (one));"}
+{"sql":"SELECT a.* FROM (atest5 a JOIN atest5 b USING (one))","shape":"SELECT a.* FROM (atest5 AS a JOIN atest5 AS b USING (one));"}
+{"sql":"SELECT (a.*) IS NULL FROM (atest5 a JOIN atest5 b USING (one))","shape":"SELECT (a.*) IS NULL FROM (atest5 AS a JOIN atest5 AS b USING (one));"}
+{"sql":"SELECT two FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT two FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT a.two FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT a.two FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT y FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT y FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT b.y FROM (atest5 a JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT b.y FROM (atest5 AS a JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT y FROM (atest5 a LEFT JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT y FROM (atest5 AS a LEFT JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT b.y FROM (atest5 a LEFT JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT b.y FROM (atest5 AS a LEFT JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT y FROM (atest5 a FULL JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT y FROM (atest5 AS a FULL JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT b.y FROM (atest5 a FULL JOIN atest5 b(one,x,y,z) USING (one))","shape":"SELECT b.y FROM (atest5 AS a FULL JOIN atest5 AS b(one, x, y, z) USING (one));"}
+{"sql":"SELECT 1 FROM atest5 WHERE two = 2","shape":"SELECT 1 FROM atest5 WHERE two = 2;"}
+{"sql":"SELECT * FROM atest1, atest5","shape":"SELECT * FROM atest1, atest5;"}
+{"sql":"SELECT atest1.* FROM atest1, atest5","shape":"SELECT atest1.* FROM atest1, atest5;"}
+{"sql":"SELECT atest1.*,atest5.one FROM atest1, atest5","shape":"SELECT atest1.*, atest5.one FROM atest1, atest5;"}
+{"sql":"SELECT atest1.*,atest5.one FROM atest1 JOIN atest5 ON (atest1.a = atest5.two)","shape":"SELECT atest1.*, atest5.one FROM atest1 JOIN atest5 ON (atest1.a = atest5.two);"}
+{"sql":"SELECT atest1.*,atest5.one FROM atest1 JOIN atest5 ON (atest1.a = atest5.one)","shape":"SELECT atest1.*, atest5.one FROM atest1 JOIN atest5 ON (atest1.a = atest5.one);"}
+{"sql":"SELECT one, two FROM atest5","shape":"SELECT one, two FROM atest5;"}
+{"sql":"GRANT SELECT (one,two) ON atest6 TO regress_priv_user4","shape":"GRANT SELECT (one, two) ON atest6 TO regress_priv_user4;"}
+{"sql":"SELECT one, two FROM atest5 NATURAL JOIN atest6","shape":"SELECT one, two FROM atest5 NATURAL JOIN atest6;"}
+{"sql":"GRANT SELECT (two) ON atest5 TO regress_priv_user4","shape":"GRANT SELECT (two) ON atest5 TO regress_priv_user4;"}
+{"sql":"INSERT INTO atest5 (two) VALUES (3)","shape":"INSERT INTO atest5 (two) VALUES (3);"}
+{"sql":"COPY atest5 FROM stdin","shape":"COPY atest5 FROM STDIN;"}
+{"sql":"INSERT INTO atest5 (three) VALUES (4)","shape":"INSERT INTO atest5 (three) VALUES (4);"}
+{"sql":"INSERT INTO atest5 VALUES (5,5,5)","shape":"INSERT INTO atest5 VALUES (5, 5, 5);"}
+{"sql":"UPDATE atest5 SET three = 10","shape":"UPDATE atest5 SET three = 10;"}
+{"sql":"UPDATE atest5 SET one = 8","shape":"UPDATE atest5 SET one = 8;"}
+{"sql":"UPDATE atest5 SET three = 5, one = 2","shape":"UPDATE atest5 SET three = 5, one = 2;"}
+{"sql":"INSERT INTO atest5(two) VALUES (6) ON CONFLICT (two) DO UPDATE set three = 10","shape":"INSERT INTO atest5 (two) VALUES (6) ON CONFLICT (two) DO UPDATE SET three = 10;"}
+{"sql":"INSERT INTO atest5(two) VALUES (6) ON CONFLICT (two) DO UPDATE set three = 10 RETURNING atest5.three","shape":"INSERT INTO atest5 (two) VALUES (6) ON CONFLICT (two) DO UPDATE SET three = 10 RETURNING atest5.three;"}
+{"sql":"INSERT INTO atest5(two) VALUES (6) ON CONFLICT (two) DO UPDATE set three = 10 RETURNING atest5.one","shape":"INSERT INTO atest5 (two) VALUES (6) ON CONFLICT (two) DO UPDATE SET three = 10 RETURNING atest5.one;"}
+{"sql":"INSERT INTO atest5(two) VALUES (6) ON CONFLICT (two) DO UPDATE set three = EXCLUDED.one","shape":"INSERT INTO atest5 (two) VALUES (6) ON CONFLICT (two) DO UPDATE SET three = EXCLUDED.one;"}
+{"sql":"INSERT INTO atest5(two) VALUES (6) ON CONFLICT (two) DO UPDATE set three = EXCLUDED.three","shape":"INSERT INTO atest5 (two) VALUES (6) ON CONFLICT (two) DO UPDATE SET three = EXCLUDED.three;"}
+{"sql":"INSERT INTO atest5(two) VALUES (6) ON CONFLICT (two) DO UPDATE set one = 8","shape":"INSERT INTO atest5 (two) VALUES (6) ON CONFLICT (two) DO UPDATE SET one = 8;"}
+{"sql":"INSERT INTO atest5(three) VALUES (4) ON CONFLICT (two) DO UPDATE set three = 10","shape":"INSERT INTO atest5 (three) VALUES (4) ON CONFLICT (two) DO UPDATE SET three = 10;"}
+{"sql":"INSERT INTO atest5(four) VALUES (4)","shape":"INSERT INTO atest5 (four) VALUES (4);"}
+{"sql":"GRANT INSERT (four) ON atest5 TO regress_priv_user4","shape":"GRANT INSERT (four) ON atest5 TO regress_priv_user4;"}
+{"sql":"INSERT INTO atest5(four) VALUES (4) ON CONFLICT (four) DO UPDATE set three = 3","shape":"INSERT INTO atest5 (four) VALUES (4) ON CONFLICT (four) DO UPDATE SET three = 3;"}
+{"sql":"INSERT INTO atest5(four) VALUES (4) ON CONFLICT ON CONSTRAINT atest5_four_key DO UPDATE set three = 3","shape":"INSERT INTO atest5 (four) VALUES (4) ON CONFLICT ON CONSTRAINT atest5_four_key DO UPDATE SET three = 3;"}
+{"sql":"GRANT SELECT (four) ON atest5 TO regress_priv_user4","shape":"GRANT SELECT (four) ON atest5 TO regress_priv_user4;"}
+{"sql":"REVOKE ALL (one) ON atest5 FROM regress_priv_user4","shape":"REVOKE ALL PRIVILEGES (one) ON atest5 FROM regress_priv_user4;"}
+{"sql":"GRANT SELECT (one,two,blue) ON atest6 TO regress_priv_user4","shape":"GRANT SELECT (one, two, blue) ON atest6 TO regress_priv_user4;"}
+{"sql":"UPDATE atest5 SET one = 1","shape":"UPDATE atest5 SET one = 1;"}
+{"sql":"SELECT atest6 FROM atest6","shape":"SELECT atest6 FROM atest6;"}
+{"sql":"COPY atest6 TO stdout","shape":"COPY atest6 TO STDOUT;"}
+{"sql":"CREATE TABLE mtarget (a int, b text)","shape":"CREATE TABLE mtarget (a int, b text);"}
+{"sql":"CREATE TABLE msource (a int, b text)","shape":"CREATE TABLE msource (a int, b text);"}
+{"sql":"INSERT INTO mtarget VALUES (1, 'init1'), (2, 'init2')","shape":"INSERT INTO mtarget VALUES (1, 'init1'), (2, 'init2');"}
+{"sql":"INSERT INTO msource VALUES (1, 'source1'), (2, 'source2'), (3, 'source3')","shape":"INSERT INTO msource VALUES (1, 'source1'), (2, 'source2'), (3, 'source3');"}
+{"sql":"GRANT SELECT (a) ON msource TO regress_priv_user4","shape":"GRANT SELECT (a) ON msource TO regress_priv_user4;"}
+{"sql":"GRANT SELECT (a) ON mtarget TO regress_priv_user4","shape":"GRANT SELECT (a) ON mtarget TO regress_priv_user4;"}
+{"sql":"GRANT INSERT (a,b) ON mtarget TO regress_priv_user4","shape":"GRANT INSERT (a, b) ON mtarget TO regress_priv_user4;"}
+{"sql":"GRANT UPDATE (b) ON mtarget TO regress_priv_user4","shape":"GRANT UPDATE (b) ON mtarget TO regress_priv_user4;"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = s.b\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, NULL)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = s.b WHEN NOT MATCHED THEN INSERT VALUES (a, NULL);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = 'x'\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, b)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = 'x' WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED AND s.b = 'x' THEN\n\tUPDATE SET b = 'x'\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, NULL)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED AND s.b = 'x' THEN UPDATE SET b = 'x' WHEN NOT MATCHED THEN INSERT VALUES (a, NULL);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = 'ok'\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, NULL)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = 'ok' WHEN NOT MATCHED THEN INSERT VALUES (a, NULL);"}
+{"sql":"GRANT SELECT (b) ON msource TO regress_priv_user4","shape":"GRANT SELECT (b) ON msource TO regress_priv_user4;"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = s.b\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, b)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = s.b WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = t.b\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, NULL)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = t.b WHEN NOT MATCHED THEN INSERT VALUES (a, NULL);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = s.b, a = t.a + 1\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, b)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = s.b, a = t.a + 1 WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED AND t.b IS NOT NULL THEN\n\tUPDATE SET b = s.b\nWHEN NOT MATCHED THEN\n\tINSERT VALUES (a, b)","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED AND t.b IS NOT NULL THEN UPDATE SET b = s.b WHEN NOT MATCHED THEN INSERT VALUES (a, b);"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED THEN\n\tUPDATE SET b = s.b","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED THEN UPDATE SET b = s.b;"}
+{"sql":"MERGE INTO mtarget t USING msource s ON t.a = s.a\nWHEN MATCHED AND t.b IS NOT NULL THEN\n\tDELETE","shape":"MERGE INTO mtarget AS t USING msource AS s ON t.a = s.a WHEN MATCHED AND t.b IS NOT NULL THEN DELETE;"}
+{"sql":"GRANT DELETE ON mtarget TO regress_priv_user4","shape":"GRANT DELETE ON mtarget TO regress_priv_user4;"}
+{"sql":"CREATE TABLE t1 (c1 int, c2 int, c3 int check (c3 < 5), primary key (c1, c2))","shape":"CREATE TABLE t1 (c1 int, c2 int, c3 int CHECK (c3 < 5), PRIMARY KEY (c1, c2));"}
+{"sql":"GRANT SELECT (c1) ON t1 TO regress_priv_user2","shape":"GRANT SELECT (c1) ON t1 TO regress_priv_user2;"}
+{"sql":"GRANT INSERT (c1, c2, c3) ON t1 TO regress_priv_user2","shape":"GRANT INSERT (c1, c2, c3) ON t1 TO regress_priv_user2;"}
+{"sql":"GRANT UPDATE (c1, c2, c3) ON t1 TO regress_priv_user2","shape":"GRANT UPDATE (c1, c2, c3) ON t1 TO regress_priv_user2;"}
+{"sql":"INSERT INTO t1 VALUES (1, 1, 1)","shape":"INSERT INTO t1 VALUES (1, 1, 1);"}
+{"sql":"INSERT INTO t1 VALUES (1, 2, 1)","shape":"INSERT INTO t1 VALUES (1, 2, 1);"}
+{"sql":"INSERT INTO t1 VALUES (2, 1, 2)","shape":"INSERT INTO t1 VALUES (2, 1, 2);"}
+{"sql":"INSERT INTO t1 VALUES (2, 2, 2)","shape":"INSERT INTO t1 VALUES (2, 2, 2);"}
+{"sql":"INSERT INTO t1 VALUES (3, 1, 3)","shape":"INSERT INTO t1 VALUES (3, 1, 3);"}
+{"sql":"INSERT INTO t1 (c1, c2) VALUES (1, 1)","shape":"INSERT INTO t1 (c1, c2) VALUES (1, 1);"}
+{"sql":"UPDATE t1 SET c2 = 1","shape":"UPDATE t1 SET c2 = 1;"}
+{"sql":"INSERT INTO t1 (c1, c2) VALUES (null, null)","shape":"INSERT INTO t1 (c1, c2) VALUES (NULL, NULL);"}
+{"sql":"INSERT INTO t1 (c3) VALUES (null)","shape":"INSERT INTO t1 (c3) VALUES (NULL);"}
+{"sql":"INSERT INTO t1 (c1) VALUES (5)","shape":"INSERT INTO t1 (c1) VALUES (5);"}
+{"sql":"UPDATE t1 SET c3 = 10","shape":"UPDATE t1 SET c3 = 10;"}
+{"sql":"CREATE TABLE errtst(a text, b text NOT NULL, c text, secret1 text, secret2 text) PARTITION BY LIST (a)","shape":"CREATE TABLE errtst (a text, b text NOT NULL, c text, secret1 text, secret2 text) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE errtst_part_1(secret2 text, c text, a text, b text NOT NULL, secret1 text)","shape":"CREATE TABLE errtst_part_1 (secret2 text, c text, a text, b text NOT NULL, secret1 text);"}
+{"sql":"CREATE TABLE errtst_part_2(secret1 text, secret2 text, a text, c text, b text NOT NULL)","shape":"CREATE TABLE errtst_part_2 (secret1 text, secret2 text, a text, c text, b text NOT NULL);"}
+{"sql":"ALTER TABLE errtst ATTACH PARTITION errtst_part_1 FOR VALUES IN ('aaa')"}
+{"sql":"ALTER TABLE errtst ATTACH PARTITION errtst_part_2 FOR VALUES IN ('aaaa')"}
+{"sql":"GRANT SELECT (a, b, c) ON TABLE errtst TO regress_priv_user2","shape":"GRANT SELECT (a, b, c) ON TABLE errtst TO regress_priv_user2;"}
+{"sql":"GRANT UPDATE (a, b, c) ON TABLE errtst TO regress_priv_user2","shape":"GRANT UPDATE (a, b, c) ON TABLE errtst TO regress_priv_user2;"}
+{"sql":"GRANT INSERT (a, b, c) ON TABLE errtst TO regress_priv_user2","shape":"GRANT INSERT (a, b, c) ON TABLE errtst TO regress_priv_user2;"}
+{"sql":"INSERT INTO errtst_part_1 (a, b, c, secret1, secret2)\nVALUES ('aaa', 'bbb', 'ccc', 'the body', 'is in the attic')","shape":"INSERT INTO errtst_part_1 (a, b, c, secret1, secret2) VALUES ('aaa', 'bbb', 'ccc', 'the body', 'is in the attic');"}
+{"sql":"INSERT INTO errtst (a, b) VALUES ('aaa', NULL)","shape":"INSERT INTO errtst (a, b) VALUES ('aaa', NULL);"}
+{"sql":"UPDATE errtst SET b = NULL","shape":"UPDATE errtst SET b = NULL;"}
+{"sql":"UPDATE errtst SET a = 'aaa', b = NULL","shape":"UPDATE errtst SET a = 'aaa', b = NULL;"}
+{"sql":"UPDATE errtst SET a = 'aaaa', b = NULL","shape":"UPDATE errtst SET a = 'aaaa', b = NULL;"}
+{"sql":"UPDATE errtst SET a = 'aaaa', b = NULL WHERE a = 'aaa'","shape":"UPDATE errtst SET a = 'aaaa', b = NULL WHERE a = 'aaa';"}
+{"sql":"DROP TABLE errtst","shape":"DROP TABLE errtst;"}
+{"sql":"ALTER TABLE atest6 ADD COLUMN three integer","shape":"ALTER TABLE atest6 ADD COLUMN three integer;"}
+{"sql":"GRANT DELETE ON atest5 TO regress_priv_user3","shape":"GRANT DELETE ON atest5 TO regress_priv_user3;"}
+{"sql":"GRANT SELECT (two) ON atest5 TO regress_priv_user3","shape":"GRANT SELECT (two) ON atest5 TO regress_priv_user3;"}
+{"sql":"REVOKE ALL (one) ON atest5 FROM regress_priv_user3","shape":"REVOKE ALL PRIVILEGES (one) ON atest5 FROM regress_priv_user3;"}
+{"sql":"GRANT SELECT (one) ON atest5 TO regress_priv_user4","shape":"GRANT SELECT (one) ON atest5 TO regress_priv_user4;"}
+{"sql":"SELECT one FROM atest5 NATURAL JOIN atest6","shape":"SELECT one FROM atest5 NATURAL JOIN atest6;"}
+{"sql":"ALTER TABLE atest6 DROP COLUMN three","shape":"ALTER TABLE atest6 DROP COLUMN three;"}
+{"sql":"ALTER TABLE atest6 DROP COLUMN two","shape":"ALTER TABLE atest6 DROP COLUMN two;"}
+{"sql":"REVOKE SELECT (one,blue) ON atest6 FROM regress_priv_user4","shape":"REVOKE SELECT (one, blue) ON atest6 FROM regress_priv_user4;"}
+{"sql":"SELECT * FROM atest6","shape":"SELECT * FROM atest6;"}
+{"sql":"SELECT 1 FROM atest6","shape":"SELECT 1 FROM atest6;"}
+{"sql":"DELETE FROM atest5 WHERE one = 1","shape":"DELETE FROM atest5 WHERE one = 1;"}
+{"sql":"DELETE FROM atest5 WHERE two = 2","shape":"DELETE FROM atest5 WHERE two = 2;"}
+{"sql":"CREATE TABLE atestp1 (f1 int, f2 int)","shape":"CREATE TABLE atestp1 (f1 int, f2 int);"}
+{"sql":"CREATE TABLE atestp2 (fx int, fy int)","shape":"CREATE TABLE atestp2 (fx int, fy int);"}
+{"sql":"CREATE TABLE atestc (fz int) INHERITS (atestp1, atestp2)","shape":"CREATE TABLE atestc (fz int) INHERITS (atestp1, atestp2);"}
+{"sql":"GRANT SELECT(fx,fy,tableoid) ON atestp2 TO regress_priv_user2","shape":"GRANT SELECT (fx, fy, tableoid) ON atestp2 TO regress_priv_user2;"}
+{"sql":"GRANT SELECT(fx) ON atestc TO regress_priv_user2","shape":"GRANT SELECT (fx) ON atestc TO regress_priv_user2;"}
+{"sql":"SELECT fx FROM atestp2","shape":"SELECT fx FROM atestp2;"}
+{"sql":"SELECT fy FROM atestp2","shape":"SELECT fy FROM atestp2;"}
+{"sql":"SELECT atestp2 FROM atestp2","shape":"SELECT atestp2 FROM atestp2;"}
+{"sql":"SELECT tableoid FROM atestp2","shape":"SELECT tableoid FROM atestp2;"}
+{"sql":"SELECT fy FROM atestc","shape":"SELECT fy FROM atestc;"}
+{"sql":"GRANT SELECT(fy,tableoid) ON atestc TO regress_priv_user2","shape":"GRANT SELECT (fy, tableoid) ON atestc TO regress_priv_user2;"}
+{"sql":"REVOKE ALL ON atestc FROM regress_priv_user2","shape":"REVOKE ALL PRIVILEGES ON atestc FROM regress_priv_user2;"}
+{"sql":"GRANT ALL ON atestp1 TO regress_priv_user2","shape":"GRANT ALL PRIVILEGES ON atestp1 TO regress_priv_user2;"}
+{"sql":"SELECT f2 FROM atestp1","shape":"SELECT f2 FROM atestp1;"}
+{"sql":"SELECT f2 FROM atestc","shape":"SELECT f2 FROM atestc;"}
+{"sql":"DELETE FROM atestp1","shape":"DELETE FROM atestp1;"}
+{"sql":"DELETE FROM atestc","shape":"DELETE FROM atestc;"}
+{"sql":"UPDATE atestp1 SET f1 = 1","shape":"UPDATE atestp1 SET f1 = 1;"}
+{"sql":"UPDATE atestc SET f1 = 1","shape":"UPDATE atestc SET f1 = 1;"}
+{"sql":"TRUNCATE atestp1","shape":"TRUNCATE TABLE atestp1;"}
+{"sql":"TRUNCATE atestc","shape":"TRUNCATE TABLE atestc;"}
+{"sql":"LOCK atestp1","shape":"LOCK TABLE atestp1;"}
+{"sql":"LOCK atestc","shape":"LOCK TABLE atestc;"}
+{"sql":"REVOKE ALL PRIVILEGES ON LANGUAGE sql FROM PUBLIC","shape":"REVOKE ALL PRIVILEGES ON LANGUAGE sql FROM PUBLIC;"}
+{"sql":"GRANT USAGE ON LANGUAGE sql TO regress_priv_user1","shape":"GRANT USAGE ON LANGUAGE sql TO regress_priv_user1;"}
+{"sql":"GRANT USAGE ON LANGUAGE c TO PUBLIC","shape":"GRANT USAGE ON LANGUAGE c TO PUBLIC;"}
+{"sql":"GRANT USAGE ON LANGUAGE sql TO regress_priv_user2","shape":"GRANT USAGE ON LANGUAGE sql TO regress_priv_user2;"}
+{"sql":"CREATE FUNCTION priv_testfunc1(int) RETURNS int AS 'select 2 * $1;' LANGUAGE sql","shape":"CREATE FUNCTION priv_testfunc1(int) RETURNS int AS 'select 2 * $1;' LANGUAGE sql;"}
+{"sql":"CREATE FUNCTION priv_testfunc2(int) RETURNS int AS 'select 3 * $1;' LANGUAGE sql","shape":"CREATE FUNCTION priv_testfunc2(int) RETURNS int AS 'select 3 * $1;' LANGUAGE sql;"}
+{"sql":"CREATE AGGREGATE priv_testagg1(int) (sfunc = int4pl, stype = int4)"}
+{"sql":"CREATE PROCEDURE priv_testproc1(int) AS 'select $1;' LANGUAGE sql","shape":"CREATE PROCEDURE priv_testproc1(int) AS 'select $1;' LANGUAGE sql;"}
+{"sql":"REVOKE ALL ON FUNCTION priv_testfunc1(int), priv_testfunc2(int), priv_testagg1(int) FROM PUBLIC"}
+{"sql":"GRANT EXECUTE ON FUNCTION priv_testfunc1(int), priv_testfunc2(int), priv_testagg1(int) TO regress_priv_user2"}
+{"sql":"REVOKE ALL ON FUNCTION priv_testproc1(int) FROM PUBLIC"}
+{"sql":"REVOKE ALL ON PROCEDURE priv_testproc1(int) FROM PUBLIC"}
+{"sql":"GRANT EXECUTE ON PROCEDURE priv_testproc1(int) TO regress_priv_user2"}
+{"sql":"GRANT USAGE ON FUNCTION priv_testfunc1(int) TO regress_priv_user3"}
+{"sql":"GRANT USAGE ON FUNCTION priv_testagg1(int) TO regress_priv_user3"}
+{"sql":"GRANT USAGE ON PROCEDURE priv_testproc1(int) TO regress_priv_user3"}
+{"sql":"GRANT ALL PRIVILEGES ON FUNCTION priv_testfunc1(int) TO regress_priv_user4"}
+{"sql":"GRANT ALL PRIVILEGES ON FUNCTION priv_testfunc_nosuch(int) TO regress_priv_user4"}
+{"sql":"GRANT ALL PRIVILEGES ON FUNCTION priv_testagg1(int) TO regress_priv_user4"}
+{"sql":"GRANT ALL PRIVILEGES ON PROCEDURE priv_testproc1(int) TO regress_priv_user4"}
+{"sql":"CREATE FUNCTION priv_testfunc4(boolean) RETURNS text\n  AS 'select col1 from atest2 where col2 = $1;'\n  LANGUAGE sql SECURITY DEFINER","shape":"CREATE FUNCTION priv_testfunc4(boolean) RETURNS text AS 'select col1 from atest2 where col2 = $1;' LANGUAGE sql SECURITY DEFINER;"}
+{"sql":"GRANT EXECUTE ON FUNCTION priv_testfunc4(boolean) TO regress_priv_user3"}
+{"sql":"SELECT priv_testfunc1(5), priv_testfunc2(5)","shape":"SELECT priv_testfunc1(5), priv_testfunc2(5);"}
+{"sql":"CREATE FUNCTION priv_testfunc3(int) RETURNS int AS 'select 2 * $1;' LANGUAGE sql","shape":"CREATE FUNCTION priv_testfunc3(int) RETURNS int AS 'select 2 * $1;' LANGUAGE sql;"}
+{"sql":"SELECT priv_testagg1(x) FROM (VALUES (1), (2), (3)) _(x)","shape":"SELECT priv_testagg1(x) FROM (VALUES (1), (2), (3)) AS _(x);"}
+{"sql":"CALL priv_testproc1(6)","shape":"CALL priv_testproc1(6);"}
+{"sql":"SELECT priv_testfunc1(5)","shape":"SELECT priv_testfunc1(5);"}
+{"sql":"SELECT col1 FROM atest2 WHERE col2 = true","shape":"SELECT col1 FROM atest2 WHERE col2 = TRUE;"}
+{"sql":"SELECT priv_testfunc4(true)","shape":"SELECT priv_testfunc4(TRUE);"}
+{"sql":"DROP FUNCTION priv_testfunc1(int)"}
+{"sql":"DROP AGGREGATE priv_testagg1(int)"}
+{"sql":"DROP PROCEDURE priv_testproc1(int)"}
+{"sql":"GRANT ALL PRIVILEGES ON LANGUAGE sql TO PUBLIC","shape":"GRANT ALL PRIVILEGES ON LANGUAGE sql TO PUBLIC;"}
+{"sql":"SELECT '{1}'::int4[]::int8[]","shape":"SELECT '{1}'::int4[]::int8[];"}
+{"sql":"REVOKE ALL ON FUNCTION int8(integer) FROM PUBLIC"}
+{"sql":"CREATE TYPE priv_testtype1 AS (a int, b text)","shape":"CREATE TYPE priv_testtype1 AS (a int, b text);"}
+{"sql":"REVOKE USAGE ON TYPE priv_testtype1 FROM PUBLIC","shape":"REVOKE USAGE ON TYPE priv_testtype1 FROM PUBLIC;"}
+{"sql":"GRANT USAGE ON TYPE priv_testtype1 TO regress_priv_user2","shape":"GRANT USAGE ON TYPE priv_testtype1 TO regress_priv_user2;"}
+{"sql":"GRANT USAGE ON TYPE _priv_testtype1 TO regress_priv_user2","shape":"GRANT USAGE ON TYPE _priv_testtype1 TO regress_priv_user2;"}
+{"sql":"GRANT USAGE ON DOMAIN priv_testtype1 TO regress_priv_user2","shape":"GRANT USAGE ON DOMAIN priv_testtype1 TO regress_priv_user2;"}
+{"sql":"CREATE DOMAIN priv_testdomain1 AS int","shape":"CREATE DOMAIN priv_testdomain1 AS int;"}
+{"sql":"REVOKE USAGE on DOMAIN priv_testdomain1 FROM PUBLIC","shape":"REVOKE USAGE ON DOMAIN priv_testdomain1 FROM PUBLIC;"}
+{"sql":"GRANT USAGE ON DOMAIN priv_testdomain1 TO regress_priv_user2","shape":"GRANT USAGE ON DOMAIN priv_testdomain1 TO regress_priv_user2;"}
+{"sql":"GRANT USAGE ON TYPE priv_testdomain1 TO regress_priv_user2","shape":"GRANT USAGE ON TYPE priv_testdomain1 TO regress_priv_user2;"}
+{"sql":"CREATE AGGREGATE priv_testagg1a(priv_testdomain1) (sfunc = int4_sum, stype = bigint)"}
+{"sql":"CREATE DOMAIN priv_testdomain2a AS priv_testdomain1","shape":"CREATE DOMAIN priv_testdomain2a AS priv_testdomain1;"}
+{"sql":"CREATE DOMAIN priv_testdomain3a AS int","shape":"CREATE DOMAIN priv_testdomain3a AS int;"}
+{"sql":"CREATE FUNCTION castfunc(int) RETURNS priv_testdomain3a AS $$ SELECT $1::priv_testdomain3a $$ LANGUAGE SQL","shape":"CREATE FUNCTION castfunc(int) RETURNS priv_testdomain3a AS ' SELECT $1::priv_testdomain3a ' LANGUAGE SQL;"}
+{"sql":"CREATE CAST (priv_testdomain1 AS priv_testdomain3a) WITH FUNCTION castfunc(int)"}
+{"sql":"DROP FUNCTION castfunc(int) CASCADE"}
+{"sql":"DROP DOMAIN priv_testdomain3a","shape":"DROP DOMAIN priv_testdomain3a;"}
+{"sql":"CREATE FUNCTION priv_testfunc5a(a priv_testdomain1) RETURNS int LANGUAGE SQL AS $$ SELECT $1 $$","shape":"CREATE FUNCTION priv_testfunc5a(a priv_testdomain1) RETURNS int LANGUAGE SQL AS ' SELECT $1 ';"}
+{"sql":"CREATE FUNCTION priv_testfunc6a(b int) RETURNS priv_testdomain1 LANGUAGE SQL AS $$ SELECT $1::priv_testdomain1 $$","shape":"CREATE FUNCTION priv_testfunc6a(b int) RETURNS priv_testdomain1 LANGUAGE SQL AS ' SELECT $1::priv_testdomain1 ';"}
+{"sql":"CREATE OPERATOR !+! (PROCEDURE = int4pl, LEFTARG = priv_testdomain1, RIGHTARG = priv_testdomain1)"}
+{"sql":"CREATE TABLE test5a (a int, b priv_testdomain1)","shape":"CREATE TABLE test5a (a int, b priv_testdomain1);"}
+{"sql":"CREATE TABLE test6a OF priv_testtype1","shape":"CREATE TABLE test6a OF priv_testtype1;"}
+{"sql":"CREATE TABLE test10a (a int[], b priv_testtype1[])","shape":"CREATE TABLE test10a (a int[], b priv_testtype1[]);"}
+{"sql":"CREATE TABLE test9a (a int, b int)","shape":"CREATE TABLE test9a (a int, b int);"}
+{"sql":"ALTER TABLE test9a ADD COLUMN c priv_testdomain1","shape":"ALTER TABLE test9a ADD COLUMN c priv_testdomain1;"}
+{"sql":"ALTER TABLE test9a ALTER COLUMN b TYPE priv_testdomain1","shape":"ALTER TABLE test9a ALTER COLUMN b SET DATA TYPE priv_testdomain1;"}
+{"sql":"CREATE TYPE test7a AS (a int, b priv_testdomain1)","shape":"CREATE TYPE test7a AS (a int, b priv_testdomain1);"}
+{"sql":"CREATE TYPE test8a AS (a int, b int)","shape":"CREATE TYPE test8a AS (a int, b int);"}
+{"sql":"ALTER TYPE test8a ADD ATTRIBUTE c priv_testdomain1"}
+{"sql":"ALTER TYPE test8a ALTER ATTRIBUTE b TYPE priv_testdomain1"}
+{"sql":"CREATE TABLE test11a AS (SELECT 1::priv_testdomain1 AS a)","shape":"CREATE TABLE test11a AS (SELECT 1::priv_testdomain1 AS a);"}
+{"sql":"REVOKE ALL ON TYPE priv_testtype1 FROM PUBLIC","shape":"REVOKE ALL PRIVILEGES ON TYPE priv_testtype1 FROM PUBLIC;"}
+{"sql":"CREATE AGGREGATE priv_testagg1b(priv_testdomain1) (sfunc = int4_sum, stype = bigint)"}
+{"sql":"CREATE DOMAIN priv_testdomain2b AS priv_testdomain1","shape":"CREATE DOMAIN priv_testdomain2b AS priv_testdomain1;"}
+{"sql":"CREATE DOMAIN priv_testdomain3b AS int","shape":"CREATE DOMAIN priv_testdomain3b AS int;"}
+{"sql":"CREATE FUNCTION castfunc(int) RETURNS priv_testdomain3b AS $$ SELECT $1::priv_testdomain3b $$ LANGUAGE SQL","shape":"CREATE FUNCTION castfunc(int) RETURNS priv_testdomain3b AS ' SELECT $1::priv_testdomain3b ' LANGUAGE SQL;"}
+{"sql":"CREATE CAST (priv_testdomain1 AS priv_testdomain3b) WITH FUNCTION castfunc(int)"}
+{"sql":"CREATE FUNCTION priv_testfunc5b(a priv_testdomain1) RETURNS int LANGUAGE SQL AS $$ SELECT $1 $$","shape":"CREATE FUNCTION priv_testfunc5b(a priv_testdomain1) RETURNS int LANGUAGE SQL AS ' SELECT $1 ';"}
+{"sql":"CREATE FUNCTION priv_testfunc6b(b int) RETURNS priv_testdomain1 LANGUAGE SQL AS $$ SELECT $1::priv_testdomain1 $$","shape":"CREATE FUNCTION priv_testfunc6b(b int) RETURNS priv_testdomain1 LANGUAGE SQL AS ' SELECT $1::priv_testdomain1 ';"}
+{"sql":"CREATE OPERATOR !! (PROCEDURE = priv_testfunc5b, RIGHTARG = priv_testdomain1)"}
+{"sql":"CREATE TABLE test5b (a int, b priv_testdomain1)","shape":"CREATE TABLE test5b (a int, b priv_testdomain1);"}
+{"sql":"CREATE TABLE test6b OF priv_testtype1","shape":"CREATE TABLE test6b OF priv_testtype1;"}
+{"sql":"CREATE TABLE test10b (a int[], b priv_testtype1[])","shape":"CREATE TABLE test10b (a int[], b priv_testtype1[]);"}
+{"sql":"CREATE TABLE test9b (a int, b int)","shape":"CREATE TABLE test9b (a int, b int);"}
+{"sql":"ALTER TABLE test9b ADD COLUMN c priv_testdomain1","shape":"ALTER TABLE test9b ADD COLUMN c priv_testdomain1;"}
+{"sql":"ALTER TABLE test9b ALTER COLUMN b TYPE priv_testdomain1","shape":"ALTER TABLE test9b ALTER COLUMN b SET DATA TYPE priv_testdomain1;"}
+{"sql":"CREATE TYPE test7b AS (a int, b priv_testdomain1)","shape":"CREATE TYPE test7b AS (a int, b priv_testdomain1);"}
+{"sql":"CREATE TYPE test8b AS (a int, b int)","shape":"CREATE TYPE test8b AS (a int, b int);"}
+{"sql":"ALTER TYPE test8b ADD ATTRIBUTE c priv_testdomain1"}
+{"sql":"ALTER TYPE test8b ALTER ATTRIBUTE b TYPE priv_testdomain1"}
+{"sql":"CREATE TABLE test11b AS (SELECT 1::priv_testdomain1 AS a)","shape":"CREATE TABLE test11b AS (SELECT 1::priv_testdomain1 AS a);"}
+{"sql":"DROP AGGREGATE priv_testagg1b(priv_testdomain1)"}
+{"sql":"DROP DOMAIN priv_testdomain2b","shape":"DROP DOMAIN priv_testdomain2b;"}
+{"sql":"DROP OPERATOR !! (NONE, priv_testdomain1)"}
+{"sql":"DROP FUNCTION priv_testfunc5b(a priv_testdomain1)"}
+{"sql":"DROP FUNCTION priv_testfunc6b(b int)"}
+{"sql":"DROP TABLE test5b","shape":"DROP TABLE test5b;"}
+{"sql":"DROP TABLE test6b","shape":"DROP TABLE test6b;"}
+{"sql":"DROP TABLE test9b","shape":"DROP TABLE test9b;"}
+{"sql":"DROP TABLE test10b","shape":"DROP TABLE test10b;"}
+{"sql":"DROP TYPE test7b","shape":"DROP TYPE test7b;"}
+{"sql":"DROP TYPE test8b","shape":"DROP TYPE test8b;"}
+{"sql":"DROP CAST (priv_testdomain1 AS priv_testdomain3b)"}
+{"sql":"DROP DOMAIN priv_testdomain3b","shape":"DROP DOMAIN priv_testdomain3b;"}
+{"sql":"DROP TABLE test11b","shape":"DROP TABLE test11b;"}
+{"sql":"DROP TYPE priv_testtype1","shape":"DROP TYPE priv_testtype1;"}
+{"sql":"DROP DOMAIN priv_testdomain1","shape":"DROP DOMAIN priv_testdomain1;"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_user5"}
+{"sql":"TRUNCATE atest3","shape":"TRUNCATE TABLE atest3;"}
+{"sql":"select has_table_privilege(NULL,'pg_authid','select')","shape":"SELECT has_table_privilege(NULL, 'pg_authid', 'select');"}
+{"sql":"select has_table_privilege('pg_shad','select')","shape":"SELECT has_table_privilege('pg_shad', 'select');"}
+{"sql":"select has_table_privilege('nosuchuser','pg_authid','select')","shape":"SELECT has_table_privilege('nosuchuser', 'pg_authid', 'select');"}
+{"sql":"select has_table_privilege('pg_authid','sel')","shape":"SELECT has_table_privilege('pg_authid', 'sel');"}
+{"sql":"select has_table_privilege(-999999,'pg_authid','update')","shape":"SELECT has_table_privilege(-999999, 'pg_authid', 'update');"}
+{"sql":"select has_table_privilege(1,'select')","shape":"SELECT has_table_privilege(1, 'select');"}
+{"sql":"select has_table_privilege(current_user,'pg_authid','select')","shape":"SELECT has_table_privilege(current_user, 'pg_authid', 'select');"}
+{"sql":"select has_table_privilege(current_user,'pg_authid','insert')","shape":"SELECT has_table_privilege(current_user, 'pg_authid', 'insert');"}
+{"sql":"select has_table_privilege(t2.oid,'pg_authid','update')\nfrom (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, 'pg_authid', 'update') FROM (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(t2.oid,'pg_authid','delete')\nfrom (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, 'pg_authid', 'delete') FROM (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(current_user,t1.oid,'rule')\nfrom (select oid from pg_class where relname = 'pg_authid') as t1","shape":"SELECT has_table_privilege(current_user, t1.oid, 'rule') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_authid') AS t1;"}
+{"sql":"select has_table_privilege(current_user,t1.oid,'references')\nfrom (select oid from pg_class where relname = 'pg_authid') as t1","shape":"SELECT has_table_privilege(current_user, t1.oid, 'references') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_authid') AS t1;"}
+{"sql":"select has_table_privilege(t2.oid,t1.oid,'select')\nfrom (select oid from pg_class where relname = 'pg_authid') as t1,\n  (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, t1.oid, 'select') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_authid') AS t1, (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(t2.oid,t1.oid,'insert')\nfrom (select oid from pg_class where relname = 'pg_authid') as t1,\n  (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, t1.oid, 'insert') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_authid') AS t1, (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege('pg_authid','update')","shape":"SELECT has_table_privilege('pg_authid', 'update');"}
+{"sql":"select has_table_privilege('pg_authid','delete')","shape":"SELECT has_table_privilege('pg_authid', 'delete');"}
+{"sql":"select has_table_privilege('pg_authid','truncate')","shape":"SELECT has_table_privilege('pg_authid', 'truncate');"}
+{"sql":"select has_table_privilege(t1.oid,'select')\nfrom (select oid from pg_class where relname = 'pg_authid') as t1","shape":"SELECT has_table_privilege(t1.oid, 'select') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_authid') AS t1;"}
+{"sql":"select has_table_privilege(t1.oid,'trigger')\nfrom (select oid from pg_class where relname = 'pg_authid') as t1","shape":"SELECT has_table_privilege(t1.oid, 'trigger') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_authid') AS t1;"}
+{"sql":"select has_table_privilege(current_user,'pg_class','select')","shape":"SELECT has_table_privilege(current_user, 'pg_class', 'select');"}
+{"sql":"select has_table_privilege(current_user,'pg_class','insert')","shape":"SELECT has_table_privilege(current_user, 'pg_class', 'insert');"}
+{"sql":"select has_table_privilege(t2.oid,'pg_class','update')\nfrom (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, 'pg_class', 'update') FROM (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(t2.oid,'pg_class','delete')\nfrom (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, 'pg_class', 'delete') FROM (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(current_user,t1.oid,'references')\nfrom (select oid from pg_class where relname = 'pg_class') as t1","shape":"SELECT has_table_privilege(current_user, t1.oid, 'references') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_class') AS t1;"}
+{"sql":"select has_table_privilege(t2.oid,t1.oid,'select')\nfrom (select oid from pg_class where relname = 'pg_class') as t1,\n  (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, t1.oid, 'select') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_class') AS t1, (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(t2.oid,t1.oid,'insert')\nfrom (select oid from pg_class where relname = 'pg_class') as t1,\n  (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, t1.oid, 'insert') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_class') AS t1, (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege('pg_class','update')","shape":"SELECT has_table_privilege('pg_class', 'update');"}
+{"sql":"select has_table_privilege('pg_class','delete')","shape":"SELECT has_table_privilege('pg_class', 'delete');"}
+{"sql":"select has_table_privilege('pg_class','truncate')","shape":"SELECT has_table_privilege('pg_class', 'truncate');"}
+{"sql":"select has_table_privilege(t1.oid,'select')\nfrom (select oid from pg_class where relname = 'pg_class') as t1","shape":"SELECT has_table_privilege(t1.oid, 'select') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_class') AS t1;"}
+{"sql":"select has_table_privilege(t1.oid,'trigger')\nfrom (select oid from pg_class where relname = 'pg_class') as t1","shape":"SELECT has_table_privilege(t1.oid, 'trigger') FROM (SELECT oid FROM pg_class WHERE relname = 'pg_class') AS t1;"}
+{"sql":"select has_table_privilege(current_user,'atest1','select')","shape":"SELECT has_table_privilege(current_user, 'atest1', 'select');"}
+{"sql":"select has_table_privilege(current_user,'atest1','insert')","shape":"SELECT has_table_privilege(current_user, 'atest1', 'insert');"}
+{"sql":"select has_table_privilege(t2.oid,'atest1','update')\nfrom (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, 'atest1', 'update') FROM (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(t2.oid,'atest1','delete')\nfrom (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, 'atest1', 'delete') FROM (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(current_user,t1.oid,'references')\nfrom (select oid from pg_class where relname = 'atest1') as t1","shape":"SELECT has_table_privilege(current_user, t1.oid, 'references') FROM (SELECT oid FROM pg_class WHERE relname = 'atest1') AS t1;"}
+{"sql":"select has_table_privilege(t2.oid,t1.oid,'select')\nfrom (select oid from pg_class where relname = 'atest1') as t1,\n  (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, t1.oid, 'select') FROM (SELECT oid FROM pg_class WHERE relname = 'atest1') AS t1, (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege(t2.oid,t1.oid,'insert')\nfrom (select oid from pg_class where relname = 'atest1') as t1,\n  (select oid from pg_roles where rolname = current_user) as t2","shape":"SELECT has_table_privilege(t2.oid, t1.oid, 'insert') FROM (SELECT oid FROM pg_class WHERE relname = 'atest1') AS t1, (SELECT oid FROM pg_roles WHERE rolname = current_user) AS t2;"}
+{"sql":"select has_table_privilege('atest1','update')","shape":"SELECT has_table_privilege('atest1', 'update');"}
+{"sql":"select has_table_privilege('atest1','delete')","shape":"SELECT has_table_privilege('atest1', 'delete');"}
+{"sql":"select has_table_privilege('atest1','truncate')","shape":"SELECT has_table_privilege('atest1', 'truncate');"}
+{"sql":"select has_table_privilege(t1.oid,'select')\nfrom (select oid from pg_class where relname = 'atest1') as t1","shape":"SELECT has_table_privilege(t1.oid, 'select') FROM (SELECT oid FROM pg_class WHERE relname = 'atest1') AS t1;"}
+{"sql":"select has_table_privilege(t1.oid,'trigger')\nfrom (select oid from pg_class where relname = 'atest1') as t1","shape":"SELECT has_table_privilege(t1.oid, 'trigger') FROM (SELECT oid FROM pg_class WHERE relname = 'atest1') AS t1;"}
+{"sql":"select has_column_privilege('pg_authid',NULL,'select')","shape":"SELECT has_column_privilege('pg_authid', NULL, 'select');"}
+{"sql":"select has_column_privilege('pg_authid','nosuchcol','select')","shape":"SELECT has_column_privilege('pg_authid', 'nosuchcol', 'select');"}
+{"sql":"select has_column_privilege(9999,'nosuchcol','select')","shape":"SELECT has_column_privilege(9999, 'nosuchcol', 'select');"}
+{"sql":"select has_column_privilege(9999,99::int2,'select')","shape":"SELECT has_column_privilege(9999, 99::int2, 'select');"}
+{"sql":"select has_column_privilege('pg_authid',99::int2,'select')","shape":"SELECT has_column_privilege('pg_authid', 99::int2, 'select');"}
+{"sql":"create temp table mytable(f1 int, f2 int, f3 int)","shape":"CREATE TEMPORARY TABLE mytable (f1 int, f2 int, f3 int);"}
+{"sql":"alter table mytable drop column f2","shape":"ALTER TABLE mytable DROP COLUMN f2;"}
+{"sql":"select has_column_privilege('mytable','f2','select')","shape":"SELECT has_column_privilege('mytable', 'f2', 'select');"}
+{"sql":"select has_column_privilege('mytable','........pg.dropped.2........','select')","shape":"SELECT has_column_privilege('mytable', '........pg.dropped.2........', 'select');"}
+{"sql":"select has_column_privilege('mytable',2::int2,'select')","shape":"SELECT has_column_privilege('mytable', 2::int2, 'select');"}
+{"sql":"select has_column_privilege('mytable',99::int2,'select')","shape":"SELECT has_column_privilege('mytable', 99::int2, 'select');"}
+{"sql":"revoke select on table mytable from regress_priv_user3","shape":"REVOKE SELECT ON TABLE mytable FROM regress_priv_user3;"}
+{"sql":"drop table mytable","shape":"DROP TABLE mytable;"}
+{"sql":"CREATE TABLE atest4 (a int)","shape":"CREATE TABLE atest4 (a int);"}
+{"sql":"GRANT SELECT ON atest4 TO regress_priv_user2 WITH GRANT OPTION","shape":"GRANT SELECT ON atest4 TO regress_priv_user2 WITH GRANT OPTION;"}
+{"sql":"GRANT UPDATE ON atest4 TO regress_priv_user2","shape":"GRANT UPDATE ON atest4 TO regress_priv_user2;"}
+{"sql":"GRANT SELECT ON atest4 TO GROUP regress_priv_group1 WITH GRANT OPTION","shape":"GRANT SELECT ON atest4 TO regress_priv_group1 WITH GRANT OPTION;"}
+{"sql":"GRANT SELECT ON atest4 TO regress_priv_user3","shape":"GRANT SELECT ON atest4 TO regress_priv_user3;"}
+{"sql":"GRANT UPDATE ON atest4 TO regress_priv_user3","shape":"GRANT UPDATE ON atest4 TO regress_priv_user3;"}
+{"sql":"REVOKE SELECT ON atest4 FROM regress_priv_user3","shape":"REVOKE SELECT ON atest4 FROM regress_priv_user3;"}
+{"sql":"SELECT has_table_privilege('regress_priv_user3', 'atest4', 'SELECT')","shape":"SELECT has_table_privilege('regress_priv_user3', 'atest4', 'SELECT');"}
+{"sql":"REVOKE SELECT ON atest4 FROM regress_priv_user2","shape":"REVOKE SELECT ON atest4 FROM regress_priv_user2;"}
+{"sql":"REVOKE GRANT OPTION FOR SELECT ON atest4 FROM regress_priv_user2 CASCADE","shape":"REVOKE GRANT OPTION FOR SELECT ON atest4 FROM regress_priv_user2 CASCADE;"}
+{"sql":"SELECT has_table_privilege('regress_priv_user2', 'atest4', 'SELECT')","shape":"SELECT has_table_privilege('regress_priv_user2', 'atest4', 'SELECT');"}
+{"sql":"SELECT has_table_privilege('regress_priv_user1', 'atest4', 'SELECT WITH GRANT OPTION')","shape":"SELECT has_table_privilege('regress_priv_user1', 'atest4', 'SELECT WITH GRANT OPTION');"}
+{"sql":"CREATE ROLE regress_sro_user"}
+{"sql":"CREATE FUNCTION sro_ifun(int) RETURNS int AS $$\nBEGIN\n\t-- Below we set the table's owner to regress_sro_user\n\tASSERT current_user = 'regress_sro_user',\n\t\tformat('sro_ifun(%s) called by %s', $1, current_user);\n\tRETURN $1;\nEND;\n$$ LANGUAGE plpgsql IMMUTABLE","shape":"CREATE FUNCTION sro_ifun(int) RETURNS int AS '\nBEGIN\n\t-- Below we set the table''s owner to regress_sro_user\n\tASSERT current_user = ''regress_sro_user'',\n\t\tformat(''sro_ifun(%s) called by %s'', $1, current_user);\n\tRETURN $1;\nEND;\n' LANGUAGE plpgsql IMMUTABLE;"}
+{"sql":"CREATE TABLE sro_tab (a int)","shape":"CREATE TABLE sro_tab (a int);"}
+{"sql":"ALTER TABLE sro_tab OWNER TO regress_sro_user"}
+{"sql":"INSERT INTO sro_tab VALUES (1), (2), (3)","shape":"INSERT INTO sro_tab VALUES (1), (2), (3);"}
+{"sql":"CREATE INDEX sro_idx ON sro_tab ((sro_ifun(a) + sro_ifun(0)))\n\tWHERE sro_ifun(a + 10) > sro_ifun(10)","shape":"CREATE INDEX sro_idx ON sro_tab ((sro_ifun(a) + sro_ifun(0))) WHERE sro_ifun(a + 10) > sro_ifun(10);"}
+{"sql":"DROP INDEX sro_idx","shape":"DROP INDEX sro_idx;"}
+{"sql":"CREATE INDEX CONCURRENTLY sro_idx ON sro_tab ((sro_ifun(a) + sro_ifun(0)))\n\tWHERE sro_ifun(a + 10) > sro_ifun(10)","shape":"CREATE INDEX CONCURRENTLY sro_idx ON sro_tab ((sro_ifun(a) + sro_ifun(0))) WHERE sro_ifun(a + 10) > sro_ifun(10);"}
+{"sql":"REINDEX TABLE sro_tab","shape":"REINDEX TABLE sro_tab;"}
+{"sql":"REINDEX INDEX sro_idx","shape":"REINDEX INDEX sro_idx;"}
+{"sql":"REINDEX TABLE CONCURRENTLY sro_tab","shape":"REINDEX TABLE CONCURRENTLY sro_tab;"}
+{"sql":"CREATE INDEX sro_cluster_idx ON sro_tab ((sro_ifun(a) + sro_ifun(0)))","shape":"CREATE INDEX sro_cluster_idx ON sro_tab ((sro_ifun(a) + sro_ifun(0)));"}
+{"sql":"CLUSTER sro_tab USING sro_cluster_idx"}
+{"sql":"DROP INDEX sro_cluster_idx","shape":"DROP INDEX sro_cluster_idx;"}
+{"sql":"CREATE INDEX sro_brin ON sro_tab USING brin ((sro_ifun(a) + sro_ifun(0)))","shape":"CREATE INDEX sro_brin ON sro_tab USING brin ((sro_ifun(a) + sro_ifun(0)));"}
+{"sql":"SELECT brin_desummarize_range('sro_brin', 0)","shape":"SELECT brin_desummarize_range('sro_brin', 0);"}
+{"sql":"SELECT brin_summarize_range('sro_brin', 0)","shape":"SELECT brin_summarize_range('sro_brin', 0);"}
+{"sql":"DROP TABLE sro_tab","shape":"DROP TABLE sro_tab;"}
+{"sql":"CREATE TABLE sro_ptab (a int) PARTITION BY RANGE (a)","shape":"CREATE TABLE sro_ptab (a int) PARTITION BY RANGE (a);"}
+{"sql":"ALTER TABLE sro_ptab OWNER TO regress_sro_user"}
+{"sql":"CREATE TABLE sro_part PARTITION OF sro_ptab FOR VALUES FROM (1) TO (10)","shape":"CREATE TABLE sro_part PARTITION OF sro_ptab FOR VALUES FROM (1) TO (10);"}
+{"sql":"ALTER TABLE sro_part OWNER TO regress_sro_user"}
+{"sql":"INSERT INTO sro_ptab VALUES (1), (2), (3)","shape":"INSERT INTO sro_ptab VALUES (1), (2), (3);"}
+{"sql":"CREATE INDEX sro_pidx ON sro_ptab ((sro_ifun(a) + sro_ifun(0)))\n\tWHERE sro_ifun(a + 10) > sro_ifun(10)","shape":"CREATE INDEX sro_pidx ON sro_ptab ((sro_ifun(a) + sro_ifun(0))) WHERE sro_ifun(a + 10) > sro_ifun(10);"}
+{"sql":"REINDEX TABLE sro_ptab","shape":"REINDEX TABLE sro_ptab;"}
+{"sql":"REINDEX INDEX CONCURRENTLY sro_pidx","shape":"REINDEX INDEX CONCURRENTLY sro_pidx;"}
+{"sql":"SET SESSION AUTHORIZATION regress_sro_user"}
+{"sql":"CREATE FUNCTION unwanted_grant() RETURNS void LANGUAGE sql AS\n\t'GRANT regress_priv_group2 TO regress_sro_user'","shape":"CREATE FUNCTION unwanted_grant() RETURNS void LANGUAGE sql AS 'GRANT regress_priv_group2 TO regress_sro_user';"}
+{"sql":"CREATE FUNCTION mv_action() RETURNS bool LANGUAGE sql AS\n\t'DECLARE c CURSOR WITH HOLD FOR SELECT unwanted_grant(); SELECT true'","shape":"CREATE FUNCTION mv_action() RETURNS bool LANGUAGE sql AS 'DECLARE c CURSOR WITH HOLD FOR SELECT unwanted_grant(); SELECT true';"}
+{"sql":"CREATE MATERIALIZED VIEW sro_mv AS SELECT mv_action() WITH NO DATA","shape":"CREATE MATERIALIZED VIEW sro_mv AS SELECT mv_action() WITH NO DATA;"}
+{"sql":"REFRESH MATERIALIZED VIEW sro_mv","shape":"REFRESH MATERIALIZED VIEW sro_mv;"}
+{"sql":"CREATE TABLE sro_trojan_table ()","shape":"CREATE TABLE sro_trojan_table ();"}
+{"sql":"CREATE FUNCTION sro_trojan() RETURNS trigger LANGUAGE plpgsql AS\n\t'BEGIN PERFORM unwanted_grant(); RETURN NULL; END'","shape":"CREATE FUNCTION sro_trojan() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN PERFORM unwanted_grant(); RETURN NULL; END';"}
+{"sql":"CREATE CONSTRAINT TRIGGER t AFTER INSERT ON sro_trojan_table\n    INITIALLY DEFERRED FOR EACH ROW EXECUTE PROCEDURE sro_trojan()","shape":"CREATE CONSTRAINT TRIGGER t AFTER INSERT ON sro_trojan_table INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION sro_trojan();"}
+{"sql":"CREATE OR REPLACE FUNCTION mv_action() RETURNS bool LANGUAGE sql AS\n\t'INSERT INTO sro_trojan_table DEFAULT VALUES; SELECT true'","shape":"CREATE OR REPLACE FUNCTION mv_action() RETURNS bool LANGUAGE sql AS 'INSERT INTO sro_trojan_table DEFAULT VALUES; SELECT true';"}
+{"sql":"CREATE FUNCTION unwanted_grant_nofail(int) RETURNS int\n\tIMMUTABLE LANGUAGE plpgsql AS $$\nBEGIN\n\tPERFORM unwanted_grant();\n\tRAISE WARNING 'owned';\n\tRETURN 1;\nEXCEPTION WHEN OTHERS THEN\n\tRETURN 2;\nEND$$","shape":"CREATE FUNCTION unwanted_grant_nofail(int) RETURNS int IMMUTABLE LANGUAGE plpgsql AS '\nBEGIN\n\tPERFORM unwanted_grant();\n\tRAISE WARNING ''owned'';\n\tRETURN 1;\nEXCEPTION WHEN OTHERS THEN\n\tRETURN 2;\nEND';"}
+{"sql":"CREATE MATERIALIZED VIEW sro_index_mv AS SELECT 1 AS c","shape":"CREATE MATERIALIZED VIEW sro_index_mv AS SELECT 1 AS c;"}
+{"sql":"CREATE UNIQUE INDEX ON sro_index_mv (c) WHERE unwanted_grant_nofail(1) > 0","shape":"CREATE UNIQUE INDEX ON sro_index_mv (c) WHERE unwanted_grant_nofail(1) > 0;"}
+{"sql":"REFRESH MATERIALIZED VIEW CONCURRENTLY sro_index_mv","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY sro_index_mv;"}
+{"sql":"REFRESH MATERIALIZED VIEW sro_index_mv","shape":"REFRESH MATERIALIZED VIEW sro_index_mv;"}
+{"sql":"DROP OWNED BY regress_sro_user"}
+{"sql":"DROP ROLE regress_sro_user","shape":"DROP ROLE regress_sro_user;"}
+{"sql":"CREATE FUNCTION dogrant_ok() RETURNS void LANGUAGE sql SECURITY DEFINER AS\n\t'GRANT regress_priv_group2 TO regress_priv_user5'","shape":"CREATE FUNCTION dogrant_ok() RETURNS void LANGUAGE sql SECURITY DEFINER AS 'GRANT regress_priv_group2 TO regress_priv_user5';"}
+{"sql":"GRANT regress_priv_group2 TO regress_priv_user5","shape":"GRANT regress_priv_group2 TO regress_priv_user5;"}
+{"sql":"SET ROLE regress_priv_group2"}
+{"sql":"SELECT dogrant_ok()","shape":"SELECT dogrant_ok();"}
+{"sql":"SET SESSION AUTHORIZATION regress_priv_group2"}
+{"sql":"DROP FUNCTION dogrant_ok()"}
+{"sql":"REVOKE regress_priv_group2 FROM regress_priv_user5","shape":"REVOKE regress_priv_group2 FROM regress_priv_user5;"}
+{"sql":"CREATE SEQUENCE x_seq","shape":"CREATE SEQUENCE x_seq;"}
+{"sql":"GRANT USAGE on x_seq to regress_priv_user2","shape":"GRANT USAGE ON x_seq TO regress_priv_user2;"}
+{"sql":"SELECT has_sequence_privilege('regress_priv_user1', 'atest1', 'SELECT')","shape":"SELECT has_sequence_privilege('regress_priv_user1', 'atest1', 'SELECT');"}
+{"sql":"SELECT has_sequence_privilege('regress_priv_user1', 'x_seq', 'INSERT')","shape":"SELECT has_sequence_privilege('regress_priv_user1', 'x_seq', 'INSERT');"}
+{"sql":"SELECT has_sequence_privilege('regress_priv_user1', 'x_seq', 'SELECT')","shape":"SELECT has_sequence_privilege('regress_priv_user1', 'x_seq', 'SELECT');"}
+{"sql":"SELECT has_sequence_privilege('x_seq', 'USAGE')","shape":"SELECT has_sequence_privilege('x_seq', 'USAGE');"}
+{"sql":"SELECT lo_create(1001)","shape":"SELECT lo_create(1001);"}
+{"sql":"SELECT lo_create(1002)","shape":"SELECT lo_create(1002);"}
+{"sql":"SELECT lo_create(1003)","shape":"SELECT lo_create(1003);"}
+{"sql":"SELECT lo_create(1004)","shape":"SELECT lo_create(1004);"}
+{"sql":"SELECT lo_create(1005)","shape":"SELECT lo_create(1005);"}
+{"sql":"GRANT ALL ON LARGE OBJECT 1001 TO PUBLIC"}
+{"sql":"GRANT SELECT ON LARGE OBJECT 1003 TO regress_priv_user2"}
+{"sql":"GRANT SELECT,UPDATE ON LARGE OBJECT 1004 TO regress_priv_user2"}
+{"sql":"GRANT ALL ON LARGE OBJECT 1005 TO regress_priv_user2"}
+{"sql":"GRANT SELECT ON LARGE OBJECT 1005 TO regress_priv_user2 WITH GRANT OPTION"}
+{"sql":"GRANT SELECT, INSERT ON LARGE OBJECT 1001 TO PUBLIC"}
+{"sql":"GRANT SELECT, UPDATE ON LARGE OBJECT 1001 TO nosuchuser"}
+{"sql":"GRANT SELECT, UPDATE ON LARGE OBJECT  999 TO PUBLIC"}
+{"sql":"SELECT lo_create(2001)","shape":"SELECT lo_create(2001);"}
+{"sql":"SELECT lo_create(2002)","shape":"SELECT lo_create(2002);"}
+{"sql":"SELECT loread(lo_open(1001, x'20000'::int), 32)","shape":"SELECT loread(lo_open(1001, X'20000'::int), 32);"}
+{"sql":"SELECT lowrite(lo_open(1001, x'40000'::int), 'abcd')","shape":"SELECT lowrite(lo_open(1001, X'40000'::int), 'abcd');"}
+{"sql":"SELECT loread(lo_open(1001, x'40000'::int), 32)","shape":"SELECT loread(lo_open(1001, X'40000'::int), 32);"}
+{"sql":"SELECT loread(lo_open(1002, x'40000'::int), 32)","shape":"SELECT loread(lo_open(1002, X'40000'::int), 32);"}
+{"sql":"SELECT loread(lo_open(1003, x'40000'::int), 32)","shape":"SELECT loread(lo_open(1003, X'40000'::int), 32);"}
+{"sql":"SELECT loread(lo_open(1004, x'40000'::int), 32)","shape":"SELECT loread(lo_open(1004, X'40000'::int), 32);"}
+{"sql":"SELECT lowrite(lo_open(1001, x'20000'::int), 'abcd')","shape":"SELECT lowrite(lo_open(1001, X'20000'::int), 'abcd');"}
+{"sql":"SELECT lowrite(lo_open(1002, x'20000'::int), 'abcd')","shape":"SELECT lowrite(lo_open(1002, X'20000'::int), 'abcd');"}
+{"sql":"SELECT lowrite(lo_open(1003, x'20000'::int), 'abcd')","shape":"SELECT lowrite(lo_open(1003, X'20000'::int), 'abcd');"}
+{"sql":"SELECT lowrite(lo_open(1004, x'20000'::int), 'abcd')","shape":"SELECT lowrite(lo_open(1004, X'20000'::int), 'abcd');"}
+{"sql":"GRANT SELECT ON LARGE OBJECT 1005 TO regress_priv_user3"}
+{"sql":"GRANT UPDATE ON LARGE OBJECT 1006 TO regress_priv_user3"}
+{"sql":"REVOKE ALL ON LARGE OBJECT 2001, 2002 FROM PUBLIC"}
+{"sql":"GRANT ALL ON LARGE OBJECT 2001 TO regress_priv_user3"}
+{"sql":"SELECT lo_unlink(1001)","shape":"SELECT lo_unlink(1001);"}
+{"sql":"SELECT lo_unlink(2002)","shape":"SELECT lo_unlink(2002);"}
+{"sql":"SELECT oid, pg_get_userbyid(lomowner) ownername, lomacl FROM pg_largeobject_metadata WHERE oid >= 1000 AND oid < 3000 ORDER BY oid","shape":"SELECT oid, pg_get_userbyid(lomowner) AS ownername, lomacl FROM pg_largeobject_metadata WHERE (oid >= 1000) AND (oid < 3000) ORDER BY oid;"}
+{"sql":"SELECT loread(lo_open(1005, x'40000'::int), 32)","shape":"SELECT loread(lo_open(1005, X'40000'::int), 32);"}
+{"sql":"SELECT lo_truncate(lo_open(1005, x'20000'::int), 10)","shape":"SELECT lo_truncate(lo_open(1005, X'20000'::int), 10);"}
+{"sql":"SELECT lo_truncate(lo_open(2001, x'20000'::int), 10)","shape":"SELECT lo_truncate(lo_open(2001, X'20000'::int), 10);"}
+{"sql":"SET lo_compat_privileges = false","shape":"SET lo_compat_privileges TO FALSE;"}
+{"sql":"SELECT lo_truncate(lo_open(1002, x'20000'::int), 10)","shape":"SELECT lo_truncate(lo_open(1002, X'20000'::int), 10);"}
+{"sql":"SELECT lo_put(1002, 1, 'abcd')","shape":"SELECT lo_put(1002, 1, 'abcd');"}
+{"sql":"SELECT lo_unlink(1002)","shape":"SELECT lo_unlink(1002);"}
+{"sql":"SELECT lo_export(1001, '/dev/null')","shape":"SELECT lo_export(1001, '/dev/null');"}
+{"sql":"SELECT lo_import('/dev/null')","shape":"SELECT lo_import('/dev/null');"}
+{"sql":"SELECT lo_import('/dev/null', 2003)","shape":"SELECT lo_import('/dev/null', 2003);"}
+{"sql":"SET lo_compat_privileges = true","shape":"SET lo_compat_privileges TO TRUE;"}
+{"sql":"SELECT * FROM pg_largeobject LIMIT 0","shape":"SELECT * FROM pg_largeobject LIMIT 0;"}
+{"sql":"CREATE OR REPLACE FUNCTION terminate_nothrow(pid int) RETURNS bool\n\tLANGUAGE plpgsql SECURITY DEFINER SET client_min_messages = error AS $$\nBEGIN\n\tRETURN pg_terminate_backend($1);\nEXCEPTION WHEN OTHERS THEN\n\tRETURN false;\nEND$$","shape":"CREATE OR REPLACE FUNCTION terminate_nothrow(pid int) RETURNS bool LANGUAGE plpgsql SECURITY DEFINER SET client_min_messages TO error AS '\nBEGIN\n\tRETURN pg_terminate_backend($1);\nEXCEPTION WHEN OTHERS THEN\n\tRETURN false;\nEND';"}
+{"sql":"ALTER FUNCTION terminate_nothrow OWNER TO pg_signal_backend"}
+{"sql":"SELECT backend_type FROM pg_stat_activity\nWHERE CASE WHEN COALESCE(usesysid, 10) = 10 THEN terminate_nothrow(pid) END","shape":"SELECT backend_type FROM pg_stat_activity WHERE CASE WHEN COALESCE(usesysid, 10) = 10 THEN terminate_nothrow(pid) END;"}
+{"sql":"GRANT pg_database_owner TO regress_priv_user1","shape":"GRANT pg_database_owner TO regress_priv_user1;"}
+{"sql":"GRANT regress_priv_user1 TO pg_database_owner","shape":"GRANT regress_priv_user1 TO pg_database_owner;"}
+{"sql":"CREATE TABLE datdba_only ()","shape":"CREATE TABLE datdba_only ();"}
+{"sql":"ALTER TABLE datdba_only OWNER TO pg_database_owner"}
+{"sql":"REVOKE DELETE ON datdba_only FROM pg_database_owner","shape":"REVOKE DELETE ON datdba_only FROM pg_database_owner;"}
+{"sql":"SELECT\n\tpg_has_role('regress_priv_user1', 'pg_database_owner', 'USAGE') as priv,\n\tpg_has_role('regress_priv_user1', 'pg_database_owner', 'MEMBER') as mem,\n\tpg_has_role('regress_priv_user1', 'pg_database_owner',\n\t\t\t\t'MEMBER WITH ADMIN OPTION') as admin","shape":"SELECT pg_has_role('regress_priv_user1', 'pg_database_owner', 'USAGE') AS priv, pg_has_role('regress_priv_user1', 'pg_database_owner', 'MEMBER') AS mem, pg_has_role('regress_priv_user1', 'pg_database_owner', 'MEMBER WITH ADMIN OPTION') AS admin;"}
+{"sql":"DO $$BEGIN EXECUTE format(\n\t'ALTER DATABASE %I OWNER TO regress_priv_group2', current_catalog); END$$","shape":"DO 'BEGIN EXECUTE format(\n\t''ALTER DATABASE %I OWNER TO regress_priv_group2'', current_catalog); END';"}
+{"sql":"TABLE information_schema.enabled_roles ORDER BY role_name COLLATE \"C\"","shape":"TABLE information_schema.enabled_roles ORDER BY role_name COLLATE \"C\";"}
+{"sql":"TABLE information_schema.applicable_roles ORDER BY role_name COLLATE \"C\"","shape":"TABLE information_schema.applicable_roles ORDER BY role_name COLLATE \"C\";"}
+{"sql":"INSERT INTO datdba_only DEFAULT VALUES","shape":"INSERT INTO datdba_only DEFAULT VALUES;"}
+{"sql":"DELETE FROM datdba_only","shape":"DELETE FROM datdba_only;"}
+{"sql":"TABLE information_schema.enabled_roles","shape":"TABLE information_schema.enabled_roles;"}
+{"sql":"CREATE SCHEMA testns","shape":"CREATE SCHEMA testns;"}
+{"sql":"GRANT ALL ON SCHEMA testns TO regress_priv_user1","shape":"GRANT ALL PRIVILEGES ON SCHEMA testns TO regress_priv_user1;"}
+{"sql":"CREATE TABLE testns.acltest1 (x int)","shape":"CREATE TABLE testns.acltest1 (x int);"}
+{"sql":"SELECT has_table_privilege('regress_priv_user1', 'testns.acltest1', 'SELECT')","shape":"SELECT has_table_privilege('regress_priv_user1', 'testns.acltest1', 'SELECT');"}
+{"sql":"SELECT has_table_privilege('regress_priv_user1', 'testns.acltest1', 'INSERT')","shape":"SELECT has_table_privilege('regress_priv_user1', 'testns.acltest1', 'INSERT');"}
+{"sql":"ALTER DEFAULT PRIVILEGES IN SCHEMA testns,testns GRANT SELECT ON TABLES TO public,public"}
+{"sql":"DROP TABLE testns.acltest1","shape":"DROP TABLE testns.acltest1;"}
+{"sql":"ALTER DEFAULT PRIVILEGES IN SCHEMA testns GRANT INSERT ON TABLES TO regress_priv_user1"}
+{"sql":"ALTER DEFAULT PRIVILEGES IN SCHEMA testns REVOKE INSERT ON TABLES FROM regress_priv_user1"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE regress_priv_user1 REVOKE EXECUTE ON FUNCTIONS FROM public"}
+{"sql":"ALTER DEFAULT PRIVILEGES IN SCHEMA testns GRANT USAGE ON SCHEMAS TO regress_priv_user2"}
+{"sql":"SELECT makeaclitem('regress_priv_user1'::regrole, 'regress_priv_user2'::regrole,\n\t'SELECT', TRUE)","shape":"SELECT makeaclitem('regress_priv_user1'::regrole, 'regress_priv_user2'::regrole, 'SELECT', TRUE);"}
+{"sql":"SELECT makeaclitem('regress_priv_user1'::regrole, 'regress_priv_user2'::regrole,\n\t'SELECT, INSERT,  UPDATE , DELETE  ', FALSE)","shape":"SELECT makeaclitem('regress_priv_user1'::regrole, 'regress_priv_user2'::regrole, 'SELECT, INSERT,  UPDATE , DELETE  ', FALSE);"}
+{"sql":"SELECT makeaclitem('regress_priv_user1'::regrole, 'regress_priv_user2'::regrole,\n\t'SELECT, fake_privilege', FALSE)","shape":"SELECT makeaclitem('regress_priv_user1'::regrole, 'regress_priv_user2'::regrole, 'SELECT, fake_privilege', FALSE);"}
+{"sql":"CREATE ROLE \"regress_\"\"quoted\""}
+{"sql":"SELECT makeaclitem('regress_\"quoted'::regrole, 'regress_\"quoted'::regrole,\n                   'SELECT', TRUE)","shape":"SELECT makeaclitem('regress_\"quoted'::regrole, 'regress_\"quoted'::regrole, 'SELECT', TRUE);"}
+{"sql":"SELECT '\"regress_\"\"quoted\"=r*/\"regress_\"\"quoted\"'::aclitem","shape":"SELECT '\"regress_\"\"quoted\"=r*/\"regress_\"\"quoted\"'::aclitem;"}
+{"sql":"SELECT '\"\"=r*/\"\"'::aclitem","shape":"SELECT '\"\"=r*/\"\"'::aclitem;"}
+{"sql":"DROP ROLE \"regress_\"\"quoted\"","shape":"DROP ROLE \"regress_\"\"quoted\";"}
+{"sql":"SELECT pg_input_is_valid('regress_priv_user1=r/regress_priv_user2', 'aclitem')","shape":"SELECT pg_input_is_valid('regress_priv_user1=r/regress_priv_user2', 'aclitem');"}
+{"sql":"SELECT pg_input_is_valid('regress_priv_user1=r/', 'aclitem')","shape":"SELECT pg_input_is_valid('regress_priv_user1=r/', 'aclitem');"}
+{"sql":"SELECT * FROM pg_input_error_info('regress_priv_user1=r/', 'aclitem')","shape":"SELECT * FROM pg_input_error_info('regress_priv_user1=r/', 'aclitem');"}
+{"sql":"SELECT pg_input_is_valid('regress_priv_user1=r/regress_no_such_user', 'aclitem')","shape":"SELECT pg_input_is_valid('regress_priv_user1=r/regress_no_such_user', 'aclitem');"}
+{"sql":"SELECT * FROM pg_input_error_info('regress_priv_user1=r/regress_no_such_user', 'aclitem')","shape":"SELECT * FROM pg_input_error_info('regress_priv_user1=r/regress_no_such_user', 'aclitem');"}
+{"sql":"SELECT pg_input_is_valid('regress_priv_user1=rY', 'aclitem')","shape":"SELECT pg_input_is_valid('regress_priv_user1=rY', 'aclitem');"}
+{"sql":"SELECT * FROM pg_input_error_info('regress_priv_user1=rY', 'aclitem')","shape":"SELECT * FROM pg_input_error_info('regress_priv_user1=rY', 'aclitem');"}
+{"sql":"ALTER DEFAULT PRIVILEGES GRANT USAGE ON SCHEMAS TO regress_priv_user2"}
+{"sql":"CREATE SCHEMA testns2","shape":"CREATE SCHEMA testns2;"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns2', 'USAGE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns2', 'USAGE');"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user6', 'testns2', 'USAGE')","shape":"SELECT has_schema_privilege('regress_priv_user6', 'testns2', 'USAGE');"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns2', 'CREATE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns2', 'CREATE');"}
+{"sql":"ALTER DEFAULT PRIVILEGES REVOKE USAGE ON SCHEMAS FROM regress_priv_user2"}
+{"sql":"CREATE SCHEMA testns3","shape":"CREATE SCHEMA testns3;"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns3', 'USAGE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns3', 'USAGE');"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns3', 'CREATE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns3', 'CREATE');"}
+{"sql":"ALTER DEFAULT PRIVILEGES GRANT ALL ON SCHEMAS TO regress_priv_user2"}
+{"sql":"CREATE SCHEMA testns4","shape":"CREATE SCHEMA testns4;"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns4', 'USAGE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns4', 'USAGE');"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns4', 'CREATE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns4', 'CREATE');"}
+{"sql":"ALTER DEFAULT PRIVILEGES REVOKE ALL ON SCHEMAS FROM regress_priv_user2"}
+{"sql":"ALTER DEFAULT PRIVILEGES GRANT ALL ON FUNCTIONS TO regress_priv_user2"}
+{"sql":"ALTER DEFAULT PRIVILEGES GRANT ALL ON SEQUENCES TO regress_priv_user2"}
+{"sql":"ALTER DEFAULT PRIVILEGES GRANT ALL ON TABLES TO regress_priv_user2"}
+{"sql":"ALTER DEFAULT PRIVILEGES GRANT ALL ON TYPES TO regress_priv_user2"}
+{"sql":"SELECT count(*) FROM pg_shdepend\n  WHERE deptype = 'a' AND\n        refobjid = 'regress_priv_user2'::regrole AND\n\tclassid = 'pg_default_acl'::regclass","shape":"SELECT count(*) FROM pg_shdepend WHERE ((deptype = 'a') AND (refobjid = 'regress_priv_user2'::regrole)) AND (classid = 'pg_default_acl'::regclass);"}
+{"sql":"DROP OWNED BY regress_priv_user2, regress_priv_user2"}
+{"sql":"CREATE SCHEMA testns5","shape":"CREATE SCHEMA testns5;"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns5', 'USAGE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns5', 'USAGE');"}
+{"sql":"SELECT has_schema_privilege('regress_priv_user2', 'testns5', 'CREATE')","shape":"SELECT has_schema_privilege('regress_priv_user2', 'testns5', 'CREATE');"}
+{"sql":"SET ROLE regress_priv_user1"}
+{"sql":"CREATE FUNCTION testns.foo() RETURNS int AS 'select 1' LANGUAGE sql","shape":"CREATE FUNCTION testns.foo() RETURNS int AS 'select 1' LANGUAGE sql;"}
+{"sql":"CREATE AGGREGATE testns.agg1(int) (sfunc = int4pl, stype = int4)"}
+{"sql":"CREATE PROCEDURE testns.bar() AS 'select 1' LANGUAGE sql","shape":"CREATE PROCEDURE testns.bar() AS 'select 1' LANGUAGE sql;"}
+{"sql":"SELECT has_function_privilege('regress_priv_user2', 'testns.foo()', 'EXECUTE')","shape":"SELECT has_function_privilege('regress_priv_user2', 'testns.foo()', 'EXECUTE');"}
+{"sql":"SELECT has_function_privilege('regress_priv_user2', 'testns.agg1(int)', 'EXECUTE')","shape":"SELECT has_function_privilege('regress_priv_user2', 'testns.agg1(int)', 'EXECUTE');"}
+{"sql":"SELECT has_function_privilege('regress_priv_user2', 'testns.bar()', 'EXECUTE')","shape":"SELECT has_function_privilege('regress_priv_user2', 'testns.bar()', 'EXECUTE');"}
+{"sql":"ALTER DEFAULT PRIVILEGES IN SCHEMA testns GRANT EXECUTE ON ROUTINES to public"}
+{"sql":"DROP FUNCTION testns.foo()"}
+{"sql":"DROP AGGREGATE testns.agg1(int)"}
+{"sql":"DROP PROCEDURE testns.bar()"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE regress_priv_user1 REVOKE USAGE ON TYPES FROM public"}
+{"sql":"CREATE DOMAIN testns.priv_testdomain1 AS int","shape":"CREATE DOMAIN testns.priv_testdomain1 AS int;"}
+{"sql":"SELECT has_type_privilege('regress_priv_user2', 'testns.priv_testdomain1', 'USAGE')","shape":"SELECT has_type_privilege('regress_priv_user2', 'testns.priv_testdomain1', 'USAGE');"}
+{"sql":"ALTER DEFAULT PRIVILEGES IN SCHEMA testns GRANT USAGE ON TYPES to public"}
+{"sql":"DROP DOMAIN testns.priv_testdomain1","shape":"DROP DOMAIN testns.priv_testdomain1;"}
+{"sql":"SELECT count(*)\n  FROM pg_default_acl d LEFT JOIN pg_namespace n ON defaclnamespace = n.oid\n  WHERE nspname = 'testns'","shape":"SELECT count(*) FROM pg_default_acl AS d LEFT JOIN pg_namespace AS n ON defaclnamespace = n.oid WHERE nspname = 'testns';"}
+{"sql":"DROP SCHEMA testns CASCADE","shape":"DROP SCHEMA testns CASCADE;"}
+{"sql":"DROP SCHEMA testns2 CASCADE","shape":"DROP SCHEMA testns2 CASCADE;"}
+{"sql":"DROP SCHEMA testns3 CASCADE","shape":"DROP SCHEMA testns3 CASCADE;"}
+{"sql":"DROP SCHEMA testns4 CASCADE","shape":"DROP SCHEMA testns4 CASCADE;"}
+{"sql":"DROP SCHEMA testns5 CASCADE","shape":"DROP SCHEMA testns5 CASCADE;"}
+{"sql":"SELECT d.*     -- check that entries went away\n  FROM pg_default_acl d LEFT JOIN pg_namespace n ON defaclnamespace = n.oid\n  WHERE nspname IS NULL AND defaclnamespace != 0","shape":"SELECT d.* FROM pg_default_acl AS d LEFT JOIN pg_namespace AS n ON defaclnamespace = n.oid WHERE (nspname IS NULL) AND (defaclnamespace != 0);"}
+{"sql":"CREATE TABLE testns.t1 (f1 int)","shape":"CREATE TABLE testns.t1 (f1 int);"}
+{"sql":"CREATE TABLE testns.t2 (f1 int)","shape":"CREATE TABLE testns.t2 (f1 int);"}
+{"sql":"SELECT has_table_privilege('regress_priv_user1', 'testns.t1', 'SELECT')","shape":"SELECT has_table_privilege('regress_priv_user1', 'testns.t1', 'SELECT');"}
+{"sql":"GRANT ALL ON ALL TABLES IN SCHEMA testns TO regress_priv_user1","shape":"GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA testns TO regress_priv_user1;"}
+{"sql":"SELECT has_table_privilege('regress_priv_user1', 'testns.t2', 'SELECT')","shape":"SELECT has_table_privilege('regress_priv_user1', 'testns.t2', 'SELECT');"}
+{"sql":"REVOKE ALL ON ALL TABLES IN SCHEMA testns FROM regress_priv_user1","shape":"REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA testns FROM regress_priv_user1;"}
+{"sql":"CREATE FUNCTION testns.priv_testfunc(int) RETURNS int AS 'select 3 * $1;' LANGUAGE sql","shape":"CREATE FUNCTION testns.priv_testfunc(int) RETURNS int AS 'select 3 * $1;' LANGUAGE sql;"}
+{"sql":"CREATE AGGREGATE testns.priv_testagg(int) (sfunc = int4pl, stype = int4)"}
+{"sql":"CREATE PROCEDURE testns.priv_testproc(int) AS 'select 3' LANGUAGE sql","shape":"CREATE PROCEDURE testns.priv_testproc(int) AS 'select 3' LANGUAGE sql;"}
+{"sql":"SELECT has_function_privilege('regress_priv_user1', 'testns.priv_testfunc(int)', 'EXECUTE')","shape":"SELECT has_function_privilege('regress_priv_user1', 'testns.priv_testfunc(int)', 'EXECUTE');"}
+{"sql":"SELECT has_function_privilege('regress_priv_user1', 'testns.priv_testagg(int)', 'EXECUTE')","shape":"SELECT has_function_privilege('regress_priv_user1', 'testns.priv_testagg(int)', 'EXECUTE');"}
+{"sql":"SELECT has_function_privilege('regress_priv_user1', 'testns.priv_testproc(int)', 'EXECUTE')","shape":"SELECT has_function_privilege('regress_priv_user1', 'testns.priv_testproc(int)', 'EXECUTE');"}
+{"sql":"REVOKE ALL ON ALL FUNCTIONS IN SCHEMA testns FROM PUBLIC","shape":"REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA testns FROM PUBLIC;"}
+{"sql":"REVOKE ALL ON ALL PROCEDURES IN SCHEMA testns FROM PUBLIC","shape":"REVOKE ALL PRIVILEGES ON ALL PROCEDURES IN SCHEMA testns FROM PUBLIC;"}
+{"sql":"GRANT ALL ON ALL ROUTINES IN SCHEMA testns TO PUBLIC","shape":"GRANT ALL PRIVILEGES ON ALL ROUTINES IN SCHEMA testns TO PUBLIC;"}
+{"sql":"CREATE ROLE regress_schemauser1 superuser login"}
+{"sql":"CREATE ROLE regress_schemauser2 superuser login"}
+{"sql":"SET SESSION ROLE regress_schemauser1"}
+{"sql":"SELECT nspname, rolname FROM pg_namespace, pg_roles WHERE pg_namespace.nspname = 'testns' AND pg_namespace.nspowner = pg_roles.oid","shape":"SELECT nspname, rolname FROM pg_namespace, pg_roles WHERE (pg_namespace.nspname = 'testns') AND (pg_namespace.nspowner = pg_roles.oid);"}
+{"sql":"ALTER SCHEMA testns OWNER TO regress_schemauser2"}
+{"sql":"ALTER ROLE regress_schemauser2 RENAME TO regress_schemauser_renamed"}
+{"sql":"set session role regress_schemauser_renamed"}
+{"sql":"DROP ROLE regress_schemauser1","shape":"DROP ROLE regress_schemauser1;"}
+{"sql":"DROP ROLE regress_schemauser_renamed","shape":"DROP ROLE regress_schemauser_renamed;"}
+{"sql":"set session role regress_priv_user1"}
+{"sql":"create table dep_priv_test (a int)","shape":"CREATE TABLE dep_priv_test (a int);"}
+{"sql":"grant select on dep_priv_test to regress_priv_user2 with grant option","shape":"GRANT SELECT ON dep_priv_test TO regress_priv_user2 WITH GRANT OPTION;"}
+{"sql":"grant select on dep_priv_test to regress_priv_user3 with grant option","shape":"GRANT SELECT ON dep_priv_test TO regress_priv_user3 WITH GRANT OPTION;"}
+{"sql":"set session role regress_priv_user2"}
+{"sql":"grant select on dep_priv_test to regress_priv_user4 with grant option","shape":"GRANT SELECT ON dep_priv_test TO regress_priv_user4 WITH GRANT OPTION;"}
+{"sql":"set session role regress_priv_user3"}
+{"sql":"set session role regress_priv_user4"}
+{"sql":"grant select on dep_priv_test to regress_priv_user5","shape":"GRANT SELECT ON dep_priv_test TO regress_priv_user5;"}
+{"sql":"revoke select on dep_priv_test from regress_priv_user4 cascade","shape":"REVOKE SELECT ON dep_priv_test FROM regress_priv_user4 CASCADE;"}
+{"sql":"drop table dep_priv_test","shape":"DROP TABLE dep_priv_test;"}
+{"sql":"drop sequence x_seq","shape":"DROP SEQUENCE x_seq;"}
+{"sql":"DROP FUNCTION priv_testfunc2(int)"}
+{"sql":"DROP FUNCTION priv_testfunc4(boolean)"}
+{"sql":"DROP VIEW atestv0","shape":"DROP VIEW atestv0;"}
+{"sql":"DROP VIEW atestv1","shape":"DROP VIEW atestv1;"}
+{"sql":"DROP VIEW atestv2","shape":"DROP VIEW atestv2;"}
+{"sql":"DROP VIEW atestv3 CASCADE","shape":"DROP VIEW atestv3 CASCADE;"}
+{"sql":"DROP VIEW atestv4","shape":"DROP VIEW atestv4;"}
+{"sql":"DROP TABLE atest1","shape":"DROP TABLE atest1;"}
+{"sql":"DROP TABLE atest2","shape":"DROP TABLE atest2;"}
+{"sql":"DROP TABLE atest3","shape":"DROP TABLE atest3;"}
+{"sql":"DROP TABLE atest4","shape":"DROP TABLE atest4;"}
+{"sql":"DROP TABLE atest5","shape":"DROP TABLE atest5;"}
+{"sql":"DROP TABLE atest6","shape":"DROP TABLE atest6;"}
+{"sql":"DROP TABLE atestc","shape":"DROP TABLE atestc;"}
+{"sql":"DROP TABLE atestp1","shape":"DROP TABLE atestp1;"}
+{"sql":"DROP TABLE atestp2","shape":"DROP TABLE atestp2;"}
+{"sql":"DROP GROUP regress_priv_group1"}
+{"sql":"DROP GROUP regress_priv_group2"}
+{"sql":"REVOKE USAGE ON LANGUAGE sql FROM regress_priv_user1","shape":"REVOKE USAGE ON LANGUAGE sql FROM regress_priv_user1;"}
+{"sql":"DROP OWNED BY regress_priv_user1"}
+{"sql":"DROP USER regress_priv_user1","shape":"DROP USER regress_priv_user1;"}
+{"sql":"DROP USER regress_priv_user2","shape":"DROP USER regress_priv_user2;"}
+{"sql":"DROP USER regress_priv_user3","shape":"DROP USER regress_priv_user3;"}
+{"sql":"DROP USER regress_priv_user4","shape":"DROP USER regress_priv_user4;"}
+{"sql":"DROP USER regress_priv_user5","shape":"DROP USER regress_priv_user5;"}
+{"sql":"DROP USER regress_priv_user6","shape":"DROP USER regress_priv_user6;"}
+{"sql":"DROP USER regress_priv_user7","shape":"DROP USER regress_priv_user7;"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE pg_signal_backend\n\tREVOKE USAGE ON TYPES FROM pg_signal_backend"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE pg_read_all_settings\n\tREVOKE USAGE ON TYPES FROM pg_read_all_settings"}
+{"sql":"CREATE USER regress_locktable_user"}
+{"sql":"CREATE TABLE lock_table (a int)","shape":"CREATE TABLE lock_table (a int);"}
+{"sql":"GRANT SELECT ON lock_table TO regress_locktable_user","shape":"GRANT SELECT ON lock_table TO regress_locktable_user;"}
+{"sql":"SET SESSION AUTHORIZATION regress_locktable_user"}
+{"sql":"LOCK TABLE lock_table IN ACCESS SHARE MODE","shape":"LOCK TABLE lock_table IN ACCESS SHARE MODE;"}
+{"sql":"LOCK TABLE lock_table IN ROW EXCLUSIVE MODE","shape":"LOCK TABLE lock_table IN ROW EXCLUSIVE MODE;"}
+{"sql":"LOCK TABLE lock_table IN ACCESS EXCLUSIVE MODE","shape":"LOCK TABLE lock_table IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"REVOKE SELECT ON lock_table FROM regress_locktable_user","shape":"REVOKE SELECT ON lock_table FROM regress_locktable_user;"}
+{"sql":"GRANT INSERT ON lock_table TO regress_locktable_user","shape":"GRANT INSERT ON lock_table TO regress_locktable_user;"}
+{"sql":"REVOKE INSERT ON lock_table FROM regress_locktable_user","shape":"REVOKE INSERT ON lock_table FROM regress_locktable_user;"}
+{"sql":"GRANT UPDATE ON lock_table TO regress_locktable_user","shape":"GRANT UPDATE ON lock_table TO regress_locktable_user;"}
+{"sql":"REVOKE UPDATE ON lock_table FROM regress_locktable_user","shape":"REVOKE UPDATE ON lock_table FROM regress_locktable_user;"}
+{"sql":"GRANT DELETE ON lock_table TO regress_locktable_user","shape":"GRANT DELETE ON lock_table TO regress_locktable_user;"}
+{"sql":"REVOKE DELETE ON lock_table FROM regress_locktable_user","shape":"REVOKE DELETE ON lock_table FROM regress_locktable_user;"}
+{"sql":"GRANT TRUNCATE ON lock_table TO regress_locktable_user","shape":"GRANT TRUNCATE ON lock_table TO regress_locktable_user;"}
+{"sql":"REVOKE TRUNCATE ON lock_table FROM regress_locktable_user","shape":"REVOKE TRUNCATE ON lock_table FROM regress_locktable_user;"}
+{"sql":"DROP TABLE lock_table","shape":"DROP TABLE lock_table;"}
+{"sql":"DROP USER regress_locktable_user","shape":"DROP USER regress_locktable_user;"}
+{"sql":"CREATE ROLE regress_readallstats"}
+{"sql":"SELECT has_table_privilege('regress_readallstats','pg_backend_memory_contexts','SELECT')","shape":"SELECT has_table_privilege('regress_readallstats', 'pg_backend_memory_contexts', 'SELECT');"}
+{"sql":"SELECT has_table_privilege('regress_readallstats','pg_shmem_allocations','SELECT')","shape":"SELECT has_table_privilege('regress_readallstats', 'pg_shmem_allocations', 'SELECT');"}
+{"sql":"GRANT pg_read_all_stats TO regress_readallstats","shape":"GRANT pg_read_all_stats TO regress_readallstats;"}
+{"sql":"SET ROLE regress_readallstats"}
+{"sql":"SELECT COUNT(*) >= 0 AS ok FROM pg_backend_memory_contexts","shape":"SELECT COUNT(*) >= 0 AS ok FROM pg_backend_memory_contexts;"}
+{"sql":"SELECT COUNT(*) >= 0 AS ok FROM pg_shmem_allocations","shape":"SELECT COUNT(*) >= 0 AS ok FROM pg_shmem_allocations;"}
+{"sql":"DROP ROLE regress_readallstats","shape":"DROP ROLE regress_readallstats;"}
+{"sql":"CREATE ROLE regress_group"}
+{"sql":"CREATE ROLE regress_group_direct_manager"}
+{"sql":"CREATE ROLE regress_group_indirect_manager"}
+{"sql":"CREATE ROLE regress_group_member"}
+{"sql":"GRANT regress_group TO regress_group_direct_manager WITH INHERIT FALSE, ADMIN TRUE","shape":"GRANT regress_group TO regress_group_direct_manager WITH INHERIT FALSE, ADMIN TRUE;"}
+{"sql":"GRANT regress_group_direct_manager TO regress_group_indirect_manager","shape":"GRANT regress_group_direct_manager TO regress_group_indirect_manager;"}
+{"sql":"SET SESSION AUTHORIZATION regress_group_direct_manager"}
+{"sql":"GRANT regress_group TO regress_group_member","shape":"GRANT regress_group TO regress_group_member;"}
+{"sql":"SELECT member::regrole::text, CASE WHEN grantor = 10 THEN 'BOOTSTRAP SUPERUSER' ELSE grantor::regrole::text END FROM pg_auth_members WHERE roleid = 'regress_group'::regrole ORDER BY 1, 2","shape":"SELECT member::regrole::text, CASE WHEN grantor = 10 THEN 'BOOTSTRAP SUPERUSER' ELSE grantor::regrole::text END FROM pg_auth_members WHERE roleid = 'regress_group'::regrole ORDER BY 1, 2;"}
+{"sql":"REVOKE regress_group FROM regress_group_member","shape":"REVOKE regress_group FROM regress_group_member;"}
+{"sql":"SET SESSION AUTHORIZATION regress_group_indirect_manager"}
+{"sql":"DROP ROLE regress_group","shape":"DROP ROLE regress_group;"}
+{"sql":"DROP ROLE regress_group_direct_manager","shape":"DROP ROLE regress_group_direct_manager;"}
+{"sql":"DROP ROLE regress_group_indirect_manager","shape":"DROP ROLE regress_group_indirect_manager;"}
+{"sql":"DROP ROLE regress_group_member","shape":"DROP ROLE regress_group_member;"}
+{"sql":"CREATE ROLE regress_roleoption_protagonist"}
+{"sql":"CREATE ROLE regress_roleoption_donor"}
+{"sql":"CREATE ROLE regress_roleoption_recipient"}
+{"sql":"CREATE SCHEMA regress_roleoption","shape":"CREATE SCHEMA regress_roleoption;"}
+{"sql":"GRANT CREATE, USAGE ON SCHEMA regress_roleoption TO PUBLIC","shape":"GRANT CREATE, USAGE ON SCHEMA regress_roleoption TO PUBLIC;"}
+{"sql":"GRANT regress_roleoption_donor TO regress_roleoption_protagonist WITH INHERIT TRUE, SET FALSE","shape":"GRANT regress_roleoption_donor TO regress_roleoption_protagonist WITH INHERIT TRUE, SET FALSE;"}
+{"sql":"GRANT regress_roleoption_recipient TO regress_roleoption_protagonist WITH INHERIT FALSE, SET TRUE","shape":"GRANT regress_roleoption_recipient TO regress_roleoption_protagonist WITH INHERIT FALSE, SET TRUE;"}
+{"sql":"SET SESSION AUTHORIZATION regress_roleoption_protagonist"}
+{"sql":"CREATE TABLE regress_roleoption.t1 (a int)","shape":"CREATE TABLE regress_roleoption.t1 (a int);"}
+{"sql":"CREATE TABLE regress_roleoption.t2 (a int)","shape":"CREATE TABLE regress_roleoption.t2 (a int);"}
+{"sql":"SET SESSION AUTHORIZATION regress_roleoption_donor"}
+{"sql":"CREATE TABLE regress_roleoption.t3 (a int)","shape":"CREATE TABLE regress_roleoption.t3 (a int);"}
+{"sql":"SET SESSION AUTHORIZATION regress_roleoption_recipient"}
+{"sql":"CREATE TABLE regress_roleoption.t4 (a int)","shape":"CREATE TABLE regress_roleoption.t4 (a int);"}
+{"sql":"ALTER TABLE regress_roleoption.t1 OWNER TO regress_roleoption_donor"}
+{"sql":"ALTER TABLE regress_roleoption.t2 OWNER TO regress_roleoption_recipient"}
+{"sql":"ALTER TABLE regress_roleoption.t3 OWNER TO regress_roleoption_protagonist"}
+{"sql":"ALTER TABLE regress_roleoption.t4 OWNER TO regress_roleoption_protagonist"}
+{"sql":"DROP TABLE regress_roleoption.t1","shape":"DROP TABLE regress_roleoption.t1;"}
+{"sql":"DROP TABLE regress_roleoption.t2","shape":"DROP TABLE regress_roleoption.t2;"}
+{"sql":"DROP TABLE regress_roleoption.t3","shape":"DROP TABLE regress_roleoption.t3;"}
+{"sql":"DROP TABLE regress_roleoption.t4","shape":"DROP TABLE regress_roleoption.t4;"}
+{"sql":"DROP SCHEMA regress_roleoption","shape":"DROP SCHEMA regress_roleoption;"}
+{"sql":"DROP ROLE regress_roleoption_protagonist","shape":"DROP ROLE regress_roleoption_protagonist;"}
+{"sql":"DROP ROLE regress_roleoption_donor","shape":"DROP ROLE regress_roleoption_donor;"}
+{"sql":"DROP ROLE regress_roleoption_recipient","shape":"DROP ROLE regress_roleoption_recipient;"}

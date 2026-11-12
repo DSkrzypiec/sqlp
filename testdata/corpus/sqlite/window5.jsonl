@@ -1,0 +1,9 @@
+{"sql":"INSERT INTO t1 VALUES(4, 'a')"}
+{"sql":"INSERT INTO t1 VALUES(6, 'b')"}
+{"sql":"INSERT INTO t1 VALUES(1, 'c')"}
+{"sql":"INSERT INTO t1 VALUES(5, 'd')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'f')"}
+{"sql":"SELECT win(a) OVER (ORDER BY b), median(a) OVER (ORDER BY b) FROM t1"}
+{"sql":"SELECT sumint(a) OVER (ORDER BY rowid) FROM t1 ORDER BY rowid"}
+{"sql":"SELECT sumint(a) OVER (ORDER BY rowid ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t1 ORDER BY rowid"}
+{"sql":"SELECT sum(a) OVER \n  (ORDER BY b ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) \n  FROM t1"}

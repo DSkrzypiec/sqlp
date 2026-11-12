@@ -1,0 +1,132 @@
+{"sql":"SELECT 1 AS two UNION SELECT 2 ORDER BY 1","shape":"SELECT 1 AS two UNION SELECT 2 ORDER BY 1;"}
+{"sql":"SELECT 1 AS one UNION SELECT 1 ORDER BY 1","shape":"SELECT 1 AS one UNION SELECT 1 ORDER BY 1;"}
+{"sql":"SELECT 1 AS two UNION ALL SELECT 2","shape":"SELECT 1 AS two UNION ALL SELECT 2;"}
+{"sql":"SELECT 1 AS two UNION ALL SELECT 1","shape":"SELECT 1 AS two UNION ALL SELECT 1;"}
+{"sql":"SELECT 1 AS three UNION SELECT 2 UNION SELECT 3 ORDER BY 1","shape":"(SELECT 1 AS three UNION SELECT 2) UNION SELECT 3 ORDER BY 1;"}
+{"sql":"SELECT 1 AS two UNION SELECT 2 UNION SELECT 2 ORDER BY 1","shape":"(SELECT 1 AS two UNION SELECT 2) UNION SELECT 2 ORDER BY 1;"}
+{"sql":"SELECT 1 AS three UNION SELECT 2 UNION ALL SELECT 2 ORDER BY 1","shape":"(SELECT 1 AS three UNION SELECT 2) UNION ALL SELECT 2 ORDER BY 1;"}
+{"sql":"SELECT 1.1 AS two UNION SELECT 2.2 ORDER BY 1","shape":"SELECT 1.1 AS two UNION SELECT 2.2 ORDER BY 1;"}
+{"sql":"SELECT 1.1 AS two UNION SELECT 2 ORDER BY 1","shape":"SELECT 1.1 AS two UNION SELECT 2 ORDER BY 1;"}
+{"sql":"SELECT 1 AS two UNION SELECT 2.2 ORDER BY 1","shape":"SELECT 1 AS two UNION SELECT 2.2 ORDER BY 1;"}
+{"sql":"SELECT 1 AS one UNION SELECT 1.0::float8 ORDER BY 1","shape":"SELECT 1 AS one UNION SELECT 1.0::float8 ORDER BY 1;"}
+{"sql":"SELECT 1.1 AS two UNION ALL SELECT 2 ORDER BY 1","shape":"SELECT 1.1 AS two UNION ALL SELECT 2 ORDER BY 1;"}
+{"sql":"SELECT 1.0::float8 AS two UNION ALL SELECT 1 ORDER BY 1","shape":"SELECT 1.0::float8 AS two UNION ALL SELECT 1 ORDER BY 1;"}
+{"sql":"SELECT 1.1 AS three UNION SELECT 2 UNION SELECT 3 ORDER BY 1","shape":"(SELECT 1.1 AS three UNION SELECT 2) UNION SELECT 3 ORDER BY 1;"}
+{"sql":"SELECT 1.1::float8 AS two UNION SELECT 2 UNION SELECT 2.0::float8 ORDER BY 1","shape":"(SELECT 1.1::float8 AS two UNION SELECT 2) UNION SELECT 2.0::float8 ORDER BY 1;"}
+{"sql":"SELECT 1.1 AS three UNION SELECT 2 UNION ALL SELECT 2 ORDER BY 1","shape":"(SELECT 1.1 AS three UNION SELECT 2) UNION ALL SELECT 2 ORDER BY 1;"}
+{"sql":"SELECT 1.1 AS two UNION (SELECT 2 UNION ALL SELECT 2) ORDER BY 1","shape":"SELECT 1.1 AS two UNION (SELECT 2 UNION ALL SELECT 2) ORDER BY 1;"}
+{"sql":"SELECT f1 AS five FROM FLOAT8_TBL\nUNION\nSELECT f1 FROM FLOAT8_TBL\nORDER BY 1","shape":"SELECT f1 AS five FROM FLOAT8_TBL UNION SELECT f1 FROM FLOAT8_TBL ORDER BY 1;"}
+{"sql":"SELECT f1 AS ten FROM FLOAT8_TBL\nUNION ALL\nSELECT f1 FROM FLOAT8_TBL","shape":"SELECT f1 AS ten FROM FLOAT8_TBL UNION ALL SELECT f1 FROM FLOAT8_TBL;"}
+{"sql":"SELECT f1 AS nine FROM FLOAT8_TBL\nUNION\nSELECT f1 FROM INT4_TBL\nORDER BY 1","shape":"SELECT f1 AS nine FROM FLOAT8_TBL UNION SELECT f1 FROM INT4_TBL ORDER BY 1;"}
+{"sql":"SELECT f1 AS ten FROM FLOAT8_TBL\nUNION ALL\nSELECT f1 FROM INT4_TBL","shape":"SELECT f1 AS ten FROM FLOAT8_TBL UNION ALL SELECT f1 FROM INT4_TBL;"}
+{"sql":"SELECT f1 AS five FROM FLOAT8_TBL\n  WHERE f1 BETWEEN -1e6 AND 1e6\nUNION\nSELECT f1 FROM INT4_TBL\n  WHERE f1 BETWEEN 0 AND 1000000\nORDER BY 1","shape":"SELECT f1 AS five FROM FLOAT8_TBL WHERE f1 BETWEEN (-1e6) AND 1e6 UNION SELECT f1 FROM INT4_TBL WHERE f1 BETWEEN 0 AND 1000000 ORDER BY 1;"}
+{"sql":"SELECT CAST(f1 AS char(4)) AS three FROM VARCHAR_TBL\nUNION\nSELECT f1 FROM CHAR_TBL\nORDER BY 1","shape":"SELECT CAST(f1 AS char(4)) AS three FROM VARCHAR_TBL UNION SELECT f1 FROM CHAR_TBL ORDER BY 1;"}
+{"sql":"SELECT f1 AS three FROM VARCHAR_TBL\nUNION\nSELECT CAST(f1 AS varchar) FROM CHAR_TBL\nORDER BY 1","shape":"SELECT f1 AS three FROM VARCHAR_TBL UNION SELECT CAST(f1 AS varchar) FROM CHAR_TBL ORDER BY 1;"}
+{"sql":"SELECT f1 AS eight FROM VARCHAR_TBL\nUNION ALL\nSELECT f1 FROM CHAR_TBL","shape":"SELECT f1 AS eight FROM VARCHAR_TBL UNION ALL SELECT f1 FROM CHAR_TBL;"}
+{"sql":"SELECT f1 AS five FROM TEXT_TBL\nUNION\nSELECT f1 FROM VARCHAR_TBL\nUNION\nSELECT TRIM(TRAILING FROM f1) FROM CHAR_TBL\nORDER BY 1","shape":"(SELECT f1 AS five FROM TEXT_TBL UNION SELECT f1 FROM VARCHAR_TBL) UNION SELECT TRIM(TRAILING FROM f1) FROM CHAR_TBL ORDER BY 1;"}
+{"sql":"SELECT q2 FROM int8_tbl INTERSECT SELECT q1 FROM int8_tbl ORDER BY 1","shape":"SELECT q2 FROM int8_tbl INTERSECT SELECT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q2 FROM int8_tbl INTERSECT ALL SELECT q1 FROM int8_tbl ORDER BY 1","shape":"SELECT q2 FROM int8_tbl INTERSECT ALL SELECT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q2 FROM int8_tbl EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1","shape":"SELECT q2 FROM int8_tbl EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q2 FROM int8_tbl EXCEPT ALL SELECT q1 FROM int8_tbl ORDER BY 1","shape":"SELECT q2 FROM int8_tbl EXCEPT ALL SELECT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q2 FROM int8_tbl EXCEPT ALL SELECT DISTINCT q1 FROM int8_tbl ORDER BY 1","shape":"SELECT q2 FROM int8_tbl EXCEPT ALL SELECT DISTINCT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl EXCEPT SELECT q2 FROM int8_tbl ORDER BY 1","shape":"SELECT q1 FROM int8_tbl EXCEPT SELECT q2 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl EXCEPT ALL SELECT q2 FROM int8_tbl ORDER BY 1","shape":"SELECT q1 FROM int8_tbl EXCEPT ALL SELECT q2 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl EXCEPT ALL SELECT DISTINCT q2 FROM int8_tbl ORDER BY 1","shape":"SELECT q1 FROM int8_tbl EXCEPT ALL SELECT DISTINCT q2 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl EXCEPT ALL SELECT q1 FROM int8_tbl FOR NO KEY UPDATE","shape":"SELECT q1 FROM int8_tbl EXCEPT ALL SELECT q1 FROM int8_tbl FOR NO KEY UPDATE;"}
+{"sql":"(SELECT 1,2,3 UNION SELECT 4,5,6) INTERSECT SELECT 4,5,6","shape":"(SELECT 1, 2, 3 UNION SELECT 4, 5, 6) INTERSECT SELECT 4, 5, 6;"}
+{"sql":"(SELECT 1,2,3 UNION SELECT 4,5,6 ORDER BY 1,2) INTERSECT SELECT 4,5,6","shape":"(SELECT 1, 2, 3 UNION SELECT 4, 5, 6 ORDER BY 1, 2) INTERSECT SELECT 4, 5, 6;"}
+{"sql":"(SELECT 1,2,3 UNION SELECT 4,5,6) EXCEPT SELECT 4,5,6","shape":"(SELECT 1, 2, 3 UNION SELECT 4, 5, 6) EXCEPT SELECT 4, 5, 6;"}
+{"sql":"(SELECT 1,2,3 UNION SELECT 4,5,6 ORDER BY 1,2) EXCEPT SELECT 4,5,6","shape":"(SELECT 1, 2, 3 UNION SELECT 4, 5, 6 ORDER BY 1, 2) EXCEPT SELECT 4, 5, 6;"}
+{"sql":"set enable_hashagg to on","shape":"SET enable_hashagg TO on;"}
+{"sql":"explain (costs off)\nselect count(*) from\n  ( select unique1 from tenk1 union select fivethous from tenk1 ) ss","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM (SELECT unique1 FROM tenk1 UNION SELECT fivethous FROM tenk1) AS ss;"}
+{"sql":"select count(*) from\n  ( select unique1 from tenk1 union select fivethous from tenk1 ) ss","shape":"SELECT count(*) FROM (SELECT unique1 FROM tenk1 UNION SELECT fivethous FROM tenk1) AS ss;"}
+{"sql":"explain (costs off)\nselect count(*) from\n  ( select unique1 from tenk1 intersect select fivethous from tenk1 ) ss","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM (SELECT unique1 FROM tenk1 INTERSECT SELECT fivethous FROM tenk1) AS ss;"}
+{"sql":"select count(*) from\n  ( select unique1 from tenk1 intersect select fivethous from tenk1 ) ss","shape":"SELECT count(*) FROM (SELECT unique1 FROM tenk1 INTERSECT SELECT fivethous FROM tenk1) AS ss;"}
+{"sql":"explain (costs off)\nselect unique1 from tenk1 except select unique2 from tenk1 where unique2 != 10","shape":"EXPLAIN (COSTS off) SELECT unique1 FROM tenk1 EXCEPT SELECT unique2 FROM tenk1 WHERE unique2 != 10;"}
+{"sql":"select unique1 from tenk1 except select unique2 from tenk1 where unique2 != 10","shape":"SELECT unique1 FROM tenk1 EXCEPT SELECT unique2 FROM tenk1 WHERE unique2 != 10;"}
+{"sql":"explain (costs off)\nselect x from (values (100::money), (200::money)) _(x) union select x from (values (100::money), (300::money)) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (100::money), (200::money)) AS _(x) UNION SELECT x FROM (VALUES (100::money), (300::money)) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (array[1, 2]), (array[1, 3])) _(x) union select x from (values (array[1, 2]), (array[1, 4])) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 3])) AS _(x) UNION SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 4])) AS _(x);"}
+{"sql":"select x from (values (array[1, 2]), (array[1, 3])) _(x) union select x from (values (array[1, 2]), (array[1, 4])) _(x)","shape":"SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 3])) AS _(x) UNION SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 4])) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (array[1, 2]), (array[1, 3])) _(x) intersect select x from (values (array[1, 2]), (array[1, 4])) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 3])) AS _(x) INTERSECT SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 4])) AS _(x);"}
+{"sql":"select x from (values (array[1, 2]), (array[1, 3])) _(x) intersect select x from (values (array[1, 2]), (array[1, 4])) _(x)","shape":"SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 3])) AS _(x) INTERSECT SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 4])) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (array[1, 2]), (array[1, 3])) _(x) except select x from (values (array[1, 2]), (array[1, 4])) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 3])) AS _(x) EXCEPT SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 4])) AS _(x);"}
+{"sql":"select x from (values (array[1, 2]), (array[1, 3])) _(x) except select x from (values (array[1, 2]), (array[1, 4])) _(x)","shape":"SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 3])) AS _(x) EXCEPT SELECT x FROM (VALUES (ARRAY[1, 2]), (ARRAY[1, 4])) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (array[100::money]), (array[200::money])) _(x) union select x from (values (array[100::money]), (array[300::money])) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ARRAY[100::money]), (ARRAY[200::money])) AS _(x) UNION SELECT x FROM (VALUES (ARRAY[100::money]), (ARRAY[300::money])) AS _(x);"}
+{"sql":"select x from (values (array[100::money]), (array[200::money])) _(x) union select x from (values (array[100::money]), (array[300::money])) _(x)","shape":"SELECT x FROM (VALUES (ARRAY[100::money]), (ARRAY[200::money])) AS _(x) UNION SELECT x FROM (VALUES (ARRAY[100::money]), (ARRAY[300::money])) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (row(1, 2)), (row(1, 3))) _(x) union select x from (values (row(1, 2)), (row(1, 4))) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 3))) AS _(x) UNION SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 4))) AS _(x);"}
+{"sql":"select x from (values (row(1, 2)), (row(1, 3))) _(x) union select x from (values (row(1, 2)), (row(1, 4))) _(x)","shape":"SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 3))) AS _(x) UNION SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 4))) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (row(1, 2)), (row(1, 3))) _(x) intersect select x from (values (row(1, 2)), (row(1, 4))) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 3))) AS _(x) INTERSECT SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 4))) AS _(x);"}
+{"sql":"select x from (values (row(1, 2)), (row(1, 3))) _(x) intersect select x from (values (row(1, 2)), (row(1, 4))) _(x)","shape":"SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 3))) AS _(x) INTERSECT SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 4))) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (row(1, 2)), (row(1, 3))) _(x) except select x from (values (row(1, 2)), (row(1, 4))) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 3))) AS _(x) EXCEPT SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 4))) AS _(x);"}
+{"sql":"select x from (values (row(1, 2)), (row(1, 3))) _(x) except select x from (values (row(1, 2)), (row(1, 4))) _(x)","shape":"SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 3))) AS _(x) EXCEPT SELECT x FROM (VALUES (ROW(1, 2)), (ROW(1, 4))) AS _(x);"}
+{"sql":"explain (costs off)\nselect x from (values (row(100::money)), (row(200::money))) _(x) union select x from (values (row(100::money)), (row(300::money))) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ROW(100::money)), (ROW(200::money))) AS _(x) UNION SELECT x FROM (VALUES (ROW(100::money)), (ROW(300::money))) AS _(x);"}
+{"sql":"select x from (values (row(100::money)), (row(200::money))) _(x) union select x from (values (row(100::money)), (row(300::money))) _(x)","shape":"SELECT x FROM (VALUES (ROW(100::money)), (ROW(200::money))) AS _(x) UNION SELECT x FROM (VALUES (ROW(100::money)), (ROW(300::money))) AS _(x);"}
+{"sql":"create type ct1 as (f1 money)","shape":"CREATE TYPE ct1 AS (f1 money);"}
+{"sql":"explain (costs off)\nselect x from (values (row(100::money)::ct1), (row(200::money)::ct1)) _(x) union select x from (values (row(100::money)::ct1), (row(300::money)::ct1)) _(x)","shape":"EXPLAIN (COSTS off) SELECT x FROM (VALUES (ROW(100::money)::ct1), (ROW(200::money)::ct1)) AS _(x) UNION SELECT x FROM (VALUES (ROW(100::money)::ct1), (ROW(300::money)::ct1)) AS _(x);"}
+{"sql":"select x from (values (row(100::money)::ct1), (row(200::money)::ct1)) _(x) union select x from (values (row(100::money)::ct1), (row(300::money)::ct1)) _(x)","shape":"SELECT x FROM (VALUES (ROW(100::money)::ct1), (ROW(200::money)::ct1)) AS _(x) UNION SELECT x FROM (VALUES (ROW(100::money)::ct1), (ROW(300::money)::ct1)) AS _(x);"}
+{"sql":"drop type ct1","shape":"DROP TYPE ct1;"}
+{"sql":"SELECT f1 FROM float8_tbl INTERSECT SELECT f1 FROM int4_tbl ORDER BY 1","shape":"SELECT f1 FROM float8_tbl INTERSECT SELECT f1 FROM int4_tbl ORDER BY 1;"}
+{"sql":"SELECT f1 FROM float8_tbl EXCEPT SELECT f1 FROM int4_tbl ORDER BY 1","shape":"SELECT f1 FROM float8_tbl EXCEPT SELECT f1 FROM int4_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl INTERSECT SELECT q2 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl  ORDER BY 1","shape":"(SELECT q1 FROM int8_tbl INTERSECT SELECT q2 FROM int8_tbl) UNION ALL SELECT q2 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl INTERSECT (((SELECT q2 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl))) ORDER BY 1","shape":"SELECT q1 FROM int8_tbl INTERSECT (((SELECT q2 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl))) ORDER BY 1;"}
+{"sql":"(((SELECT q1 FROM int8_tbl INTERSECT SELECT q2 FROM int8_tbl ORDER BY 1))) UNION ALL SELECT q2 FROM int8_tbl","shape":"(((SELECT q1 FROM int8_tbl INTERSECT SELECT q2 FROM int8_tbl ORDER BY 1))) UNION ALL SELECT q2 FROM int8_tbl;"}
+{"sql":"SELECT q1 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1","shape":"(SELECT q1 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl) EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1 FROM int8_tbl UNION ALL (((SELECT q2 FROM int8_tbl EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1)))","shape":"SELECT q1 FROM int8_tbl UNION ALL (((SELECT q2 FROM int8_tbl EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1)));"}
+{"sql":"(((SELECT q1 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl))) EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1","shape":"(((SELECT q1 FROM int8_tbl UNION ALL SELECT q2 FROM int8_tbl))) EXCEPT SELECT q1 FROM int8_tbl ORDER BY 1;"}
+{"sql":"SELECT q1,q2 FROM int8_tbl EXCEPT SELECT q2,q1 FROM int8_tbl\nORDER BY q2,q1","shape":"SELECT q1, q2 FROM int8_tbl EXCEPT SELECT q2, q1 FROM int8_tbl ORDER BY q2, q1;"}
+{"sql":"SELECT q1 FROM int8_tbl EXCEPT SELECT q2 FROM int8_tbl ORDER BY q2 LIMIT 1","shape":"SELECT q1 FROM int8_tbl EXCEPT SELECT q2 FROM int8_tbl ORDER BY q2 LIMIT 1;"}
+{"sql":"SELECT q1 FROM int8_tbl EXCEPT (((SELECT q2 FROM int8_tbl ORDER BY q2 LIMIT 1))) ORDER BY 1","shape":"SELECT q1 FROM int8_tbl EXCEPT (((SELECT q2 FROM int8_tbl ORDER BY q2 LIMIT 1))) ORDER BY 1;"}
+{"sql":"(((((select * from int8_tbl)))))","shape":"(((((SELECT * FROM int8_tbl)))));"}
+{"sql":"select union select","shape":"SELECT UNION SELECT;"}
+{"sql":"select intersect select","shape":"SELECT INTERSECT SELECT;"}
+{"sql":"select except select","shape":"SELECT EXCEPT SELECT;"}
+{"sql":"explain (costs off)\nselect from generate_series(1,5) union select from generate_series(1,3)","shape":"EXPLAIN (COSTS off) SELECT FROM generate_series(1, 5) UNION SELECT FROM generate_series(1, 3);"}
+{"sql":"explain (costs off)\nselect from generate_series(1,5) intersect select from generate_series(1,3)","shape":"EXPLAIN (COSTS off) SELECT FROM generate_series(1, 5) INTERSECT SELECT FROM generate_series(1, 3);"}
+{"sql":"select from generate_series(1,5) union select from generate_series(1,3)","shape":"SELECT FROM generate_series(1, 5) UNION SELECT FROM generate_series(1, 3);"}
+{"sql":"select from generate_series(1,5) union all select from generate_series(1,3)","shape":"SELECT FROM generate_series(1, 5) UNION ALL SELECT FROM generate_series(1, 3);"}
+{"sql":"select from generate_series(1,5) intersect select from generate_series(1,3)","shape":"SELECT FROM generate_series(1, 5) INTERSECT SELECT FROM generate_series(1, 3);"}
+{"sql":"select from generate_series(1,5) intersect all select from generate_series(1,3)","shape":"SELECT FROM generate_series(1, 5) INTERSECT ALL SELECT FROM generate_series(1, 3);"}
+{"sql":"select from generate_series(1,5) except select from generate_series(1,3)","shape":"SELECT FROM generate_series(1, 5) EXCEPT SELECT FROM generate_series(1, 3);"}
+{"sql":"select from generate_series(1,5) except all select from generate_series(1,3)","shape":"SELECT FROM generate_series(1, 5) EXCEPT ALL SELECT FROM generate_series(1, 3);"}
+{"sql":"SELECT a.f1 FROM (SELECT 'test' AS f1 FROM varchar_tbl) a\nUNION\nSELECT b.f1 FROM (SELECT f1 FROM varchar_tbl) b\nORDER BY 1","shape":"SELECT a.f1 FROM (SELECT 'test' AS f1 FROM varchar_tbl) AS a UNION SELECT b.f1 FROM (SELECT f1 FROM varchar_tbl) AS b ORDER BY 1;"}
+{"sql":"SELECT '3.4'::numeric UNION SELECT 'foo'","shape":"SELECT '3.4'::numeric UNION SELECT 'foo';"}
+{"sql":"CREATE TEMP TABLE t1 (a text, b text)","shape":"CREATE TEMPORARY TABLE t1 (a text, b text);"}
+{"sql":"CREATE INDEX t1_ab_idx on t1 ((a || b))","shape":"CREATE INDEX t1_ab_idx ON t1 ((a || b));"}
+{"sql":"CREATE TEMP TABLE t2 (ab text primary key)","shape":"CREATE TEMPORARY TABLE t2 (ab text PRIMARY KEY);"}
+{"sql":"INSERT INTO t1 VALUES ('a', 'b'), ('x', 'y')","shape":"INSERT INTO t1 VALUES ('a', 'b'), ('x', 'y');"}
+{"sql":"INSERT INTO t2 VALUES ('ab'), ('xy')","shape":"INSERT INTO t2 VALUES ('ab'), ('xy');"}
+{"sql":"explain (costs off)\n SELECT * FROM\n (SELECT a || b AS ab FROM t1\n  UNION ALL\n  SELECT * FROM t2) t\n WHERE ab = 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT a || b AS ab FROM t1 UNION ALL SELECT * FROM t2) AS t WHERE ab = 'ab';"}
+{"sql":"explain (costs off)\n SELECT * FROM\n (SELECT a || b AS ab FROM t1\n  UNION\n  SELECT * FROM t2) t\n WHERE ab = 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT a || b AS ab FROM t1 UNION SELECT * FROM t2) AS t WHERE ab = 'ab';"}
+{"sql":"CREATE TEMP TABLE t1c (b text, a text)","shape":"CREATE TEMPORARY TABLE t1c (b text, a text);"}
+{"sql":"ALTER TABLE t1c INHERIT t1"}
+{"sql":"CREATE TEMP TABLE t2c (primary key (ab)) INHERITS (t2)","shape":"CREATE TEMPORARY TABLE t2c (PRIMARY KEY (ab)) INHERITS (t2);"}
+{"sql":"INSERT INTO t1c VALUES ('v', 'w'), ('c', 'd'), ('m', 'n'), ('e', 'f')","shape":"INSERT INTO t1c VALUES ('v', 'w'), ('c', 'd'), ('m', 'n'), ('e', 'f');"}
+{"sql":"INSERT INTO t2c VALUES ('vw'), ('cd'), ('mn'), ('ef')","shape":"INSERT INTO t2c VALUES ('vw'), ('cd'), ('mn'), ('ef');"}
+{"sql":"CREATE INDEX t1c_ab_idx on t1c ((a || b))","shape":"CREATE INDEX t1c_ab_idx ON t1c ((a || b));"}
+{"sql":"explain (costs off)\n  SELECT * FROM\n  (SELECT a || b AS ab FROM t1\n   UNION ALL\n   SELECT ab FROM t2) t\n  ORDER BY 1 LIMIT 8","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT a || b AS ab FROM t1 UNION ALL SELECT ab FROM t2) AS t ORDER BY 1 LIMIT 8;"}
+{"sql":"SELECT * FROM\n  (SELECT a || b AS ab FROM t1\n   UNION ALL\n   SELECT ab FROM t2) t\n  ORDER BY 1 LIMIT 8","shape":"SELECT * FROM (SELECT a || b AS ab FROM t1 UNION ALL SELECT ab FROM t2) AS t ORDER BY 1 LIMIT 8;"}
+{"sql":"create table events (event_id int primary key)","shape":"CREATE TABLE events (event_id int PRIMARY KEY);"}
+{"sql":"create table other_events (event_id int primary key)","shape":"CREATE TABLE other_events (event_id int PRIMARY KEY);"}
+{"sql":"create table events_child () inherits (events)","shape":"CREATE TABLE events_child () INHERITS (events);"}
+{"sql":"explain (costs off)\nselect event_id\n from (select event_id from events\n       union all\n       select event_id from other_events) ss\n order by event_id","shape":"EXPLAIN (COSTS off) SELECT event_id FROM (SELECT event_id FROM events UNION ALL SELECT event_id FROM other_events) AS ss ORDER BY event_id;"}
+{"sql":"drop table events_child, events, other_events","shape":"DROP TABLE events_child, events, other_events;"}
+{"sql":"explain (costs off)\n SELECT * FROM\n  (SELECT 1 AS t, * FROM tenk1 a\n   UNION ALL\n   SELECT 2 AS t, * FROM tenk1 b) c\n WHERE t = 2","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT 1 AS t, * FROM tenk1 AS a UNION ALL SELECT 2 AS t, * FROM tenk1 AS b) AS c WHERE t = 2;"}
+{"sql":"explain (costs off)\nSELECT * FROM\n  (SELECT 1 AS t, 2 AS x\n   UNION\n   SELECT 2 AS t, 4 AS x) ss\nWHERE x < 4\nORDER BY x","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT 1 AS t, 2 AS x UNION SELECT 2 AS t, 4 AS x) AS ss WHERE x < 4 ORDER BY x;"}
+{"sql":"SELECT * FROM\n  (SELECT 1 AS t, 2 AS x\n   UNION\n   SELECT 2 AS t, 4 AS x) ss\nWHERE x < 4\nORDER BY x","shape":"SELECT * FROM (SELECT 1 AS t, 2 AS x UNION SELECT 2 AS t, 4 AS x) AS ss WHERE x < 4 ORDER BY x;"}
+{"sql":"explain (costs off)\nSELECT * FROM\n  (SELECT 1 AS t, generate_series(1,10) AS x\n   UNION\n   SELECT 2 AS t, 4 AS x) ss\nWHERE x < 4\nORDER BY x","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT 1 AS t, generate_series(1, 10) AS x UNION SELECT 2 AS t, 4 AS x) AS ss WHERE x < 4 ORDER BY x;"}
+{"sql":"SELECT * FROM\n  (SELECT 1 AS t, generate_series(1,10) AS x\n   UNION\n   SELECT 2 AS t, 4 AS x) ss\nWHERE x < 4\nORDER BY x","shape":"SELECT * FROM (SELECT 1 AS t, generate_series(1, 10) AS x UNION SELECT 2 AS t, 4 AS x) AS ss WHERE x < 4 ORDER BY x;"}
+{"sql":"explain (costs off)\nSELECT * FROM\n  (SELECT 1 AS t, (random()*3)::int AS x\n   UNION\n   SELECT 2 AS t, 4 AS x) ss\nWHERE x > 3\nORDER BY x","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT 1 AS t, (random() * 3)::int AS x UNION SELECT 2 AS t, 4 AS x) AS ss WHERE x > 3 ORDER BY x;"}
+{"sql":"SELECT * FROM\n  (SELECT 1 AS t, (random()*3)::int AS x\n   UNION\n   SELECT 2 AS t, 4 AS x) ss\nWHERE x > 3\nORDER BY x","shape":"SELECT * FROM (SELECT 1 AS t, (random() * 3)::int AS x UNION SELECT 2 AS t, 4 AS x) AS ss WHERE x > 3 ORDER BY x;"}
+{"sql":"explain (costs off)\nselect distinct q1 from\n  (select distinct * from int8_tbl i81\n   union all\n   select distinct * from int8_tbl i82) ss\nwhere q2 = q2","shape":"EXPLAIN (COSTS off) SELECT DISTINCT q1 FROM (SELECT DISTINCT * FROM int8_tbl AS i81 UNION ALL SELECT DISTINCT * FROM int8_tbl AS i82) AS ss WHERE q2 = q2;"}
+{"sql":"select distinct q1 from\n  (select distinct * from int8_tbl i81\n   union all\n   select distinct * from int8_tbl i82) ss\nwhere q2 = q2","shape":"SELECT DISTINCT q1 FROM (SELECT DISTINCT * FROM int8_tbl AS i81 UNION ALL SELECT DISTINCT * FROM int8_tbl AS i82) AS ss WHERE q2 = q2;"}
+{"sql":"explain (costs off)\nselect distinct q1 from\n  (select distinct * from int8_tbl i81\n   union all\n   select distinct * from int8_tbl i82) ss\nwhere -q1 = q2","shape":"EXPLAIN (COSTS off) SELECT DISTINCT q1 FROM (SELECT DISTINCT * FROM int8_tbl AS i81 UNION ALL SELECT DISTINCT * FROM int8_tbl AS i82) AS ss WHERE (-q1) = q2;"}
+{"sql":"select distinct q1 from\n  (select distinct * from int8_tbl i81\n   union all\n   select distinct * from int8_tbl i82) ss\nwhere -q1 = q2","shape":"SELECT DISTINCT q1 FROM (SELECT DISTINCT * FROM int8_tbl AS i81 UNION ALL SELECT DISTINCT * FROM int8_tbl AS i82) AS ss WHERE (-q1) = q2;"}
+{"sql":"create function expensivefunc(int) returns int\nlanguage plpgsql immutable strict cost 10000\nas $$begin return $1; end$$","shape":"CREATE FUNCTION expensivefunc(int) RETURNS int LANGUAGE plpgsql IMMUTABLE STRICT COST 10000 AS 'begin return $1; end';"}
+{"sql":"create temp table t3 as select generate_series(-1000,1000) as x","shape":"CREATE TEMPORARY TABLE t3 AS SELECT generate_series(-1000, 1000) AS x;"}
+{"sql":"create index t3i on t3 (expensivefunc(x))","shape":"CREATE INDEX t3i ON t3 (expensivefunc(x));"}
+{"sql":"analyze t3","shape":"ANALYZE t3;"}
+{"sql":"explain (costs off)\nselect * from\n  (select * from t3 a union all select * from t3 b) ss\n  join int4_tbl on f1 = expensivefunc(x)","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT * FROM t3 AS a UNION ALL SELECT * FROM t3 AS b) AS ss JOIN int4_tbl ON f1 = expensivefunc(x);"}
+{"sql":"select * from\n  (select * from t3 a union all select * from t3 b) ss\n  join int4_tbl on f1 = expensivefunc(x)","shape":"SELECT * FROM (SELECT * FROM t3 AS a UNION ALL SELECT * FROM t3 AS b) AS ss JOIN int4_tbl ON f1 = expensivefunc(x);"}
+{"sql":"drop function expensivefunc(int)"}
+{"sql":"explain (costs off)\nselect * from\n  (select *, 0 as x from int8_tbl a\n   union all\n   select *, 1 as x from int8_tbl b) ss\nwhere (x = 0) or (q1 >= q2 and q1 <= q2)","shape":"EXPLAIN (COSTS off) SELECT * FROM (SELECT *, 0 AS x FROM int8_tbl AS a UNION ALL SELECT *, 1 AS x FROM int8_tbl AS b) AS ss WHERE (x = 0) OR ((q1 >= q2) AND (q1 <= q2));"}
+{"sql":"select * from\n  (select *, 0 as x from int8_tbl a\n   union all\n   select *, 1 as x from int8_tbl b) ss\nwhere (x = 0) or (q1 >= q2 and q1 <= q2)","shape":"SELECT * FROM (SELECT *, 0 AS x FROM int8_tbl AS a UNION ALL SELECT *, 1 AS x FROM int8_tbl AS b) AS ss WHERE (x = 0) OR ((q1 >= q2) AND (q1 <= q2));"}

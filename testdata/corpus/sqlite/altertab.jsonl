@@ -1,0 +1,107 @@
+{"sql":"INSERT INTO t11 VALUES(3, 3)"}
+{"sql":"SELECT \n    sqlite_rename_table(db, 0, 0, sql, zOld, zNew, bTemp)\n    FROM ddd"}
+{"sql":"CREATE TABLE t1(x, y)"}
+{"sql":"CREATE TABLE log(c)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO log SELECT y FROM t1, t2;\n  END"}
+{"sql":"ALTER TABLE t2 RENAME b TO y"}
+{"sql":"CREATE TABLE t1(a integer NOT NULL PRIMARY KEY)"}
+{"sql":"CREATE VIEW v1 AS SELECT a FROM t1"}
+{"sql":"CREATE TRIGGER tr1 INSTEAD OF INSERT ON v1 BEGIN \n    UPDATE t1 SET a = NEW.a;\n  END"}
+{"sql":"CREATE TRIGGER tr2 INSTEAD OF INSERT ON v1 BEGIN \n    SELECT new.a;\n  END"}
+{"sql":"CREATE TABLE t2 (b)"}
+{"sql":"INSERT INTO v1 VALUES(1)"}
+{"sql":"CREATE TABLE x(f1 integer NOT NULL)"}
+{"sql":"CREATE VIEW y AS SELECT f1 AS f1 FROM x"}
+{"sql":"CREATE TRIGGER t INSTEAD OF UPDATE OF f1 ON y BEGIN \n    UPDATE x SET f1 = NEW.f1; \n  END"}
+{"sql":"CREATE TABLE z (f1 integer NOT NULL PRIMARY KEY)"}
+{"sql":"ALTER TABLE z RENAME TO z2"}
+{"sql":"INSERT INTO x VALUES(1), (2), (3)"}
+{"sql":"ALTER TABLE x RENAME f1 TO f2"}
+{"sql":"SELECT * FROM x"}
+{"sql":"UPDATE y SET f1 = 'x' WHERE f1 = 1"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'y'"}
+{"sql":"CREATE VIRTUAL TABLE y1 USING fts3"}
+{"sql":"INSERT INTO y1_segments VALUES(1, X'1234567890')"}
+{"sql":"DROP TABLE y1_segments"}
+{"sql":"ALTER TABLE y1_segments RENAME TO abc"}
+{"sql":"CREATE TABLE y1_segments AS SELECT * FROM abc"}
+{"sql":"CREATE VIEW y1_segments AS SELECT * FROM abc"}
+{"sql":"ALTER TABLE abc RENAME TO y1_segments"}
+{"sql":"ALTER TABLE y1 RENAME TO z1"}
+{"sql":"SELECT * FROM z1_segments"}
+{"sql":"CREATE TABLE sqlite1234 (id integer)"}
+{"sql":"ALTER TABLE sqlite1234 RENAME TO User"}
+{"sql":"SELECT name, sql FROM sqlite_master WHERE sql IS NOT NULL"}
+{"sql":"CREATE TABLE t0 (c0 INTEGER, PRIMARY KEY(c0)) WITHOUT ROWID"}
+{"sql":"ALTER TABLE t0 RENAME COLUMN c0 TO c1"}
+{"sql":"CREATE TABLE t0 (c0 INTEGER, PRIMARY KEY(c0))"}
+{"sql":"CREATE VIEW t2 AS SELECT 1 FROM t1, (t1 AS a0, t1)"}
+{"sql":"INSERT INTO t3(x) VALUES(123)"}
+{"sql":"INSERT INTO t3(x) VALUES('xyz')"}
+{"sql":"CREATE TABLE a(a)"}
+{"sql":"CREATE VIEW b AS SELECT(SELECT *FROM c JOIN a USING(d, a, a, a) JOIN a) IN()"}
+{"sql":"ALTER TABLE a RENAME a TO e"}
+{"sql":"CREATE VIEW c AS \n      SELECT NULL INTERSECT \n      SELECT NULL ORDER BY\n      likelihood(NULL, (d, (SELECT c)))"}
+{"sql":"SELECT likelihood(NULL, (d, (SELECT c)))"}
+{"sql":"ALTER TABLE a RENAME TO e"}
+{"sql":"CREATE TABLE t1(a INT, b TEXT NOT NULL)"}
+{"sql":"INSERT INTO t1 VALUES(1,2),('a','b')"}
+{"sql":"UPDATE sqlite_schema SET sql='CREATE TABLE t1(a INT, b TEXT)' WHERE name LIKE 't1'"}
+{"sql":"PRAGMA schema_version=1234"}
+{"sql":"ALTER TABLE t1 ADD COLUMN c INT DEFAULT 78"}
+{"sql":"CREATE TABLE gigo(a text)"}
+{"sql":"CREATE TABLE idx(x text COLLATE compare64)"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM idx WHERE x='abc'"}
+{"sql":"alter table gigo rename to ggiiggoo"}
+{"sql":"alter table idx rename to idx2"}
+{"sql":"ALTER TABLE idx2 RENAME x TO y"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 BEGIN\n    INSERT INTO nosuchtable VALUES(new.a) ON CONFLICT(a) DO NOTHING;\n  END"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 BEGIN\n    INSERT INTO v1 VALUES(new.a) ON CONFLICT(a) DO NOTHING;\n  END"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM nosuchtable"}
+{"sql":"CREATE TABLE xx(x)"}
+{"sql":"CREATE VIEW v3(b) AS WITH b AS (SELECT b FROM (SELECT * FROM t2)) VALUES(1)"}
+{"sql":"ALTER TABLE json_each RENAME TO t4"}
+{"sql":"CREATE TABLE t1(k,v)"}
+{"sql":"CREATE TABLE t2_a(k,v)"}
+{"sql":"CREATE VIEW t2 AS SELECT * FROM t2_a"}
+{"sql":"CREATE TRIGGER r2 AFTER INSERT ON t1 BEGIN\n    UPDATE t1 \n       SET (k,v)=((WITH cte1(a) AS (SELECT 1 FROM t2) SELECT t2.k FROM t2, cte1),1);\n  END"}
+{"sql":"ALTER TABLE t1 RENAME TO t1x"}
+{"sql":"INSERT INTO t2_a VALUES(2,3)"}
+{"sql":"INSERT INTO t1x VALUES(98,99)"}
+{"sql":"SELECT * FROM t1x"}
+{"sql":"create table t_sa (\n c_muyat INTEGER NOT NULL,\n c_d4u TEXT \n )"}
+{"sql":"create table t2 ( abc )"}
+{"sql":"CREATE TRIGGER trig AFTER DELETE ON t_sa\n   BEGIN\n   DELETE FROM t_sa WHERE (\n       SELECT 123 FROM t2\n       WINDOW oamat7fzf AS ( PARTITION BY t_sa.c_d4u )\n   );\n   END"}
+{"sql":"alter table t_sa rename column c_muyat to c_dg"}
+{"sql":"INSERT INTO t1 VALUES('a', 'b', 'c')"}
+{"sql":"CREATE VIEW v0 AS\n    WITH p AS ( SELECT 1 FROM t1 ),\n         g AS ( SELECT 1 FROM p, t1 )\n    SELECT 1 FROM g"}
+{"sql":"SELECT * FROM v0"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='v0'"}
+{"sql":"CREATE VIEW v2 AS\n    WITH p AS ( SELECT 1 FROM t2 ),\n         g AS ( SELECT 1 FROM (\n           WITH i AS (SELECT 1 FROM p, t2)\n           SELECT * FROM i\n         )\n    )\n    SELECT 1 FROM g"}
+{"sql":"SELECT * FROM v2"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='v2'"}
+{"sql":"CREATE TABLE t2(b,c)"}
+{"sql":"CREATE TABLE t4(b,c)"}
+{"sql":"INSERT INTO t2 VALUES(1,2),(1,3),(2,5)"}
+{"sql":"INSERT INTO t4 VALUES(1,2),(1,3),(2,5)"}
+{"sql":"CREATE VIEW v3 AS \n    WITH RECURSIVE t3(x,y,z) AS (\n        SELECT b,c,NULL FROM t4\n        UNION\n        SELECT x,y,NULL FROM t3, t2\n    )\n  SELECT * FROM t3 AS xyz"}
+{"sql":"SELECT * FROM v3"}
+{"sql":"ALTER TABLE t1 RENAME a TO a2"}
+{"sql":"ALTER TABLE t2 RENAME TO t5"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='v3'"}
+{"sql":"CREATE TABLE t1(a,b,c,d,e,f)"}
+{"sql":"CREATE TABLE t2(a,b,c)"}
+{"sql":"CREATE INDEX t1abc ON t1(a,b,c+d+e)"}
+{"sql":"CREATE VIEW v1(x,y) AS \n    SELECT t1.b,t2.b FROM t1,t2 WHERE t1.a=t2.a \n      GROUP BY 1 HAVING t2.c NOT NULL LIMIT 10"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 WHEN 'no' NOT NULL BEGIN\n    INSERT INTO t2(a,a,b,c) VALUES(new.b,new.a,new.c-7);\n    WITH c1(x) AS (\n      VALUES(0) \n        UNION ALL \n      SELECT current_time+x FROM c1 WHERE x \n        UNION ALL \n      SELECT 1+x FROM c1 WHERE x<1\n    ), c2(x) AS (VALUES(0),(1))\n    SELECT * FROM c1 AS x1, c2 AS x2, (\n      SELECT x+1 FROM c1 WHERE x IS NOT TRUE \n        UNION ALL \n      SELECT 1+x FROM c1 WHERE 1<x\n    ) AS x3, c2 x5;\n  END"}
+{"sql":"SELECT sql FROM sqlite_schema ORDER BY rowid"}
+{"sql":"CREATE TABLE t1(q)"}
+{"sql":"CREATE VIEW vvv AS WITH x AS (WITH y AS (SELECT * FROM x) SELECT 1) SELECT 1"}
+{"sql":"ALTER TABLE t1x RENAME q TO x"}
+{"sql":"CREATE TRIGGER r1 BEFORE INSERT ON t1 BEGIN \n    UPDATE t1 SET x=x FROM (SELECT*);\n  END"}
+{"sql":"ALTER TABLE t1 RENAME TO x"}
+{"sql":"INSERT INTO t1(a) VALUES('abc'),('def'),(NULL)"}
+{"sql":"CREATE TABLE t2(b TEXT)"}
+{"sql":"CREATE TRIGGER r3 AFTER INSERT ON t1 BEGIN\n   UPDATE t2 SET (b,a)=(SELECT 1) FROM t1 JOIN t2 ON (SELECT * FROM (SELECT a));\n  END"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN a TO b"}
+{"sql":"SELECT quote(a) FROM t1 ORDER BY +a"}

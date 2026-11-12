@@ -1,0 +1,86 @@
+{"sql":"CREATE TABLE tbl_include_reg (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl_include_reg (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl_include_reg SELECT x, 2*x, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl_include_reg SELECT x, 2 * x, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"CREATE INDEX tbl_include_reg_idx ON tbl_include_reg (c1, c2) INCLUDE (c3, c4)","shape":"CREATE INDEX tbl_include_reg_idx ON tbl_include_reg (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE INDEX ON tbl_include_reg (c1, c2) INCLUDE (c1, c3)","shape":"CREATE INDEX ON tbl_include_reg (c1, c2) INCLUDE (c1, c3);"}
+{"sql":"SELECT pg_get_indexdef(i.indexrelid)\nFROM pg_index i JOIN pg_class c ON i.indexrelid = c.oid\nWHERE i.indrelid = 'tbl_include_reg'::regclass ORDER BY c.relname","shape":"SELECT pg_get_indexdef(i.indexrelid) FROM pg_index AS i JOIN pg_class AS c ON i.indexrelid = c.oid WHERE i.indrelid = 'tbl_include_reg'::regclass ORDER BY c.relname;"}
+{"sql":"CREATE TABLE tbl_include_unique1 (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl_include_unique1 (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl_include_unique1 SELECT x, 2*x, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl_include_unique1 SELECT x, 2 * x, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"CREATE UNIQUE INDEX tbl_include_unique1_idx_unique ON tbl_include_unique1 using btree (c1, c2) INCLUDE (c3, c4)","shape":"CREATE UNIQUE INDEX tbl_include_unique1_idx_unique ON tbl_include_unique1 USING btree (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"ALTER TABLE tbl_include_unique1 add UNIQUE USING INDEX tbl_include_unique1_idx_unique","shape":"ALTER TABLE tbl_include_unique1 ADD UNIQUE USING INDEX tbl_include_unique1_idx_unique;"}
+{"sql":"ALTER TABLE tbl_include_unique1 add UNIQUE (c1, c2) INCLUDE (c3, c4)","shape":"ALTER TABLE tbl_include_unique1 ADD UNIQUE (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"SELECT pg_get_indexdef(i.indexrelid)\nFROM pg_index i JOIN pg_class c ON i.indexrelid = c.oid\nWHERE i.indrelid = 'tbl_include_unique1'::regclass ORDER BY c.relname","shape":"SELECT pg_get_indexdef(i.indexrelid) FROM pg_index AS i JOIN pg_class AS c ON i.indexrelid = c.oid WHERE i.indrelid = 'tbl_include_unique1'::regclass ORDER BY c.relname;"}
+{"sql":"CREATE TABLE tbl_include_unique2 (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl_include_unique2 (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl_include_unique2 SELECT 1, 2, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl_include_unique2 SELECT 1, 2, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"CREATE UNIQUE INDEX tbl_include_unique2_idx_unique ON tbl_include_unique2 using btree (c1, c2) INCLUDE (c3, c4)","shape":"CREATE UNIQUE INDEX tbl_include_unique2_idx_unique ON tbl_include_unique2 USING btree (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"ALTER TABLE tbl_include_unique2 add UNIQUE (c1, c2) INCLUDE (c3, c4)","shape":"ALTER TABLE tbl_include_unique2 ADD UNIQUE (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE TABLE tbl_include_pk (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl_include_pk (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl_include_pk SELECT 1, 2*x, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl_include_pk SELECT 1, 2 * x, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"ALTER TABLE tbl_include_pk add PRIMARY KEY (c1, c2) INCLUDE (c3, c4)","shape":"ALTER TABLE tbl_include_pk ADD PRIMARY KEY (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"SELECT pg_get_indexdef(i.indexrelid)\nFROM pg_index i JOIN pg_class c ON i.indexrelid = c.oid\nWHERE i.indrelid = 'tbl_include_pk'::regclass ORDER BY c.relname","shape":"SELECT pg_get_indexdef(i.indexrelid) FROM pg_index AS i JOIN pg_class AS c ON i.indexrelid = c.oid WHERE i.indrelid = 'tbl_include_pk'::regclass ORDER BY c.relname;"}
+{"sql":"CREATE TABLE tbl_include_box (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl_include_box (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl_include_box SELECT 1, 2*x, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl_include_box SELECT 1, 2 * x, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"CREATE UNIQUE INDEX tbl_include_box_idx_unique ON tbl_include_box using btree (c1, c2) INCLUDE (c3, c4)","shape":"CREATE UNIQUE INDEX tbl_include_box_idx_unique ON tbl_include_box USING btree (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"ALTER TABLE tbl_include_box add PRIMARY KEY USING INDEX tbl_include_box_idx_unique","shape":"ALTER TABLE tbl_include_box ADD PRIMARY KEY USING INDEX tbl_include_box_idx_unique;"}
+{"sql":"SELECT pg_get_indexdef(i.indexrelid)\nFROM pg_index i JOIN pg_class c ON i.indexrelid = c.oid\nWHERE i.indrelid = 'tbl_include_box'::regclass ORDER BY c.relname","shape":"SELECT pg_get_indexdef(i.indexrelid) FROM pg_index AS i JOIN pg_class AS c ON i.indexrelid = c.oid WHERE i.indrelid = 'tbl_include_box'::regclass ORDER BY c.relname;"}
+{"sql":"CREATE TABLE tbl_include_box_pk (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl_include_box_pk (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl_include_box_pk SELECT 1, 2, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl_include_box_pk SELECT 1, 2, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"ALTER TABLE tbl_include_box_pk add PRIMARY KEY (c1, c2) INCLUDE (c3, c4)","shape":"ALTER TABLE tbl_include_box_pk ADD PRIMARY KEY (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box,\n\t\t\t\tCONSTRAINT covering UNIQUE(c1,c2) INCLUDE(c3,c4))","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box, CONSTRAINT covering UNIQUE (c1, c2) INCLUDE (c3, c4));"}
+{"sql":"SELECT indexrelid::regclass, indnatts, indnkeyatts, indisunique, indisprimary, indkey, indclass FROM pg_index WHERE indrelid = 'tbl'::regclass::oid","shape":"SELECT indexrelid::regclass, indnatts, indnkeyatts, indisunique, indisprimary, indkey, indclass FROM pg_index WHERE indrelid = 'tbl'::regclass::oid;"}
+{"sql":"SELECT pg_get_constraintdef(oid), conname, conkey FROM pg_constraint WHERE conrelid = 'tbl'::regclass::oid","shape":"SELECT pg_get_constraintdef(oid), conname, conkey FROM pg_constraint WHERE conrelid = 'tbl'::regclass::oid;"}
+{"sql":"INSERT INTO tbl SELECT 1, 2, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl SELECT 1, 2, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"DROP TABLE tbl","shape":"DROP TABLE tbl;"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box,\n\t\t\t\tCONSTRAINT covering PRIMARY KEY(c1,c2) INCLUDE(c3,c4))","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box, CONSTRAINT covering PRIMARY KEY (c1, c2) INCLUDE (c3, c4));"}
+{"sql":"INSERT INTO tbl SELECT 1, NULL, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl SELECT 1, NULL, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"INSERT INTO tbl SELECT x, 2*x, NULL, NULL FROM generate_series(1,300) AS x","shape":"INSERT INTO tbl SELECT x, 2 * x, NULL, NULL FROM generate_series(1, 300) AS x;"}
+{"sql":"explain (costs off)\nselect * from tbl where (c1,c2,c3) < (2,5,1)","shape":"EXPLAIN (COSTS off) SELECT * FROM tbl WHERE (c1, c2, c3) < (2, 5, 1);"}
+{"sql":"select * from tbl where (c1,c2,c3) < (2,5,1)","shape":"SELECT * FROM tbl WHERE (c1, c2, c3) < (2, 5, 1);"}
+{"sql":"explain (costs off)\nselect * from tbl where (c1,c2,c3) < (262,1,1) limit 1","shape":"EXPLAIN (COSTS off) SELECT * FROM tbl WHERE (c1, c2, c3) < (262, 1, 1) LIMIT 1;"}
+{"sql":"select * from tbl where (c1,c2,c3) < (262,1,1) limit 1","shape":"SELECT * FROM tbl WHERE (c1, c2, c3) < (262, 1, 1) LIMIT 1;"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box,\n\t\t\t\tUNIQUE(c1,c2) INCLUDE(c3,c4))","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box, UNIQUE (c1, c2) INCLUDE (c3, c4));"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box,\n\t\t\t\tPRIMARY KEY(c1,c2) INCLUDE(c3,c4))","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box, PRIMARY KEY (c1, c2) INCLUDE (c3, c4));"}
+{"sql":"INSERT INTO tbl SELECT x, 2*x, NULL, NULL FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl SELECT x, 2 * x, NULL, NULL FROM generate_series(1, 10) AS x;"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box,\n\t\t\t\tEXCLUDE USING btree (c1 WITH =) INCLUDE(c3,c4))","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box, EXCLUDE USING btree (c1 WITH =) INCLUDE (c3, c4));"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 int)","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 int);"}
+{"sql":"CREATE UNIQUE INDEX tbl_idx ON tbl using btree(c1, c2, c3, c4)","shape":"CREATE UNIQUE INDEX tbl_idx ON tbl USING btree (c1, c2, c3, c4);"}
+{"sql":"SELECT indexdef FROM pg_indexes WHERE tablename = 'tbl' ORDER BY indexname","shape":"SELECT indexdef FROM pg_indexes WHERE tablename = 'tbl' ORDER BY indexname;"}
+{"sql":"ALTER TABLE tbl DROP COLUMN c3","shape":"ALTER TABLE tbl DROP COLUMN c3;"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"CREATE UNIQUE INDEX tbl_idx ON tbl using btree(c1, c2) INCLUDE(c3,c4)","shape":"CREATE UNIQUE INDEX tbl_idx ON tbl USING btree (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 int, c4 box, UNIQUE(c1, c2) INCLUDE(c3,c4))","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box, UNIQUE (c1, c2) INCLUDE (c3, c4));"}
+{"sql":"ALTER TABLE tbl DROP COLUMN c1","shape":"ALTER TABLE tbl DROP COLUMN c1;"}
+{"sql":"CREATE TABLE tbl (c1 int, c2 int)","shape":"CREATE TABLE tbl (c1 int, c2 int);"}
+{"sql":"CREATE INDEX tbl_idx ON tbl (c1, (c1+0)) INCLUDE (c2)","shape":"CREATE INDEX tbl_idx ON tbl (c1, (c1 + 0)) INCLUDE (c2);"}
+{"sql":"ALTER INDEX tbl_idx ALTER COLUMN 1 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX tbl_idx ALTER COLUMN 2 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX tbl_idx ALTER COLUMN 3 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX tbl_idx ALTER COLUMN 4 SET STATISTICS 1000"}
+{"sql":"INSERT INTO tbl SELECT x, 2*x, 3*x, box('4,4,4,4') FROM generate_series(1,1000) AS x","shape":"INSERT INTO tbl SELECT x, 2 * x, 3 * x, box('4,4,4,4') FROM generate_series(1, 1000) AS x;"}
+{"sql":"CREATE UNIQUE INDEX CONCURRENTLY on tbl (c1, c2) INCLUDE (c3, c4)","shape":"CREATE UNIQUE INDEX CONCURRENTLY ON tbl (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"REINDEX INDEX tbl_c1_c2_c3_c4_key","shape":"REINDEX INDEX tbl_c1_c2_c3_c4_key;"}
+{"sql":"CREATE TABLE tbl (c1 int,c2 int, c3 box, c4 box)","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 box, c4 box);"}
+{"sql":"CREATE INDEX on tbl USING brin(c1, c2) INCLUDE (c3, c4)","shape":"CREATE INDEX ON tbl USING brin (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE INDEX on tbl USING gist(c3) INCLUDE (c1, c4)","shape":"CREATE INDEX ON tbl USING gist (c3) INCLUDE (c1, c4);"}
+{"sql":"CREATE INDEX on tbl USING spgist(c3) INCLUDE (c4)","shape":"CREATE INDEX ON tbl USING spgist (c3) INCLUDE (c4);"}
+{"sql":"CREATE INDEX on tbl USING gin(c1, c2) INCLUDE (c3, c4)","shape":"CREATE INDEX ON tbl USING gin (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE INDEX on tbl USING hash(c1, c2) INCLUDE (c3, c4)","shape":"CREATE INDEX ON tbl USING hash (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE INDEX on tbl USING rtree(c3) INCLUDE (c1, c4)","shape":"CREATE INDEX ON tbl USING rtree (c3) INCLUDE (c1, c4);"}
+{"sql":"CREATE INDEX on tbl USING btree(c1, c2) INCLUDE (c3, c4)","shape":"CREATE INDEX ON tbl USING btree (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box)","shape":"CREATE TABLE tbl (c1 int, c2 int, c3 int, c4 box);"}
+{"sql":"INSERT INTO tbl SELECT x, 2*x, 3*x, box('4,4,4,4') FROM generate_series(1,10) AS x","shape":"INSERT INTO tbl SELECT x, 2 * x, 3 * x, box('4,4,4,4') FROM generate_series(1, 10) AS x;"}
+{"sql":"CREATE UNIQUE INDEX tbl_idx_unique ON tbl using btree(c1, c2) INCLUDE (c3,c4)","shape":"CREATE UNIQUE INDEX tbl_idx_unique ON tbl USING btree (c1, c2) INCLUDE (c3, c4);"}
+{"sql":"UPDATE tbl SET c1 = 100 WHERE c1 = 2","shape":"UPDATE tbl SET c1 = 100 WHERE c1 = 2;"}
+{"sql":"UPDATE tbl SET c1 = 1 WHERE c1 = 3","shape":"UPDATE tbl SET c1 = 1 WHERE c1 = 3;"}
+{"sql":"UPDATE tbl SET c2 = 2 WHERE c1 = 1","shape":"UPDATE tbl SET c2 = 2 WHERE c1 = 1;"}
+{"sql":"UPDATE tbl SET c3 = 1","shape":"UPDATE tbl SET c3 = 1;"}
+{"sql":"DELETE FROM tbl WHERE c1 = 5 OR c3 = 12","shape":"DELETE FROM tbl WHERE (c1 = 5) OR (c3 = 12);"}
+{"sql":"ALTER TABLE tbl ALTER c1 TYPE bigint","shape":"ALTER TABLE tbl ALTER COLUMN c1 SET DATA TYPE bigint;"}
+{"sql":"ALTER TABLE tbl ALTER c3 TYPE bigint","shape":"ALTER TABLE tbl ALTER COLUMN c3 SET DATA TYPE bigint;"}
+{"sql":"CREATE TABLE nametbl (c1 int, c2 name, c3 float)","shape":"CREATE TABLE nametbl (c1 int, c2 name, c3 float);"}
+{"sql":"CREATE INDEX nametbl_c1_c2_idx ON nametbl (c2, c1) INCLUDE (c3)","shape":"CREATE INDEX nametbl_c1_c2_idx ON nametbl (c2, c1) INCLUDE (c3);"}
+{"sql":"INSERT INTO nametbl VALUES(1, 'two', 3.0)","shape":"INSERT INTO nametbl VALUES (1, 'two', 3.0);"}
+{"sql":"VACUUM nametbl","shape":"VACUUM nametbl;"}
+{"sql":"SET enable_seqscan = 0","shape":"SET enable_seqscan TO 0;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT c2, c1, c3 FROM nametbl WHERE c2 = 'two' AND c1 = 1","shape":"EXPLAIN (COSTS OFF) SELECT c2, c1, c3 FROM nametbl WHERE (c2 = 'two') AND (c1 = 1);"}
+{"sql":"SELECT c2, c1, c3 FROM nametbl WHERE c2 = 'two' AND c1 = 1","shape":"SELECT c2, c1, c3 FROM nametbl WHERE (c2 = 'two') AND (c1 = 1);"}
+{"sql":"DROP TABLE nametbl","shape":"DROP TABLE nametbl;"}

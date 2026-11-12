@@ -1,0 +1,22 @@
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'example AND (hello OR world))'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'example AND (hello OR world'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH '(hello'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH '('"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH ')'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'example (hello world'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'example OR \"hello world'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'example OR hello world\"'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'OR hello world'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'hello world OR'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'one (hello world OR) two'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'one (OR hello world) two'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH '(hello OR world) NEAR one'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'one NEAR (hello OR world)'"}
+{"sql":"SELECT fts3_exprtest('simple', 'a b')"}
+{"sql":"SELECT fts3_exprtest('doesnotexist', 'a b', 'c')"}
+{"sql":"SELECT fts3_exprtest('simple', 'a b OR', 'c')"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(a)"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'five four one' ORDER BY rowid"}
+{"sql":"CREATE VIRTUAL TABLE test USING fts3 (keyword)"}
+{"sql":"INSERT INTO test VALUES ('abc')"}
+{"sql":"SELECT * FROM test WHERE keyword MATCH '\"\"'"}

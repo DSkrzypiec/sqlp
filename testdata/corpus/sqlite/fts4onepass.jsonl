@@ -1,0 +1,18 @@
+{"sql":"INSERT INTO ft(rowid, content) VALUES(1, '1 2 3')"}
+{"sql":"INSERT INTO ft(rowid, content) VALUES(2, '4 5 6')"}
+{"sql":"INSERT INTO ft(rowid, content) VALUES(3, '7 8 9')"}
+{"sql":"CREATE TRIGGER t1_ai AFTER INSERT ON t1 BEGIN\n    DELETE FROM ft WHERE rowid=new.x;\n  END"}
+{"sql":"CREATE TRIGGER t1_ad AFTER DELETE ON t1 BEGIN\n    UPDATE ft SET content = 'a b c' WHERE rowid=old.x;\n  END"}
+{"sql":"CREATE TRIGGER t1_bu BEFORE UPDATE ON t1 BEGIN\n    DELETE FROM ft WHERE rowid=old.x;\n  END"}
+{"sql":"DROP TABLE IF EXISTS ft2"}
+{"sql":"INSERT INTO ft2(rowid, content) VALUES(1, 'a b c')"}
+{"sql":"INSERT INTO ft2(rowid, content) VALUES(2, 'a b d')"}
+{"sql":"INSERT INTO ft2(rowid, content) VALUES(3, 'a b e')"}
+{"sql":"SELECT rowid, content FROM ft2"}
+{"sql":"INSERT INTO ft2(ft2) VALUES('integrity-check')"}
+{"sql":"CREATE VIRTUAL TABLE zt USING fts4(a, b)"}
+{"sql":"INSERT INTO zt(rowid, a, b) VALUES(1, 'unus duo', NULL)"}
+{"sql":"INSERT INTO zt(rowid, a, b) VALUES(2, NULL, NULL)"}
+{"sql":"UPDATE zt SET b='septum' WHERE rowid = 1"}
+{"sql":"UPDATE zt SET b='octo' WHERE rowid = 1"}
+{"sql":"SELECT count(*) FROM zt_segdir"}

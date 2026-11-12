@@ -1,0 +1,4 @@
+{"sql":"SELECT ix FROM qpvtab WHERE vn='sqlite3_vtab_distinct'"}
+{"sql":"SELECT DISTINCT ix FROM qpvtab WHERE vn='sqlite3_vtab_distinct'"}
+{"sql":"SELECT distinct vn, ix FROM qpvtab(3)\n   WHERE +vn IN ('sqlite3_vtab_distinct','nOrderBy')"}
+{"sql":"SELECT vn, ix FROM qpvtab\n   GROUP BY vn\n  HAVING vn='sqlite3_vtab_distinct'"}

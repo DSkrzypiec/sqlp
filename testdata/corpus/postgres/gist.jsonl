@@ -1,0 +1,58 @@
+{"sql":"create table gist_point_tbl(id int4, p point)","shape":"CREATE TABLE gist_point_tbl (id int4, p point);"}
+{"sql":"create index gist_pointidx on gist_point_tbl using gist(p)","shape":"CREATE INDEX gist_pointidx ON gist_point_tbl USING gist (p);"}
+{"sql":"create index gist_pointidx2 on gist_point_tbl using gist(p) with (buffering = on, fillfactor=50)","shape":"CREATE INDEX gist_pointidx2 ON gist_point_tbl USING gist (p) WITH (buffering = on, fillfactor = 50);"}
+{"sql":"create index gist_pointidx3 on gist_point_tbl using gist(p) with (buffering = off)","shape":"CREATE INDEX gist_pointidx3 ON gist_point_tbl USING gist (p) WITH (buffering = off);"}
+{"sql":"create index gist_pointidx4 on gist_point_tbl using gist(p) with (buffering = auto)","shape":"CREATE INDEX gist_pointidx4 ON gist_point_tbl USING gist (p) WITH (buffering = auto);"}
+{"sql":"drop index gist_pointidx2, gist_pointidx3, gist_pointidx4","shape":"DROP INDEX gist_pointidx2, gist_pointidx3, gist_pointidx4;"}
+{"sql":"create index gist_pointidx5 on gist_point_tbl using gist(p) with (buffering = invalid_value)","shape":"CREATE INDEX gist_pointidx5 ON gist_point_tbl USING gist (p) WITH (buffering = invalid_value);"}
+{"sql":"create index gist_pointidx5 on gist_point_tbl using gist(p) with (fillfactor=9)","shape":"CREATE INDEX gist_pointidx5 ON gist_point_tbl USING gist (p) WITH (fillfactor = 9);"}
+{"sql":"create index gist_pointidx5 on gist_point_tbl using gist(p) with (fillfactor=101)","shape":"CREATE INDEX gist_pointidx5 ON gist_point_tbl USING gist (p) WITH (fillfactor = 101);"}
+{"sql":"insert into gist_point_tbl (id, p)\nselect g,        point(g*10, g*10) from generate_series(1, 10000) g","shape":"INSERT INTO gist_point_tbl (id, p) SELECT g, point(g * 10, g * 10) FROM generate_series(1, 10000) AS g;"}
+{"sql":"insert into gist_point_tbl (id, p)\nselect g+100000, point(g*10+1, g*10+1) from generate_series(1, 10000) g","shape":"INSERT INTO gist_point_tbl (id, p) SELECT g + 100000, point((g * 10) + 1, (g * 10) + 1) FROM generate_series(1, 10000) AS g;"}
+{"sql":"delete from gist_point_tbl where id % 2 = 1","shape":"DELETE FROM gist_point_tbl WHERE (id % 2) = 1;"}
+{"sql":"delete from gist_point_tbl where id > 5000","shape":"DELETE FROM gist_point_tbl WHERE id > 5000;"}
+{"sql":"vacuum analyze gist_point_tbl","shape":"VACUUM ANALYZE gist_point_tbl;"}
+{"sql":"alter index gist_pointidx SET (fillfactor = 40)"}
+{"sql":"reindex index gist_pointidx","shape":"REINDEX INDEX gist_pointidx;"}
+{"sql":"create table gist_tbl (b box, p point, c circle)","shape":"CREATE TABLE gist_tbl (b box, p point, c circle);"}
+{"sql":"insert into gist_tbl\nselect box(point(0.05*i, 0.05*i), point(0.05*i, 0.05*i)),\n       point(0.05*i, 0.05*i),\n       circle(point(0.05*i, 0.05*i), 1.0)\nfrom generate_series(0,10000) as i","shape":"INSERT INTO gist_tbl SELECT box(point(0.05 * i, 0.05 * i), point(0.05 * i, 0.05 * i)), point(0.05 * i, 0.05 * i), circle(point(0.05 * i, 0.05 * i), 1.0) FROM generate_series(0, 10000) AS i;"}
+{"sql":"vacuum analyze gist_tbl","shape":"VACUUM ANALYZE gist_tbl;"}
+{"sql":"set enable_seqscan=off","shape":"SET enable_seqscan TO off;"}
+{"sql":"set enable_bitmapscan=off","shape":"SET enable_bitmapscan TO off;"}
+{"sql":"set enable_indexonlyscan=on","shape":"SET enable_indexonlyscan TO on;"}
+{"sql":"create index gist_tbl_point_index on gist_tbl using gist (p)","shape":"CREATE INDEX gist_tbl_point_index ON gist_tbl USING gist (p);"}
+{"sql":"explain (costs off)\nselect p from gist_tbl where p <@ box(point(0,0), point(0.5, 0.5))","shape":"EXPLAIN (COSTS off) SELECT p FROM gist_tbl WHERE p <@ box(point(0, 0), point(0.5, 0.5));"}
+{"sql":"select p from gist_tbl where p <@ box(point(0,0), point(0.5, 0.5))","shape":"SELECT p FROM gist_tbl WHERE p <@ box(point(0, 0), point(0.5, 0.5));"}
+{"sql":"explain (costs off)\nselect p from gist_tbl where p <@ box(point(0,0), point(0.5, 0.5))\norder by p <-> point(0.201, 0.201)","shape":"EXPLAIN (COSTS off) SELECT p FROM gist_tbl WHERE p <@ box(point(0, 0), point(0.5, 0.5)) ORDER BY p <-> point(0.201, 0.201);"}
+{"sql":"select p from gist_tbl where p <@ box(point(0,0), point(0.5, 0.5))\norder by p <-> point(0.201, 0.201)","shape":"SELECT p FROM gist_tbl WHERE p <@ box(point(0, 0), point(0.5, 0.5)) ORDER BY p <-> point(0.201, 0.201);"}
+{"sql":"explain (costs off)\nselect p from gist_tbl where p <@ box(point(0,0), point(0.5, 0.5))\norder by point(0.101, 0.101) <-> p","shape":"EXPLAIN (COSTS off) SELECT p FROM gist_tbl WHERE p <@ box(point(0, 0), point(0.5, 0.5)) ORDER BY point(0.101, 0.101) <-> p;"}
+{"sql":"select p from gist_tbl where p <@ box(point(0,0), point(0.5, 0.5))\norder by point(0.101, 0.101) <-> p","shape":"SELECT p FROM gist_tbl WHERE p <@ box(point(0, 0), point(0.5, 0.5)) ORDER BY point(0.101, 0.101) <-> p;"}
+{"sql":"explain (costs off)\nselect p from\n  (values (box(point(0,0), point(0.5,0.5))),\n          (box(point(0.5,0.5), point(0.75,0.75))),\n          (box(point(0.8,0.8), point(1.0,1.0)))) as v(bb)\ncross join lateral\n  (select p from gist_tbl where p <@ bb order by p <-> bb[0] limit 2) ss","shape":"EXPLAIN (COSTS off) SELECT p FROM (VALUES (box(point(0, 0), point(0.5, 0.5))), (box(point(0.5, 0.5), point(0.75, 0.75))), (box(point(0.8, 0.8), point(1.0, 1.0)))) AS v(bb) CROSS JOIN LATERAL (SELECT p FROM gist_tbl WHERE p <@ bb ORDER BY p <-> bb[0] LIMIT 2) AS ss;"}
+{"sql":"select p from\n  (values (box(point(0,0), point(0.5,0.5))),\n          (box(point(0.5,0.5), point(0.75,0.75))),\n          (box(point(0.8,0.8), point(1.0,1.0)))) as v(bb)\ncross join lateral\n  (select p from gist_tbl where p <@ bb order by p <-> bb[0] limit 2) ss","shape":"SELECT p FROM (VALUES (box(point(0, 0), point(0.5, 0.5))), (box(point(0.5, 0.5), point(0.75, 0.75))), (box(point(0.8, 0.8), point(1.0, 1.0)))) AS v(bb) CROSS JOIN LATERAL (SELECT p FROM gist_tbl WHERE p <@ bb ORDER BY p <-> bb[0] LIMIT 2) AS ss;"}
+{"sql":"drop index gist_tbl_point_index","shape":"DROP INDEX gist_tbl_point_index;"}
+{"sql":"create index gist_tbl_box_index on gist_tbl using gist (b)","shape":"CREATE INDEX gist_tbl_box_index ON gist_tbl USING gist (b);"}
+{"sql":"explain (costs off)\nselect b from gist_tbl where b <@ box(point(5,5), point(6,6))","shape":"EXPLAIN (COSTS off) SELECT b FROM gist_tbl WHERE b <@ box(point(5, 5), point(6, 6));"}
+{"sql":"select b from gist_tbl where b <@ box(point(5,5), point(6,6))","shape":"SELECT b FROM gist_tbl WHERE b <@ box(point(5, 5), point(6, 6));"}
+{"sql":"explain (costs off)\nselect b from gist_tbl where b <@ box(point(5,5), point(6,6))\norder by b <-> point(5.2, 5.91)","shape":"EXPLAIN (COSTS off) SELECT b FROM gist_tbl WHERE b <@ box(point(5, 5), point(6, 6)) ORDER BY b <-> point(5.2, 5.91);"}
+{"sql":"select b from gist_tbl where b <@ box(point(5,5), point(6,6))\norder by b <-> point(5.2, 5.91)","shape":"SELECT b FROM gist_tbl WHERE b <@ box(point(5, 5), point(6, 6)) ORDER BY b <-> point(5.2, 5.91);"}
+{"sql":"explain (costs off)\nselect b from gist_tbl where b <@ box(point(5,5), point(6,6))\norder by point(5.2, 5.91) <-> b","shape":"EXPLAIN (COSTS off) SELECT b FROM gist_tbl WHERE b <@ box(point(5, 5), point(6, 6)) ORDER BY point(5.2, 5.91) <-> b;"}
+{"sql":"select b from gist_tbl where b <@ box(point(5,5), point(6,6))\norder by point(5.2, 5.91) <-> b","shape":"SELECT b FROM gist_tbl WHERE b <@ box(point(5, 5), point(6, 6)) ORDER BY point(5.2, 5.91) <-> b;"}
+{"sql":"drop index gist_tbl_box_index","shape":"DROP INDEX gist_tbl_box_index;"}
+{"sql":"create index gist_tbl_multi_index on gist_tbl using gist (p, c)","shape":"CREATE INDEX gist_tbl_multi_index ON gist_tbl USING gist (p, c);"}
+{"sql":"explain (costs off)\nselect p, c from gist_tbl\nwhere p <@ box(point(5,5), point(6, 6))","shape":"EXPLAIN (COSTS off) SELECT p, c FROM gist_tbl WHERE p <@ box(point(5, 5), point(6, 6));"}
+{"sql":"select b, p from gist_tbl\nwhere b <@ box(point(4.5, 4.5), point(5.5, 5.5))\nand p <@ box(point(5,5), point(6, 6))","shape":"SELECT b, p FROM gist_tbl WHERE (b <@ box(point(4.5, 4.5), point(5.5, 5.5))) AND (p <@ box(point(5, 5), point(6, 6)));"}
+{"sql":"drop index gist_tbl_multi_index","shape":"DROP INDEX gist_tbl_multi_index;"}
+{"sql":"create index gist_tbl_multi_index on gist_tbl using gist (circle(p,1), p)","shape":"CREATE INDEX gist_tbl_multi_index ON gist_tbl USING gist (circle(p, 1), p);"}
+{"sql":"explain (verbose, costs off)\nselect circle(p,1) from gist_tbl\nwhere p <@ box(point(5, 5), point(5.3, 5.3))","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT circle(p, 1) FROM gist_tbl WHERE p <@ box(point(5, 5), point(5.3, 5.3));"}
+{"sql":"select circle(p,1) from gist_tbl\nwhere p <@ box(point(5, 5), point(5.3, 5.3))","shape":"SELECT circle(p, 1) FROM gist_tbl WHERE p <@ box(point(5, 5), point(5.3, 5.3));"}
+{"sql":"explain (verbose, costs off)\nselect p from gist_tbl where circle(p,1) @> circle(point(0,0),0.95)","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT p FROM gist_tbl WHERE circle(p, 1) @> circle(point(0, 0), 0.95);"}
+{"sql":"select p from gist_tbl where circle(p,1) @> circle(point(0,0),0.95)","shape":"SELECT p FROM gist_tbl WHERE circle(p, 1) @> circle(point(0, 0), 0.95);"}
+{"sql":"explain (verbose, costs off)\nselect count(*) from gist_tbl","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT count(*) FROM gist_tbl;"}
+{"sql":"select count(*) from gist_tbl","shape":"SELECT count(*) FROM gist_tbl;"}
+{"sql":"explain (verbose, costs off)\nselect p from gist_tbl order by circle(p,1) <-> point(0,0) limit 1","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT p FROM gist_tbl ORDER BY circle(p, 1) <-> point(0, 0) LIMIT 1;"}
+{"sql":"select p from gist_tbl order by circle(p,1) <-> point(0,0) limit 1","shape":"SELECT p FROM gist_tbl ORDER BY circle(p, 1) <-> point(0, 0) LIMIT 1;"}
+{"sql":"create index gist_tbl_box_index_forcing_buffering on gist_tbl using gist (p)\n  with (buffering=on, fillfactor=50)","shape":"CREATE INDEX gist_tbl_box_index_forcing_buffering ON gist_tbl USING gist (p) WITH (buffering = on, fillfactor = 50);"}
+{"sql":"reset enable_indexonlyscan","shape":"RESET enable_indexonlyscan;"}
+{"sql":"drop table gist_tbl","shape":"DROP TABLE gist_tbl;"}
+{"sql":"create unlogged table gist_tbl (b box)","shape":"CREATE UNLOGGED TABLE gist_tbl (b box);"}
+{"sql":"insert into gist_tbl\n  select box(point(0.05*i, 0.05*i)) from generate_series(0,10) as i","shape":"INSERT INTO gist_tbl SELECT box(point(0.05 * i, 0.05 * i)) FROM generate_series(0, 10) AS i;"}

@@ -1,0 +1,6 @@
+{"sql":"ATTACH 'test.db2' AS dbfile"}
+{"sql":"ATTACH ''         AS dbtemp"}
+{"sql":"ATTACH ':memory:'  AS dbmem"}
+{"sql":"CREATE TABLE dbfile.t2(x)"}
+{"sql":"CREATE TABLE dbtemp.t3(x)"}
+{"sql":"CREATE TABLE dbmem.t4(x)"}

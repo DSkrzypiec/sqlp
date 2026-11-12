@@ -1,0 +1,48 @@
+{"sql":"CREATE TABLE fruits(\n     name TEXT COLLATE NOCASE,\n     color TEXT COLLATE NOCASE\n  )"}
+{"sql":"INSERT INTO fruits (name, color) VALUES ('apple', 'RED')"}
+{"sql":"INSERT INTO fruits (name, color) VALUES ('APPLE', 'yellow')"}
+{"sql":"INSERT INTO fruits (name, color) VALUES ('pear', 'YELLOW')"}
+{"sql":"INSERT INTO fruits (name, color) VALUES ('PEAR', 'green')"}
+{"sql":"SELECT name, color, dense_rank() OVER (ORDER BY name) FROM fruits"}
+{"sql":"SELECT name, color,\n    dense_rank() OVER (PARTITION BY name ORDER BY color)\n  FROM fruits"}
+{"sql":"SELECT name, color,\n    dense_rank() OVER (ORDER BY name),\n    dense_rank() OVER (PARTITION BY name ORDER BY color)\n  FROM fruits"}
+{"sql":"SELECT name, color,\n    dense_rank() OVER (ORDER BY name),\n    dense_rank() OVER (PARTITION BY name ORDER BY color)\n  FROM fruits ORDER BY color"}
+{"sql":"CREATE TABLE t1(a BLOB, b INTEGER, c COLLATE nocase)"}
+{"sql":"INSERT INTO t1 VALUES(1, 2, 'abc')"}
+{"sql":"INSERT INTO t1 VALUES(3, 4, 'ABC')"}
+{"sql":"SELECT c=='Abc' FROM t1"}
+{"sql":"SELECT c=='Abc', rank() OVER (ORDER BY b) FROM t1"}
+{"sql":"SELECT b=='2' FROM t1"}
+{"sql":"SELECT b=='2', rank() OVER (ORDER BY a) FROM t1"}
+{"sql":"SELECT EXISTS(SELECT 1 FROM t1 ORDER BY sum(a) OVER ()) FROM t1"}
+{"sql":"SELECT sum(a) OVER () FROM t2\n   ORDER BY EXISTS(SELECT 1 FROM t2 ORDER BY sum(a) OVER ())"}
+{"sql":"SELECT a, sum(a) OVER (ORDER BY a DESC) FROM t2 \n  ORDER BY EXISTS(\n    SELECT 1 FROM t2 ORDER BY sum(a) OVER (ORDER BY a)\n  ) OVER (ORDER BY a)","reject":true}
+{"sql":"SELECT y, y+1, y+2 FROM (\n      SELECT c IN (\n        SELECT min(a) OVER (),\n        (abs(row_number() OVER())+22)/19,\n        max(a) OVER () FROM t1\n        ) AS y FROM t2\n      )"}
+{"sql":"INSERT INTO t1 VALUES('A', 1), ('A', 2), ('2', 1), ('2', 2)"}
+{"sql":"SELECT b, b=count(*), '1,2'                   FROM t1 GROUP BY b"}
+{"sql":"SELECT b, b=count(*), group_concat(b) OVER () FROM t1 GROUP BY b"}
+{"sql":"CREATE INDEX i1 ON t1(a, b, c, d, e)"}
+{"sql":"SELECT * FROM t0 WHERE \n  EXISTS (\n    SELECT MIN(c0) OVER (), CUME_DIST() OVER () FROM t0\n  ) >=1 AND \n  EXISTS (\n    SELECT MIN(c0) OVER (), CUME_DIST() OVER () FROM t0\n  ) <=1"}
+{"sql":"SELECT * FROM t0 WHERE EXISTS (\n    SELECT MIN(c0) OVER (), CUME_DIST() OVER () FROM t0\n  ) \n  BETWEEN 1 AND 1"}
+{"sql":"SELECT avg(x) OVER (ORDER BY y) AS z FROM t1 ORDER BY z"}
+{"sql":"SELECT avg(x) OVER (ORDER BY y) z FROM t1 ORDER BY (z IS y)"}
+{"sql":"SELECT avg(x) OVER (ORDER BY y) z FROM t1 ORDER BY (y IS z)"}
+{"sql":"SELECT avg(x) OVER (ORDER BY y) z FROM t1 ORDER BY z + 0.0"}
+{"sql":"SELECT min( sum(a) ) OVER () FROM t1"}
+{"sql":"SELECT min( sum(a) ) OVER () FROM t1 GROUP BY a"}
+{"sql":"CREATE VIEW v1 AS \n    SELECT 0 AS x\n      UNION \n    SELECT count() OVER() FROM (SELECT 0) \n    ORDER BY 1"}
+{"sql":"SELECT min( max((SELECT x FROM v1)) ) OVER()"}
+{"sql":"SELECT(\n      SELECT x UNION \n      SELECT sum( avg((SELECT x FROM v1)) ) OVER()\n  )\n  FROM v1"}
+{"sql":"INSERT INTO t1 VALUES(NULL,'bb',356)"}
+{"sql":"INSERT INTO t1 VALUES('CB','aa',158)"}
+{"sql":"SELECT sum(c) OVER (\n    ORDER BY c RANGE BETWEEN 0 PRECEDING AND '-700' PRECEDING\n  )\n  FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(1, 'a')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'b')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'c')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'd')"}
+{"sql":"INSERT INTO t1 VALUES(5, 'e')"}
+{"sql":"INSERT INTO t1 VALUES(6, 'f')"}
+{"sql":"SELECT a, min(b) OVER win\n  FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN 2 PRECEDING AND 1 FOLLOWING)"}
+{"sql":"SELECT a, min(b) FILTER (WHERE a%2) OVER win\n  FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN 2 PRECEDING AND 1 FOLLOWING)"}
+{"sql":"SELECT a, min(b) FILTER (WHERE (a%2)=0) OVER win\n  FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN 2 PRECEDING AND 1 FOLLOWING)"}
+{"sql":"SELECT a, nth_value(b, 1) FILTER (WHERE (a%2)=0) OVER win\n  FROM t1\n  WINDOW win AS (ORDER BY a ROWS BETWEEN 2 PRECEDING AND 1 FOLLOWING)"}

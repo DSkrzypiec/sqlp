@@ -1,0 +1,4 @@
+{"sql":"PRAGMA secure_delete=OFF"}
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y TEXT)"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<1000\n  )\n  INSERT INTO t1 SELECT NULL, hex(myrandomblob(64)) FROM s"}
+{"sql":"PRAGMA wal_checkpoint = noop"}

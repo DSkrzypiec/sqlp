@@ -1,0 +1,26 @@
+{"sql":"SELECT count(a), sum(a) FROM t1"}
+{"sql":"CREATE TABLE data(x)"}
+{"sql":"INSERT INTO data VALUES('need xShmOpen to see this')"}
+{"sql":"SELECT * FROM data"}
+{"sql":"INSERT INTO x VALUES(1)"}
+{"sql":"Pragma Journal_Mode = Wal"}
+{"sql":"Pragma Locking_Mode = Exclusive"}
+{"sql":"Pragma Lock_Status"}
+{"sql":"Pragma loCK_STATus"}
+{"sql":"PRAGMA LOCKING_MODE = EXCLUSIVE"}
+{"sql":"INSERT INTO t1 VALUES('Chico')"}
+{"sql":"INSERT INTO t1 VALUES('Harpo')"}
+{"sql":"INSERT INTO t1 VALUES('Groucho')"}
+{"sql":"INSERT INTO t2 VALUES('V', 'VI')"}
+{"sql":"INSERT INTO t2 VALUES('VII', 'VIII')"}
+{"sql":"INSERT INTO t2 VALUES('IX', 'X')"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(8188*1020))"}
+{"sql":"SELECT rootpage>=8192 FROM sqlite_master WHERE tbl_name = 't2'"}
+{"sql":"INSERT INTO t3 VALUES(randomblob(900))"}
+{"sql":"INSERT INTO t3 SELECT randomblob(900) FROM t3"}
+{"sql":"INSERT INTO t2 VALUES('goodbye')"}
+{"sql":"INSERT INTO x VALUES('Barton')"}
+{"sql":"INSERT INTO x VALUES('Deakin')"}
+{"sql":"INSERT INTO x VALUES('Watson')"}
+{"sql":"INSERT INTO t1 VALUES('3.14', '2.72')"}
+{"sql":"INSERT INTO t1 VALUES(7, zeroblob(12*4096))"}

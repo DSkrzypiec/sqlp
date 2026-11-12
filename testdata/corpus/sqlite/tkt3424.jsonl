@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE names(id INTEGER, data TEXT, code TEXT)"}
+{"sql":"INSERT INTO names VALUES(1,'E1','AAA')"}
+{"sql":"INSERT INTO names VALUES(2,NULL,'BBB')"}
+{"sql":"CREATE TABLE orig(code TEXT, data TEXT)"}
+{"sql":"INSERT INTO orig VALUES('AAA','E1')"}
+{"sql":"INSERT INTO orig VALUES('AAA','E2')"}
+{"sql":"INSERT INTO orig VALUES('AAA','E3')"}
+{"sql":"INSERT INTO orig VALUES('AAA','E4')"}
+{"sql":"INSERT INTO orig VALUES('AAA','E5')"}
+{"sql":"SELECT * FROM \n    names LEFT OUTER JOIN orig\n    ON names.data = orig.data AND names.code = orig.code"}
+{"sql":"CREATE INDEX udx_orig_code_data ON orig(code, data)"}

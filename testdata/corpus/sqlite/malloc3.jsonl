@@ -1,0 +1,11 @@
+{"sql":"SELECT tbl_name FROM sqlite_master"}
+{"sql":"SELECT * FROM abc ORDER BY a DESC"}
+{"sql":"SELECT name, tbl_name FROM sqlite_master ORDER BY name"}
+{"sql":"SELECT min(\n          (oid == a) AND 'String value ' || a == b AND a == length(c) \n      ) FROM abc"}
+{"sql":"SELECT a, b, c FROM abc"}
+{"sql":"SELECT a, count(*) FROM abc GROUP BY a"}
+{"sql":"SELECT name, tbl_name FROM sqlite_master"}
+{"sql":"SELECT * FROM def, ghi WHERE d = g"}
+{"sql":"SELECT * FROM v1 WHERE d = g"}
+{"sql":"SELECT * FROM tbl2, def WHERE d = x"}
+{"sql":"SELECT * FROM ghi"}

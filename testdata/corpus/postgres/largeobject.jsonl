@@ -1,0 +1,55 @@
+{"sql":"SET bytea_output TO escape","shape":"SET bytea_output TO escape;"}
+{"sql":"CREATE ROLE regress_lo_user"}
+{"sql":"SELECT lo_create(42)","shape":"SELECT lo_create(42);"}
+{"sql":"ALTER LARGE OBJECT 42 OWNER TO regress_lo_user"}
+{"sql":"SET SESSION AUTHORIZATION regress_lo_user"}
+{"sql":"GRANT SELECT ON LARGE OBJECT 42 TO public"}
+{"sql":"COMMENT ON LARGE OBJECT 42 IS 'the ultimate answer'"}
+{"sql":"CREATE TABLE lotest_stash_values (loid oid, fd integer)","shape":"CREATE TABLE lotest_stash_values (loid oid, fd integer);"}
+{"sql":"INSERT INTO lotest_stash_values (loid) SELECT lo_creat(42)","shape":"INSERT INTO lotest_stash_values (loid) SELECT lo_creat(42);"}
+{"sql":"UPDATE lotest_stash_values SET fd = lo_open(loid, CAST(x'20000' | x'40000' AS integer))","shape":"UPDATE lotest_stash_values SET fd = lo_open(loid, CAST(X'20000' | X'40000' AS integer));"}
+{"sql":"SELECT lowrite(fd, '\nI wandered lonely as a cloud\nThat floats on high o''er vales and hills,\nWhen all at once I saw a crowd,\nA host, of golden daffodils;\nBeside the lake, beneath the trees,\nFluttering and dancing in the breeze.\n\nContinuous as the stars that shine\nAnd twinkle on the milky way,\nThey stretched in never-ending line\nAlong the margin of a bay:\nTen thousand saw I at a glance,\nTossing their heads in sprightly dance.\n\nThe waves beside them danced; but they\nOut-did the sparkling waves in glee:\nA poet could not but be gay,\nIn such a jocund company:\nI gazed--and gazed--but little thought\nWhat wealth the show to me had brought:\n\nFor oft, when on my couch I lie\nIn vacant or in pensive mood,\nThey flash upon that inward eye\nWhich is the bliss of solitude;\nAnd then my heart with pleasure fills,\nAnd dances with the daffodils.\n\n         -- William Wordsworth\n') FROM lotest_stash_values","shape":"SELECT lowrite(fd, '\nI wandered lonely as a cloud\nThat floats on high o''er vales and hills,\nWhen all at once I saw a crowd,\nA host, of golden daffodils;\nBeside the lake, beneath the trees,\nFluttering and dancing in the breeze.\n\nContinuous as the stars that shine\nAnd twinkle on the milky way,\nThey stretched in never-ending line\nAlong the margin of a bay:\nTen thousand saw I at a glance,\nTossing their heads in sprightly dance.\n\nThe waves beside them danced; but they\nOut-did the sparkling waves in glee:\nA poet could not but be gay,\nIn such a jocund company:\nI gazed--and gazed--but little thought\nWhat wealth the show to me had brought:\n\nFor oft, when on my couch I lie\nIn vacant or in pensive mood,\nThey flash upon that inward eye\nWhich is the bliss of solitude;\nAnd then my heart with pleasure fills,\nAnd dances with the daffodils.\n\n         -- William Wordsworth\n') FROM lotest_stash_values;"}
+{"sql":"SELECT lo_close(fd) FROM lotest_stash_values","shape":"SELECT lo_close(fd) FROM lotest_stash_values;"}
+{"sql":"UPDATE lotest_stash_values SET fd=lo_open(loid, CAST(x'20000' | x'40000' AS integer))","shape":"UPDATE lotest_stash_values SET fd = lo_open(loid, CAST(X'20000' | X'40000' AS integer));"}
+{"sql":"SELECT lo_lseek(fd, 104, 0) FROM lotest_stash_values","shape":"SELECT lo_lseek(fd, 104, 0) FROM lotest_stash_values;"}
+{"sql":"SELECT loread(fd, 28) FROM lotest_stash_values","shape":"SELECT loread(fd, 28) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek(fd, -19, 1) FROM lotest_stash_values","shape":"SELECT lo_lseek(fd, -19, 1) FROM lotest_stash_values;"}
+{"sql":"SELECT lowrite(fd, 'n') FROM lotest_stash_values","shape":"SELECT lowrite(fd, 'n') FROM lotest_stash_values;"}
+{"sql":"SELECT lo_tell(fd) FROM lotest_stash_values","shape":"SELECT lo_tell(fd) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek(fd, -744, 2) FROM lotest_stash_values","shape":"SELECT lo_lseek(fd, -744, 2) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_open(loid, x'40000'::int) from lotest_stash_values","shape":"SELECT lo_open(loid, X'40000'::int) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_truncate(fd, 11) FROM lotest_stash_values","shape":"SELECT lo_truncate(fd, 11) FROM lotest_stash_values;"}
+{"sql":"SELECT loread(fd, 15) FROM lotest_stash_values","shape":"SELECT loread(fd, 15) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_truncate(fd, 10000) FROM lotest_stash_values","shape":"SELECT lo_truncate(fd, 10000) FROM lotest_stash_values;"}
+{"sql":"SELECT loread(fd, 10) FROM lotest_stash_values","shape":"SELECT loread(fd, 10) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek(fd, 0, 2) FROM lotest_stash_values","shape":"SELECT lo_lseek(fd, 0, 2) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_truncate(fd, 5000) FROM lotest_stash_values","shape":"SELECT lo_truncate(fd, 5000) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek64(fd, 4294967296, 0) FROM lotest_stash_values","shape":"SELECT lo_lseek64(fd, 4294967296, 0) FROM lotest_stash_values;"}
+{"sql":"SELECT lowrite(fd, 'offset:4GB') FROM lotest_stash_values","shape":"SELECT lowrite(fd, 'offset:4GB') FROM lotest_stash_values;"}
+{"sql":"SELECT lo_tell64(fd) FROM lotest_stash_values","shape":"SELECT lo_tell64(fd) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek64(fd, -10, 1) FROM lotest_stash_values","shape":"SELECT lo_lseek64(fd, -10, 1) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_truncate64(fd, 5000000000) FROM lotest_stash_values","shape":"SELECT lo_truncate64(fd, 5000000000) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek64(fd, 0, 2) FROM lotest_stash_values","shape":"SELECT lo_lseek64(fd, 0, 2) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_truncate64(fd, 3000000000) FROM lotest_stash_values","shape":"SELECT lo_truncate64(fd, 3000000000) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_unlink(loid) from lotest_stash_values","shape":"SELECT lo_unlink(loid) FROM lotest_stash_values;"}
+{"sql":"TRUNCATE lotest_stash_values","shape":"TRUNCATE TABLE lotest_stash_values;"}
+{"sql":"SELECT lo_lseek(fd, 2030, 0) FROM lotest_stash_values","shape":"SELECT lo_lseek(fd, 2030, 0) FROM lotest_stash_values;"}
+{"sql":"SELECT loread(fd, 36) FROM lotest_stash_values","shape":"SELECT loread(fd, 36) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_lseek(fd, -26, 1) FROM lotest_stash_values","shape":"SELECT lo_lseek(fd, -26, 1) FROM lotest_stash_values;"}
+{"sql":"SELECT lowrite(fd, 'abcdefghijklmnop') FROM lotest_stash_values","shape":"SELECT lowrite(fd, 'abcdefghijklmnop') FROM lotest_stash_values;"}
+{"sql":"SELECT lo_unlink(loid) FROM lotest_stash_values","shape":"SELECT lo_unlink(loid) FROM lotest_stash_values;"}
+{"sql":"SELECT lo_from_bytea(0, E'\\\\xdeadbeef') AS newloid\n\nSET bytea_output TO hex","reject":true}
+{"sql":"SELECT lo_create(2121)","shape":"SELECT lo_create(2121);"}
+{"sql":"COMMENT ON LARGE OBJECT 2121 IS 'testing comments'"}
+{"sql":"START TRANSACTION READ ONLY"}
+{"sql":"SELECT lo_open(2121, x'40000'::int)","shape":"SELECT lo_open(2121, X'40000'::int);"}
+{"sql":"SELECT lo_open(2121, x'20000'::int)","shape":"SELECT lo_open(2121, X'20000'::int);"}
+{"sql":"SELECT lo_creat(42)","shape":"SELECT lo_creat(42);"}
+{"sql":"SELECT lo_unlink(42)","shape":"SELECT lo_unlink(42);"}
+{"sql":"SELECT lowrite(42, 'x')","shape":"SELECT lowrite(42, 'x');"}
+{"sql":"SELECT lo_truncate(42, 0)","shape":"SELECT lo_truncate(42, 0);"}
+{"sql":"SELECT lo_truncate64(42, 0)","shape":"SELECT lo_truncate64(42, 0);"}
+{"sql":"SELECT lo_from_bytea(0, 'x')","shape":"SELECT lo_from_bytea(0, 'x');"}
+{"sql":"SELECT lo_put(42, 0, 'x')","shape":"SELECT lo_put(42, 0, 'x');"}
+{"sql":"DROP TABLE lotest_stash_values","shape":"DROP TABLE lotest_stash_values;"}
+{"sql":"DROP ROLE regress_lo_user","shape":"DROP ROLE regress_lo_user;"}

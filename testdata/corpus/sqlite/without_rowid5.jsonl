@@ -1,0 +1,42 @@
+{"sql":"CREATE TABLE t1(a PRIMARY KEY,b,c)"}
+{"sql":"CREATE TABLE t1w(a PRIMARY KEY,b,c) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(1565,681,1148),(1429,1190,1619),(425,358,1306)"}
+{"sql":"INSERT INTO t1w SELECT a,b,c FROM t1"}
+{"sql":"SELECT rowid, _rowid_, oid FROM t1 ORDER BY a DESC"}
+{"sql":"SELECT rowid FROM t1w"}
+{"sql":"SELECT _rowid_ FROM t1w"}
+{"sql":"SELECT oid FROM t1w"}
+{"sql":"CREATE TABLE IF NOT EXISTS wordcount(\n    word TEXT PRIMARY KEY,\n    cnt INTEGER\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO wordcount VALUES('one',1)"}
+{"sql":"SELECT rowid FROM wordcount"}
+{"sql":"CREATE TABLE IF NOT EXISTS wordcount_b(\n    word TEXT PRIMARY KEY,\n    cnt INTEGER\n  ) WITHOUT rowid"}
+{"sql":"INSERT INTO wordcount_b VALUES('one',1)"}
+{"sql":"SELECT rowid FROM wordcount_b"}
+{"sql":"CREATE TABLE IF NOT EXISTS wordcount_c(\n    word TEXT PRIMARY KEY,\n    cnt INTEGER\n  ) without rowid"}
+{"sql":"INSERT INTO wordcount_c VALUES('one',1)"}
+{"sql":"SELECT rowid FROM wordcount_c"}
+{"sql":"CREATE TABLE IF NOT EXISTS wordcount_d(\n    word TEXT PRIMARY KEY,\n    cnt INTEGER\n  ) WITHOUT rowid"}
+{"sql":"INSERT INTO wordcount_d VALUES('one',1)"}
+{"sql":"SELECT rowid FROM wordcount_d"}
+{"sql":"CREATE TABLE IF NOT EXISTS error1(\n    word TEXT PRIMARY KEY,\n    cnt INTEGER\n  ) WITHOUT _rowid_","reject":true}
+{"sql":"CREATE TABLE IF NOT EXISTS error2(\n    word TEXT PRIMARY KEY,\n    cnt INTEGER\n  ) WITHOUT oid","reject":true}
+{"sql":"CREATE TABLE IF NOT EXISTS error3(\n    word TEXT UNIQUE,\n    cnt INTEGER\n  ) WITHOUT ROWID"}
+{"sql":"CREATE TABLE ipk(key INTEGER PRIMARY KEY, val TEXT) WITHOUT ROWID"}
+{"sql":"INSERT INTO ipk VALUES('rival','bonus')"}
+{"sql":"SELECT * FROM ipk"}
+{"sql":"INSERT INTO ipk VALUES(NULL,'sample')"}
+{"sql":"CREATE TABLE ipk2(key INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)WITHOUT ROWID"}
+{"sql":"CREATE TABLE nn(a, b, c, d, e, PRIMARY KEY(c,a,e))"}
+{"sql":"CREATE TABLE nnw(a, b, c, d, e, PRIMARY KEY(c,a,e)) WITHOUT ROWID"}
+{"sql":"INSERT INTO nn VALUES(1,2,3,4,5)"}
+{"sql":"INSERT INTO nnw VALUES(1,2,3,4,5)"}
+{"sql":"INSERT INTO nn VALUES(NULL, 3,4,5,6)"}
+{"sql":"INSERT INTO nn VALUES(3,4,NULL,7,8)"}
+{"sql":"INSERT INTO nn VALUES(4,5,6,7,NULL)"}
+{"sql":"SELECT count(*) FROM nn"}
+{"sql":"INSERT INTO nnw VALUES(NULL, 3,4,5,6)"}
+{"sql":"INSERT INTO nnw VALUES(3,4,NULL,7,8)"}
+{"sql":"INSERT INTO nnw VALUES(4,5,6,7,NULL)"}
+{"sql":"SELECT count(*) FROM nnw"}
+{"sql":"CREATE TABLE b1(a INTEGER PRIMARY KEY, b BLOB) WITHOUT ROWID"}
+{"sql":"INSERT INTO b1 VALUES(1,x'0102030405060708090a0b0c0d0e0f')"}

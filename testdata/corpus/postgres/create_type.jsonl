@@ -1,0 +1,75 @@
+{"sql":"CREATE TYPE widget (\n   internallength = 24,\n   input = widget_in,\n   output = widget_out,\n   typmod_in = numerictypmodin,\n   typmod_out = numerictypmodout,\n   alignment = double\n)"}
+{"sql":"CREATE TYPE city_budget (\n   internallength = 16,\n   input = int44in,\n   output = int44out,\n   element = int4,\n   category = 'x',   -- just to verify the system will take it\n   preferred = true  -- ditto\n)"}
+{"sql":"CREATE TYPE shell","shape":"CREATE TYPE shell;"}
+{"sql":"DROP TYPE shell","shape":"DROP TYPE shell;"}
+{"sql":"CREATE TYPE myshell","shape":"CREATE TYPE myshell;"}
+{"sql":"CREATE TYPE int42","shape":"CREATE TYPE int42;"}
+{"sql":"CREATE TYPE text_w_default","shape":"CREATE TYPE text_w_default;"}
+{"sql":"CREATE FUNCTION int42_in(cstring)\n   RETURNS int42\n   AS 'int4in'\n   LANGUAGE internal STRICT IMMUTABLE","shape":"CREATE FUNCTION int42_in(cstring) RETURNS int42 AS 'int4in' LANGUAGE internal STRICT IMMUTABLE;"}
+{"sql":"CREATE FUNCTION int42_out(int42)\n   RETURNS cstring\n   AS 'int4out'\n   LANGUAGE internal STRICT IMMUTABLE","shape":"CREATE FUNCTION int42_out(int42) RETURNS cstring AS 'int4out' LANGUAGE internal STRICT IMMUTABLE;"}
+{"sql":"CREATE FUNCTION text_w_default_in(cstring)\n   RETURNS text_w_default\n   AS 'textin'\n   LANGUAGE internal STRICT IMMUTABLE","shape":"CREATE FUNCTION text_w_default_in(cstring) RETURNS text_w_default AS 'textin' LANGUAGE internal STRICT IMMUTABLE;"}
+{"sql":"CREATE FUNCTION text_w_default_out(text_w_default)\n   RETURNS cstring\n   AS 'textout'\n   LANGUAGE internal STRICT IMMUTABLE","shape":"CREATE FUNCTION text_w_default_out(text_w_default) RETURNS cstring AS 'textout' LANGUAGE internal STRICT IMMUTABLE;"}
+{"sql":"CREATE TYPE int42 (\n   internallength = 4,\n   input = int42_in,\n   output = int42_out,\n   alignment = int4,\n   default = 42,\n   passedbyvalue\n)"}
+{"sql":"CREATE TYPE text_w_default (\n   internallength = variable,\n   input = text_w_default_in,\n   output = text_w_default_out,\n   alignment = int4,\n   default = 'zippo'\n)"}
+{"sql":"CREATE TABLE default_test (f1 text_w_default, f2 int42)","shape":"CREATE TABLE default_test (f1 text_w_default, f2 int42);"}
+{"sql":"INSERT INTO default_test DEFAULT VALUES","shape":"INSERT INTO default_test DEFAULT VALUES;"}
+{"sql":"SELECT * FROM default_test","shape":"SELECT * FROM default_test;"}
+{"sql":"CREATE TYPE bogus_type","shape":"CREATE TYPE bogus_type;"}
+{"sql":"CREATE TYPE bogus_type (\n\t\"Internallength\" = 4,\n\t\"Input\" = int42_in,\n\t\"Output\" = int42_out,\n\t\"Alignment\" = int4,\n\t\"Default\" = 42,\n\t\"Passedbyvalue\"\n)"}
+{"sql":"CREATE TYPE bogus_type (INPUT = array_in,\n    OUTPUT = array_out,\n    ELEMENT = int,\n    INTERNALLENGTH = 32)"}
+{"sql":"DROP TYPE bogus_type","shape":"DROP TYPE bogus_type;"}
+{"sql":"CREATE TYPE default_test_row AS (f1 text_w_default, f2 int42)","shape":"CREATE TYPE default_test_row AS (f1 text_w_default, f2 int42);"}
+{"sql":"CREATE FUNCTION get_default_test() RETURNS SETOF default_test_row AS '\n  SELECT * FROM default_test;\n' LANGUAGE SQL","shape":"CREATE FUNCTION get_default_test() RETURNS SETOF default_test_row AS '\n  SELECT * FROM default_test;\n' LANGUAGE SQL;"}
+{"sql":"SELECT * FROM get_default_test()","shape":"SELECT * FROM get_default_test();"}
+{"sql":"COMMENT ON TYPE bad IS 'bad comment'","shape":"COMMENT ON TYPE bad IS 'bad comment';"}
+{"sql":"COMMENT ON TYPE default_test_row IS 'good comment'","shape":"COMMENT ON TYPE default_test_row IS 'good comment';"}
+{"sql":"COMMENT ON TYPE default_test_row IS NULL","shape":"COMMENT ON TYPE default_test_row IS NULL;"}
+{"sql":"COMMENT ON COLUMN default_test_row.nope IS 'bad comment'","shape":"COMMENT ON COLUMN default_test_row.nope IS 'bad comment';"}
+{"sql":"COMMENT ON COLUMN default_test_row.f1 IS 'good comment'","shape":"COMMENT ON COLUMN default_test_row.f1 IS 'good comment';"}
+{"sql":"COMMENT ON COLUMN default_test_row.f1 IS NULL","shape":"COMMENT ON COLUMN default_test_row.f1 IS NULL;"}
+{"sql":"DROP TYPE default_test_row CASCADE","shape":"DROP TYPE default_test_row CASCADE;"}
+{"sql":"DROP TABLE default_test","shape":"DROP TABLE default_test;"}
+{"sql":"CREATE TYPE base_type","shape":"CREATE TYPE base_type;"}
+{"sql":"CREATE FUNCTION base_fn_in(cstring) RETURNS base_type AS 'boolin'\n    LANGUAGE internal IMMUTABLE STRICT","shape":"CREATE FUNCTION base_fn_in(cstring) RETURNS base_type AS 'boolin' LANGUAGE internal IMMUTABLE STRICT;"}
+{"sql":"CREATE FUNCTION base_fn_out(base_type) RETURNS cstring AS 'boolout'\n    LANGUAGE internal IMMUTABLE STRICT","shape":"CREATE FUNCTION base_fn_out(base_type) RETURNS cstring AS 'boolout' LANGUAGE internal IMMUTABLE STRICT;"}
+{"sql":"CREATE TYPE base_type(INPUT = base_fn_in, OUTPUT = base_fn_out)"}
+{"sql":"DROP FUNCTION base_fn_in(cstring)"}
+{"sql":"DROP FUNCTION base_fn_out(base_type)"}
+{"sql":"DROP TYPE base_type","shape":"DROP TYPE base_type;"}
+{"sql":"DROP TYPE base_type CASCADE","shape":"DROP TYPE base_type CASCADE;"}
+{"sql":"CREATE TEMP TABLE mytab (foo widget(42,13,7))","shape":"CREATE TEMPORARY TABLE mytab (foo widget(42, 13, 7));"}
+{"sql":"CREATE TEMP TABLE mytab (foo widget(42,13))","shape":"CREATE TEMPORARY TABLE mytab (foo widget(42, 13));"}
+{"sql":"SELECT format_type(atttypid,atttypmod) FROM pg_attribute\nWHERE attrelid = 'mytab'::regclass AND attnum > 0","shape":"SELECT format_type(atttypid, atttypmod) FROM pg_attribute WHERE (attrelid = 'mytab'::regclass) AND (attnum > 0);"}
+{"sql":"INSERT INTO mytab VALUES ('(1,2,3)'), ('(-44,5.5,12)')","shape":"INSERT INTO mytab VALUES ('(1,2,3)'), ('(-44,5.5,12)');"}
+{"sql":"TABLE mytab","shape":"TABLE mytab;"}
+{"sql":"select format_type('varchar'::regtype, 42)","shape":"SELECT format_type('varchar'::regtype, 42);"}
+{"sql":"select format_type('bpchar'::regtype, null)","shape":"SELECT format_type('bpchar'::regtype, NULL);"}
+{"sql":"select format_type('bpchar'::regtype, -1)","shape":"SELECT format_type('bpchar'::regtype, -1);"}
+{"sql":"SELECT pg_input_is_valid('(1,2,3)', 'widget')","shape":"SELECT pg_input_is_valid('(1,2,3)', 'widget');"}
+{"sql":"SELECT pg_input_is_valid('(1,2)', 'widget')","shape":"SELECT pg_input_is_valid('(1,2)', 'widget');"}
+{"sql":"SELECT pg_input_is_valid('{\"(1,2,3)\"}', 'widget[]')","shape":"SELECT pg_input_is_valid('{\"(1,2,3)\"}', 'widget[]');"}
+{"sql":"SELECT pg_input_is_valid('{\"(1,2)\"}', 'widget[]')","shape":"SELECT pg_input_is_valid('{\"(1,2)\"}', 'widget[]');"}
+{"sql":"SELECT pg_input_is_valid('(\"(1,2,3)\")', 'mytab')","shape":"SELECT pg_input_is_valid('(\"(1,2,3)\")', 'mytab');"}
+{"sql":"SELECT pg_input_is_valid('(\"(1,2)\")', 'mytab')","shape":"SELECT pg_input_is_valid('(\"(1,2)\")', 'mytab');"}
+{"sql":"CREATE OPERATOR <% (\n   leftarg = point,\n   rightarg = widget,\n   procedure = pt_in_widget,\n   commutator = >% ,\n   negator = >=%\n)"}
+{"sql":"SELECT point '(1,2)' <% widget '(0,0,3)' AS t,\n       point '(1,2)' <% widget '(0,0,1)' AS f","shape":"SELECT point '(1,2)' <% widget '(0,0,3)' AS t, point '(1,2)' <% widget '(0,0,1)' AS f;"}
+{"sql":"CREATE TABLE city (\n\tname\t\tname,\n\tlocation \tbox,\n\tbudget \t\tcity_budget\n)","shape":"CREATE TABLE city (name name, location box, budget city_budget);"}
+{"sql":"INSERT INTO city VALUES\n('Podunk', '(1,2),(3,4)', '100,127,1000'),\n('Gotham', '(1000,34),(1100,334)', '123456,127,-1000,6789')","shape":"INSERT INTO city VALUES ('Podunk', '(1,2),(3,4)', '100,127,1000'), ('Gotham', '(1000,34),(1100,334)', '123456,127,-1000,6789');"}
+{"sql":"TABLE city","shape":"TABLE city;"}
+{"sql":"CREATE TYPE myvarchar","shape":"CREATE TYPE myvarchar;"}
+{"sql":"CREATE FUNCTION myvarcharin(cstring, oid, integer) RETURNS myvarchar\nLANGUAGE internal IMMUTABLE PARALLEL SAFE STRICT AS 'varcharin'","shape":"CREATE FUNCTION myvarcharin(cstring, oid, integer) RETURNS myvarchar LANGUAGE internal IMMUTABLE PARALLEL SAFE STRICT AS 'varcharin';"}
+{"sql":"CREATE FUNCTION myvarcharout(myvarchar) RETURNS cstring\nLANGUAGE internal IMMUTABLE PARALLEL SAFE STRICT AS 'varcharout'","shape":"CREATE FUNCTION myvarcharout(myvarchar) RETURNS cstring LANGUAGE internal IMMUTABLE PARALLEL SAFE STRICT AS 'varcharout';"}
+{"sql":"CREATE FUNCTION myvarcharsend(myvarchar) RETURNS bytea\nLANGUAGE internal STABLE PARALLEL SAFE STRICT AS 'varcharsend'","shape":"CREATE FUNCTION myvarcharsend(myvarchar) RETURNS bytea LANGUAGE internal STABLE PARALLEL SAFE STRICT AS 'varcharsend';"}
+{"sql":"CREATE FUNCTION myvarcharrecv(internal, oid, integer) RETURNS myvarchar\nLANGUAGE internal STABLE PARALLEL SAFE STRICT AS 'varcharrecv'","shape":"CREATE FUNCTION myvarcharrecv(internal, oid, integer) RETURNS myvarchar LANGUAGE internal STABLE PARALLEL SAFE STRICT AS 'varcharrecv';"}
+{"sql":"ALTER TYPE myvarchar SET (storage = extended)"}
+{"sql":"CREATE TYPE myvarchar (\n    input = myvarcharin,\n    output = myvarcharout,\n    alignment = integer,\n    storage = main\n)"}
+{"sql":"CREATE DOMAIN myvarchardom AS myvarchar","shape":"CREATE DOMAIN myvarchardom AS myvarchar;"}
+{"sql":"ALTER TYPE myvarchar SET (storage = plain)"}
+{"sql":"ALTER TYPE myvarchar SET (\n    send = myvarcharsend,\n    receive = myvarcharrecv,\n    typmod_in = varchartypmodin,\n    typmod_out = varchartypmodout,\n    -- these are bogus, but it's safe as long as we don't use the type:\n    analyze = ts_typanalyze,\n    subscript = raw_array_subscript_handler\n)"}
+{"sql":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout,\n       typanalyze, typsubscript, typstorage\nFROM pg_type WHERE typname = 'myvarchar'","shape":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout, typanalyze, typsubscript, typstorage FROM pg_type WHERE typname = 'myvarchar';"}
+{"sql":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout,\n       typanalyze, typsubscript, typstorage\nFROM pg_type WHERE typname = '_myvarchar'","shape":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout, typanalyze, typsubscript, typstorage FROM pg_type WHERE typname = '_myvarchar';"}
+{"sql":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout,\n       typanalyze, typsubscript, typstorage\nFROM pg_type WHERE typname = 'myvarchardom'","shape":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout, typanalyze, typsubscript, typstorage FROM pg_type WHERE typname = 'myvarchardom';"}
+{"sql":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout,\n       typanalyze, typsubscript, typstorage\nFROM pg_type WHERE typname = '_myvarchardom'","shape":"SELECT typinput, typoutput, typreceive, typsend, typmodin, typmodout, typanalyze, typsubscript, typstorage FROM pg_type WHERE typname = '_myvarchardom';"}
+{"sql":"DROP FUNCTION myvarcharsend(myvarchar)"}
+{"sql":"DROP TYPE myvarchar","shape":"DROP TYPE myvarchar;"}
+{"sql":"DROP TYPE myvarchar CASCADE","shape":"DROP TYPE myvarchar CASCADE;"}

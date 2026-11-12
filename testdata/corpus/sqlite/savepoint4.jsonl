@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(randstr(10,400))"}
+{"sql":"INSERT INTO t1 SELECT randstr(10,400) FROM t1"}
+{"sql":"DELETE FROM t1 WHERE random()%10==0"}
+{"sql":"INSERT INTO t1 SELECT randstr(10,10)||x FROM t1 WHERE random()%9==0"}

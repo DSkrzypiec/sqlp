@@ -1,0 +1,62 @@
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b, c, d, e)"}
+{"sql":"CREATE TABLE t2(a INT PRIMARY KEY, f, g, h, i)"}
+{"sql":"CREATE TABLE t3(a INT PRIMARY KEY, j, k, l, m)"}
+{"sql":"CREATE VIEW v4 AS SELECT * FROM t2 UNION ALL SELECT * FROM t3"}
+{"sql":"SELECT * FROM t1, v4 WHERE t1.a=?1 AND v4.a=t1.a"}
+{"sql":"SELECT * FROM t1, t2, t3\n   WHERE t1.a=t2.a AND t2.a=t3.j AND t3.j=5\n  ORDER BY t1.a"}
+{"sql":"SELECT * FROM t1, t2, t3\n   WHERE t1.a=t2.a AND t2.a=t3.j AND t3.j=abs(5)\n  ORDER BY t1.a"}
+{"sql":"SELECT * FROM t1, t2, t3\n   WHERE t1.a=t2.a AND t2.a=t3.j AND t3.j=coalesce(5,random())\n  ORDER BY t1.a"}
+{"sql":"CREATE TABLE c3(x COLLATE binary, y COLLATE nocase, z COLLATE binary)"}
+{"sql":"CREATE INDEX c3x ON c3(x)"}
+{"sql":"INSERT INTO c3 VALUES('ABC', 'ABC', 'abc')"}
+{"sql":"SELECT * FROM c3 WHERE x=y AND y=z AND z='abc'"}
+{"sql":"SELECT * FROM c3 WHERE x='abc' AND y='abc' AND z='abc'"}
+{"sql":"CREATE TABLE A(id INTEGER PRIMARY KEY, label TEXT)"}
+{"sql":"CREATE TABLE B(id INTEGER PRIMARY KEY, label TEXT, Aid INTEGER)"}
+{"sql":"CREATE TABLE C(\n    id INTEGER PRIMARY KEY,\n    xx INTEGER NOT NULL,\n    yy INTEGER,\n    zz INTEGER\n  )"}
+{"sql":"CREATE UNIQUE INDEX x2 ON C(yy)"}
+{"sql":"CREATE UNIQUE INDEX x4 ON C(yy, zz)"}
+{"sql":"INSERT INTO A(id) VALUES(1)"}
+{"sql":"INSERT INTO B(id) VALUES(2)"}
+{"sql":"INSERT INTO C(id,xx,yy,zz) VALUES(99,50,1,2)"}
+{"sql":"SELECT 1\n    FROM A,\n         (SELECT id,xx,yy,zz FROM C) subq,\n         B\n   WHERE A.id='1'\n     AND A.id=subq.yy\n     AND B.id=subq.zz"}
+{"sql":"SELECT 1\n    FROM A,\n         (SELECT id,xx,yy,zz FROM C) subq,\n         B\n   WHERE A.id=1\n     AND A.id=subq.yy\n     AND B.id=subq.zz"}
+{"sql":"SELECT 1\n    FROM A,\n         (SELECT id,yy,zz FROM C) subq,\n         B\n   WHERE A.id='1'\n     AND A.id=subq.yy\n     AND B.id=subq.zz"}
+{"sql":"CREATE TABLE x(a, b, c)"}
+{"sql":"CREATE TABLE y(a, b)"}
+{"sql":"INSERT INTO x VALUES (1, 0, 1)"}
+{"sql":"INSERT INTO y VALUES (1, 2)"}
+{"sql":"SELECT x.a FROM x JOIN y ON x.c = y.a WHERE x.b = 1 AND x.b = 1"}
+{"sql":"INSERT INTO t0 VALUES('0')"}
+{"sql":"CREATE VIEW v0(c0) AS SELECT CAST(0 AS INT) FROM t0"}
+{"sql":"SELECT 200, * FROM t0, v0 WHERE 0 = t0.c0 AND t0.c0 = v0.c0"}
+{"sql":"SELECT 200, * FROM t0, v0 WHERE t0.c0 = 0 AND t0.c0 = v0.c0"}
+{"sql":"SELECT 200, * FROM t0, v0 WHERE 0 = t0.c0 AND v0.c0 = t0.c0"}
+{"sql":"SELECT 200, * FROM t0, v0 WHERE t0.c0 = 0 AND v0.c0 = t0.c0"}
+{"sql":"INSERT INTO t1 VALUES('good'),('bad')"}
+{"sql":"INSERT INTO t2 VALUES('good'),('bad')"}
+{"sql":"SELECT * FROM t1 JOIN t2 ON x=y\n   WHERE x='good' AND y='good'"}
+{"sql":"CREATE TABLE tableA(\n    ID           int,\n    RunYearMonth int\n  )"}
+{"sql":"INSERT INTO tableA VALUES(1,202003),(2,202003),(3,202003),(4,202004),\n    (5,202004),(6,202004),(7,202004),(8,202004)"}
+{"sql":"CREATE TABLE tableB (\n    ID           int,\n    RunYearMonth int\n  )"}
+{"sql":"INSERT INTO tableB VALUES(1,202004),(2,202004),(3,202004),(4,202004),\n  (5,202004)"}
+{"sql":"SELECT *\n   FROM (\n        SELECT *\n        FROM tableA\n        WHERE RunYearMonth = 202004\n    ) AS A\n    INNER JOIN (\n        SELECT *\n        FROM tableB\n        WHERE RunYearMonth = 202004\n    ) AS B\n    ON A.ID = B.ID\n    AND A.RunYearMonth = B.RunYearMonth"}
+{"sql":"CREATE TABLE t1(v INTEGER)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(-10) UNION ALL SELECT x+1 FROM c WHERE x<10)\n    INSERT INTO t1(v) SELECT x FROM c"}
+{"sql":"CREATE INDEX idx ON t1( abs(v) )"}
+{"sql":"SELECT v FROM t1 WHERE abs(v)=1 and v=1"}
+{"sql":"CREATE TABLE t1(c2)"}
+{"sql":"CREATE INDEX i0 ON t1(NULL)"}
+{"sql":"INSERT INTO t1(c2) VALUES (0.2)"}
+{"sql":"CREATE VIEW v0(c3) AS SELECT DISTINCT c2 FROM t1"}
+{"sql":"SELECT * FROM v0 LEFT JOIN t0 ON c3<NULL LEFT JOIN t1 ON 1"}
+{"sql":"SELECT * FROM v0 LEFT JOIN t0 ON c3<NULL LEFT JOIN t1 ON 1 WHERE c2/0.1"}
+{"sql":"SELECT * FROM (SELECT 1.0 AS abc) WHERE abc=1"}
+{"sql":"SELECT * FROM (SELECT 1.0 AS abc) WHERE abc LIKE '1.0'"}
+{"sql":"SELECT * FROM (SELECT 1.0 AS abc) WHERE abc=1 AND abc LIKE '1.0'"}
+{"sql":"CREATE TABLE IF NOT EXISTS t0 (c0 BLOB)"}
+{"sql":"CREATE TABLE IF NOT EXISTS t1 (c0 INTEGER)"}
+{"sql":"INSERT INTO t1 VALUES ('1')"}
+{"sql":"INSERT INTO t0 VALUES (''), (''), ('2')"}
+{"sql":"SELECT *\n    FROM (SELECT 0.0 AS col_0) as subQuery\n    LEFT JOIN t0 ON ((CASE ''\n          WHEN t0.c0 THEN subQuery.col_0\n          ELSE (t0.c0) END) LIKE (((((subQuery.col_0))))))\n    LEFT JOIN t1 ON ((subQuery.col_0) == (false))"}
+{"sql":"SELECT *\n    FROM (SELECT 0.0 AS col_0) as subQuery\n    LEFT JOIN t0 ON ((CASE ''\n          WHEN t0.c0 THEN subQuery.col_0\n          ELSE (t0.c0) END) LIKE (((((subQuery.col_0))))))\n    LEFT JOIN t1 ON ((subQuery.col_0) == (false)) WHERE t1.c0"}

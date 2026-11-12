@@ -1,0 +1,18 @@
+{"sql":"CREATE TABLE costs(iLang, cFrom, cTo, Cost)"}
+{"sql":"INSERT INTO costs VALUES(0, '', '?', 100)"}
+{"sql":"INSERT INTO costs VALUES(0, '?', '', 100)"}
+{"sql":"INSERT INTO costs VALUES(0, '?', '?', 150)"}
+{"sql":"CREATE TABLE vocab(w TEXT UNIQUE)"}
+{"sql":"INSERT OR IGNORE INTO vocab SELECT term FROM t1aux"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING approximate_match(\n      vocabulary_table=t1aux,\n      vocabulary_word=term,\n      edit_distances=costs\n    )"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING approximate_match(\n      vocabulary_table=vocab,\n      vocabulary_word=w,\n      edit_distances=costs\n    )"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING approximate_match(\n        vocabulary_table=vtemp,\n        vocabulary_word=w,\n        edit_distances=costs\n      )"}
+{"sql":"SELECT word, distance FROM t2\n       WHERE word MATCH 'josxph' AND distance<300"}
+{"sql":"SELECT word, distance FROM t3\n       WHERE word MATCH 'josxph' AND distance<300"}
+{"sql":"CREATE TEMP TABLE vtemp(w TEXT UNIQUE)"}
+{"sql":"INSERT OR IGNORE INTO vtemp SELECT term FROM t1aux"}
+{"sql":"SELECT word, distance FROM t4\n       WHERE word MATCH 'josxph' AND distance<300"}
+{"sql":"SELECT word, distance FROM t2\n     WHERE word MATCH 'joxxph' AND distance<=300"}
+{"sql":"SELECT word, distance FROM t3\n     WHERE word MATCH 'joxxph' AND distance<=300"}
+{"sql":"SELECT word, distance FROM t2\n     WHERE word MATCH 'joxxph' AND distance<300"}
+{"sql":"SELECT word, distance FROM t3\n     WHERE word MATCH 'joxxph' AND distance<300"}

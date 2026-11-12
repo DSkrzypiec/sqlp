@@ -1,0 +1,15 @@
+{"sql":"PRAGMA cache_size=12"}
+{"sql":"CREATE INDEX i4 ON t4(a, b)"}
+{"sql":"CREATE INDEX i5 ON t5(a, b)"}
+{"sql":"CREATE INDEX i6 ON t6(a, b)"}
+{"sql":"CREATE INDEX i7 ON t7(a, b)"}
+{"sql":"CREATE INDEX i9 ON t9(a, b)"}
+{"sql":"CREATE INDEX i10 ON t9(a, b)"}
+{"sql":"CREATE INDEX i11 ON t9(a, b)"}
+{"sql":"SELECT * FROM t6 ORDER BY a"}
+{"sql":"SELECT * FROM t7 ORDER BY a"}
+{"sql":"SELECT * FROM t8 ORDER BY a"}
+{"sql":"SELECT * FROM t8"}
+{"sql":"SELECT * FROM t9 ORDER BY a"}
+{"sql":"SELECT * FROM t9"}
+{"sql":"PRAGMA cache_size = 15"}

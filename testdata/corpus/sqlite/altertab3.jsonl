@@ -1,0 +1,89 @@
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    SELECT sum(b) OVER w FROM t1 WINDOW w AS (ORDER BY a);\n  END"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='tr1'"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 WHEN new.a NOT NULL BEGIN\n    SELECT a,b, a name FROM t1 \n      INTERSECT \n    SELECT a,b,c FROM t1 WHERE b>='d' ORDER BY name;\n    SELECT new.c;\n  END"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'r1'"}
+{"sql":"CREATE TABLE t1(a, b, c, d)"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t1 WHERE a=1 OR (b IN ())"}
+{"sql":"ALTER TABLE t1 RENAME b TO bbb"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'v1'"}
+{"sql":"CREATE TABLE t3(e, f)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t2 VALUES(new.a, new.b);\n  END"}
+{"sql":"ALTER TABLE t3 RENAME TO t4"}
+{"sql":"SELECT type, name, tbl_name, sql \n  FROM sqlite_master WHERE type='table' AND name!='t1'"}
+{"sql":"ALTER TABLE t3 RENAME e TO eee"}
+{"sql":"CREATE TABLE t1 (\n      c1 integer, c2, PRIMARY KEY(c1 collate rtrim),\n      UNIQUE(c2)\n  )"}
+{"sql":"ALTER TABLE t1 RENAME c1 TO c3"}
+{"sql":"CREATE TEMPORARY TABLE Table0 (\n    Col0 INTEGER, \n    PRIMARY KEY(Col0 COLLATE RTRIM), \n    FOREIGN KEY (Col0) REFERENCES Table0\n  )"}
+{"sql":"ALTER TABLE Table0 RENAME Col0 TO Col0"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 BEGIN\n    SELECT a, rank() OVER w1 FROM t1\n    WINDOW w1 AS (PARTITION BY b, percent_rank() OVER w1);\n  END"}
+{"sql":"DROP TRIGGER after"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1x BEGIN\n    SELECT a, rank() OVER w1 FROM t1x\n    WINDOW w1 AS (PARTITION BY b, percent_rank() OVER w1 ORDER BY d);\n  END"}
+{"sql":"ALTER TABLE t1x RENAME TO t1"}
+{"sql":"CREATE INDEX i0 ON t0('1' IN ())"}
+{"sql":"CREATE TABLE t2 (c0)"}
+{"sql":"CREATE INDEX i2 ON t2((LIKELIHOOD(c0, 1.0) IN ()))"}
+{"sql":"ALTER TABLE t2 RENAME COLUMN c0 TO c1"}
+{"sql":"SELECT sql FROM sqlite_master WHERE tbl_name = 't2'"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 WHEN new.a NOT NULL BEGIN\n    SELECT true WHERE (SELECT a, b FROM (t1)) IN ();\n  END"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t1 WHERE (\n    SELECT t1.a FROM t1, t2\n  ) IN () OR t1.a=5"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='v1'"}
+{"sql":"CREATE TABLE t1(\n      a,b,c,d,e,f,g,h,j,jj,jjb,k,aa,bb,cc,dd,ee DEFAULT 3.14,\n      ff DEFAULT('hiccup'),Wg NOD NULL DEFAULT(false)\n  )"}
+{"sql":"CREATE TRIGGER b AFTER INSERT ON t1 WHEN new.a BEGIN\n    SELECT a, sum() w3 FROM t1 \n    WINDOW b AS (ORDER BY NOT EXISTS(SELECT 1 FROM abc));\n  END"}
+{"sql":"DROP TRIGGER b"}
+{"sql":"CREATE TRIGGER b AFTER INSERT ON t1 WHEN new.a BEGIN\n    SELECT a, sum() w3 FROM t1 \n    WINDOW b AS (ORDER BY NOT EXISTS(SELECT 1 FROM t1));\n  END"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'b'"}
+{"sql":"CREATE TABLE t1(a,b,c,d,e,f,g,h,j,jj,Zjj,k,aQ,bb,cc,dd,ee DEFAULT 3.14,\nff DEFAULT('hiccup'),gg NOD NULL DEFAULT(false))"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 WHEN new.a NOT NULL BEGIN\n\nSELECT b () OVER , dense_rank() OVER d, d () OVER w1\nFROM t1\nWINDOW\nw1 AS\n( w1 ORDER BY d\nROWS BETWEEN 2 NOT IN(SELECT a, sum(d) w2,max(d)OVER FROM t1\nWINDOW\nw1 AS\n(PARTITION BY d\nROWS BETWEEN '' PRECEDING AND false FOLLOWING),\nd AS\n(PARTITION BY b ORDER BY d\nROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)\n) PRECEDING AND 1 FOLLOWING),\nw2 AS\n(PARTITION BY b ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),\nw3 AS\n(PARTITION BY b ORDER BY d\nROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)\n;\nSELECT a, sum(d) w2,max(d)OVER FROM t1\nWINDOW\nw1 AS\n(PARTITION BY d\nROWS BETWEEN '' PRECEDING AND false FOLLOWING),\nd AS\n(PARTITION BY b ORDER BY d\nROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)\n;\n\nEND"}
+{"sql":"CREATE TRIGGER r1 INSERT ON t1 BEGIN\n    SELECT a(*) OVER (ORDER BY (SELECT 1)) FROM t1;\n  END"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 BEGIN\n    SELECT sum() FILTER (WHERE (SELECT sum() FILTER (WHERE 0)) AND a);\n  END"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 BEGIN\n    SELECT (WITH t2 AS (WITH t3 AS (SELECT true)\n          SELECT * FROM t3 ORDER BY true COLLATE nocase)\n        SELECT 11);\n\n    WITH t4 AS (SELECT * FROM t1) SELECT 33;\n  END"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 WHEN new.a NOT NULL BEGIN\n    SELECT a () FILTER (WHERE a>0) FROM t1;\n  END"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    SELECT a, b FROM t1\n    INTERSECT SELECT b,a FROM t1\n    ORDER BY b IN (\n        SELECT a UNION SELECT b\n        FROM t1\n        ORDER BY b COLLATE nocase\n        )\n    ;\n  END"}
+{"sql":"SELECT a, b FROM t1\n    INTERSECT \n    SELECT b,a FROM t1\n    ORDER BY b IN (\n        SELECT a UNION SELECT b\n        FROM t1\n        ORDER BY b COLLATE nocase\n        )"}
+{"sql":"CREATE TABLE a(a,h CONSTRAINT a UNIQUE ON CONFLICT FAIL,CONSTRAINT a)"}
+{"sql":"ALTER TABLE a RENAME TO g"}
+{"sql":"CREATE TABLE s(a, b, c)"}
+{"sql":"CREATE INDEX k ON s( (WITH s AS( SELECT * ) VALUES(2) ) IN () )"}
+{"sql":"ALTER TABLE s RENAME a TO a2"}
+{"sql":"CREATE TABLE s(col)"}
+{"sql":"CREATE VIEW v AS SELECT ( \n    WITH x(a) AS(SELECT * FROM s) VALUES(RIGHT) \n  ) IN()"}
+{"sql":"ALTER TABLE a RENAME a TO b"}
+{"sql":"CREATE VIEW v2(b) AS SELECT * FROM v2"}
+{"sql":"ALTER TABLE t1 RENAME TO t4"}
+{"sql":"CREATE VIEW v2(b) AS WITH t3 AS (SELECT b FROM v2) SELECT * FROM t3"}
+{"sql":"CREATE VIEW v2(b) AS WITH t3 AS (SELECT b FROM v2) VALUES(1)"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    UPDATE t1 SET (c,d)=((SELECT 1 FROM t1 JOIN t2 ON b=x),1);\n  END"}
+{"sql":"CREATE TABLE v0 (a)"}
+{"sql":"CREATE VIEW v2 (v3) AS \n    WITH x1 AS (SELECT * FROM v2) \n    SELECT v3 AS x, v3 AS y FROM v2"}
+{"sql":"ALTER TABLE v0 RENAME TO t3"}
+{"sql":"CREATE TABLE v0 (v1)"}
+{"sql":"CREATE TABLE v2 (v3 INTEGER UNIQUE ON CONFLICT ABORT)"}
+{"sql":"CREATE TRIGGER x AFTER INSERT ON v2 WHEN ( \n      ( SELECT v1 AS PROMO_REVENUE FROM v2 JOIN v0 USING ( VALUE ) ) AND 0 ) \n  BEGIN \n    DELETE FROM v2; \n  END"}
+{"sql":"ALTER TABLE v0 RENAME TO x"}
+{"sql":"DROP TRIGGER x"}
+{"sql":"CREATE TRIGGER x AFTER INSERT ON v2 WHEN (\n    0 AND (SELECT rowid FROM v0)\n  ) BEGIN\n    DELETE FROM v2;\n  END"}
+{"sql":"ALTER TABLE v0 RENAME TO xyz"}
+{"sql":"CREATE TRIGGER ttt AFTER INSERT ON t1 BEGIN\n    UPDATE t1 SET a=t2.a FROM t2 WHERE t1.a=t2.a; \n  END"}
+{"sql":"#  ALTER TABLE t2 RENAME COLUMN a TO aaa","reject":true}
+{"sql":"#","reject":true}
+{"sql":"CREATE TABLE t3(y)"}
+{"sql":"CREATE TABLE t4(z)"}
+{"sql":"CREATE TRIGGER tr1 INSERT ON t3 BEGIN\n    UPDATE t3 SET y=z FROM (SELECT z FROM t4);\n  END"}
+{"sql":"CREATE TRIGGER tr2 INSERT ON t3 BEGIN\n    UPDATE t3 SET y=abc FROM (SELECT x AS abc FROM t1);\n  END"}
+{"sql":"ALTER TABLE t2 RENAME x TO xx"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='tr2'"}
+{"sql":"CREATE TABLE t1(xx)"}
+{"sql":"CREATE TRIGGER xx INSERT ON t1 BEGIN\n     UPDATE t1 SET xx=xx FROM(SELECT xx);\n  END"}
+{"sql":"CREATE TABLE t1(a, b AS ((WITH w1 (xyz) AS  ( SELECT t1.b FROM t1 )  SELECT 123) IN ()), c)"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t1 BEGIN\n    UPDATE t1 SET (c,d)=(a,b);\n  END"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE type='trigger'"}
+{"sql":"CREATE TRIGGER Trigger1 DELETE ON t1 \n  BEGIN \n    SELECT t1.*, t1.x FROM t1 ORDER BY t1.x;\n  END"}
+{"sql":"ALTER TABLE t1 RENAME x TO z"}
+{"sql":"CREATE TRIGGER tr2 AFTER DELETE ON t2 BEGIN\n    SELECT z, y FROM (\n      SELECT t2.* FROM t2\n    );\n  END"}
+{"sql":"DELETE FROM t2"}
+{"sql":"CREATE VIEW v1 AS \n      SELECT ( VALUES(a), (b) ) FROM (\n        SELECT a, b FROM t1\n      )"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE type='view'"}
+{"sql":"CREATE TABLE t1(ii INTEGER PRIMARY KEY, tt INTEGER, rr REAL)"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<50000\n  )\n  INSERT INTO t1 SELECT NULL, i, 5.0 FROM s"}
+{"sql":"ALTER TABLE t1 DROP COLUMN tt"}
+{"sql":"SELECT rr FROM t1 LIMIT 1"}

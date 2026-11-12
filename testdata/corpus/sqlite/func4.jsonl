@@ -1,0 +1,196 @@
+{"sql":"SELECT tointeger(NULL)"}
+{"sql":"SELECT tointeger('')"}
+{"sql":"SELECT tointeger('   ')"}
+{"sql":"SELECT tointeger('1234')"}
+{"sql":"SELECT tointeger('   1234')"}
+{"sql":"SELECT tointeger('bad')"}
+{"sql":"SELECT tointeger('0xBAD')"}
+{"sql":"SELECT tointeger('123BAD')"}
+{"sql":"SELECT tointeger('0x123BAD')"}
+{"sql":"SELECT tointeger('123NO')"}
+{"sql":"SELECT tointeger('0x123NO')"}
+{"sql":"SELECT tointeger('-0x1')"}
+{"sql":"SELECT tointeger('-0x0')"}
+{"sql":"SELECT tointeger('0x0')"}
+{"sql":"SELECT tointeger('0x1')"}
+{"sql":"SELECT tointeger(-1)"}
+{"sql":"SELECT tointeger(-0)"}
+{"sql":"SELECT tointeger(0)"}
+{"sql":"SELECT tointeger(1)"}
+{"sql":"SELECT tointeger(-1.79769313486232e308 - 1)"}
+{"sql":"SELECT tointeger(-1.79769313486232e308)"}
+{"sql":"SELECT tointeger(-1.79769313486232e308 + 1)"}
+{"sql":"SELECT tointeger(-9223372036854775808 - 1)"}
+{"sql":"SELECT tointeger(-9223372036854775808)"}
+{"sql":"SELECT tointeger(-9223372036854775808 + 1)"}
+{"sql":"SELECT tointeger(-9223372036854775807 - 1)"}
+{"sql":"SELECT tointeger(-9223372036854775807)"}
+{"sql":"SELECT tointeger(-9223372036854775807 + 1)"}
+{"sql":"SELECT tointeger(-2147483648 - 1)"}
+{"sql":"SELECT tointeger(-2147483648)"}
+{"sql":"SELECT tointeger(-2147483648 + 1)"}
+{"sql":"SELECT tointeger(2147483647 - 1)"}
+{"sql":"SELECT tointeger(2147483647)"}
+{"sql":"SELECT tointeger(2147483647 + 1)"}
+{"sql":"SELECT tointeger(9223372036854775807 - 1)"}
+{"sql":"SELECT tointeger(9223372036854775807)"}
+{"sql":"SELECT tointeger(9223372036854775807 + 1)"}
+{"sql":"SELECT tointeger(1.79769313486232e308 - 1)"}
+{"sql":"SELECT tointeger(1.79769313486232e308)"}
+{"sql":"SELECT tointeger(1.79769313486232e308 + 1)"}
+{"sql":"SELECT tointeger(4503599627370496 - 1)"}
+{"sql":"SELECT tointeger(4503599627370496)"}
+{"sql":"SELECT tointeger(4503599627370496 + 1)"}
+{"sql":"SELECT tointeger(9007199254740992 - 1)"}
+{"sql":"SELECT tointeger(9007199254740992)"}
+{"sql":"SELECT tointeger(9007199254740992 + 1)"}
+{"sql":"SELECT tointeger(9223372036854775808 - 1)"}
+{"sql":"SELECT tointeger(9223372036854775808)"}
+{"sql":"SELECT tointeger(9223372036854775808 + 1)"}
+{"sql":"SELECT tointeger(18446744073709551616 - 1)"}
+{"sql":"SELECT tointeger(18446744073709551616)"}
+{"sql":"SELECT tointeger(18446744073709551616 + 1)"}
+{"sql":"SELECT toreal(NULL)"}
+{"sql":"SELECT toreal('')"}
+{"sql":"SELECT toreal('   ')"}
+{"sql":"SELECT toreal('1234')"}
+{"sql":"SELECT toreal('   1234')"}
+{"sql":"SELECT toreal('bad')"}
+{"sql":"SELECT toreal('0xBAD')"}
+{"sql":"SELECT toreal('123BAD')"}
+{"sql":"SELECT toreal('0x123BAD')"}
+{"sql":"SELECT toreal('123NO')"}
+{"sql":"SELECT toreal('0x123NO')"}
+{"sql":"SELECT toreal('-0x1')"}
+{"sql":"SELECT toreal('-0x0')"}
+{"sql":"SELECT toreal('0x0')"}
+{"sql":"SELECT toreal('0x1')"}
+{"sql":"SELECT toreal(-1)"}
+{"sql":"SELECT toreal(-0)"}
+{"sql":"SELECT toreal(0)"}
+{"sql":"SELECT toreal(1)"}
+{"sql":"SELECT toreal(-1.79769313486232e308 - 1)"}
+{"sql":"SELECT toreal(-1.79769313486232e308)"}
+{"sql":"SELECT toreal(-1.79769313486232e308 + 1)"}
+{"sql":"SELECT toreal(-9223372036854775808 - 1)"}
+{"sql":"SELECT toreal(-9223372036854775808)"}
+{"sql":"SELECT toreal(-9223372036854775808 + 1)"}
+{"sql":"SELECT toreal(-9223372036854775807 - 1)"}
+{"sql":"SELECT toreal(-9223372036854775807)"}
+{"sql":"SELECT toreal(-9223372036854775807 + 1)"}
+{"sql":"SELECT toreal(-2147483648 - 1)"}
+{"sql":"SELECT toreal(-2147483648)"}
+{"sql":"SELECT toreal(-2147483648 + 1)"}
+{"sql":"SELECT toreal(2147483647 - 1)"}
+{"sql":"SELECT toreal(2147483647)"}
+{"sql":"SELECT toreal(2147483647 + 1)"}
+{"sql":"SELECT toreal(9223372036854775807 - 1)"}
+{"sql":"SELECT toreal(9223372036854775807)"}
+{"sql":"SELECT toreal(9223372036854775807 + 1)"}
+{"sql":"SELECT toreal(1.79769313486232e308 - 1)"}
+{"sql":"SELECT toreal(1.79769313486232e308)"}
+{"sql":"SELECT toreal(1.79769313486232e308 + 1)"}
+{"sql":"SELECT toreal(4503599627370496 - 1)"}
+{"sql":"SELECT toreal(4503599627370496)"}
+{"sql":"SELECT toreal(4503599627370496 + 1)"}
+{"sql":"SELECT toreal(9007199254740992 - 1)"}
+{"sql":"SELECT toreal(9007199254740992)"}
+{"sql":"SELECT toreal(9007199254740992 + 1)"}
+{"sql":"SELECT toreal(9007199254740992 + 2)"}
+{"sql":"SELECT toreal(tointeger(9223372036854775808) - 1)"}
+{"sql":"SELECT toreal(tointeger(9223372036854775808))"}
+{"sql":"SELECT toreal(tointeger(9223372036854775808) + 1)"}
+{"sql":"SELECT toreal(tointeger(18446744073709551616) - 1)"}
+{"sql":"SELECT toreal(tointeger(18446744073709551616))"}
+{"sql":"SELECT toreal(tointeger(18446744073709551616) + 1)"}
+{"sql":"CREATE TABLE t1(\n      x INTEGER CHECK(tointeger(x) IS NOT NULL)\n    )"}
+{"sql":"INSERT INTO t1 (x) VALUES (NULL)"}
+{"sql":"INSERT INTO t1 (x) VALUES ('')"}
+{"sql":"INSERT INTO t1 (x) VALUES ('bad')"}
+{"sql":"INSERT INTO t1 (x) VALUES ('1234bad')"}
+{"sql":"INSERT INTO t1 (x) VALUES ('1234.56bad')"}
+{"sql":"INSERT INTO t1 (x) VALUES (1234)"}
+{"sql":"INSERT INTO t1 (x) VALUES (1234.56)"}
+{"sql":"INSERT INTO t1 (x) VALUES ('1234')"}
+{"sql":"INSERT INTO t1 (x) VALUES ('1234.56')"}
+{"sql":"INSERT INTO t1 (x) VALUES (ZEROBLOB(4))"}
+{"sql":"INSERT INTO t1 (x) VALUES (X'')"}
+{"sql":"INSERT INTO t1 (x) VALUES (X'1234')"}
+{"sql":"INSERT INTO t1 (x) VALUES (X'12345678')"}
+{"sql":"INSERT INTO t1 (x) VALUES ('1234.00')"}
+{"sql":"INSERT INTO t1 (x) VALUES (1234.00)"}
+{"sql":"INSERT INTO t1 (x) VALUES ('-9223372036854775809')"}
+{"sql":"INSERT INTO t1 (x) VALUES (9223372036854775808)"}
+{"sql":"SELECT x FROM t1 WHERE x>0 ORDER BY x"}
+{"sql":"CREATE TABLE t2(\n        x REAL CHECK(toreal(x) IS NOT NULL)\n      )"}
+{"sql":"INSERT INTO t2 (x) VALUES (NULL)"}
+{"sql":"INSERT INTO t2 (x) VALUES ('')"}
+{"sql":"INSERT INTO t2 (x) VALUES ('bad')"}
+{"sql":"INSERT INTO t2 (x) VALUES ('1234bad')"}
+{"sql":"INSERT INTO t2 (x) VALUES ('1234.56bad')"}
+{"sql":"INSERT INTO t2 (x) VALUES (1234)"}
+{"sql":"INSERT INTO t2 (x) VALUES (1234.56)"}
+{"sql":"INSERT INTO t2 (x) VALUES ('1234')"}
+{"sql":"INSERT INTO t2 (x) VALUES ('1234.56')"}
+{"sql":"INSERT INTO t2 (x) VALUES (ZEROBLOB(4))"}
+{"sql":"INSERT INTO t2 (x) VALUES (X'')"}
+{"sql":"INSERT INTO t2 (x) VALUES (X'1234')"}
+{"sql":"INSERT INTO t2 (x) VALUES (X'12345678')"}
+{"sql":"SELECT x FROM t2 ORDER BY x"}
+{"sql":"SELECT tointeger(toreal('1234'))"}
+{"sql":"SELECT tointeger(toreal(-1))"}
+{"sql":"SELECT tointeger(toreal(-0))"}
+{"sql":"SELECT tointeger(toreal(0))"}
+{"sql":"SELECT tointeger(toreal(1))"}
+{"sql":"SELECT tointeger(toreal(-9223372036854775808 - 1))"}
+{"sql":"SELECT tointeger(toreal(-9223372036854775808))"}
+{"sql":"SELECT tointeger(toreal(-9223372036854775808 + 1))"}
+{"sql":"SELECT tointeger(toreal(-2147483648 - 1))"}
+{"sql":"SELECT tointeger(toreal(-2147483648))"}
+{"sql":"SELECT tointeger(toreal(-2147483648 + 1))"}
+{"sql":"SELECT tointeger(toreal(2147483647 - 1))"}
+{"sql":"SELECT tointeger(toreal(2147483647))"}
+{"sql":"SELECT tointeger(toreal(2147483647 + 1))"}
+{"sql":"SELECT tointeger(toreal(9223372036854775807 - 1))"}
+{"sql":"SELECT tointeger(toreal(9223372036854775807))"}
+{"sql":"SELECT tointeger(toreal(9223372036854775807 + 1))"}
+{"sql":"SELECT tointeger(toreal(4503599627370496 - 1))"}
+{"sql":"SELECT tointeger(toreal(4503599627370496))"}
+{"sql":"SELECT tointeger(toreal(4503599627370496 + 1))"}
+{"sql":"SELECT tointeger(toreal(9007199254740992 - 1))"}
+{"sql":"SELECT tointeger(toreal(9007199254740992))"}
+{"sql":"SELECT tointeger(toreal(9007199254740992 + 1))"}
+{"sql":"SELECT tointeger(toreal(9007199254740992 + 2))"}
+{"sql":"SELECT tointeger(toreal(9223372036854775808 - 1))"}
+{"sql":"SELECT tointeger(toreal(9223372036854775808))"}
+{"sql":"SELECT tointeger(toreal(9223372036854775808 + 1))"}
+{"sql":"SELECT tointeger(toreal(18446744073709551616 - 1))"}
+{"sql":"SELECT tointeger(toreal(18446744073709551616))"}
+{"sql":"SELECT tointeger(toreal(18446744073709551616 + 1))"}
+{"sql":"SELECT tointeger(x'0102030405060708')"}
+{"sql":"SELECT tointeger(x'0807060504030201')"}
+{"sql":"SELECT toreal(x'ffefffffffffffff')"}
+{"sql":"SELECT toreal(x'8010000000000000')"}
+{"sql":"SELECT toreal(x'c000000000000000')"}
+{"sql":"SELECT toreal(x'bff0000000000000')"}
+{"sql":"SELECT toreal(x'8000000000000000')"}
+{"sql":"SELECT toreal(x'0000000000000000')"}
+{"sql":"SELECT toreal(x'3ff0000000000000')"}
+{"sql":"SELECT toreal(x'4000000000000000')"}
+{"sql":"SELECT toreal(x'0010000000000000')"}
+{"sql":"SELECT toreal(x'7fefffffffffffff')"}
+{"sql":"SELECT toreal(x'8000000000000001')"}
+{"sql":"SELECT toreal(x'800fffffffffffff')"}
+{"sql":"SELECT toreal(x'0000000000000001')"}
+{"sql":"SELECT toreal(x'000fffffffffffff')"}
+{"sql":"SELECT toreal(x'fff0000000000000')"}
+{"sql":"SELECT toreal(x'7ff0000000000000')"}
+{"sql":"SELECT toreal(x'fff8000000000000')"}
+{"sql":"SELECT toreal(x'fff0000000000001')"}
+{"sql":"SELECT toreal(x'fff7ffffffffffff')"}
+{"sql":"SELECT toreal(x'7ff0000000000001')"}
+{"sql":"SELECT toreal(x'7ff7ffffffffffff')"}
+{"sql":"SELECT toreal(x'fff8000000000001')"}
+{"sql":"SELECT toreal(x'ffffffffffffffff')"}
+{"sql":"SELECT toreal(x'7ff8000000000000')"}
+{"sql":"SELECT toreal(x'7fffffffffffffff')"}

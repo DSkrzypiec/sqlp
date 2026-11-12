@@ -1,0 +1,27 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content, tokenize blah)"}
+{"sql":"SELECT fts3_tokenizer('blah', fts3_tokenizer('simple')) IS NULL"}
+{"sql":"SELECT fts3_tokenizer('blah') == fts3_tokenizer('simple')"}
+{"sql":"INSERT INTO t1(content) VALUES('There was movement at the station')"}
+{"sql":"INSERT INTO t1(content) VALUES('For the word has passed around')"}
+{"sql":"INSERT INTO t1(content) VALUES('That the colt from ol regret had got')"}
+{"sql":"SELECT content FROM t1 WHERE content MATCH 'movement'"}
+{"sql":"CREATE VIEW v110(x) AS\n      SELECT fts3_tokenizer('tok110', fts3_tokenizer('simple')) IS NULL"}
+{"sql":"SELECT * FROM v110"}
+{"sql":"CREATE TABLE t110(a,b)"}
+{"sql":"CREATE TRIGGER r110 AFTER INSERT ON t110 BEGIN\n      SELECT fts3_tokenizer('tok110', fts3_tokenizer('simple')) IS NULL;\n  END"}
+{"sql":"INSERT INTO t110(a,b) VALUES(1,2)"}
+{"sql":"SELECT * FROM t110"}
+{"sql":"SELECT fts3_tokenizer('nosuchtokenizer')"}
+{"sql":"SELECT fts3_tokenizer_test('simple', 'I don''t see how')"}
+{"sql":"SELECT fts3_tokenizer_test('porter', 'I don''t see how')"}
+{"sql":"SELECT fts3_tokenizer_test('icu', 'I don''t see how')"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING fts3(name,TOKENIZE icu en_US)"}
+{"sql":"insert into x1 (name) values (NULL)"}
+{"sql":"delete from x1"}
+{"sql":"SELECT fts3_tokenizer_internal_test()"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(tokenize=\"\")"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(tokenize=)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(tokenize=\"   \")"}
+{"sql":"SELECT fts3_tokenizer(NULL)"}
+{"sql":"SELECT fts3_tokenizer(NULL, X'1234567812345678')"}
+{"sql":"SELECT fts3_tokenizer(NULL, X'12345678')"}

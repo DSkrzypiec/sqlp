@@ -1,0 +1,4 @@
+{"sql":"UPDATE t1 set x = x+10000"}
+{"sql":"SAVEPOINT tr"}
+{"sql":"ROLLBACK TO tr"}
+{"sql":"RELEASE tr"}

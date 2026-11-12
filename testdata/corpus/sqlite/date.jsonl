@@ -1,0 +1,17 @@
+{"sql":"SELECT datetime('2000-05-29 14:16:00','localtime')"}
+{"sql":"SELECT datetime('2000-10-29 12:00Z','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00 +00:00','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00+00:00','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00+00:00','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00 -00:00','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00-00:00','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00-00:00','utc','utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00+05:00')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00+05:00', 'utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00Z', 'localtime')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00Z', 'utc', 'localtime')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00Z', 'utc', 'localtime', 'utc')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00Z', 'utc','localtime','utc','localtime')"}
+{"sql":"SELECT datetime('2000-10-29 12:00:00Z', 'localtime','localtime')"}
+{"sql":"SELECT strftime('%Y-%m-%d %H:%M:%f', julianday('2006-09-24T10:50:26.047'))"}
+{"sql":"INSERT INTO t1 VALUES(1.1)"}

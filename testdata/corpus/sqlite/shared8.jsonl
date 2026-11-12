@@ -1,0 +1,2 @@
+{"sql":"CREATE VIEW v1 AS SELECT a, roman(b) FROM t1"}
+{"sql":"DELETE FROM sqlite_master WHERE 1"}

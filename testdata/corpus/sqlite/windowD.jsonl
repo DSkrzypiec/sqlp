@@ -1,0 +1,13 @@
+{"sql":"CREATE VIEW v0(c0, c1) \n    AS SELECT CUME_DIST() OVER (PARTITION BY t0.c0), TRUE FROM t0"}
+{"sql":"INSERT INTO t0 VALUES ('x')"}
+{"sql":"SELECT ('500') IS (v0.c1) FROM v0"}
+{"sql":"SELECT (('500') IS (v0.c1)) FROM v0, t0"}
+{"sql":"SELECT (('500') IS (v0.c1)) IS FALSE FROM v0"}
+{"sql":"SELECT * FROM v0 WHERE ('500' IS v0.c1) IS FALSE"}
+{"sql":"CREATE VIEW v1(a, b, c, d) AS SELECT 1, 2, TRUE, FALSE FROM t1"}
+{"sql":"SELECT 500 IS a, 500 IS b, 500 IS c, 500 IS d FROM v1"}
+{"sql":"SELECT * FROM v1 WHERE 500 IS c"}
+{"sql":"SELECT * FROM v1 WHERE 500 IS d"}
+{"sql":"CREATE VIEW v2 AS SELECT max(x) OVER () AS a, TRUE AS c FROM t1"}
+{"sql":"SELECT 500 IS c FROM v2"}
+{"sql":"SELECT * FROM v2 WHERE 500 IS c"}

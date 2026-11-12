@@ -1,0 +1,103 @@
+{"sql":"CREATE ROLE regress_subscription_user LOGIN SUPERUSER"}
+{"sql":"CREATE ROLE regress_subscription_user2"}
+{"sql":"CREATE ROLE regress_subscription_user3 IN ROLE pg_create_subscription"}
+{"sql":"CREATE ROLE regress_subscription_user_dummy LOGIN NOSUPERUSER"}
+{"sql":"SET SESSION AUTHORIZATION 'regress_subscription_user'"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'foo'","reject":true}
+{"sql":"CREATE SUBSCRIPTION regress_testsub PUBLICATION foo","reject":true}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'testconn' PUBLICATION testpub WITH (create_slot)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'testconn' PUBLICATION testpub"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION foo, testpub, foo WITH (connect = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false)"}
+{"sql":"COMMENT ON SUBSCRIPTION regress_testsub IS 'test subscription'"}
+{"sql":"SELECT obj_description(s.oid, 'pg_subscription') FROM pg_subscription s","shape":"SELECT obj_description(s.oid, 'pg_subscription') FROM pg_subscription AS s;"}
+{"sql":"SELECT subname, stats_reset IS NULL stats_reset_is_null FROM pg_stat_subscription_stats WHERE subname = 'regress_testsub'","shape":"SELECT subname, stats_reset IS NULL AS stats_reset_is_null FROM pg_stat_subscription_stats WHERE subname = 'regress_testsub';"}
+{"sql":"SELECT pg_stat_reset_subscription_stats(oid) FROM pg_subscription WHERE subname = 'regress_testsub'","shape":"SELECT pg_stat_reset_subscription_stats(oid) FROM pg_subscription WHERE subname = 'regress_testsub';"}
+{"sql":"SELECT stats_reset as prev_stats_reset FROM pg_stat_subscription_stats WHERE subname = 'regress_testsub'","shape":"SELECT stats_reset AS prev_stats_reset FROM pg_stat_subscription_stats WHERE subname = 'regress_testsub';"}
+{"sql":"SET SESSION AUTHORIZATION 'regress_subscription_user2'"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION foo WITH (connect = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, copy_data = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, enabled = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, create_slot = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, enabled = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, enabled = false, create_slot = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, enabled = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub2 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, create_slot = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub3 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, connect = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub3 ENABLE"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub3 REFRESH PUBLICATION"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub4 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, connect = false, origin = foo)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub4 CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (slot_name = NONE, connect = false, origin = none)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub4 SET (origin = any)"}
+{"sql":"DROP SUBSCRIPTION regress_testsub3"}
+{"sql":"DROP SUBSCRIPTION regress_testsub4"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub5 CONNECTION 'i_dont_exist=param' PUBLICATION testpub"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub5 CONNECTION 'port=-1' PUBLICATION testpub"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub CONNECTION 'foobar'"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET PUBLICATION testpub2, testpub3 WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist2'"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (slot_name = 'newname')"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (password_required = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (run_as_owner = true)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (password_required = true)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (run_as_owner = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (slot_name = '')"}
+{"sql":"ALTER SUBSCRIPTION regress_doesnotexist CONNECTION 'dbname=regress_doesnotexist2'"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (create_slot = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SKIP (lsn = '0/12345')"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SKIP (lsn = NONE)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SKIP (lsn = '0/0')"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub ENABLE"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub DISABLE"}
+{"sql":"SET ROLE regress_subscription_user_dummy"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub RENAME TO regress_testsub_dummy"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub RENAME TO regress_testsub_foo"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub_foo SET (synchronous_commit = local)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub_foo SET (synchronous_commit = foobar)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub_foo RENAME TO regress_testsub"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub OWNER TO regress_subscription_user2"}
+{"sql":"DROP SUBSCRIPTION regress_testsub"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (slot_name = NONE)"}
+{"sql":"DROP SUBSCRIPTION IF EXISTS regress_testsub"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, binary = foo)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, binary = true)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (binary = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, streaming = foo)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, streaming = true)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (streaming = parallel)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (streaming = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub ADD PUBLICATION testpub WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub ADD PUBLICATION testpub1, testpub1 WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub ADD PUBLICATION testpub1, testpub2 WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub DROP PUBLICATION testpub1, testpub1 WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub DROP PUBLICATION testpub, testpub1, testpub2 WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub DROP PUBLICATION testpub3 WITH (refresh = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub DROP PUBLICATION testpub1, testpub2 WITH (refresh = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION mypub\n       WITH (connect = false, create_slot = false, copy_data = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET PUBLICATION mypub WITH (refresh = true)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub REFRESH PUBLICATION"}
+{"sql":"CREATE FUNCTION func() RETURNS VOID AS\n$$ ALTER SUBSCRIPTION regress_testsub SET PUBLICATION mypub WITH (refresh = true) $$ LANGUAGE SQL","shape":"CREATE FUNCTION func() RETURNS VOID AS ' ALTER SUBSCRIPTION regress_testsub SET PUBLICATION mypub WITH (refresh = true) ' LANGUAGE SQL;"}
+{"sql":"SELECT func()","shape":"SELECT func();"}
+{"sql":"DROP FUNCTION func"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, two_phase = foo)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, two_phase = true)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (two_phase = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (streaming = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, streaming = true, two_phase = true)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, disable_on_error = foo)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, disable_on_error = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub SET (disable_on_error = true)"}
+{"sql":"SET SESSION AUTHORIZATION regress_subscription_user3"}
+{"sql":"GRANT CREATE ON DATABASE REGRESSION TO regress_subscription_user3","shape":"GRANT CREATE ON DATABASE REGRESSION TO regress_subscription_user3;"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist' PUBLICATION testpub WITH (connect = false, password_required = false)"}
+{"sql":"CREATE SUBSCRIPTION regress_testsub CONNECTION 'dbname=regress_doesnotexist password=regress_fakepassword' PUBLICATION testpub WITH (connect = false)"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub OWNER TO regress_subscription_user"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub RENAME TO regress_testsub2"}
+{"sql":"REVOKE pg_create_subscription FROM regress_subscription_user3","shape":"REVOKE pg_create_subscription FROM regress_subscription_user3;"}
+{"sql":"ALTER SUBSCRIPTION regress_testsub2 RENAME TO regress_testsub"}
+{"sql":"REVOKE CREATE ON DATABASE REGRESSION FROM regress_subscription_user3","shape":"REVOKE CREATE ON DATABASE REGRESSION FROM regress_subscription_user3;"}
+{"sql":"DROP ROLE regress_subscription_user","shape":"DROP ROLE regress_subscription_user;"}
+{"sql":"DROP ROLE regress_subscription_user2","shape":"DROP ROLE regress_subscription_user2;"}
+{"sql":"DROP ROLE regress_subscription_user3","shape":"DROP ROLE regress_subscription_user3;"}
+{"sql":"DROP ROLE regress_subscription_user_dummy","shape":"DROP ROLE regress_subscription_user_dummy;"}

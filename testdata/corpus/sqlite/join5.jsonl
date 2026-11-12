@@ -1,0 +1,119 @@
+{"sql":"CREATE TABLE t1(a integer primary key, b integer, c integer)"}
+{"sql":"CREATE TABLE t2(x integer primary key, y)"}
+{"sql":"CREATE TABLE t3(p integer primary key, q)"}
+{"sql":"INSERT INTO t3 VALUES(11,'t3-11')"}
+{"sql":"INSERT INTO t3 VALUES(12,'t3-12')"}
+{"sql":"INSERT INTO t2 VALUES(11,'t2-11')"}
+{"sql":"INSERT INTO t2 VALUES(12,'t2-12')"}
+{"sql":"INSERT INTO t1 VALUES(1, 5, 0)"}
+{"sql":"INSERT INTO t1 VALUES(2, 11, 2)"}
+{"sql":"INSERT INTO t1 VALUES(3, 12, 1)"}
+{"sql":"select * from t1 left join t2 on t1.b=t2.x and t1.c=1"}
+{"sql":"select * from t1 left join t2 on t1.b=t2.x where t1.c=1"}
+{"sql":"select * from t1 left join t2 on t1.b=t2.x and t1.c=1\n                     left join t3 on t1.b=t3.p and t1.c=2"}
+{"sql":"select * from t1 left join t2 on t1.b=t2.x and t1.c=1\n                     left join t3 on t1.b=t3.p where t1.c=2"}
+{"sql":"CREATE TABLE ab(a,b)"}
+{"sql":"INSERT INTO \"ab\" VALUES(1,2)"}
+{"sql":"INSERT INTO \"ab\" VALUES(3,NULL)"}
+{"sql":"CREATE TABLE xy(x,y)"}
+{"sql":"INSERT INTO \"xy\" VALUES(2,3)"}
+{"sql":"INSERT INTO \"xy\" VALUES(NULL,1)"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 0"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 1"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON NULL"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 0 WHERE 0"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 1 WHERE 0"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON NULL WHERE 0"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 0 WHERE 1"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 1 WHERE 1"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON NULL WHERE 1"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 0 WHERE NULL"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON 1 WHERE NULL"}
+{"sql":"SELECT * FROM xy LEFT JOIN ab ON NULL WHERE NULL"}
+{"sql":"INSERT INTO x1 VALUES(1)"}
+{"sql":"CREATE TABLE x2(b NOT NULL)"}
+{"sql":"CREATE TABLE x3(c, d)"}
+{"sql":"INSERT INTO x3 VALUES('a', NULL)"}
+{"sql":"INSERT INTO x3 VALUES('b', NULL)"}
+{"sql":"INSERT INTO x3 VALUES('c', NULL)"}
+{"sql":"SELECT * FROM x1 LEFT JOIN x2 LEFT JOIN x3 ON x3.d = x2.b"}
+{"sql":"CREATE TABLE t1(x text NOT NULL, y text)"}
+{"sql":"CREATE TABLE t2(u text NOT NULL, x text NOT NULL)"}
+{"sql":"CREATE TABLE t3(w text NOT NULL, v text)"}
+{"sql":"CREATE TABLE t4(w text NOT NULL, z text NOT NULL)"}
+{"sql":"CREATE TABLE t5(z text NOT NULL, m text)"}
+{"sql":"INSERT INTO t1 VALUES('f6d7661f-4efe-4c90-87b5-858e61cd178b',NULL)"}
+{"sql":"INSERT INTO t1 VALUES('f6ea82c3-2cad-45ce-ae8f-3ddca4fb2f48',NULL)"}
+{"sql":"INSERT INTO t1 VALUES('f6f47499-ecb4-474b-9a02-35be73c235e5',NULL)"}
+{"sql":"INSERT INTO t1 VALUES('56f47499-ecb4-474b-9a02-35be73c235e5',NULL)"}
+{"sql":"INSERT INTO t3 VALUES('007f2033-cb20-494c-b135-a1e4eb66130c',\n                        'f6d7661f-4efe-4c90-87b5-858e61cd178b')"}
+{"sql":"SELECT *\n    FROM t3\n         INNER JOIN t1 ON t1.x= t3.v AND t1.y IS NULL\n         LEFT JOIN t4  ON t4.w = t3.w\n         LEFT JOIN t5  ON t5.z = t4.z\n         LEFT JOIN t2  ON t2.u = t5.m\n         LEFT JOIN t1 xyz ON xyz.y = t2.x"}
+{"sql":"DROP TABLE IF EXISTS x3"}
+{"sql":"SELECT * FROM x1 LEFT JOIN x2 JOIN x3 WHERE x3.d = x2.b"}
+{"sql":"SELECT *\n  FROM (\n      SELECT 'apple' fruit\n      UNION ALL SELECT 'banana'\n  ) a\n  JOIN (\n      SELECT 'apple' fruit\n      UNION ALL SELECT 'banana'\n  ) b ON a.fruit=b.fruit\n  LEFT JOIN (\n      SELECT 1 isyellow\n  ) c ON b.fruit='banana'"}
+{"sql":"SELECT *\n    FROM (SELECT 'apple' fruit UNION ALL SELECT 'banana')\n         LEFT JOIN (SELECT 1) ON fruit='banana'"}
+{"sql":"CREATE TABLE y1(x, y, z)"}
+{"sql":"INSERT INTO y1 VALUES(0, 0, 1)"}
+{"sql":"CREATE TABLE y2(a)"}
+{"sql":"SELECT count(z) FROM y1 LEFT JOIN y2 ON x GROUP BY y"}
+{"sql":"SELECT count(z) FROM ( SELECT * FROM y1 ) LEFT JOIN y2 ON x GROUP BY y"}
+{"sql":"CREATE VIEW v1 AS SELECT x, y, z FROM y1"}
+{"sql":"SELECT count(z) FROM v1 LEFT JOIN y2 ON x GROUP BY y"}
+{"sql":"SELECT count(z) FROM ( SELECT * FROM y1 ) LEFT JOIN y2 ON x"}
+{"sql":"SELECT * FROM ( SELECT * FROM y1 ) LEFT JOIN y2 ON x"}
+{"sql":"CREATE TABLE t2(y INTEGER PRIMARY KEY,a,b)"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON a=2 OR b=3 WHERE y IS NULL"}
+{"sql":"SELECT ifnull(z, '!!!') FROM t3 LEFT JOIN t4 ON (x=y)"}
+{"sql":"CREATE INDEX t4i ON t4(y, ifnull(z, '!!!'))"}
+{"sql":"CREATE TABLE t1(aa, bb)"}
+{"sql":"CREATE INDEX t1x1 on t1(abs(aa), abs(bb))"}
+{"sql":"INSERT INTO t1 VALUES(-2,-3),(+2,-3),(-2,+3),(+2,+3)"}
+{"sql":"SELECT * FROM (t1) \n   WHERE ((abs(aa)=1 AND 1=2) OR abs(aa)=2)\n     AND abs(bb)=3\n  ORDER BY +1, +2"}
+{"sql":"CREATE INDEX t2xy ON t2(x, y)"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<50000\n  )\n  INSERT INTO t2 SELECT i/10, i, NULL FROM s"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON (\n    t2.x = t1.x AND (t2.y=? OR (t2.y=? AND t2.z IS NOT NULL))\n  )"}
+{"sql":"INSERT INTO t3(x) VALUES(1)"}
+{"sql":"CREATE INDEX t3x ON t3(x)"}
+{"sql":"CREATE INDEX t4xy ON t4(x, y)"}
+{"sql":"CREATE INDEX t4xz ON t4(x, z)"}
+{"sql":"WITH s(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<50000)\n  INSERT INTO t4 SELECT i/10, i, i FROM s"}
+{"sql":"UPDATE sqlite_stat1 SET stat='1000000 10 1' WHERE idx='t3x'"}
+{"sql":"SELECT * FROM t3 LEFT JOIN t4 ON (t4.x = t3.x) WHERE (t4.y = ? OR t4.z = ?)"}
+{"sql":"SELECT * FROM t3 LEFT JOIN t4 ON (t4.x = t3.x) WHERE (t4.y = ? OR t3.x = ?)"}
+{"sql":"SELECT * FROM t3 LEFT JOIN t4 ON (t4.x = t3.x) WHERE (t3.x = ? OR t4.z = ?)"}
+{"sql":"SELECT * FROM t3 CROSS JOIN t4 ON (t4.x = t3.x) WHERE (+t4.y = ? OR t4.z = ?)"}
+{"sql":"CREATE TABLE t0 (c0, c1, PRIMARY KEY (c0, c1))"}
+{"sql":"CREATE TABLE t1 (c0)"}
+{"sql":"INSERT INTO t1 VALUES (2)"}
+{"sql":"INSERT INTO t0 VALUES(0, 10)"}
+{"sql":"INSERT INTO t0 VALUES(1, 10)"}
+{"sql":"INSERT INTO t0 VALUES(2, 10)"}
+{"sql":"INSERT INTO t0 VALUES(3, 10)"}
+{"sql":"SELECT * FROM t0, t1 \n  WHERE (t0.c1 >= 1 OR t0.c1 < 1) AND t0.c0 IN (1, t1.c0) ORDER BY 1"}
+{"sql":"CREATE TABLE t1(a ,b FLOAT)"}
+{"sql":"CREATE INDEX t1x1 ON t1(a,b,a,a,a,a,a,a,a,a,a,b)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t1','t1x1','648 324 81 81 81 81 81 81 81081 81 81 81')"}
+{"sql":"SELECT a FROM \n      (SELECT a FROM t1 NATURAL LEFT JOIN t1) NATURAL LEFT JOIN t1 \n  WHERE (rowid,1)<=(5,0)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<20)\n    INSERT INTO t1(x) SELECT 0 FROM c"}
+{"sql":"CREATE INDEX t1x1 ON t1(x BETWEEN 0 AND 10, x)"}
+{"sql":"INSERT INTO t1 VALUES(0),(0)"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t1 NATURAL JOIN t1 WHERE (x BETWEEN 0 AND 10) OR true"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM v1 NATURAL JOIN v1"}
+{"sql":"CREATE VIEW v3 AS SELECT * FROM v2, v1 USING (x) GROUP BY x"}
+{"sql":"SELECT x FROM v3"}
+{"sql":"CREATE TABLE t2(c INTEGER PRIMARY KEY, d INT)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<8)\n  INSERT INTO t1(a,b) SELECT x, 10*x FROM c"}
+{"sql":"INSERT INTO t2(c,d) SELECT b*2, 100*a FROM t1"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat) VALUES\n    ('t1',NULL,150105),('t2',NULL,98747)"}
+{"sql":"SELECT count(*) FROM t1 LEFT JOIN t2 ON c=b WHERE d IS NULL"}
+{"sql":"SELECT count(*) FROM t1 LEFT JOIN t2 ON c=b WHERE d=100"}
+{"sql":"SELECT count(*) FROM t1 LEFT JOIN t2 ON c=b WHERE d>=300"}
+{"sql":"CREATE TABLE t1(a INT, b INT, c INT)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n    INSERT INTO t1(a,b,c) SELECT x, x*1000, x*1000000 FROM c"}
+{"sql":"CREATE TABLE t2(b INT, x INT)"}
+{"sql":"INSERT INTO t2(b,x) SELECT b, a FROM t1 WHERE a%3==0"}
+{"sql":"CREATE TABLE t3(c INT, y INT)"}
+{"sql":"INSERT INTO t3(c,y) SELECT c, a FROM t1 WHERE a%4==0"}
+{"sql":"CREATE INDEX t3c ON t3(c)"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES(200, 200000, NULL)"}
+{"sql":"SELECT * FROM t1 NATURAL JOIN t2 NATURAL JOIN t3 WHERE x>0 AND y>0\n  ORDER BY +a"}

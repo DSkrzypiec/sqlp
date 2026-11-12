@@ -1,0 +1,20 @@
+{"sql":"CREATE TABLE t3(c INT)"}
+{"sql":"CREATE TABLE t0(c0 INT, c1 INT)"}
+{"sql":"CREATE VIEW v1(c0) AS SELECT t0.c0 FROM t0 NATURAL RIGHT JOIN t1"}
+{"sql":"CREATE VIEW v2(c0) AS SELECT 0 FROM v1"}
+{"sql":"INSERT INTO t0(c0, c1) VALUES (-1, 0)"}
+{"sql":"SELECT * FROM v1 INNER JOIN (v2 CROSS JOIN t0) ON (t0.c0 < t0.c1)"}
+{"sql":"CREATE TABLE t0(c0, c1)"}
+{"sql":"CREATE TABLE t1(v)"}
+{"sql":"CREATE TABLE t5(z)"}
+{"sql":"SELECT 1234 FROM t4 \n  RIGHT JOIN t5 \n  CROSS JOIN (t2 CROSS JOIN t0) AS a1 ON (a1.c0 < a1.c1)"}
+{"sql":"SELECT 1234 FROM t4 \n  RIGHT JOIN t5 \n  CROSS JOIN (t2 CROSS JOIN t1 CROSS JOIN t0) AS a1 ON (a1.c0 < a1.c1)"}
+{"sql":"SELECT 5678 FROM t0 RIGHT JOIN t1 ON (\n    SELECT 1 FROM t2 RIGHT JOIN t3 ON t2.w\n  ) CROSS JOIN t4"}
+{"sql":"SELECT 5678 FROM t0 RIGHT JOIN t1 ON (\n    SELECT 1 FROM t2 RIGHT JOIN t3 ON t4.y\n  ) CROSS JOIN t4"}
+{"sql":"SELECT 5678 FROM t0 RIGHT JOIN t1 ON (\n    SELECT 1 FROM t2 RIGHT JOIN t3 ON 0=t1.v\n  ) CROSS JOIN t4"}
+{"sql":"SELECT 5678 FROM t0 RIGHT JOIN t1 ON (\n    SELECT 1 FROM t2 RIGHT JOIN t3 ON max(0,t5.z) CROSS JOIN t5\n  ) CROSS JOIN t4"}
+{"sql":"SELECT c+d AS cd FROM t1 LEFT JOIN t2 ON (cd=5) CROSS JOIN t3"}
+{"sql":"CREATE TABLE parent1(parent1key, child1key, Child2key, child3key)"}
+{"sql":"CREATE TABLE child1 ( child1key NVARCHAR, value NVARCHAR )"}
+{"sql":"CREATE TABLE child2 ( child2key NVARCHAR, value NVARCHAR )"}
+{"sql":"SELECT parent1.parent1key, child1.value, child2.value\n    FROM parent1\n    LEFT OUTER JOIN child1 ON child1.child1key = parent1.child1key\n    INNER JOIN child2 ON child2.child2key = parent1.child2key"}

@@ -1,0 +1,41 @@
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY, grp_id)"}
+{"sql":"CREATE INDEX i1 ON t1(grp_id)"}
+{"sql":"CREATE VIEW lll AS SELECT\n    row_number() OVER (PARTITION BY grp_id), \n    grp_id, id \n  FROM t1"}
+{"sql":"INSERT INTO t1 VALUES\n    (1, 2), (2, 3), (3, 3), (4, 1), (5, 1),\n    (6, 1), (7, 1), (8, 1), (9, 3), (10, 3), \n    (11, 2), (12, 3), (13, 3), (14, 2), (15, 1),\n    (16, 2), (17, 1), (18, 2), (19, 3), (20, 2)"}
+{"sql":"SELECT * FROM lll"}
+{"sql":"SELECT * FROM lll WHERE grp_id=2"}
+{"sql":"INSERT INTO t1 VALUES('A', 'C', 1,  0.1)"}
+{"sql":"INSERT INTO t1 VALUES('A', 'D', 2,  0.2)"}
+{"sql":"INSERT INTO t1 VALUES('A', 'E', 3,  0.3)"}
+{"sql":"INSERT INTO t1 VALUES('A', 'C', 4,  0.4)"}
+{"sql":"INSERT INTO t1 VALUES('B', 'D', 5,  0.5)"}
+{"sql":"INSERT INTO t1 VALUES('B', 'E', 6,  0.6)"}
+{"sql":"INSERT INTO t1 VALUES('B', 'C', 7,  0.7)"}
+{"sql":"INSERT INTO t1 VALUES('B', 'D', 8,  0.8)"}
+{"sql":"INSERT INTO t1 VALUES('C', 'E', 9,  0.9)"}
+{"sql":"INSERT INTO t1 VALUES('C', 'C', 10, 1.0)"}
+{"sql":"INSERT INTO t1 VALUES('C', 'D', 11, 1.1)"}
+{"sql":"INSERT INTO t1 VALUES('C', 'E', 12, 1.2)"}
+{"sql":"CREATE VIEW v1 AS SELECT a, c, max(c) OVER (PARTITION BY a) FROM t1"}
+{"sql":"CREATE VIEW v2 AS SELECT a, c, \n      max(c) OVER (PARTITION BY a),\n      row_number() OVER ()\n  FROM t1"}
+{"sql":"CREATE VIEW v3 AS SELECT b, d, \n      max(d) OVER (PARTITION BY b),\n      row_number() OVER (PARTITION BY b)\n  FROM t1"}
+{"sql":"INSERT INTO t2 VALUES('W', 3, 1)"}
+{"sql":"INSERT INTO t2 VALUES('W', 2, 2)"}
+{"sql":"INSERT INTO t2 VALUES('X', 1, 4)"}
+{"sql":"INSERT INTO t2 VALUES('X', 5, 7)"}
+{"sql":"INSERT INTO t2 VALUES('Y', 1, 9)"}
+{"sql":"INSERT INTO t2 VALUES('Y', 4, 2)"}
+{"sql":"INSERT INTO t2 VALUES('Z', 3, 3)"}
+{"sql":"INSERT INTO t2 VALUES('Z', 3, 4)"}
+{"sql":"SELECT * FROM v1 WHERE a IN ('A', 'B')"}
+{"sql":"SELECT * FROM v1 WHERE a IS 'C'"}
+{"sql":"SELECT * FROM v1 WHERE a = 'c' COLLATE nocase"}
+{"sql":"SELECT * FROM v2 WHERE a = 'C'"}
+{"sql":"SELECT * FROM v3 WHERE b<'E'"}
+{"sql":"SELECT * FROM v3 WHERE b='E'"}
+{"sql":"SELECT * FROM v3 WHERE b>'C'"}
+{"sql":"SELECT * FROM v3 WHERE d<0.55"}
+{"sql":"SELECT * FROM (\n      SELECT x, sum(y) AS s, max(z) AS m \n      FROM t2 GROUP BY x\n    )"}
+{"sql":"SELECT * FROM (\n      SELECT x, sum(y) AS s, max(z) AS m,\n        max( max(z) ) OVER (PARTITION BY sum(y) \n            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\n        )\n      FROM t2 GROUP BY x\n    )"}
+{"sql":"SELECT * FROM (\n      SELECT x, sum(y) AS s, max(z) AS m,\n        max( max(z) ) OVER (PARTITION BY sum(y) \n            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\n        )\n      FROM t2 GROUP BY x\n    ) WHERE s=6"}
+{"sql":"SELECT * FROM (\n      SELECT x, sum(y) AS s, max(z) AS m,\n        max( max(z) ) OVER (PARTITION BY sum(y) \n            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\n        )\n      FROM t2 GROUP BY x\n    ) WHERE s<6"}

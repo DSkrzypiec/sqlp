@@ -1,0 +1,6 @@
+{"sql":"INSERT INTO t11 VALUES(randomblob(5000), NULL)"}
+{"sql":"INSERT INTO t11 SELECT randomblob(5000), NULL FROM t11"}
+{"sql":"UPDATE t11 SET b = cksum(a)"}
+{"sql":"WITH r(x,y) AS (\n        SELECT 1, randomblob(1000)\n        UNION ALL\n        SELECT x+1, randomblob(1000) FROM r\n        LIMIT 20000\n    )\n    SELECT count(*), sum(length(y)) FROM r GROUP BY (x%5)"}
+{"sql":"PRAGMA cache_size = 20000"}
+{"sql":"WITH r(x,y) AS (\n    SELECT 1, randomblob(1000)\n    UNION ALL\n    SELECT x+1, randomblob(1000) FROM r\n    LIMIT 2200000\n  )\n  SELECT count(*), sum(length(y)) FROM r GROUP BY (x%5)"}

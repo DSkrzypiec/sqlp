@@ -1,0 +1,10 @@
+{"sql":"DROP TABLE ft1"}
+{"sql":"DROP TABLE ft2"}
+{"sql":"DROP TABLE ft3"}
+{"sql":"DROP TABLE ft4"}
+{"sql":"DROP TABLE ft6"}
+{"sql":"DROP TABLE ft7"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3(a, b)"}
+{"sql":"DELETE FROM ft WHERE docid>=32"}
+{"sql":"SELECT a FROM ft"}
+{"sql":"CREATE VIRTUAL TABLE ft8 USING fts3(x, tokenize porter)"}

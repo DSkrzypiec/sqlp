@@ -1,0 +1,17 @@
+{"sql":"CREATE TABLE blobs(id INTEGER PRIMARY KEY, data BLOB)"}
+{"sql":"INSERT INTO blobs VALUES(NULL, zeroblob(5000))"}
+{"sql":"INSERT INTO blobs VALUES(5, zeroblob(10240))"}
+{"sql":"INSERT INTO t1 VALUES(1, 'abcde')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'fghij')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'klmno')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'pqrst')"}
+{"sql":"PRAGMA read_uncommitted=1"}
+{"sql":"INSERT INTO t1 VALUES(1, zeroblob(100))"}
+{"sql":"CREATE TABLE t3(a INTEGER UNIQUE, b TEXT)"}
+{"sql":"INSERT INTO t3 VALUES(1, 'aaaaaaaaaaaaaaaaaaaa')"}
+{"sql":"INSERT INTO t3 VALUES(2, 'bbbbbbbbbbbbbbbbbbbb')"}
+{"sql":"INSERT INTO t3 VALUES(3, 'cccccccccccccccccccc')"}
+{"sql":"INSERT INTO t3 VALUES(4, 'dddddddddddddddddddd')"}
+{"sql":"INSERT INTO t3 VALUES(5, 'eeeeeeeeeeeeeeeeeeee')"}
+{"sql":"UPDATE t3 SET a = 6 WHERE a > 3"}
+{"sql":"UPDATE t3 SET a = 6 WHERE a = 3 OR a = 5"}

@@ -1,0 +1,45 @@
+{"sql":"create table t2(x unique)"}
+{"sql":"insert into t2 values(1)"}
+{"sql":"insert or ignore into t2 select x*2 from t2"}
+{"sql":"insert or ignore into t2 select x*4 from t2"}
+{"sql":"insert or ignore into t2 select x*16 from t2"}
+{"sql":"insert or ignore into t2 select x*256 from t2"}
+{"sql":"insert or ignore into t2 select x*65536 from t2"}
+{"sql":"insert or ignore into t2 select x*2147483648 from t2"}
+{"sql":"insert or ignore into t2 select x-1 from t2"}
+{"sql":"insert or ignore into t2 select x+1 from t2"}
+{"sql":"insert or ignore into t2 select -x from t2"}
+{"sql":"select count(*) from t2"}
+{"sql":"create table t2_temp(x)"}
+{"sql":"insert into t2_temp values(1)"}
+{"sql":"insert into t2_temp select x*2 from t2_temp"}
+{"sql":"insert into t2_temp select x*4 from t2_temp"}
+{"sql":"insert into t2_temp select x*16 from t2_temp"}
+{"sql":"insert into t2_temp select x*256 from t2_temp"}
+{"sql":"insert into t2_temp select x*65536 from t2_temp"}
+{"sql":"insert into t2_temp select x*2147483648 from t2_temp"}
+{"sql":"insert into t2_temp select x-1 from t2_temp"}
+{"sql":"insert into t2_temp select x+1 from t2_temp"}
+{"sql":"insert into t2_temp select -x from t2_temp"}
+{"sql":"INSERT INTO t2 SELECT DISTINCT(x) FROM t2_temp"}
+{"sql":"DROP TABLE t2_temp"}
+{"sql":"select x from t2 order by x"}
+{"sql":"CREATE TABLE songs(songid, artist, timesplayed)"}
+{"sql":"INSERT INTO songs VALUES(1,'one',1)"}
+{"sql":"INSERT INTO songs VALUES(2,'one',2)"}
+{"sql":"INSERT INTO songs VALUES(3,'two',3)"}
+{"sql":"INSERT INTO songs VALUES(4,'three',5)"}
+{"sql":"INSERT INTO songs VALUES(5,'one',7)"}
+{"sql":"INSERT INTO songs VALUES(6,'two',11)"}
+{"sql":"SELECT DISTINCT artist \n      FROM (    \n       SELECT DISTINCT artist    \n       FROM songs      \n       WHERE songid IN (    \n        SELECT songid    \n        FROM songs    \n        WHERE LOWER(artist) = (    \n          -- This sub-query is indeterminate. Because there is no ORDER BY,\n          -- it may return 'one', 'two' or 'three'. Because of this, the\n\t  -- outermost parent query may correctly return any of 'one', 'two' \n          -- or 'three' as well.\n          SELECT DISTINCT LOWER(artist)    \n          FROM (      \n            -- This sub-query returns the table:\n            --\n            --     two      14\n            --     one      10\n            --     three    5\n            --\n            SELECT DISTINCT artist,sum(timesplayed) AS total      \n            FROM songs      \n            GROUP BY LOWER(artist)      \n            ORDER BY total DESC      \n            LIMIT 10    \n          )    \n          WHERE artist <> '' \n        )  \n       )       \n      )  \n      ORDER BY LOWER(artist) ASC"}
+{"sql":"SELECT .1"}
+{"sql":"SELECT 2."}
+{"sql":"SELECT 3.e0"}
+{"sql":"SELECT .4e+1"}
+{"sql":"SELECT * FROM sqlite_master \n      UNION ALL \n      SELECT * FROM sqlite_master\n      LIMIT (SELECT count(*) FROM blah)"}
+{"sql":"CREATE TABLE logs(msg TEXT, timestamp INTEGER, dbtime TEXT)"}
+{"sql":"SELECT * FROM logs WHERE logs.oid >= (SELECT head FROM logs_base) \n      UNION ALL \n      SELECT * FROM logs \n      LIMIT (SELECT lmt FROM logs_base)"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE table t(o CHECK(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((;VALUES(o)'"}
+{"sql":"DROP TABLE IF EXISTS D"}
+{"sql":"SELECT name, type FROM sqlite_master WHERE name IS NULL\n      UNION\n      SELECT type, name FROM sqlite_master WHERE type IS NULL\n      ORDER BY 1, 2, 1, 2, 1, 2"}
+{"sql":"SELECT name, type FROM sqlite_master WHERE name IS NULL\n      UNION\n      SELECT type, name FROM sqlite_master WHERE type IS NULL\n      ORDER BY 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2"}

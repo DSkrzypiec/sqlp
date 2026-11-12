@@ -1,0 +1,77 @@
+{"sql":"ANALYZE no_such_table"}
+{"sql":"SELECT count(*) FROM sqlite_master WHERE name='sqlite_stat1'"}
+{"sql":"ANALYZE no_such_db.no_such_table"}
+{"sql":"PRAGMA empty_result_callbacks=1"}
+{"sql":"CREATE INDEX stat1idx ON sqlite_stat1(idx)"}
+{"sql":"CREATE INDEX main.stat1idx ON SQLite_stat1(idx)"}
+{"sql":"SELECT * FROM sqlite_stat1 WHERE idx NOT NULL"}
+{"sql":"ANALYZE main"}
+{"sql":"ANALYZE main.t1"}
+{"sql":"SELECT * FROM sqlite_stat1"}
+{"sql":"ANALYZE t1"}
+{"sql":"CREATE INDEX t1i1 ON t1(a)"}
+{"sql":"SELECT * FROM sqlite_stat1 ORDER BY idx"}
+{"sql":"CREATE INDEX t1i2 ON t1(b)"}
+{"sql":"CREATE INDEX t1i3 ON t1(a,b)"}
+{"sql":"INSERT INTO t1 VALUES(1,3)"}
+{"sql":"SELECT idx, stat FROM sqlite_stat1 ORDER BY idx"}
+{"sql":"INSERT INTO t1 VALUES(1,4)"}
+{"sql":"INSERT INTO t1 VALUES(1,5)"}
+{"sql":"INSERT INTO t1 VALUES(2,5)"}
+{"sql":"CREATE TABLE t2 AS SELECT * FROM t1"}
+{"sql":"CREATE INDEX t2i1 ON t2(a)"}
+{"sql":"CREATE INDEX t2i2 ON t2(b)"}
+{"sql":"CREATE INDEX t2i3 ON t2(a,b)"}
+{"sql":"DROP INDEX t2i3"}
+{"sql":"ANALYZE t2"}
+{"sql":"DROP INDEX t2i2"}
+{"sql":"CREATE TABLE t3 AS SELECT a, b, rowid AS c, 'hi' AS d FROM t1"}
+{"sql":"CREATE INDEX t3i1 ON t3(a)"}
+{"sql":"CREATE INDEX t3i2 ON t3(a,b,c,d)"}
+{"sql":"CREATE INDEX t3i3 ON t3(d,b,c,a)"}
+{"sql":"DROP TABLE t2"}
+{"sql":"CREATE TABLE [silly \" name](a, b, c)"}
+{"sql":"CREATE INDEX 'foolish '' name' ON [silly \" name](a, b)"}
+{"sql":"CREATE INDEX 'another foolish '' name' ON [silly \" name](c)"}
+{"sql":"INSERT INTO [silly \" name] VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO [silly \" name] VALUES(4, 5, 6)"}
+{"sql":"DROP INDEX \"foolish ' name\""}
+{"sql":"DROP TABLE \"silly \"\" name\""}
+{"sql":"PRAGMA writable_schema=on"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES(null,null,null)"}
+{"sql":"PRAGMA writable_schema=off"}
+{"sql":"SELECT * FROM t4 WHERE x=1234"}
+{"sql":"DELETE FROM sqlite_stat1"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t4','t4i1','nonsense')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t4','t4i2','120897349817238741092873198273409187234918720394817209384710928374109827172901827349871928741910')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t4','xyzzy','0 1 2 3')"}
+{"sql":"DELETE FROM t3"}
+{"sql":"DELETE FROM t4"}
+{"sql":"INSERT INTO t3 VALUES(1,2,3,4)"}
+{"sql":"INSERT INTO t3 VALUES(5,6,7,8)"}
+{"sql":"INSERT INTO t3 SELECT a+8, b+8, c+8, d+8 FROM t3"}
+{"sql":"INSERT INTO t3 SELECT a+16, b+16, c+16, d+16 FROM t3"}
+{"sql":"INSERT INTO t3 SELECT a+32, b+32, c+32, d+32 FROM t3"}
+{"sql":"INSERT INTO t3 SELECT a+64, b+64, c+64, d+64 FROM t3"}
+{"sql":"INSERT INTO t4 SELECT a, b, c FROM t3"}
+{"sql":"SELECT DISTINCT idx FROM sqlite_stat1 ORDER BY 1"}
+{"sql":"SELECT DISTINCT tbl FROM sqlite_stat1 ORDER BY 1"}
+{"sql":"SELECT DISTINCT idx FROM sqlite_stat4 ORDER BY 1"}
+{"sql":"SELECT DISTINCT tbl FROM sqlite_stat4 ORDER BY 1"}
+{"sql":"DROP INDEX t3i2"}
+{"sql":"UPDATE sqlite_master SET sql='nonsense' WHERE name='sqlite_stat1'"}
+{"sql":"CREATE TABLE sqliteDemo(a)"}
+{"sql":"INSERT INTO sqliteDemo(a) VALUES(1),(2),(3),(4),(5)"}
+{"sql":"CREATE TABLE SQLiteDemo2(a INTEGER PRIMARY KEY AUTOINCREMENT)"}
+{"sql":"INSERT INTO SQLiteDemo2 SELECT * FROM sqliteDemo"}
+{"sql":"CREATE TABLE t1(b)"}
+{"sql":"INSERT INTO t1(b) SELECT a FROM sqliteDemo"}
+{"sql":"SELECT tbl FROM sqlite_stat1 WHERE idx IS NULL ORDER BY tbl"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b INTEGER)"}
+{"sql":"INSERT INTO t1 VALUES(1, 7223372036854775)"}
+{"sql":"INSERT INTO t1 VALUES(2, 7223372036854776)"}
+{"sql":"INSERT INTO t1 VALUES(3, 7223372036854777)"}
+{"sql":"CREATE INDEX i1 ON t1(b)"}
+{"sql":"UPDATE sqlite_stat4 SET sample = substr(sample, 0, 4)"}
+{"sql":"ANALYZE sqlite_schema"}
+{"sql":"SELECT * FROM t1 WHERE b>7223372036854775"}

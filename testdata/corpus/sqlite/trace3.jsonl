@@ -1,0 +1,18 @@
+{"sql":"INSERT INTO t1 VALUES(1,NULL)"}
+{"sql":"INSERT INTO t1 VALUES(2,-1)"}
+{"sql":"INSERT INTO t1 VALUES(3,0)"}
+{"sql":"INSERT INTO t1 VALUES(4,1)"}
+{"sql":"INSERT INTO t1 VALUES(5,-2147483648)"}
+{"sql":"INSERT INTO t1 VALUES(6,2147483647)"}
+{"sql":"INSERT INTO t1 VALUES(7,-9223372036854775808)"}
+{"sql":"INSERT INTO t1 VALUES(8,9223372036854775807)"}
+{"sql":"INSERT INTO t1 VALUES(9,-1.0)"}
+{"sql":"INSERT INTO t1 VALUES(10,0.0)"}
+{"sql":"INSERT INTO t1 VALUES(11,1.0)"}
+{"sql":"INSERT INTO t1 VALUES(12,'')"}
+{"sql":"INSERT INTO t1 VALUES(13,'1')"}
+{"sql":"INSERT INTO t1 VALUES(14,'one')"}
+{"sql":"INSERT INTO t1 VALUES(15,x'abcd0123')"}
+{"sql":"INSERT INTO t1 VALUES(16,x'4567cdef')"}
+{"sql":"SELECT a, b FROM t1 ORDER BY a"}
+{"sql":"CREATE TABLE nameFtsFuzzySearchTable(\n      word, distance, langid, score, top, scope\n    )"}

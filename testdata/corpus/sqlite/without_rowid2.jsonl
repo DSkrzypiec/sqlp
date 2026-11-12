@@ -1,0 +1,5 @@
+{"sql":"CREATE TABLE t1(\n      a INT PRIMARY KEY,\n      b INT\n           REFERENCES t1 ON DELETE CASCADE\n           REFERENCES t2,\n      c TEXT,\n      FOREIGN KEY (b,c) REFERENCES t2(x,y) ON UPDATE CASCADE\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE t2(\n      x INT PRIMARY KEY,\n      y TEXT\n    ) WITHOUT rowid"}
+{"sql":"CREATE TABLE t3(\n      a INT REFERENCES t2,\n      b INT REFERENCES t1,\n      FOREIGN KEY (a,b) REFERENCES t2(x,y)\n    )"}
+{"sql":"CREATE TABLE t4(a int primary key) WITHOUT rowid"}
+{"sql":"CREATE TABLE t5(a PRIMARY KEY, b, c) WITHOUT rowid"}

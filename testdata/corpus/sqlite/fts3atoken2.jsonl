@@ -1,0 +1,4 @@
+{"sql":"SELECT typeof( fts3_tokenizer('simple') )"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING fts3(col, tokenize=mytok)"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING fts3(col, tokenize=mytok2)"}
+{"sql":"CREATE VIRTUAL TABLE x3 USING fts3(col, tokenize=mytok3)"}

@@ -1,0 +1,4 @@
+{"sql":"UPDATE OR REPLACE t1 SET a = 1"}
+{"sql":"CREATE TRIGGER t2_t AFTER UPDATE ON t2 BEGIN\n      DELETE FROM t2 WHERE a = new.a + 1;\n    END"}
+{"sql":"UPDATE t2 SET b = 5"}
+{"sql":"CREATE TRIGGER t3_t AFTER DELETE ON t3 BEGIN\n      DELETE FROM t3 WHERE a = old.a + 1;\n    END"}

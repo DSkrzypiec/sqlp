@@ -1,0 +1,143 @@
+{"sql":"INSERT INTO test1 VALUES(1,2,3)"}
+{"sql":"INSERT INTO sqlite_master VALUES(1,2,3,4)"}
+{"sql":"CREATE TABLE test1(one int, two int, three int)"}
+{"sql":"INSERT INTO test1 VALUES(1,2)"}
+{"sql":"INSERT INTO test1 VALUES(1,2,3,4)"}
+{"sql":"INSERT INTO test1(one,two) VALUES(1,2,3,4)"}
+{"sql":"INSERT INTO test1(one,two) VALUES(1)"}
+{"sql":"INSERT INTO test1(one,four) VALUES(1,2)"}
+{"sql":"SELECT * FROM test1"}
+{"sql":"INSERT INTO test1 VALUES(4,5,6)"}
+{"sql":"SELECT * FROM test1 ORDER BY one"}
+{"sql":"INSERT INTO test1 VALUES(7,8,9)"}
+{"sql":"INSERT INTO test1(one,two) VALUES(1,2)"}
+{"sql":"INSERT INTO test1(two,three) VALUES(5,6)"}
+{"sql":"INSERT INTO test1(three,one) VALUES(7,8)"}
+{"sql":"CREATE TABLE test2(\n      f1 int default -111, \n      f2 real default +4.32,\n      f3 int default +222,\n      f4 int default 7.89\n    )"}
+{"sql":"SELECT * from test2"}
+{"sql":"INSERT INTO test2(f1,f3) VALUES(+10,-10)"}
+{"sql":"SELECT * FROM test2"}
+{"sql":"INSERT INTO test2(f2,f4) VALUES(1.23,-3.45)"}
+{"sql":"SELECT * FROM test2 WHERE f1==-111"}
+{"sql":"INSERT INTO test2(f1,f2,f4) VALUES(77,+1.23,3.45)"}
+{"sql":"SELECT * FROM test2 WHERE f1==77"}
+{"sql":"CREATE TABLE test2(\n      f1 int default 111, \n      f2 real default -4.32,\n      f3 text default hi,\n      f4 text default 'abc-123',\n      f5 varchar(10)\n    )"}
+{"sql":"INSERT INTO test2(f2,f4) VALUES(-2.22,'hi!')"}
+{"sql":"INSERT INTO test2(f1,f5) VALUES(1,'xyzzy')"}
+{"sql":"SELECT * FROM test2 ORDER BY f1"}
+{"sql":"DELETE FROM test2"}
+{"sql":"CREATE INDEX index9 ON test2(f1,f2)"}
+{"sql":"CREATE INDEX indext ON test2(f4,f5)"}
+{"sql":"INSERT INTO test2(f2,f4) VALUES(-3.33,'hum')"}
+{"sql":"SELECT * FROM test2 WHERE f1='111' AND f2=-3.33"}
+{"sql":"INSERT INTO test2(f1,f2,f5) VALUES(22,-4.44,'wham')"}
+{"sql":"SELECT * FROM test2 WHERE f1=22 AND f2=-4.44"}
+{"sql":"INSERT INTO t3 VALUES(1+2+3,4,5)"}
+{"sql":"INSERT INTO t3 VALUES((SELECT max(a) FROM t3)+1,5,6)"}
+{"sql":"SELECT max(a) FROM t3"}
+{"sql":"SELECT * FROM t3 ORDER BY a"}
+{"sql":"INSERT INTO t3 VALUES((SELECT max(a) FROM t3)+1,t3.a,6)"}
+{"sql":"INSERT INTO t3 VALUES((SELECT b FROM t3 WHERE a=0),6,7)"}
+{"sql":"SELECT b FROM t3 WHERE a = 0"}
+{"sql":"SELECT b,c FROM t3 WHERE a IS NULL"}
+{"sql":"INSERT INTO t3 VALUES(notafunc(2,3),2,3)"}
+{"sql":"INSERT INTO t3 VALUES(min(1,2,3),max(1,2,3),99)"}
+{"sql":"SELECT * FROM t3 WHERE c=99"}
+{"sql":"CREATE TEMP TABLE t4(x)"}
+{"sql":"INSERT INTO t4 VALUES(1)"}
+{"sql":"INSERT INTO t4 SELECT x+1 FROM t4"}
+{"sql":"EXPLAIN INSERT INTO t4 SELECT x+2 FROM t4"}
+{"sql":"SELECT rootpage FROM sqlite_master WHERE name='test1'"}
+{"sql":"SELECT rootpage FROM sqlite_temp_master WHERE name='t4'"}
+{"sql":"INSERT INTO t4 SELECT one FROM test1 WHERE three=7"}
+{"sql":"EXPLAIN INSERT INTO t4 SELECT one FROM test1"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(2,3)"}
+{"sql":"SELECT b FROM t1 WHERE b=2"}
+{"sql":"REPLACE INTO t1 VALUES(1,4)"}
+{"sql":"UPDATE OR REPLACE t1 SET a=2 WHERE b=4"}
+{"sql":"SELECT * FROM t1 WHERE b=3"}
+{"sql":"INSERT INTO t1 SELECT max(a) FROM t1"}
+{"sql":"INSERT INTO t3 SELECT * FROM (SELECT * FROM t3 UNION ALL SELECT 1,2,3)"}
+{"sql":"INSERT INTO t5 VALUES(2)"}
+{"sql":"INSERT INTO t5 VALUES(3)"}
+{"sql":"INSERT INTO t5(rowid, x) SELECT nullif(x*2+10,14), x+100 FROM t5"}
+{"sql":"CREATE TABLE t6(x INTEGER PRIMARY KEY, y)"}
+{"sql":"INSERT INTO t6 VALUES(1,1)"}
+{"sql":"INSERT INTO t6 VALUES(2,2)"}
+{"sql":"INSERT INTO t6 VALUES(3,3)"}
+{"sql":"INSERT INTO t6 SELECT nullif(y*2+10,14), y+100 FROM t6"}
+{"sql":"SELECT x, y FROM t6"}
+{"sql":"CREATE TABLE t10(a,b,c)"}
+{"sql":"INSERT INTO t10 VALUES(1,2,3), (4,5,6), (7,8,9)"}
+{"sql":"INSERT INTO t10 VALUES(11,12,13), (14,15), (16,17,28)"}
+{"sql":"CREATE TABLE t11a AS SELECT '123456789' AS x"}
+{"sql":"CREATE TABLE t11b (a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"INSERT INTO t11b SELECT x, x, x FROM t11a"}
+{"sql":"SELECT quote(a), quote(b), quote(c) FROM t11b"}
+{"sql":"CREATE TABLE t12a(a,b,c,d,e,f,g)"}
+{"sql":"INSERT INTO t12a VALUES(101,102,103,104,105,106,107)"}
+{"sql":"CREATE TABLE t12b(x)"}
+{"sql":"INSERT INTO t12b(x,rowid,x,x,x,x,x) SELECT * FROM t12a"}
+{"sql":"SELECT rowid, x FROM t12b"}
+{"sql":"CREATE TABLE tab1( value INTEGER)"}
+{"sql":"INSERT INTO tab1 (value, _rowid_) values( 11, 1)"}
+{"sql":"INSERT INTO tab1 (value, _rowid_) SELECT 22,999"}
+{"sql":"SELECT * FROM tab1"}
+{"sql":"CREATE TABLE t12c(a, b DEFAULT 'xyzzy', c)"}
+{"sql":"INSERT INTO t12c(a, rowid, c) SELECT 'one', 999, 'two'"}
+{"sql":"SELECT * FROM t12c"}
+{"sql":"DROP TABLE IF EXISTS t13"}
+{"sql":"CREATE TABLE t13(a INTEGER PRIMARY KEY,b UNIQUE)"}
+{"sql":"CREATE INDEX t13x1 ON t13(-b=b)"}
+{"sql":"INSERT INTO t13 VALUES(1,5),(6,2)"}
+{"sql":"REPLACE INTO t13 SELECT b,0 FROM t13"}
+{"sql":"SELECT * FROM t13 ORDER BY +b"}
+{"sql":"DROP TABLE IF EXISTS t14"}
+{"sql":"CREATE TABLE t14(x INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t14 VALUES(CASE WHEN 1 THEN null END)"}
+{"sql":"SELECT x FROM t14"}
+{"sql":"INSERT INTO t2 VALUES(4, randomblob(31000))"}
+{"sql":"INSERT INTO t2 VALUES(4, randomblob(32000))"}
+{"sql":"INSERT INTO t2 VALUES(4, randomblob(33000))"}
+{"sql":"REPLACE INTO t1 SELECT a, b FROM t2"}
+{"sql":"SELECT a, length(b) FROM t1"}
+{"sql":"CREATE TABLE t0(c0,c1)"}
+{"sql":"CREATE UNIQUE INDEX i0 ON t0(c0)"}
+{"sql":"INSERT INTO t0(c0,c1) VALUES(123,1)"}
+{"sql":"CREATE TRIGGER tr0 AFTER DELETE ON t0\n  BEGIN\n    INSERT INTO t0 VALUES(123,2);\n  END"}
+{"sql":"REPLACE INTO t0(c0,c1) VALUES(123,3)"}
+{"sql":"CREATE TRIGGER tr3 AFTER DELETE ON t1 BEGIN\n    INSERT INTO t1 VALUES(1, 'three');\n  END"}
+{"sql":"REPLACE INTO t1 VALUES(1, 'two')"}
+{"sql":"CREATE TABLE c1(c, d REFERENCES p1(b) ON DELETE CASCADE)"}
+{"sql":"CREATE TRIGGER tr6 AFTER DELETE ON c1 BEGIN\n    INSERT INTO p1 VALUES(4, 1);\n  END"}
+{"sql":"INSERT INTO c1 VALUES(2, 1)"}
+{"sql":"REPLACE INTO p1 VALUES(3, 1)"}
+{"sql":"2","reject":true}
+{"sql":"PRAGMA temp.recursive_triggers = true"}
+{"sql":"CREATE TABLE t0(aa, bb)"}
+{"sql":"CREATE UNIQUE INDEX t0bb ON t0(bb)"}
+{"sql":"CREATE TRIGGER \"r17.1\" BEFORE DELETE ON t0\n    BEGIN INSERT INTO t0(aa,bb) VALUES(99,1);\n  END"}
+{"sql":"INSERT INTO t0(aa,bb) VALUES(10,20)"}
+{"sql":"REPLACE INTO t0(aa,bb) VALUES(30,20)"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES(1,1,1),(2,2,2),(3,3,3),(4,4,4)"}
+{"sql":"CREATE TRIGGER \"r17.3\" AFTER DELETE ON t1 WHEN OLD.c<>3 BEGIN\n    INSERT INTO t1(rowid,a,b,c) VALUES(100,100,100,3);\n  END"}
+{"sql":"REPLACE INTO t1(rowid,a,b,c) VALUES(200,1,2,3)"}
+{"sql":"INSERT INTO t2(a,b) VALUES(1,1),(2,2),(3,3),(4,4)"}
+{"sql":"CREATE TABLE fire(x)"}
+{"sql":"CREATE TRIGGER t2r1 AFTER DELETE ON t2 BEGIN\n    INSERT INTO fire VALUES(old.a);\n  END"}
+{"sql":"UPDATE OR REPLACE t2 SET a=4, b=3 WHERE a=1"}
+{"sql":"SELECT *, 'x' FROM t2 ORDER BY a"}
+{"sql":"SELECT x FROM fire ORDER BY x"}
+{"sql":"DELETE FROM fire"}
+{"sql":"UPDATE OR REPLACE t2 SET a=1, b=3 WHERE a=1"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY, b INT, c INT, d INT)"}
+{"sql":"CREATE UNIQUE INDEX t3bpi ON t3(b) WHERE c<=d"}
+{"sql":"CREATE UNIQUE INDEX t3d ON t3(d)"}
+{"sql":"INSERT INTO t3(a,b,c,d) VALUES(1,1,1,1),(2,1,3,2),(3,4,5,6)"}
+{"sql":"CREATE TRIGGER t3r1 AFTER DELETE ON t3 BEGIN\n    SELECT 'hi';\n  END"}
+{"sql":"REPLACE INTO t3(a,b,c,d) VALUES(4,4,8,9)"}
+{"sql":"SELECT *, 'x' FROM t3 ORDER BY a"}
+{"sql":"REPLACE INTO t3(a,b,c,d) VALUES(5,1,11,2)"}
+{"sql":"DROP TRIGGER t3r1"}
+{"sql":"CREATE TRIGGER t3r1 AFTER DELETE ON t3 BEGIN\n    INSERT INTO t3(b,c,d) VALUES(old.b,old.c,old.d);\n  END"}

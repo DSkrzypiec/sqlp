@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE T1(a, b)"}
+{"sql":"INSERT INTO t1(rowid, a ,b) VALUES(5, 'v', 'five')"}
+{"sql":"INSERT INTO t1(rowid, a, b) VALUES(10, 'x', 'ten')"}
+{"sql":"SELECT pgno, cell, field, quote(value) FROM sqlite_dbdata WHERE pgno=2"}
+{"sql":"SELECT pgno, cell, field, quote(value) FROM sqlite_dbdata"}
+{"sql":"INSERT INTO t1 VALUES(NULL, randomblob(5050))"}
+{"sql":"SELECT quote(value) FROM sqlite_dbdata WHERE pgno=2 AND cell=0 AND field=1"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<10\n  )\n  INSERT INTO t1 SELECT randomblob(900) FROM s"}
+{"sql":"SELECT * FROM sqlite_dbptr WHERE pgno=2"}
+{"sql":"SELECT * FROM sqlite_dbptr WHERE pgno=3"}
+{"sql":"SELECT * FROM sqlite_dbptr"}

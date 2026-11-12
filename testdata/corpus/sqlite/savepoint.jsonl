@@ -1,0 +1,80 @@
+{"sql":"SAVEPOINT sp1"}
+{"sql":"RELEASE sp1"}
+{"sql":"ROLLBACK TO sp1"}
+{"sql":"SAVEPOINT sp2"}
+{"sql":"RELEASE sp2"}
+{"sql":"RELEASE SAVEPOINT sp1"}
+{"sql":"SAVEPOINT sp3"}
+{"sql":"ROLLBACK TO SAVEPOINT sp3"}
+{"sql":"ROLLBACK TRANSACTION TO sp2"}
+{"sql":"ROLLBACK TRANSACTION TO SAVEPOINT sp1"}
+{"sql":"RELEASE SAVEPOINT SP1"}
+{"sql":"UPDATE t1 SET a = 2, b = 3, c = 4"}
+{"sql":"INSERT INTO t1 VALUES(10, 11, 12)"}
+{"sql":"INSERT INTO t1 VALUES('d', 'e', 'f')"}
+{"sql":"SAVEPOINT \"transaction\""}
+{"sql":"ROLLBACK TO \"transaction\""}
+{"sql":"RELEASE \"transaction\""}
+{"sql":"CREATE TABLE t3(g,h)"}
+{"sql":"INSERT INTO t3 VALUES('I', 'II')"}
+{"sql":"INSERT INTO t3 VALUES('III', 'IV', 'V')"}
+{"sql":"INSERT INTO t1 VALUES('o', 't', 't')"}
+{"sql":"INSERT INTO t3 VALUES('z', 'y', 'x')"}
+{"sql":"INSERT INTO t3 VALUES('value')"}
+{"sql":"CREATE TABLE blobs(x)"}
+{"sql":"INSERT INTO blobs VALUES('a twentyeight character blob')"}
+{"sql":"ROLLBACK TO def"}
+{"sql":"SAVEPOINT def"}
+{"sql":"RELEASE def"}
+{"sql":"savepoint def"}
+{"sql":"release def"}
+{"sql":"release abc"}
+{"sql":"SAVEPOINT main"}
+{"sql":"INSERT INTO blobs VALUES('another blob')"}
+{"sql":"SELECT count(*) FROM blobs"}
+{"sql":"RELEASE main"}
+{"sql":"SELECT x FROM blobs WHERE rowid = 2"}
+{"sql":"PRAGMA incr_vacuum"}
+{"sql":"INSERT INTO t1(a) VALUES('alligator')"}
+{"sql":"INSERT INTO t1(a) VALUES('angelfish')"}
+{"sql":"INSERT INTO t1(a) VALUES('ant')"}
+{"sql":"INSERT INTO t1(a) VALUES('antelope')"}
+{"sql":"INSERT INTO t1(a) VALUES('ape')"}
+{"sql":"INSERT INTO t1(a) VALUES('baboon')"}
+{"sql":"INSERT INTO t1(a) VALUES('badger')"}
+{"sql":"INSERT INTO t1(a) VALUES('bear')"}
+{"sql":"INSERT INTO t1(a) VALUES('beetle')"}
+{"sql":"INSERT INTO t1(a) VALUES('bird')"}
+{"sql":"INSERT INTO t1(a) VALUES('bison')"}
+{"sql":"UPDATE t1 SET b =    randstr(1000,1000)"}
+{"sql":"UPDATE t1 SET b = b||randstr(1000,1000)"}
+{"sql":"UPDATE t1 SET b = b||randstr(10,1000)"}
+{"sql":"INSERT INTO t1 VALUES(randstr(1000,1000), randstr(1000,1000))"}
+{"sql":"CREATE TABLE t5(x, y)"}
+{"sql":"INSERT INTO t5 VALUES(1, randstr(1000,1000))"}
+{"sql":"INSERT INTO t5 VALUES(2, randstr(1000,1000))"}
+{"sql":"INSERT INTO t5 VALUES(3, randstr(1000,1000))"}
+{"sql":"INSERT INTO t5 VALUES(4, randstr(1000,1000))"}
+{"sql":"INSERT INTO t5 VALUES(5, randstr(1000,1000))"}
+{"sql":"DELETE FROM t5 WHERE x=1 OR x=2"}
+{"sql":"SAVEPOINT \"save1\""}
+{"sql":"RELEASE save1"}
+{"sql":"SAVEPOINT \"Including whitespace \""}
+{"sql":"RELEASE \"including Whitespace \""}
+{"sql":"CREATE TABLE main.t1(x, y)"}
+{"sql":"CREATE TABLE aux1.t2(x, y)"}
+{"sql":"CREATE TABLE aux2.t3(x, y)"}
+{"sql":"SELECT name FROM aux1.sqlite_master"}
+{"sql":"SELECT name FROM aux2.sqlite_master"}
+{"sql":"INSERT INTO t3 VALUES(3, 4)"}
+{"sql":"SELECT 'a', * FROM t1"}
+{"sql":"SELECT 'b', * FROM t3"}
+{"sql":"SAVEPOINT three"}
+{"sql":"INSERT INTO t3 VALUES('e', 'f')"}
+{"sql":"INSERT INTO t3 VALUES('g', 'h')"}
+{"sql":"INSERT OR ROLLBACK INTO t4 VALUES(1, 'one')"}
+{"sql":"INSERT INTO t1 SELECT a+4,b+4  FROM t1"}
+{"sql":"SAVEPOINT s1"}
+{"sql":"ROLLBACK TO s1"}
+{"sql":"INSERT INTO t6 VALUES(1, 2)"}
+{"sql":"INSERT INTO t6 VALUES(3, 4)"}

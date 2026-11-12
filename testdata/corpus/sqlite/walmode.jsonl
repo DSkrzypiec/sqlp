@@ -1,0 +1,5 @@
+{"sql":"PRAGMA temp.journal_mode = wal"}
+{"sql":"PRAGMA two.journal_mode"}
+{"sql":"PRAGMA two.journal_mode = DELETE"}
+{"sql":"INSERT INTO two.t2 DEFAULT VALUES"}
+{"sql":"PRAGMA two.journal_mode=WAL"}

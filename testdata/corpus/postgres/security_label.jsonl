@@ -1,0 +1,26 @@
+{"sql":"DROP ROLE IF EXISTS regress_seclabel_user1","shape":"DROP ROLE IF EXISTS regress_seclabel_user1;"}
+{"sql":"DROP ROLE IF EXISTS regress_seclabel_user2","shape":"DROP ROLE IF EXISTS regress_seclabel_user2;"}
+{"sql":"CREATE USER regress_seclabel_user1 WITH CREATEROLE"}
+{"sql":"CREATE USER regress_seclabel_user2"}
+{"sql":"CREATE TABLE seclabel_tbl1 (a int, b text)","shape":"CREATE TABLE seclabel_tbl1 (a int, b text);"}
+{"sql":"CREATE TABLE seclabel_tbl2 (x int, y text)","shape":"CREATE TABLE seclabel_tbl2 (x int, y text);"}
+{"sql":"CREATE VIEW seclabel_view1 AS SELECT * FROM seclabel_tbl2","shape":"CREATE VIEW seclabel_view1 AS SELECT * FROM seclabel_tbl2;"}
+{"sql":"CREATE FUNCTION seclabel_four() RETURNS integer AS $$SELECT 4$$ language sql","shape":"CREATE FUNCTION seclabel_four() RETURNS integer AS 'SELECT 4' LANGUAGE sql;"}
+{"sql":"CREATE DOMAIN seclabel_domain AS text","shape":"CREATE DOMAIN seclabel_domain AS text;"}
+{"sql":"ALTER TABLE seclabel_tbl1 OWNER TO regress_seclabel_user1"}
+{"sql":"ALTER TABLE seclabel_tbl2 OWNER TO regress_seclabel_user2"}
+{"sql":"SECURITY LABEL ON TABLE seclabel_tbl1 IS 'classified'"}
+{"sql":"SECURITY LABEL FOR 'dummy' ON TABLE seclabel_tbl1 IS 'classified'"}
+{"sql":"SECURITY LABEL ON TABLE seclabel_tbl1 IS '...invalid label...'"}
+{"sql":"SECURITY LABEL ON TABLE seclabel_tbl3 IS 'unclassified'"}
+{"sql":"SECURITY LABEL ON ROLE regress_seclabel_user1 IS 'classified'"}
+{"sql":"SECURITY LABEL FOR 'dummy' ON ROLE regress_seclabel_user1 IS 'classified'"}
+{"sql":"SECURITY LABEL ON ROLE regress_seclabel_user1 IS '...invalid label...'"}
+{"sql":"SECURITY LABEL ON ROLE regress_seclabel_user3 IS 'unclassified'"}
+{"sql":"DROP FUNCTION seclabel_four()"}
+{"sql":"DROP DOMAIN seclabel_domain","shape":"DROP DOMAIN seclabel_domain;"}
+{"sql":"DROP VIEW seclabel_view1","shape":"DROP VIEW seclabel_view1;"}
+{"sql":"DROP TABLE seclabel_tbl1","shape":"DROP TABLE seclabel_tbl1;"}
+{"sql":"DROP TABLE seclabel_tbl2","shape":"DROP TABLE seclabel_tbl2;"}
+{"sql":"DROP USER regress_seclabel_user1","shape":"DROP USER regress_seclabel_user1;"}
+{"sql":"DROP USER regress_seclabel_user2","shape":"DROP USER regress_seclabel_user2;"}

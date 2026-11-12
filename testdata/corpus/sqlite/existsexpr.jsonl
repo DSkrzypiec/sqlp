@@ -1,0 +1,57 @@
+{"sql":"CREATE TABLE x1(a, b, PRIMARY KEY(a)) WITHOUT ROWID"}
+{"sql":"INSERT INTO x1 VALUES(1, 2), (3, 4), (5, 6)"}
+{"sql":"CREATE INDEX x1b ON x1(b)"}
+{"sql":"CREATE TABLE x2(x, y)"}
+{"sql":"INSERT INTO x2 VALUES(1, 2), (3, 4), (5, 6)"}
+{"sql":"SELECT 1 WHERE EXISTS (SELECT 1 FROM x1 WHERE a=5)"}
+{"sql":"SELECT * FROM x2 WHERE EXISTS (SELECT 1 FROM x1 WHERE a=x)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM x2 WHERE EXISTS (SELECT 1 FROM x1 WHERE a=x)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM x2 WHERE EXISTS (SELECT 1 FROM x1 WHERE b=x)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM x2 WHERE x=1 AND EXISTS (SELECT 1 FROM x1 WHERE a=x)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM x2 WHERE EXISTS (SELECT 1 FROM x1 WHERE a=x) AND y=2"}
+{"sql":"SELECT count(*) FROM x2 WHERE EXISTS (SELECT 1 FROM x1 WHERE a=x)"}
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<1000\n  ) INSERT INTO t1 SELECT i, i FROM s"}
+{"sql":"WITH s(i) AS (\n    SELECT 10 UNION ALL SELECT i+10 FROM s WHERE i<1000\n  ) INSERT INTO t2 SELECT i, i FROM s"}
+{"sql":"SELECT count(*) FROM t1, t2 WHERE a=c"}
+{"sql":"SELECT count(*) FROM t1 WHERE EXISTS (SELECT 1 FROM t2 WHERE c=a)"}
+{"sql":"CREATE UNIQUE INDEX t2c ON t2(c)"}
+{"sql":"CREATE UNIQUE INDEX t1a ON t1(a)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT count(*) FROM t1 WHERE EXISTS (SELECT 1 FROM t2 WHERE t2.rowid=a)"}
+{"sql":"CREATE TABLE y1(a, b, c)"}
+{"sql":"CREATE TABLE y2(x, y, z)"}
+{"sql":"CREATE UNIQUE INDEX y2zy ON y2(z, y)"}
+{"sql":"INSERT INTO y1 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO y1 VALUES(2, 2, 2)"}
+{"sql":"INSERT INTO y1 VALUES(3, 3, 3)"}
+{"sql":"INSERT INTO y1 VALUES(4, 4, 4)"}
+{"sql":"INSERT INTO y2 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO y2 VALUES(3, 3, 3)"}
+{"sql":"CREATE TABLE tx1(a TEXT COLLATE nocase, b TEXT)"}
+{"sql":"CREATE UNIQUE INDEX tx1ab ON tx1(a, b)"}
+{"sql":"INSERT INTO tx1 VALUES('a', 'a')"}
+{"sql":"INSERT INTO tx1 VALUES('B', 'b')"}
+{"sql":"INSERT INTO tx1 VALUES('c', 'c')"}
+{"sql":"INSERT INTO tx1 VALUES('D', 'd')"}
+{"sql":"INSERT INTO tx1 VALUES('e', 'e')"}
+{"sql":"CREATE TABLE tx2(x, y)"}
+{"sql":"INSERT INTO tx2 VALUES('A', 'a')"}
+{"sql":"INSERT INTO tx2 VALUES('b', 'b')"}
+{"sql":"INSERT INTO tx2 VALUES('C', 'c')"}
+{"sql":"INSERT INTO tx2 VALUES('D', 'd')"}
+{"sql":"DROP INDEX tx1ab"}
+{"sql":"CREATE UNIQUE INDEX tx1ab ON tx1(a COLLATE binary, b)"}
+{"sql":"CREATE TABLE a2(o)"}
+{"sql":"INSERT INTO a2 VALUES(2), (5)"}
+{"sql":"CREATE TABLE t1(a, b UNIQUE, c UNIQUE)"}
+{"sql":"CREATE TABLE t2(a INfEGER PRIMARY KEY, b)"}
+{"sql":"CREATE UNIQUE INDEX t2b ON t2(b)"}
+{"sql":"SELECT a FROM t1 WHERE EXISTS (SELECT 1 FROM t2 WHERE c COLLATE f = a)"}
+{"sql":"CREATE TABLE t2(y UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(1), (2)"}
+{"sql":"INSERT INTO t2 VALUES(1), (3)"}
+{"sql":"SELECT * FROM t1 one LEFT JOIN t1 two ON (one.x=two.x AND EXISTS (\n    SELECT 1 FROM t2 WHERE y=one.x\n  ))"}
+{"sql":"CREATE TABLE t0 (c0 INT)"}
+{"sql":"INSERT INTO t0(c0) VALUES (1)"}
+{"sql":"CREATE TABLE t1(c0 INT)"}
+{"sql":"INSERT INTO t1(c0) VALUES (2)"}
+{"sql":"SELECT * FROM t1 WHERE EXISTS (SELECT 1 FROM t0 LIMIT 0)"}

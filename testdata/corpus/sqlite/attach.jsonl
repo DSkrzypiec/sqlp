@@ -1,0 +1,131 @@
+{"sql":"CREATE TABLE t2(x,y)"}
+{"sql":"INSERT INTO t2 VALUES(1,'x')"}
+{"sql":"INSERT INTO t2 VALUES(2,'y')"}
+{"sql":"ATTACH DATABASE 'test2.db' AS two"}
+{"sql":"SELECT * FROM two.t2"}
+{"sql":"DETACH DATABASE two"}
+{"sql":"ATTACH DATABASE 'test3.db' AS three"}
+{"sql":"SELECT * FROM three.sqlite_master"}
+{"sql":"DETACH DATABASE [three]"}
+{"sql":"ATTACH 'test.db' AS db2"}
+{"sql":"ATTACH 'test.db' AS db3"}
+{"sql":"ATTACH 'test.db' AS db4"}
+{"sql":"ATTACH 'test.db' AS db5"}
+{"sql":"ATTACH 'test.db' AS db6"}
+{"sql":"ATTACH 'test.db' AS db7"}
+{"sql":"ATTACH 'test.db' AS db8"}
+{"sql":"ATTACH 'test.db' AS db9"}
+{"sql":"PRAGMA database_list"}
+{"sql":"ATTACH 'test.db' as db2"}
+{"sql":"ATTACH 'test.db' as db5"}
+{"sql":"ATTACH 'test.db' as db9"}
+{"sql":"ATTACH 'test.db' as main"}
+{"sql":"ATTACH 'test.db' as temp"}
+{"sql":"ATTACH 'test.db' as MAIN"}
+{"sql":"ATTACH 'test.db' as db10"}
+{"sql":"ATTACH 'test.db' as db11"}
+{"sql":"ATTACH 'test.db' as db12"}
+{"sql":"DETACH db5"}
+{"sql":"select * from temp.sqlite_master"}
+{"sql":"ATTACH 'test.db' as db13"}
+{"sql":"DETACH \"db14\""}
+{"sql":"DETACH db12"}
+{"sql":"DETACH main"}
+{"sql":"DETACH Temp"}
+{"sql":"DETACH db11"}
+{"sql":"DETACH db10"}
+{"sql":"DETACH db9"}
+{"sql":"DETACH db8"}
+{"sql":"DETACH db7"}
+{"sql":"DETACH db6"}
+{"sql":"DETACH db4"}
+{"sql":"DETACH db3"}
+{"sql":"DETACH db2"}
+{"sql":"CREATE TABLE tx(x1,x2,y1,y2)"}
+{"sql":"CREATE TRIGGER r1 AFTER UPDATE ON t2 FOR EACH ROW BEGIN\n      INSERT INTO tx(x1,x2,y1,y2) VALUES(OLD.x,NEW.x,OLD.y,NEW.y);\n    END"}
+{"sql":"SELECT * FROM tx"}
+{"sql":"UPDATE t2 SET x=x+10"}
+{"sql":"ATTACH 'test2.db' AS db2"}
+{"sql":"UPDATE db2.t2 SET x=x+10"}
+{"sql":"SELECT * FROM db2.tx"}
+{"sql":"SELECT * FROM main.tx"}
+{"sql":"SELECT type, name, tbl_name FROM db2.sqlite_master"}
+{"sql":"SELECT * FROM t2 WHERE x>5"}
+{"sql":"SELECT type, name, tbl_name FROM sqlite_master"}
+{"sql":"#    SELECT * FROM t2 WHERE x>5","reject":true}
+{"sql":"ATTACH DATABASE 'test2.db' AS db2"}
+{"sql":"UPDATE t2 SET x=x+1 WHERE x=50"}
+{"sql":"UPDATE t2 SET x=0 WHERE 0"}
+{"sql":"UPDATE t1 SET a=a+1"}
+{"sql":"CREATE TABLE t3(x,y)"}
+{"sql":"CREATE UNIQUE INDEX t3i1 ON t3(x)"}
+{"sql":"INSERT INTO t3 VALUES(1,2)"}
+{"sql":"CREATE TABLE t3(a,b)"}
+{"sql":"CREATE UNIQUE INDEX t3i1b ON t3(a)"}
+{"sql":"INSERT INTO t3 VALUES(9,10)"}
+{"sql":"SELECT * FROM db2.t3"}
+{"sql":"SELECT * FROM main.t3"}
+{"sql":"INSERT INTO db2.t3 VALUES(9,10)"}
+{"sql":"CREATE TABLE t4(x)"}
+{"sql":"CREATE TRIGGER t3r3 AFTER INSERT ON t3 BEGIN\n        INSERT INTO t4 VALUES('db2.' || NEW.x);\n      END"}
+{"sql":"INSERT INTO t3 VALUES(6,7)"}
+{"sql":"CREATE TABLE t4(y)"}
+{"sql":"CREATE TRIGGER t3r3 AFTER INSERT ON t3 BEGIN\n        INSERT INTO t4 VALUES('main.' || NEW.a);\n      END"}
+{"sql":"INSERT INTO main.t3 VALUES(11,12)"}
+{"sql":"SELECT * FROM main.t4"}
+{"sql":"INSERT INTO t4 VALUES('db2.6')"}
+{"sql":"INSERT INTO t4 VALUES('db2.13')"}
+{"sql":"INSERT INTO t4 VALUES('main.11')"}
+{"sql":"INSERT INTO db2.t3 VALUES(13,14)"}
+{"sql":"SELECT * FROM db2.t4 UNION ALL SELECT * FROM main.t4"}
+{"sql":"INSERT INTO main.t4 VALUES('main.15')"}
+{"sql":"INSERT INTO main.t3 VALUES(15,16)"}
+{"sql":"DETACH DATABASE db2"}
+{"sql":"CREATE VIEW v3 AS SELECT x*100+y FROM t3"}
+{"sql":"CREATE VIEW v3 AS SELECT a*100+b FROM t3"}
+{"sql":"SELECT * FROM db2.v3"}
+{"sql":"SELECT * FROM main.v3"}
+{"sql":"ATTACH DATABASE 'test.db' AS orig"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON orig.t1 BEGIN\n      SELECT 'no-op';\n    END"}
+{"sql":"CREATE TABLE t5(x,y)"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n      SELECT 'no-op';\n    END"}
+{"sql":"DROP TRIGGER r5"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n      SELECT 'no-op' FROM orig.t1;\n    END"}
+{"sql":"CREATE TEMP TABLE t6(p,q,r)"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        SELECT 'no-op' FROM temp.t6;\n      END"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        SELECT 'no-op' || (SELECT * FROM temp.t6);\n      END"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        SELECT 'no-op' FROM t1 WHERE x<(SELECT min(x) FROM temp.t6);\n      END"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        SELECT 'no-op' FROM t1 GROUP BY 1 HAVING x<(SELECT min(x) FROM temp.t6);\n      END"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        SELECT max(1,x,(SELECT min(x) FROM temp.t6)) FROM t1;\n      END"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        INSERT INTO t1 VALUES((SELECT min(x) FROM temp.t6),5);\n      END"}
+{"sql":"CREATE TRIGGER r5 AFTER INSERT ON t5 BEGIN\n        DELETE FROM t1 WHERE x<(SELECT min(x) FROM temp.t6);\n      END"}
+{"sql":"ATTACH DATABASE 'no-such-file' AS nosuch"}
+{"sql":"ATTACH DATABASE 'cannot-read' AS noread"}
+{"sql":"CREATE TABLE no_such_db.t1(a, b, c)"}
+{"sql":"DETACH RAISE ( IGNORE ) IN ( SELECT \"AAAAAA\" . * ORDER BY \n      REGISTER LIMIT \"AAAAAA\" . \"AAAAAA\" OFFSET RAISE ( IGNORE ) NOT NULL )"}
+{"sql":"ATTACH 'test2.db' AS t2"}
+{"sql":"ATTACH 'test4.db' AS aux1"}
+{"sql":"CREATE TABLE aux1.t1(a, b)"}
+{"sql":"INSERT INTO aux1.t1 VALUES(1, 2)"}
+{"sql":"ATTACH 'test4.db' AS aux2"}
+{"sql":"SELECT * FROM aux2.t1"}
+{"sql":"INSERT INTO aux1.t1 VALUES(3, 4)"}
+{"sql":"INSERT INTO aux2.t1 VALUES(5, 6)"}
+{"sql":"ATTACH '' AS noname"}
+{"sql":"ATTACH ':memory:' AS inmem"}
+{"sql":"CREATE TABLE noname.noname(x)"}
+{"sql":"CREATE TABLE inmem.inmem(y)"}
+{"sql":"CREATE TABLE main.main(z)"}
+{"sql":"SELECT name FROM noname.sqlite_master"}
+{"sql":"SELECT name FROM inmem.sqlite_master"}
+{"sql":"ATTACH printf('file:%09000x/x.db?mode=memory&cache=shared',1) AS aux1"}
+{"sql":"CREATE TABLE aux1.t1(x,y)"}
+{"sql":"INSERT INTO aux1.t1(x,y) VALUES(1,2),(3,4)"}
+{"sql":"SELECT * FROM aux1.t1"}
+{"sql":"CREATE TABLE Table1 (col TEXT NOT NULL PRIMARY KEY)"}
+{"sql":"ATTACH ':memory:' AS db2"}
+{"sql":"CREATE TABLE db2.Table2(col1 INTEGER, col2 INTEGER, col3 INTEGER, col4)"}
+{"sql":"CREATE UNIQUE INDEX db2.idx_col1_unique ON Table2 (col1)"}
+{"sql":"CREATE UNIQUE INDEX db2.idx_col23_unique ON Table2 (col2, col3)"}
+{"sql":"CREATE INDEX db2.idx_col2 ON Table2 (col2)"}
+{"sql":"INSERT INTO Table2 VALUES(1,2,3,4)"}

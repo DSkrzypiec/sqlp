@@ -1,0 +1,33 @@
+{"sql":"CREATE TABLE t1(a TEXT COLLATE nocase)"}
+{"sql":"INSERT INTO t1 VALUES('BBB')"}
+{"sql":"INSERT INTO t1 VALUES('ccc')"}
+{"sql":"INSERT INTO t1 VALUES('DDD')"}
+{"sql":"SELECT a FROM t1 ORDER BY a"}
+{"sql":"SELECT rowid FROM t1 WHERE a<'ccc' ORDER BY 1"}
+{"sql":"SELECT rowid FROM t1 WHERE a<'ccc' COLLATE binary ORDER BY 1"}
+{"sql":"SELECT rowid FROM t1 WHERE +a<'ccc' ORDER BY 1"}
+{"sql":"SELECT a FROM t1 ORDER BY +a"}
+{"sql":"SELECT a AS x FROM t1 ORDER BY \"x\""}
+{"sql":"SELECT a AS x FROM t1 WHERE x<'ccc' ORDER BY 1"}
+{"sql":"SELECT a AS x FROM t1 WHERE x<'ccc' COLLATE binary ORDER BY [x]"}
+{"sql":"SELECT a AS x FROM t1 WHERE +x<'ccc' ORDER BY 1"}
+{"sql":"SELECT a AS x FROM t1 ORDER BY +x"}
+{"sql":"INSERT INTO t2 VALUES('abc')"}
+{"sql":"INSERT INTO t2 VALUES('ABC')"}
+{"sql":"SELECT a AS x FROM t2 WHERE x='abc'"}
+{"sql":"SELECT a AS x FROM t2 WHERE x='abc' COLLATE nocase"}
+{"sql":"SELECT a AS x FROM t2 WHERE (x COLLATE nocase)='abc'"}
+{"sql":"SELECT a COLLATE nocase AS x FROM t2 WHERE x='abc'"}
+{"sql":"SELECT a COLLATE nocase AS x FROM t2 WHERE (x COLLATE binary)='abc'"}
+{"sql":"SELECT a COLLATE nocase AS x FROM t2 WHERE x='abc' COLLATE binary"}
+{"sql":"SELECT * FROM t2 WHERE (a COLLATE nocase)='abc' COLLATE binary"}
+{"sql":"SELECT a COLLATE nocase AS x FROM t2 WHERE 'abc'=x COLLATE binary"}
+{"sql":"SELECT 'abc'==('ABC'||'') COLLATE nocase"}
+{"sql":"SELECT 'abc'==('ABC'||'' COLLATE nocase)"}
+{"sql":"SELECT 'abc'==('ABC'||('' COLLATE nocase))"}
+{"sql":"SELECT 'abc'==('ABC'||upper('' COLLATE nocase))"}
+{"sql":"SELECT 'abc'==('ABC'||max('' COLLATE nocase,'' COLLATE binary))"}
+{"sql":"SELECT 'abc'==('ABC'||max('' COLLATE binary,'' COLLATE nocase))"}
+{"sql":"SELECT 'abc'==('ABC'||CASE WHEN 1-1=2 THEN '' COLLATE nocase\n                                        ELSE '' COLLATE binary END)"}
+{"sql":"SELECT 'abc'==('ABC'||CASE WHEN 1+1=2 THEN '' COLLATE nocase\n                                        ELSE '' COLLATE binary END)"}
+{"sql":"SELECT 'abc'==('ABC'||CASE WHEN 1=2 THEN '' COLLATE binary\n                                      ELSE '' COLLATE nocase END)"}

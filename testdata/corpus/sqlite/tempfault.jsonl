@@ -1,0 +1,4 @@
+{"sql":"UPDATE t1 SET a = randomblob(99)"}
+{"sql":"WITH x(i) AS (SELECT 1 UNION ALL SELECT i+1 FROM x WHERE i<100)\n          INSERT INTO t1 SELECT randomblob(100), randomblob(100) FROM x"}
+{"sql":"UPDATE t1 SET a = randomblob(98) WHERE (rowid%10)==0"}
+{"sql":"UPDATE t1 SET a = randomblob(97) WHERE (rowid%5)==0"}

@@ -1,0 +1,27 @@
+{"sql":"%QUERY%","reject":true}
+{"sql":"CREATE VIRTUAL TABLE t1 USING tcl('vtab_cmd')"}
+{"sql":"CREATE TABLE t1x(a INTEGER, b TEXT, c REAL)"}
+{"sql":"INSERT INTO t1x VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO t1x VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO t1x VALUES(7, 8, 9)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING tcl('vtab_simple')"}
+{"sql":"CREATE TABLE t2x(x INTEGER)"}
+{"sql":"DELETE FROM t1x"}
+{"sql":"INSERT INTO t1x VALUES('a', 'b', 'c')"}
+{"sql":"SELECT * FROM t1 WHERE (a, b) != ('a', 'b')"}
+{"sql":"SELECT * FROM t1 WHERE (a, b) != (7, '8')"}
+{"sql":"SELECT * FROM t1 WHERE a!=7 OR b!='8'"}
+{"sql":"CREATE TABLE t3(a INTEGER, b TEXT)"}
+{"sql":"INSERT INTO t3 VALUES(45, 46)"}
+{"sql":"SELECT * FROM t3 WHERE (a, b) != (45, 46)"}
+{"sql":"SELECT * FROM t3 WHERE (a, b) != ('45', '46')"}
+{"sql":"SELECT * FROM t3 WHERE (a, b) == (45, 46)"}
+{"sql":"SELECT * FROM t3 WHERE (a, b) == ('45', '46')"}
+{"sql":"CREATE TABLE t4x(a INTEGER)"}
+{"sql":"INSERT INTO t4x VALUES(245)"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING tcl('vtab_simple_integer')"}
+{"sql":"SELECT rowid, * FROM t4 WHERE x=245"}
+{"sql":"SELECT rowid, * FROM t4 WHERE x='245'"}
+{"sql":"SELECT rowid, * FROM t4 WHERE x!=245"}
+{"sql":"SELECT rowid, * FROM t4 WHERE x!='245'"}
+{"sql":"SELECT rowid, * FROM t4 WHERE rowid!=1 OR x!='245'"}

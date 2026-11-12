@@ -1,0 +1,261 @@
+{"sql":"SET client_min_messages TO 'warning'","shape":"SET client_min_messages TO 'warning';"}
+{"sql":"DROP ROLE IF EXISTS regress_alter_generic_user1","shape":"DROP ROLE IF EXISTS regress_alter_generic_user1;"}
+{"sql":"DROP ROLE IF EXISTS regress_alter_generic_user2","shape":"DROP ROLE IF EXISTS regress_alter_generic_user2;"}
+{"sql":"DROP ROLE IF EXISTS regress_alter_generic_user3","shape":"DROP ROLE IF EXISTS regress_alter_generic_user3;"}
+{"sql":"RESET client_min_messages","shape":"RESET client_min_messages;"}
+{"sql":"CREATE USER regress_alter_generic_user3"}
+{"sql":"CREATE USER regress_alter_generic_user2"}
+{"sql":"CREATE USER regress_alter_generic_user1 IN ROLE regress_alter_generic_user3"}
+{"sql":"CREATE SCHEMA alt_nsp1","shape":"CREATE SCHEMA alt_nsp1;"}
+{"sql":"CREATE SCHEMA alt_nsp2","shape":"CREATE SCHEMA alt_nsp2;"}
+{"sql":"GRANT ALL ON SCHEMA alt_nsp1, alt_nsp2 TO public","shape":"GRANT ALL PRIVILEGES ON SCHEMA alt_nsp1, alt_nsp2 TO PUBLIC;"}
+{"sql":"SET search_path = alt_nsp1, public","shape":"SET search_path TO alt_nsp1, public;"}
+{"sql":"SET SESSION AUTHORIZATION regress_alter_generic_user1"}
+{"sql":"CREATE FUNCTION alt_func1(int) RETURNS int LANGUAGE sql\n  AS 'SELECT $1 + 1'","shape":"CREATE FUNCTION alt_func1(int) RETURNS int LANGUAGE sql AS 'SELECT $1 + 1';"}
+{"sql":"CREATE FUNCTION alt_func2(int) RETURNS int LANGUAGE sql\n  AS 'SELECT $1 - 1'","shape":"CREATE FUNCTION alt_func2(int) RETURNS int LANGUAGE sql AS 'SELECT $1 - 1';"}
+{"sql":"CREATE AGGREGATE alt_agg1 (\n  sfunc1 = int4pl, basetype = int4, stype1 = int4, initcond = 0\n)"}
+{"sql":"CREATE AGGREGATE alt_agg2 (\n  sfunc1 = int4mi, basetype = int4, stype1 = int4, initcond = 0\n)"}
+{"sql":"ALTER AGGREGATE alt_func1(int) RENAME TO alt_func3"}
+{"sql":"ALTER AGGREGATE alt_func1(int) OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER AGGREGATE alt_func1(int) SET SCHEMA alt_nsp2"}
+{"sql":"ALTER FUNCTION alt_func1(int) RENAME TO alt_func2"}
+{"sql":"ALTER FUNCTION alt_func1(int) RENAME TO alt_func3"}
+{"sql":"ALTER FUNCTION alt_func2(int) OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER FUNCTION alt_func2(int) OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER FUNCTION alt_func2(int) SET SCHEMA alt_nsp1"}
+{"sql":"ALTER FUNCTION alt_func2(int) SET SCHEMA alt_nsp2"}
+{"sql":"ALTER AGGREGATE alt_agg1(int) RENAME TO alt_agg2"}
+{"sql":"ALTER AGGREGATE alt_agg1(int) RENAME TO alt_agg3"}
+{"sql":"ALTER AGGREGATE alt_agg2(int) OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER AGGREGATE alt_agg2(int) OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER AGGREGATE alt_agg2(int) SET SCHEMA alt_nsp2"}
+{"sql":"SET SESSION AUTHORIZATION regress_alter_generic_user2"}
+{"sql":"CREATE FUNCTION alt_func1(int) RETURNS int LANGUAGE sql\n  AS 'SELECT $1 + 2'","shape":"CREATE FUNCTION alt_func1(int) RETURNS int LANGUAGE sql AS 'SELECT $1 + 2';"}
+{"sql":"CREATE FUNCTION alt_func2(int) RETURNS int LANGUAGE sql\n  AS 'SELECT $1 - 2'","shape":"CREATE FUNCTION alt_func2(int) RETURNS int LANGUAGE sql AS 'SELECT $1 - 2';"}
+{"sql":"CREATE AGGREGATE alt_agg1 (\n  sfunc1 = int4pl, basetype = int4, stype1 = int4, initcond = 100\n)"}
+{"sql":"CREATE AGGREGATE alt_agg2 (\n  sfunc1 = int4mi, basetype = int4, stype1 = int4, initcond = -100\n)"}
+{"sql":"ALTER FUNCTION alt_func3(int) RENAME TO alt_func4"}
+{"sql":"ALTER FUNCTION alt_func1(int) RENAME TO alt_func4"}
+{"sql":"ALTER FUNCTION alt_func3(int) OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER FUNCTION alt_func3(int) SET SCHEMA alt_nsp2"}
+{"sql":"ALTER AGGREGATE alt_agg3(int) RENAME TO alt_agg4"}
+{"sql":"ALTER AGGREGATE alt_agg1(int) RENAME TO alt_agg4"}
+{"sql":"ALTER AGGREGATE alt_agg3(int) OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER AGGREGATE alt_agg3(int) SET SCHEMA alt_nsp2"}
+{"sql":"RESET SESSION AUTHORIZATION","shape":"RESET session_authorization;"}
+{"sql":"SELECT n.nspname, proname, prorettype::regtype, prokind, a.rolname\n  FROM pg_proc p, pg_namespace n, pg_authid a\n  WHERE p.pronamespace = n.oid AND p.proowner = a.oid\n    AND n.nspname IN ('alt_nsp1', 'alt_nsp2')\n  ORDER BY nspname, proname","shape":"SELECT n.nspname, proname, prorettype::regtype, prokind, a.rolname FROM pg_proc AS p, pg_namespace AS n, pg_authid AS a WHERE ((p.pronamespace = n.oid) AND (p.proowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, proname;"}
+{"sql":"CREATE CONVERSION alt_conv1 FOR 'LATIN1' TO 'UTF8' FROM iso8859_1_to_utf8"}
+{"sql":"CREATE CONVERSION alt_conv2 FOR 'LATIN1' TO 'UTF8' FROM iso8859_1_to_utf8"}
+{"sql":"ALTER CONVERSION alt_conv1 RENAME TO alt_conv2"}
+{"sql":"ALTER CONVERSION alt_conv1 RENAME TO alt_conv3"}
+{"sql":"ALTER CONVERSION alt_conv2 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER CONVERSION alt_conv2 OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER CONVERSION alt_conv2 SET SCHEMA alt_nsp2"}
+{"sql":"ALTER CONVERSION alt_conv3 RENAME TO alt_conv4"}
+{"sql":"ALTER CONVERSION alt_conv1 RENAME TO alt_conv4"}
+{"sql":"ALTER CONVERSION alt_conv3 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER CONVERSION alt_conv3 SET SCHEMA alt_nsp2"}
+{"sql":"SELECT n.nspname, c.conname, a.rolname\n  FROM pg_conversion c, pg_namespace n, pg_authid a\n  WHERE c.connamespace = n.oid AND c.conowner = a.oid\n    AND n.nspname IN ('alt_nsp1', 'alt_nsp2')\n  ORDER BY nspname, conname","shape":"SELECT n.nspname, c.conname, a.rolname FROM pg_conversion AS c, pg_namespace AS n, pg_authid AS a WHERE ((c.connamespace = n.oid) AND (c.conowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, conname;"}
+{"sql":"CREATE FOREIGN DATA WRAPPER alt_fdw1"}
+{"sql":"CREATE FOREIGN DATA WRAPPER alt_fdw2"}
+{"sql":"CREATE SERVER alt_fserv1 FOREIGN DATA WRAPPER alt_fdw1"}
+{"sql":"CREATE SERVER alt_fserv2 FOREIGN DATA WRAPPER alt_fdw2"}
+{"sql":"ALTER FOREIGN DATA WRAPPER alt_fdw1 RENAME TO alt_fdw2"}
+{"sql":"ALTER FOREIGN DATA WRAPPER alt_fdw1 RENAME TO alt_fdw3"}
+{"sql":"ALTER SERVER alt_fserv1 RENAME TO alt_fserv2"}
+{"sql":"ALTER SERVER alt_fserv1 RENAME TO alt_fserv3"}
+{"sql":"SELECT fdwname FROM pg_foreign_data_wrapper WHERE fdwname like 'alt_fdw%'","shape":"SELECT fdwname FROM pg_foreign_data_wrapper WHERE fdwname LIKE 'alt_fdw%';"}
+{"sql":"SELECT srvname FROM pg_foreign_server WHERE srvname like 'alt_fserv%'","shape":"SELECT srvname FROM pg_foreign_server WHERE srvname LIKE 'alt_fserv%';"}
+{"sql":"CREATE LANGUAGE alt_lang1 HANDLER plpgsql_call_handler"}
+{"sql":"CREATE LANGUAGE alt_lang2 HANDLER plpgsql_call_handler"}
+{"sql":"ALTER LANGUAGE alt_lang1 OWNER TO regress_alter_generic_user1"}
+{"sql":"ALTER LANGUAGE alt_lang2 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER LANGUAGE alt_lang1 RENAME TO alt_lang2"}
+{"sql":"ALTER LANGUAGE alt_lang2 RENAME TO alt_lang3"}
+{"sql":"ALTER LANGUAGE alt_lang1 RENAME TO alt_lang3"}
+{"sql":"ALTER LANGUAGE alt_lang2 OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER LANGUAGE alt_lang3 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER LANGUAGE alt_lang3 OWNER TO regress_alter_generic_user3"}
+{"sql":"SELECT lanname, a.rolname\n  FROM pg_language l, pg_authid a\n  WHERE l.lanowner = a.oid AND l.lanname like 'alt_lang%'\n  ORDER BY lanname","shape":"SELECT lanname, a.rolname FROM pg_language AS l, pg_authid AS a WHERE (l.lanowner = a.oid) AND (l.lanname LIKE 'alt_lang%') ORDER BY lanname;"}
+{"sql":"CREATE OPERATOR @-@ ( leftarg = int4, rightarg = int4, procedure = int4mi )"}
+{"sql":"CREATE OPERATOR @+@ ( leftarg = int4, rightarg = int4, procedure = int4pl )"}
+{"sql":"ALTER OPERATOR @+@(int4, int4) OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER OPERATOR @+@(int4, int4) OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER OPERATOR @-@(int4, int4) SET SCHEMA alt_nsp2"}
+{"sql":"ALTER OPERATOR @-@(int4, int4) OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER OPERATOR @+@(int4, int4) SET SCHEMA alt_nsp2"}
+{"sql":"SELECT n.nspname, oprname, a.rolname,\n    oprleft::regtype, oprright::regtype, oprcode::regproc\n  FROM pg_operator o, pg_namespace n, pg_authid a\n  WHERE o.oprnamespace = n.oid AND o.oprowner = a.oid\n    AND n.nspname IN ('alt_nsp1', 'alt_nsp2')\n  ORDER BY nspname, oprname","shape":"SELECT n.nspname, oprname, a.rolname, oprleft::regtype, oprright::regtype, oprcode::regproc FROM pg_operator AS o, pg_namespace AS n, pg_authid AS a WHERE ((o.oprnamespace = n.oid) AND (o.oprowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, oprname;"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf1 USING hash"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf2 USING hash"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf1 USING hash OWNER TO regress_alter_generic_user1"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf2 USING hash OWNER TO regress_alter_generic_user1"}
+{"sql":"CREATE OPERATOR CLASS alt_opc1 FOR TYPE uuid USING hash AS STORAGE uuid"}
+{"sql":"CREATE OPERATOR CLASS alt_opc2 FOR TYPE uuid USING hash AS STORAGE uuid"}
+{"sql":"ALTER OPERATOR CLASS alt_opc1 USING hash OWNER TO regress_alter_generic_user1"}
+{"sql":"ALTER OPERATOR CLASS alt_opc2 USING hash OWNER TO regress_alter_generic_user1"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf1 USING hash RENAME TO alt_opf2"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf1 USING hash RENAME TO alt_opf3"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf2 USING hash OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf2 USING hash OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf2 USING hash SET SCHEMA alt_nsp2"}
+{"sql":"ALTER OPERATOR CLASS alt_opc1 USING hash RENAME TO alt_opc2"}
+{"sql":"ALTER OPERATOR CLASS alt_opc1 USING hash RENAME TO alt_opc3"}
+{"sql":"ALTER OPERATOR CLASS alt_opc2 USING hash OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER OPERATOR CLASS alt_opc2 USING hash OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER OPERATOR CLASS alt_opc2 USING hash SET SCHEMA alt_nsp2"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf1 USING hash OWNER TO regress_alter_generic_user2"}
+{"sql":"CREATE OPERATOR CLASS alt_opc1 FOR TYPE macaddr USING hash AS STORAGE macaddr"}
+{"sql":"CREATE OPERATOR CLASS alt_opc2 FOR TYPE macaddr USING hash AS STORAGE macaddr"}
+{"sql":"ALTER OPERATOR CLASS alt_opc1 USING hash OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf3 USING hash RENAME TO alt_opf4"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf1 USING hash RENAME TO alt_opf4"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf3 USING hash OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf3 USING hash SET SCHEMA alt_nsp2"}
+{"sql":"ALTER OPERATOR CLASS alt_opc3 USING hash RENAME TO alt_opc4"}
+{"sql":"ALTER OPERATOR CLASS alt_opc1 USING hash RENAME TO alt_opc4"}
+{"sql":"ALTER OPERATOR CLASS alt_opc3 USING hash OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER OPERATOR CLASS alt_opc3 USING hash SET SCHEMA alt_nsp2"}
+{"sql":"SELECT nspname, opfname, amname, rolname\n  FROM pg_opfamily o, pg_am m, pg_namespace n, pg_authid a\n  WHERE o.opfmethod = m.oid AND o.opfnamespace = n.oid AND o.opfowner = a.oid\n    AND n.nspname IN ('alt_nsp1', 'alt_nsp2')\n\tAND NOT opfname LIKE 'alt_opc%'\n  ORDER BY nspname, opfname","shape":"SELECT nspname, opfname, amname, rolname FROM pg_opfamily AS o, pg_am AS m, pg_namespace AS n, pg_authid AS a WHERE ((((o.opfmethod = m.oid) AND (o.opfnamespace = n.oid)) AND (o.opfowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2'))) AND (NOT (opfname LIKE 'alt_opc%')) ORDER BY nspname, opfname;"}
+{"sql":"SELECT nspname, opcname, amname, rolname\n  FROM pg_opclass o, pg_am m, pg_namespace n, pg_authid a\n  WHERE o.opcmethod = m.oid AND o.opcnamespace = n.oid AND o.opcowner = a.oid\n    AND n.nspname IN ('alt_nsp1', 'alt_nsp2')\n  ORDER BY nspname, opcname","shape":"SELECT nspname, opcname, amname, rolname FROM pg_opclass AS o, pg_am AS m, pg_namespace AS n, pg_authid AS a WHERE (((o.opcmethod = m.oid) AND (o.opcnamespace = n.oid)) AND (o.opcowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, opcname;"}
+{"sql":"BEGIN TRANSACTION","shape":"BEGIN;"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf4 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD\n  -- int4 vs int2\n  OPERATOR 1 < (int4, int2) ,\n  OPERATOR 2 <= (int4, int2) ,\n  OPERATOR 3 = (int4, int2) ,\n  OPERATOR 4 >= (int4, int2) ,\n  OPERATOR 5 > (int4, int2) ,\n  FUNCTION 1 btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree DROP\n  -- int4 vs int2\n  OPERATOR 1 (int4, int2) ,\n  OPERATOR 2 (int4, int2) ,\n  OPERATOR 3 (int4, int2) ,\n  OPERATOR 4 (int4, int2) ,\n  OPERATOR 5 (int4, int2) ,\n  FUNCTION 1 (int4, int2)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf4 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING invalid_index_method ADD  OPERATOR 1 < (int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD OPERATOR 6 < (int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD OPERATOR 0 < (int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD OPERATOR 1 <"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD FUNCTION 0 btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD FUNCTION 6 btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf4 USING btree ADD STORAGE invalid_storage"}
+{"sql":"CREATE ROLE regress_alter_generic_user5 NOSUPERUSER"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf5 USING btree"}
+{"sql":"SET ROLE regress_alter_generic_user5"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf5 USING btree ADD OPERATOR 1 < (int4, int2), FUNCTION 1 btint42cmp(int4, int2)"}
+{"sql":"RESET ROLE","shape":"RESET ROLE;"}
+{"sql":"DROP OPERATOR FAMILY alt_opf5 USING btree"}
+{"sql":"CREATE ROLE regress_alter_generic_user6"}
+{"sql":"CREATE SCHEMA alt_nsp6","shape":"CREATE SCHEMA alt_nsp6;"}
+{"sql":"REVOKE ALL ON SCHEMA alt_nsp6 FROM regress_alter_generic_user6","shape":"REVOKE ALL PRIVILEGES ON SCHEMA alt_nsp6 FROM regress_alter_generic_user6;"}
+{"sql":"CREATE OPERATOR FAMILY alt_nsp6.alt_opf6 USING btree"}
+{"sql":"SET ROLE regress_alter_generic_user6"}
+{"sql":"ALTER OPERATOR FAMILY alt_nsp6.alt_opf6 USING btree ADD OPERATOR 1 < (int4, int2)"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf7 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf7 USING btree ADD OPERATOR 1 < (int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf7 USING btree DROP OPERATOR 1 (int4, int2, int8)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf7 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf8 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf8 USING btree ADD OPERATOR 1 < (int4, int4)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf8 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf9 USING gist"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf9 USING gist ADD OPERATOR 1 < (int4, int4) FOR ORDER BY float_ops"}
+{"sql":"DROP OPERATOR FAMILY alt_opf9 USING gist"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf10 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf10 USING btree ADD OPERATOR 1 < (int4, int4) FOR ORDER BY float_ops"}
+{"sql":"DROP OPERATOR FAMILY alt_opf10 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf11 USING gist"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf11 USING gist ADD OPERATOR 1 < (int4, int4) FOR ORDER BY float_ops"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf11 USING gist DROP OPERATOR 1 (int4, int4)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf11 USING gist"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf12 USING btree"}
+{"sql":"CREATE FUNCTION fn_opf12  (int4, int2) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL","shape":"CREATE FUNCTION fn_opf12(int4, int2) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL;"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf12 USING btree ADD FUNCTION 1 fn_opf12(int4, int2)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf12 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf13 USING hash"}
+{"sql":"CREATE FUNCTION fn_opf13  (int4) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL","shape":"CREATE FUNCTION fn_opf13(int4) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL;"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf13 USING hash ADD FUNCTION 1 fn_opf13(int4)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf13 USING hash"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf14 USING btree"}
+{"sql":"CREATE FUNCTION fn_opf14 (int4) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL","shape":"CREATE FUNCTION fn_opf14(int4) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL;"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf14 USING btree ADD FUNCTION 1 fn_opf14(int4)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf14 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf15 USING hash"}
+{"sql":"CREATE FUNCTION fn_opf15 (int4, int2) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL","shape":"CREATE FUNCTION fn_opf15(int4, int2) RETURNS BIGINT AS 'SELECT NULL::BIGINT;' LANGUAGE SQL;"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf15 USING hash ADD FUNCTION 1 fn_opf15(int4, int2)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf15 USING hash"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf16 USING gist"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf16 USING gist ADD FUNCTION 1 btint42cmp(int4, int2)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf16 USING gist"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf17 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf17 USING btree ADD OPERATOR 1 < (int4, int4), OPERATOR 1 < (int4, int4)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf17 USING btree ADD OPERATOR 1 < (int4, int4)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf17 USING btree ADD\n  OPERATOR 1 < (int4, int2) ,\n  OPERATOR 2 <= (int4, int2) ,\n  OPERATOR 3 = (int4, int2) ,\n  OPERATOR 4 >= (int4, int2) ,\n  OPERATOR 5 > (int4, int2) ,\n  FUNCTION 1 btint42cmp(int4, int2) ,\n  FUNCTION 1 btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf17 USING btree ADD\n  OPERATOR 1 < (int4, int2) ,\n  OPERATOR 2 <= (int4, int2) ,\n  OPERATOR 3 = (int4, int2) ,\n  OPERATOR 4 >= (int4, int2) ,\n  OPERATOR 5 > (int4, int2) ,\n  FUNCTION 1 btint42cmp(int4, int2)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf17 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf18 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf18 USING btree DROP OPERATOR 1 (int4, int4)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf18 USING btree ADD\n  OPERATOR 1 < (int4, int2) ,\n  OPERATOR 2 <= (int4, int2) ,\n  OPERATOR 3 = (int4, int2) ,\n  OPERATOR 4 >= (int4, int2) ,\n  OPERATOR 5 > (int4, int2) ,\n  FUNCTION 1 btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf18 USING btree\n  ADD FUNCTION 4 (int4, int2) btequalimage(oid)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf18 USING btree DROP FUNCTION 2 (int4, int4)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf18 USING btree"}
+{"sql":"CREATE OPERATOR FAMILY alt_opf19 USING btree"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf19 USING btree ADD FUNCTION 5 test_opclass_options_func(internal, text[], bool)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf19 USING btree ADD FUNCTION 5 (int4) btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf19 USING btree ADD FUNCTION 5 (int4, int2) btint42cmp(int4, int2)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf19 USING btree ADD FUNCTION 5 (int4) test_opclass_options_func(internal)"}
+{"sql":"ALTER OPERATOR FAMILY alt_opf19 USING btree DROP FUNCTION 5 (int4, int4)"}
+{"sql":"DROP OPERATOR FAMILY alt_opf19 USING btree"}
+{"sql":"CREATE TABLE alt_regress_1 (a INTEGER, b INTEGER)","shape":"CREATE TABLE alt_regress_1 (a INTEGER, b INTEGER);"}
+{"sql":"CREATE STATISTICS alt_stat1 ON a, b FROM alt_regress_1"}
+{"sql":"CREATE STATISTICS alt_stat2 ON a, b FROM alt_regress_1"}
+{"sql":"ALTER STATISTICS alt_stat1 RENAME TO alt_stat2"}
+{"sql":"ALTER STATISTICS alt_stat1 RENAME TO alt_stat3"}
+{"sql":"ALTER STATISTICS alt_stat2 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER STATISTICS alt_stat2 OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER STATISTICS alt_stat2 SET SCHEMA alt_nsp2"}
+{"sql":"CREATE TABLE alt_regress_2 (a INTEGER, b INTEGER)","shape":"CREATE TABLE alt_regress_2 (a INTEGER, b INTEGER);"}
+{"sql":"CREATE STATISTICS alt_stat1 ON a, b FROM alt_regress_2"}
+{"sql":"CREATE STATISTICS alt_stat2 ON a, b FROM alt_regress_2"}
+{"sql":"ALTER STATISTICS alt_stat3 RENAME TO alt_stat4"}
+{"sql":"ALTER STATISTICS alt_stat1 RENAME TO alt_stat4"}
+{"sql":"ALTER STATISTICS alt_stat3 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER STATISTICS alt_stat3 SET SCHEMA alt_nsp2"}
+{"sql":"SELECT nspname, stxname, rolname\n  FROM pg_statistic_ext s, pg_namespace n, pg_authid a\n WHERE s.stxnamespace = n.oid AND s.stxowner = a.oid\n   AND n.nspname in ('alt_nsp1', 'alt_nsp2')\n ORDER BY nspname, stxname","shape":"SELECT nspname, stxname, rolname FROM pg_statistic_ext AS s, pg_namespace AS n, pg_authid AS a WHERE ((s.stxnamespace = n.oid) AND (s.stxowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, stxname;"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY alt_ts_dict1 (template=simple)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY alt_ts_dict2 (template=simple)"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict1 RENAME TO alt_ts_dict2"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict1 RENAME TO alt_ts_dict3"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict2 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict2 OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict2 SET SCHEMA alt_nsp2"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict3 RENAME TO alt_ts_dict4"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict1 RENAME TO alt_ts_dict4"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict3 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY alt_ts_dict3 SET SCHEMA alt_nsp2"}
+{"sql":"SELECT nspname, dictname, rolname\n  FROM pg_ts_dict t, pg_namespace n, pg_authid a\n  WHERE t.dictnamespace = n.oid AND t.dictowner = a.oid\n    AND n.nspname in ('alt_nsp1', 'alt_nsp2')\n  ORDER BY nspname, dictname","shape":"SELECT nspname, dictname, rolname FROM pg_ts_dict AS t, pg_namespace AS n, pg_authid AS a WHERE ((t.dictnamespace = n.oid) AND (t.dictowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, dictname;"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION alt_ts_conf1 (copy=english)"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION alt_ts_conf2 (copy=english)"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf1 RENAME TO alt_ts_conf2"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf1 RENAME TO alt_ts_conf3"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf2 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf2 OWNER TO regress_alter_generic_user3"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf2 SET SCHEMA alt_nsp2"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf3 RENAME TO alt_ts_conf4"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf1 RENAME TO alt_ts_conf4"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf3 OWNER TO regress_alter_generic_user2"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION alt_ts_conf3 SET SCHEMA alt_nsp2"}
+{"sql":"SELECT nspname, cfgname, rolname\n  FROM pg_ts_config t, pg_namespace n, pg_authid a\n  WHERE t.cfgnamespace = n.oid AND t.cfgowner = a.oid\n    AND n.nspname in ('alt_nsp1', 'alt_nsp2')\n  ORDER BY nspname, cfgname","shape":"SELECT nspname, cfgname, rolname FROM pg_ts_config AS t, pg_namespace AS n, pg_authid AS a WHERE ((t.cfgnamespace = n.oid) AND (t.cfgowner = a.oid)) AND (n.nspname IN ('alt_nsp1', 'alt_nsp2')) ORDER BY nspname, cfgname;"}
+{"sql":"CREATE TEXT SEARCH TEMPLATE alt_ts_temp1 (lexize=dsimple_lexize)"}
+{"sql":"CREATE TEXT SEARCH TEMPLATE alt_ts_temp2 (lexize=dsimple_lexize)"}
+{"sql":"ALTER TEXT SEARCH TEMPLATE alt_ts_temp1 RENAME TO alt_ts_temp2"}
+{"sql":"ALTER TEXT SEARCH TEMPLATE alt_ts_temp1 RENAME TO alt_ts_temp3"}
+{"sql":"ALTER TEXT SEARCH TEMPLATE alt_ts_temp2 SET SCHEMA alt_nsp2"}
+{"sql":"CREATE TEXT SEARCH TEMPLATE tstemp_case (\"Init\" = init_function)"}
+{"sql":"SELECT nspname, tmplname\n  FROM pg_ts_template t, pg_namespace n\n  WHERE t.tmplnamespace = n.oid AND nspname like 'alt_nsp%'\n  ORDER BY nspname, tmplname","shape":"SELECT nspname, tmplname FROM pg_ts_template AS t, pg_namespace AS n WHERE (t.tmplnamespace = n.oid) AND (nspname LIKE 'alt_nsp%') ORDER BY nspname, tmplname;"}
+{"sql":"CREATE TEXT SEARCH PARSER alt_ts_prs1\n    (start = prsd_start, gettoken = prsd_nexttoken, end = prsd_end, lextypes = prsd_lextype)"}
+{"sql":"CREATE TEXT SEARCH PARSER alt_ts_prs2\n    (start = prsd_start, gettoken = prsd_nexttoken, end = prsd_end, lextypes = prsd_lextype)"}
+{"sql":"ALTER TEXT SEARCH PARSER alt_ts_prs1 RENAME TO alt_ts_prs2"}
+{"sql":"ALTER TEXT SEARCH PARSER alt_ts_prs1 RENAME TO alt_ts_prs3"}
+{"sql":"ALTER TEXT SEARCH PARSER alt_ts_prs2 SET SCHEMA alt_nsp2"}
+{"sql":"CREATE TEXT SEARCH PARSER tspars_case (\"Start\" = start_function)"}
+{"sql":"SELECT nspname, prsname\n  FROM pg_ts_parser t, pg_namespace n\n  WHERE t.prsnamespace = n.oid AND nspname like 'alt_nsp%'\n  ORDER BY nspname, prsname","shape":"SELECT nspname, prsname FROM pg_ts_parser AS t, pg_namespace AS n WHERE (t.prsnamespace = n.oid) AND (nspname LIKE 'alt_nsp%') ORDER BY nspname, prsname;"}
+{"sql":"DROP FOREIGN DATA WRAPPER alt_fdw2 CASCADE"}
+{"sql":"DROP FOREIGN DATA WRAPPER alt_fdw3 CASCADE"}
+{"sql":"DROP LANGUAGE alt_lang2 CASCADE"}
+{"sql":"DROP LANGUAGE alt_lang3 CASCADE"}
+{"sql":"DROP SCHEMA alt_nsp1 CASCADE","shape":"DROP SCHEMA alt_nsp1 CASCADE;"}
+{"sql":"DROP SCHEMA alt_nsp2 CASCADE","shape":"DROP SCHEMA alt_nsp2 CASCADE;"}
+{"sql":"DROP USER regress_alter_generic_user1","shape":"DROP USER regress_alter_generic_user1;"}
+{"sql":"DROP USER regress_alter_generic_user2","shape":"DROP USER regress_alter_generic_user2;"}
+{"sql":"DROP USER regress_alter_generic_user3","shape":"DROP USER regress_alter_generic_user3;"}

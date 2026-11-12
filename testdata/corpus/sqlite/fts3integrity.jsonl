@@ -1,0 +1,5 @@
+{"sql":"INSERT INTO t1 VALUES('first row')"}
+{"sql":"INSERT INTO t1 VALUES('second row')"}
+{"sql":"INSERT INTO t2 VALUES('first row')"}
+{"sql":"INSERT INTO t2 VALUES('second row')"}
+{"sql":"CREATE TABLE t3(x, y)"}

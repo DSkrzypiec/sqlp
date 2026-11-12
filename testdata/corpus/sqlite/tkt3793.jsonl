@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES(randstr(50,50), randstr(50,50))"}
+{"sql":"INSERT INTO t1 SELECT randstr(50,50), randstr(50,50) FROM t1"}
+{"sql":"UPDATE t1 SET b = randstr(50,50)"}

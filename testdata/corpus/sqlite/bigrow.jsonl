@@ -1,0 +1,19 @@
+{"sql":"CREATE TABLE t1(a text, b text, c text)"}
+{"sql":"SELECT name FROM sqlite_master\n      WHERE type='table' OR type='index'\n      ORDER BY name"}
+{"sql":"SELECT a, c FROM t1"}
+{"sql":"SELECT b FROM t1"}
+{"sql":"SELECT b FROM t1 ORDER BY c"}
+{"sql":"SELECT c FROM t1 ORDER BY c"}
+{"sql":"DELETE FROM t1 WHERE a='abc2'"}
+{"sql":"SELECT c FROM t1"}
+{"sql":"UPDATE t1 SET a=b, b=a"}
+{"sql":"SELECT b,c FROM t1"}
+{"sql":"INSERT INTO t1 VALUES('1','2','3')"}
+{"sql":"INSERT INTO t1 VALUES('A','B','C')"}
+{"sql":"SELECT b FROM t1 WHERE a=='1'"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES('one','abcdefghijklmnopqrstuvwxyz0123','hi')"}
+{"sql":"SELECT a,length(b),c FROM t1"}
+{"sql":"UPDATE t1 SET b=b||b"}
+{"sql":"UPDATE t1 SET b=substr(b,1,65515)"}
+{"sql":"SELECT length(b) FROM t1"}
+{"sql":"SELECT content FROM docs"}

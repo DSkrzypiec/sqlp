@@ -1,0 +1,521 @@
+{"sql":"CREATE TABLE a (aa TEXT)","shape":"CREATE TABLE a (aa TEXT);"}
+{"sql":"CREATE TABLE b (bb TEXT) INHERITS (a)","shape":"CREATE TABLE b (bb TEXT) INHERITS (a);"}
+{"sql":"CREATE TABLE c (cc TEXT) INHERITS (a)","shape":"CREATE TABLE c (cc TEXT) INHERITS (a);"}
+{"sql":"CREATE TABLE d (dd TEXT) INHERITS (b,c,a)","shape":"CREATE TABLE d (dd TEXT) INHERITS (b, c, a);"}
+{"sql":"INSERT INTO a(aa) VALUES('aaa')","shape":"INSERT INTO a (aa) VALUES ('aaa');"}
+{"sql":"INSERT INTO a(aa) VALUES('aaaa')","shape":"INSERT INTO a (aa) VALUES ('aaaa');"}
+{"sql":"INSERT INTO a(aa) VALUES('aaaaa')","shape":"INSERT INTO a (aa) VALUES ('aaaaa');"}
+{"sql":"INSERT INTO a(aa) VALUES('aaaaaa')","shape":"INSERT INTO a (aa) VALUES ('aaaaaa');"}
+{"sql":"INSERT INTO a(aa) VALUES('aaaaaaa')","shape":"INSERT INTO a (aa) VALUES ('aaaaaaa');"}
+{"sql":"INSERT INTO a(aa) VALUES('aaaaaaaa')","shape":"INSERT INTO a (aa) VALUES ('aaaaaaaa');"}
+{"sql":"INSERT INTO b(aa) VALUES('bbb')","shape":"INSERT INTO b (aa) VALUES ('bbb');"}
+{"sql":"INSERT INTO b(aa) VALUES('bbbb')","shape":"INSERT INTO b (aa) VALUES ('bbbb');"}
+{"sql":"INSERT INTO b(aa) VALUES('bbbbb')","shape":"INSERT INTO b (aa) VALUES ('bbbbb');"}
+{"sql":"INSERT INTO b(aa) VALUES('bbbbbb')","shape":"INSERT INTO b (aa) VALUES ('bbbbbb');"}
+{"sql":"INSERT INTO b(aa) VALUES('bbbbbbb')","shape":"INSERT INTO b (aa) VALUES ('bbbbbbb');"}
+{"sql":"INSERT INTO b(aa) VALUES('bbbbbbbb')","shape":"INSERT INTO b (aa) VALUES ('bbbbbbbb');"}
+{"sql":"INSERT INTO c(aa) VALUES('ccc')","shape":"INSERT INTO c (aa) VALUES ('ccc');"}
+{"sql":"INSERT INTO c(aa) VALUES('cccc')","shape":"INSERT INTO c (aa) VALUES ('cccc');"}
+{"sql":"INSERT INTO c(aa) VALUES('ccccc')","shape":"INSERT INTO c (aa) VALUES ('ccccc');"}
+{"sql":"INSERT INTO c(aa) VALUES('cccccc')","shape":"INSERT INTO c (aa) VALUES ('cccccc');"}
+{"sql":"INSERT INTO c(aa) VALUES('ccccccc')","shape":"INSERT INTO c (aa) VALUES ('ccccccc');"}
+{"sql":"INSERT INTO c(aa) VALUES('cccccccc')","shape":"INSERT INTO c (aa) VALUES ('cccccccc');"}
+{"sql":"INSERT INTO d(aa) VALUES('ddd')","shape":"INSERT INTO d (aa) VALUES ('ddd');"}
+{"sql":"INSERT INTO d(aa) VALUES('dddd')","shape":"INSERT INTO d (aa) VALUES ('dddd');"}
+{"sql":"INSERT INTO d(aa) VALUES('ddddd')","shape":"INSERT INTO d (aa) VALUES ('ddddd');"}
+{"sql":"INSERT INTO d(aa) VALUES('dddddd')","shape":"INSERT INTO d (aa) VALUES ('dddddd');"}
+{"sql":"INSERT INTO d(aa) VALUES('ddddddd')","shape":"INSERT INTO d (aa) VALUES ('ddddddd');"}
+{"sql":"INSERT INTO d(aa) VALUES('dddddddd')","shape":"INSERT INTO d (aa) VALUES ('dddddddd');"}
+{"sql":"SELECT relname, a.* FROM a, pg_class where a.tableoid = pg_class.oid","shape":"SELECT relname, a.* FROM a, pg_class WHERE a.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, b.* FROM b, pg_class where b.tableoid = pg_class.oid","shape":"SELECT relname, b.* FROM b, pg_class WHERE b.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, c.* FROM c, pg_class where c.tableoid = pg_class.oid","shape":"SELECT relname, c.* FROM c, pg_class WHERE c.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, d.* FROM d, pg_class where d.tableoid = pg_class.oid","shape":"SELECT relname, d.* FROM d, pg_class WHERE d.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, a.* FROM ONLY a, pg_class where a.tableoid = pg_class.oid","shape":"SELECT relname, a.* FROM ONLY a, pg_class WHERE a.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, b.* FROM ONLY b, pg_class where b.tableoid = pg_class.oid","shape":"SELECT relname, b.* FROM ONLY b, pg_class WHERE b.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, c.* FROM ONLY c, pg_class where c.tableoid = pg_class.oid","shape":"SELECT relname, c.* FROM ONLY c, pg_class WHERE c.tableoid = pg_class.oid;"}
+{"sql":"SELECT relname, d.* FROM ONLY d, pg_class where d.tableoid = pg_class.oid","shape":"SELECT relname, d.* FROM ONLY d, pg_class WHERE d.tableoid = pg_class.oid;"}
+{"sql":"UPDATE a SET aa='zzzz' WHERE aa='aaaa'","shape":"UPDATE a SET aa = 'zzzz' WHERE aa = 'aaaa';"}
+{"sql":"UPDATE ONLY a SET aa='zzzzz' WHERE aa='aaaaa'","shape":"UPDATE ONLY a SET aa = 'zzzzz' WHERE aa = 'aaaaa';"}
+{"sql":"UPDATE b SET aa='zzz' WHERE aa='aaa'","shape":"UPDATE b SET aa = 'zzz' WHERE aa = 'aaa';"}
+{"sql":"UPDATE ONLY b SET aa='zzz' WHERE aa='aaa'","shape":"UPDATE ONLY b SET aa = 'zzz' WHERE aa = 'aaa';"}
+{"sql":"UPDATE a SET aa='zzzzzz' WHERE aa LIKE 'aaa%'","shape":"UPDATE a SET aa = 'zzzzzz' WHERE aa LIKE 'aaa%';"}
+{"sql":"UPDATE b SET aa='new'","shape":"UPDATE b SET aa = 'new';"}
+{"sql":"UPDATE a SET aa='new'","shape":"UPDATE a SET aa = 'new';"}
+{"sql":"DELETE FROM ONLY c WHERE aa='new'","shape":"DELETE FROM ONLY c WHERE aa = 'new';"}
+{"sql":"DELETE FROM a","shape":"DELETE FROM a;"}
+{"sql":"CREATE TEMP TABLE z (b TEXT, PRIMARY KEY(aa, b)) inherits (a)","shape":"CREATE TEMPORARY TABLE z (b TEXT, PRIMARY KEY (aa, b)) INHERITS (a);"}
+{"sql":"INSERT INTO z VALUES (NULL, 'text')","shape":"INSERT INTO z VALUES (NULL, 'text');"}
+{"sql":"create table some_tab (f1 int, f2 int, f3 int, check (f1 < 10) no inherit)","shape":"CREATE TABLE some_tab (f1 int, f2 int, f3 int, CHECK (f1 < 10) NO INHERIT);"}
+{"sql":"create table some_tab_child () inherits(some_tab)","shape":"CREATE TABLE some_tab_child () INHERITS (some_tab);"}
+{"sql":"insert into some_tab_child select i, i+1, 0 from generate_series(1,1000) i","shape":"INSERT INTO some_tab_child SELECT i, i + 1, 0 FROM generate_series(1, 1000) AS i;"}
+{"sql":"create index on some_tab_child(f1, f2)","shape":"CREATE INDEX ON some_tab_child (f1, f2);"}
+{"sql":"create function some_tab_stmt_trig_func() returns trigger as\n$$begin raise notice 'updating some_tab'; return NULL; end;$$\nlanguage plpgsql","shape":"CREATE FUNCTION some_tab_stmt_trig_func() RETURNS trigger AS 'begin raise notice ''updating some_tab''; return NULL; end;' LANGUAGE plpgsql;"}
+{"sql":"create trigger some_tab_stmt_trig\n  before update on some_tab execute function some_tab_stmt_trig_func()","shape":"CREATE TRIGGER some_tab_stmt_trig BEFORE UPDATE ON some_tab EXECUTE FUNCTION some_tab_stmt_trig_func();"}
+{"sql":"explain (costs off)\nupdate some_tab set f3 = 11 where f1 = 12 and f2 = 13","shape":"EXPLAIN (COSTS off) UPDATE some_tab SET f3 = 11 WHERE (f1 = 12) AND (f2 = 13);"}
+{"sql":"update some_tab set f3 = 11 where f1 = 12 and f2 = 13","shape":"UPDATE some_tab SET f3 = 11 WHERE (f1 = 12) AND (f2 = 13);"}
+{"sql":"drop table some_tab cascade","shape":"DROP TABLE some_tab CASCADE;"}
+{"sql":"drop function some_tab_stmt_trig_func()"}
+{"sql":"create table some_tab (a int, b int)","shape":"CREATE TABLE some_tab (a int, b int);"}
+{"sql":"create table some_tab_child () inherits (some_tab)","shape":"CREATE TABLE some_tab_child () INHERITS (some_tab);"}
+{"sql":"insert into some_tab_child values(1,2)","shape":"INSERT INTO some_tab_child VALUES (1, 2);"}
+{"sql":"explain (verbose, costs off)\nupdate some_tab set a = a + 1 where false","shape":"EXPLAIN (VERBOSE, COSTS off) UPDATE some_tab SET a = a + 1 WHERE FALSE;"}
+{"sql":"update some_tab set a = a + 1 where false","shape":"UPDATE some_tab SET a = a + 1 WHERE FALSE;"}
+{"sql":"explain (verbose, costs off)\nupdate some_tab set a = a + 1 where false returning b, a","shape":"EXPLAIN (VERBOSE, COSTS off) UPDATE some_tab SET a = a + 1 WHERE FALSE RETURNING b, a;"}
+{"sql":"update some_tab set a = a + 1 where false returning b, a","shape":"UPDATE some_tab SET a = a + 1 WHERE FALSE RETURNING b, a;"}
+{"sql":"table some_tab","shape":"TABLE some_tab;"}
+{"sql":"create temp table foo(f1 int, f2 int)","shape":"CREATE TEMPORARY TABLE foo (f1 int, f2 int);"}
+{"sql":"create temp table foo2(f3 int) inherits (foo)","shape":"CREATE TEMPORARY TABLE foo2 (f3 int) INHERITS (foo);"}
+{"sql":"create temp table bar(f1 int, f2 int)","shape":"CREATE TEMPORARY TABLE bar (f1 int, f2 int);"}
+{"sql":"create temp table bar2(f3 int) inherits (bar)","shape":"CREATE TEMPORARY TABLE bar2 (f3 int) INHERITS (bar);"}
+{"sql":"insert into foo values(1,1)","shape":"INSERT INTO foo VALUES (1, 1);"}
+{"sql":"insert into foo values(3,3)","shape":"INSERT INTO foo VALUES (3, 3);"}
+{"sql":"insert into foo2 values(2,2,2)","shape":"INSERT INTO foo2 VALUES (2, 2, 2);"}
+{"sql":"insert into foo2 values(3,3,3)","shape":"INSERT INTO foo2 VALUES (3, 3, 3);"}
+{"sql":"insert into bar values(1,1)","shape":"INSERT INTO bar VALUES (1, 1);"}
+{"sql":"insert into bar values(2,2)","shape":"INSERT INTO bar VALUES (2, 2);"}
+{"sql":"insert into bar values(3,3)","shape":"INSERT INTO bar VALUES (3, 3);"}
+{"sql":"insert into bar values(4,4)","shape":"INSERT INTO bar VALUES (4, 4);"}
+{"sql":"insert into bar2 values(1,1,1)","shape":"INSERT INTO bar2 VALUES (1, 1, 1);"}
+{"sql":"insert into bar2 values(2,2,2)","shape":"INSERT INTO bar2 VALUES (2, 2, 2);"}
+{"sql":"insert into bar2 values(3,3,3)","shape":"INSERT INTO bar2 VALUES (3, 3, 3);"}
+{"sql":"insert into bar2 values(4,4,4)","shape":"INSERT INTO bar2 VALUES (4, 4, 4);"}
+{"sql":"update bar set f2 = f2 + 100 where f1 in (select f1 from foo)","shape":"UPDATE bar SET f2 = f2 + 100 WHERE f1 IN (SELECT f1 FROM foo);"}
+{"sql":"select tableoid::regclass::text as relname, bar.* from bar order by 1,2","shape":"SELECT tableoid::regclass::text AS relname, bar.* FROM bar ORDER BY 1, 2;"}
+{"sql":"update bar set f2 = f2 + 100\nfrom\n  ( select f1 from foo union all select f1+3 from foo ) ss\nwhere bar.f1 = ss.f1","shape":"UPDATE bar SET f2 = f2 + 100 FROM (SELECT f1 FROM foo UNION ALL SELECT f1 + 3 FROM foo) AS ss WHERE bar.f1 = ss.f1;"}
+{"sql":"create table some_tab (a int)","shape":"CREATE TABLE some_tab (a int);"}
+{"sql":"insert into some_tab values (0)","shape":"INSERT INTO some_tab VALUES (0);"}
+{"sql":"insert into some_tab_child values (1)","shape":"INSERT INTO some_tab_child VALUES (1);"}
+{"sql":"create table parted_tab (a int, b char) partition by list (a)","shape":"CREATE TABLE parted_tab (a int, b char) PARTITION BY LIST (a);"}
+{"sql":"create table parted_tab_part1 partition of parted_tab for values in (1)","shape":"CREATE TABLE parted_tab_part1 PARTITION OF parted_tab FOR VALUES IN (1);"}
+{"sql":"create table parted_tab_part2 partition of parted_tab for values in (2)","shape":"CREATE TABLE parted_tab_part2 PARTITION OF parted_tab FOR VALUES IN (2);"}
+{"sql":"create table parted_tab_part3 partition of parted_tab for values in (3)","shape":"CREATE TABLE parted_tab_part3 PARTITION OF parted_tab FOR VALUES IN (3);"}
+{"sql":"insert into parted_tab values (1, 'a'), (2, 'a'), (3, 'a')","shape":"INSERT INTO parted_tab VALUES (1, 'a'), (2, 'a'), (3, 'a');"}
+{"sql":"update parted_tab set b = 'b'\nfrom\n  (select a from some_tab union all select a+1 from some_tab) ss (a)\nwhere parted_tab.a = ss.a","shape":"UPDATE parted_tab SET b = 'b' FROM (SELECT a FROM some_tab UNION ALL SELECT a + 1 FROM some_tab) AS ss(a) WHERE parted_tab.a = ss.a;"}
+{"sql":"select tableoid::regclass::text as relname, parted_tab.* from parted_tab order by 1,2","shape":"SELECT tableoid::regclass::text AS relname, parted_tab.* FROM parted_tab ORDER BY 1, 2;"}
+{"sql":"truncate parted_tab","shape":"TRUNCATE TABLE parted_tab;"}
+{"sql":"update parted_tab set b = 'b'\nfrom\n  (select 0 from parted_tab union all select 1 from parted_tab) ss (a)\nwhere parted_tab.a = ss.a","shape":"UPDATE parted_tab SET b = 'b' FROM (SELECT 0 FROM parted_tab UNION ALL SELECT 1 FROM parted_tab) AS ss(a) WHERE parted_tab.a = ss.a;"}
+{"sql":"explain update parted_tab set a = 2 where false","shape":"EXPLAIN UPDATE parted_tab SET a = 2 WHERE FALSE;"}
+{"sql":"drop table parted_tab","shape":"DROP TABLE parted_tab;"}
+{"sql":"create table mlparted_tab (a int, b char, c text) partition by list (a)","shape":"CREATE TABLE mlparted_tab (a int, b char, c text) PARTITION BY LIST (a);"}
+{"sql":"create table mlparted_tab_part1 partition of mlparted_tab for values in (1)","shape":"CREATE TABLE mlparted_tab_part1 PARTITION OF mlparted_tab FOR VALUES IN (1);"}
+{"sql":"create table mlparted_tab_part2 partition of mlparted_tab for values in (2) partition by list (b)","shape":"CREATE TABLE mlparted_tab_part2 PARTITION OF mlparted_tab FOR VALUES IN (2) PARTITION BY LIST (b);"}
+{"sql":"create table mlparted_tab_part3 partition of mlparted_tab for values in (3)","shape":"CREATE TABLE mlparted_tab_part3 PARTITION OF mlparted_tab FOR VALUES IN (3);"}
+{"sql":"create table mlparted_tab_part2a partition of mlparted_tab_part2 for values in ('a')","shape":"CREATE TABLE mlparted_tab_part2a PARTITION OF mlparted_tab_part2 FOR VALUES IN ('a');"}
+{"sql":"create table mlparted_tab_part2b partition of mlparted_tab_part2 for values in ('b')","shape":"CREATE TABLE mlparted_tab_part2b PARTITION OF mlparted_tab_part2 FOR VALUES IN ('b');"}
+{"sql":"insert into mlparted_tab values (1, 'a'), (2, 'a'), (2, 'b'), (3, 'a')","shape":"INSERT INTO mlparted_tab VALUES (1, 'a'), (2, 'a'), (2, 'b'), (3, 'a');"}
+{"sql":"update mlparted_tab mlp set c = 'xxx'\nfrom\n  (select a from some_tab union all select a+1 from some_tab) ss (a)\nwhere (mlp.a = ss.a and mlp.b = 'b') or mlp.a = 3","shape":"UPDATE mlparted_tab AS mlp SET c = 'xxx' FROM (SELECT a FROM some_tab UNION ALL SELECT a + 1 FROM some_tab) AS ss(a) WHERE ((mlp.a = ss.a) AND (mlp.b = 'b')) OR (mlp.a = 3);"}
+{"sql":"select tableoid::regclass::text as relname, mlparted_tab.* from mlparted_tab order by 1,2","shape":"SELECT tableoid::regclass::text AS relname, mlparted_tab.* FROM mlparted_tab ORDER BY 1, 2;"}
+{"sql":"drop table mlparted_tab","shape":"DROP TABLE mlparted_tab;"}
+{"sql":"CREATE TABLE firstparent (tomorrow date default now()::date + 1)","shape":"CREATE TABLE firstparent (tomorrow date DEFAULT now()::date + 1);"}
+{"sql":"CREATE TABLE secondparent (tomorrow date default  now() :: date  +  1)","shape":"CREATE TABLE secondparent (tomorrow date DEFAULT now()::date + 1);"}
+{"sql":"CREATE TABLE jointchild () INHERITS (firstparent, secondparent)","shape":"CREATE TABLE jointchild () INHERITS (firstparent, secondparent);"}
+{"sql":"CREATE TABLE thirdparent (tomorrow date default now()::date - 1)","shape":"CREATE TABLE thirdparent (tomorrow date DEFAULT now()::date - 1);"}
+{"sql":"CREATE TABLE otherchild () INHERITS (firstparent, thirdparent)","shape":"CREATE TABLE otherchild () INHERITS (firstparent, thirdparent);"}
+{"sql":"CREATE TABLE otherchild (tomorrow date default now())\n  INHERITS (firstparent, thirdparent)","shape":"CREATE TABLE otherchild (tomorrow date DEFAULT now()) INHERITS (firstparent, thirdparent);"}
+{"sql":"DROP TABLE firstparent, secondparent, jointchild, thirdparent, otherchild","shape":"DROP TABLE firstparent, secondparent, jointchild, thirdparent, otherchild;"}
+{"sql":"insert into d values('test','one','two','three')","shape":"INSERT INTO d VALUES ('test', 'one', 'two', 'three');"}
+{"sql":"alter table a alter column aa type integer using bit_length(aa)","shape":"ALTER TABLE a ALTER COLUMN aa SET DATA TYPE integer USING bit_length(aa);"}
+{"sql":"select * from d","shape":"SELECT * FROM d;"}
+{"sql":"create temp table parent1(f1 int, f2 int)","shape":"CREATE TEMPORARY TABLE parent1 (f1 int, f2 int);"}
+{"sql":"create temp table parent2(f1 int, f3 bigint)","shape":"CREATE TEMPORARY TABLE parent2 (f1 int, f3 bigint);"}
+{"sql":"create temp table childtab(f4 int) inherits(parent1, parent2)","shape":"CREATE TEMPORARY TABLE childtab (f4 int) INHERITS (parent1, parent2);"}
+{"sql":"alter table parent1 alter column f1 type bigint","shape":"ALTER TABLE parent1 ALTER COLUMN f1 SET DATA TYPE bigint;"}
+{"sql":"alter table parent1 alter column f2 type bigint","shape":"ALTER TABLE parent1 ALTER COLUMN f2 SET DATA TYPE bigint;"}
+{"sql":"create table p1(ff1 int)","shape":"CREATE TABLE p1 (ff1 int);"}
+{"sql":"alter table p1 add constraint p1chk check (ff1 > 0) no inherit","shape":"ALTER TABLE p1 ADD CONSTRAINT p1chk CHECK (ff1 > 0) NO INHERIT;"}
+{"sql":"alter table p1 add constraint p2chk check (ff1 > 10)","shape":"ALTER TABLE p1 ADD CONSTRAINT p2chk CHECK (ff1 > 10);"}
+{"sql":"select pc.relname, pgc.conname, pgc.contype, pgc.conislocal, pgc.coninhcount, pgc.connoinherit from pg_class as pc inner join pg_constraint as pgc on (pgc.conrelid = pc.oid) where pc.relname = 'p1' order by 1,2","shape":"SELECT pc.relname, pgc.conname, pgc.contype, pgc.conislocal, pgc.coninhcount, pgc.connoinherit FROM pg_class AS pc JOIN pg_constraint AS pgc ON (pgc.conrelid = pc.oid) WHERE pc.relname = 'p1' ORDER BY 1, 2;"}
+{"sql":"create table c1 () inherits (p1)","shape":"CREATE TABLE c1 () INHERITS (p1);"}
+{"sql":"create table c2 (constraint p2chk check (ff1 > 10) no inherit) inherits (p1)","shape":"CREATE TABLE c2 (CONSTRAINT p2chk CHECK (ff1 > 10) NO INHERIT) INHERITS (p1);"}
+{"sql":"create table base (i integer)","shape":"CREATE TABLE base (i integer);"}
+{"sql":"create table derived () inherits (base)","shape":"CREATE TABLE derived () INHERITS (base);"}
+{"sql":"create table more_derived (like derived, b int) inherits (derived)","shape":"CREATE TABLE more_derived (LIKE derived, b int) INHERITS (derived);"}
+{"sql":"insert into derived (i) values (0)","shape":"INSERT INTO derived (i) VALUES (0);"}
+{"sql":"select derived::base from derived","shape":"SELECT derived::base FROM derived;"}
+{"sql":"select NULL::derived::base","shape":"SELECT NULL::derived::base;"}
+{"sql":"explain (verbose on, costs off) select row(i, b)::more_derived::derived::base from more_derived","shape":"EXPLAIN (VERBOSE on, COSTS off) SELECT ROW(i, b)::more_derived::derived::base FROM more_derived;"}
+{"sql":"explain (verbose on, costs off) select (1, 2)::more_derived::derived::base","shape":"EXPLAIN (VERBOSE on, COSTS off) SELECT (1, 2)::more_derived::derived::base;"}
+{"sql":"drop table more_derived","shape":"DROP TABLE more_derived;"}
+{"sql":"drop table derived","shape":"DROP TABLE derived;"}
+{"sql":"drop table base","shape":"DROP TABLE base;"}
+{"sql":"create table p2(f1 text)","shape":"CREATE TABLE p2 (f1 text);"}
+{"sql":"create function p2text(p2) returns text as 'select $1.f1' language sql","shape":"CREATE FUNCTION p2text(p2) RETURNS text AS 'select $1.f1' LANGUAGE sql;"}
+{"sql":"create table c1(f3 int) inherits(p1,p2)","shape":"CREATE TABLE c1 (f3 int) INHERITS (p1, p2);"}
+{"sql":"insert into c1 values(123456789, 'hi', 42)","shape":"INSERT INTO c1 VALUES (123456789, 'hi', 42);"}
+{"sql":"select p2text(c1.*) from c1","shape":"SELECT p2text(c1.*) FROM c1;"}
+{"sql":"drop function p2text(p2)"}
+{"sql":"drop table c1","shape":"DROP TABLE c1;"}
+{"sql":"drop table p2","shape":"DROP TABLE p2;"}
+{"sql":"CREATE TABLE ac (aa TEXT)","shape":"CREATE TABLE ac (aa TEXT);"}
+{"sql":"alter table ac add constraint ac_check check (aa is not null)","shape":"ALTER TABLE ac ADD CONSTRAINT ac_check CHECK (aa IS NOT NULL);"}
+{"sql":"CREATE TABLE bc (bb TEXT) INHERITS (ac)","shape":"CREATE TABLE bc (bb TEXT) INHERITS (ac);"}
+{"sql":"select pc.relname, pgc.conname, pgc.contype, pgc.conislocal, pgc.coninhcount, pg_get_expr(pgc.conbin, pc.oid) as consrc from pg_class as pc inner join pg_constraint as pgc on (pgc.conrelid = pc.oid) where pc.relname in ('ac', 'bc') order by 1,2","shape":"SELECT pc.relname, pgc.conname, pgc.contype, pgc.conislocal, pgc.coninhcount, pg_get_expr(pgc.conbin, pc.oid) AS consrc FROM pg_class AS pc JOIN pg_constraint AS pgc ON (pgc.conrelid = pc.oid) WHERE pc.relname IN ('ac', 'bc') ORDER BY 1, 2;"}
+{"sql":"insert into ac (aa) values (NULL)","shape":"INSERT INTO ac (aa) VALUES (NULL);"}
+{"sql":"insert into bc (aa) values (NULL)","shape":"INSERT INTO bc (aa) VALUES (NULL);"}
+{"sql":"alter table bc drop constraint ac_check","shape":"ALTER TABLE bc DROP CONSTRAINT ac_check;"}
+{"sql":"alter table ac drop constraint ac_check","shape":"ALTER TABLE ac DROP CONSTRAINT ac_check;"}
+{"sql":"alter table ac add check (aa is not null)","shape":"ALTER TABLE ac ADD CHECK (aa IS NOT NULL);"}
+{"sql":"alter table bc drop constraint ac_aa_check","shape":"ALTER TABLE bc DROP CONSTRAINT ac_aa_check;"}
+{"sql":"alter table ac drop constraint ac_aa_check","shape":"ALTER TABLE ac DROP CONSTRAINT ac_aa_check;"}
+{"sql":"alter table bc no inherit ac"}
+{"sql":"drop table bc","shape":"DROP TABLE bc;"}
+{"sql":"drop table ac","shape":"DROP TABLE ac;"}
+{"sql":"create table ac (a int constraint check_a check (a <> 0))","shape":"CREATE TABLE ac (a int CONSTRAINT check_a CHECK (a <> 0));"}
+{"sql":"create table bc (a int constraint check_a check (a <> 0), b int constraint check_b check (b <> 0)) inherits (ac)","shape":"CREATE TABLE bc (a int CONSTRAINT check_a CHECK (a <> 0), b int CONSTRAINT check_b CHECK (b <> 0)) INHERITS (ac);"}
+{"sql":"create table bc (b int constraint check_b check (b <> 0))","shape":"CREATE TABLE bc (b int CONSTRAINT check_b CHECK (b <> 0));"}
+{"sql":"create table cc (c int constraint check_c check (c <> 0)) inherits (ac, bc)","shape":"CREATE TABLE cc (c int CONSTRAINT check_c CHECK (c <> 0)) INHERITS (ac, bc);"}
+{"sql":"select pc.relname, pgc.conname, pgc.contype, pgc.conislocal, pgc.coninhcount, pg_get_expr(pgc.conbin, pc.oid) as consrc from pg_class as pc inner join pg_constraint as pgc on (pgc.conrelid = pc.oid) where pc.relname in ('ac', 'bc', 'cc') order by 1,2","shape":"SELECT pc.relname, pgc.conname, pgc.contype, pgc.conislocal, pgc.coninhcount, pg_get_expr(pgc.conbin, pc.oid) AS consrc FROM pg_class AS pc JOIN pg_constraint AS pgc ON (pgc.conrelid = pc.oid) WHERE pc.relname IN ('ac', 'bc', 'cc') ORDER BY 1, 2;"}
+{"sql":"alter table cc no inherit bc"}
+{"sql":"drop table cc","shape":"DROP TABLE cc;"}
+{"sql":"create table p1(f1 int)","shape":"CREATE TABLE p1 (f1 int);"}
+{"sql":"create table p2(f2 int)","shape":"CREATE TABLE p2 (f2 int);"}
+{"sql":"insert into c1 values(1,-1,2)","shape":"INSERT INTO c1 VALUES (1, -1, 2);"}
+{"sql":"alter table p2 add constraint cc check (f2>0)","shape":"ALTER TABLE p2 ADD CONSTRAINT cc CHECK (f2 > 0);"}
+{"sql":"alter table p2 add check (f2>0)","shape":"ALTER TABLE p2 ADD CHECK (f2 > 0);"}
+{"sql":"delete from c1","shape":"DELETE FROM c1;"}
+{"sql":"insert into c1 values(1,1,2)","shape":"INSERT INTO c1 VALUES (1, 1, 2);"}
+{"sql":"create table c2(f3 int) inherits(p1,p2)","shape":"CREATE TABLE c2 (f3 int) INHERITS (p1, p2);"}
+{"sql":"create table c3 (f4 int) inherits(c1,c2)","shape":"CREATE TABLE c3 (f4 int) INHERITS (c1, c2);"}
+{"sql":"drop table p2 cascade","shape":"DROP TABLE p2 CASCADE;"}
+{"sql":"create table pp1 (f1 int)","shape":"CREATE TABLE pp1 (f1 int);"}
+{"sql":"create table cc1 (f2 text, f3 int) inherits (pp1)","shape":"CREATE TABLE cc1 (f2 text, f3 int) INHERITS (pp1);"}
+{"sql":"alter table pp1 add column a1 int check (a1 > 0)","shape":"ALTER TABLE pp1 ADD COLUMN a1 int CHECK (a1 > 0);"}
+{"sql":"create table cc2(f4 float) inherits(pp1,cc1)","shape":"CREATE TABLE cc2 (f4 float) INHERITS (pp1, cc1);"}
+{"sql":"alter table pp1 add column a2 int check (a2 > 0)","shape":"ALTER TABLE pp1 ADD COLUMN a2 int CHECK (a2 > 0);"}
+{"sql":"drop table pp1 cascade","shape":"DROP TABLE pp1 CASCADE;"}
+{"sql":"CREATE TABLE inht1 (a int, b int)","shape":"CREATE TABLE inht1 (a int, b int);"}
+{"sql":"CREATE TABLE inhs1 (b int, c int)","shape":"CREATE TABLE inhs1 (b int, c int);"}
+{"sql":"CREATE TABLE inhts (d int) INHERITS (inht1, inhs1)","shape":"CREATE TABLE inhts (d int) INHERITS (inht1, inhs1);"}
+{"sql":"ALTER TABLE inht1 RENAME a TO aa","shape":"ALTER TABLE inht1 RENAME COLUMN a TO aa;"}
+{"sql":"ALTER TABLE inht1 RENAME b TO bb","shape":"ALTER TABLE inht1 RENAME COLUMN b TO bb;"}
+{"sql":"ALTER TABLE inhts RENAME aa TO aaa","shape":"ALTER TABLE inhts RENAME COLUMN aa TO aaa;"}
+{"sql":"ALTER TABLE inhts RENAME d TO dd","shape":"ALTER TABLE inhts RENAME COLUMN d TO dd;"}
+{"sql":"DROP TABLE inhts","shape":"DROP TABLE inhts;"}
+{"sql":"CREATE TABLE inhta ()","shape":"CREATE TABLE inhta ();"}
+{"sql":"CREATE TABLE inhtb () INHERITS (inhta)","shape":"CREATE TABLE inhtb () INHERITS (inhta);"}
+{"sql":"CREATE TABLE inhtc () INHERITS (inhtb)","shape":"CREATE TABLE inhtc () INHERITS (inhtb);"}
+{"sql":"CREATE TABLE inhtd () INHERITS (inhta, inhtb, inhtc)","shape":"CREATE TABLE inhtd () INHERITS (inhta, inhtb, inhtc);"}
+{"sql":"ALTER TABLE inhta ADD COLUMN i int, ADD COLUMN j bigint DEFAULT 1","shape":"ALTER TABLE inhta ADD COLUMN i int, ADD COLUMN j bigint DEFAULT 1;"}
+{"sql":"DROP TABLE inhta, inhtb, inhtc, inhtd","shape":"DROP TABLE inhta, inhtb, inhtc, inhtd;"}
+{"sql":"CREATE TABLE inht2 (x int) INHERITS (inht1)","shape":"CREATE TABLE inht2 (x int) INHERITS (inht1);"}
+{"sql":"CREATE TABLE inht3 (y int) INHERITS (inht1)","shape":"CREATE TABLE inht3 (y int) INHERITS (inht1);"}
+{"sql":"CREATE TABLE inht4 (z int) INHERITS (inht2, inht3)","shape":"CREATE TABLE inht4 (z int) INHERITS (inht2, inht3);"}
+{"sql":"ALTER TABLE inht1 RENAME aa TO aaa","shape":"ALTER TABLE inht1 RENAME COLUMN aa TO aaa;"}
+{"sql":"CREATE TABLE inhts (d int) INHERITS (inht2, inhs1)","shape":"CREATE TABLE inhts (d int) INHERITS (inht2, inhs1);"}
+{"sql":"ALTER TABLE inht1 RENAME aaa TO aaaa","shape":"ALTER TABLE inht1 RENAME COLUMN aaa TO aaaa;"}
+{"sql":"WITH RECURSIVE r AS (\n  SELECT 'inht1'::regclass AS inhrelid\nUNION ALL\n  SELECT c.inhrelid FROM pg_inherits c, r WHERE r.inhrelid = c.inhparent\n)\nSELECT a.attrelid::regclass, a.attname, a.attinhcount, e.expected\n  FROM (SELECT inhrelid, count(*) AS expected FROM pg_inherits\n        WHERE inhparent IN (SELECT inhrelid FROM r) GROUP BY inhrelid) e\n  JOIN pg_attribute a ON e.inhrelid = a.attrelid WHERE NOT attislocal\n  ORDER BY a.attrelid::regclass::name, a.attnum","shape":"WITH RECURSIVE r AS (SELECT 'inht1'::regclass AS inhrelid UNION ALL SELECT c.inhrelid FROM pg_inherits AS c, r WHERE r.inhrelid = c.inhparent) SELECT a.attrelid::regclass, a.attname, a.attinhcount, e.expected FROM (SELECT inhrelid, count(*) AS expected FROM pg_inherits WHERE inhparent IN (SELECT inhrelid FROM r) GROUP BY inhrelid) AS e JOIN pg_attribute AS a ON e.inhrelid = a.attrelid WHERE NOT attislocal ORDER BY a.attrelid::regclass::name, a.attnum;"}
+{"sql":"DROP TABLE inht1, inhs1 CASCADE","shape":"DROP TABLE inht1, inhs1 CASCADE;"}
+{"sql":"CREATE TABLE test_constraints (id int, val1 varchar, val2 int, UNIQUE(val1, val2))","shape":"CREATE TABLE test_constraints (id int, val1 varchar, val2 int, UNIQUE (val1, val2));"}
+{"sql":"CREATE TABLE test_constraints_inh () INHERITS (test_constraints)","shape":"CREATE TABLE test_constraints_inh () INHERITS (test_constraints);"}
+{"sql":"ALTER TABLE ONLY test_constraints DROP CONSTRAINT test_constraints_val1_val2_key","shape":"ALTER TABLE ONLY test_constraints DROP CONSTRAINT test_constraints_val1_val2_key;"}
+{"sql":"DROP TABLE test_constraints_inh","shape":"DROP TABLE test_constraints_inh;"}
+{"sql":"DROP TABLE test_constraints","shape":"DROP TABLE test_constraints;"}
+{"sql":"CREATE TABLE test_ex_constraints (\n    c circle,\n    EXCLUDE USING gist (c WITH &&)\n)","shape":"CREATE TABLE test_ex_constraints (c circle, EXCLUDE USING gist (c WITH &&));"}
+{"sql":"CREATE TABLE test_ex_constraints_inh () INHERITS (test_ex_constraints)","shape":"CREATE TABLE test_ex_constraints_inh () INHERITS (test_ex_constraints);"}
+{"sql":"ALTER TABLE test_ex_constraints DROP CONSTRAINT test_ex_constraints_c_excl","shape":"ALTER TABLE test_ex_constraints DROP CONSTRAINT test_ex_constraints_c_excl;"}
+{"sql":"DROP TABLE test_ex_constraints_inh","shape":"DROP TABLE test_ex_constraints_inh;"}
+{"sql":"DROP TABLE test_ex_constraints","shape":"DROP TABLE test_ex_constraints;"}
+{"sql":"CREATE TABLE test_primary_constraints(id int PRIMARY KEY)","shape":"CREATE TABLE test_primary_constraints (id int PRIMARY KEY);"}
+{"sql":"CREATE TABLE test_foreign_constraints(id1 int REFERENCES test_primary_constraints(id))","shape":"CREATE TABLE test_foreign_constraints (id1 int REFERENCES test_primary_constraints (id));"}
+{"sql":"CREATE TABLE test_foreign_constraints_inh () INHERITS (test_foreign_constraints)","shape":"CREATE TABLE test_foreign_constraints_inh () INHERITS (test_foreign_constraints);"}
+{"sql":"ALTER TABLE test_foreign_constraints DROP CONSTRAINT test_foreign_constraints_id1_fkey","shape":"ALTER TABLE test_foreign_constraints DROP CONSTRAINT test_foreign_constraints_id1_fkey;"}
+{"sql":"DROP TABLE test_foreign_constraints_inh","shape":"DROP TABLE test_foreign_constraints_inh;"}
+{"sql":"DROP TABLE test_foreign_constraints","shape":"DROP TABLE test_foreign_constraints;"}
+{"sql":"DROP TABLE test_primary_constraints","shape":"DROP TABLE test_primary_constraints;"}
+{"sql":"create table inh_fk_1 (a int primary key)","shape":"CREATE TABLE inh_fk_1 (a int PRIMARY KEY);"}
+{"sql":"insert into inh_fk_1 values (1), (2), (3)","shape":"INSERT INTO inh_fk_1 VALUES (1), (2), (3);"}
+{"sql":"create table inh_fk_2 (x int primary key, y int references inh_fk_1 on delete cascade)","shape":"CREATE TABLE inh_fk_2 (x int PRIMARY KEY, y int REFERENCES inh_fk_1 ON DELETE CASCADE);"}
+{"sql":"insert into inh_fk_2 values (11, 1), (22, 2), (33, 3)","shape":"INSERT INTO inh_fk_2 VALUES (11, 1), (22, 2), (33, 3);"}
+{"sql":"create table inh_fk_2_child () inherits (inh_fk_2)","shape":"CREATE TABLE inh_fk_2_child () INHERITS (inh_fk_2);"}
+{"sql":"insert into inh_fk_2_child values (111, 1), (222, 2)","shape":"INSERT INTO inh_fk_2_child VALUES (111, 1), (222, 2);"}
+{"sql":"delete from inh_fk_1 where a = 1","shape":"DELETE FROM inh_fk_1 WHERE a = 1;"}
+{"sql":"select * from inh_fk_1 order by 1","shape":"SELECT * FROM inh_fk_1 ORDER BY 1;"}
+{"sql":"select * from inh_fk_2 order by 1, 2","shape":"SELECT * FROM inh_fk_2 ORDER BY 1, 2;"}
+{"sql":"drop table inh_fk_1, inh_fk_2, inh_fk_2_child","shape":"DROP TABLE inh_fk_1, inh_fk_2, inh_fk_2_child;"}
+{"sql":"create table p1_c1() inherits(p1)","shape":"CREATE TABLE p1_c1 () INHERITS (p1);"}
+{"sql":"alter table p1 add constraint inh_check_constraint1 check (f1 > 0)","shape":"ALTER TABLE p1 ADD CONSTRAINT inh_check_constraint1 CHECK (f1 > 0);"}
+{"sql":"alter table p1_c1 add constraint inh_check_constraint1 check (f1 > 0)","shape":"ALTER TABLE p1_c1 ADD CONSTRAINT inh_check_constraint1 CHECK (f1 > 0);"}
+{"sql":"alter table p1_c1 add constraint inh_check_constraint2 check (f1 < 10)","shape":"ALTER TABLE p1_c1 ADD CONSTRAINT inh_check_constraint2 CHECK (f1 < 10);"}
+{"sql":"alter table p1 add constraint inh_check_constraint2 check (f1 < 10)","shape":"ALTER TABLE p1 ADD CONSTRAINT inh_check_constraint2 CHECK (f1 < 10);"}
+{"sql":"select conrelid::regclass::text as relname, conname, conislocal, coninhcount\nfrom pg_constraint where conname like 'inh\\_check\\_constraint%'\norder by 1, 2","shape":"SELECT conrelid::regclass::text AS relname, conname, conislocal, coninhcount FROM pg_constraint WHERE conname LIKE 'inh\\_check\\_constraint%' ORDER BY 1, 2;"}
+{"sql":"create table invalid_check_con(f1 int)","shape":"CREATE TABLE invalid_check_con (f1 int);"}
+{"sql":"create table invalid_check_con_child() inherits(invalid_check_con)","shape":"CREATE TABLE invalid_check_con_child () INHERITS (invalid_check_con);"}
+{"sql":"alter table invalid_check_con_child add constraint inh_check_constraint check(f1 > 0) not valid","shape":"ALTER TABLE invalid_check_con_child ADD CONSTRAINT inh_check_constraint CHECK (f1 > 0) NOT VALID;"}
+{"sql":"alter table invalid_check_con add constraint inh_check_constraint check(f1 > 0)","shape":"ALTER TABLE invalid_check_con ADD CONSTRAINT inh_check_constraint CHECK (f1 > 0);"}
+{"sql":"alter table invalid_check_con_child drop constraint inh_check_constraint","shape":"ALTER TABLE invalid_check_con_child DROP CONSTRAINT inh_check_constraint;"}
+{"sql":"insert into invalid_check_con values(0)","shape":"INSERT INTO invalid_check_con VALUES (0);"}
+{"sql":"alter table invalid_check_con_child add constraint inh_check_constraint check(f1 > 0)","shape":"ALTER TABLE invalid_check_con_child ADD CONSTRAINT inh_check_constraint CHECK (f1 > 0);"}
+{"sql":"alter table invalid_check_con add constraint inh_check_constraint check(f1 > 0) not valid","shape":"ALTER TABLE invalid_check_con ADD CONSTRAINT inh_check_constraint CHECK (f1 > 0) NOT VALID;"}
+{"sql":"insert into invalid_check_con_child values(0)","shape":"INSERT INTO invalid_check_con_child VALUES (0);"}
+{"sql":"select conrelid::regclass::text as relname, conname,\n       convalidated, conislocal, coninhcount, connoinherit\nfrom pg_constraint where conname like 'inh\\_check\\_constraint%'\norder by 1, 2","shape":"SELECT conrelid::regclass::text AS relname, conname, convalidated, conislocal, coninhcount, connoinherit FROM pg_constraint WHERE conname LIKE 'inh\\_check\\_constraint%' ORDER BY 1, 2;"}
+{"sql":"create temp table patest0 (id, x) as\n  select x, x from generate_series(0,1000) x","shape":"CREATE TEMPORARY TABLE patest0 (id, x) AS SELECT x, x FROM generate_series(0, 1000) AS x;"}
+{"sql":"create temp table patest1() inherits (patest0)","shape":"CREATE TEMPORARY TABLE patest1 () INHERITS (patest0);"}
+{"sql":"insert into patest1\n  select x, x from generate_series(0,1000) x","shape":"INSERT INTO patest1 SELECT x, x FROM generate_series(0, 1000) AS x;"}
+{"sql":"create temp table patest2() inherits (patest0)","shape":"CREATE TEMPORARY TABLE patest2 () INHERITS (patest0);"}
+{"sql":"insert into patest2\n  select x, x from generate_series(0,1000) x","shape":"INSERT INTO patest2 SELECT x, x FROM generate_series(0, 1000) AS x;"}
+{"sql":"create index patest0i on patest0(id)","shape":"CREATE INDEX patest0i ON patest0 (id);"}
+{"sql":"create index patest1i on patest1(id)","shape":"CREATE INDEX patest1i ON patest1 (id);"}
+{"sql":"create index patest2i on patest2(id)","shape":"CREATE INDEX patest2i ON patest2 (id);"}
+{"sql":"analyze patest0","shape":"ANALYZE patest0;"}
+{"sql":"analyze patest1","shape":"ANALYZE patest1;"}
+{"sql":"analyze patest2","shape":"ANALYZE patest2;"}
+{"sql":"explain (costs off)\nselect * from patest0 join (select f1 from int4_tbl limit 1) ss on id = f1","shape":"EXPLAIN (COSTS off) SELECT * FROM patest0 JOIN (SELECT f1 FROM int4_tbl LIMIT 1) AS ss ON id = f1;"}
+{"sql":"select * from patest0 join (select f1 from int4_tbl limit 1) ss on id = f1","shape":"SELECT * FROM patest0 JOIN (SELECT f1 FROM int4_tbl LIMIT 1) AS ss ON id = f1;"}
+{"sql":"drop index patest2i","shape":"DROP INDEX patest2i;"}
+{"sql":"drop table patest0 cascade","shape":"DROP TABLE patest0 CASCADE;"}
+{"sql":"create table matest0 (id serial primary key, name text)","shape":"CREATE TABLE matest0 (id serial PRIMARY KEY, name text);"}
+{"sql":"create table matest1 (id integer primary key) inherits (matest0)","shape":"CREATE TABLE matest1 (id integer PRIMARY KEY) INHERITS (matest0);"}
+{"sql":"create table matest2 (id integer primary key) inherits (matest0)","shape":"CREATE TABLE matest2 (id integer PRIMARY KEY) INHERITS (matest0);"}
+{"sql":"create table matest3 (id integer primary key) inherits (matest0)","shape":"CREATE TABLE matest3 (id integer PRIMARY KEY) INHERITS (matest0);"}
+{"sql":"create index matest0i on matest0 ((1-id))","shape":"CREATE INDEX matest0i ON matest0 ((1 - id));"}
+{"sql":"create index matest1i on matest1 ((1-id))","shape":"CREATE INDEX matest1i ON matest1 ((1 - id));"}
+{"sql":"create index matest3i on matest3 ((1-id))","shape":"CREATE INDEX matest3i ON matest3 ((1 - id));"}
+{"sql":"insert into matest1 (name) values ('Test 1')","shape":"INSERT INTO matest1 (name) VALUES ('Test 1');"}
+{"sql":"insert into matest1 (name) values ('Test 2')","shape":"INSERT INTO matest1 (name) VALUES ('Test 2');"}
+{"sql":"insert into matest2 (name) values ('Test 3')","shape":"INSERT INTO matest2 (name) VALUES ('Test 3');"}
+{"sql":"insert into matest2 (name) values ('Test 4')","shape":"INSERT INTO matest2 (name) VALUES ('Test 4');"}
+{"sql":"insert into matest3 (name) values ('Test 5')","shape":"INSERT INTO matest3 (name) VALUES ('Test 5');"}
+{"sql":"insert into matest3 (name) values ('Test 6')","shape":"INSERT INTO matest3 (name) VALUES ('Test 6');"}
+{"sql":"explain (verbose, costs off) select * from matest0 order by 1-id","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM matest0 ORDER BY 1 - id;"}
+{"sql":"select * from matest0 order by 1-id","shape":"SELECT * FROM matest0 ORDER BY 1 - id;"}
+{"sql":"explain (verbose, costs off) select min(1-id) from matest0","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT min(1 - id) FROM matest0;"}
+{"sql":"select min(1-id) from matest0","shape":"SELECT min(1 - id) FROM matest0;"}
+{"sql":"set enable_parallel_append = off","shape":"SET enable_parallel_append TO off;"}
+{"sql":"reset enable_parallel_append","shape":"RESET enable_parallel_append;"}
+{"sql":"explain (verbose, costs off)  -- bug #18652\nselect 1 - id as c from\n(select id from matest3 t1 union all select id * 2 from matest3 t2) ss\norder by c","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT 1 - id AS c FROM (SELECT id FROM matest3 AS t1 UNION ALL SELECT id * 2 FROM matest3 AS t2) AS ss ORDER BY c;"}
+{"sql":"select 1 - id as c from\n(select id from matest3 t1 union all select id * 2 from matest3 t2) ss\norder by c","shape":"SELECT 1 - id AS c FROM (SELECT id FROM matest3 AS t1 UNION ALL SELECT id * 2 FROM matest3 AS t2) AS ss ORDER BY c;"}
+{"sql":"drop table matest0 cascade","shape":"DROP TABLE matest0 CASCADE;"}
+{"sql":"create table matest0 (a int, b int, c int, d int)","shape":"CREATE TABLE matest0 (a int, b int, c int, d int);"}
+{"sql":"create table matest1 () inherits(matest0)","shape":"CREATE TABLE matest1 () INHERITS (matest0);"}
+{"sql":"create index matest0i on matest0 (b, c)","shape":"CREATE INDEX matest0i ON matest0 (b, c);"}
+{"sql":"create index matest1i on matest1 (b, c)","shape":"CREATE INDEX matest1i ON matest1 (b, c);"}
+{"sql":"explain (costs off)\nselect t1.* from matest0 t1, matest0 t2\nwhere t1.b = t2.b and t2.c = t2.d\norder by t1.b limit 10","shape":"EXPLAIN (COSTS off) SELECT t1.* FROM matest0 AS t1, matest0 AS t2 WHERE (t1.b = t2.b) AND (t2.c = t2.d) ORDER BY t1.b LIMIT 10;"}
+{"sql":"reset enable_nestloop","shape":"RESET enable_nestloop;"}
+{"sql":"set enable_indexscan = on","shape":"SET enable_indexscan TO on;"}
+{"sql":"set enable_bitmapscan = off","shape":"SET enable_bitmapscan TO off;"}
+{"sql":"explain (costs off)\nSELECT thousand, tenthous FROM tenk1\nUNION ALL\nSELECT thousand, thousand FROM tenk1\nORDER BY thousand, tenthous","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous FROM tenk1 UNION ALL SELECT thousand, thousand FROM tenk1 ORDER BY thousand, tenthous;"}
+{"sql":"explain (costs off)\nSELECT thousand, tenthous, thousand+tenthous AS x FROM tenk1\nUNION ALL\nSELECT 42, 42, hundred FROM tenk1\nORDER BY thousand, tenthous","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous, thousand + tenthous AS x FROM tenk1 UNION ALL SELECT 42, 42, hundred FROM tenk1 ORDER BY thousand, tenthous;"}
+{"sql":"explain (costs off)\nSELECT thousand, tenthous FROM tenk1\nUNION ALL\nSELECT thousand, random()::integer FROM tenk1\nORDER BY thousand, tenthous","shape":"EXPLAIN (COSTS off) SELECT thousand, tenthous FROM tenk1 UNION ALL SELECT thousand, random()::integer FROM tenk1 ORDER BY thousand, tenthous;"}
+{"sql":"explain (costs off)\nSELECT min(x) FROM\n  (SELECT unique1 AS x FROM tenk1 a\n   UNION ALL\n   SELECT unique2 AS x FROM tenk1 b) s","shape":"EXPLAIN (COSTS off) SELECT min(x) FROM (SELECT unique1 AS x FROM tenk1 AS a UNION ALL SELECT unique2 AS x FROM tenk1 AS b) AS s;"}
+{"sql":"explain (costs off)\nSELECT min(y) FROM\n  (SELECT unique1 AS x, unique1 AS y FROM tenk1 a\n   UNION ALL\n   SELECT unique2 AS x, unique2 AS y FROM tenk1 b) s","shape":"EXPLAIN (COSTS off) SELECT min(y) FROM (SELECT unique1 AS x, unique1 AS y FROM tenk1 AS a UNION ALL SELECT unique2 AS x, unique2 AS y FROM tenk1 AS b) AS s;"}
+{"sql":"explain (costs off)\nSELECT x, y FROM\n  (SELECT thousand AS x, tenthous AS y FROM tenk1 a\n   UNION ALL\n   SELECT unique2 AS x, unique2 AS y FROM tenk1 b) s\nORDER BY x, y","shape":"EXPLAIN (COSTS off) SELECT x, y FROM (SELECT thousand AS x, tenthous AS y FROM tenk1 AS a UNION ALL SELECT unique2 AS x, unique2 AS y FROM tenk1 AS b) AS s ORDER BY x, y;"}
+{"sql":"explain (costs off)\nSELECT\n    ARRAY(SELECT f.i FROM (\n        (SELECT d + g.i FROM generate_series(4, 30, 3) d ORDER BY 1)\n        UNION ALL\n        (SELECT d + g.i FROM generate_series(0, 30, 5) d ORDER BY 1)\n    ) f(i)\n    ORDER BY f.i LIMIT 10)\nFROM generate_series(1, 3) g(i)","shape":"EXPLAIN (COSTS off) SELECT ARRAY(SELECT f.i FROM ((SELECT d + g.i FROM generate_series(4, 30, 3) AS d ORDER BY 1) UNION ALL (SELECT d + g.i FROM generate_series(0, 30, 5) AS d ORDER BY 1)) AS f(i) ORDER BY f.i LIMIT 10) FROM generate_series(1, 3) AS g(i);"}
+{"sql":"SELECT\n    ARRAY(SELECT f.i FROM (\n        (SELECT d + g.i FROM generate_series(4, 30, 3) d ORDER BY 1)\n        UNION ALL\n        (SELECT d + g.i FROM generate_series(0, 30, 5) d ORDER BY 1)\n    ) f(i)\n    ORDER BY f.i LIMIT 10)\nFROM generate_series(1, 3) g(i)","shape":"SELECT ARRAY(SELECT f.i FROM ((SELECT d + g.i FROM generate_series(4, 30, 3) AS d ORDER BY 1) UNION ALL (SELECT d + g.i FROM generate_series(0, 30, 5) AS d ORDER BY 1)) AS f(i) ORDER BY f.i LIMIT 10) FROM generate_series(1, 3) AS g(i);"}
+{"sql":"create table inhpar(f1 int, f2 name)","shape":"CREATE TABLE inhpar (f1 int, f2 name);"}
+{"sql":"create table inhcld(f2 name, f1 int)","shape":"CREATE TABLE inhcld (f2 name, f1 int);"}
+{"sql":"alter table inhcld inherit inhpar"}
+{"sql":"insert into inhpar select x, x::text from generate_series(1,5) x","shape":"INSERT INTO inhpar SELECT x, x::text FROM generate_series(1, 5) AS x;"}
+{"sql":"insert into inhcld select x::text, x from generate_series(6,10) x","shape":"INSERT INTO inhcld SELECT x::text, x FROM generate_series(6, 10) AS x;"}
+{"sql":"explain (verbose, costs off)\nupdate inhpar i set (f1, f2) = (select i.f1, i.f2 || '-' from int4_tbl limit 1)","shape":"EXPLAIN (VERBOSE, COSTS off) UPDATE inhpar AS i SET (f1, f2) = (SELECT i.f1, i.f2 || '-' FROM int4_tbl LIMIT 1);"}
+{"sql":"update inhpar i set (f1, f2) = (select i.f1, i.f2 || '-' from int4_tbl limit 1)","shape":"UPDATE inhpar AS i SET (f1, f2) = (SELECT i.f1, i.f2 || '-' FROM int4_tbl LIMIT 1);"}
+{"sql":"select * from inhpar","shape":"SELECT * FROM inhpar;"}
+{"sql":"drop table inhpar cascade","shape":"DROP TABLE inhpar CASCADE;"}
+{"sql":"create table inhpar(f1 int primary key, f2 name) partition by range (f1)","shape":"CREATE TABLE inhpar (f1 int PRIMARY KEY, f2 name) PARTITION BY RANGE (f1);"}
+{"sql":"create table inhcld1(f2 name, f1 int primary key)","shape":"CREATE TABLE inhcld1 (f2 name, f1 int PRIMARY KEY);"}
+{"sql":"create table inhcld2(f1 int primary key, f2 name)","shape":"CREATE TABLE inhcld2 (f1 int PRIMARY KEY, f2 name);"}
+{"sql":"alter table inhpar attach partition inhcld1 for values from (1) to (5)"}
+{"sql":"alter table inhpar attach partition inhcld2 for values from (5) to (100)"}
+{"sql":"insert into inhpar select x, x::text from generate_series(1,10) x","shape":"INSERT INTO inhpar SELECT x, x::text FROM generate_series(1, 10) AS x;"}
+{"sql":"insert into inhpar as i values (3), (7) on conflict (f1)\n  do update set (f1, f2) = (select i.f1, i.f2 || '+')","shape":"INSERT INTO inhpar AS i VALUES (3), (7) ON CONFLICT (f1) DO UPDATE SET (f1, f2) = (SELECT i.f1, i.f2 || '+');"}
+{"sql":"select * from inhpar order by f1","shape":"SELECT * FROM inhpar ORDER BY f1;"}
+{"sql":"create table cnullparent (f1 int)","shape":"CREATE TABLE cnullparent (f1 int);"}
+{"sql":"create table cnullchild (check (f1 = 1 or f1 = null)) inherits(cnullparent)","shape":"CREATE TABLE cnullchild (CHECK ((f1 = 1) OR (f1 = NULL))) INHERITS (cnullparent);"}
+{"sql":"insert into cnullchild values(1)","shape":"INSERT INTO cnullchild VALUES (1);"}
+{"sql":"insert into cnullchild values(2)","shape":"INSERT INTO cnullchild VALUES (2);"}
+{"sql":"insert into cnullchild values(null)","shape":"INSERT INTO cnullchild VALUES (NULL);"}
+{"sql":"select * from cnullparent","shape":"SELECT * FROM cnullparent;"}
+{"sql":"select * from cnullparent where f1 = 2","shape":"SELECT * FROM cnullparent WHERE f1 = 2;"}
+{"sql":"drop table cnullparent cascade","shape":"DROP TABLE cnullparent CASCADE;"}
+{"sql":"create table inh_perm_parent (a1 int)","shape":"CREATE TABLE inh_perm_parent (a1 int);"}
+{"sql":"create temp table inh_temp_parent (a1 int)","shape":"CREATE TEMPORARY TABLE inh_temp_parent (a1 int);"}
+{"sql":"create temp table inh_temp_child () inherits (inh_perm_parent)","shape":"CREATE TEMPORARY TABLE inh_temp_child () INHERITS (inh_perm_parent);"}
+{"sql":"create table inh_perm_child () inherits (inh_temp_parent)","shape":"CREATE TABLE inh_perm_child () INHERITS (inh_temp_parent);"}
+{"sql":"create temp table inh_temp_child_2 () inherits (inh_temp_parent)","shape":"CREATE TEMPORARY TABLE inh_temp_child_2 () INHERITS (inh_temp_parent);"}
+{"sql":"insert into inh_perm_parent values (1)","shape":"INSERT INTO inh_perm_parent VALUES (1);"}
+{"sql":"insert into inh_temp_parent values (2)","shape":"INSERT INTO inh_temp_parent VALUES (2);"}
+{"sql":"insert into inh_temp_child values (3)","shape":"INSERT INTO inh_temp_child VALUES (3);"}
+{"sql":"insert into inh_temp_child_2 values (4)","shape":"INSERT INTO inh_temp_child_2 VALUES (4);"}
+{"sql":"select tableoid::regclass, a1 from inh_perm_parent","shape":"SELECT tableoid::regclass, a1 FROM inh_perm_parent;"}
+{"sql":"select tableoid::regclass, a1 from inh_temp_parent","shape":"SELECT tableoid::regclass, a1 FROM inh_temp_parent;"}
+{"sql":"drop table inh_perm_parent cascade","shape":"DROP TABLE inh_perm_parent CASCADE;"}
+{"sql":"drop table inh_temp_parent cascade","shape":"DROP TABLE inh_temp_parent CASCADE;"}
+{"sql":"create table list_parted (\n\ta\tvarchar\n) partition by list (a)","shape":"CREATE TABLE list_parted (a varchar) PARTITION BY LIST (a);"}
+{"sql":"create table part_ab_cd partition of list_parted for values in ('ab', 'cd')","shape":"CREATE TABLE part_ab_cd PARTITION OF list_parted FOR VALUES IN ('ab', 'cd');"}
+{"sql":"create table part_ef_gh partition of list_parted for values in ('ef', 'gh')","shape":"CREATE TABLE part_ef_gh PARTITION OF list_parted FOR VALUES IN ('ef', 'gh');"}
+{"sql":"create table part_null_xy partition of list_parted for values in (null, 'xy')","shape":"CREATE TABLE part_null_xy PARTITION OF list_parted FOR VALUES IN (NULL, 'xy');"}
+{"sql":"explain (costs off) select * from list_parted","shape":"EXPLAIN (COSTS off) SELECT * FROM list_parted;"}
+{"sql":"explain (costs off) select * from list_parted where a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM list_parted WHERE a IS NULL;"}
+{"sql":"explain (costs off) select * from list_parted where a is not null","shape":"EXPLAIN (COSTS off) SELECT * FROM list_parted WHERE a IS NOT NULL;"}
+{"sql":"explain (costs off) select * from list_parted where a in ('ab', 'cd', 'ef')","shape":"EXPLAIN (COSTS off) SELECT * FROM list_parted WHERE a IN ('ab', 'cd', 'ef');"}
+{"sql":"explain (costs off) select * from list_parted where a = 'ab' or a in (null, 'cd')","shape":"EXPLAIN (COSTS off) SELECT * FROM list_parted WHERE (a = 'ab') OR (a IN (NULL, 'cd'));"}
+{"sql":"explain (costs off) select * from list_parted where a = 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM list_parted WHERE a = 'ab';"}
+{"sql":"create table range_list_parted (\n\ta\tint,\n\tb\tchar(2)\n) partition by range (a)","shape":"CREATE TABLE range_list_parted (a int, b char(2)) PARTITION BY RANGE (a);"}
+{"sql":"create table part_1_10 partition of range_list_parted for values from (1) to (10) partition by list (b)","shape":"CREATE TABLE part_1_10 PARTITION OF range_list_parted FOR VALUES FROM (1) TO (10) PARTITION BY LIST (b);"}
+{"sql":"create table part_1_10_ab partition of part_1_10 for values in ('ab')","shape":"CREATE TABLE part_1_10_ab PARTITION OF part_1_10 FOR VALUES IN ('ab');"}
+{"sql":"create table part_1_10_cd partition of part_1_10 for values in ('cd')","shape":"CREATE TABLE part_1_10_cd PARTITION OF part_1_10 FOR VALUES IN ('cd');"}
+{"sql":"create table part_10_20 partition of range_list_parted for values from (10) to (20) partition by list (b)","shape":"CREATE TABLE part_10_20 PARTITION OF range_list_parted FOR VALUES FROM (10) TO (20) PARTITION BY LIST (b);"}
+{"sql":"create table part_10_20_ab partition of part_10_20 for values in ('ab')","shape":"CREATE TABLE part_10_20_ab PARTITION OF part_10_20 FOR VALUES IN ('ab');"}
+{"sql":"create table part_10_20_cd partition of part_10_20 for values in ('cd')","shape":"CREATE TABLE part_10_20_cd PARTITION OF part_10_20 FOR VALUES IN ('cd');"}
+{"sql":"create table part_21_30 partition of range_list_parted for values from (21) to (30) partition by list (b)","shape":"CREATE TABLE part_21_30 PARTITION OF range_list_parted FOR VALUES FROM (21) TO (30) PARTITION BY LIST (b);"}
+{"sql":"create table part_21_30_ab partition of part_21_30 for values in ('ab')","shape":"CREATE TABLE part_21_30_ab PARTITION OF part_21_30 FOR VALUES IN ('ab');"}
+{"sql":"create table part_21_30_cd partition of part_21_30 for values in ('cd')","shape":"CREATE TABLE part_21_30_cd PARTITION OF part_21_30 FOR VALUES IN ('cd');"}
+{"sql":"create table part_40_inf partition of range_list_parted for values from (40) to (maxvalue) partition by list (b)","shape":"CREATE TABLE part_40_inf PARTITION OF range_list_parted FOR VALUES FROM (40) TO (maxvalue) PARTITION BY LIST (b);"}
+{"sql":"create table part_40_inf_ab partition of part_40_inf for values in ('ab')","shape":"CREATE TABLE part_40_inf_ab PARTITION OF part_40_inf FOR VALUES IN ('ab');"}
+{"sql":"create table part_40_inf_cd partition of part_40_inf for values in ('cd')","shape":"CREATE TABLE part_40_inf_cd PARTITION OF part_40_inf FOR VALUES IN ('cd');"}
+{"sql":"create table part_40_inf_null partition of part_40_inf for values in (null)","shape":"CREATE TABLE part_40_inf_null PARTITION OF part_40_inf FOR VALUES IN (NULL);"}
+{"sql":"explain (costs off) select * from range_list_parted","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted;"}
+{"sql":"explain (costs off) select * from range_list_parted where a = 5","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE a = 5;"}
+{"sql":"explain (costs off) select * from range_list_parted where b = 'ab'","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE b = 'ab';"}
+{"sql":"explain (costs off) select * from range_list_parted where a between 3 and 23 and b in ('ab')","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE (a BETWEEN 3 AND 23) AND (b IN ('ab'));"}
+{"sql":"explain (costs off) select * from range_list_parted where a is null","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE a IS NULL;"}
+{"sql":"explain (costs off) select * from range_list_parted where b is null","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE b IS NULL;"}
+{"sql":"explain (costs off) select * from range_list_parted where a is not null and a < 67","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE (a IS NOT NULL) AND (a < 67);"}
+{"sql":"explain (costs off) select * from range_list_parted where a >= 30","shape":"EXPLAIN (COSTS off) SELECT * FROM range_list_parted WHERE a >= 30;"}
+{"sql":"drop table list_parted","shape":"DROP TABLE list_parted;"}
+{"sql":"drop table range_list_parted","shape":"DROP TABLE range_list_parted;"}
+{"sql":"create table mcrparted (a int, b int, c int) partition by range (a, abs(b), c)","shape":"CREATE TABLE mcrparted (a int, b int, c int) PARTITION BY RANGE (a, abs(b), c);"}
+{"sql":"create table mcrparted_def partition of mcrparted default","shape":"CREATE TABLE mcrparted_def PARTITION OF mcrparted DEFAULT;"}
+{"sql":"create table mcrparted0 partition of mcrparted for values from (minvalue, minvalue, minvalue) to (1, 1, 1)","shape":"CREATE TABLE mcrparted0 PARTITION OF mcrparted FOR VALUES FROM (minvalue, minvalue, minvalue) TO (1, 1, 1);"}
+{"sql":"create table mcrparted1 partition of mcrparted for values from (1, 1, 1) to (10, 5, 10)","shape":"CREATE TABLE mcrparted1 PARTITION OF mcrparted FOR VALUES FROM (1, 1, 1) TO (10, 5, 10);"}
+{"sql":"create table mcrparted2 partition of mcrparted for values from (10, 5, 10) to (10, 10, 10)","shape":"CREATE TABLE mcrparted2 PARTITION OF mcrparted FOR VALUES FROM (10, 5, 10) TO (10, 10, 10);"}
+{"sql":"create table mcrparted3 partition of mcrparted for values from (11, 1, 1) to (20, 10, 10)","shape":"CREATE TABLE mcrparted3 PARTITION OF mcrparted FOR VALUES FROM (11, 1, 1) TO (20, 10, 10);"}
+{"sql":"create table mcrparted4 partition of mcrparted for values from (20, 10, 10) to (20, 20, 20)","shape":"CREATE TABLE mcrparted4 PARTITION OF mcrparted FOR VALUES FROM (20, 10, 10) TO (20, 20, 20);"}
+{"sql":"create table mcrparted5 partition of mcrparted for values from (20, 20, 20) to (maxvalue, maxvalue, maxvalue)","shape":"CREATE TABLE mcrparted5 PARTITION OF mcrparted FOR VALUES FROM (20, 20, 20) TO (maxvalue, maxvalue, maxvalue);"}
+{"sql":"explain (costs off) select * from mcrparted where a = 0","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE a = 0;"}
+{"sql":"explain (costs off) select * from mcrparted where a = 10 and abs(b) < 5","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE (a = 10) AND (abs(b) < 5);"}
+{"sql":"explain (costs off) select * from mcrparted where a = 10 and abs(b) = 5","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE (a = 10) AND (abs(b) = 5);"}
+{"sql":"explain (costs off) select * from mcrparted where abs(b) = 5","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE abs(b) = 5;"}
+{"sql":"explain (costs off) select * from mcrparted where a > -1","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE a > (-1);"}
+{"sql":"explain (costs off) select * from mcrparted where a = 20 and abs(b) = 10 and c > 10","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE ((a = 20) AND (abs(b) = 10)) AND (c > 10);"}
+{"sql":"explain (costs off) select * from mcrparted where a = 20 and c > 20","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE (a = 20) AND (c > 20);"}
+{"sql":"create table parted_minmax (a int, b varchar(16)) partition by range (a)","shape":"CREATE TABLE parted_minmax (a int, b varchar(16)) PARTITION BY RANGE (a);"}
+{"sql":"create table parted_minmax1 partition of parted_minmax for values from (1) to (10)","shape":"CREATE TABLE parted_minmax1 PARTITION OF parted_minmax FOR VALUES FROM (1) TO (10);"}
+{"sql":"create index parted_minmax1i on parted_minmax1 (a, b)","shape":"CREATE INDEX parted_minmax1i ON parted_minmax1 (a, b);"}
+{"sql":"insert into parted_minmax values (1,'12345')","shape":"INSERT INTO parted_minmax VALUES (1, '12345');"}
+{"sql":"explain (costs off) select min(a), max(a) from parted_minmax where b = '12345'","shape":"EXPLAIN (COSTS off) SELECT min(a), max(a) FROM parted_minmax WHERE b = '12345';"}
+{"sql":"select min(a), max(a) from parted_minmax where b = '12345'","shape":"SELECT min(a), max(a) FROM parted_minmax WHERE b = '12345';"}
+{"sql":"drop table parted_minmax","shape":"DROP TABLE parted_minmax;"}
+{"sql":"create index mcrparted_a_abs_c_idx on mcrparted (a, abs(b), c)","shape":"CREATE INDEX mcrparted_a_abs_c_idx ON mcrparted (a, abs(b), c);"}
+{"sql":"explain (costs off) select * from mcrparted order by a, abs(b), c","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted ORDER BY a, abs(b), c;"}
+{"sql":"drop table mcrparted_def","shape":"DROP TABLE mcrparted_def;"}
+{"sql":"explain (costs off) select * from mcrparted order by a desc, abs(b) desc, c desc","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted ORDER BY a DESC, abs(b) DESC, c DESC;"}
+{"sql":"drop table mcrparted5","shape":"DROP TABLE mcrparted5;"}
+{"sql":"create table mcrparted5 partition of mcrparted for values from (20, 20, 20) to (maxvalue, maxvalue, maxvalue) partition by list (a)","shape":"CREATE TABLE mcrparted5 PARTITION OF mcrparted FOR VALUES FROM (20, 20, 20) TO (maxvalue, maxvalue, maxvalue) PARTITION BY LIST (a);"}
+{"sql":"create table mcrparted5a partition of mcrparted5 for values in(20)","shape":"CREATE TABLE mcrparted5a PARTITION OF mcrparted5 FOR VALUES IN (20);"}
+{"sql":"create table mcrparted5_def partition of mcrparted5 default","shape":"CREATE TABLE mcrparted5_def PARTITION OF mcrparted5 DEFAULT;"}
+{"sql":"drop table mcrparted5_def","shape":"DROP TABLE mcrparted5_def;"}
+{"sql":"explain (costs off) select a, abs(b) from mcrparted order by a, abs(b), c","shape":"EXPLAIN (COSTS off) SELECT a, abs(b) FROM mcrparted ORDER BY a, abs(b), c;"}
+{"sql":"explain (costs off) select * from mcrparted where a < 20 order by a, abs(b), c","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE a < 20 ORDER BY a, abs(b), c;"}
+{"sql":"set enable_sort to off","shape":"SET enable_sort TO off;"}
+{"sql":"create table mclparted (a int) partition by list(a)","shape":"CREATE TABLE mclparted (a int) PARTITION BY LIST (a);"}
+{"sql":"create table mclparted1 partition of mclparted for values in(1)","shape":"CREATE TABLE mclparted1 PARTITION OF mclparted FOR VALUES IN (1);"}
+{"sql":"create table mclparted2 partition of mclparted for values in(2)","shape":"CREATE TABLE mclparted2 PARTITION OF mclparted FOR VALUES IN (2);"}
+{"sql":"create index on mclparted (a)","shape":"CREATE INDEX ON mclparted (a);"}
+{"sql":"explain (costs off) select * from mclparted order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM mclparted ORDER BY a;"}
+{"sql":"create table mclparted3_5 partition of mclparted for values in(3,5)","shape":"CREATE TABLE mclparted3_5 PARTITION OF mclparted FOR VALUES IN (3, 5);"}
+{"sql":"create table mclparted4 partition of mclparted for values in(4)","shape":"CREATE TABLE mclparted4 PARTITION OF mclparted FOR VALUES IN (4);"}
+{"sql":"explain (costs off) select * from mclparted where a in(3,4,5) order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM mclparted WHERE a IN (3, 4, 5) ORDER BY a;"}
+{"sql":"create table mclparted_null partition of mclparted for values in(null)","shape":"CREATE TABLE mclparted_null PARTITION OF mclparted FOR VALUES IN (NULL);"}
+{"sql":"create table mclparted_def partition of mclparted default","shape":"CREATE TABLE mclparted_def PARTITION OF mclparted DEFAULT;"}
+{"sql":"explain (costs off) select * from mclparted where a in(1,2,4) order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM mclparted WHERE a IN (1, 2, 4) ORDER BY a;"}
+{"sql":"explain (costs off) select * from mclparted where a in(1,2,4) or a is null order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM mclparted WHERE (a IN (1, 2, 4)) OR (a IS NULL) ORDER BY a;"}
+{"sql":"drop table mclparted_null","shape":"DROP TABLE mclparted_null;"}
+{"sql":"create table mclparted_0_null partition of mclparted for values in(0,null)","shape":"CREATE TABLE mclparted_0_null PARTITION OF mclparted FOR VALUES IN (0, NULL);"}
+{"sql":"explain (costs off) select * from mclparted where a in(0,1,2,4) order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM mclparted WHERE a IN (0, 1, 2, 4) ORDER BY a;"}
+{"sql":"explain (costs off) select * from mclparted where a in(1,2,4,100) order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM mclparted WHERE a IN (1, 2, 4, 100) ORDER BY a;"}
+{"sql":"drop table mclparted","shape":"DROP TABLE mclparted;"}
+{"sql":"reset enable_sort","shape":"RESET enable_sort;"}
+{"sql":"drop index mcrparted_a_abs_c_idx","shape":"DROP INDEX mcrparted_a_abs_c_idx;"}
+{"sql":"create index on mcrparted1 (a, abs(b), c)","shape":"CREATE INDEX ON mcrparted1 (a, abs(b), c);"}
+{"sql":"create index on mcrparted2 (a, abs(b), c)","shape":"CREATE INDEX ON mcrparted2 (a, abs(b), c);"}
+{"sql":"create index on mcrparted3 (a, abs(b), c)","shape":"CREATE INDEX ON mcrparted3 (a, abs(b), c);"}
+{"sql":"create index on mcrparted4 (a, abs(b), c)","shape":"CREATE INDEX ON mcrparted4 (a, abs(b), c);"}
+{"sql":"explain (costs off) select * from mcrparted where a < 20 order by a, abs(b), c limit 1","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE a < 20 ORDER BY a, abs(b), c LIMIT 1;"}
+{"sql":"set enable_bitmapscan = 0","shape":"SET enable_bitmapscan TO 0;"}
+{"sql":"explain (costs off) select * from mcrparted where a = 10 order by a, abs(b), c","shape":"EXPLAIN (COSTS off) SELECT * FROM mcrparted WHERE a = 10 ORDER BY a, abs(b), c;"}
+{"sql":"drop table mcrparted","shape":"DROP TABLE mcrparted;"}
+{"sql":"create table bool_lp (b bool) partition by list(b)","shape":"CREATE TABLE bool_lp (b bool) PARTITION BY LIST (b);"}
+{"sql":"create table bool_lp_true partition of bool_lp for values in(true)","shape":"CREATE TABLE bool_lp_true PARTITION OF bool_lp FOR VALUES IN (TRUE);"}
+{"sql":"create table bool_lp_false partition of bool_lp for values in(false)","shape":"CREATE TABLE bool_lp_false PARTITION OF bool_lp FOR VALUES IN (FALSE);"}
+{"sql":"create index on bool_lp (b)","shape":"CREATE INDEX ON bool_lp (b);"}
+{"sql":"explain (costs off) select * from bool_lp order by b","shape":"EXPLAIN (COSTS off) SELECT * FROM bool_lp ORDER BY b;"}
+{"sql":"drop table bool_lp","shape":"DROP TABLE bool_lp;"}
+{"sql":"create table bool_rp (b bool, a int) partition by range(b,a)","shape":"CREATE TABLE bool_rp (b bool, a int) PARTITION BY RANGE (b, a);"}
+{"sql":"create table bool_rp_false_1k partition of bool_rp for values from (false,0) to (false,1000)","shape":"CREATE TABLE bool_rp_false_1k PARTITION OF bool_rp FOR VALUES FROM (FALSE, 0) TO (FALSE, 1000);"}
+{"sql":"create table bool_rp_true_1k partition of bool_rp for values from (true,0) to (true,1000)","shape":"CREATE TABLE bool_rp_true_1k PARTITION OF bool_rp FOR VALUES FROM (TRUE, 0) TO (TRUE, 1000);"}
+{"sql":"create table bool_rp_false_2k partition of bool_rp for values from (false,1000) to (false,2000)","shape":"CREATE TABLE bool_rp_false_2k PARTITION OF bool_rp FOR VALUES FROM (FALSE, 1000) TO (FALSE, 2000);"}
+{"sql":"create table bool_rp_true_2k partition of bool_rp for values from (true,1000) to (true,2000)","shape":"CREATE TABLE bool_rp_true_2k PARTITION OF bool_rp FOR VALUES FROM (TRUE, 1000) TO (TRUE, 2000);"}
+{"sql":"create index on bool_rp (b,a)","shape":"CREATE INDEX ON bool_rp (b, a);"}
+{"sql":"explain (costs off) select * from bool_rp where b = true order by b,a","shape":"EXPLAIN (COSTS off) SELECT * FROM bool_rp WHERE b = TRUE ORDER BY b, a;"}
+{"sql":"explain (costs off) select * from bool_rp where b = false order by b,a","shape":"EXPLAIN (COSTS off) SELECT * FROM bool_rp WHERE b = FALSE ORDER BY b, a;"}
+{"sql":"explain (costs off) select * from bool_rp where b = true order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM bool_rp WHERE b = TRUE ORDER BY a;"}
+{"sql":"explain (costs off) select * from bool_rp where b = false order by a","shape":"EXPLAIN (COSTS off) SELECT * FROM bool_rp WHERE b = FALSE ORDER BY a;"}
+{"sql":"drop table bool_rp","shape":"DROP TABLE bool_rp;"}
+{"sql":"create table range_parted (a int, b int, c int) partition by range(a, b)","shape":"CREATE TABLE range_parted (a int, b int, c int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table range_parted1 partition of range_parted for values from (0,0) to (10,10)","shape":"CREATE TABLE range_parted1 PARTITION OF range_parted FOR VALUES FROM (0, 0) TO (10, 10);"}
+{"sql":"create table range_parted2 partition of range_parted for values from (10,10) to (20,20)","shape":"CREATE TABLE range_parted2 PARTITION OF range_parted FOR VALUES FROM (10, 10) TO (20, 20);"}
+{"sql":"create index on range_parted (a,b,c)","shape":"CREATE INDEX ON range_parted (a, b, c);"}
+{"sql":"explain (costs off) select * from range_parted order by a,b,c","shape":"EXPLAIN (COSTS off) SELECT * FROM range_parted ORDER BY a, b, c;"}
+{"sql":"explain (costs off) select * from range_parted order by a desc,b desc,c desc","shape":"EXPLAIN (COSTS off) SELECT * FROM range_parted ORDER BY a DESC, b DESC, c DESC;"}
+{"sql":"drop table range_parted","shape":"DROP TABLE range_parted;"}
+{"sql":"create table permtest_parent (a int, b text, c text) partition by list (a)","shape":"CREATE TABLE permtest_parent (a int, b text, c text) PARTITION BY LIST (a);"}
+{"sql":"create table permtest_child (b text, c text, a int) partition by list (b)","shape":"CREATE TABLE permtest_child (b text, c text, a int) PARTITION BY LIST (b);"}
+{"sql":"create table permtest_grandchild (c text, b text, a int)","shape":"CREATE TABLE permtest_grandchild (c text, b text, a int);"}
+{"sql":"alter table permtest_child attach partition permtest_grandchild for values in ('a')"}
+{"sql":"alter table permtest_parent attach partition permtest_child for values in (1)"}
+{"sql":"create index on permtest_parent (left(c, 3))","shape":"CREATE INDEX ON permtest_parent (left(c, 3));"}
+{"sql":"insert into permtest_parent\n  select 1, 'a', left(fipshash(i::text), 5) from generate_series(0, 100) i","shape":"INSERT INTO permtest_parent SELECT 1, 'a', left(fipshash(i::text), 5) FROM generate_series(0, 100) AS i;"}
+{"sql":"analyze permtest_parent","shape":"ANALYZE permtest_parent;"}
+{"sql":"create role regress_no_child_access"}
+{"sql":"revoke all on permtest_grandchild from regress_no_child_access","shape":"REVOKE ALL PRIVILEGES ON permtest_grandchild FROM regress_no_child_access;"}
+{"sql":"grant select on permtest_parent to regress_no_child_access","shape":"GRANT SELECT ON permtest_parent TO regress_no_child_access;"}
+{"sql":"set session authorization regress_no_child_access"}
+{"sql":"explain (costs off)\n  select * from permtest_parent p1 inner join permtest_parent p2\n  on p1.a = p2.a and p1.c ~ 'a1$'","shape":"EXPLAIN (COSTS off) SELECT * FROM permtest_parent AS p1 JOIN permtest_parent AS p2 ON (p1.a = p2.a) AND (p1.c ~ 'a1$');"}
+{"sql":"explain (costs off)\n  select * from permtest_parent p1 inner join permtest_parent p2\n  on p1.a = p2.a and left(p1.c, 3) ~ 'a1$'","shape":"EXPLAIN (COSTS off) SELECT * FROM permtest_parent AS p1 JOIN permtest_parent AS p2 ON (p1.a = p2.a) AND (left(p1.c, 3) ~ 'a1$');"}
+{"sql":"revoke all on permtest_parent from regress_no_child_access","shape":"REVOKE ALL PRIVILEGES ON permtest_parent FROM regress_no_child_access;"}
+{"sql":"grant select(a,c) on permtest_parent to regress_no_child_access","shape":"GRANT SELECT (a, c) ON permtest_parent TO regress_no_child_access;"}
+{"sql":"explain (costs off)\n  select p2.a, p1.c from permtest_parent p1 inner join permtest_parent p2\n  on p1.a = p2.a and p1.c ~ 'a1$'","shape":"EXPLAIN (COSTS off) SELECT p2.a, p1.c FROM permtest_parent AS p1 JOIN permtest_parent AS p2 ON (p1.a = p2.a) AND (p1.c ~ 'a1$');"}
+{"sql":"explain (costs off)\n  select p2.a, p1.c from permtest_parent p1 inner join permtest_parent p2\n  on p1.a = p2.a and left(p1.c, 3) ~ 'a1$'","shape":"EXPLAIN (COSTS off) SELECT p2.a, p1.c FROM permtest_parent AS p1 JOIN permtest_parent AS p2 ON (p1.a = p2.a) AND (left(p1.c, 3) ~ 'a1$');"}
+{"sql":"drop role regress_no_child_access","shape":"DROP ROLE regress_no_child_access;"}
+{"sql":"drop table permtest_parent","shape":"DROP TABLE permtest_parent;"}
+{"sql":"CREATE TABLE errtst_parent (\n    partid int not null,\n    shdata int not null,\n    data int NOT NULL DEFAULT 0,\n    CONSTRAINT shdata_small CHECK(shdata < 3)\n) PARTITION BY RANGE (partid)","shape":"CREATE TABLE errtst_parent (partid int NOT NULL, shdata int NOT NULL, data int NOT NULL DEFAULT 0, CONSTRAINT shdata_small CHECK (shdata < 3)) PARTITION BY RANGE (partid);"}
+{"sql":"CREATE TABLE errtst_child_fastdef (\n    partid int not null,\n    shdata int not null,\n    CONSTRAINT shdata_small CHECK(shdata < 3)\n)","shape":"CREATE TABLE errtst_child_fastdef (partid int NOT NULL, shdata int NOT NULL, CONSTRAINT shdata_small CHECK (shdata < 3));"}
+{"sql":"CREATE TABLE errtst_child_plaindef (\n    partid int not null,\n    shdata int not null,\n    data int NOT NULL DEFAULT 0,\n    CONSTRAINT shdata_small CHECK(shdata < 3),\n    CHECK(data < 10)\n)","shape":"CREATE TABLE errtst_child_plaindef (partid int NOT NULL, shdata int NOT NULL, data int NOT NULL DEFAULT 0, CONSTRAINT shdata_small CHECK (shdata < 3), CHECK (data < 10));"}
+{"sql":"CREATE TABLE errtst_child_reorder (\n    data int NOT NULL DEFAULT 0,\n    shdata int not null,\n    partid int not null,\n    CONSTRAINT shdata_small CHECK(shdata < 3),\n    CHECK(data < 10)\n)","shape":"CREATE TABLE errtst_child_reorder (data int NOT NULL DEFAULT 0, shdata int NOT NULL, partid int NOT NULL, CONSTRAINT shdata_small CHECK (shdata < 3), CHECK (data < 10));"}
+{"sql":"ALTER TABLE errtst_child_fastdef ADD COLUMN data int NOT NULL DEFAULT 0","shape":"ALTER TABLE errtst_child_fastdef ADD COLUMN data int NOT NULL DEFAULT 0;"}
+{"sql":"ALTER TABLE errtst_child_fastdef ADD CONSTRAINT errtest_child_fastdef_data_check CHECK (data < 10)","shape":"ALTER TABLE errtst_child_fastdef ADD CONSTRAINT errtest_child_fastdef_data_check CHECK (data < 10);"}
+{"sql":"ALTER TABLE errtst_parent ATTACH PARTITION errtst_child_fastdef FOR VALUES FROM (0) TO (10)"}
+{"sql":"ALTER TABLE errtst_parent ATTACH PARTITION errtst_child_plaindef FOR VALUES FROM (10) TO (20)"}
+{"sql":"ALTER TABLE errtst_parent ATTACH PARTITION errtst_child_reorder FOR VALUES FROM (20) TO (30)"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ( '0', '1', '5')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('0', '1', '5');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('10', '1', '5')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('10', '1', '5');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('20', '1', '5')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('20', '1', '5');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ( '0', '1', '10')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('0', '1', '10');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('10', '1', '10')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('10', '1', '10');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('20', '1', '10')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('20', '1', '10');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ( '0', '1', NULL)","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('0', '1', NULL);"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('10', '1', NULL)","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('10', '1', NULL);"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('20', '1', NULL)","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('20', '1', NULL);"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ( '0', '5', '5')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('0', '5', '5');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('10', '5', '5')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('10', '5', '5');"}
+{"sql":"INSERT INTO errtst_parent(partid, shdata, data) VALUES ('20', '5', '5')","shape":"INSERT INTO errtst_parent (partid, shdata, data) VALUES ('20', '5', '5');"}
+{"sql":"UPDATE errtst_parent SET data = data + 1 WHERE partid = 0","shape":"UPDATE errtst_parent SET data = data + 1 WHERE partid = 0;"}
+{"sql":"UPDATE errtst_parent SET data = data + 1 WHERE partid = 10","shape":"UPDATE errtst_parent SET data = data + 1 WHERE partid = 10;"}
+{"sql":"UPDATE errtst_parent SET data = data + 1 WHERE partid = 20","shape":"UPDATE errtst_parent SET data = data + 1 WHERE partid = 20;"}
+{"sql":"UPDATE errtst_parent SET data = data + 10 WHERE partid = 0","shape":"UPDATE errtst_parent SET data = data + 10 WHERE partid = 0;"}
+{"sql":"UPDATE errtst_parent SET data = data + 10 WHERE partid = 10","shape":"UPDATE errtst_parent SET data = data + 10 WHERE partid = 10;"}
+{"sql":"UPDATE errtst_parent SET data = data + 10 WHERE partid = 20","shape":"UPDATE errtst_parent SET data = data + 10 WHERE partid = 20;"}
+{"sql":"UPDATE errtst_child_fastdef SET partid = 1 WHERE partid = 0","shape":"UPDATE errtst_child_fastdef SET partid = 1 WHERE partid = 0;"}
+{"sql":"UPDATE errtst_child_plaindef SET partid = 11 WHERE partid = 10","shape":"UPDATE errtst_child_plaindef SET partid = 11 WHERE partid = 10;"}
+{"sql":"UPDATE errtst_child_reorder SET partid = 21 WHERE partid = 20","shape":"UPDATE errtst_child_reorder SET partid = 21 WHERE partid = 20;"}
+{"sql":"UPDATE errtst_child_fastdef SET partid = partid + 10 WHERE partid = 0","shape":"UPDATE errtst_child_fastdef SET partid = partid + 10 WHERE partid = 0;"}
+{"sql":"UPDATE errtst_child_plaindef SET partid = partid + 10 WHERE partid = 10","shape":"UPDATE errtst_child_plaindef SET partid = partid + 10 WHERE partid = 10;"}
+{"sql":"UPDATE errtst_child_reorder SET partid = partid + 10 WHERE partid = 20","shape":"UPDATE errtst_child_reorder SET partid = partid + 10 WHERE partid = 20;"}
+{"sql":"UPDATE errtst_parent SET partid = 10, data = data + 1 WHERE partid = 0","shape":"UPDATE errtst_parent SET partid = 10, data = data + 1 WHERE partid = 0;"}
+{"sql":"UPDATE errtst_parent SET partid = 20, data = data + 1 WHERE partid = 10","shape":"UPDATE errtst_parent SET partid = 20, data = data + 1 WHERE partid = 10;"}
+{"sql":"UPDATE errtst_parent SET partid = 0, data = data + 1 WHERE partid = 20","shape":"UPDATE errtst_parent SET partid = 0, data = data + 1 WHERE partid = 20;"}
+{"sql":"UPDATE errtst_parent SET partid = 10, data = data + 10 WHERE partid = 0","shape":"UPDATE errtst_parent SET partid = 10, data = data + 10 WHERE partid = 0;"}
+{"sql":"UPDATE errtst_parent SET partid = 20, data = data + 10 WHERE partid = 10","shape":"UPDATE errtst_parent SET partid = 20, data = data + 10 WHERE partid = 10;"}
+{"sql":"UPDATE errtst_parent SET partid = 0, data = data + 10 WHERE partid = 20","shape":"UPDATE errtst_parent SET partid = 0, data = data + 10 WHERE partid = 20;"}
+{"sql":"UPDATE errtst_parent SET partid = 30, data = data + 10 WHERE partid = 20","shape":"UPDATE errtst_parent SET partid = 30, data = data + 10 WHERE partid = 20;"}
+{"sql":"DROP TABLE errtst_parent","shape":"DROP TABLE errtst_parent;"}

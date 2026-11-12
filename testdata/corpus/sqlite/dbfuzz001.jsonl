@@ -1,0 +1,6 @@
+{"sql":"DELETE FROM t3 WHERE x IS NOT NULL AND +rowid=6"}
+{"sql":"CREATE TABLE t1(a INTEGER, b INT, c DEFAULT 0)"}
+{"sql":"PRAGMA locking_mode=EXCLUSIVE"}
+{"sql":"PRAGMA journal_mode = memory"}
+{"sql":"PRAGMA journal_mode=PERSIST"}
+{"sql":"PRAGMA journal_mode=MEMORY"}

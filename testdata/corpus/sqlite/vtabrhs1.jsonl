@@ -1,0 +1,7 @@
+{"sql":"SELECT rhs FROM qpvtab\n   WHERE cn='a'\n     AND a=12345"}
+{"sql":"SELECT rhs FROM qpvtab\n   WHERE cn='a'\n     AND a<>4.5"}
+{"sql":"SELECT rhs FROM qpvtab\n   WHERE cn='a'\n     AND 'quokka' < a"}
+{"sql":"SELECT rhs FROM qpvtab\n   WHERE cn='a'\n     AND a IS NULL"}
+{"sql":"SELECT rhs FROM qpvtab\n   WHERE cn='a'\n     AND a GLOB x'0123'"}
+{"sql":"SELECT typeof(rhs) FROM qpvtab WHERE cn='a' AND a=format('abc')"}
+{"sql":"SELECT typeof(rhs) FROM qpvtab WHERE cn='a' AND a=?2"}

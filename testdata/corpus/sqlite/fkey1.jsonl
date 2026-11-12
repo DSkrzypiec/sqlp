@@ -1,0 +1,70 @@
+{"sql":"CREATE TABLE t1(\n      a INTEGER PRIMARY KEY,\n      b INTEGER\n           REFERENCES t1 ON DELETE CASCADE\n           REFERENCES t2,\n      c TEXT,\n      FOREIGN KEY (b,c) REFERENCES t2(x,y) ON UPDATE CASCADE\n    )"}
+{"sql":"CREATE TABLE t2(\n      x INTEGER PRIMARY KEY,\n      y TEXT\n    )"}
+{"sql":"CREATE TABLE t3(\n      a INTEGER REFERENCES t2,\n      b INTEGER REFERENCES t1,\n      FOREIGN KEY (a,b) REFERENCES t2(x,y)\n    )"}
+{"sql":"CREATE TABLE t4(a integer primary key)"}
+{"sql":"CREATE TABLE t5(x references t4)"}
+{"sql":"CREATE TABLE t6(x references t4)"}
+{"sql":"CREATE TABLE t7(x references t4)"}
+{"sql":"CREATE TABLE t8(x references t4)"}
+{"sql":"CREATE TABLE t9(x references t4)"}
+{"sql":"CREATE TABLE t10(x references t4)"}
+{"sql":"DROP TABLE t7"}
+{"sql":"DROP TABLE t9"}
+{"sql":"DROP TABLE t8"}
+{"sql":"DROP TABLE t6"}
+{"sql":"CREATE TABLE t5(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE TABLE t6(\n      d REFERENCES t5,\n      e REFERENCES t5(c)\n    )"}
+{"sql":"PRAGMA foreign_key_list(t6)"}
+{"sql":"CREATE TABLE t7(d, e, f,\n      FOREIGN KEY (d, e) REFERENCES t5(a, b)\n    )"}
+{"sql":"PRAGMA foreign_key_list(t7)"}
+{"sql":"CREATE TABLE t8(d, e, f,\n      FOREIGN KEY (d, e) REFERENCES t5 ON DELETE CASCADE ON UPDATE SET NULL\n    )"}
+{"sql":"PRAGMA foreign_key_list(t8)"}
+{"sql":"CREATE TABLE t9(d, e, f,\n      FOREIGN KEY (d, e) REFERENCES t5 ON DELETE CASCADE ON UPDATE SET DEFAULT\n    )"}
+{"sql":"PRAGMA foreign_key_list(t9)"}
+{"sql":"PRAGMA foreign_keys=ON"}
+{"sql":"CREATE TABLE \"xx1\"(\"xx2\" TEXT PRIMARY KEY, \"xx3\" TEXT)"}
+{"sql":"INSERT INTO \"xx1\"(\"xx2\",\"xx3\") VALUES('abc','def')"}
+{"sql":"CREATE TABLE \"xx4\"(\"xx5\" TEXT REFERENCES \"xx1\" ON DELETE CASCADE)"}
+{"sql":"INSERT INTO \"xx4\"(\"xx5\") VALUES('abc')"}
+{"sql":"INSERT INTO \"xx1\"(\"xx2\",\"xx3\") VALUES('uvw','xyz')"}
+{"sql":"SELECT 1, \"xx5\" FROM \"xx4\""}
+{"sql":"DELETE FROM \"xx1\""}
+{"sql":"SELECT 2, \"xx5\" FROM \"xx4\""}
+{"sql":"CREATE TABLE \"\"\"1\"(\"\"\"2\" TEXT PRIMARY KEY, \"\"\"3\" TEXT)"}
+{"sql":"INSERT INTO \"\"\"1\"(\"\"\"2\",\"\"\"3\") VALUES('abc','def')"}
+{"sql":"CREATE TABLE \"\"\"4\"(\"\"\"5\" TEXT REFERENCES \"\"\"1\" ON DELETE CASCADE)"}
+{"sql":"INSERT INTO \"\"\"4\"(\"\"\"5\") VALUES('abc')"}
+{"sql":"INSERT INTO \"\"\"1\"(\"\"\"2\",\"\"\"3\") VALUES('uvw','xyz')"}
+{"sql":"SELECT 1, \"\"\"5\" FROM \"\"\"4\""}
+{"sql":"DELETE FROM \"\"\"1\""}
+{"sql":"SELECT 2, \"\"\"5\" FROM \"\"\"4\""}
+{"sql":"PRAGMA table_info=\"\"\"1\""}
+{"sql":"CREATE TABLE t11(\n    x INTEGER PRIMARY KEY, \n    parent REFERENCES t11 ON DELETE CASCADE\n  )"}
+{"sql":"INSERT INTO t11 VALUES (1, NULL), (2, 1), (3, 2)"}
+{"sql":"INSERT OR REPLACE INTO t11 VALUES (2, 3)"}
+{"sql":"CREATE TABLE Foo (\n    Id INTEGER PRIMARY KEY, \n    ParentId INTEGER REFERENCES Foo(Id) ON DELETE CASCADE, C1\n  )"}
+{"sql":"INSERT OR REPLACE INTO Foo(Id, ParentId, C1) VALUES (1, null, 'A')"}
+{"sql":"INSERT OR REPLACE INTO Foo(Id, ParentId, C1) VALUES (2, 1, 'A-2-1')"}
+{"sql":"INSERT OR REPLACE INTO Foo(Id, ParentId, C1) VALUES (3, 2, 'A-3-2')"}
+{"sql":"INSERT OR REPLACE INTO Foo(Id, ParentId, C1) VALUES (4, 3, 'A-4-3')"}
+{"sql":"INSERT OR REPLACE INTO Foo(Id, ParentId, C1) VALUES (2, 3, 'A-2-3')"}
+{"sql":"CREATE TABLE p1(x, y)"}
+{"sql":"CREATE UNIQUE INDEX p1x ON p1(x) WHERE y<2"}
+{"sql":"INSERT INTO p1 VALUES(1, 1)"}
+{"sql":"CREATE TABLE c1(a REFERENCES p1(x))"}
+{"sql":"INSERT INTO c1 VALUES(1)"}
+{"sql":"CREATE UNIQUE INDEX p1x2 ON p1(x)"}
+{"sql":"PRAGMA foreign_keys=OFF"}
+{"sql":"CREATE TABLE t1(a,b,c,FOREIGN KEY(a,a,a,a,a,a,a,a,a,a,a,a,a,a) REFERENCES t0)"}
+{"sql":"PRAGMA foreign_key_check"}
+{"sql":"CREATE TABLE t1(a,b,c AS(1),d, FOREIGN KEY(c,d,b,a,b,d,b,c) REFERENCES t0)"}
+{"sql":"CREATE TABLE sqlite_stat1 (tbl INTEGER PRIMARY KEY DESC, idx UNIQUE DEFAULT NULL) WITHOUT ROWID"}
+{"sql":"CREATE TABLE sqlsim4(stat PRIMARY KEY)"}
+{"sql":"CREATE TABLE t1(sqlsim7 REFERENCES sqlite_stat1 ON DELETE CASCADE)"}
+{"sql":"DROP table \"sqlsim4\""}
+{"sql":"CREATE TABLE t1(a REFERENCES sqlite_stat1 ON DELETE CASCADE)"}
+{"sql":"CREATE TABLE t2(a TEXT PRIMARY KEY)"}
+{"sql":"CREATE TABLE sqlite_stat1(tbl INTEGER PRIMARY KEY DESC, idx UNIQUE DEFAULT NULL) WITHOUT ROWID"}
+{"sql":"UPDATE sqlite_schema SET name='sqlite_autoindex_sqlite_stat1_1' WHERE name='sqlite_autoindex_sqlite_stat1_2'"}
+{"sql":"CREATE TABLE \"\"\"1\"(\"\"\"2\", \"\"\"3\" PRIMARY KEY)"}
+{"sql":"CREATE TABLE \"\"\"4\"(\"\"\"5\" REFERENCES \"\"\"1\" ON DELETE RESTRICT)"}

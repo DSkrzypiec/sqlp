@@ -1,0 +1,5 @@
+{"sql":"SELECT OPTIMIZE(t1) FROM t1 LIMIT 1"}
+{"sql":"UPDATE t1_segdir SET level = 2 WHERE level = 1 AND idx = 0"}
+{"sql":"INSERT INTO xyz(xyz) VALUES('merge=2,2')"}
+{"sql":"ALTER TABLE xyz RENAME TO ott"}
+{"sql":"SELECT name FROM sqlite_master WHERE name GLOB '???_*' ORDER BY 1"}

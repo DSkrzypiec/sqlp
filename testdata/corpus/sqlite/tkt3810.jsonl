@@ -1,0 +1,2 @@
+{"sql":"CREATE TEMP TRIGGER r1 AFTER INSERT ON t1 BEGIN\n       INSERT INTO t2 VALUES(new.rowid);\n     END"}
+{"sql":"SELECT name FROM temp.sqlite_master ORDER BY name"}

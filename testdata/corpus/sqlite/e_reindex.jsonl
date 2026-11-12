@@ -1,0 +1,24 @@
+{"sql":"CREATE INDEX i2 ON t1(b, a)"}
+{"sql":"CREATE TABLE saved(a,b,c,d,e)"}
+{"sql":"INSERT INTO saved SELECT * FROM sqlite_master WHERE type = 'index'"}
+{"sql":"DELETE FROM sqlite_master WHERE type = 'index'"}
+{"sql":"DELETE FROM t1 WHERE a = 3"}
+{"sql":"INSERT INTO sqlite_master SELECT * FROM saved"}
+{"sql":"DROP TABLE saved"}
+{"sql":"CREATE INDEX i1_a ON t1(x COLLATE collA)"}
+{"sql":"CREATE INDEX i1_b ON t1(x COLLATE collB)"}
+{"sql":"INSERT INTO t1 VALUES('four')"}
+{"sql":"INSERT INTO t1 VALUES('five')"}
+{"sql":"INSERT INTO t1 VALUES('six')"}
+{"sql":"INSERT INTO t1 VALUES('seven')"}
+{"sql":"INSERT INTO t1 VALUES('eight')"}
+{"sql":"CREATE INDEX i2_a ON t2(x COLLATE collA)"}
+{"sql":"CREATE INDEX i2_b ON t2(x COLLATE collB)"}
+{"sql":"INSERT INTO t2 SELECT x FROM t1"}
+{"sql":"CREATE INDEX aux.i1_a ON t1(x COLLATE collA)"}
+{"sql":"CREATE INDEX aux.i1_b ON t1(x COLLATE collB)"}
+{"sql":"INSERT INTO aux.t1 SELECT x FROM main.t1"}
+{"sql":"CREATE TABLE collA(x)"}
+{"sql":"CREATE INDEX icolla_a ON collA(x COLLATE collA)"}
+{"sql":"CREATE INDEX icolla_b ON collA(x COLLATE collB)"}
+{"sql":"INSERT INTO collA SELECT x FROM t1"}

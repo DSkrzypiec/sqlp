@@ -1,0 +1,47 @@
+{"sql":"CREATE USER regress_dep_user"}
+{"sql":"CREATE USER regress_dep_user2"}
+{"sql":"CREATE USER regress_dep_user3"}
+{"sql":"CREATE GROUP regress_dep_group"}
+{"sql":"CREATE TABLE deptest (f1 serial primary key, f2 text)","shape":"CREATE TABLE deptest (f1 serial PRIMARY KEY, f2 text);"}
+{"sql":"GRANT SELECT ON TABLE deptest TO GROUP regress_dep_group","shape":"GRANT SELECT ON TABLE deptest TO regress_dep_group;"}
+{"sql":"GRANT ALL ON TABLE deptest TO regress_dep_user, regress_dep_user2","shape":"GRANT ALL PRIVILEGES ON TABLE deptest TO regress_dep_user, regress_dep_user2;"}
+{"sql":"DROP USER regress_dep_user","shape":"DROP USER regress_dep_user;"}
+{"sql":"DROP GROUP regress_dep_group"}
+{"sql":"REVOKE SELECT ON deptest FROM GROUP regress_dep_group","shape":"REVOKE SELECT ON deptest FROM regress_dep_group;"}
+{"sql":"REVOKE SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES ON deptest FROM regress_dep_user","shape":"REVOKE SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES ON deptest FROM regress_dep_user;"}
+{"sql":"REVOKE TRIGGER ON deptest FROM regress_dep_user","shape":"REVOKE TRIGGER ON deptest FROM regress_dep_user;"}
+{"sql":"REVOKE ALL ON deptest FROM regress_dep_user2","shape":"REVOKE ALL PRIVILEGES ON deptest FROM regress_dep_user2;"}
+{"sql":"DROP USER regress_dep_user2","shape":"DROP USER regress_dep_user2;"}
+{"sql":"ALTER TABLE deptest OWNER TO regress_dep_user3"}
+{"sql":"DROP USER regress_dep_user3","shape":"DROP USER regress_dep_user3;"}
+{"sql":"DROP TABLE deptest","shape":"DROP TABLE deptest;"}
+{"sql":"CREATE USER regress_dep_user0"}
+{"sql":"CREATE USER regress_dep_user1"}
+{"sql":"SET SESSION AUTHORIZATION regress_dep_user0"}
+{"sql":"DROP OWNED BY regress_dep_user1"}
+{"sql":"DROP OWNED BY regress_dep_user0, regress_dep_user2"}
+{"sql":"REASSIGN OWNED BY regress_dep_user0 TO regress_dep_user1","shape":"REASSIGN OWNED BY regress_dep_user0 TO regress_dep_user1;"}
+{"sql":"REASSIGN OWNED BY regress_dep_user1 TO regress_dep_user0","shape":"REASSIGN OWNED BY regress_dep_user1 TO regress_dep_user0;"}
+{"sql":"DROP OWNED BY regress_dep_user0"}
+{"sql":"CREATE TABLE deptest1 (f1 int unique)","shape":"CREATE TABLE deptest1 (f1 int UNIQUE);"}
+{"sql":"GRANT ALL ON deptest1 TO regress_dep_user1 WITH GRANT OPTION","shape":"GRANT ALL PRIVILEGES ON deptest1 TO regress_dep_user1 WITH GRANT OPTION;"}
+{"sql":"SET SESSION AUTHORIZATION regress_dep_user1"}
+{"sql":"CREATE TABLE deptest (a serial primary key, b text)","shape":"CREATE TABLE deptest (a serial PRIMARY KEY, b text);"}
+{"sql":"GRANT ALL ON deptest1 TO regress_dep_user2","shape":"GRANT ALL PRIVILEGES ON deptest1 TO regress_dep_user2;"}
+{"sql":"GRANT ALL ON deptest1 TO regress_dep_user1","shape":"GRANT ALL PRIVILEGES ON deptest1 TO regress_dep_user1;"}
+{"sql":"GRANT CREATE ON DATABASE regression TO regress_dep_user1","shape":"GRANT CREATE ON DATABASE regression TO regress_dep_user1;"}
+{"sql":"CREATE SCHEMA deptest","shape":"CREATE SCHEMA deptest;"}
+{"sql":"ALTER DEFAULT PRIVILEGES FOR ROLE regress_dep_user1 IN SCHEMA deptest\n  GRANT ALL ON TABLES TO regress_dep_user2"}
+{"sql":"CREATE FUNCTION deptest_func() RETURNS void LANGUAGE plpgsql\n  AS $$ BEGIN END; $$","shape":"CREATE FUNCTION deptest_func() RETURNS void LANGUAGE plpgsql AS ' BEGIN END; ';"}
+{"sql":"CREATE TYPE deptest_enum AS ENUM ('red')","shape":"CREATE TYPE deptest_enum AS ENUM ('red');"}
+{"sql":"CREATE TYPE deptest_range AS RANGE (SUBTYPE = int4)"}
+{"sql":"CREATE TABLE deptest2 (f1 int)","shape":"CREATE TABLE deptest2 (f1 int);"}
+{"sql":"CREATE SEQUENCE ss1","shape":"CREATE SEQUENCE ss1;"}
+{"sql":"ALTER TABLE deptest2 ALTER f1 SET DEFAULT nextval('ss1')","shape":"ALTER TABLE deptest2 ALTER COLUMN f1 SET DEFAULT nextval('ss1');"}
+{"sql":"ALTER SEQUENCE ss1 OWNED BY deptest2.f1"}
+{"sql":"CREATE TYPE deptest_t AS (a int)","shape":"CREATE TYPE deptest_t AS (a int);"}
+{"sql":"SELECT typowner = relowner\nFROM pg_type JOIN pg_class c ON typrelid = c.oid WHERE typname = 'deptest_t'","shape":"SELECT typowner = relowner FROM pg_type JOIN pg_class AS c ON typrelid = c.oid WHERE typname = 'deptest_t';"}
+{"sql":"REASSIGN OWNED BY regress_dep_user1 TO regress_dep_user2","shape":"REASSIGN OWNED BY regress_dep_user1 TO regress_dep_user2;"}
+{"sql":"DROP USER regress_dep_user1","shape":"DROP USER regress_dep_user1;"}
+{"sql":"DROP OWNED BY regress_dep_user2, regress_dep_user0"}
+{"sql":"DROP USER regress_dep_user0","shape":"DROP USER regress_dep_user0;"}

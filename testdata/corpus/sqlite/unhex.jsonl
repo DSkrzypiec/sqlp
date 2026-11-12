@@ -1,0 +1,7 @@
+{"sql":"SELECT typeof( unhex('') ), length( unhex('') )"}
+{"sql":"SELECT unhex()"}
+{"sql":"SELECT unhex('ABCD', '1234', '')"}
+{"sql":"SELECT typeof( unhex(' ', ' -') ), length( unhex('-', ' -') )"}
+{"sql":"SELECT typeof(unhex(NULL))"}
+{"sql":"SELECT typeof(unhex(NULL, ' '))"}
+{"sql":"SELECT typeof(unhex('1234', NULL))"}

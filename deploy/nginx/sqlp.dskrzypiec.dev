@@ -1,0 +1,37 @@
+# nginx site for sqlp_serv, as installed by deploy/setup.sh. certbot then adds
+# the HTTPS server and the redirect from HTTP to this file in /etc/nginx.
+#
+# Every /run costs CPU on a machine shared with other sites, so one address
+# gets 2 runs a second (10 at once after a pause) and 2 at a time.
+limit_req_zone $binary_remote_addr zone=sqlp_run:1m rate=2r/s;
+limit_conn_zone $binary_remote_addr zone=sqlp_conn:1m;
+
+server {
+    listen 80;
+    server_name sqlp.dskrzypiec.dev;
+
+    # The app accepts at most 512 KB per request.
+    client_max_body_size 1m;
+
+    gzip on;
+    gzip_proxied any;
+    gzip_vary on;
+    gzip_types text/css text/javascript application/javascript image/svg+xml;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    location / {
+        proxy_pass http://127.0.0.1:9393;
+    }
+
+    location = /run {
+        limit_req zone=sqlp_run burst=10 nodelay;
+        limit_conn sqlp_conn 2;
+        limit_req_status 429;
+        limit_conn_status 429;
+        proxy_pass http://127.0.0.1:9393;
+    }
+}

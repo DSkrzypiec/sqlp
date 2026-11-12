@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t1(k int, v text)"}
+{"sql":"CREATE UNIQUE INDEX x1 ON t1(k, v)"}
+{"sql":"INSERT INTO t1 VALUES(0,'abcdefghij')\n     ON CONFLICT(k) DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(0,'abcdefghij')\n     ON CONFLICT(v) DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(0, 'abcdefghij')\n      ON CONFLICT(k,v) DO NOTHING"}
+{"sql":"INSERT INTO t1 VALUES(0, 'abcdefghij')\n      ON CONFLICT(v,k) DO NOTHING"}
+{"sql":"CREATE TABLE excluded(a INT, b INT, c INT DEFAULT 0)"}
+{"sql":"CREATE UNIQUE INDEX excludedab ON excluded(a,b)"}
+{"sql":"INSERT INTO excluded(a,b) VALUES(1,2),(1,2),(3,4),(1,2),(5,6),(3,4)\n    ON CONFLICT(b,a) DO UPDATE SET c=excluded.c+1"}
+{"sql":"SELECT *, 'x' FROM excluded ORDER BY a"}
+{"sql":"INSERT INTO excluded AS base(a,b,c) VALUES(1,2,8),(1,2,3)\n    ON CONFLICT(b,a) DO UPDATE SET c=excluded.c+1 WHERE base.c<excluded.c"}

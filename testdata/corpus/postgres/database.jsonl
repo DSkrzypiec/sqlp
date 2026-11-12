@@ -1,0 +1,13 @@
+{"sql":"CREATE DATABASE regression_tbd\n\tENCODING utf8 LC_COLLATE \"C\" LC_CTYPE \"C\" TEMPLATE template0"}
+{"sql":"ALTER DATABASE regression_tbd RENAME TO regression_utf8"}
+{"sql":"ALTER DATABASE regression_utf8 SET TABLESPACE regress_tblspace"}
+{"sql":"ALTER DATABASE regression_utf8 RESET TABLESPACE"}
+{"sql":"ALTER DATABASE regression_utf8 CONNECTION_LIMIT 123"}
+{"sql":"UPDATE pg_database\nSET datacl = array_fill(makeaclitem(10, 10, 'USAGE', false), ARRAY[5e5::int])\nWHERE datname = 'regression_utf8'","shape":"UPDATE pg_database SET datacl = array_fill(makeaclitem(10, 10, 'USAGE', FALSE), ARRAY[5e5::int]) WHERE datname = 'regression_utf8';"}
+{"sql":"CREATE ROLE regress_datdba_before"}
+{"sql":"CREATE ROLE regress_datdba_after"}
+{"sql":"ALTER DATABASE regression_utf8 OWNER TO regress_datdba_before"}
+{"sql":"REASSIGN OWNED BY regress_datdba_before TO regress_datdba_after","shape":"REASSIGN OWNED BY regress_datdba_before TO regress_datdba_after;"}
+{"sql":"DROP DATABASE regression_utf8"}
+{"sql":"DROP ROLE regress_datdba_before","shape":"DROP ROLE regress_datdba_before;"}
+{"sql":"DROP ROLE regress_datdba_after","shape":"DROP ROLE regress_datdba_after;"}

@@ -1,0 +1,28 @@
+{"sql":"CREATE TABLE real_t1(a,b,c)"}
+{"sql":"CREATE TABLE real_t2(b,c,d)"}
+{"sql":"CREATE TABLE real_t3(c,d,e)"}
+{"sql":"CREATE TABLE real_t4(d,e,f)"}
+{"sql":"CREATE TABLE real_t5(a INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE real_t6(a INTEGER)"}
+{"sql":"CREATE TABLE real_t7 (x, y)"}
+{"sql":"CREATE TABLE real_t8 (a integer primary key, b)"}
+{"sql":"CREATE TABLE real_t9(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE real_t10(x INTEGER PRIMARY KEY, y)"}
+{"sql":"CREATE TABLE real_t11(p INTEGER PRIMARY KEY, q)"}
+{"sql":"CREATE TABLE real_t12(a,b)"}
+{"sql":"CREATE TABLE real_t13(b,c)"}
+{"sql":"CREATE TABLE real_t21(a,b,c)"}
+{"sql":"CREATE TABLE real_t22(p,q)"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON t1.a IS t2.d"}
+{"sql":"CREATE INDEX i22 ON real_t22(q)"}
+{"sql":"SELECT a FROM t21 LEFT JOIN t22 ON b=p WHERE q=\n       (SELECT max(m.q) FROM t22 m JOIN t21 n ON n.b=m.p WHERE n.c=1)"}
+{"sql":"CREATE TABLE ab_r(a, b)"}
+{"sql":"CREATE TABLE bc_r(b, c)"}
+{"sql":"CREATE VIRTUAL TABLE ab USING echo(ab_r)"}
+{"sql":"CREATE VIRTUAL TABLE bc USING echo(bc_r)"}
+{"sql":"INSERT INTO ab VALUES(1, 2)"}
+{"sql":"INSERT INTO bc VALUES(2, 3)"}
+{"sql":"SELECT a, b, c FROM ab NATURAL JOIN bc"}
+{"sql":"SELECT a, b, c FROM bc NATURAL JOIN ab"}
+{"sql":"CREATE INDEX ab_i ON ab_r(b)"}
+{"sql":"CREATE INDEX bc_i ON bc_r(b)"}

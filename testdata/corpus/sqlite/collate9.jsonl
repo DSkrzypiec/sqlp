@@ -1,0 +1,14 @@
+{"sql":"CREATE TABLE xy(x COLLATE \"reverse sort\", y COLLATE binary)"}
+{"sql":"INSERT INTO xy VALUES('one', 'one')"}
+{"sql":"INSERT INTO xy VALUES('two', 'two')"}
+{"sql":"INSERT INTO xy VALUES('three', 'three')"}
+{"sql":"SELECT x FROM xy ORDER BY x"}
+{"sql":"SELECT y FROM xy ORDER BY y"}
+{"sql":"CREATE INDEX xy_i ON xy(x)"}
+{"sql":"SELECT x, x < 'seven' FROM xy ORDER BY x"}
+{"sql":"SELECT y, y < 'seven' FROM xy ORDER BY x"}
+{"sql":"SELECT y, y COLLATE \"reverse sort\" < 'seven' FROM xy ORDER BY x"}
+{"sql":"SELECT y FROM xy ORDER BY y COLLATE \"reverse sort\""}
+{"sql":"SELECT y COLLATE \"reverse sort\" AS aaa FROM xy ORDER BY aaa"}
+{"sql":"CREATE INDEX xy_i2 ON xy(y COLLATE \"reverse sort\")"}
+{"sql":"REINDEX \"reverse sort\""}

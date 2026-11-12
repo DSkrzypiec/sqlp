@@ -1,0 +1,83 @@
+{"sql":"CREATE INDEX i3 ON t2(c)"}
+{"sql":"CREATE INDEX i4 ON t2(d)"}
+{"sql":"CREATE TABLE t3(e PRIMARY KEY, f)"}
+{"sql":"select * from t1 WHERE a = 10"}
+{"sql":"select * from t1"}
+{"sql":"select * from t1, t2 WHERE c = 10"}
+{"sql":"SELECT * FROM t1 NOT INDEXED WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM main.t1 NOT INDEXED WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM t1 INDEXED BY i1 WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM main.t1 INDEXED BY i1 WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM t1 INDEXED BY i2 WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM t1 INDEXED BY i3 WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT b FROM t1 INDEXED BY i1 WHERE b = 'two'"}
+{"sql":"SELECT * FROM t1 INDEXED BY i5 WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM t1 INDEXED BY WHERE a = 'one' AND b = 'two'","reject":true}
+{"sql":"SELECT * FROM v1 INDEXED BY i1 WHERE a = 'one'"}
+{"sql":"SELECT * FROM t1 WHERE a = 'one' AND b = 'two'"}
+{"sql":"SELECT * FROM t1 NOT INDEXED WHERE rowid=1"}
+{"sql":"SELECT * FROM t1 INDEXED BY i2 WHERE a = 'one'"}
+{"sql":"SELECT * FROM t1 INDEXED BY i2 ORDER BY a"}
+{"sql":"SELECT * FROM t1 INDEXED BY i1 WHERE a = 'one'"}
+{"sql":"SELECT * FROM t1 INDEXED BY i1 ORDER BY a"}
+{"sql":"SELECT * FROM t3 INDEXED BY sqlite_autoindex_t3_1 ORDER BY e"}
+{"sql":"SELECT * FROM t3 INDEXED BY sqlite_autoindex_t3_1 WHERE e = 10"}
+{"sql":"SELECT * FROM t3 INDEXED BY sqlite_autoindex_t3_1 WHERE f = 10"}
+{"sql":"SELECT * FROM t3 INDEXED BY sqlite_autoindex_t3_2 WHERE f = 10"}
+{"sql":"SELECT * FROM t1, t2 WHERE a = c"}
+{"sql":"SELECT * FROM t1 INDEXED BY i1, t2 WHERE a = c"}
+{"sql":"SELECT * FROM t1 INDEXED BY i1, t2 INDEXED BY i3 WHERE a=c"}
+{"sql":"SELECT * FROM t2 INDEXED BY i3, t1 INDEXED BY i1 WHERE a=c"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM t1 INDEXED BY i1 WHERE a > 5"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM v2"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM v2 WHERE b = 10"}
+{"sql":"SELECT * FROM t1 WHERE b = 10 ORDER BY rowid"}
+{"sql":"SELECT * FROM t1 NOT INDEXED WHERE b = 10 ORDER BY rowid"}
+{"sql":"DELETE FROM t1 WHERE a = 5"}
+{"sql":"DELETE FROM t1 NOT INDEXED WHERE a = 5"}
+{"sql":"DELETE FROM t1 INDEXED BY i1 WHERE a = 5"}
+{"sql":"DELETE FROM t1 INDEXED BY i1 WHERE a = 5 AND b = 10"}
+{"sql":"DELETE FROM t1 INDEXED BY i2 WHERE a = 5 AND b = 10"}
+{"sql":"DELETE FROM t1 INDEXED BY i2 WHERE a = 5"}
+{"sql":"UPDATE t1 SET rowid=rowid+1 WHERE a = 5"}
+{"sql":"UPDATE t1 NOT INDEXED SET rowid=rowid+1 WHERE a = 5"}
+{"sql":"UPDATE t1 INDEXED BY i1 SET rowid=rowid+1 WHERE a = 5"}
+{"sql":"UPDATE t1 INDEXED BY i1 SET rowid=rowid+1 WHERE a = 5 AND b = 10"}
+{"sql":"UPDATE t1 INDEXED BY i2 SET rowid=rowid+1 WHERE a = 5 AND b = 10"}
+{"sql":"UPDATE t1 INDEXED BY i2 SET rowid=rowid+1 WHERE a = 5"}
+{"sql":"CREATE TABLE maintable( id integer)"}
+{"sql":"CREATE TABLE joinme(id_int integer, id_text text)"}
+{"sql":"CREATE INDEX joinme_id_text_idx on joinme(id_text)"}
+{"sql":"CREATE INDEX joinme_id_int_idx on joinme(id_int)"}
+{"sql":"select * from maintable as m inner join\n    joinme as j indexed by joinme_id_text_idx\n    on ( m.id  = j.id_int)"}
+{"sql":"select * from maintable, joinme INDEXED by joinme_id_text_idx"}
+{"sql":"CREATE TABLE indexed(x,y)"}
+{"sql":"INSERT INTO indexed VALUES(1,2)"}
+{"sql":"SELECT * FROM indexed"}
+{"sql":"CREATE INDEX i10 ON indexed(x)"}
+{"sql":"SELECT * FROM indexed indexed by i10 where x>0"}
+{"sql":"DROP TABLE indexed"}
+{"sql":"CREATE TABLE t10(indexed INTEGER)"}
+{"sql":"INSERT INTO t10 VALUES(1)"}
+{"sql":"CREATE INDEX indexed ON t10(indexed)"}
+{"sql":"SELECT * FROM t10 indexed by indexed WHERE indexed>0"}
+{"sql":"CREATE TABLE x1(a, b TEXT)"}
+{"sql":"INSERT INTO x1 VALUES(1, 1)"}
+{"sql":"SELECT a,b,rowid FROM x1 INDEXED BY x1i WHERE a=1 AND b=1 AND rowid=3"}
+{"sql":"SELECT a,b,rowid FROM x1 INDEXED BY x1i WHERE a=1 AND b=1 AND rowid='3'"}
+{"sql":"SELECT a,b,rowid FROM x1 INDEXED BY x1i WHERE a=1 AND b=1 AND rowid='3.0'"}
+{"sql":"CREATE TABLE x2(c INTEGER PRIMARY KEY, a, b TEXT)"}
+{"sql":"CREATE INDEX x2i ON x2(a, b)"}
+{"sql":"INSERT INTO x2 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO x2 VALUES(2, 1, 1)"}
+{"sql":"INSERT INTO x2 VALUES(3, 1, 1)"}
+{"sql":"INSERT INTO x2 VALUES(4, 1, 1)"}
+{"sql":"SELECT a,b,c FROM x2 INDEXED BY x2i WHERE a=1 AND b=1 AND c=3"}
+{"sql":"SELECT a,b,c FROM x2 INDEXED BY x2i WHERE a=1 AND b=1 AND c='3'"}
+{"sql":"SELECT a,b,c FROM x2 INDEXED BY x2i WHERE a=1 AND b=1 AND c='3.0'"}
+{"sql":"CREATE TABLE o1(x INTEGER PRIMARY KEY, y, z)"}
+{"sql":"CREATE INDEX p1 ON o1(z)"}
+{"sql":"CREATE INDEX p2 ON o1(y) WHERE z=1"}
+{"sql":"SELECT * FROM o1 INDEXED BY p2 ORDER BY 1"}
+{"sql":"DROP INDEX p1"}
+{"sql":"DROP INDEX p2"}

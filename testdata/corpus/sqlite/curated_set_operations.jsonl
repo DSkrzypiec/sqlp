@@ -1,0 +1,325 @@
+{"sql":"SELECT a FROM t UNION SELECT a FROM u","shape":"SELECT a FROM t UNION SELECT a FROM u;"}
+{"sql":"SELECT a FROM t UNION ALL SELECT a FROM u","shape":"SELECT a FROM t UNION ALL SELECT a FROM u;"}
+{"sql":"SELECT a FROM t UNION DISTINCT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT SELECT a FROM u","shape":"SELECT a FROM t INTERSECT SELECT a FROM u;"}
+{"sql":"SELECT a FROM t INTERSECT ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT DISTINCT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t EXCEPT SELECT a FROM u","shape":"SELECT a FROM t EXCEPT SELECT a FROM u;"}
+{"sql":"SELECT a FROM t EXCEPT ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t EXCEPT DISTINCT SELECT a FROM u","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 UNION SELECT 3"}
+{"sql":"SELECT 1 UNION SELECT 2 UNION ALL SELECT 3"}
+{"sql":"SELECT 1 UNION ALL SELECT 2 UNION SELECT 3"}
+{"sql":"SELECT 1 UNION SELECT 2 INTERSECT SELECT 3"}
+{"sql":"SELECT 1 INTERSECT SELECT 2 UNION SELECT 3"}
+{"sql":"SELECT 1 EXCEPT SELECT 2 INTERSECT SELECT 3"}
+{"sql":"SELECT 1 INTERSECT SELECT 2 EXCEPT SELECT 3"}
+{"sql":"SELECT 1 UNION SELECT 2 EXCEPT SELECT 3"}
+{"sql":"SELECT 1 EXCEPT SELECT 2 UNION SELECT 3"}
+{"sql":"SELECT 1 EXCEPT SELECT 2 EXCEPT SELECT 3"}
+{"sql":"SELECT 1 INTERSECT SELECT 2 INTERSECT SELECT 3"}
+{"sql":"SELECT 1 UNION SELECT 2 INTERSECT SELECT 3 EXCEPT SELECT 4"}
+{"sql":"SELECT 1 UNION ALL SELECT 2 INTERSECT ALL SELECT 3 EXCEPT ALL SELECT 4","reject":true}
+{"sql":"(SELECT 1)","reject":true}
+{"sql":"((SELECT 1))","reject":true}
+{"sql":"(SELECT 1) UNION (SELECT 2)","reject":true}
+{"sql":"(SELECT 1) UNION SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION (SELECT 2)","reject":true}
+{"sql":"((SELECT 1) UNION (SELECT 2))","reject":true}
+{"sql":"(SELECT 1 UNION SELECT 2) INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION (SELECT 2 INTERSECT SELECT 3)","reject":true}
+{"sql":"SELECT 1 EXCEPT (SELECT 2 EXCEPT SELECT 3)","reject":true}
+{"sql":"(SELECT 1 UNION SELECT 2) INTERSECT (SELECT 3 UNION SELECT 4)","reject":true}
+{"sql":"((SELECT 1 UNION SELECT 2) UNION SELECT 3) UNION SELECT 4","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY a","shape":"SELECT a FROM t UNION SELECT a FROM u ORDER BY a;"}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u LIMIT 1","shape":"SELECT a FROM t UNION SELECT a FROM u LIMIT 1;"}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1 OFFSET 1","shape":"SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1 OFFSET 1;"}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY 1 DESC","shape":"SELECT a FROM t UNION SELECT a FROM u ORDER BY 1 DESC;"}
+{"sql":"(SELECT a FROM t ORDER BY a) UNION SELECT a FROM u","reject":true}
+{"sql":"(SELECT a FROM t LIMIT 1) UNION (SELECT a FROM u LIMIT 1)","reject":true}
+{"sql":"(SELECT a FROM t ORDER BY a LIMIT 1) UNION ALL (SELECT a FROM u ORDER BY a LIMIT 1) ORDER BY 1 LIMIT 1","reject":true}
+{"sql":"(SELECT a FROM t UNION SELECT a FROM u) ORDER BY a","reject":true}
+{"sql":"(SELECT a FROM t) ORDER BY a","reject":true}
+{"sql":"(SELECT a FROM t) LIMIT 1","reject":true}
+{"sql":"(SELECT a FROM t ORDER BY a) ORDER BY a","reject":true}
+{"sql":"(SELECT a FROM t LIMIT 1) LIMIT 2","reject":true}
+{"sql":"VALUES (1) UNION VALUES (2)","shape":"VALUES (1) UNION VALUES (2);"}
+{"sql":"VALUES (1) UNION SELECT 2","shape":"VALUES (1) UNION SELECT 2;"}
+{"sql":"SELECT 1 UNION VALUES (2)","shape":"SELECT 1 UNION VALUES (2);"}
+{"sql":"TABLE t UNION TABLE u","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a UNION SELECT a FROM u GROUP BY a","shape":"SELECT a FROM t GROUP BY a UNION SELECT a FROM u GROUP BY a;"}
+{"sql":"SELECT a FROM t WHERE a = 1 UNION SELECT a FROM u WHERE a = 2","shape":"SELECT a FROM t WHERE a = 1 UNION SELECT a FROM u WHERE a = 2;"}
+{"sql":"SELECT a, b FROM t UNION SELECT a, b FROM u","shape":"SELECT a, b FROM t UNION SELECT a, b FROM u;"}
+{"sql":"SELECT * FROM t JOIN u ON t.a = u.a UNION SELECT * FROM t JOIN u ON t.a = u.a","shape":"SELECT * FROM t JOIN u ON t.a = u.a UNION SELECT * FROM t JOIN u ON t.a = u.a;"}
+{"sql":"SELECT UNION SELECT 1","reject":true}
+{"sql":"SELECT 1 UNION","reject":true}
+{"sql":"SELECT 1 UNION UNION SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION ALL ALL SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION DISTINCT ALL SELECT 2","reject":true}
+{"sql":"SELECT 1 ALL UNION SELECT 2","reject":true}
+{"sql":"UNION SELECT 1","reject":true}
+{"sql":"SELECT 1 INTERSECT","reject":true}
+{"sql":"SELECT 1 EXCEPT","reject":true}
+{"sql":"SELECT 1 MINUS SELECT 2","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a UNION SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 UNION SELECT a FROM u","reject":true}
+{"sql":"(SELECT 1","reject":true}
+{"sql":"(SELECT 1))","reject":true}
+{"sql":"()","reject":true}
+{"sql":"(SELECT 1) (SELECT 2)","reject":true}
+{"sql":"SELECT 1 UNION ()","reject":true}
+{"sql":"SELECT 1 UNION (SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION t","reject":true}
+{"sql":"SELECT a FROM FROM t UNION SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a a FROM u","shape":"SELECT a FROM t UNION SELECT a AS a FROM u;"}
+{"sql":"SELECT a FROM t UNION SELECT a FROM","reject":true}
+{"sql":"a SELECT FROM t UNION ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT FROM a t UNION ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t UNION ALL SELECT a FROM","reject":true}
+{"sql":"SELECT a FROM t a ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t UNION DISTINCT SELECT FROM a u","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT DISTINCT a FROM u","shape":"SELECT a FROM t UNION SELECT DISTINCT a FROM u;"}
+{"sql":"SELECT a FROM t UNION DISTINCT SELECT a u FROM","reject":true}
+{"sql":"SELECT a FROM t UNION DISTINCT SELECT FROM FROM u","reject":true}
+{"sql":"SELECT FROM a t INTERSECT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t t INTERSECT SELECT a FROM u","shape":"SELECT a FROM t AS t INTERSECT SELECT a FROM u;"}
+{"sql":"SELECT a FROM t INTERSECT SELECT SELECT FROM u","reject":true}
+{"sql":"SELECT a FROM INTERSECT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT ALL SELECT 1 FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT ALL SELECT SELECT a FROM u","reject":true}
+{"sql":"a SELECT FROM t INTERSECT ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t t INTERSECT ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT DISTINCT SELECT FROM a u","reject":true}
+{"sql":"SELECT a FROM t 1 DISTINCT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT DISTINCT SELECT a a FROM u","reject":true}
+{"sql":"SELECT a FROM t INTERSECT DISTINCT SELECT a FROM a","reject":true}
+{"sql":"SELECT a FROM t EXCEPT SELECT a u"}
+{"sql":"SELECT a FROM SELECT EXCEPT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM EXCEPT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t EXCEPT ALL a FROM u","reject":true}
+{"sql":"SELECT FROM a t EXCEPT ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM EXCEPT t ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM EXCEPT ALL SELECT a FROM u","reject":true}
+{"sql":"SELECT a t FROM EXCEPT DISTINCT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t EXCEPT DISTINCT SELECT FROM a u","reject":true}
+{"sql":"SELECT a FROM t EXCEPT DISTINCT SELECT SELECT FROM u","reject":true}
+{"sql":"t a FROM t EXCEPT DISTINCT SELECT a FROM u","reject":true}
+{"sql":"SELECT 1 1 UNION SELECT 2 UNION SELECT 3","reject":true}
+{"sql":"SELECT SELECT UNION SELECT 2 UNION SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 UNION 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 UNION SELECT SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT UNION ALL SELECT 3","reject":true}
+{"sql":"SELECT SELECT 1 UNION SELECT 2 UNION ALL SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION UNION SELECT 2 UNION ALL SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION ALL a 2 UNION SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION ALL SELECT UNION 2 SELECT 3","reject":true}
+{"sql":"SELECT 1 1 UNION ALL SELECT 2 UNION SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION UNION SELECT 2 INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT SELECT 1 UNION SELECT 2 INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT SELECT 2 INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT 1 INTERSECT SELECT 2 UNION 3 SELECT","reject":true}
+{"sql":"SELECT 1 INTERSECT SELECT 2 a SELECT 3","reject":true}
+{"sql":"SELECT 1 INTERSECT SELECT 2 UNION SELECT SELECT 3","reject":true}
+{"sql":"SELECT 1 EXCEPT SELECT 2 INTERSECT t 3","reject":true}
+{"sql":"SELECT 1 EXCEPT SELECT 2 INTERSECT ON 3","reject":true}
+{"sql":"1 SELECT EXCEPT SELECT 2 INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT 1 INTERSECT 2 EXCEPT SELECT 3","reject":true}
+{"sql":"SELECT 1 INTERSECT SELECT EXCEPT SELECT 3","reject":true}
+{"sql":"SELECT 1 INTERSECT SELECT 2 EXCEPT SELECT","reject":true}
+{"sql":"SELECT 1 BY SELECT 2 EXCEPT SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 2 EXCEPT SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 EXCEPT SELECT 3 3","reject":true}
+{"sql":"SELECT 1 SELECT EXCEPT 2 UNION SELECT 3","reject":true}
+{"sql":"SELECT 1 BY SELECT 2 UNION SELECT 3","reject":true}
+{"sql":"SELECT 1 EXCEPT SELECT 2 UNION a 3","reject":true}
+{"sql":"SELECT 1 EXCEPT SELECT 2 EXCEPT 3 SELECT","reject":true}
+{"sql":"SELECT 1 EXCEPT SELECT 2 EXCEPT SELECT","reject":true}
+{"sql":"1 SELECT EXCEPT SELECT 2 EXCEPT SELECT 3","reject":true}
+{"sql":"SELECT t INTERSECT SELECT 2 INTERSECT SELECT 3"}
+{"sql":"SELECT INTERSECT SELECT 2 INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT 1 INTERSECT SELECT 2 INTERSECT SELECT","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 INTERSECT SELECT 3 EXCEPT 4 SELECT","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 SELECT SELECT 3 EXCEPT SELECT 4","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 INTERSECT SELECT 3 EXCEPT 4","reject":true}
+{"sql":"SELECT 1 ALL SELECT 2 INTERSECT ALL SELECT 3 EXCEPT ALL SELECT 4","reject":true}
+{"sql":"SELECT 1 UNION ALL SELECT 2 INTERSECT ALL SELECT 3 EXCEPT SELECT ALL 4","reject":true}
+{"sql":"SELECT 1 UNION ALL SELECT 2 ALL SELECT 3 EXCEPT ALL SELECT 4","reject":true}
+{"sql":"SELECT 1 UNION ALL SELECT 2 INTERSECT ALL SELECT 3 EXCEPT SELECT 4","reject":true}
+{"sql":"( SELECT 1 ) )","reject":true}
+{"sql":"( SELECT )","reject":true}
+{"sql":"( SELECT 1 )","reject":true}
+{"sql":"( SELECT 1","reject":true}
+{"sql":"( ( SELECT 1 VALUES )","reject":true}
+{"sql":"( ( SELECT 1 ) )","reject":true}
+{"sql":"SELECT ( SELECT 1 ) )","reject":true}
+{"sql":"( SELECT 1 ) ) UNION ( SELECT 2 )","reject":true}
+{"sql":"( SELECT 1 ) UNION ON SELECT 2 )","reject":true}
+{"sql":"( SELECT 1 ) UNION ( 2 SELECT )","reject":true}
+{"sql":"( SELECT 1 ) UNION ( SELECT ) 2","reject":true}
+{"sql":"( SELECT 1 ) SELECT 2","reject":true}
+{"sql":"( SELECT 1 ) SELECT UNION 2","reject":true}
+{"sql":"( SELECT 1 ) ) UNION SELECT 2","reject":true}
+{"sql":"( 1 ) UNION SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION ( SELECT ) 2","reject":true}
+{"sql":"SELECT 1 UNION ( SELECT 2","reject":true}
+{"sql":"SELECT 1 1 UNION ( SELECT 2 )","reject":true}
+{"sql":"SELECT 1 ( SELECT 2 )","reject":true}
+{"sql":"( ( SELECT 1 ) SELECT ( SELECT 2 ) )","reject":true}
+{"sql":"( ( SELECT 1 ) UNION ( SELECT 2 ) ) )","reject":true}
+{"sql":"( ( SELECT SELECT 1 ) UNION ( SELECT 2 ) )","reject":true}
+{"sql":"t ( SELECT 1 ) UNION ( SELECT 2 ) )","reject":true}
+{"sql":"( SELECT 1 UNION 2 ) INTERSECT SELECT 3","reject":true}
+{"sql":"( SELECT UNION SELECT 2 ) INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2 ) INTERSECT SELECT 3","reject":true}
+{"sql":"( SELECT 1 SELECT SELECT 2 ) INTERSECT SELECT 3","reject":true}
+{"sql":"SELECT UNION 1 ( SELECT 2 INTERSECT SELECT 3 )","reject":true}
+{"sql":"SELECT 1 UNION ( SELECT SELECT 2 INTERSECT SELECT 3 )","reject":true}
+{"sql":"1 UNION ( SELECT 2 INTERSECT SELECT 3 )","reject":true}
+{"sql":"SELECT 1 UNION ( SELECT 2 INTERSECT SELECT )","reject":true}
+{"sql":"SELECT 1 EXCEPT ( u 2 EXCEPT SELECT 3 )","reject":true}
+{"sql":"SELECT 1 EXCEPT ( SELECT 2 EXCEPT 3 )","reject":true}
+{"sql":"SELECT 1 EXCEPT SELECT ( 2 EXCEPT SELECT 3 )","reject":true}
+{"sql":"SELECT 1 EXCEPT ( SELECT 2 EXCEPT SELECT )","reject":true}
+{"sql":"( SELECT 1 UNION SELECT 2 ) INTERSECT ( SELECT UNION 3 SELECT 4 )","reject":true}
+{"sql":"( SELECT SELECT 1 UNION SELECT 2 ) INTERSECT ( SELECT 3 UNION SELECT 4 )","reject":true}
+{"sql":"( SELECT 1 UNION SELECT 2 ) FROM ( SELECT 3 UNION SELECT 4 )","reject":true}
+{"sql":"( ( SELECT 1 SELECT SELECT 2 ) UNION SELECT 3 ) UNION SELECT 4","reject":true}
+{"sql":"1 ( SELECT 1 UNION SELECT 2 ) UNION SELECT 3 ) UNION SELECT 4","reject":true}
+{"sql":"( ( SELECT 1 UNION SELECT 2 ) SELECT UNION 3 ) UNION SELECT 4","reject":true}
+{"sql":"( ( SELECT 1 UNION SELECT 2 ) UNION , 3 ) UNION SELECT 4","reject":true}
+{"sql":"a FROM t UNION SELECT a FROM u ORDER BY a","reject":true}
+{"sql":"SELECT a FROM t UNION a SELECT FROM u ORDER BY a","reject":true}
+{"sql":"SELECT a FROM t ( SELECT a FROM u ORDER BY a","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY BY a","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM a LIMIT 1"}
+{"sql":"SELECT a SELECT t UNION SELECT a FROM u LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT FROM u LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u u LIMIT 1","shape":"SELECT a FROM t UNION SELECT a FROM u AS u LIMIT 1;"}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 1 GROUP 1","reject":true}
+{"sql":"SELECT a EXCEPT t UNION SELECT a FROM u ORDER BY a LIMIT 1 OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY a 1 LIMIT OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t UNION a FROM u ORDER BY a LIMIT 1 OFFSET 1","reject":true}
+{"sql":"SELECT a SELECT t UNION SELECT a FROM u ORDER BY 1 DESC","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER BY BY 1 DESC","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM u ORDER t 1 DESC","reject":true}
+{"sql":"SELECT a FROM t UNION SELECT a FROM ORDER BY 1 DESC","reject":true}
+{"sql":"( SELECT a FROM FROM t ORDER BY a ) UNION SELECT a FROM u","reject":true}
+{"sql":"( SELECT FROM a t ORDER BY a ) UNION SELECT a FROM u","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY a ) UNION SELECT FROM FROM u","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY a UNION SELECT a FROM u","reject":true}
+{"sql":"( SELECT a FROM t LIMIT 1 ) UNION ( ( SELECT a FROM u LIMIT 1 )","reject":true}
+{"sql":"( SELECT a FROM t LIMIT 1 ) UNION ( SELECT a FROM u LIMIT LIMIT 1 )","reject":true}
+{"sql":"( SELECT a FROM t LIMIT 1 ) UNION ( SELECT a FROM LIMIT 1 )","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 ) UNION ( SELECT a FROM u LIMIT 1 )","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY BY a LIMIT 1 ) UNION ALL ( SELECT a FROM u ORDER BY a LIMIT 1 ) ORDER BY 1 LIMIT 1","reject":true}
+{"sql":"( SELECT FROM a t ORDER BY a LIMIT 1 ) UNION ALL ( SELECT a FROM u ORDER BY a LIMIT 1 ) ORDER BY 1 LIMIT 1","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY a LIMIT 1 ) UNION ALL ALL ( SELECT a FROM u ORDER BY a LIMIT 1 ) ORDER BY 1 LIMIT 1","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY a LIMIT 1 ) UNION ALL ( SELECT a FROM u ORDER BY LIMIT 1 ) ORDER BY 1 LIMIT 1","reject":true}
+{"sql":"( SELECT a FROM t UNION UNION SELECT a FROM u ) ORDER BY a","reject":true}
+{"sql":"( SELECT a FROM t UNION SELECT a FROM u ) ORDER a","reject":true}
+{"sql":"( SELECT a FROM t UNION 2 a FROM u ) ORDER BY a","reject":true}
+{"sql":"( SELECT a FROM t UNION SELECT a FROM u ) ORDER BY","reject":true}
+{"sql":"( SELECT a FROM ) t ORDER BY a","reject":true}
+{"sql":"( SELECT a FROM t ) ORDER BY","reject":true}
+{"sql":"( SELECT a a FROM t ) ORDER BY a","reject":true}
+{"sql":"( SELECT FROM a t ) ORDER BY a","reject":true}
+{"sql":"( SELECT FROM t ) LIMIT 1","reject":true}
+{"sql":"( SELECT a t ) LIMIT 1","reject":true}
+{"sql":"( SELECT a FROM t LIMIT ) 1","reject":true}
+{"sql":"( SELECT a FROM t ) BY 1","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY a ) ORDER INTERSECT a","reject":true}
+{"sql":"( SELECT a FROM t t ORDER BY a ) ORDER BY a","reject":true}
+{"sql":"( SELECT a FROM t ORDER BY a ) BY ORDER a","reject":true}
+{"sql":"( SELECT a a FROM t LIMIT 1 ) LIMIT 2","reject":true}
+{"sql":"( SELECT a FROM LIMIT t 1 ) LIMIT 2","reject":true}
+{"sql":"( SELECT a FROM t LIMIT 1 ) LIMIT","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 ) LIMIT 2","reject":true}
+{"sql":"VALUES ( 1 ) UNION VALUES ( 2 FROM","reject":true}
+{"sql":"VALUES VALUES ( 1 ) UNION VALUES ( 2 )","reject":true}
+{"sql":"VALUES ( 1 ) UNION * ( 2 )","reject":true}
+{"sql":"VALUES ( 1 ) UNION ( VALUES 2 )","reject":true}
+{"sql":"VALUES ( 1 EXCEPT UNION SELECT 2","reject":true}
+{"sql":"VALUES ( 1 ) 2 SELECT 2","reject":true}
+{"sql":"VALUES ( 1 UNION UNION SELECT 2","reject":true}
+{"sql":"VALUES ( 1 UNION SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION VALUES ( 2 ) )","reject":true}
+{"sql":"SELECT SELECT 1 UNION VALUES ( 2 )","reject":true}
+{"sql":"SELECT 1 UNION VALUES ( FROM )","reject":true}
+{"sql":"SELECT 1 UNION VALUES VALUES ( 2 )","reject":true}
+{"sql":"TABLE UNION t TABLE u","reject":true}
+{"sql":"TABLE t UNION TABLE SELECT","reject":true}
+{"sql":"TABLE t UNION UNION TABLE u","reject":true}
+{"sql":"SELECT a FROM t GROUP SELECT a UNION SELECT a FROM u GROUP BY a","reject":true}
+{"sql":"SELECT a FROM GROUP t BY a UNION SELECT a FROM u GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t GROUP BY a UNION SELECT a FROM u GROUP BY a a","reject":true}
+{"sql":"SELECT a FROM t WHERE a = 1 UNION SELECT a FROM u WHERE a 2 =","reject":true}
+{"sql":"SELECT a FROM t WHERE a = 1 UNION u a FROM u WHERE a = 2","reject":true}
+{"sql":"SELECT SELECT a FROM t WHERE a = 1 UNION SELECT a FROM u WHERE a = 2","reject":true}
+{"sql":"SELECT a , b FROM t t UNION SELECT a , b FROM u","shape":"SELECT a, b FROM t AS t UNION SELECT a, b FROM u;"}
+{"sql":"SELECT , b FROM t UNION SELECT a , b FROM u","reject":true}
+{"sql":"SELECT a , b FROM t SELECT UNION a , b FROM u","reject":true}
+{"sql":"a , b FROM t UNION SELECT a , b FROM u","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a UNION SELECT * FROM t JOIN u ON t a = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a UNION SELECT * FROM t JOIN u ON t . DISTINCT = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a UNION SELECT * FROM t JOIN JOIN u ON t . a = u . a","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = u . a UNION SELECT * FROM t t u ON t . a = u . a","reject":true}
+{"sql":"SELECT UNION SELECT SELECT 1","reject":true}
+{"sql":"3 UNION SELECT 1","reject":true}
+{"sql":"SELECT UNION SELECT","reject":true}
+{"sql":"SELECT UNION SELECT 1 1","reject":true}
+{"sql":"SELECT SELECT UNION","reject":true}
+{"sql":"SELECT UNION 1","reject":true}
+{"sql":"SELECT UNION","reject":true}
+{"sql":"1 SELECT UNION","reject":true}
+{"sql":"SELECT 1 UNION SELECT UNION 2","reject":true}
+{"sql":"SELECT 1 UNION UNION SELECT 2 2","reject":true}
+{"sql":"SELECT UNION 1 UNION SELECT 2","reject":true}
+{"sql":"1 SELECT UNION ALL ALL SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION ALL ALL 2","reject":true}
+{"sql":"SELECT 1 ALL ALL SELECT 2","reject":true}
+{"sql":"SELECT SELECT 1 UNION DISTINCT ALL SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION ALL DISTINCT SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION t ALL SELECT 2","reject":true}
+{"sql":"SELECT 1 1 ALL UNION SELECT 2","reject":true}
+{"sql":"SELECT 1 ALL UNION 2","reject":true}
+{"sql":"SELECT 1 ALL EXCEPT SELECT 2","reject":true}
+{"sql":"SELECT 1 ALL UNION INTERSECT 2","reject":true}
+{"sql":"UNION 1","reject":true}
+{"sql":"UNION SELECT FROM","reject":true}
+{"sql":"SELECT ( INTERSECT","reject":true}
+{"sql":"SELECT 1 INTERSECT INTERSECT","reject":true}
+{"sql":"SELECT SELECT 1 EXCEPT","reject":true}
+{"sql":"SELECT 1 EXCEPT EXCEPT","reject":true}
+{"sql":"SELECT 1 MINUS SELECT SELECT 2","reject":true}
+{"sql":"1 1 MINUS SELECT 2","reject":true}
+{"sql":"SELECT 1 SELECT MINUS 2","reject":true}
+{"sql":"SELECT u FROM t ORDER BY a UNION SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a SELECT a FROM u","reject":true}
+{"sql":"UNION a FROM t ORDER BY a UNION SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 SELECT UNION a FROM u","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 UNION SELECT SELECT a FROM u","reject":true}
+{"sql":"SELECT a FROM LIMIT t 1 UNION SELECT a FROM u","reject":true}
+{"sql":"( 1 SELECT","reject":true}
+{"sql":"( SELECT","reject":true}
+{"sql":"( SELECT SELECT ) )","reject":true}
+{"sql":"( SELECT SELECT 1 ) )","reject":true}
+{"sql":"( SELECT 1 ) ) )","reject":true}
+{"sql":"( ( )","reject":true}
+{"sql":") (","reject":true}
+{"sql":"( ) )","reject":true}
+{"sql":"UNION SELECT 1 ) ( SELECT 2 )","reject":true}
+{"sql":"( 1 ) ( SELECT 2 )","reject":true}
+{"sql":"( SELECT 1 ) ( ( SELECT 2 )","reject":true}
+{"sql":"( SELECT t ) ( SELECT 2 )","reject":true}
+{"sql":"SELECT 1 1 UNION ( )","reject":true}
+{"sql":"1 UNION ( )","reject":true}
+{"sql":"SELECT 1 UNION ( )","reject":true}
+{"sql":"SELECT 1 UNION EXCEPT )","reject":true}
+{"sql":"SELECT 1 UNION ( 2 SELECT","reject":true}
+{"sql":"SELECT 1 UNION ( 2","reject":true}
+{"sql":"1 SELECT UNION ( SELECT 2","reject":true}
+{"sql":"SELECT 1 UNION SELECT 2","shape":"SELECT 1 UNION SELECT 2;"}
+{"sql":"SELECT 1 t UNION","reject":true}
+{"sql":"SELECT UNION 1 t","reject":true}
+{"sql":"1 SELECT UNION t","reject":true}

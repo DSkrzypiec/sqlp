@@ -1,0 +1,10 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING tcl(\"vtab_cmd t1 {a b}\")"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING tcl(\"vtab_cmd t2 {c d}\")"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING tcl(\"vtab_cmd t3 {e f}\")"}
+{"sql":"SELECT * FROM t1 WHERE a='abc'"}
+{"sql":"SELECT * FROM t1 WHERE a='abc' AND b='def'"}
+{"sql":"SELECT * FROM t1 WHERE a='abc' AND a='def'"}
+{"sql":"SELECT * FROM t1,t2 WHERE c=a"}
+{"sql":"SELECT * FROM t1, t2 CROSS JOIN t3 WHERE t2.c = +t1.b AND t3.e=t2.d"}
+{"sql":"SELECT * FROM t1, t2, t3 WHERE t2.c = +t1.b AND t3.e = t2.d"}
+{"sql":"SELECT * FROM x1 CROSS JOIN t1, t2, t3 \n    WHERE t1.a = t2.c AND t1.b = t3.e"}

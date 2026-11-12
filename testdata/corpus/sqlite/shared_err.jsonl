@@ -1,0 +1,10 @@
+{"sql":"INSERT INTO t1(oid) VALUES(NULL)"}
+{"sql":"INSERT INTO t1(oid) SELECT NULL FROM t1"}
+{"sql":"UPDATE t1 set a = oid, b = 'abcdefghijklmnopqrstuvwxyz0123456789'"}
+{"sql":"DELETE FROM t1 WHERE 0 = (a % 2)"}
+{"sql":"INSERT INTO t1 SELECT a+1, b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT 'string' || a, b FROM t1 WHERE 0 = (a%7)"}
+{"sql":"SELECT max(a), min(a), count(*) FROM (SELECT a FROM t1 order by a)"}
+{"sql":"INSERT INTO t1 VALUES('201.201.201.201.201', NULL)"}
+{"sql":"UPDATE t1 SET a = '202.202.202.202.202' WHERE a LIKE '201%'"}
+{"sql":"INSERT INTO t1 VALUES(6, NULL)"}

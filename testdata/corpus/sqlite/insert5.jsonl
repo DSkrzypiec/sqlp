@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE MAIN(Id INTEGER, Id1 INTEGER)"}
+{"sql":"CREATE TABLE B(Id INTEGER, Id1 INTEGER)"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM B"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM MAIN"}
+{"sql":"INSERT INTO MAIN(Id,Id1) VALUES(2,3)"}
+{"sql":"INSERT INTO B(Id,Id1) VALUES(2,3)"}
+{"sql":"INSERT INTO B \n        SELECT * FROM B UNION ALL \n        SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id)"}
+{"sql":"SELECT * FROM B"}
+{"sql":"INSERT INTO B SELECT * FROM B"}
+{"sql":"INSERT INTO B\n        SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id)"}
+{"sql":"INSERT INTO b \n    SELECT * FROM main \n    WHERE id > 10 AND (SELECT count(*) FROM v2 GROUP BY main.id)"}

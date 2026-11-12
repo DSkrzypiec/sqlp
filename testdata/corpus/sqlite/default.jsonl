@@ -1,0 +1,26 @@
+{"sql":"CREATE TABLE t1(\n        a INTEGER,\n        b BLOB DEFAULT x'6869'\n      )"}
+{"sql":"INSERT INTO t1(a) VALUES(1)"}
+{"sql":"SELECT * from t1"}
+{"sql":"CREATE TABLE t2(\n      x INTEGER,\n      y INTEGER DEFAULT NULL\n    )"}
+{"sql":"INSERT INTO t2(x) VALUES(1)"}
+{"sql":"CREATE TABLE t3(\n      x INTEGER,\n      y INTEGER DEFAULT (max(x,5))\n    )"}
+{"sql":"CREATE TABLE t4(c DEFAULT 'abc')"}
+{"sql":"PRAGMA table_info(t4)"}
+{"sql":"INSERT INTO t4 DEFAULT VALUES"}
+{"sql":"CREATE TABLE t3(\n    a INTEGER PRIMARY KEY AUTOINCREMENT,\n    b INT DEFAULT 12345 UNIQUE NOT NULL CHECK( b>=0 AND b<99999 ),\n    c VARCHAR(123,456) DEFAULT 'hello' NOT NULL ON CONFLICT REPLACE,\n    d REAL,\n    e FLOATING POINT(5,10) DEFAULT 4.36,\n    f NATIONAL CHARACTER(15) COLLATE RTRIM,\n    g LONG INTEGER DEFAULT( 3600*12 )\n  )"}
+{"sql":"INSERT INTO t3 VALUES(null, 5, 'row1', '5.25', 'xyz', 321, '432')"}
+{"sql":"SELECT a, typeof(a), b, typeof(b), c, typeof(c), \n         d, typeof(d), e, typeof(e), f, typeof(f),\n         g, typeof(g) FROM t3"}
+{"sql":"INSERT INTO t3 DEFAULT VALUES"}
+{"sql":"CREATE TABLE t300(\n    a INT DEFAULT 2147483647,\n    b INT DEFAULT 2147483648,\n    c INT DEFAULT +9223372036854775807,\n    d INT DEFAULT -2147483647,\n    e INT DEFAULT -2147483648,\n    f INT DEFAULT -9223372036854775808,\n    g INT DEFAULT (-(-9223372036854775808)),\n    h INT DEFAULT (-(-9223372036854775807))\n  )"}
+{"sql":"INSERT INTO t300 DEFAULT VALUES"}
+{"sql":"SELECT * FROM t300"}
+{"sql":"CREATE TABLE t1(a TEXT, b TEXT DEFAULT(99))"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE TABLE t1(a TEXT, b TEXT DEFAULT(:xyz))'"}
+{"sql":"INSERT INTO t1(a) VALUES('xyzzy')"}
+{"sql":"SELECT a, quote(b) FROM t1"}
+{"sql":"CREATE TABLE t2(a TEXT, b TEXT DEFAULT(:xyz))"}
+{"sql":"CREATE TABLE t2(a TEXT, b TEXT DEFAULT(abs(:xyz)))"}
+{"sql":"CREATE TABLE t2(a TEXT, b TEXT DEFAULT(98+coalesce(5,:xyz)))"}
+{"sql":"CREATE TABLE t1 (a,b DEFAULT(random() NOTNULL IN (RAISE(IGNORE),2,3)))"}
+{"sql":"CREATE TABLE Table0 (Col0 DEFAULT (RAISE(IGNORE) )  )"}
+{"sql":"INSERT INTO Table0 DEFAULT VALUES"}

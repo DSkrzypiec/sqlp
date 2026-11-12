@@ -1,0 +1,5 @@
+{"sql":"SELECT half(1.0)"}
+{"sql":"SELECT half(5)"}
+{"sql":"SELECT sqlite3_status('MEMORY_USED_X') AS mused"}
+{"sql":"SELECT sqlite3_status(4.53) AS mused"}
+{"sql":"SELECT sqlite3_status(23) AS mused"}

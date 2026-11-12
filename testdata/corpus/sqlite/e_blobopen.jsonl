@@ -1,0 +1,78 @@
+{"sql":"CREATE TABLE main.t1(a INTEGER PRIMARY KEY, b TEXT, c BLOB)"}
+{"sql":"CREATE TEMP TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c BLOB)"}
+{"sql":"CREATE TABLE aux.t1(a INTEGER PRIMARY KEY, b TEXT, c BLOB)"}
+{"sql":"CREATE TABLE main.x1(a INTEGER PRIMARY KEY, b TEXT, c BLOB)"}
+{"sql":"CREATE TEMP TABLE x2(a INTEGER PRIMARY KEY, b TEXT, c BLOB)"}
+{"sql":"CREATE TABLE aux.x3(a INTEGER PRIMARY KEY, b TEXT, c BLOB)"}
+{"sql":"INSERT INTO main.t1 VALUES(1, 'main one', X'0101')"}
+{"sql":"INSERT INTO main.t1 VALUES(2, 'main two', X'0102')"}
+{"sql":"INSERT INTO main.t1 VALUES(3, 'main three', X'0103')"}
+{"sql":"INSERT INTO main.t1 VALUES(4, 'main four', X'0104')"}
+{"sql":"INSERT INTO main.t1 VALUES(5, 'main five', X'0105')"}
+{"sql":"INSERT INTO main.x1 VALUES(1, 'x main one', X'000101')"}
+{"sql":"INSERT INTO main.x1 VALUES(2, 'x main two', X'000102')"}
+{"sql":"INSERT INTO main.x1 VALUES(3, 'x main three', X'000103')"}
+{"sql":"INSERT INTO main.x1 VALUES(4, 'x main four', X'000104')"}
+{"sql":"INSERT INTO main.x1 VALUES(5, 'x main five', X'000105')"}
+{"sql":"INSERT INTO temp.t1 VALUES(1, 'temp one', X'0201')"}
+{"sql":"INSERT INTO temp.t1 VALUES(2, 'temp two', X'0202')"}
+{"sql":"INSERT INTO temp.t1 VALUES(3, 'temp three', X'0203')"}
+{"sql":"INSERT INTO temp.t1 VALUES(4, 'temp four', X'0204')"}
+{"sql":"INSERT INTO temp.t1 VALUES(5, 'temp five', X'0205')"}
+{"sql":"INSERT INTO temp.x2 VALUES(1, 'x temp one', X'000201')"}
+{"sql":"INSERT INTO temp.x2 VALUES(2, 'x temp two', X'000202')"}
+{"sql":"INSERT INTO temp.x2 VALUES(3, 'x temp three', X'000203')"}
+{"sql":"INSERT INTO temp.x2 VALUES(4, 'x temp four', X'000204')"}
+{"sql":"INSERT INTO temp.x2 VALUES(5, 'x temp five', X'000205')"}
+{"sql":"INSERT INTO aux.t1 VALUES(1, 'aux one', X'0301')"}
+{"sql":"INSERT INTO aux.t1 VALUES(2, 'aux two', X'0302')"}
+{"sql":"INSERT INTO aux.t1 VALUES(3, 'aux three', X'0303')"}
+{"sql":"INSERT INTO aux.t1 VALUES(4, 'aux four', X'0304')"}
+{"sql":"INSERT INTO aux.t1 VALUES(5, 'aux five', X'0305')"}
+{"sql":"INSERT INTO aux.x3 VALUES(1, 'x aux one', X'000301')"}
+{"sql":"INSERT INTO aux.x3 VALUES(2, 'x aux two', X'000302')"}
+{"sql":"INSERT INTO aux.x3 VALUES(3, 'x aux three', X'000303')"}
+{"sql":"INSERT INTO aux.x3 VALUES(4, 'x aux four', X'000304')"}
+{"sql":"INSERT INTO aux.x3 VALUES(5, 'x aux five', X'000305')"}
+{"sql":"INSERT INTO t1 VALUES('abcd', 152)"}
+{"sql":"INSERT INTO t1 VALUES(NULL, X'00010203')"}
+{"sql":"INSERT INTO t1 VALUES('', 154.2)"}
+{"sql":"CREATE TABLE t2(x PRIMARY KEY, y) WITHOUT ROWID"}
+{"sql":"INSERT INTO t2 VALUES(1, 'blob')"}
+{"sql":"CREATE TABLE t3(a PRIMARY KEY, b, c, d, e, f, UNIQUE(e, f))"}
+{"sql":"INSERT INTO t3 VALUES('aaaa', 'bbbb', 'cccc', 'dddd', 'eeee', 'ffff')"}
+{"sql":"CREATE TABLE c1(a INTEGER PRIMARY KEY, b REFERENCES p1)"}
+{"sql":"INSERT INTO c1 VALUES(45, 'abc')"}
+{"sql":"CREATE TABLE b1(a INTEGER PRIMARY KEY, b, c UNIQUE)"}
+{"sql":"INSERT INTO b1 VALUES(1, '1234567890', 1)"}
+{"sql":"INSERT INTO b1 VALUES(2, '1234567890', 2)"}
+{"sql":"INSERT INTO b1 VALUES(3, '1234567890', 3)"}
+{"sql":"INSERT INTO b1 VALUES(4, '1234567890', 4)"}
+{"sql":"INSERT INTO b1 VALUES(5, '1234567890', 5)"}
+{"sql":"INSERT INTO b1 VALUES(6, '1234567890', 6)"}
+{"sql":"CREATE TABLE b2(a INTEGER PRIMARY KEY, b, c UNIQUE)"}
+{"sql":"INSERT INTO b2 VALUES(1, '1234567890', 1)"}
+{"sql":"INSERT INTO b2 VALUES(2, '1234567890', 2)"}
+{"sql":"INSERT INTO b2 VALUES(3, '1234567890', 3)"}
+{"sql":"INSERT INTO b2 VALUES(4, '1234567890', 4)"}
+{"sql":"INSERT INTO b2 VALUES(5, '1234567890', 5)"}
+{"sql":"INSERT INTO b2 VALUES(6, '1234567890', 6)"}
+{"sql":"DELETE FROM b1 WHERE a = 1"}
+{"sql":"DELETE FROM b1 WHERE a = 2"}
+{"sql":"UPDATE b1 SET c = 42 WHERE a=4"}
+{"sql":"UPDATE b1 SET c = 43 WHERE a=3"}
+{"sql":"INSERT OR REPLACE INTO b1 VALUES(10, 'abcdefghij', 5)"}
+{"sql":"INSERT OR REPLACE INTO b1 VALUES(11, 'abcdefghij', 6)"}
+{"sql":"DELETE FROM b2 WHERE a = 1"}
+{"sql":"DELETE FROM b2 WHERE a = 2"}
+{"sql":"UPDATE b2 SET c = 42 WHERE a=4"}
+{"sql":"UPDATE b2 SET c = 43 WHERE a=3"}
+{"sql":"INSERT OR REPLACE INTO b2 VALUES(10, 'abcdefghij', 5)"}
+{"sql":"INSERT OR REPLACE INTO b2 VALUES(11, 'abcdefghij', 6)"}
+{"sql":"CREATE TABLE b3(x INTEGER PRIMARY KEY, y TEXT, z INTEGER)"}
+{"sql":"INSERT INTO b3 VALUES(22, '..........', NULL)"}
+{"sql":"UPDATE b3 SET z = 'not null'"}
+{"sql":"SELECT * FROM b3"}
+{"sql":"CREATE TABLE c2(i INTEGER PRIMARY KEY, j)"}
+{"sql":"INSERT INTO c2 VALUES(10, zeroblob(24))"}
+{"sql":"SELECT j FROM c2"}

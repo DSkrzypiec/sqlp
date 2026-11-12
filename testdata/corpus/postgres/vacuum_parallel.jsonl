@@ -1,0 +1,13 @@
+{"sql":"SET max_parallel_maintenance_workers TO 4","shape":"SET max_parallel_maintenance_workers TO 4;"}
+{"sql":"SET min_parallel_index_scan_size TO '128kB'","shape":"SET min_parallel_index_scan_size TO '128kB';"}
+{"sql":"CREATE TABLE parallel_vacuum_table (a int) WITH (autovacuum_enabled = off)","shape":"CREATE TABLE parallel_vacuum_table (a int) WITH (autovacuum_enabled = off);"}
+{"sql":"INSERT INTO parallel_vacuum_table SELECT i from generate_series(1, 10000) i","shape":"INSERT INTO parallel_vacuum_table SELECT i FROM generate_series(1, 10000) AS i;"}
+{"sql":"CREATE INDEX regular_sized_index ON parallel_vacuum_table(a)","shape":"CREATE INDEX regular_sized_index ON parallel_vacuum_table (a);"}
+{"sql":"CREATE INDEX typically_sized_index ON parallel_vacuum_table(a)","shape":"CREATE INDEX typically_sized_index ON parallel_vacuum_table (a);"}
+{"sql":"CREATE INDEX vacuum_in_leader_small_index ON parallel_vacuum_table((1))","shape":"CREATE INDEX vacuum_in_leader_small_index ON parallel_vacuum_table ((1));"}
+{"sql":"SELECT EXISTS (\nSELECT 1\nFROM pg_class\nWHERE oid = 'vacuum_in_leader_small_index'::regclass AND\n  pg_relation_size(oid) <\n  pg_size_bytes(current_setting('min_parallel_index_scan_size'))\n) as leader_will_handle_small_index","shape":"SELECT EXISTS (SELECT 1 FROM pg_class WHERE (oid = 'vacuum_in_leader_small_index'::regclass) AND (pg_relation_size(oid) < pg_size_bytes(current_setting('min_parallel_index_scan_size')))) AS leader_will_handle_small_index;"}
+{"sql":"SELECT count(*) as trigger_parallel_vacuum_nindexes\nFROM pg_class\nWHERE oid in ('regular_sized_index'::regclass, 'typically_sized_index'::regclass) AND\n  pg_relation_size(oid) >=\n  pg_size_bytes(current_setting('min_parallel_index_scan_size'))","shape":"SELECT count(*) AS trigger_parallel_vacuum_nindexes FROM pg_class WHERE (oid IN ('regular_sized_index'::regclass, 'typically_sized_index'::regclass)) AND (pg_relation_size(oid) >= pg_size_bytes(current_setting('min_parallel_index_scan_size')));"}
+{"sql":"DELETE FROM parallel_vacuum_table","shape":"DELETE FROM parallel_vacuum_table;"}
+{"sql":"VACUUM (PARALLEL 4, INDEX_CLEANUP ON) parallel_vacuum_table","shape":"VACUUM (PARALLEL 4, INDEX_CLEANUP ON) parallel_vacuum_table;"}
+{"sql":"INSERT INTO parallel_vacuum_table SELECT i FROM generate_series(1, 10000) i","shape":"INSERT INTO parallel_vacuum_table SELECT i FROM generate_series(1, 10000) AS i;"}
+{"sql":"RESET max_parallel_maintenance_workers","shape":"RESET max_parallel_maintenance_workers;"}

@@ -1,0 +1,186 @@
+{"sql":"CREATE TABLE t2(x PRIMARY KEY, y)"}
+{"sql":"CREATE TABLE t3(i, j, UNIQUE(i, j) )"}
+{"sql":"ATTACH 'test.db2' AS auxa"}
+{"sql":"ATTACH 'test.db3' AS auxb"}
+{"sql":"CREATE VIEW  v1 AS SELECT * FROM t1"}
+{"sql":"CREATE TABLE auxa.tbl1(x, y)"}
+{"sql":"CREATE INDEX auxa.idx1 ON tbl1(x)"}
+{"sql":"CREATE VIEW auxa.view1 AS SELECT * FROM tbl1"}
+{"sql":"CREATE TABLE auxb.t2(x, y)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    SELECT 1;\n  END"}
+{"sql":"CREATE TRIGGER auxb.tr2 AFTER INSERT ON t2 BEGIN\n    SELECT 1;\n  END"}
+{"sql":"CREATE TABLE auxa.t3(a, b)"}
+{"sql":"CREATE TABLE auxa.t4(a, b)"}
+{"sql":"SELECT name FROM auxa.sqlite_master"}
+{"sql":"CREATE TABLE t3(g BIGINT, h VARCHAR(10))"}
+{"sql":"CREATE TABLE t4(i BLOB, j ANYOLDATA)"}
+{"sql":"CREATE TABLE t5(k FLOAT, l INTEGER)"}
+{"sql":"CREATE TABLE t6(m DEFAULT 10, n DEFAULT 5, PRIMARY KEY(m, n))"}
+{"sql":"CREATE TABLE t7(x INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE t8(o COLLATE nocase DEFAULT 'abc')"}
+{"sql":"CREATE TABLE t9(p NOT NULL, q DOUBLE CHECK (q!=0), r STRING UNIQUE)"}
+{"sql":"DROP TABLE x1"}
+{"sql":"INSERT INTO x2 DEFAULT VALUES"}
+{"sql":"INSERT INTO x3 DEFAULT VALUES"}
+{"sql":"INSERT INTO x4 DEFAULT VALUES"}
+{"sql":"SELECT * FROM x2"}
+{"sql":"SELECT * FROM x3"}
+{"sql":"SELECT * FROM x4"}
+{"sql":"INSERT INTO t1 VALUES('i',   'one')"}
+{"sql":"INSERT INTO t1 VALUES('ii',  'two')"}
+{"sql":"INSERT INTO t1 VALUES('iii', 'three')"}
+{"sql":"CREATE TABLE t1(x VARCHAR(10), y INTEGER, z DOUBLE)"}
+{"sql":"CREATE TABLE t2(a DATETIME, b STRING, c REAL)"}
+{"sql":"CREATE TABLE t3(o, t)"}
+{"sql":"INSERT INTO t1 VALUES(14, 'quite a lengthy string', X'555655')"}
+{"sql":"INSERT INTO t2 VALUES('not a datetime', 13, '12:41:59')"}
+{"sql":"CREATE TABLE t4(\n    a DEFAULT NULL,\n    b DEFAULT 'string constant',\n    c DEFAULT X'424C4F42',\n    d DEFAULT 1,\n    e DEFAULT -1,\n    f DEFAULT 3.14,\n    g DEFAULT -3.14,\n    h DEFAULT ( substr('abcd', 0, 2) || 'cd' ),\n    i DEFAULT CURRENT_TIME,\n    j DEFAULT CURRENT_DATE,\n    k DEFAULT CURRENT_TIMESTAMP\n  )"}
+{"sql":"CREATE TABLE t5(\n    a DEFAULT NULL,  \n    b DEFAULT 'text value',  \n    c DEFAULT X'424C4F42',\n    d DEFAULT -45678.6,\n    e DEFAULT 394507\n  )"}
+{"sql":"SELECT quote(a), quote(b), quote(c), quote(d), quote(e) FROM t5"}
+{"sql":"CREATE TABLE t6(a DEFAULT ( nextint() ), b DEFAULT ( nextint() ))"}
+{"sql":"INSERT INTO t6 DEFAULT VALUES"}
+{"sql":"SELECT quote(a), quote(b) FROM t6"}
+{"sql":"INSERT INTO t6(a) VALUES('X')"}
+{"sql":"INSERT INTO t6(a) SELECT a FROM t6"}
+{"sql":"CREATE TABLE t7(\n    a DEFAULT CURRENT_TIME, \n    b DEFAULT CURRENT_DATE, \n    c DEFAULT CURRENT_TIMESTAMP\n  )"}
+{"sql":"INSERT INTO t7 DEFAULT VALUES"}
+{"sql":"SELECT quote(a), quote(b), quote(c) FROM t7"}
+{"sql":"CREATE TABLE t8(a COLLATE nocase, b COLLATE rtrim, c COLLATE binary, d)"}
+{"sql":"INSERT INTO t8 VALUES('abc',   'abc',   'abc',   'abc')"}
+{"sql":"INSERT INTO t8 VALUES('abc  ', 'abc  ', 'abc  ', 'abc  ')"}
+{"sql":"INSERT INTO t8 VALUES('ABC  ', 'ABC  ', 'ABC  ', 'ABC  ')"}
+{"sql":"INSERT INTO t8 VALUES('ABC',   'ABC',   'ABC',   'ABC')"}
+{"sql":"CREATE TABLE t10([columns 500])"}
+{"sql":"CREATE TABLE t11([columns 501])"}
+{"sql":"INSERT INTO t12 VALUES(randomblob(30000),randomblob(30000),randomblob(30000))"}
+{"sql":"INSERT INTO t12 VALUES(randomblob(30001),randomblob(30000),randomblob(30000))"}
+{"sql":"CREATE TABLE t7(a, b) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(0,          'zero')"}
+{"sql":"INSERT INTO t1 VALUES(45.5,       'one')"}
+{"sql":"INSERT INTO t1 VALUES('brambles', 'two')"}
+{"sql":"INSERT INTO t1 VALUES(X'ABCDEF',  'three')"}
+{"sql":"CREATE TABLE t2(x, y, PRIMARY KEY(x, y))"}
+{"sql":"INSERT INTO t2 VALUES(0,          'zero')"}
+{"sql":"INSERT INTO t2 VALUES(45.5,       'one')"}
+{"sql":"INSERT INTO t2 VALUES('brambles', 'two')"}
+{"sql":"INSERT INTO t2 VALUES(X'ABCDEF',  'three')"}
+{"sql":"CREATE TABLE t3(s, u INTEGER PRIMARY KEY, v)"}
+{"sql":"INSERT INTO t3 VALUES(1, NULL, 2)"}
+{"sql":"INSERT INTO t3 VALUES('x', NULL, 'y')"}
+{"sql":"SELECT u FROM t3"}
+{"sql":"INSERT INTO t3 VALUES(2, 5, 3)"}
+{"sql":"UPDATE t3 SET u = NULL WHERE s = 2"}
+{"sql":"CREATE TABLE t4(s, u INT PRIMARY KEY, v) WITHOUT ROWID"}
+{"sql":"INSERT INTO t4 VALUES(1, NULL, 2)"}
+{"sql":"CREATE TABLE t5(s, u INT PRIMARY KEY NOT NULL, v)"}
+{"sql":"INSERT INTO t5 VALUES(1, NULL, 2)"}
+{"sql":"CREATE TABLE t6(s INT, u INT PRIMARY KEY, v INT) STRICT"}
+{"sql":"INSERT INTO t6 VALUES(1, NULL, 2)"}
+{"sql":"CREATE TABLE t7(s INT, u INT PRIMARY KEY NOT NULL, v INT) STRICT"}
+{"sql":"INSERT INTO t7 VALUES(1, NULL, 2)"}
+{"sql":"INSERT INTO t1 VALUES(4.3, 5.5)"}
+{"sql":"INSERT INTO t1 VALUES('reveal', 'variableness')"}
+{"sql":"INSERT INTO t1 VALUES(X'123456', X'654321')"}
+{"sql":"INSERT INTO t4 VALUES('xyx', 1, 1)"}
+{"sql":"INSERT INTO t4 VALUES('xyx', 2, 1)"}
+{"sql":"INSERT INTO t4 VALUES('uvw', 1, 1)"}
+{"sql":"CREATE TABLE t1(a, b PRIMARY KEY)"}
+{"sql":"CREATE TABLE t2(a, b, c, UNIQUE(b, c))"}
+{"sql":"CREATE TABLE x1(a TEXT, b INTEGER CHECK( b>0 ))"}
+{"sql":"CREATE TABLE t1(a TEXT, b INTEGER, CHECK( b>0 ))"}
+{"sql":"INSERT INTO x1 VALUES('x', 'xx')"}
+{"sql":"INSERT INTO x1 VALUES('y', 'yy')"}
+{"sql":"INSERT INTO t1 SELECT * FROM x1"}
+{"sql":"CREATE TABLE x2(a CHECK( a||b ), b)"}
+{"sql":"CREATE TABLE t2(a, b, CHECK( a||b ))"}
+{"sql":"INSERT INTO x2 VALUES(1, 'xx')"}
+{"sql":"INSERT INTO x2 VALUES(1, 'yy')"}
+{"sql":"INSERT INTO t2 SELECT * FROM x2"}
+{"sql":"INSERT INTO t1 VALUES('z', NULL)"}
+{"sql":"INSERT INTO t2 VALUES('x', 'y')"}
+{"sql":"INSERT INTO t2 VALUES('z', NULL)"}
+{"sql":"INSERT INTO t3 VALUES('x', 'y', 'z')"}
+{"sql":"CREATE TABLE t1_ab(a PRIMARY KEY ON CONFLICT ABORT, b)"}
+{"sql":"CREATE TABLE t1_ro(a PRIMARY KEY ON CONFLICT ROLLBACK, b)"}
+{"sql":"CREATE TABLE t1_ig(a PRIMARY KEY ON CONFLICT IGNORE, b)"}
+{"sql":"CREATE TABLE t1_fa(a PRIMARY KEY ON CONFLICT FAIL, b)"}
+{"sql":"CREATE TABLE t1_re(a PRIMARY KEY ON CONFLICT REPLACE, b)"}
+{"sql":"CREATE TABLE t1_xx(a PRIMARY KEY, b)"}
+{"sql":"INSERT INTO t1_ab VALUES(1, 'one')"}
+{"sql":"INSERT INTO t1_ab VALUES(2, 'two')"}
+{"sql":"INSERT INTO t1_ro SELECT * FROM t1_ab"}
+{"sql":"INSERT INTO t1_ig SELECT * FROM t1_ab"}
+{"sql":"INSERT INTO t1_fa SELECT * FROM t1_ab"}
+{"sql":"INSERT INTO t1_re SELECT * FROM t1_ab"}
+{"sql":"INSERT INTO t1_xx SELECT * FROM t1_ab"}
+{"sql":"CREATE TABLE t2_ab(a, b NOT NULL ON CONFLICT ABORT)"}
+{"sql":"CREATE TABLE t2_ro(a, b NOT NULL ON CONFLICT ROLLBACK)"}
+{"sql":"CREATE TABLE t2_ig(a, b NOT NULL ON CONFLICT IGNORE)"}
+{"sql":"CREATE TABLE t2_fa(a, b NOT NULL ON CONFLICT FAIL)"}
+{"sql":"CREATE TABLE t2_re(a, b NOT NULL ON CONFLICT REPLACE)"}
+{"sql":"CREATE TABLE t2_xx(a, b NOT NULL)"}
+{"sql":"INSERT INTO t2_ab VALUES(1, 'one')"}
+{"sql":"INSERT INTO t2_ab VALUES(2, 'two')"}
+{"sql":"INSERT INTO t2_ro SELECT * FROM t2_ab"}
+{"sql":"INSERT INTO t2_ig SELECT * FROM t2_ab"}
+{"sql":"INSERT INTO t2_fa SELECT * FROM t2_ab"}
+{"sql":"INSERT INTO t2_re SELECT * FROM t2_ab"}
+{"sql":"INSERT INTO t2_xx SELECT * FROM t2_ab"}
+{"sql":"CREATE TABLE t3_ab(a, b, UNIQUE(a, b) ON CONFLICT ABORT)"}
+{"sql":"CREATE TABLE t3_ro(a, b, UNIQUE(a, b) ON CONFLICT ROLLBACK)"}
+{"sql":"CREATE TABLE t3_ig(a, b, UNIQUE(a, b) ON CONFLICT IGNORE)"}
+{"sql":"CREATE TABLE t3_fa(a, b, UNIQUE(a, b) ON CONFLICT FAIL)"}
+{"sql":"CREATE TABLE t3_re(a, b, UNIQUE(a, b) ON CONFLICT REPLACE)"}
+{"sql":"CREATE TABLE t3_xx(a, b, UNIQUE(a, b))"}
+{"sql":"INSERT INTO t3_ab VALUES(1, 'one')"}
+{"sql":"INSERT INTO t3_ab VALUES(2, 'two')"}
+{"sql":"INSERT INTO t3_ro SELECT * FROM t3_ab"}
+{"sql":"INSERT INTO t3_ig SELECT * FROM t3_ab"}
+{"sql":"INSERT INTO t3_fa SELECT * FROM t3_ab"}
+{"sql":"INSERT INTO t3_re SELECT * FROM t3_ab"}
+{"sql":"INSERT INTO t3_xx SELECT * FROM t3_ab"}
+{"sql":"CREATE TABLE t4(a, b CHECK (b!=10))"}
+{"sql":"INSERT INTO t4 VALUES(1, 2)"}
+{"sql":"INSERT INTO t4 VALUES(3, 4)"}
+{"sql":"INSERT INTO t4 VALUES(5, 6)"}
+{"sql":"INSERT INTO t4 SELECT a+4, b+4 FROM t4"}
+{"sql":"CREATE TABLE t5(a NOT NULL ON CONFLICT IGNORE, b NOT NULL ON CONFLICT ABORT)"}
+{"sql":"INSERT INTO t5 VALUES(NULL, 'not null')"}
+{"sql":"INSERT INTO t5 VALUES('not null', NULL)"}
+{"sql":"INSERT INTO t1 VALUES('one', 'first')"}
+{"sql":"INSERT INTO t1 VALUES('two', 'second')"}
+{"sql":"INSERT INTO t1 VALUES('three', 'third')"}
+{"sql":"CREATE TABLE t2(oid, b)"}
+{"sql":"CREATE TABLE t3(a, _rowid_)"}
+{"sql":"CREATE TABLE t4(a, b, rowid)"}
+{"sql":"INSERT INTO t2 VALUES('one', 'two')"}
+{"sql":"INSERT INTO t2 VALUES('three', 'four')"}
+{"sql":"INSERT INTO t3 VALUES('five', 'six')"}
+{"sql":"INSERT INTO t3 VALUES('seven', 'eight')"}
+{"sql":"INSERT INTO t4 VALUES('nine', 'ten', 'eleven')"}
+{"sql":"INSERT INTO t4 VALUES('twelve', 'thirteen', 'fourteen')"}
+{"sql":"CREATE TABLE t6(pk INT primary key)"}
+{"sql":"CREATE TABLE t7(pk BIGINT primary key)"}
+{"sql":"CREATE TABLE t8(pk SHORT INTEGER primary key)"}
+{"sql":"CREATE TABLE t9(pk UNSIGNED INTEGER primary key)"}
+{"sql":"INSERT INTO t6 VALUES('2.0')"}
+{"sql":"INSERT INTO t7 VALUES('2.0')"}
+{"sql":"INSERT INTO t8 VALUES('2.0')"}
+{"sql":"INSERT INTO t9 VALUES('2.0')"}
+{"sql":"SELECT typeof(pk), pk FROM t6"}
+{"sql":"SELECT typeof(pk), pk FROM t7"}
+{"sql":"SELECT typeof(pk), pk FROM t8"}
+{"sql":"SELECT typeof(pk), pk FROM t9"}
+{"sql":"INSERT INTO t6 VALUES(2)"}
+{"sql":"INSERT INTO t7 VALUES(2)"}
+{"sql":"INSERT INTO t8 VALUES(2)"}
+{"sql":"INSERT INTO t9 VALUES(2)"}
+{"sql":"DROP TABLE t"}
+{"sql":"INSERT INTO t10 VALUES('ten', 10)"}
+{"sql":"CREATE TABLE t11(a, b INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t11 VALUES('ten', 10)"}
+{"sql":"DELETE FROM t10"}
+{"sql":"DELETE FROM t11"}
+{"sql":"CREATE TABLE t12(x INTEGER PRIMARY KEY, y)"}
+{"sql":"INSERT INTO t12 VALUES(5, 'five')"}
+{"sql":"DELETE FROM t12"}

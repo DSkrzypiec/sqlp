@@ -1,0 +1,45 @@
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(tokenize=unicode61, x)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(tokenize=unicode61, x, y)"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 'a b c')"}
+{"sql":"SELECT snippet(t1, '[', ']') FROM t1 WHERE t1 MATCH 'b'"}
+{"sql":"INSERT INTO t1 VALUES('b b b b b b b b b b b', 'b b b b b b b b b b b b b')"}
+{"sql":"INSERT INTO t1 VALUES('a b c', NULL)"}
+{"sql":"INSERT INTO t1 VALUES('a x c', NULL)"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'a b'"}
+{"sql":"SELECT rowid FROM t3 WHERE t3 MATCH 'o'"}
+{"sql":"SELECT rowid FROM t3 WHERE t3 MATCH 'a'"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4(tokenize=unicode61 \"remove_diacritics=0\")"}
+{"sql":"INSERT INTO t4 SELECT * FROM t3"}
+{"sql":"SELECT rowid FROM t4 WHERE t4 MATCH 'o'"}
+{"sql":"SELECT rowid FROM t4 WHERE t4 MATCH 'a'"}
+{"sql":"DROP TABLE IF EXISTS t5aux"}
+{"sql":"DROP TABLE IF EXISTS t6"}
+{"sql":"DROP TABLE IF EXISTS t6aux"}
+{"sql":"DROP TABLE IF EXISTS t7"}
+{"sql":"DROP TABLE IF EXISTS t7aux"}
+{"sql":"CREATE VIRTUAL TABLE t5aux USING fts4aux(t5)"}
+{"sql":"INSERT INTO t5 VALUES('one two three/four.five.six')"}
+{"sql":"SELECT * FROM t5aux"}
+{"sql":"CREATE VIRTUAL TABLE t6aux USING fts4aux(t6)"}
+{"sql":"INSERT INTO t6 VALUES('alpha=beta\"gamma/delta[epsilon]zeta')"}
+{"sql":"SELECT * FROM t6aux"}
+{"sql":"CREATE VIRTUAL TABLE t7aux USING fts4aux(t7)"}
+{"sql":"INSERT INTO t7 VALUES('alephxbeth\\xC4gimel')"}
+{"sql":"SELECT * FROM t7aux"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(tokenize=unicode61\n    \"tokenchars=xyz\" \"tokenchars=.=\" \"separators=.=\" \"separators=xy\"\n    \"separators=a\" \"separators=a\" \"tokenchars=a\" \"tokenchars=a\"\n  )"}
+{"sql":"INSERT INTO t1 VALUES('oneatwoxthreeyfour')"}
+{"sql":"INSERT INTO t1 VALUES('a.single=word')"}
+{"sql":"SELECT * FROM t1aux"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(tokenize=unicode61 \"separators=aB\")"}
+{"sql":"INSERT INTO t2 VALUES('oneatwoBthree')"}
+{"sql":"INSERT INTO t2 VALUES('onebtwoAthree')"}
+{"sql":"SELECT * FROM t2aux"}
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts3tokenize(\n    \"unicode61\", \"tokenchars=@.\", \"separators=1234567890\"\n  )"}
+{"sql":"SELECT token FROM ft1 WHERE input = 'berlin@street123sydney.road'"}
+{"sql":"CREATE VIRTUAL TABLE t12 USING fts4(tokenize=unicode61)"}
+{"sql":"INSERT INTO t12 VALUES('abc' || char(0) || 'def')"}
+{"sql":"SELECT hex(CAST(content AS blob)) FROM t12"}
+{"sql":"INSERT INTO t12(t12) VALUES('integrity-check')"}
+{"sql":"CREATE VIRTUAL TABLE t12aux USING fts4aux(t12)"}
+{"sql":"SELECT * FROM t12aux"}
+{"sql":"SELECT hex(CAST(content AS blob)) FROM t12 WHERE t12 MATCH 'abc'"}

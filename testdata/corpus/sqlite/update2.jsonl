@@ -1,0 +1,52 @@
+{"sql":"UPDATE t1 SET b = repeat(b, 100)"}
+{"sql":"CREATE INDEX t3i ON t3(b)"}
+{"sql":"UPDATE t3 SET c=1 WHERE b=?"}
+{"sql":"UPDATE t3 SET c=1 WHERE rowid=?"}
+{"sql":"CREATE TABLE t4(a PRIMARY KEY, b, c) WITHOUT ROWID"}
+{"sql":"CREATE INDEX t4c ON t4(c)"}
+{"sql":"INSERT INTO t4 VALUES(2, 3, 4)"}
+{"sql":"UPDATE t4 SET c=c+2 WHERE c>2"}
+{"sql":"SELECT a, c FROM t4 ORDER BY a"}
+{"sql":"DROP TABLE IF EXISTS b1"}
+{"sql":"DROP TABLE IF EXISTS c1"}
+{"sql":"CREATE UNIQUE INDEX b1c ON b1(c)"}
+{"sql":"INSERT INTO b1 VALUES(1, 'a', 1)"}
+{"sql":"INSERT INTO b1 VALUES(2, 'b', 15)"}
+{"sql":"INSERT INTO b1 VALUES(3, 'c', 3)"}
+{"sql":"INSERT INTO b1 VALUES(4, 'd', 4)"}
+{"sql":"INSERT INTO b1 VALUES(5, 'e', 5)"}
+{"sql":"INSERT INTO b1 VALUES(6, 'f', 6)"}
+{"sql":"INSERT INTO b1 VALUES(7, 'g', 7)"}
+{"sql":"UPDATE OR REPLACE b1 SET c=c+10 WHERE a BETWEEN 4 AND 7"}
+{"sql":"SELECT * FROM b1 ORDER BY a"}
+{"sql":"CREATE INDEX c1d ON c1(d, b)"}
+{"sql":"CREATE UNIQUE INDEX c1c ON c1(c, b)"}
+{"sql":"INSERT INTO c1 VALUES(1, 'a', 1,  1)"}
+{"sql":"INSERT INTO c1 VALUES(2, 'a', 15, 2)"}
+{"sql":"INSERT INTO c1 VALUES(3, 'a', 3,  3)"}
+{"sql":"INSERT INTO c1 VALUES(4, 'a', 4,  4)"}
+{"sql":"INSERT INTO c1 VALUES(5, 'a', 5,  5)"}
+{"sql":"INSERT INTO c1 VALUES(6, 'a', 6,  6)"}
+{"sql":"INSERT INTO c1 VALUES(7, 'a', 7,  7)"}
+{"sql":"UPDATE OR REPLACE c1 SET c=c+10 WHERE d BETWEEN 4 AND 7"}
+{"sql":"SELECT * FROM c1 ORDER BY a"}
+{"sql":"DROP INDEX c1d"}
+{"sql":"DROP INDEX c1c"}
+{"sql":"CREATE INDEX c1d ON c1(d)"}
+{"sql":"CREATE UNIQUE INDEX c1c ON c1(c)"}
+{"sql":"CREATE TABLE x1(a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"CREATE INDEX x1c ON x1(b, c)"}
+{"sql":"INSERT INTO x1 VALUES(1, 'a', 1)"}
+{"sql":"INSERT INTO x1 VALUES(2, 'a', 2)"}
+{"sql":"INSERT INTO x1 VALUES(3, 'a', 3)"}
+{"sql":"UPDATE x1 SET c=c+1 WHERE b='a'"}
+{"sql":"CREATE TABLE d1(a,b)"}
+{"sql":"CREATE INDEX d1b ON d1(a)"}
+{"sql":"CREATE INDEX d1c ON d1(b)"}
+{"sql":"INSERT INTO d1 VALUES(1,2)"}
+{"sql":"UPDATE d1 SET a = a+2 WHERE a>0 OR b>0"}
+{"sql":"SELECT * FROM d1"}
+{"sql":"CREATE UNIQUE INDEX t1x1 ON t1(x) WHERE x IS NOT NULL"}
+{"sql":"CREATE INDEX t1x2 ON t1(y)"}
+{"sql":"SELECT quote(x), quote(y), '|' FROM t1"}
+{"sql":"UPDATE OR REPLACE t1 SET x=1"}

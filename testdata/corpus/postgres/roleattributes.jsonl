@@ -1,0 +1,64 @@
+{"sql":"CREATE ROLE regress_test_def_superuser"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_superuser'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_superuser';"}
+{"sql":"CREATE ROLE regress_test_superuser WITH SUPERUSER"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_superuser'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_superuser';"}
+{"sql":"ALTER ROLE regress_test_superuser WITH NOSUPERUSER"}
+{"sql":"ALTER ROLE regress_test_superuser WITH SUPERUSER"}
+{"sql":"CREATE ROLE regress_test_def_inherit"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_inherit'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_inherit';"}
+{"sql":"CREATE ROLE regress_test_inherit WITH NOINHERIT"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_inherit'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_inherit';"}
+{"sql":"ALTER ROLE regress_test_inherit WITH INHERIT"}
+{"sql":"ALTER ROLE regress_test_inherit WITH NOINHERIT"}
+{"sql":"CREATE ROLE regress_test_def_createrole"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_createrole'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_createrole';"}
+{"sql":"CREATE ROLE regress_test_createrole WITH CREATEROLE"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_createrole'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_createrole';"}
+{"sql":"ALTER ROLE regress_test_createrole WITH NOCREATEROLE"}
+{"sql":"ALTER ROLE regress_test_createrole WITH CREATEROLE"}
+{"sql":"CREATE ROLE regress_test_def_createdb"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_createdb'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_createdb';"}
+{"sql":"CREATE ROLE regress_test_createdb WITH CREATEDB"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_createdb'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_createdb';"}
+{"sql":"ALTER ROLE regress_test_createdb WITH NOCREATEDB"}
+{"sql":"ALTER ROLE regress_test_createdb WITH CREATEDB"}
+{"sql":"CREATE ROLE regress_test_def_role_canlogin"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_role_canlogin'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_role_canlogin';"}
+{"sql":"CREATE ROLE regress_test_role_canlogin WITH LOGIN"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_role_canlogin'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_role_canlogin';"}
+{"sql":"ALTER ROLE regress_test_role_canlogin WITH NOLOGIN"}
+{"sql":"ALTER ROLE regress_test_role_canlogin WITH LOGIN"}
+{"sql":"CREATE USER regress_test_def_user_canlogin"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_user_canlogin'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_user_canlogin';"}
+{"sql":"CREATE USER regress_test_user_canlogin WITH NOLOGIN"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_user_canlogin'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_user_canlogin';"}
+{"sql":"ALTER USER regress_test_user_canlogin WITH LOGIN"}
+{"sql":"ALTER USER regress_test_user_canlogin WITH NOLOGIN"}
+{"sql":"CREATE ROLE regress_test_def_replication"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_replication'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_replication';"}
+{"sql":"CREATE ROLE regress_test_replication WITH REPLICATION"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_replication'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_replication';"}
+{"sql":"ALTER ROLE regress_test_replication WITH NOREPLICATION"}
+{"sql":"ALTER ROLE regress_test_replication WITH REPLICATION"}
+{"sql":"CREATE ROLE regress_test_def_bypassrls"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_bypassrls'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_def_bypassrls';"}
+{"sql":"CREATE ROLE regress_test_bypassrls WITH BYPASSRLS"}
+{"sql":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_bypassrls'","shape":"SELECT rolname, rolsuper, rolinherit, rolcreaterole, rolcreatedb, rolcanlogin, rolreplication, rolbypassrls, rolconnlimit, rolpassword, rolvaliduntil FROM pg_authid WHERE rolname = 'regress_test_bypassrls';"}
+{"sql":"ALTER ROLE regress_test_bypassrls WITH NOBYPASSRLS"}
+{"sql":"ALTER ROLE regress_test_bypassrls WITH BYPASSRLS"}
+{"sql":"DROP ROLE regress_test_def_superuser","shape":"DROP ROLE regress_test_def_superuser;"}
+{"sql":"DROP ROLE regress_test_superuser","shape":"DROP ROLE regress_test_superuser;"}
+{"sql":"DROP ROLE regress_test_def_inherit","shape":"DROP ROLE regress_test_def_inherit;"}
+{"sql":"DROP ROLE regress_test_inherit","shape":"DROP ROLE regress_test_inherit;"}
+{"sql":"DROP ROLE regress_test_def_createrole","shape":"DROP ROLE regress_test_def_createrole;"}
+{"sql":"DROP ROLE regress_test_createrole","shape":"DROP ROLE regress_test_createrole;"}
+{"sql":"DROP ROLE regress_test_def_createdb","shape":"DROP ROLE regress_test_def_createdb;"}
+{"sql":"DROP ROLE regress_test_createdb","shape":"DROP ROLE regress_test_createdb;"}
+{"sql":"DROP ROLE regress_test_def_role_canlogin","shape":"DROP ROLE regress_test_def_role_canlogin;"}
+{"sql":"DROP ROLE regress_test_role_canlogin","shape":"DROP ROLE regress_test_role_canlogin;"}
+{"sql":"DROP USER regress_test_def_user_canlogin","shape":"DROP USER regress_test_def_user_canlogin;"}
+{"sql":"DROP USER regress_test_user_canlogin","shape":"DROP USER regress_test_user_canlogin;"}
+{"sql":"DROP ROLE regress_test_def_replication","shape":"DROP ROLE regress_test_def_replication;"}
+{"sql":"DROP ROLE regress_test_replication","shape":"DROP ROLE regress_test_replication;"}
+{"sql":"DROP ROLE regress_test_def_bypassrls","shape":"DROP ROLE regress_test_def_bypassrls;"}
+{"sql":"DROP ROLE regress_test_bypassrls","shape":"DROP ROLE regress_test_bypassrls;"}

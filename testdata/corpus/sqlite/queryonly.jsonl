@@ -1,0 +1,5 @@
+{"sql":"INSERT INTO t1 VALUES(123),(456)"}
+{"sql":"PRAGMA query_only"}
+{"sql":"PRAGMA query_only=ON"}
+{"sql":"INSERT INTO t1 VALUES(789)"}
+{"sql":"PRAGMA query_only=OFF"}

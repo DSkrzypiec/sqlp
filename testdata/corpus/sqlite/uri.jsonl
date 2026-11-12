@@ -1,0 +1,3 @@
+{"sql":"ATTACH 'file:test.db2?vfs=tvfs2' AS aux"}
+{"sql":"PRAGMA main.journal_mode = PERSIST"}
+{"sql":"ATTACH 'file:test.db2?mode=rw' AS aux"}

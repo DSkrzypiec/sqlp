@@ -1,0 +1,3 @@
+{"sql":"INSERT INTO t1 VALUES('one')"}
+{"sql":"INSERT INTO t1 VALUES('two')"}
+{"sql":"INSERT INTO t1 VALUES('three')"}

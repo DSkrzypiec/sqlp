@@ -1,0 +1,64 @@
+{"sql":"CREATE TABLE hash_i4_heap (\n\tseqno \t\tint4,\n\trandom \t\tint4\n)","shape":"CREATE TABLE hash_i4_heap (seqno int4, random int4);"}
+{"sql":"CREATE TABLE hash_name_heap (\n\tseqno \t\tint4,\n\trandom \t\tname\n)","shape":"CREATE TABLE hash_name_heap (seqno int4, random name);"}
+{"sql":"CREATE TABLE hash_txt_heap (\n\tseqno \t\tint4,\n\trandom \t\ttext\n)","shape":"CREATE TABLE hash_txt_heap (seqno int4, random text);"}
+{"sql":"CREATE TABLE hash_f8_heap (\n\tseqno\t\tint4,\n\trandom \t\tfloat8\n)","shape":"CREATE TABLE hash_f8_heap (seqno int4, random float8);"}
+{"sql":"ANALYZE hash_i4_heap","shape":"ANALYZE hash_i4_heap;"}
+{"sql":"ANALYZE hash_name_heap","shape":"ANALYZE hash_name_heap;"}
+{"sql":"ANALYZE hash_txt_heap","shape":"ANALYZE hash_txt_heap;"}
+{"sql":"ANALYZE hash_f8_heap","shape":"ANALYZE hash_f8_heap;"}
+{"sql":"CREATE INDEX hash_i4_index ON hash_i4_heap USING hash (random int4_ops)","shape":"CREATE INDEX hash_i4_index ON hash_i4_heap USING hash (random int4_ops);"}
+{"sql":"CREATE INDEX hash_name_index ON hash_name_heap USING hash (random name_ops)","shape":"CREATE INDEX hash_name_index ON hash_name_heap USING hash (random name_ops);"}
+{"sql":"CREATE INDEX hash_txt_index ON hash_txt_heap USING hash (random text_ops)","shape":"CREATE INDEX hash_txt_index ON hash_txt_heap USING hash (random text_ops);"}
+{"sql":"CREATE INDEX hash_f8_index ON hash_f8_heap USING hash (random float8_ops)\n  WITH (fillfactor=60)","shape":"CREATE INDEX hash_f8_index ON hash_f8_heap USING hash (random float8_ops) WITH (fillfactor = 60);"}
+{"sql":"create unique index hash_f8_index_1 on hash_f8_heap(abs(random))","shape":"CREATE UNIQUE INDEX hash_f8_index_1 ON hash_f8_heap (abs(random));"}
+{"sql":"create unique index hash_f8_index_2 on hash_f8_heap((seqno + 1), random)","shape":"CREATE UNIQUE INDEX hash_f8_index_2 ON hash_f8_heap ((seqno + 1), random);"}
+{"sql":"create unique index hash_f8_index_3 on hash_f8_heap(random) where seqno > 1000","shape":"CREATE UNIQUE INDEX hash_f8_index_3 ON hash_f8_heap (random) WHERE seqno > 1000;"}
+{"sql":"SELECT * FROM hash_i4_heap\n   WHERE hash_i4_heap.random = 843938989","shape":"SELECT * FROM hash_i4_heap WHERE hash_i4_heap.random = 843938989;"}
+{"sql":"SELECT * FROM hash_i4_heap\n   WHERE hash_i4_heap.random = 66766766","shape":"SELECT * FROM hash_i4_heap WHERE hash_i4_heap.random = 66766766;"}
+{"sql":"SELECT * FROM hash_name_heap\n   WHERE hash_name_heap.random = '1505703298'::name","shape":"SELECT * FROM hash_name_heap WHERE hash_name_heap.random = '1505703298'::name;"}
+{"sql":"SELECT * FROM hash_name_heap\n   WHERE hash_name_heap.random = '7777777'::name","shape":"SELECT * FROM hash_name_heap WHERE hash_name_heap.random = '7777777'::name;"}
+{"sql":"SELECT * FROM hash_txt_heap\n   WHERE hash_txt_heap.random = '1351610853'::text","shape":"SELECT * FROM hash_txt_heap WHERE hash_txt_heap.random = '1351610853'::text;"}
+{"sql":"SELECT * FROM hash_txt_heap\n   WHERE hash_txt_heap.random = '111111112222222233333333'::text","shape":"SELECT * FROM hash_txt_heap WHERE hash_txt_heap.random = '111111112222222233333333'::text;"}
+{"sql":"SELECT * FROM hash_f8_heap\n   WHERE hash_f8_heap.random = '444705537'::float8","shape":"SELECT * FROM hash_f8_heap WHERE hash_f8_heap.random = '444705537'::float8;"}
+{"sql":"SELECT * FROM hash_f8_heap\n   WHERE hash_f8_heap.random = '88888888'::float8","shape":"SELECT * FROM hash_f8_heap WHERE hash_f8_heap.random = '88888888'::float8;"}
+{"sql":"UPDATE hash_i4_heap\n   SET random = 1\n   WHERE hash_i4_heap.seqno = 1492","shape":"UPDATE hash_i4_heap SET random = 1 WHERE hash_i4_heap.seqno = 1492;"}
+{"sql":"SELECT h.seqno AS i1492, h.random AS i1\n   FROM hash_i4_heap h\n   WHERE h.random = 1","shape":"SELECT h.seqno AS i1492, h.random AS i1 FROM hash_i4_heap AS h WHERE h.random = 1;"}
+{"sql":"UPDATE hash_i4_heap\n   SET seqno = 20000\n   WHERE hash_i4_heap.random = 1492795354","shape":"UPDATE hash_i4_heap SET seqno = 20000 WHERE hash_i4_heap.random = 1492795354;"}
+{"sql":"SELECT h.seqno AS i20000\n   FROM hash_i4_heap h\n   WHERE h.random = 1492795354","shape":"SELECT h.seqno AS i20000 FROM hash_i4_heap AS h WHERE h.random = 1492795354;"}
+{"sql":"UPDATE hash_name_heap\n   SET random = '0123456789abcdef'::name\n   WHERE hash_name_heap.seqno = 6543","shape":"UPDATE hash_name_heap SET random = '0123456789abcdef'::name WHERE hash_name_heap.seqno = 6543;"}
+{"sql":"SELECT h.seqno AS i6543, h.random AS c0_to_f\n   FROM hash_name_heap h\n   WHERE h.random = '0123456789abcdef'::name","shape":"SELECT h.seqno AS i6543, h.random AS c0_to_f FROM hash_name_heap AS h WHERE h.random = '0123456789abcdef'::name;"}
+{"sql":"UPDATE hash_name_heap\n   SET seqno = 20000\n   WHERE hash_name_heap.random = '76652222'::name","shape":"UPDATE hash_name_heap SET seqno = 20000 WHERE hash_name_heap.random = '76652222'::name;"}
+{"sql":"SELECT h.seqno AS emptyset\n   FROM hash_name_heap h\n   WHERE h.random = '76652222'::name","shape":"SELECT h.seqno AS emptyset FROM hash_name_heap AS h WHERE h.random = '76652222'::name;"}
+{"sql":"UPDATE hash_txt_heap\n   SET random = '0123456789abcdefghijklmnop'::text\n   WHERE hash_txt_heap.seqno = 4002","shape":"UPDATE hash_txt_heap SET random = '0123456789abcdefghijklmnop'::text WHERE hash_txt_heap.seqno = 4002;"}
+{"sql":"SELECT h.seqno AS i4002, h.random AS c0_to_p\n   FROM hash_txt_heap h\n   WHERE h.random = '0123456789abcdefghijklmnop'::text","shape":"SELECT h.seqno AS i4002, h.random AS c0_to_p FROM hash_txt_heap AS h WHERE h.random = '0123456789abcdefghijklmnop'::text;"}
+{"sql":"UPDATE hash_txt_heap\n   SET seqno = 20000\n   WHERE hash_txt_heap.random = '959363399'::text","shape":"UPDATE hash_txt_heap SET seqno = 20000 WHERE hash_txt_heap.random = '959363399'::text;"}
+{"sql":"SELECT h.seqno AS t20000\n   FROM hash_txt_heap h\n   WHERE h.random = '959363399'::text","shape":"SELECT h.seqno AS t20000 FROM hash_txt_heap AS h WHERE h.random = '959363399'::text;"}
+{"sql":"UPDATE hash_f8_heap\n   SET random = '-1234.1234'::float8\n   WHERE hash_f8_heap.seqno = 8906","shape":"UPDATE hash_f8_heap SET random = '-1234.1234'::float8 WHERE hash_f8_heap.seqno = 8906;"}
+{"sql":"SELECT h.seqno AS i8096, h.random AS f1234_1234\n   FROM hash_f8_heap h\n   WHERE h.random = '-1234.1234'::float8","shape":"SELECT h.seqno AS i8096, h.random AS f1234_1234 FROM hash_f8_heap AS h WHERE h.random = '-1234.1234'::float8;"}
+{"sql":"UPDATE hash_f8_heap\n   SET seqno = 20000\n   WHERE hash_f8_heap.random = '488912369'::float8","shape":"UPDATE hash_f8_heap SET seqno = 20000 WHERE hash_f8_heap.random = '488912369'::float8;"}
+{"sql":"SELECT h.seqno AS f20000\n   FROM hash_f8_heap h\n   WHERE h.random = '488912369'::float8","shape":"SELECT h.seqno AS f20000 FROM hash_f8_heap AS h WHERE h.random = '488912369'::float8;"}
+{"sql":"CREATE TABLE hash_split_heap (keycol INT)","shape":"CREATE TABLE hash_split_heap (keycol INT);"}
+{"sql":"INSERT INTO hash_split_heap SELECT 1 FROM generate_series(1, 500) a","shape":"INSERT INTO hash_split_heap SELECT 1 FROM generate_series(1, 500) AS a;"}
+{"sql":"CREATE INDEX hash_split_index on hash_split_heap USING HASH (keycol)","shape":"CREATE INDEX hash_split_index ON hash_split_heap USING HASH (keycol);"}
+{"sql":"INSERT INTO hash_split_heap SELECT 1 FROM generate_series(1, 5000) a","shape":"INSERT INTO hash_split_heap SELECT 1 FROM generate_series(1, 5000) AS a;"}
+{"sql":"DECLARE c CURSOR FOR SELECT * from hash_split_heap WHERE keycol = 1","shape":"DECLARE c CURSOR FOR SELECT * from hash_split_heap WHERE keycol = 1;"}
+{"sql":"MOVE FORWARD ALL FROM c","shape":"MOVE FORWARD ALL FROM c;"}
+{"sql":"MOVE BACKWARD 10000 FROM c","shape":"MOVE BACKWARD 10000 FROM c;"}
+{"sql":"MOVE BACKWARD ALL FROM c","shape":"MOVE BACKWARD ALL FROM c;"}
+{"sql":"CLOSE c","shape":"CLOSE c;"}
+{"sql":"DELETE FROM hash_split_heap WHERE keycol = 1","shape":"DELETE FROM hash_split_heap WHERE keycol = 1;"}
+{"sql":"INSERT INTO hash_split_heap SELECT a/2 FROM generate_series(1, 25000) a","shape":"INSERT INTO hash_split_heap SELECT a / 2 FROM generate_series(1, 25000) AS a;"}
+{"sql":"VACUUM hash_split_heap","shape":"VACUUM hash_split_heap;"}
+{"sql":"ALTER INDEX hash_split_index SET (fillfactor = 10)"}
+{"sql":"REINDEX INDEX hash_split_index","shape":"REINDEX INDEX hash_split_index;"}
+{"sql":"DROP TABLE hash_split_heap","shape":"DROP TABLE hash_split_heap;"}
+{"sql":"CREATE TEMP TABLE hash_temp_heap (x int, y int)","shape":"CREATE TEMPORARY TABLE hash_temp_heap (x int, y int);"}
+{"sql":"INSERT INTO hash_temp_heap VALUES (1,1)","shape":"INSERT INTO hash_temp_heap VALUES (1, 1);"}
+{"sql":"CREATE INDEX hash_idx ON hash_temp_heap USING hash (x)","shape":"CREATE INDEX hash_idx ON hash_temp_heap USING hash (x);"}
+{"sql":"DROP TABLE hash_temp_heap CASCADE","shape":"DROP TABLE hash_temp_heap CASCADE;"}
+{"sql":"CREATE TABLE hash_heap_float4 (x float4, y int)","shape":"CREATE TABLE hash_heap_float4 (x float4, y int);"}
+{"sql":"INSERT INTO hash_heap_float4 VALUES (1.1,1)","shape":"INSERT INTO hash_heap_float4 VALUES (1.1, 1);"}
+{"sql":"CREATE INDEX hash_idx ON hash_heap_float4 USING hash (x)","shape":"CREATE INDEX hash_idx ON hash_heap_float4 USING hash (x);"}
+{"sql":"DROP TABLE hash_heap_float4 CASCADE","shape":"DROP TABLE hash_heap_float4 CASCADE;"}
+{"sql":"CREATE INDEX hash_f8_index2 ON hash_f8_heap USING hash (random float8_ops)\n\tWITH (fillfactor=9)","shape":"CREATE INDEX hash_f8_index2 ON hash_f8_heap USING hash (random float8_ops) WITH (fillfactor = 9);"}
+{"sql":"CREATE INDEX hash_f8_index2 ON hash_f8_heap USING hash (random float8_ops)\n\tWITH (fillfactor=101)","shape":"CREATE INDEX hash_f8_index2 ON hash_f8_heap USING hash (random float8_ops) WITH (fillfactor = 101);"}

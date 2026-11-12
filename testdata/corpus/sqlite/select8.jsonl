@@ -1,0 +1,4 @@
+{"sql":"SELECT DISTINCT artist,sum(timesplayed) AS total      \n  FROM songs      \n  GROUP BY LOWER(artist)"}
+{"sql":"SELECT DISTINCT artist,sum(timesplayed) AS total      \n    FROM songs      \n    GROUP BY LOWER(artist)      \n    LIMIT 1 OFFSET 1"}
+{"sql":"SELECT DISTINCT artist,sum(timesplayed) AS total      \n    FROM songs      \n    GROUP BY LOWER(artist)      \n    LIMIT 2 OFFSET 1"}
+{"sql":"SELECT DISTINCT artist,sum(timesplayed) AS total      \n    FROM songs      \n    GROUP BY LOWER(artist)      \n    LIMIT -1 OFFSET 2"}

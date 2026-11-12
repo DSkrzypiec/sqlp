@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t1(a, b HIDDEN VARCHAR, c INTEGER)"}
+{"sql":"CREATE VIRTUAL TABLE t1e USING echo(t1)"}
+{"sql":"PRAGMA table_info(t1e)"}
+{"sql":"INSERT INTO t1e VALUES('value a', 'value c')"}
+{"sql":"SELECT a, b, c FROM t1e"}
+{"sql":"DELETE FROM t1e"}
+{"sql":"INSERT INTO t1e SELECT 'abc','def'"}
+{"sql":"INSERT INTO t1e VALUES('ghi','jkl'),('mno','pqr'),('stu','vwx')"}
+{"sql":"SELECT a,b,c, '|' FROM t1e ORDER BY 1"}
+{"sql":"INSERT INTO t1e SELECT * FROM t1e"}
+{"sql":"SELECT * FROM t1e ORDER BY 1"}

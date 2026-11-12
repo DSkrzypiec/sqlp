@@ -1,0 +1,24 @@
+{"sql":"CREATE FUNCTION alter_op_test_fn(boolean, boolean)\nRETURNS boolean AS $$ SELECT NULL::BOOLEAN; $$ LANGUAGE sql IMMUTABLE","shape":"CREATE FUNCTION alter_op_test_fn(boolean, boolean) RETURNS boolean AS ' SELECT NULL::BOOLEAN; ' LANGUAGE sql IMMUTABLE;"}
+{"sql":"CREATE FUNCTION customcontsel(internal, oid, internal, integer)\nRETURNS float8 AS 'contsel' LANGUAGE internal STABLE STRICT","shape":"CREATE FUNCTION customcontsel(internal, oid, internal, integer) RETURNS float8 AS 'contsel' LANGUAGE internal STABLE STRICT;"}
+{"sql":"CREATE OPERATOR === (\n    LEFTARG = boolean,\n    RIGHTARG = boolean,\n    PROCEDURE = alter_op_test_fn,\n    COMMUTATOR = ===,\n    NEGATOR = !==,\n    RESTRICT = customcontsel,\n    JOIN = contjoinsel,\n    HASHES, MERGES\n)"}
+{"sql":"SELECT pg_describe_object(refclassid,refobjid,refobjsubid) as ref, deptype\nFROM pg_depend\nWHERE classid = 'pg_operator'::regclass AND\n      objid = '===(bool,bool)'::regoperator\nORDER BY 1","shape":"SELECT pg_describe_object(refclassid, refobjid, refobjsubid) AS ref, deptype FROM pg_depend WHERE (classid = 'pg_operator'::regclass) AND (objid = '===(bool,bool)'::regoperator) ORDER BY 1;"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (RESTRICT = NONE)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (JOIN = NONE)"}
+{"sql":"SELECT oprrest, oprjoin FROM pg_operator WHERE oprname = '==='\n  AND oprleft = 'boolean'::regtype AND oprright = 'boolean'::regtype","shape":"SELECT oprrest, oprjoin FROM pg_operator WHERE ((oprname = '===') AND (oprleft = 'boolean'::regtype)) AND (oprright = 'boolean'::regtype);"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (RESTRICT = contsel)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (JOIN = contjoinsel)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (RESTRICT = NONE, JOIN = NONE)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (RESTRICT = customcontsel, JOIN = contjoinsel)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (COMMUTATOR = ====)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (NEGATOR = ====)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (RESTRICT = non_existent_func)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (JOIN = non_existent_func)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (COMMUTATOR = !==)"}
+{"sql":"ALTER OPERATOR === (boolean, boolean) SET (NEGATOR = !==)"}
+{"sql":"ALTER OPERATOR & (bit, bit) SET (\"Restrict\" = _int_contsel, \"Join\" = _int_contjoinsel)"}
+{"sql":"CREATE USER regress_alter_op_user"}
+{"sql":"SET SESSION AUTHORIZATION regress_alter_op_user"}
+{"sql":"DROP USER regress_alter_op_user","shape":"DROP USER regress_alter_op_user;"}
+{"sql":"DROP OPERATOR === (boolean, boolean)"}
+{"sql":"DROP FUNCTION customcontsel(internal, oid, internal, integer)"}
+{"sql":"DROP FUNCTION alter_op_test_fn(boolean, boolean)"}

@@ -1,0 +1,21 @@
+{"sql":"INSERT INTO t1(a,b,c)\n    VALUES(1,2,3),(7,8,9),(4,5,6),(10,11,12),(4,8,12),(1,11,111)"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat)\n    VALUES('t1','t1a','12345 2'),('t1','t1b','12345 4')"}
+{"sql":"SELECT *, '#' FROM t1 WHERE a BETWEEN 3 AND 8 ORDER BY c"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT *, '#' FROM t1 WHERE a BETWEEN 3 AND 8 ORDER BY c"}
+{"sql":"SELECT c FROM t1 ORDER BY a"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT c FROM t1 ORDER BY a"}
+{"sql":"UPDATE sqlite_stat1 SET stat='12345 2 unordered' WHERE idx='t1a'"}
+{"sql":"UPDATE sqlite_stat1 SET stat='12345 2 whatever=5 unordered xyzzy=11'\n   WHERE idx='t1a'"}
+{"sql":"DROP INDEX t1a"}
+{"sql":"CREATE INDEX t1ab ON t1(a,b)"}
+{"sql":"CREATE INDEX t1ca ON t1(c,a)"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat)\n    VALUES('t1','t1ab','12345 3 2 sz=10'),('t1','t1ca','12345 3 2 sz=20')"}
+{"sql":"SELECT count(a) FROM t1"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT count(a) FROM t1"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat)\n    VALUES('t1','t1ab','12345 3 2 sz=20'),('t1','t1ca','12345 3 2 sz=10')"}
+{"sql":"DROP TABLE IF EXISTS t44"}
+{"sql":"CREATE TABLE t44(a PRIMARY KEY)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t44',null,'sz=0')"}
+{"sql":"SELECT 0 FROM t44 WHERE a IN(1,2,3)"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat)\n    VALUES('t1','t1ab','12345 3 2 x=5 sz=10 y=10'),\n          ('t1','t1ca','12345 3 2 whatever sz=20 junk')"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat)\n    VALUES('t1','t1ca','12345 3 2 x=5 sz=10 y=10'),\n          ('t1','t1ab','12345 3 2 whatever sz=20 junk')"}

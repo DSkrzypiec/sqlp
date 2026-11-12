@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY,b,c)"}
+{"sql":"INSERT INTO t1 VALUES(1,3,1)"}
+{"sql":"INSERT INTO t1 VALUES(2,4,2)"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON b=x AND c=1"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON x=b AND c=1"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON x=b AND 1=c"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON b=x AND 1=c"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON b=x WHERE c=1"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON x=b WHERE c=1"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON b=x WHERE 1=c"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON x=b WHERE 1=c"}

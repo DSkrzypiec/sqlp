@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE t3(a unique on conflict rollback)"}
+{"sql":"INSERT INTO t3 SELECT a FROM t1"}
+{"sql":"INSERT INTO t3 VALUES('hello world')"}
+{"sql":"SELECT distinct tbl_name FROM sqlite_master"}

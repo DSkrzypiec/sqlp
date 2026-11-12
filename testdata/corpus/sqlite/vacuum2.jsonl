@@ -1,0 +1,15 @@
+{"sql":"INSERT INTO t2 VALUES('out there')"}
+{"sql":"pragma auto_vacuum=1"}
+{"sql":"create table t(a, b)"}
+{"sql":"insert into t values(1, 2)"}
+{"sql":"pragma auto_vacuum=0"}
+{"sql":"vacuum"}
+{"sql":"INSERT INTO t1 SELECT a+1, randomblob(500) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+2, randomblob(500) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+4, randomblob(500) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+8, randomblob(500) FROM t1"}
+{"sql":"CREATE TABLE t6(x PRIMARY KEY COLLATE cmp, y) WITHOUT ROWID"}
+{"sql":"CREATE INDEX t6y ON t6(y)"}
+{"sql":"INSERT INTO t6 VALUES('i', 'one')"}
+{"sql":"INSERT INTO t6 VALUES('ii', 'one')"}
+{"sql":"INSERT INTO t6 VALUES('iii', 'one')"}

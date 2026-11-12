@@ -1,0 +1,25 @@
+{"sql":"CREATE TABLE t1(w int, x int, y int)"}
+{"sql":"CREATE TABLE t2(p int, q int, r int, s int)"}
+{"sql":"select max(y) from t1"}
+{"sql":"SELECT rowid \n    FROM t1 \n    WHERE rowid IN (SELECT rowid FROM t1 WHERE rowid IN (1, 2))"}
+{"sql":"select rowid from t1 where rowid IN (-1,2,4)"}
+{"sql":"SELECT rowid FROM t1 WHERE rowid IN \n       (select rowid from t1 where rowid IN (-1,2,4))"}
+{"sql":"CREATE TABLE t1(a BLOB, b NUMBER ,c TEXT)"}
+{"sql":"CREATE UNIQUE INDEX t1_i1 ON t1(a)"}
+{"sql":"CREATE UNIQUE INDEX t1_i2 ON t1(b)"}
+{"sql":"CREATE UNIQUE INDEX t1_i3 ON t1(c)"}
+{"sql":"CREATE TABLE t2(x BLOB, y NUMBER, z TEXT)"}
+{"sql":"CREATE UNIQUE INDEX t2_i1 ON t2(x)"}
+{"sql":"CREATE UNIQUE INDEX t2_i2 ON t2(y)"}
+{"sql":"CREATE UNIQUE INDEX t2_i3 ON t2(z)"}
+{"sql":"INSERT INTO t1 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO t2 VALUES('1', '1', '1')"}
+{"sql":"CREATE UNIQUE INDEX t3_i ON t3(b, a)"}
+{"sql":"INSERT INTO t3 VALUES(1, 'numeric', 2)"}
+{"sql":"INSERT INTO t3 VALUES(2, 'text', 2)"}
+{"sql":"INSERT INTO t3 VALUES(3, 'real', 2)"}
+{"sql":"INSERT INTO t3 VALUES(4, 'none', 2)"}
+{"sql":"CREATE UNIQUE INDEX t3_i2 ON t3(b)"}
+{"sql":"DROP INDEX t3_i2"}
+{"sql":"CREATE TABLE Folders(\n      folderid INTEGER PRIMARY KEY, \n      parentid INTEGER, \n      rootid INTEGER, \n      path VARCHAR(255)\n    )"}
+{"sql":"DELETE FROM Folders WHERE folderid IN\n    (SELECT folderid FROM Folder WHERE path LIKE 'C:\\MP3\\Albums\\' || '%')"}

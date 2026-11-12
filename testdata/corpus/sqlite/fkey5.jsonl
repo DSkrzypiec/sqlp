@@ -1,0 +1,37 @@
+{"sql":"PRAGMA temp.foreign_key_check(c2)"}
+{"sql":"PRAGMA foreign_key_list(c5)"}
+{"sql":"CREATE TABLE k1(x REFERENCES s1)"}
+{"sql":"PRAGMA foreign_key_check(k1)"}
+{"sql":"INSERT INTO k1 VALUES(NULL)"}
+{"sql":"INSERT INTO k1 VALUES(1)"}
+{"sql":"CREATE TABLE k2(x, y, FOREIGN KEY(x, y) REFERENCES s1(a, b))"}
+{"sql":"PRAGMA foreign_key_check(k2)"}
+{"sql":"INSERT INTO k2 VALUES(NULL, 'five')"}
+{"sql":"INSERT INTO k2 VALUES('one', NULL)"}
+{"sql":"INSERT INTO k2 VALUES('six', 'seven')"}
+{"sql":"CREATE TABLE p30 (id INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE IF NOT EXISTS c30 (\n      line INTEGER, \n      master REFERENCES p30(id), \n      PRIMARY KEY(master)\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO p30 (id) VALUES (1)"}
+{"sql":"INSERT INTO c30 (master, line)  VALUES (1, 999)"}
+{"sql":"INSERT INTO c30 VALUES(45, 45)"}
+{"sql":"CREATE TABLE tt(y)"}
+{"sql":"CREATE TABLE c11(x REFERENCES tt(y))"}
+{"sql":"ATTACH ':memory:' as aux"}
+{"sql":"CREATE TABLE aux.t1(a INTEGER PRIMARY KEY, b TEXT REFERENCES t2)"}
+{"sql":"CREATE TABLE main.t2(x TEXT PRIMARY KEY, y INT)"}
+{"sql":"INSERT INTO main.t2 VALUES('abc',11),('def',22),('xyz',99)"}
+{"sql":"INSERT INTO aux.t1 VALUES(5,'abc'),(7,'xyz'),(9,'oops')"}
+{"sql":"PRAGMA foreign_key_check=t1"}
+{"sql":"CREATE TABLE aux.t2(x TEXT PRIMARY KEY, y INT)"}
+{"sql":"INSERT INTO aux.t2 VALUES('abc',11),('def',22),('xyz',99)"}
+{"sql":"SELECT *, 'x' FROM pragma_foreign_key_check('t1')"}
+{"sql":"SELECT *, 'x' FROM pragma_foreign_key_check('t1','main')"}
+{"sql":"SELECT *, 'x' FROM pragma_foreign_key_check('t1','aux')"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT REFERENCES t2)"}
+{"sql":"CREATE TABLE t2(x TEXT PRIMARY KEY, y INT)"}
+{"sql":"CREATE TABLE t3(w TEXT, z INT REFERENCES t1)"}
+{"sql":"INSERT INTO t2 VALUES('abc',11),('def',22),('xyz',99)"}
+{"sql":"INSERT INTO t1 VALUES(5,'abc'),(7,'xyz'),(9,'oops')"}
+{"sql":"INSERT INTO t3 VALUES(11,7),(22,19)"}
+{"sql":"SELECT x.*, '|'\n      FROM sqlite_schema, pragma_foreign_key_check(name) AS x\n      WHERE type='table'\n      ORDER BY x.\"table\""}
+{"sql":"SELECT *, '|'\n      FROM pragma_foreign_key_check AS x\n      ORDER BY x.\"table\""}

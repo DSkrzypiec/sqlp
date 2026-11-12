@@ -1,0 +1,8 @@
+{"sql":"CREATE TEMP TABLE tbl(a, b, c)"}
+{"sql":"CREATE TABLE main.tbl(a, b, c)"}
+{"sql":"CREATE INDEX main.tbli ON tbl(a, b, c)"}
+{"sql":"INSERT INTO main.tbl SELECT a, b, c FROM temp.tbl"}
+{"sql":"CREATE TEMP TABLE tmp(a, b, c)"}
+{"sql":"INSERT INTO tmp VALUES(1, 'abc', 'def')"}
+{"sql":"INSERT INTO tmp VALUES(2, 'ghi', 'jkl')"}
+{"sql":"INSERT INTO main.tbl SELECT a, b, c FROM temp.tmp"}

@@ -1,0 +1,336 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f7f7f5;
+  --panel: #ffffff;
+  --text: #1c1f24;
+  --muted: #667085;
+  --line: #e2e4e8;
+  --accent: #2f5bd3;
+  --accent-text: #ffffff;
+  --code-bg: #f2f3f5;
+  --error: #c62828;
+  --error-bg: #fdecea;
+  --warn-bg: #fff6df;
+  --edge: #8a93a3;
+
+  --k-query: #3f4a5c;
+  --k-cte: #7c3aed;
+  --k-subquery: #2563eb;
+  --k-table: #047857;
+  --k-view: #c026d3;
+  --k-materialized_view: #a21caf;
+  --k-foreign_table: #4d7c0f;
+  --k-function: #b45309;
+  --k-object: #6b7280;
+  --not-found: #dc2626;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111317;
+    --panel: #181b21;
+    --text: #e6e8ec;
+    --muted: #98a1b2;
+    --line: #2a2f38;
+    --accent: #6e8ff0;
+    --accent-text: #0d1117;
+    --code-bg: #1f232b;
+    --error: #ff8a80;
+    --error-bg: #3a1d1d;
+    --warn-bg: #3a3218;
+    --edge: #6b7385;
+
+    --k-query: #c3cad6;
+    --k-cte: #b197fc;
+    --k-subquery: #74a7ff;
+    --k-table: #3ddc97;
+    --k-view: #e879f9;
+    --k-materialized_view: #f0abfc;
+    --k-foreign_table: #a3e635;
+    --k-function: #fbbf24;
+    --k-object: #9aa3b2;
+    --not-found: #f87171;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 var(--sans);
+}
+
+.top, main, footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.top { padding-top: 22px; padding-bottom: 6px; }
+.top h1 { margin: 0; font-size: 26px; letter-spacing: -0.02em; }
+.top p { margin: 2px 0 0; color: var(--muted); }
+
+footer { color: var(--muted); font-size: 13px; padding-top: 24px; padding-bottom: 32px; }
+
+textarea {
+  width: 100%;
+  display: block;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  font: 14px/1.5 var(--mono);
+  tab-size: 4;
+}
+
+textarea:focus, select:focus, button:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+#form { margin-top: 14px; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 12px 0;
+}
+
+.controls label { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+.controls label.check { font-weight: 400; }
+
+select, button {
+  font: inherit;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+}
+
+button { cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; padding: 6px 20px; }
+button:hover { filter: brightness(1.06); }
+
+.hint { color: var(--muted); font-size: 13px; font-weight: 400; }
+
+.busy { color: var(--muted); font-size: 13px; opacity: 0; transition: opacity 150ms; }
+.busy.htmx-request { opacity: 1; }
+
+#result { margin-top: 18px; }
+
+.stmt {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  min-width: 0;
+}
+
+.stmt-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin-bottom: 12px; }
+.badge { font-weight: 600; }
+.preview { color: var(--muted); font: 13px var(--mono); overflow-wrap: anywhere; }
+
+.note { color: var(--muted); margin: 4px 0; }
+.summary { color: var(--muted); font-size: 13px; margin: 4px 2px 0; }
+
+.error-box {
+  border-left: 4px solid var(--error);
+  background: var(--error-bg);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.error-box p { margin: 0 0 6px; }
+.error-box pre { margin: 0; white-space: pre-wrap; font: 13px/1.5 var(--mono); }
+.caret { color: var(--error); font-weight: 700; }
+
+pre.code {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--code-bg);
+  border-radius: 8px;
+  overflow-x: auto;
+  font: 13px/1.5 var(--mono);
+}
+
+.error-box pre.code { background: transparent; padding: 4px 0 0; }
+
+details.section { margin-top: 12px; }
+details.section > summary { cursor: pointer; font-weight: 600; margin-bottom: 8px; }
+
+/* Query structure graph */
+
+.graph-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+svg.graph { display: block; }
+svg.graph text { font: 13px var(--mono); fill: var(--text); }
+svg.graph text.sub { font-size: 11px; fill: var(--muted); }
+
+.node rect { stroke-width: 1.5; }
+.edge { fill: none; stroke: var(--edge); stroke-width: 1.4; }
+.edge.loop, .edge.back { stroke-dasharray: 4 3; }
+.arrowhead { fill: var(--edge); }
+
+.k-query { --c: var(--k-query); }
+.k-cte { --c: var(--k-cte); }
+.k-subquery { --c: var(--k-subquery); }
+.k-table { --c: var(--k-table); }
+.k-view { --c: var(--k-view); }
+.k-materialized_view { --c: var(--k-materialized_view); }
+.k-foreign_table { --c: var(--k-foreign_table); }
+.k-function { --c: var(--k-function); }
+.k-object { --c: var(--k-object); }
+
+.node rect { fill: color-mix(in srgb, var(--c) 13%, var(--panel)); stroke: var(--c); }
+.node.k-query rect { stroke-width: 2.5; }
+.node.s-not_found rect { stroke: var(--not-found); stroke-dasharray: 5 3; }
+
+.legend { color: var(--muted); font-size: 13px; margin: 10px 2px 0; line-height: 2; }
+.swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 4px 0 10px;
+  vertical-align: -1px;
+  border-radius: 3px;
+  border: 1.5px solid var(--c);
+  background: color-mix(in srgb, var(--c) 13%, var(--panel));
+}
+.swatch.s-not_found { --c: var(--not-found); border-style: dashed; }
+
+.diags {
+  margin: 12px 0 0;
+  padding: 8px 14px 8px 32px;
+  background: var(--warn-bg);
+  border-radius: 8px;
+}
+
+table.objects { border-collapse: collapse; font-size: 14px; }
+table.objects th, table.objects td { text-align: left; padding: 4px 18px 4px 0; border-bottom: 1px solid var(--line); }
+table.objects th { color: var(--muted); font-weight: 500; }
+table.objects td.warn { color: var(--not-found); }
+.table-wrap { overflow-x: auto; margin-top: 12px; }
+
+/* Columns used */
+
+.use {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 0 8px;
+  border: 1px solid var(--c);
+  border-radius: 999px;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 10%, var(--panel));
+  font-size: 12px;
+  line-height: 1.6;
+}
+.u-select { --c: var(--k-table); }
+.u-join { --c: var(--k-subquery); }
+
+/* Syntax tree */
+
+.tree { margin-top: 12px; font: 13px/1.6 var(--mono); overflow-x: auto; }
+.tree details > details, .tree details > .leaf {
+  margin-left: 8px;
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+}
+.tree summary { cursor: pointer; }
+.tree .f { color: var(--muted); }
+.tree .f::after { content: ": "; }
+.tree .t { color: var(--k-cte); font-weight: 600; }
+.tree .n { color: var(--muted); }
+.tree .n::before { content: "["; }
+.tree .n::after { content: "]"; }
+.tree .v { color: var(--k-table); }
+
+@media (max-width: 640px) {
+  .top h1 { font-size: 22px; }
+  .stmt { padding: 12px; }
+}
+
+/* Editors */
+
+.editors {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .editors { grid-template-columns: minmax(0, 1fr); }
+}
+
+.editor { min-width: 0; }
+.editor-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 6px;
+}
+.editor-head > label:first-child { font-weight: 600; }
+.editor-head .spacer { flex: 1; }
+.editor .check { display: inline-flex; align-items: center; gap: 6px; }
+.editor > .check { margin-top: 8px; }
+.editor textarea#catalog { font-size: 12.5px; }
+
+/* The SQL editor is CodeMirror 5; its own stylesheet (codemirror/codemirror.css)
+   does the layout. These rules make it look like the textarea it replaces, in
+   both colour schemes, and colour SQL with the palette of the graph. */
+.editor .CodeMirror {
+  height: calc(22 * 1.5em + 26px); /* the textarea's 22 rows, padding and border */
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  font: 14px/1.5 var(--mono);
+}
+.editor .CodeMirror-focused { outline: 2px solid var(--accent); outline-offset: 1px; }
+.editor .CodeMirror-lines { padding: 11px 0; }
+.editor .CodeMirror pre.CodeMirror-line,
+.editor .CodeMirror pre.CodeMirror-line-like { padding: 0 10px; }
+.editor .CodeMirror-gutters { background: var(--code-bg); border-right: 1px solid var(--line); }
+.editor .CodeMirror-linenumber { color: var(--muted); }
+.editor .CodeMirror-scrollbar-filler,
+.editor .CodeMirror-gutter-filler { background: var(--panel); }
+.editor .CodeMirror-cursor { border-left-color: var(--text); }
+.editor .CodeMirror-selected { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.editor .CodeMirror-focused .CodeMirror-selected,
+.editor .CodeMirror-line::selection,
+.editor .CodeMirror-line > span::selection,
+.editor .CodeMirror-line > span > span::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.editor .cm-s-default .cm-keyword { color: var(--k-subquery); }
+.editor .cm-s-default .cm-builtin,
+.editor .cm-s-default .cm-type,
+.editor .cm-s-default .cm-variable-3 { color: var(--k-cte); }
+.editor .cm-s-default .cm-string { color: var(--k-table); }
+.editor .cm-s-default .cm-number,
+.editor .cm-s-default .cm-atom { color: var(--k-function); }
+.editor .cm-s-default .cm-variable-2 { color: var(--k-view); } /* quoted names, parameters */
+.editor .cm-s-default .cm-comment { color: var(--muted); font-style: italic; }
+.editor .cm-s-default .cm-bracket { color: inherit; }
+.editor textarea:invalid { border-color: var(--error); }
+button.small { font-size: 13px; padding: 3px 10px; }
+.fine { margin: 6px 0 0; line-height: 1.45; }
+.fine code { font: 12px var(--mono); }

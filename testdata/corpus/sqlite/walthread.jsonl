@@ -1,0 +1,5 @@
+{"sql":"INSERT INTO t1 SELECT md5sum(x) FROM t1"}
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y UNIQUE)"}
+{"sql":"CREATE TABLE t1(cnt PRIMARY KEY, sum1, sum2)"}
+{"sql":"CREATE INDEX i1 ON t1(sum1)"}
+{"sql":"CREATE INDEX i2 ON t1(sum2)"}

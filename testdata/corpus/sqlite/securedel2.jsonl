@@ -1,0 +1,3 @@
+{"sql":"PRAGMA secure_delete = 1"}
+{"sql":"DELETE FROM t1 WHERE rowid>850"}
+{"sql":"PRAGMA cache_size = 200"}

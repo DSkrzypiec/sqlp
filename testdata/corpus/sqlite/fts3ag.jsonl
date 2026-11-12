@@ -1,0 +1,13 @@
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'something'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH '-this something'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'this -something'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH '\"this something\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH '\"something is\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'something OR this'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'this OR something'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'something this'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'this something'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH '-this -something'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'this OR also'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'also OR this'"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'something OR nothing'"}

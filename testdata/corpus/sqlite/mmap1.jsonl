@@ -1,0 +1,4 @@
+{"sql":"PRAGMA mmap_size = 67108864"}
+{"sql":"INSERT INTO t1 VALUES(rblob(500), rblob(500))"}
+{"sql":"INSERT INTO t1 SELECT rblob(500), rblob(500) FROM t1"}
+{"sql":"INSERT INTO t2 VALUES('tricked you!')"}

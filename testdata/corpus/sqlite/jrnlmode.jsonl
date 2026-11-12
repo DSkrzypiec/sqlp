@@ -1,0 +1,55 @@
+{"sql":"PRAGMA temp.journal_mode"}
+{"sql":"PRAGMA journal_mode"}
+{"sql":"PRAGMA main.journal_mode"}
+{"sql":"PRAGMA Temp.journal_mode"}
+{"sql":"PRAGMA journal_mode = invalid"}
+{"sql":"PRAGMA journal_mode = PERSIST"}
+{"sql":"ATTACH ':memory:' as aux1"}
+{"sql":"PRAGMA aux1.journal_mode"}
+{"sql":"PRAGMA main.journal_mode = OFF"}
+{"sql":"ATTACH ':memory:' as aux2"}
+{"sql":"PRAGMA aux2.journal_mode"}
+{"sql":"PRAGMA aux1.journal_mode = DELETE"}
+{"sql":"ATTACH ':memory:' as aux3"}
+{"sql":"PRAGMA aux3.journal_mode"}
+{"sql":"PRAGMA journal_mode = TRUNCATE"}
+{"sql":"PRAGMA main.journal_mode = persist"}
+{"sql":"CREATE TABLE aux.def(d, e, f)"}
+{"sql":"CREATE TABLE x(n INTEGER)"}
+{"sql":"ATTACH 'test2.db' AS a"}
+{"sql":"create table a.x ( n integer )"}
+{"sql":"insert into a.x values(1)"}
+{"sql":"insert into a.x values (2)"}
+{"sql":"insert into a.x values (3)"}
+{"sql":"insert into a.x values (4)"}
+{"sql":"PRAGMA journal_mode=off"}
+{"sql":"INSERT OR IGNORE INTO main.x SELECT * FROM a.x"}
+{"sql":"INSERT INTO abc VALUES(1, 2, randomblob(2000))"}
+{"sql":"pragma page_size=1024"}
+{"sql":"pragma journal_mode=persist"}
+{"sql":"PRAGMA journal_size_limit"}
+{"sql":"PRAGMA aux.journal_mode=persist"}
+{"sql":"PRAGMA aux.journal_size_limit"}
+{"sql":"PRAGMA aux.journal_size_limit = 999999999999"}
+{"sql":"PRAGMA aux.journal_size_limit = 10240"}
+{"sql":"PRAGMA main.journal_size_limit = 20480"}
+{"sql":"ATTACH 'test3.db' AS aux2"}
+{"sql":"PRAGMA aux2.journal_mode=persist"}
+{"sql":"CREATE TABLE aux.t2(a, b, c)"}
+{"sql":"CREATE TABLE aux2.t3(a, b, c)"}
+{"sql":"INSERT INTO t3 VALUES(randomblob(1000),randomblob(1000),randomblob(1000))"}
+{"sql":"INSERT INTO t3 \n          SELECT randomblob(1000),randomblob(1000),randomblob(1000) FROM t3"}
+{"sql":"UPDATE t1 SET a = randomblob(1000)"}
+{"sql":"UPDATE t2 SET a = randomblob(1000)"}
+{"sql":"UPDATE t3 SET a = randomblob(1000)"}
+{"sql":"PRAGMA journal_size_limit = -4"}
+{"sql":"PRAGMA journal_size_limit = 0"}
+{"sql":"PRAGMA journal_mode = MEMORY"}
+{"sql":"PRAGMA user_version = 5"}
+{"sql":"PRAGMA user_version"}
+{"sql":"INSERT INTO t1 VALUES(123)"}
+{"sql":"PRAGMA journal_mode=TRUNCATE"}
+{"sql":"INSERT INTO t2 VALUES(456)"}
+{"sql":"PRAGMA locking_mode=NORMAL"}
+{"sql":"CREATE TABLE t4(w)"}
+{"sql":"CREATE TABLE tx(a)"}

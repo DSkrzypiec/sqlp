@@ -1,0 +1,64 @@
+{"sql":"select '010'::xid,\n       '42'::xid,\n       '0xffffffff'::xid,\n       '-1'::xid,\n\t   '010'::xid8,\n\t   '42'::xid8,\n\t   '0xffffffffffffffff'::xid8,\n\t   '-1'::xid8","shape":"SELECT '010'::xid, '42'::xid, '0xffffffff'::xid, '-1'::xid, '010'::xid8, '42'::xid8, '0xffffffffffffffff'::xid8, '-1'::xid8;"}
+{"sql":"select ''::xid","shape":"SELECT ''::xid;"}
+{"sql":"select 'asdf'::xid","shape":"SELECT 'asdf'::xid;"}
+{"sql":"select ''::xid8","shape":"SELECT ''::xid8;"}
+{"sql":"select 'asdf'::xid8","shape":"SELECT 'asdf'::xid8;"}
+{"sql":"SELECT pg_input_is_valid('42', 'xid')","shape":"SELECT pg_input_is_valid('42', 'xid');"}
+{"sql":"SELECT pg_input_is_valid('asdf', 'xid')","shape":"SELECT pg_input_is_valid('asdf', 'xid');"}
+{"sql":"SELECT * FROM pg_input_error_info('0xffffffffff', 'xid')","shape":"SELECT * FROM pg_input_error_info('0xffffffffff', 'xid');"}
+{"sql":"SELECT pg_input_is_valid('42', 'xid8')","shape":"SELECT pg_input_is_valid('42', 'xid8');"}
+{"sql":"SELECT pg_input_is_valid('asdf', 'xid8')","shape":"SELECT pg_input_is_valid('asdf', 'xid8');"}
+{"sql":"SELECT * FROM pg_input_error_info('0xffffffffffffffffffff', 'xid8')","shape":"SELECT * FROM pg_input_error_info('0xffffffffffffffffffff', 'xid8');"}
+{"sql":"select '1'::xid = '1'::xid","shape":"SELECT '1'::xid = '1'::xid;"}
+{"sql":"select '1'::xid != '1'::xid","shape":"SELECT '1'::xid != '1'::xid;"}
+{"sql":"select '1'::xid8 = '1'::xid8","shape":"SELECT '1'::xid8 = '1'::xid8;"}
+{"sql":"select '1'::xid8 != '1'::xid8","shape":"SELECT '1'::xid8 != '1'::xid8;"}
+{"sql":"select '1'::xid = '1'::xid8::xid","shape":"SELECT '1'::xid = '1'::xid8::xid;"}
+{"sql":"select '1'::xid != '1'::xid8::xid","shape":"SELECT '1'::xid != '1'::xid8::xid;"}
+{"sql":"select '1'::xid < '2'::xid","shape":"SELECT '1'::xid < '2'::xid;"}
+{"sql":"select '1'::xid <= '2'::xid","shape":"SELECT '1'::xid <= '2'::xid;"}
+{"sql":"select '1'::xid > '2'::xid","shape":"SELECT '1'::xid > '2'::xid;"}
+{"sql":"select '1'::xid >= '2'::xid","shape":"SELECT '1'::xid >= '2'::xid;"}
+{"sql":"select '1'::xid8 < '2'::xid8, '2'::xid8 < '2'::xid8, '2'::xid8 < '1'::xid8","shape":"SELECT '1'::xid8 < '2'::xid8, '2'::xid8 < '2'::xid8, '2'::xid8 < '1'::xid8;"}
+{"sql":"select '1'::xid8 <= '2'::xid8, '2'::xid8 <= '2'::xid8, '2'::xid8 <= '1'::xid8","shape":"SELECT '1'::xid8 <= '2'::xid8, '2'::xid8 <= '2'::xid8, '2'::xid8 <= '1'::xid8;"}
+{"sql":"select '1'::xid8 > '2'::xid8, '2'::xid8 > '2'::xid8, '2'::xid8 > '1'::xid8","shape":"SELECT '1'::xid8 > '2'::xid8, '2'::xid8 > '2'::xid8, '2'::xid8 > '1'::xid8;"}
+{"sql":"select '1'::xid8 >= '2'::xid8, '2'::xid8 >= '2'::xid8, '2'::xid8 >= '1'::xid8","shape":"SELECT '1'::xid8 >= '2'::xid8, '2'::xid8 >= '2'::xid8, '2'::xid8 >= '1'::xid8;"}
+{"sql":"select xid8cmp('1', '2'), xid8cmp('2', '2'), xid8cmp('2', '1')","shape":"SELECT xid8cmp('1', '2'), xid8cmp('2', '2'), xid8cmp('2', '1');"}
+{"sql":"create table xid8_t1 (x xid8)","shape":"CREATE TABLE xid8_t1 (x xid8);"}
+{"sql":"insert into xid8_t1 values ('0'), ('010'), ('42'), ('0xffffffffffffffff'), ('-1')","shape":"INSERT INTO xid8_t1 VALUES ('0'), ('010'), ('42'), ('0xffffffffffffffff'), ('-1');"}
+{"sql":"select min(x), max(x) from xid8_t1","shape":"SELECT min(x), max(x) FROM xid8_t1;"}
+{"sql":"create index on xid8_t1 using btree(x)","shape":"CREATE INDEX ON xid8_t1 USING btree (x);"}
+{"sql":"create index on xid8_t1 using hash(x)","shape":"CREATE INDEX ON xid8_t1 USING hash (x);"}
+{"sql":"drop table xid8_t1","shape":"DROP TABLE xid8_t1;"}
+{"sql":"select '12:13:'::pg_snapshot","shape":"SELECT '12:13:'::pg_snapshot;"}
+{"sql":"select '12:18:14,16'::pg_snapshot","shape":"SELECT '12:18:14,16'::pg_snapshot;"}
+{"sql":"select '12:16:14,14'::pg_snapshot","shape":"SELECT '12:16:14,14'::pg_snapshot;"}
+{"sql":"select '31:12:'::pg_snapshot","shape":"SELECT '31:12:'::pg_snapshot;"}
+{"sql":"select '0:1:'::pg_snapshot","shape":"SELECT '0:1:'::pg_snapshot;"}
+{"sql":"select '12:13:0'::pg_snapshot","shape":"SELECT '12:13:0'::pg_snapshot;"}
+{"sql":"select '12:16:14,13'::pg_snapshot","shape":"SELECT '12:16:14,13'::pg_snapshot;"}
+{"sql":"select pg_input_is_valid('12:13:', 'pg_snapshot')","shape":"SELECT pg_input_is_valid('12:13:', 'pg_snapshot');"}
+{"sql":"select pg_input_is_valid('31:12:', 'pg_snapshot')","shape":"SELECT pg_input_is_valid('31:12:', 'pg_snapshot');"}
+{"sql":"select * from pg_input_error_info('31:12:', 'pg_snapshot')","shape":"SELECT * FROM pg_input_error_info('31:12:', 'pg_snapshot');"}
+{"sql":"select pg_input_is_valid('12:16:14,13', 'pg_snapshot')","shape":"SELECT pg_input_is_valid('12:16:14,13', 'pg_snapshot');"}
+{"sql":"select * from pg_input_error_info('12:16:14,13', 'pg_snapshot')","shape":"SELECT * FROM pg_input_error_info('12:16:14,13', 'pg_snapshot');"}
+{"sql":"create temp table snapshot_test (\n\tnr\tinteger,\n\tsnap\tpg_snapshot\n)","shape":"CREATE TEMPORARY TABLE snapshot_test (nr integer, snap pg_snapshot);"}
+{"sql":"select  pg_snapshot_xmin(snap),\n\tpg_snapshot_xmax(snap),\n\tpg_snapshot_xip(snap)\nfrom snapshot_test order by nr","shape":"SELECT pg_snapshot_xmin(snap), pg_snapshot_xmax(snap), pg_snapshot_xip(snap) FROM snapshot_test ORDER BY nr;"}
+{"sql":"select id, pg_visible_in_snapshot(id::text::xid8, snap)\nfrom snapshot_test, generate_series(11, 21) id\nwhere nr = 2","shape":"SELECT id, pg_visible_in_snapshot(id::text::xid8, snap) FROM snapshot_test, generate_series(11, 21) AS id WHERE nr = 2;"}
+{"sql":"select id, pg_visible_in_snapshot(id::text::xid8, snap)\nfrom snapshot_test, generate_series(90, 160) id\nwhere nr = 4","shape":"SELECT id, pg_visible_in_snapshot(id::text::xid8, snap) FROM snapshot_test, generate_series(90, 160) AS id WHERE nr = 4;"}
+{"sql":"select pg_current_xact_id() >= pg_snapshot_xmin(pg_current_snapshot())","shape":"SELECT pg_current_xact_id() >= pg_snapshot_xmin(pg_current_snapshot());"}
+{"sql":"select pg_visible_in_snapshot(pg_current_xact_id(), pg_current_snapshot())","shape":"SELECT pg_visible_in_snapshot(pg_current_xact_id(), pg_current_snapshot());"}
+{"sql":"select pg_snapshot '1000100010001000:1000100010001100:1000100010001012,1000100010001013'","shape":"SELECT pg_snapshot '1000100010001000:1000100010001100:1000100010001012,1000100010001013';"}
+{"sql":"select pg_visible_in_snapshot('1000100010001012', '1000100010001000:1000100010001100:1000100010001012,1000100010001013')","shape":"SELECT pg_visible_in_snapshot('1000100010001012', '1000100010001000:1000100010001100:1000100010001012,1000100010001013');"}
+{"sql":"select pg_visible_in_snapshot('1000100010001015', '1000100010001000:1000100010001100:1000100010001012,1000100010001013')","shape":"SELECT pg_visible_in_snapshot('1000100010001015', '1000100010001000:1000100010001100:1000100010001012,1000100010001013');"}
+{"sql":"SELECT pg_snapshot '1:9223372036854775807:3'","shape":"SELECT pg_snapshot '1:9223372036854775807:3';"}
+{"sql":"SELECT pg_snapshot '1:9223372036854775808:3'","shape":"SELECT pg_snapshot '1:9223372036854775808:3';"}
+{"sql":"SELECT pg_current_xact_id_if_assigned() IS NULL","shape":"SELECT pg_current_xact_id_if_assigned() IS NULL;"}
+{"sql":"SELECT pg_current_xact_id()","shape":"SELECT pg_current_xact_id();"}
+{"sql":"SELECT pg_current_xact_id() AS committed","shape":"SELECT pg_current_xact_id() AS committed;"}
+{"sql":"SELECT pg_current_xact_id() AS rolledback","shape":"SELECT pg_current_xact_id() AS rolledback;"}
+{"sql":"SELECT pg_current_xact_id() AS inprogress","shape":"SELECT pg_current_xact_id() AS inprogress;"}
+{"sql":"SELECT pg_xact_status('1'::xid8)","shape":"SELECT pg_xact_status('1'::xid8);"}
+{"sql":"SELECT pg_xact_status('2'::xid8)","shape":"SELECT pg_xact_status('2'::xid8);"}
+{"sql":"SELECT pg_xact_status('3'::xid8)","shape":"SELECT pg_xact_status('3'::xid8);"}
+{"sql":"CREATE FUNCTION test_future_xid_status(xid8)\nRETURNS void\nLANGUAGE plpgsql\nAS\n$$\nBEGIN\n  PERFORM pg_xact_status($1);\n  RAISE EXCEPTION 'didn''t ERROR at xid in the future as expected';\nEXCEPTION\n  WHEN invalid_parameter_value THEN\n    RAISE NOTICE 'Got expected error for xid in the future';\nEND;\n$$","shape":"CREATE FUNCTION test_future_xid_status(xid8) RETURNS void LANGUAGE plpgsql AS '\nBEGIN\n  PERFORM pg_xact_status($1);\n  RAISE EXCEPTION ''didn''''t ERROR at xid in the future as expected'';\nEXCEPTION\n  WHEN invalid_parameter_value THEN\n    RAISE NOTICE ''Got expected error for xid in the future'';\nEND;\n';"}

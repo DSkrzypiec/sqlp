@@ -1,0 +1,98 @@
+{"sql":"CREATE TABLE money_data (m money)","shape":"CREATE TABLE money_data (m money);"}
+{"sql":"INSERT INTO money_data VALUES ('123')","shape":"INSERT INTO money_data VALUES ('123');"}
+{"sql":"SELECT * FROM money_data","shape":"SELECT * FROM money_data;"}
+{"sql":"SELECT m + '123' FROM money_data","shape":"SELECT m + '123' FROM money_data;"}
+{"sql":"SELECT m + '123.45' FROM money_data","shape":"SELECT m + '123.45' FROM money_data;"}
+{"sql":"SELECT m - '123.45' FROM money_data","shape":"SELECT m - '123.45' FROM money_data;"}
+{"sql":"SELECT m / '2'::money FROM money_data","shape":"SELECT m / '2'::money FROM money_data;"}
+{"sql":"SELECT m * 2 FROM money_data","shape":"SELECT m * 2 FROM money_data;"}
+{"sql":"SELECT 2 * m FROM money_data","shape":"SELECT 2 * m FROM money_data;"}
+{"sql":"SELECT m / 2 FROM money_data","shape":"SELECT m / 2 FROM money_data;"}
+{"sql":"SELECT m * 2::int2 FROM money_data","shape":"SELECT m * 2::int2 FROM money_data;"}
+{"sql":"SELECT 2::int2 * m FROM money_data","shape":"SELECT 2::int2 * m FROM money_data;"}
+{"sql":"SELECT m / 2::int2 FROM money_data","shape":"SELECT m / 2::int2 FROM money_data;"}
+{"sql":"SELECT m * 2::int8 FROM money_data","shape":"SELECT m * 2::int8 FROM money_data;"}
+{"sql":"SELECT 2::int8 * m FROM money_data","shape":"SELECT 2::int8 * m FROM money_data;"}
+{"sql":"SELECT m / 2::int8 FROM money_data","shape":"SELECT m / 2::int8 FROM money_data;"}
+{"sql":"SELECT m * 2::float8 FROM money_data","shape":"SELECT m * 2::float8 FROM money_data;"}
+{"sql":"SELECT 2::float8 * m FROM money_data","shape":"SELECT 2::float8 * m FROM money_data;"}
+{"sql":"SELECT m / 2::float8 FROM money_data","shape":"SELECT m / 2::float8 FROM money_data;"}
+{"sql":"SELECT m * 2::float4 FROM money_data","shape":"SELECT m * 2::float4 FROM money_data;"}
+{"sql":"SELECT 2::float4 * m FROM money_data","shape":"SELECT 2::float4 * m FROM money_data;"}
+{"sql":"SELECT m / 2::float4 FROM money_data","shape":"SELECT m / 2::float4 FROM money_data;"}
+{"sql":"SELECT m = '$123.00' FROM money_data","shape":"SELECT m = '$123.00' FROM money_data;"}
+{"sql":"SELECT m != '$124.00' FROM money_data","shape":"SELECT m != '$124.00' FROM money_data;"}
+{"sql":"SELECT m <= '$123.00' FROM money_data","shape":"SELECT m <= '$123.00' FROM money_data;"}
+{"sql":"SELECT m >= '$123.00' FROM money_data","shape":"SELECT m >= '$123.00' FROM money_data;"}
+{"sql":"SELECT m < '$124.00' FROM money_data","shape":"SELECT m < '$124.00' FROM money_data;"}
+{"sql":"SELECT m > '$122.00' FROM money_data","shape":"SELECT m > '$122.00' FROM money_data;"}
+{"sql":"SELECT m = '$123.01' FROM money_data","shape":"SELECT m = '$123.01' FROM money_data;"}
+{"sql":"SELECT m != '$123.00' FROM money_data","shape":"SELECT m != '$123.00' FROM money_data;"}
+{"sql":"SELECT m <= '$122.99' FROM money_data","shape":"SELECT m <= '$122.99' FROM money_data;"}
+{"sql":"SELECT m >= '$123.01' FROM money_data","shape":"SELECT m >= '$123.01' FROM money_data;"}
+{"sql":"SELECT m > '$124.00' FROM money_data","shape":"SELECT m > '$124.00' FROM money_data;"}
+{"sql":"SELECT m < '$122.00' FROM money_data","shape":"SELECT m < '$122.00' FROM money_data;"}
+{"sql":"SELECT cashlarger(m, '$124.00') FROM money_data","shape":"SELECT cashlarger(m, '$124.00') FROM money_data;"}
+{"sql":"SELECT cashsmaller(m, '$124.00') FROM money_data","shape":"SELECT cashsmaller(m, '$124.00') FROM money_data;"}
+{"sql":"SELECT cash_words(m) FROM money_data","shape":"SELECT cash_words(m) FROM money_data;"}
+{"sql":"SELECT cash_words(m + '1.23') FROM money_data","shape":"SELECT cash_words(m + '1.23') FROM money_data;"}
+{"sql":"DELETE FROM money_data","shape":"DELETE FROM money_data;"}
+{"sql":"INSERT INTO money_data VALUES ('$123.45')","shape":"INSERT INTO money_data VALUES ('$123.45');"}
+{"sql":"INSERT INTO money_data VALUES ('$123.451')","shape":"INSERT INTO money_data VALUES ('$123.451');"}
+{"sql":"INSERT INTO money_data VALUES ('$123.454')","shape":"INSERT INTO money_data VALUES ('$123.454');"}
+{"sql":"INSERT INTO money_data VALUES ('$123.455')","shape":"INSERT INTO money_data VALUES ('$123.455');"}
+{"sql":"INSERT INTO money_data VALUES ('$123.456')","shape":"INSERT INTO money_data VALUES ('$123.456');"}
+{"sql":"INSERT INTO money_data VALUES ('$123.459')","shape":"INSERT INTO money_data VALUES ('$123.459');"}
+{"sql":"SELECT '1234567890'::money","shape":"SELECT '1234567890'::money;"}
+{"sql":"SELECT '12345678901234567'::money","shape":"SELECT '12345678901234567'::money;"}
+{"sql":"SELECT '123456789012345678'::money","shape":"SELECT '123456789012345678'::money;"}
+{"sql":"SELECT '9223372036854775807'::money","shape":"SELECT '9223372036854775807'::money;"}
+{"sql":"SELECT '-12345'::money","shape":"SELECT '-12345'::money;"}
+{"sql":"SELECT '-1234567890'::money","shape":"SELECT '-1234567890'::money;"}
+{"sql":"SELECT '-12345678901234567'::money","shape":"SELECT '-12345678901234567'::money;"}
+{"sql":"SELECT '-123456789012345678'::money","shape":"SELECT '-123456789012345678'::money;"}
+{"sql":"SELECT '-9223372036854775808'::money","shape":"SELECT '-9223372036854775808'::money;"}
+{"sql":"SELECT '(1)'::money","shape":"SELECT '(1)'::money;"}
+{"sql":"SELECT '($123,456.78)'::money","shape":"SELECT '($123,456.78)'::money;"}
+{"sql":"SELECT pg_input_is_valid('\\x0001', 'money')","shape":"SELECT pg_input_is_valid('\\x0001', 'money');"}
+{"sql":"SELECT * FROM pg_input_error_info('\\x0001', 'money')","shape":"SELECT * FROM pg_input_error_info('\\x0001', 'money');"}
+{"sql":"SELECT pg_input_is_valid('192233720368547758.07', 'money')","shape":"SELECT pg_input_is_valid('192233720368547758.07', 'money');"}
+{"sql":"SELECT * FROM pg_input_error_info('192233720368547758.07', 'money')","shape":"SELECT * FROM pg_input_error_info('192233720368547758.07', 'money');"}
+{"sql":"SELECT '-92233720368547758.08'::money","shape":"SELECT '-92233720368547758.08'::money;"}
+{"sql":"SELECT '92233720368547758.07'::money","shape":"SELECT '92233720368547758.07'::money;"}
+{"sql":"SELECT '-92233720368547758.09'::money","shape":"SELECT '-92233720368547758.09'::money;"}
+{"sql":"SELECT '92233720368547758.08'::money","shape":"SELECT '92233720368547758.08'::money;"}
+{"sql":"SELECT '-92233720368547758.085'::money","shape":"SELECT '-92233720368547758.085'::money;"}
+{"sql":"SELECT '92233720368547758.075'::money","shape":"SELECT '92233720368547758.075'::money;"}
+{"sql":"SELECT '878.08'::money / 11::float8","shape":"SELECT '878.08'::money / 11::float8;"}
+{"sql":"SELECT '878.08'::money / 11::float4","shape":"SELECT '878.08'::money / 11::float4;"}
+{"sql":"SELECT '878.08'::money / 11::bigint","shape":"SELECT '878.08'::money / 11::bigint;"}
+{"sql":"SELECT '878.08'::money / 11::int","shape":"SELECT '878.08'::money / 11::int;"}
+{"sql":"SELECT '878.08'::money / 11::smallint","shape":"SELECT '878.08'::money / 11::smallint;"}
+{"sql":"SELECT '90000000000000099.00'::money / 10::bigint","shape":"SELECT '90000000000000099.00'::money / 10::bigint;"}
+{"sql":"SELECT '90000000000000099.00'::money / 10::int","shape":"SELECT '90000000000000099.00'::money / 10::int;"}
+{"sql":"SELECT '90000000000000099.00'::money / 10::smallint","shape":"SELECT '90000000000000099.00'::money / 10::smallint;"}
+{"sql":"SELECT 1234567890::money","shape":"SELECT 1234567890::money;"}
+{"sql":"SELECT 12345678901234567::money","shape":"SELECT 12345678901234567::money;"}
+{"sql":"SELECT (-12345)::money","shape":"SELECT (-12345)::money;"}
+{"sql":"SELECT (-1234567890)::money","shape":"SELECT (-1234567890)::money;"}
+{"sql":"SELECT (-12345678901234567)::money","shape":"SELECT (-12345678901234567)::money;"}
+{"sql":"SELECT 1234567890::int4::money","shape":"SELECT 1234567890::int4::money;"}
+{"sql":"SELECT 12345678901234567::int8::money","shape":"SELECT 12345678901234567::int8::money;"}
+{"sql":"SELECT 12345678901234567::numeric::money","shape":"SELECT 12345678901234567::numeric::money;"}
+{"sql":"SELECT (-1234567890)::int4::money","shape":"SELECT (-1234567890)::int4::money;"}
+{"sql":"SELECT (-12345678901234567)::int8::money","shape":"SELECT (-12345678901234567)::int8::money;"}
+{"sql":"SELECT (-12345678901234567)::numeric::money","shape":"SELECT (-12345678901234567)::numeric::money;"}
+{"sql":"SELECT '12345678901234567'::money::numeric","shape":"SELECT '12345678901234567'::money::numeric;"}
+{"sql":"SELECT '-12345678901234567'::money::numeric","shape":"SELECT '-12345678901234567'::money::numeric;"}
+{"sql":"SELECT '92233720368547758.07'::money::numeric","shape":"SELECT '92233720368547758.07'::money::numeric;"}
+{"sql":"SELECT '-92233720368547758.08'::money::numeric","shape":"SELECT '-92233720368547758.08'::money::numeric;"}
+{"sql":"SELECT '92233720368547758.07'::money + '0.01'::money","shape":"SELECT '92233720368547758.07'::money + '0.01'::money;"}
+{"sql":"SELECT '-92233720368547758.08'::money - '0.01'::money","shape":"SELECT '-92233720368547758.08'::money - '0.01'::money;"}
+{"sql":"SELECT '92233720368547758.07'::money * 2::float8","shape":"SELECT '92233720368547758.07'::money * 2::float8;"}
+{"sql":"SELECT '-1'::money / 1.175494e-38::float4","shape":"SELECT '-1'::money / 1.175494e-38::float4;"}
+{"sql":"SELECT '92233720368547758.07'::money * 2::int4","shape":"SELECT '92233720368547758.07'::money * 2::int4;"}
+{"sql":"SELECT '1'::money / 0::int2","shape":"SELECT '1'::money / 0::int2;"}
+{"sql":"SELECT '42'::money * 'inf'::float8","shape":"SELECT '42'::money * 'inf'::float8;"}
+{"sql":"SELECT '42'::money * '-inf'::float8","shape":"SELECT '42'::money * '-inf'::float8;"}
+{"sql":"SELECT '42'::money * 'nan'::float4","shape":"SELECT '42'::money * 'nan'::float4;"}

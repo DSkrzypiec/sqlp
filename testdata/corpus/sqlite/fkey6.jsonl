@@ -1,0 +1,43 @@
+{"sql":"PRAGMA defer_foreign_keys"}
+{"sql":"CREATE TABLE t2(y INTEGER PRIMARY KEY,\n          z INTEGER REFERENCES t1(x) DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"CREATE INDEX t2z ON t2(z)"}
+{"sql":"CREATE TABLE t3(u INTEGER PRIMARY KEY, v INTEGER REFERENCES t1(x))"}
+{"sql":"CREATE INDEX t3v ON t3(v)"}
+{"sql":"INSERT INTO t1 VALUES(1),(2),(3),(4),(5)"}
+{"sql":"INSERT INTO t2 VALUES(1,1),(2,2)"}
+{"sql":"INSERT INTO t3 VALUES(3,3),(4,4)"}
+{"sql":"DELETE FROM t1 WHERE x=2"}
+{"sql":"DELETE FROM t1 WHERE x=1"}
+{"sql":"PRAGMA defer_foreign_keys=ON"}
+{"sql":"DELETE FROM t1 WHERE x=3"}
+{"sql":"DELETE FROM t2 WHERE y=1"}
+{"sql":"CREATE TABLE p1(a PRIMARY KEY)"}
+{"sql":"INSERT INTO p1 VALUES('one'), ('two')"}
+{"sql":"INSERT INTO c1 VALUES('two'), ('one')"}
+{"sql":"PRAGMA defer_foreign_keys = 1"}
+{"sql":"DROP TABLE p1"}
+{"sql":"PRAGMA vdbe_trace = 0"}
+{"sql":"INSERT INTO c1 VALUES('three')"}
+{"sql":"CREATE TABLE p2(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE c2(x, y REFERENCES p2 ON DELETE RESTRICT ON UPDATE RESTRICT)"}
+{"sql":"INSERT INTO p2 VALUES(1, 'one')"}
+{"sql":"INSERT INTO p2 VALUES(2, 'two')"}
+{"sql":"INSERT INTO c2 VALUES('i', 1)"}
+{"sql":"UPDATE p2 SET a=a-1"}
+{"sql":"CREATE TRIGGER p2t AFTER DELETE ON p2 BEGIN\n    INSERT INTO p2 VALUES(old.a, 'deleted!');\n  END"}
+{"sql":"DELETE FROM p2 WHERE a=1"}
+{"sql":"SELECT * FROM p2"}
+{"sql":"CREATE TABLE p1(a INTEGER PRIMARY KEY, b UNIQUE)"}
+{"sql":"CREATE TABLE c1(x REFERENCES p1(b))"}
+{"sql":"INSERT INTO p1 VALUES(1, 'one'), (2, 'two'), (3, 'three')"}
+{"sql":"INSERT INTO c1 VALUES('two')"}
+{"sql":"DELETE FROM p1 WHERE a=2"}
+{"sql":"CREATE TABLE p1(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE c1(x REFERENCES p1 DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"INSERT INTO c1 VALUES(123)"}
+{"sql":"INSERT INTO p1 VALUES(123, 'one two three')"}
+{"sql":"INSERT INTO sqlite_schema \n      VALUES('table', 't1', 't1', 2, 'CREATE TABLE t1(x INTEGER PRIMARY KEY)')"}
+{"sql":"CREATE TABLE t2(\n        y INTEGER PRIMARY KEY,\n        z INTEGER REFERENCES t1(x) DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"INSERT INTO t2 VALUES(1,0),(2,1)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts5(a, b, content='', tokendata=1)"}
+{"sql":"INSERT INTO t3 VALUES(3,3)"}

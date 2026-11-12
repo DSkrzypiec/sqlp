@@ -1,0 +1,117 @@
+{"sql":"CREATE TABLE t1(a,b,c,d, PRIMARY KEY(c,a)) WITHOUT ROWID"}
+{"sql":"CREATE INDEX t1bd ON t1(b, d)"}
+{"sql":"INSERT INTO t1 VALUES('journal','sherman','ammonia','helena')"}
+{"sql":"INSERT INTO t1 VALUES('dynamic','juliet','flipper','command')"}
+{"sql":"INSERT INTO t1 VALUES('journal','sherman','gamma','patriot')"}
+{"sql":"INSERT INTO t1 VALUES('arctic','sleep','ammonia','helena')"}
+{"sql":"SELECT *, '|' FROM t1 ORDER BY c, a"}
+{"sql":"SELECT *, '|' FROM t1 ORDER BY +c, a"}
+{"sql":"SELECT *, '|' FROM t1 ORDER BY c DESC, a DESC"}
+{"sql":"SELECT *, '|' FROM t1 ORDER BY b, d"}
+{"sql":"SELECT *, '|' FROM t1 ORDER BY +b, d"}
+{"sql":"INSERT INTO t1 VALUES('dynamic','phone','flipper','harvard')"}
+{"sql":"REPLACE INTO t1 VALUES('dynamic','phone','flipper','harvard')"}
+{"sql":"UPDATE t1 SET d=3.1415926 WHERE a='journal'"}
+{"sql":"UPDATE t1 SET a=1250 WHERE b='phone'"}
+{"sql":"SELECT DISTINCT tbl, idx FROM sqlite_stat4 ORDER BY idx"}
+{"sql":"CREATE TABLE t4 (a COLLATE nocase PRIMARY KEY, b) WITHOUT ROWID"}
+{"sql":"UPDATE t4 SET a = 'ABC'"}
+{"sql":"CREATE TABLE t4 (b, a COLLATE nocase PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"INSERT INTO t4(a, b) VALUES('abc', 'def')"}
+{"sql":"UPDATE t4 SET a = 'ABC', b = 'xyz'"}
+{"sql":"CREATE TABLE t5 (a, b, PRIMARY KEY(b, a)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t5(a, b) VALUES('abc', 'def')"}
+{"sql":"UPDATE t5 SET a='abc', b='def'"}
+{"sql":"CREATE TABLE t6 (\n    a COLLATE nocase, b, c UNIQUE, PRIMARY KEY(b, a)\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO t6(a, b, c) VALUES('abc', 'def', 'ghi')"}
+{"sql":"UPDATE t6 SET a='ABC', c='ghi'"}
+{"sql":"SELECT * FROM t6 ORDER BY b, a"}
+{"sql":"SELECT * FROM t6 ORDER BY c"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(b)"}
+{"sql":"CREATE TABLE t2(a, b, PRIMARY KEY(a)) WITHOUT ROWID"}
+{"sql":"CREATE UNIQUE INDEX i2 ON t2(b)"}
+{"sql":"INSERT INTO t2 VALUES('three', 'two')"}
+{"sql":"INSERT OR REPLACE INTO t1 SELECT * FROM t2"}
+{"sql":"INSERT INTO t2 VALUES('four', 'four')"}
+{"sql":"INSERT INTO t2 VALUES('six', 'two')"}
+{"sql":"CREATE TABLE t4(a PRIMARY KEY)"}
+{"sql":"INSERT INTO t4 VALUES('i')"}
+{"sql":"INSERT INTO t4 VALUES('ii')"}
+{"sql":"INSERT INTO t4 VALUES('iii')"}
+{"sql":"INSERT INTO t3 SELECT * FROM t4"}
+{"sql":"CREATE TABLE t41(a PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"INSERT INTO t41 VALUES('abc')"}
+{"sql":"CREATE TABLE t42(x)"}
+{"sql":"INSERT INTO t42 VALUES('xyz')"}
+{"sql":"SELECT t42.rowid FROM t41, t42"}
+{"sql":"SELECT t42.rowid FROM t42, t41"}
+{"sql":"CREATE TABLE t45(a PRIMARY KEY, b, c) WITHOUT ROWID"}
+{"sql":"CREATE INDEX i45 ON t45(b)"}
+{"sql":"INSERT INTO t45 VALUES(2, 'one', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(4, 'one', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(6, 'one', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(8, 'one', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(10, 'one', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(1, 'two', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(3, 'two', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(5, 'two', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(7, 'two', 'x')"}
+{"sql":"INSERT INTO t45 VALUES(9, 'two', 'x')"}
+{"sql":"SELECT * FROM t45 WHERE b=? AND a>?"}
+{"sql":"SELECT * FROM t45 WHERE b='two' AND a>4"}
+{"sql":"SELECT * FROM t45 WHERE b='one' AND a<8"}
+{"sql":"CREATE TABLE t46(a, b, c, d, PRIMARY KEY(a, b)) WITHOUT ROWID"}
+{"sql":"WITH r(x) AS (\n    SELECT 1 UNION ALL SELECT x+1 FROM r WHERE x<100\n  )\n  INSERT INTO t46 SELECT x / 20, x % 20, x % 10, x FROM r"}
+{"sql":"CREATE INDEX i46 ON t46(c)"}
+{"sql":"CREATE TABLE t47(a, b UNIQUE PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"CREATE INDEX i47 ON t47(a)"}
+{"sql":"INSERT INTO t47 VALUES(1, 2)"}
+{"sql":"INSERT INTO t47 VALUES(2, 4)"}
+{"sql":"INSERT INTO t47 VALUES(3, 6)"}
+{"sql":"INSERT INTO t47 VALUES(4, 8)"}
+{"sql":"SELECT name FROM sqlite_master WHERE tbl_name = 't47'"}
+{"sql":"CREATE TABLE t48(\n    a UNIQUE UNIQUE, \n    b UNIQUE, \n    PRIMARY KEY(a), \n    UNIQUE(a)\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO t48 VALUES('a', 'b'), ('c', 'd'), ('e', 'f')"}
+{"sql":"SELECT name FROM sqlite_master WHERE tbl_name = 't48'"}
+{"sql":"CREATE TABLE t70a(\n     a INT CHECK( rowid!=33 ),\n     b TEXT PRIMARY KEY\n  )"}
+{"sql":"INSERT INTO t70a(a,b) VALUES(99,'hello')"}
+{"sql":"INSERT INTO t70a(rowid,a,b) VALUES(33,99,'xyzzy')"}
+{"sql":"CREATE TABLE t70b(\n     a INT CHECK( rowid!=33 ),\n     b TEXT PRIMARY KEY\n  ) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY UNIQUE, b) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1(x,b) VALUES('funny','buffalo')"}
+{"sql":"SELECT type, name, '|' FROM sqlite_master"}
+{"sql":"CREATE TABLE t2(b, c, PRIMARY KEY(b,c)) WITHOUT ROWID"}
+{"sql":"UPDATE t2 SET b=1 WHERE b=''"}
+{"sql":"DELETE FROM t2 WHERE b=1"}
+{"sql":"CREATE TABLE t1(a, b, c UNIQUE, PRIMARY KEY(a, b)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES('a', 'a', 1)"}
+{"sql":"INSERT INTO t1 VALUES('a', 'b', 2)"}
+{"sql":"INSERT INTO t1 VALUES('b', 'a', 3)"}
+{"sql":"INSERT INTO t1 VALUES('b', 'b', 4)"}
+{"sql":"UPDATE t1 SET c=1 WHERE (a, b) = ('a', 'a')"}
+{"sql":"UPDATE t1 SET c=1 WHERE (a, b) = ('a', 'b')"}
+{"sql":"UPDATE t1 SET c=1 WHERE (a, b) = ('b', 'a')"}
+{"sql":"UPDATE t1 SET c=1 WHERE (a, b) = ('b', 'b')"}
+{"sql":"UPDATE t1 SET c=1 WHERE (a, b) = ('c', 'c')"}
+{"sql":"CREATE TRIGGER t1_tr BEFORE UPDATE ON t1 BEGIN\n    DELETE FROM t1 WHERE a = new.a;\n  END"}
+{"sql":"UPDATE t1 SET c = c+1 WHERE a = 'a'"}
+{"sql":"CREATE TABLE t11(a TEXT PRIMARY KEY, b INT) WITHOUT ROWID"}
+{"sql":"CREATE INDEX t11a ON t11(a COLLATE NOCASE)"}
+{"sql":"INSERT INTO t11(a,b) VALUES ('A',1),('a',2)"}
+{"sql":"SELECT a FROM t11 ORDER BY a COLLATE binary"}
+{"sql":"CREATE TABLE t0 (c0 INTEGER PRIMARY KEY DESC, c1 UNIQUE DEFAULT NULL) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t0(\n    c0,\n    c1 UNIQUE,\n    PRIMARY KEY(c1, c1)\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO t0(c0,c1) VALUES('abc','xyz')"}
+{"sql":"CREATE TABLE t1(\n    c0,\n    c1 UNIQUE,\n    PRIMARY KEY(c1, c1)\n  ) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1(a) VALUES(10)"}
+{"sql":"ALTER TABLE t1 ADD COLUMN b INT"}
+{"sql":"SELECT * FROM t1 WHERE a=20 OR (a=10 AND b=10)"}
+{"sql":"CREATE TABLE dual AS SELECT 'X' AS dummy"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM dual, t1 WHERE a=10 AND b=10"}
+{"sql":"CREATE TABLE sqlite_sequence (name PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"INSERT INTO sqlite_sequence(name) VALUES('c0'),('c1'),('c2')"}
+{"sql":"ALTER TABLE c1 RENAME TO a"}
+{"sql":"SELECT name FROM sqlite_sequence ORDER BY +name"}
+{"sql":"CREATE TABLE t1(\n    c1,c2,c3,c4,c5,c6,c7,c8,\n    PRIMARY KEY(c1,c2,c1 COLLATE NOCASE)\n  ) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t2(\n    c1,c2,c3,c4,c5,c6,c7,c8,\n    PRIMARY KEY(c1 COLLATE nocase,c1 COLLATE rtrim,\n                c2 COLLATE nocase,c2 COLLATE rtrim,\n                c3 COLLATE nocase,c3 COLLATE rtrim,\n                c4 COLLATE nocase,c4 COLLATE rtrim)\n  ) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t3(\n    c1,c2,c3,c4,c5,c6,c7,c8,\n    PRIMARY KEY(c1,c2),\n    UNIQUE(c3,c4,c5,c6,c7,c8,c3 COLLATE nocase)\n  ) WITHOUT ROWID"}

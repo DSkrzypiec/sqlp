@@ -1,0 +1,99 @@
+{"sql":"PRAGMA legacy_alter_table = 1"}
+{"sql":"CREATE TABLE t1(a, b, CHECK(t1.a != t1.b))"}
+{"sql":"CREATE TABLE t2(a, b)"}
+{"sql":"CREATE INDEX t2expr ON t2(a) WHERE t2.b>0"}
+{"sql":"ALTER TABLE t1 RENAME TO t1new"}
+{"sql":"CREATE TABLE t3(c, d)"}
+{"sql":"ALTER TABLE t3 RENAME TO t3new"}
+{"sql":"DROP TABLE t3new"}
+{"sql":"ALTER TABLE t2 RENAME TO t2new"}
+{"sql":"INSERT INTO abc VALUES(1, 2, 3)"}
+{"sql":"CREATE VIRTUAL TABLE eee USING echo('abc')"}
+{"sql":"SELECT * FROM eee"}
+{"sql":"ALTER TABLE eee RENAME TO fff"}
+{"sql":"SELECT * FROM fff"}
+{"sql":"ALTER TABLE fff RENAME TO ggg"}
+{"sql":"CREATE TABLE txx(a, b, c)"}
+{"sql":"INSERT INTO txx VALUES(1, 2, 3)"}
+{"sql":"CREATE VIEW vvv AS SELECT main.txx.a, txx.b, c FROM txx"}
+{"sql":"CREATE VIEW uuu AS SELECT main.one.a, one.b, c FROM txx AS one"}
+{"sql":"CREATE VIEW temp.ttt AS SELECT main.txx.a, txx.b, one.b, main.one.a FROM txx AS one, txx"}
+{"sql":"SELECT * FROM vvv"}
+{"sql":"ALTER TABLE txx RENAME TO \"t xx\""}
+{"sql":"SELECT * FROM uuu"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='uuu'"}
+{"sql":"SELECT * FROM ttt"}
+{"sql":"SELECT sql FROM sqlite_temp_master WHERE name='ttt'"}
+{"sql":"CREATE table t1(x, y)"}
+{"sql":"CREATE table t2(a, b)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    SELECT t1.x, * FROM t1, t2;\n    INSERT INTO t2 VALUES(new.x, new.y);\n  END"}
+{"sql":"INSERT INTO t1 VALUES(1, 1)"}
+{"sql":"ALTER TABLE t1 RENAME TO t11"}
+{"sql":"INSERT INTO t11 VALUES(2, 2)"}
+{"sql":"ALTER TABLE t11 RENAME TO t1"}
+{"sql":"ALTER TABLE t2 RENAME TO t22"}
+{"sql":"INSERT INTO t1 VALUES(3, 3)"}
+{"sql":"SELECT squish(sql) FROM sqlite_master WHERE name = 'tr1'"}
+{"sql":"CREATE TABLE t9(a, b, c)"}
+{"sql":"CREATE TABLE t10(a, b, c)"}
+{"sql":"CREATE TEMP TABLE t9(a, b, c)"}
+{"sql":"CREATE TRIGGER temp.t9t AFTER INSERT ON temp.t9 BEGIN\n    INSERT INTO t10 VALUES(new.a, new.b, new.c);\n  END"}
+{"sql":"INSERT INTO temp.t9 VALUES(1, 2, 3)"}
+{"sql":"SELECT * FROM t10"}
+{"sql":"ALTER TABLE temp.t9 RENAME TO 't1234567890'"}
+{"sql":"INSERT INTO t2 VALUES(3, 4)"}
+{"sql":"CREATE VIEW v AS SELECT one.a, one.b, t2.a, t2.b FROM t1 AS one, t2"}
+{"sql":"SELECT * FROM v"}
+{"sql":"ALTER TABLE t2 RENAME TO one"}
+{"sql":"SELECT  *  FROM v"}
+{"sql":"ALTER TABLE one RENAME TO t2"}
+{"sql":"DROP VIEW v"}
+{"sql":"CREATE VIEW temp.vv AS SELECT one.a, one.b, t2.a, t2.b FROM t1 AS one, t2"}
+{"sql":"SELECT * FROM vv"}
+{"sql":"SELECT  *  FROM vv"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING tcl(tcl_command)"}
+{"sql":"ALTER TABLE x1 RENAME TO x2"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'x2'"}
+{"sql":"CREATE TABLE ddd(db, sql, zOld, zNew, bTemp)"}
+{"sql":"INSERT INTO ddd VALUES(\n        'main', 'CREATE TABLE x1(i INTEGER, t TEXT)', 'ddd', NULL, 0\n    ), (\n        'main', 'CREATE TABLE x1(i INTEGER, t TEXT)', NULL, 'eee', 0\n    ), (\n        'main', NULL, 'ddd', 'eee', 0\n    )"}
+{"sql":"CREATE TABLE aux.p1(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE aux.c1(x INTEGER PRIMARY KEY, y REFERENCES p1(a))"}
+{"sql":"INSERT INTO aux.p1 VALUES(1, 1)"}
+{"sql":"INSERT INTO aux.p1 VALUES(2, 2)"}
+{"sql":"INSERT INTO aux.c1 VALUES(NULL, 2)"}
+{"sql":"CREATE TABLE aux.c2(x INTEGER PRIMARY KEY, y REFERENCES c1(a))"}
+{"sql":"ALTER TABLE aux.p1 RENAME TO ppp"}
+{"sql":"INSERT INTO aux.c1 VALUES(NULL, 1)"}
+{"sql":"SELECT sql FROM aux.sqlite_master WHERE name = 'c1'"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM t2"}
+{"sql":"ALTER TABLE t3 RENAME TO t1"}
+{"sql":"CREATE TRIGGER tr AFTER INSERT ON t1 BEGIN\n    INSERT INTO t2 VALUES(new.a);\n  END"}
+{"sql":"CREATE TRIGGER tr AFTER INSERT ON t1 WHEN new.a IS NULL BEGIN SELECT 1, 2, 3; END"}
+{"sql":"CREATE TABLE aux.t1(x)"}
+{"sql":"CREATE TEMP TRIGGER tr AFTER INSERT ON aux.t1 BEGIN SELECT 1, 2, 3; END"}
+{"sql":"CREATE VIRTUAL TABLE fff USING fts5(x, y, z)"}
+{"sql":"INSERT INTO fff VALUES('a', 'b', 'c')"}
+{"sql":"COMMIT"}
+{"sql":"SELECT * FROM ggg"}
+{"sql":"CREATE TABLE aux.t1(a, b, c)"}
+{"sql":"CREATE TABLE main.t1(a, b, c)"}
+{"sql":"CREATE TEMP TRIGGER tr AFTER INSERT ON aux.t1 BEGIN\n    SELECT trigger(new.a, new.b, new.c);\n  END"}
+{"sql":"INSERT INTO main.t1 VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO aux.t1 VALUES(4, 5, 6)"}
+{"sql":"SELECT name, tbl_name FROM sqlite_temp_master"}
+{"sql":"ALTER TABLE aux.t1 RENAME TO t2"}
+{"sql":"INSERT INTO aux.t2 VALUES(7, 8, 9)"}
+{"sql":"CREATE TABLE t2(w)"}
+{"sql":"CREATE TRIGGER temp.r1 AFTER INSERT ON main.t2 BEGIN\n    INSERT INTO t1(a) VALUES(new.w);\n  END"}
+{"sql":"CREATE TEMP TABLE t2(x)"}
+{"sql":"INSERT INTO t3 VALUES('WWW')"}
+{"sql":"CREATE VIRTUAL TABLE rt USING rtree(id, minx, maxx, miny, maxy)"}
+{"sql":"CREATE TABLE \"mytable\" ( \"fid\" INTEGER PRIMARY KEY, \"geom\" BLOB)"}
+{"sql":"CREATE TRIGGER tr1 AFTER UPDATE OF \"geom\" ON \"mytable\" \n          WHEN OLD.\"fid\" = NEW.\"fid\" AND NEW.\"geom\" IS NULL BEGIN \n      DELETE FROM rt WHERE id = OLD.\"fid\"; \n    END"}
+{"sql":"INSERT INTO mytable VALUES(1, X'abcd')"}
+{"sql":"UPDATE mytable SET geom = X'1234'"}
+{"sql":"ALTER TABLE mytable RENAME TO mytable_renamed"}
+{"sql":"CREATE TRIGGER tr2 AFTER INSERT ON mytable_renamed BEGIN\n      DELETE FROM rt WHERE id=(SELECT min(id) FROM rt);\n    END"}
+{"sql":"ALTER TABLE mytable_renamed RENAME TO mytable2"}
+{"sql":"CREATE TRIGGER xyz AFTER INSERT ON t1 BEGIN\n    SELECT a, b FROM v1;\n  END"}
+{"sql":"ALTER TABLE t1 RENAME TO tt1"}

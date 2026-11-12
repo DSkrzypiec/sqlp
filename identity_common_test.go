@@ -1,0 +1,353 @@
+package sqlp
+
+import (
+	"testing"
+
+	"sqlp/dialect"
+	"sqlp/internal/testkit"
+)
+
+// commonIdentity holds canonical SQL that must round-trip unchanged in both
+// PostgreSQL and SQLite.
+var commonIdentity = []string{
+	// --- projections and literals ---
+	"SELECT 1",
+	"SELECT 1, 2.5, .5, 1e10, 'text', NULL, TRUE, FALSE",
+	"SELECT -1, +1, -x, NOT x",
+	"SELECT - -1, - -x",
+	"SELECT 'it''s'",
+	"SELECT X'0F'",
+	"SELECT * FROM t",
+	"SELECT t.* FROM t",
+	"SELECT a AS x, b AS y FROM t",
+	"SELECT a AS \"Quoted Alias\" FROM t",
+	"SELECT \"Mixed Case\", \"weird\"\"name\" FROM \"T\"",
+	"SELECT s.t.c FROM s.t",
+	"SELECT DISTINCT a FROM t",
+	"SELECT ALL a FROM t",
+	"SELECT 1 + 2 * 3 - 4 / 5 % 6",
+	"SELECT (1 + 2) * 3",
+	"SELECT a || b || 'c' FROM t",
+	"SELECT CASE WHEN a > 1 THEN 'big' WHEN a > 0 THEN 'small' ELSE 'none' END FROM t",
+	"SELECT CASE a WHEN 1 THEN 'one' WHEN 2 THEN 'two' END FROM t",
+	"SELECT CAST(a AS INTEGER), CAST(b AS VARCHAR(10)), CAST(c AS NUMERIC(10, 2)) FROM t",
+	"SELECT a IS NULL, b IS NOT NULL, c IS TRUE, d IS NOT FALSE FROM t",
+	"SELECT a BETWEEN 1 AND 10, b NOT BETWEEN 'a' AND 'z' FROM t",
+	"SELECT a IN (1, 2, 3), b NOT IN ('x', 'y') FROM t",
+	"SELECT a IN (SELECT id FROM u) FROM t",
+	"SELECT a LIKE 'x%', b NOT LIKE '_y' ESCAPE '\\' FROM t",
+	"SELECT EXISTS (SELECT 1 FROM u WHERE u.id = t.id) FROM t",
+	"SELECT NOT EXISTS (SELECT 1) AS none",
+	"SELECT (SELECT MAX(x) FROM u) AS m",
+	"SELECT a = b AND c <> d OR e != f AND g < h AND i <= j AND k > l AND m >= n FROM t",
+	"SELECT NOT (a AND b) FROM t",
+	"SELECT a COLLATE \"C\" FROM t",
+	"SELECT (a, b) = (1, 2) FROM t",
+	"SELECT ~a, a & b, a | b, a << 2, a >> 1 FROM t",
+	"SELECT a -> 'k', a ->> 'k' FROM t",
+
+	// --- function calls ---
+	"SELECT COUNT(*) FROM t",
+	"SELECT COUNT(DISTINCT a), SUM(b), AVG(c), MIN(d), MAX(e) FROM t",
+	"SELECT COALESCE(a, b, 0), NULLIF(a, 0), LENGTH(s), LOWER(UPPER(s)) FROM t",
+	"SELECT f() AS v",
+	"SELECT CURRENT_DATE, CURRENT_TIME, CURRENT_TIMESTAMP",
+	"SELECT GROUP_CONCAT(a, ',') FROM t",
+	"SELECT STRING_AGG(a, ', ' ORDER BY a) FROM t",
+	"SELECT COUNT(*) FILTER (WHERE a > 0) FROM t",
+	"SELECT ROW_NUMBER() OVER (ORDER BY a) FROM t",
+	"SELECT RANK() OVER (PARTITION BY g ORDER BY a DESC) FROM t",
+	"SELECT SUM(a) OVER (PARTITION BY g, h ORDER BY a ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) FROM t",
+	"SELECT SUM(a) OVER (ORDER BY a RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t",
+	"SELECT SUM(a) OVER (ORDER BY a GROUPS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING EXCLUDE TIES) FROM t",
+	"SELECT SUM(a) OVER (ROWS 2 PRECEDING) FROM t",
+	"SELECT SUM(a) OVER w FROM t WINDOW w AS (PARTITION BY g)",
+	"SELECT SUM(a) OVER (w ORDER BY b) FROM t WINDOW w AS (PARTITION BY g), w2 AS (ORDER BY h)",
+	"SELECT LAG(a, 1) OVER (ORDER BY b), LEAD(a) OVER () FROM t",
+	"SELECT FIRST_VALUE(a) OVER (ORDER BY b ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) FROM t",
+
+	// --- FROM and joins ---
+	"SELECT * FROM a, b",
+	"SELECT * FROM t AS x",
+	"SELECT * FROM a JOIN b ON a.id = b.id",
+	"SELECT * FROM a LEFT JOIN b ON a.id = b.id",
+	"SELECT * FROM a RIGHT JOIN b ON a.id = b.id",
+	"SELECT * FROM a FULL JOIN b ON a.id = b.id",
+	"SELECT * FROM a CROSS JOIN b",
+	"SELECT * FROM a NATURAL JOIN b",
+	"SELECT * FROM a NATURAL LEFT JOIN b",
+	"SELECT * FROM a JOIN b USING (id, kind)",
+	"SELECT * FROM a JOIN b ON a.id = b.id JOIN c ON b.id = c.id LEFT JOIN d ON c.id = d.id",
+	"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id",
+	"SELECT * FROM (SELECT 1 AS x) AS sub",
+	"SELECT * FROM (SELECT a FROM t) AS sub WHERE sub.a > 1",
+	"SELECT * FROM a AS x JOIN b AS y ON x.id = y.id",
+
+	// --- clauses ---
+	"SELECT a FROM t WHERE a > 1",
+	"SELECT a FROM t WHERE a > 1 AND b < 2 OR c = 3",
+	"SELECT a, COUNT(*) FROM t GROUP BY a",
+	"SELECT a, b, COUNT(*) FROM t GROUP BY a, b HAVING COUNT(*) > 1",
+	"SELECT a FROM t GROUP BY 1",
+	"SELECT a FROM t ORDER BY a",
+	"SELECT a FROM t ORDER BY a DESC, b ASC",
+	"SELECT a FROM t ORDER BY a NULLS FIRST, b DESC NULLS LAST",
+	"SELECT a FROM t ORDER BY 1, 2",
+	"SELECT a FROM t LIMIT 10",
+	"SELECT a FROM t LIMIT 10 OFFSET 5",
+	"SELECT a FROM t ORDER BY a LIMIT 1",
+	"SELECT a FROM t WHERE a > 1 GROUP BY a HAVING COUNT(*) > 1 ORDER BY a LIMIT 10 OFFSET 20",
+
+	// --- set operations ---
+	"SELECT a FROM t UNION SELECT a FROM u",
+	"SELECT a FROM t UNION ALL SELECT a FROM u",
+	"SELECT a FROM t INTERSECT SELECT a FROM u",
+	"SELECT a FROM t EXCEPT SELECT a FROM u",
+	"SELECT a FROM t UNION SELECT a FROM u UNION ALL SELECT a FROM v",
+	"SELECT a FROM t UNION SELECT a FROM u INTERSECT SELECT a FROM v",
+	"SELECT a FROM t UNION SELECT a FROM u ORDER BY a LIMIT 5",
+	"VALUES (1, 2), (3, 4)",
+	"VALUES (1) UNION ALL VALUES (2)",
+
+	// --- CTEs ---
+	"WITH x AS (SELECT 1 AS a) SELECT a FROM x",
+	"WITH x AS (SELECT 1), y AS (SELECT 2) SELECT * FROM x, y",
+	"WITH x(a, b) AS (SELECT 1, 2) SELECT a + b FROM x",
+	"WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 10) SELECT n FROM r",
+	"WITH x AS MATERIALIZED (SELECT 1) SELECT * FROM x",
+	"WITH x AS NOT MATERIALIZED (SELECT 1) SELECT * FROM x",
+	"WITH x AS (SELECT 1) INSERT INTO t SELECT * FROM x",
+	"WITH x AS (SELECT 1 AS id) UPDATE t SET a = 1 WHERE id IN (SELECT id FROM x)",
+	"WITH x AS (SELECT 1 AS id) DELETE FROM t WHERE id IN (SELECT id FROM x)",
+
+	// --- INSERT ---
+	"INSERT INTO t VALUES (1, 'a')",
+	"INSERT INTO t (a, b) VALUES (1, 'a'), (2, 'b')",
+	"INSERT INTO t (a, b) SELECT x, y FROM u",
+	"INSERT INTO t DEFAULT VALUES",
+	"INSERT INTO s.t (a) VALUES (1)",
+	"INSERT INTO t (a) VALUES (1) ON CONFLICT DO NOTHING",
+	"INSERT INTO t (a) VALUES (1) ON CONFLICT (a) DO NOTHING",
+	"INSERT INTO t (a, b) VALUES (1, 2) ON CONFLICT (a) DO UPDATE SET b = excluded.b",
+	"INSERT INTO t (a, b) VALUES (1, 2) ON CONFLICT (a) DO UPDATE SET b = excluded.b, c = t.c + 1 WHERE t.b < excluded.b",
+	"INSERT INTO t (a) VALUES (1) ON CONFLICT (a) WHERE a > 0 DO NOTHING",
+	"INSERT INTO t (a) VALUES (1) RETURNING id",
+	"INSERT INTO t (a) VALUES (1) RETURNING *",
+	"INSERT INTO t (a) VALUES (1) RETURNING id AS new_id, a",
+
+	// --- UPDATE / DELETE ---
+	"UPDATE t SET a = 1",
+	"UPDATE t SET a = 1, b = 'x' WHERE id = 5",
+	"UPDATE t SET a = a + 1 WHERE a < 10 RETURNING a",
+	"UPDATE t SET (a, b) = (1, 2) WHERE id = 1",
+	"UPDATE t SET (a, b) = (SELECT x, y FROM u WHERE u.id = t.id)",
+	"UPDATE t AS x SET a = 1 FROM u WHERE x.id = u.id",
+	"UPDATE t SET a = u.a FROM u WHERE t.id = u.id",
+	"DELETE FROM t",
+	"DELETE FROM t WHERE id = 1",
+	"DELETE FROM t WHERE id IN (SELECT id FROM u) RETURNING *",
+	"DELETE FROM t AS x WHERE x.id = 1",
+
+	// --- CREATE TABLE ---
+	"CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT NOT NULL)",
+	"CREATE TABLE IF NOT EXISTS t (id INTEGER)",
+	"CREATE TEMPORARY TABLE t (id INTEGER)",
+	"CREATE TABLE s.t (id INTEGER)",
+	"CREATE TABLE t (a INTEGER DEFAULT 0, b TEXT DEFAULT 'x', c REAL DEFAULT -1.5, d TEXT DEFAULT NULL)",
+	"CREATE TABLE t (a INTEGER DEFAULT 0 NOT NULL)",
+	"CREATE TABLE t (a INTEGER NOT NULL DEFAULT 0)",
+	"CREATE TABLE t (a INTEGER UNIQUE, b INTEGER CHECK (b > 0))",
+	"CREATE TABLE t (a INTEGER CONSTRAINT positive CHECK (a > 0))",
+	"CREATE TABLE t (a INTEGER REFERENCES u)",
+	"CREATE TABLE t (a INTEGER REFERENCES u (id))",
+	"CREATE TABLE t (a INTEGER REFERENCES u (id) ON DELETE CASCADE ON UPDATE SET NULL)",
+	"CREATE TABLE t (a INTEGER REFERENCES u (id) ON DELETE RESTRICT)",
+	"CREATE TABLE t (a INTEGER REFERENCES u (id) ON DELETE SET DEFAULT ON UPDATE NO ACTION)",
+	"CREATE TABLE t (a INTEGER REFERENCES u (id) DEFERRABLE INITIALLY DEFERRED)",
+	"CREATE TABLE t (a INTEGER REFERENCES u (id) NOT DEFERRABLE)",
+	"CREATE TABLE t (a TEXT COLLATE \"C\")",
+	"CREATE TABLE t (a INTEGER, b INTEGER, PRIMARY KEY (a, b))",
+	"CREATE TABLE t (a INTEGER, b INTEGER, CONSTRAINT pk PRIMARY KEY (a), CONSTRAINT uq UNIQUE (b))",
+	"CREATE TABLE t (a INTEGER, CHECK (a > 0))",
+	"CREATE TABLE t (a INTEGER, b INTEGER, FOREIGN KEY (a, b) REFERENCES u (x, y) ON DELETE CASCADE)",
+	"CREATE TABLE t (a INTEGER, CONSTRAINT fk FOREIGN KEY (a) REFERENCES u (id) DEFERRABLE INITIALLY IMMEDIATE)",
+	"CREATE TABLE t (a INTEGER, b INTEGER GENERATED ALWAYS AS (a * 2) STORED)",
+	"CREATE TABLE t (a INTEGER NOT NULL PRIMARY KEY, b TEXT NOT NULL UNIQUE)",
+	"CREATE TABLE t (a VARCHAR(255), b DECIMAL(10, 2), c CHAR(1))",
+	"CREATE TABLE t AS SELECT a, b FROM u",
+
+	// --- CREATE INDEX / VIEW ---
+	"CREATE INDEX idx ON t (a)",
+	"CREATE INDEX idx ON t (a, b DESC)",
+	"CREATE UNIQUE INDEX idx ON t (a)",
+	"CREATE INDEX IF NOT EXISTS idx ON t (a)",
+	"CREATE INDEX idx ON t (LOWER(a))",
+	"CREATE INDEX idx ON t ((a + b))",
+	"CREATE INDEX idx ON t (a) WHERE a > 0",
+	"CREATE INDEX idx ON t (a COLLATE \"C\" DESC)",
+	"CREATE VIEW v AS SELECT a FROM t",
+	"CREATE TEMPORARY VIEW v AS SELECT a FROM t",
+	"CREATE VIEW v (x, y) AS SELECT a, b FROM t",
+
+	// --- DROP / ALTER ---
+	"DROP TABLE t",
+	"DROP TABLE IF EXISTS t",
+	"DROP VIEW v",
+	"DROP VIEW IF EXISTS v",
+	"DROP INDEX idx",
+	"DROP INDEX IF EXISTS idx",
+	"ALTER TABLE t ADD COLUMN a INTEGER",
+	"ALTER TABLE t ADD COLUMN a INTEGER NOT NULL DEFAULT 0",
+	"ALTER TABLE t DROP COLUMN a",
+	"ALTER TABLE t RENAME COLUMN a TO b",
+	"ALTER TABLE t RENAME TO u",
+
+	// --- transactions ---
+	"BEGIN",
+	"COMMIT",
+	"ROLLBACK",
+	"SAVEPOINT sp",
+	"RELEASE SAVEPOINT sp",
+	"ROLLBACK TO SAVEPOINT sp",
+
+	// --- misc ---
+	"EXPLAIN SELECT 1",
+	"ANALYZE",
+	"ANALYZE t",
+	"VACUUM",
+
+	// --- joins (verified against PostgreSQL 16 and SQLite 3.51) ---
+	"SELECT * FROM a JOIN b ON a.x = b.x JOIN c ON b.x = c.id",
+	"SELECT * FROM a JOIN (b JOIN c ON b.x = c.id) ON a.x = b.x",
+	"SELECT * FROM (a JOIN b ON a.x = b.x) JOIN c ON b.x = c.id",
+	"SELECT * FROM ((a JOIN b ON a.x = b.x) JOIN c ON b.x = c.id)",
+	"SELECT * FROM a NATURAL RIGHT JOIN b",
+	"SELECT * FROM a NATURAL FULL JOIN b",
+	"SELECT * FROM a NATURAL JOIN b NATURAL JOIN c",
+	"SELECT * FROM a CROSS JOIN b CROSS JOIN c",
+	"SELECT * FROM a LEFT JOIN b ON a.x = b.x",
+	"SELECT * FROM a RIGHT JOIN b ON a.x = b.x",
+	"SELECT * FROM a FULL JOIN b ON a.x = b.x",
+	"SELECT * FROM a LEFT JOIN b USING (x, y)",
+	"SELECT * FROM a RIGHT JOIN b USING (x)",
+	"SELECT * FROM a FULL JOIN b USING (x)",
+	"SELECT * FROM a JOIN b ON a.x = b.x AND a.y > b.y OR a.id = 1",
+	"SELECT * FROM a JOIN b ON EXISTS (SELECT 1 FROM c WHERE c.id = a.id)",
+	"SELECT * FROM a JOIN b ON a.x IN (SELECT id FROM c)",
+	"SELECT * FROM a, b JOIN c ON b.x = c.id, d",
+	"SELECT * FROM a, b, c",
+	"SELECT * FROM t AS t1 JOIN t AS t2 ON t1.a = t2.b",
+	"SELECT * FROM a JOIN (SELECT id FROM c) AS s ON a.id = s.id",
+	"SELECT * FROM a LEFT JOIN (SELECT id FROM c) AS s USING (id)",
+	"SELECT * FROM a CROSS JOIN (SELECT 1) AS s",
+	"SELECT * FROM (SELECT 1) AS s JOIN (SELECT 2) AS r ON TRUE",
+	"SELECT * FROM (SELECT id FROM a) JOIN (SELECT id FROM b) USING (id)",
+	"SELECT * FROM (a JOIN b ON TRUE) AS j",
+	"SELECT * FROM ((a JOIN b ON TRUE)) AS j",
+
+	// --- WHERE (verified against PostgreSQL 16 and SQLite 3.51) ---
+	"SELECT 1 FROM t WHERE (SELECT COUNT(*) FROM u) > 0",
+	"SELECT 1 FROM t WHERE a IN (SELECT a FROM u WHERE u.b = t.b) AND NOT EXISTS (SELECT 1 FROM u)",
+	"SELECT 1 FROM t WHERE a NOT IN (SELECT a FROM u)",
+	"SELECT 1 FROM t WHERE a IN (VALUES (1), (2))",
+	"SELECT 1 FROM t WHERE (a, b) IN (SELECT a, b FROM u)",
+	"SELECT 1 FROM t WHERE (a, b) = (1, 2)",
+	"SELECT 1 FROM t WHERE (a, b) < (SELECT a, b FROM u)",
+	"SELECT 1 FROM t WHERE NOT (a = 1 OR b = 2) AND c IS NOT NULL",
+	"SELECT 1 FROM t WHERE EXISTS (SELECT 1 FROM u WHERE EXISTS (SELECT 1 FROM a WHERE a.id = u.id))",
+	"SELECT 1 FROM t WHERE a = (SELECT MAX(a) FROM u WHERE u.b = t.b)",
+	"SELECT 1 FROM t WHERE NULL",
+	"SELECT 1 FROM t WHERE TRUE",
+	"SELECT 1 WHERE 1 = 1",
+
+	// --- GROUP BY (verified against PostgreSQL 16 and SQLite 3.51) ---
+	"SELECT a, b, COUNT(*) FROM t GROUP BY a, b",
+	"SELECT a + 1, COUNT(*) FROM t GROUP BY a + 1, b",
+	"SELECT a, COUNT(*) FROM t GROUP BY 1",
+	"SELECT a AS x, COUNT(*) FROM t GROUP BY x",
+	"SELECT LOWER(a), COUNT(*) FROM t GROUP BY LOWER(a)",
+	"SELECT CASE WHEN a > 0 THEN 1 ELSE 0 END, COUNT(*) FROM t GROUP BY CASE WHEN a > 0 THEN 1 ELSE 0 END",
+	"SELECT a FROM t GROUP BY (a), (b)",
+	"SELECT a FROM t GROUP BY (a, b)",
+	"SELECT a FROM t GROUP BY (SELECT 1)",
+	"SELECT DISTINCT a, COUNT(*) FROM t GROUP BY a",
+	"SELECT a, COUNT(*) FROM t WHERE b > 0 GROUP BY a ORDER BY a LIMIT 5",
+	"SELECT * FROM (SELECT a, COUNT(*) AS n FROM t GROUP BY a) AS s",
+	"SELECT GROUPING(a, b), a FROM t GROUP BY a, b",
+
+	// --- HAVING (verified against PostgreSQL 16 and SQLite 3.51) ---
+	"SELECT a, COUNT(*) FROM t GROUP BY a HAVING COUNT(*) > 1",
+	"SELECT a, COUNT(*) FROM t GROUP BY 1 HAVING COUNT(*) > 1 ORDER BY 2 DESC",
+	"SELECT a FROM t GROUP BY a HAVING COUNT(*) > 1 AND MAX(b) < 5 OR a IS NULL",
+	"SELECT a FROM t GROUP BY a HAVING COUNT(DISTINCT b) > 1",
+	"SELECT a FROM t WHERE b > 0 GROUP BY a HAVING a > 0 ORDER BY a LIMIT 1",
+	"SELECT COUNT(*) FROM t HAVING COUNT(*) > 0",
+	"SELECT 1 HAVING TRUE",
+	"SELECT 1 FROM t HAVING 1 = 1 ORDER BY 1",
+	"SELECT a FROM t GROUP BY a HAVING EXISTS (SELECT 1 FROM u WHERE u.a = t.a)",
+	"SELECT a FROM t GROUP BY a HAVING a IN (SELECT a FROM u)",
+	"SELECT a FROM t GROUP BY a HAVING COUNT(*) > (SELECT COUNT(*) FROM u)",
+	"SELECT * FROM (SELECT a FROM t GROUP BY a HAVING COUNT(*) > 1) AS s",
+	"SELECT a FROM t GROUP BY a HAVING COUNT(*) > 1 UNION SELECT a FROM u GROUP BY a HAVING COUNT(*) > 2",
+	"WITH x AS (SELECT a FROM t GROUP BY a HAVING COUNT(*) > 1) SELECT * FROM x",
+
+	// --- CTEs (verified against PostgreSQL 16 and SQLite 3.51) ---
+	"WITH x AS (SELECT 1) SELECT * FROM x",
+	"WITH x AS (SELECT 1), y AS (SELECT * FROM x) SELECT * FROM y",
+	"WITH x(p, q) AS (SELECT 1, 2) SELECT * FROM x",
+	"WITH x AS (VALUES (1)) SELECT * FROM x",
+	"WITH x AS MATERIALIZED (SELECT 1), y AS NOT MATERIALIZED (SELECT 2) SELECT 1",
+	"WITH x AS (SELECT 1 ORDER BY 1 LIMIT 1) SELECT * FROM x",
+	"WITH x AS (SELECT 1 UNION ALL SELECT 2) SELECT * FROM x",
+	"WITH x AS (SELECT 1) SELECT * FROM x UNION SELECT 2 ORDER BY 1 LIMIT 1",
+	"WITH x AS (SELECT 1) SELECT * FROM x, x AS y",
+	"WITH x AS (SELECT 1) SELECT * FROM a JOIN x ON TRUE",
+	"WITH x AS (WITH y AS (SELECT 1) SELECT * FROM y) SELECT * FROM x",
+	"SELECT * FROM (WITH x AS (SELECT 1) SELECT * FROM x) AS s",
+	"SELECT (WITH x AS (SELECT 1) SELECT * FROM x)",
+	"SELECT 1 WHERE EXISTS (WITH x AS (SELECT 1) SELECT * FROM x)",
+	"SELECT 1 WHERE 1 IN (WITH x AS (SELECT 1) SELECT * FROM x)",
+	"WITH x AS (SELECT 1) UPDATE t SET a = (SELECT * FROM x)",
+	"WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)",
+	"WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 5) SELECT * FROM r",
+	"WITH RECURSIVE r AS (SELECT 1 AS n UNION SELECT n + 1 FROM r WHERE n < 5) SELECT * FROM r",
+	"WITH RECURSIVE r(n) AS (VALUES (1) UNION ALL SELECT n + 1 FROM r WHERE n < 5) SELECT * FROM r",
+	"WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r ORDER BY 1 LIMIT 5) SELECT * FROM r",
+	"WITH RECURSIVE a AS (SELECT 1 UNION SELECT 2), b AS (SELECT * FROM a) SELECT * FROM b",
+	"WITH RECURSIVE r(n) AS (SELECT 1) SELECT * FROM r",
+	"WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 5) SELECT * FROM r JOIN a ON TRUE",
+	"WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 5) INSERT INTO t SELECT * FROM r",
+	"SELECT * FROM (WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 5) SELECT * FROM r) AS s",
+	"WITH RECURSIVE r(n) AS MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 5) SELECT * FROM r",
+	"WITH RECURSIVE recursive AS (SELECT 1) SELECT 1",
+}
+
+// TestMultipleStatements checks scripts with several statements and blank
+// statements between semicolons.
+func TestMultipleStatements(t *testing.T) {
+	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+		testkit.Run(t, d.Name, func(t *testing.T) {
+			stmts, err := Parse("SELECT 1;\n\n;SELECT 2; -- trailing comment\nINSERT INTO t VALUES (1);", d)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(stmts) != 3 {
+				t.Fatalf("want 3 statements, got %d", len(stmts))
+			}
+			want := "SELECT 1;\nSELECT 2;\nINSERT INTO t VALUES (1);"
+			if got := Format(stmts, d); got != want {
+				t.Fatalf("\n want: %s\n  got: %s", want, got)
+			}
+		})
+	}
+}
+
+func TestEmptyInput(t *testing.T) {
+	testkit.Require(t, dialect.Postgres.Name)
+	for _, in := range []string{"", "   ", ";;", "-- just a comment", "/* block */"} {
+		stmts, err := Parse(in, dialect.Postgres)
+		if err != nil || len(stmts) != 0 {
+			t.Errorf("%q: want no statements and no error, got %d, %v", in, len(stmts), err)
+		}
+	}
+}

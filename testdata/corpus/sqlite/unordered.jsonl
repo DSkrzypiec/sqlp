@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(1, 'xxx')"}
+{"sql":"INSERT INTO t1 SELECT a+2, b FROM t1"}
+{"sql":"DELETE FROM sqlite_stat2"}
+{"sql":"DELETE FROM sqlite_stat3"}

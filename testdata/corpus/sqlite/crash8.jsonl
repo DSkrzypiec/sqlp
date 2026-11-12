@@ -1,0 +1,29 @@
+{"sql":"INSERT INTO t1 VALUES(6, randstr(1000,1000))"}
+{"sql":"CREATE TABLE t5(a, b)"}
+{"sql":"CREATE TABLE t7(a, b)"}
+{"sql":"CREATE TABLE t8(a, b)"}
+{"sql":"CREATE TABLE t9(a, b)"}
+{"sql":"CREATE TABLE t10(a, b)"}
+{"sql":"PRAGMA synchronous = off"}
+{"sql":"PRAGMA journal_mode = persist"}
+{"sql":"CREATE TABLE ab(a, b)"}
+{"sql":"INSERT INTO ab VALUES(0, 'abc')"}
+{"sql":"INSERT INTO ab VALUES(1, NULL)"}
+{"sql":"INSERT INTO ab VALUES(2, NULL)"}
+{"sql":"INSERT INTO ab VALUES(3, NULL)"}
+{"sql":"INSERT INTO ab VALUES(4, NULL)"}
+{"sql":"INSERT INTO ab VALUES(5, NULL)"}
+{"sql":"INSERT INTO ab VALUES(6, NULL)"}
+{"sql":"UPDATE ab SET b = randstr(1000,1000)"}
+{"sql":"PRAGMA aux.journal_mode = persist"}
+{"sql":"CREATE TABLE aux.ab(a, b)"}
+{"sql":"INSERT INTO aux.ab SELECT * FROM main.ab"}
+{"sql":"UPDATE aux.ab SET b = randstr(1000,1000) WHERE a>=1"}
+{"sql":"UPDATE ab SET b = randstr(1000,1000) WHERE a>=1"}
+{"sql":"UPDATE aux.ab SET b = 'def' WHERE a = 0"}
+{"sql":"UPDATE main.ab SET b = 'def' WHERE a = 0"}
+{"sql":"SELECT b FROM main.ab WHERE a = 0"}
+{"sql":"SELECT b FROM aux.ab WHERE a = 0"}
+{"sql":"CREATE TABLE t1(x PRIMARY KEY)"}
+{"sql":"INSERT INTO t1 SELECT randomblob(900) FROM t1"}
+{"sql":"UPDATE t1 SET x = randomblob(900)"}

@@ -1,0 +1,55 @@
+{"sql":"CREATE AGGREGATE newavg (\n   sfunc = int4_avg_accum, basetype = int4, stype = _int8,\n   finalfunc = int8_avg,\n   initcond1 = '{0,0}'\n)"}
+{"sql":"COMMENT ON AGGREGATE newavg_wrong (int4) IS 'an agg comment'"}
+{"sql":"COMMENT ON AGGREGATE newavg (int4) IS 'an agg comment'"}
+{"sql":"COMMENT ON AGGREGATE newavg (int4) IS NULL"}
+{"sql":"CREATE AGGREGATE newsum (\n   sfunc1 = int4pl, basetype = int4, stype1 = int4,\n   initcond1 = '0'\n)"}
+{"sql":"CREATE AGGREGATE newcnt (*) (\n   sfunc = int8inc, stype = int8,\n   initcond = '0', parallel = safe\n)"}
+{"sql":"CREATE AGGREGATE oldcnt (\n   sfunc = int8inc, basetype = 'ANY', stype = int8,\n   initcond = '0'\n)"}
+{"sql":"CREATE AGGREGATE newcnt (\"any\") (\n   sfunc = int8inc_any, stype = int8,\n   initcond = '0'\n)"}
+{"sql":"COMMENT ON AGGREGATE nosuchagg (*) IS 'should fail'"}
+{"sql":"COMMENT ON AGGREGATE newcnt (*) IS 'an agg(*) comment'"}
+{"sql":"COMMENT ON AGGREGATE newcnt (\"any\") IS 'an agg(any) comment'"}
+{"sql":"create function sum3(int8,int8,int8) returns int8 as\n'select $1 + $2 + $3' language sql strict immutable","shape":"CREATE FUNCTION sum3(int8, int8, int8) RETURNS int8 AS 'select $1 + $2 + $3' LANGUAGE sql STRICT IMMUTABLE;"}
+{"sql":"create aggregate sum2(int8,int8) (\n   sfunc = sum3, stype = int8,\n   initcond = '0'\n)"}
+{"sql":"create type aggtype as (a integer, b integer, c text)","shape":"CREATE TYPE aggtype AS (a integer, b integer, c text);"}
+{"sql":"create function aggf_trans(aggtype[],integer,integer,text) returns aggtype[]\nas 'select array_append($1,ROW($2,$3,$4)::aggtype)'\nlanguage sql strict immutable","shape":"CREATE FUNCTION aggf_trans(aggtype[], integer, integer, text) RETURNS aggtype[] AS 'select array_append($1,ROW($2,$3,$4)::aggtype)' LANGUAGE sql STRICT IMMUTABLE;"}
+{"sql":"create function aggfns_trans(aggtype[],integer,integer,text) returns aggtype[]\nas 'select array_append($1,ROW($2,$3,$4)::aggtype)'\nlanguage sql immutable","shape":"CREATE FUNCTION aggfns_trans(aggtype[], integer, integer, text) RETURNS aggtype[] AS 'select array_append($1,ROW($2,$3,$4)::aggtype)' LANGUAGE sql IMMUTABLE;"}
+{"sql":"create aggregate aggfstr(integer,integer,text) (\n   sfunc = aggf_trans, stype = aggtype[],\n   initcond = '{}'\n)"}
+{"sql":"create aggregate aggfns(integer,integer,text) (\n   sfunc = aggfns_trans, stype = aggtype[], sspace = 10000,\n   initcond = '{}'\n)"}
+{"sql":"create function least_accum(int8, int8) returns int8 language sql as\n  'select least($1, $2)'","shape":"CREATE FUNCTION least_accum(int8, int8) RETURNS int8 LANGUAGE sql AS 'select least($1, $2)';"}
+{"sql":"create aggregate least_agg(int4) (\n  stype = int8, sfunc = least_accum\n)"}
+{"sql":"drop function least_accum(int8, int8)"}
+{"sql":"create function least_accum(anycompatible, anycompatible)\nreturns anycompatible language sql as\n  'select least($1, $2)'","shape":"CREATE FUNCTION least_accum(anycompatible, anycompatible) RETURNS anycompatible LANGUAGE sql AS 'select least($1, $2)';"}
+{"sql":"create aggregate least_agg(int8) (\n  stype = int8, sfunc = least_accum\n)"}
+{"sql":"drop function least_accum(anycompatible, anycompatible) cascade"}
+{"sql":"create function least_accum(anyelement, variadic anyarray)\nreturns anyelement language sql as\n  'select least($1, min($2[i])) from generate_subscripts($2,1) g(i)'","shape":"CREATE FUNCTION least_accum(anyelement, VARIADIC anyarray) RETURNS anyelement LANGUAGE sql AS 'select least($1, min($2[i])) from generate_subscripts($2,1) g(i)';"}
+{"sql":"create aggregate least_agg(variadic items anyarray) (\n  stype = anyelement, sfunc = least_accum\n)"}
+{"sql":"create function cleast_accum(anycompatible, variadic anycompatiblearray)\nreturns anycompatible language sql as\n  'select least($1, min($2[i])) from generate_subscripts($2,1) g(i)'","shape":"CREATE FUNCTION cleast_accum(anycompatible, VARIADIC anycompatiblearray) RETURNS anycompatible LANGUAGE sql AS 'select least($1, min($2[i])) from generate_subscripts($2,1) g(i)';"}
+{"sql":"create aggregate cleast_agg(variadic items anycompatiblearray) (\n  stype = anycompatible, sfunc = cleast_accum\n)"}
+{"sql":"create aggregate my_percentile_disc(float8 ORDER BY anyelement) (\n  stype = internal,\n  sfunc = ordered_set_transition,\n  finalfunc = percentile_disc_final,\n  finalfunc_extra = true,\n  finalfunc_modify = read_write\n)"}
+{"sql":"create aggregate my_rank(VARIADIC \"any\" ORDER BY VARIADIC \"any\") (\n  stype = internal,\n  sfunc = ordered_set_transition_multi,\n  finalfunc = rank_final,\n  finalfunc_extra = true,\n  hypothetical\n)"}
+{"sql":"alter aggregate my_percentile_disc(float8 ORDER BY anyelement)\n  rename to test_percentile_disc"}
+{"sql":"alter aggregate my_rank(VARIADIC \"any\" ORDER BY VARIADIC \"any\")\n  rename to test_rank"}
+{"sql":"CREATE AGGREGATE sumdouble (float8)\n(\n    stype = float8,\n    sfunc = float8pl,\n    mstype = float8,\n    msfunc = float8pl,\n    minvfunc = float8mi\n)"}
+{"sql":"CREATE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tserialfunc = numeric_avg_serialize\n)"}
+{"sql":"CREATE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tserialfunc = numeric_avg_deserialize,\n\tdeserialfunc = numeric_avg_deserialize\n)"}
+{"sql":"CREATE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tserialfunc = numeric_avg_serialize,\n\tdeserialfunc = numeric_avg_serialize\n)"}
+{"sql":"CREATE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tserialfunc = numeric_avg_serialize,\n\tdeserialfunc = numeric_avg_deserialize,\n\tcombinefunc = int4larger\n)"}
+{"sql":"CREATE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tfinalfunc = numeric_avg,\n\tserialfunc = numeric_avg_serialize,\n\tdeserialfunc = numeric_avg_deserialize,\n\tcombinefunc = numeric_avg_combine,\n\tfinalfunc_modify = shareable  -- just to test a non-default setting\n)"}
+{"sql":"SELECT aggfnoid, aggtransfn, aggcombinefn, aggtranstype::regtype,\n       aggserialfn, aggdeserialfn, aggfinalmodify\nFROM pg_aggregate\nWHERE aggfnoid = 'myavg'::REGPROC","shape":"SELECT aggfnoid, aggtransfn, aggcombinefn, aggtranstype::regtype, aggserialfn, aggdeserialfn, aggfinalmodify FROM pg_aggregate WHERE aggfnoid = 'myavg'::REGPROC;"}
+{"sql":"DROP AGGREGATE myavg (numeric)"}
+{"sql":"CREATE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tfinalfunc = numeric_avg\n)"}
+{"sql":"CREATE OR REPLACE AGGREGATE myavg (numeric)\n(\n\tstype = internal,\n\tsfunc = numeric_avg_accum,\n\tfinalfunc = numeric_avg,\n\tserialfunc = numeric_avg_serialize,\n\tdeserialfunc = numeric_avg_deserialize,\n\tcombinefunc = numeric_avg_combine,\n\tfinalfunc_modify = shareable  -- just to test a non-default setting\n)"}
+{"sql":"CREATE OR REPLACE AGGREGATE myavg (numeric)\n(\n\tstype = numeric,\n\tsfunc = numeric_add\n)"}
+{"sql":"CREATE OR REPLACE AGGREGATE myavg (numeric)\n(\n\tstype = numeric,\n\tsfunc = numeric_add,\n\tfinalfunc = numeric_out\n)"}
+{"sql":"CREATE OR REPLACE AGGREGATE myavg (order by numeric)\n(\n\tstype = numeric,\n\tsfunc = numeric_add\n)"}
+{"sql":"create function sum4(int8,int8,int8,int8) returns int8 as\n'select $1 + $2 + $3 + $4' language sql strict immutable","shape":"CREATE FUNCTION sum4(int8, int8, int8, int8) RETURNS int8 AS 'select $1 + $2 + $3 + $4' LANGUAGE sql STRICT IMMUTABLE;"}
+{"sql":"CREATE OR REPLACE AGGREGATE sum3 (int8,int8,int8)\n(\n\tstype = int8,\n\tsfunc = sum4\n)"}
+{"sql":"drop function sum4(int8,int8,int8,int8)"}
+{"sql":"CREATE AGGREGATE mysum (int)\n(\n\tstype = int,\n\tsfunc = int4pl,\n\tparallel = pear\n)"}
+{"sql":"CREATE FUNCTION float8mi_n(float8, float8) RETURNS float8 AS\n$$ SELECT $1 - $2; $$\nLANGUAGE SQL","shape":"CREATE FUNCTION float8mi_n(float8, float8) RETURNS float8 AS ' SELECT $1 - $2; ' LANGUAGE SQL;"}
+{"sql":"CREATE AGGREGATE invalidsumdouble (float8)\n(\n    stype = float8,\n    sfunc = float8pl,\n    mstype = float8,\n    msfunc = float8pl,\n    minvfunc = float8mi_n\n)"}
+{"sql":"CREATE FUNCTION float8mi_int(float8, float8) RETURNS int AS\n$$ SELECT CAST($1 - $2 AS INT); $$\nLANGUAGE SQL","shape":"CREATE FUNCTION float8mi_int(float8, float8) RETURNS int AS ' SELECT CAST($1 - $2 AS INT); ' LANGUAGE SQL;"}
+{"sql":"CREATE AGGREGATE wrongreturntype (float8)\n(\n    stype = float8,\n    sfunc = float8pl,\n    mstype = float8,\n    msfunc = float8pl,\n    minvfunc = float8mi_int\n)"}
+{"sql":"CREATE AGGREGATE case_agg ( -- old syntax\n\t\"Sfunc1\" = int4pl,\n\t\"Basetype\" = int4,\n\t\"Stype1\" = int4,\n\t\"Initcond1\" = '0',\n\t\"Parallel\" = safe\n)"}
+{"sql":"CREATE AGGREGATE case_agg(float8)\n(\n\t\"Stype\" = internal,\n\t\"Sfunc\" = ordered_set_transition,\n\t\"Finalfunc\" = percentile_disc_final,\n\t\"Finalfunc_extra\" = true,\n\t\"Finalfunc_modify\" = read_write,\n\t\"Parallel\" = safe\n)"}

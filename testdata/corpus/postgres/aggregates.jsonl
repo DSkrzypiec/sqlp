@@ -1,0 +1,440 @@
+{"sql":"SET extra_float_digits = 0","shape":"SET extra_float_digits TO 0;"}
+{"sql":"CREATE TABLE aggtest (\n\ta \t\t\tint2,\n\tb\t\t\tfloat4\n)","shape":"CREATE TABLE aggtest (a int2, b float4);"}
+{"sql":"ANALYZE aggtest","shape":"ANALYZE aggtest;"}
+{"sql":"SELECT avg(four) AS avg_1 FROM onek","shape":"SELECT avg(four) AS avg_1 FROM onek;"}
+{"sql":"SELECT avg(a) AS avg_32 FROM aggtest WHERE a < 100","shape":"SELECT avg(a) AS avg_32 FROM aggtest WHERE a < 100;"}
+{"sql":"SELECT any_value(v) FROM (VALUES (1), (2), (3)) AS v (v)","shape":"SELECT any_value(v) FROM (VALUES (1), (2), (3)) AS v(v);"}
+{"sql":"SELECT any_value(v) FROM (VALUES (NULL)) AS v (v)","shape":"SELECT any_value(v) FROM (VALUES (NULL)) AS v(v);"}
+{"sql":"SELECT any_value(v) FROM (VALUES (NULL), (1), (2)) AS v (v)","shape":"SELECT any_value(v) FROM (VALUES (NULL), (1), (2)) AS v(v);"}
+{"sql":"SELECT any_value(v) FROM (VALUES (array['hello', 'world'])) AS v (v)","shape":"SELECT any_value(v) FROM (VALUES (ARRAY['hello', 'world'])) AS v(v);"}
+{"sql":"SELECT avg(b)::numeric(10,3) AS avg_107_943 FROM aggtest","shape":"SELECT avg(b)::numeric(10, 3) AS avg_107_943 FROM aggtest;"}
+{"sql":"SELECT avg(gpa) AS avg_3_4 FROM ONLY student","shape":"SELECT avg(gpa) AS avg_3_4 FROM ONLY student;"}
+{"sql":"SELECT sum(four) AS sum_1500 FROM onek","shape":"SELECT sum(four) AS sum_1500 FROM onek;"}
+{"sql":"SELECT sum(a) AS sum_198 FROM aggtest","shape":"SELECT sum(a) AS sum_198 FROM aggtest;"}
+{"sql":"SELECT sum(b) AS avg_431_773 FROM aggtest","shape":"SELECT sum(b) AS avg_431_773 FROM aggtest;"}
+{"sql":"SELECT sum(gpa) AS avg_6_8 FROM ONLY student","shape":"SELECT sum(gpa) AS avg_6_8 FROM ONLY student;"}
+{"sql":"SELECT max(four) AS max_3 FROM onek","shape":"SELECT max(four) AS max_3 FROM onek;"}
+{"sql":"SELECT max(a) AS max_100 FROM aggtest","shape":"SELECT max(a) AS max_100 FROM aggtest;"}
+{"sql":"SELECT max(aggtest.b) AS max_324_78 FROM aggtest","shape":"SELECT max(aggtest.b) AS max_324_78 FROM aggtest;"}
+{"sql":"SELECT max(student.gpa) AS max_3_7 FROM student","shape":"SELECT max(student.gpa) AS max_3_7 FROM student;"}
+{"sql":"SELECT stddev_pop(b) FROM aggtest","shape":"SELECT stddev_pop(b) FROM aggtest;"}
+{"sql":"SELECT stddev_samp(b) FROM aggtest","shape":"SELECT stddev_samp(b) FROM aggtest;"}
+{"sql":"SELECT var_pop(b) FROM aggtest","shape":"SELECT var_pop(b) FROM aggtest;"}
+{"sql":"SELECT var_samp(b) FROM aggtest","shape":"SELECT var_samp(b) FROM aggtest;"}
+{"sql":"SELECT stddev_pop(b::numeric) FROM aggtest","shape":"SELECT stddev_pop(b::numeric) FROM aggtest;"}
+{"sql":"SELECT stddev_samp(b::numeric) FROM aggtest","shape":"SELECT stddev_samp(b::numeric) FROM aggtest;"}
+{"sql":"SELECT var_pop(b::numeric) FROM aggtest","shape":"SELECT var_pop(b::numeric) FROM aggtest;"}
+{"sql":"SELECT var_samp(b::numeric) FROM aggtest","shape":"SELECT var_samp(b::numeric) FROM aggtest;"}
+{"sql":"SELECT var_pop(1.0::float8), var_samp(2.0::float8)","shape":"SELECT var_pop(1.0::float8), var_samp(2.0::float8);"}
+{"sql":"SELECT stddev_pop(3.0::float8), stddev_samp(4.0::float8)","shape":"SELECT stddev_pop(3.0::float8), stddev_samp(4.0::float8);"}
+{"sql":"SELECT var_pop('inf'::float8), var_samp('inf'::float8)","shape":"SELECT var_pop('inf'::float8), var_samp('inf'::float8);"}
+{"sql":"SELECT stddev_pop('inf'::float8), stddev_samp('inf'::float8)","shape":"SELECT stddev_pop('inf'::float8), stddev_samp('inf'::float8);"}
+{"sql":"SELECT var_pop('nan'::float8), var_samp('nan'::float8)","shape":"SELECT var_pop('nan'::float8), var_samp('nan'::float8);"}
+{"sql":"SELECT stddev_pop('nan'::float8), stddev_samp('nan'::float8)","shape":"SELECT stddev_pop('nan'::float8), stddev_samp('nan'::float8);"}
+{"sql":"SELECT var_pop(1.0::float4), var_samp(2.0::float4)","shape":"SELECT var_pop(1.0::float4), var_samp(2.0::float4);"}
+{"sql":"SELECT stddev_pop(3.0::float4), stddev_samp(4.0::float4)","shape":"SELECT stddev_pop(3.0::float4), stddev_samp(4.0::float4);"}
+{"sql":"SELECT var_pop('inf'::float4), var_samp('inf'::float4)","shape":"SELECT var_pop('inf'::float4), var_samp('inf'::float4);"}
+{"sql":"SELECT stddev_pop('inf'::float4), stddev_samp('inf'::float4)","shape":"SELECT stddev_pop('inf'::float4), stddev_samp('inf'::float4);"}
+{"sql":"SELECT var_pop('nan'::float4), var_samp('nan'::float4)","shape":"SELECT var_pop('nan'::float4), var_samp('nan'::float4);"}
+{"sql":"SELECT stddev_pop('nan'::float4), stddev_samp('nan'::float4)","shape":"SELECT stddev_pop('nan'::float4), stddev_samp('nan'::float4);"}
+{"sql":"SELECT var_pop(1.0::numeric), var_samp(2.0::numeric)","shape":"SELECT var_pop(1.0::numeric), var_samp(2.0::numeric);"}
+{"sql":"SELECT stddev_pop(3.0::numeric), stddev_samp(4.0::numeric)","shape":"SELECT stddev_pop(3.0::numeric), stddev_samp(4.0::numeric);"}
+{"sql":"SELECT var_pop('inf'::numeric), var_samp('inf'::numeric)","shape":"SELECT var_pop('inf'::numeric), var_samp('inf'::numeric);"}
+{"sql":"SELECT stddev_pop('inf'::numeric), stddev_samp('inf'::numeric)","shape":"SELECT stddev_pop('inf'::numeric), stddev_samp('inf'::numeric);"}
+{"sql":"SELECT var_pop('nan'::numeric), var_samp('nan'::numeric)","shape":"SELECT var_pop('nan'::numeric), var_samp('nan'::numeric);"}
+{"sql":"SELECT stddev_pop('nan'::numeric), stddev_samp('nan'::numeric)","shape":"SELECT stddev_pop('nan'::numeric), stddev_samp('nan'::numeric);"}
+{"sql":"select sum(null::int4) from generate_series(1,3)","shape":"SELECT sum(NULL::int4) FROM generate_series(1, 3);"}
+{"sql":"select sum(null::int8) from generate_series(1,3)","shape":"SELECT sum(NULL::int8) FROM generate_series(1, 3);"}
+{"sql":"select sum(null::numeric) from generate_series(1,3)","shape":"SELECT sum(NULL::numeric) FROM generate_series(1, 3);"}
+{"sql":"select sum(null::float8) from generate_series(1,3)","shape":"SELECT sum(NULL::float8) FROM generate_series(1, 3);"}
+{"sql":"select avg(null::int4) from generate_series(1,3)","shape":"SELECT avg(NULL::int4) FROM generate_series(1, 3);"}
+{"sql":"select avg(null::int8) from generate_series(1,3)","shape":"SELECT avg(NULL::int8) FROM generate_series(1, 3);"}
+{"sql":"select avg(null::numeric) from generate_series(1,3)","shape":"SELECT avg(NULL::numeric) FROM generate_series(1, 3);"}
+{"sql":"select avg(null::float8) from generate_series(1,3)","shape":"SELECT avg(NULL::float8) FROM generate_series(1, 3);"}
+{"sql":"select sum('NaN'::numeric) from generate_series(1,3)","shape":"SELECT sum('NaN'::numeric) FROM generate_series(1, 3);"}
+{"sql":"select avg('NaN'::numeric) from generate_series(1,3)","shape":"SELECT avg('NaN'::numeric) FROM generate_series(1, 3);"}
+{"sql":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8)\nFROM (VALUES ('1'), ('infinity')) v(x)","shape":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8) FROM (VALUES ('1'), ('infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8)\nFROM (VALUES ('infinity'), ('1')) v(x)","shape":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8) FROM (VALUES ('infinity'), ('1')) AS v(x);"}
+{"sql":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8)\nFROM (VALUES ('infinity'), ('infinity')) v(x)","shape":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8) FROM (VALUES ('infinity'), ('infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8)\nFROM (VALUES ('-infinity'), ('infinity')) v(x)","shape":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8) FROM (VALUES ('-infinity'), ('infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8)\nFROM (VALUES ('-infinity'), ('-infinity')) v(x)","shape":"SELECT sum(x::float8), avg(x::float8), var_pop(x::float8) FROM (VALUES ('-infinity'), ('-infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric)\nFROM (VALUES ('1'), ('infinity')) v(x)","shape":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric) FROM (VALUES ('1'), ('infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric)\nFROM (VALUES ('infinity'), ('1')) v(x)","shape":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric) FROM (VALUES ('infinity'), ('1')) AS v(x);"}
+{"sql":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric)\nFROM (VALUES ('infinity'), ('infinity')) v(x)","shape":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric) FROM (VALUES ('infinity'), ('infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric)\nFROM (VALUES ('-infinity'), ('infinity')) v(x)","shape":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric) FROM (VALUES ('-infinity'), ('infinity')) AS v(x);"}
+{"sql":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric)\nFROM (VALUES ('-infinity'), ('-infinity')) v(x)","shape":"SELECT sum(x::numeric), avg(x::numeric), var_pop(x::numeric) FROM (VALUES ('-infinity'), ('-infinity')) AS v(x);"}
+{"sql":"SELECT avg(x::float8), var_pop(x::float8)\nFROM (VALUES (100000003), (100000004), (100000006), (100000007)) v(x)","shape":"SELECT avg(x::float8), var_pop(x::float8) FROM (VALUES (100000003), (100000004), (100000006), (100000007)) AS v(x);"}
+{"sql":"SELECT avg(x::float8), var_pop(x::float8)\nFROM (VALUES (7000000000005), (7000000000007)) v(x)","shape":"SELECT avg(x::float8), var_pop(x::float8) FROM (VALUES (7000000000005), (7000000000007)) AS v(x);"}
+{"sql":"SELECT regr_count(b, a) FROM aggtest","shape":"SELECT regr_count(b, a) FROM aggtest;"}
+{"sql":"SELECT regr_sxx(b, a) FROM aggtest","shape":"SELECT regr_sxx(b, a) FROM aggtest;"}
+{"sql":"SELECT regr_syy(b, a) FROM aggtest","shape":"SELECT regr_syy(b, a) FROM aggtest;"}
+{"sql":"SELECT regr_sxy(b, a) FROM aggtest","shape":"SELECT regr_sxy(b, a) FROM aggtest;"}
+{"sql":"SELECT regr_avgx(b, a), regr_avgy(b, a) FROM aggtest","shape":"SELECT regr_avgx(b, a), regr_avgy(b, a) FROM aggtest;"}
+{"sql":"SELECT regr_r2(b, a) FROM aggtest","shape":"SELECT regr_r2(b, a) FROM aggtest;"}
+{"sql":"SELECT regr_slope(b, a), regr_intercept(b, a) FROM aggtest","shape":"SELECT regr_slope(b, a), regr_intercept(b, a) FROM aggtest;"}
+{"sql":"SELECT covar_pop(b, a), covar_samp(b, a) FROM aggtest","shape":"SELECT covar_pop(b, a), covar_samp(b, a) FROM aggtest;"}
+{"sql":"SELECT corr(b, a) FROM aggtest","shape":"SELECT corr(b, a) FROM aggtest;"}
+{"sql":"SELECT covar_pop(1::float8,2::float8), covar_samp(3::float8,4::float8)","shape":"SELECT covar_pop(1::float8, 2::float8), covar_samp(3::float8, 4::float8);"}
+{"sql":"SELECT covar_pop(1::float8,'inf'::float8), covar_samp(3::float8,'inf'::float8)","shape":"SELECT covar_pop(1::float8, 'inf'::float8), covar_samp(3::float8, 'inf'::float8);"}
+{"sql":"SELECT covar_pop(1::float8,'nan'::float8), covar_samp(3::float8,'nan'::float8)","shape":"SELECT covar_pop(1::float8, 'nan'::float8), covar_samp(3::float8, 'nan'::float8);"}
+{"sql":"CREATE TABLE regr_test (x float8, y float8)","shape":"CREATE TABLE regr_test (x float8, y float8);"}
+{"sql":"INSERT INTO regr_test VALUES (10,150),(20,250),(30,350),(80,540),(100,200)","shape":"INSERT INTO regr_test VALUES (10, 150), (20, 250), (30, 350), (80, 540), (100, 200);"}
+{"sql":"SELECT count(*), sum(x), regr_sxx(y,x), sum(y),regr_syy(y,x), regr_sxy(y,x)\nFROM regr_test WHERE x IN (10,20,30,80)","shape":"SELECT count(*), sum(x), regr_sxx(y, x), sum(y), regr_syy(y, x), regr_sxy(y, x) FROM regr_test WHERE x IN (10, 20, 30, 80);"}
+{"sql":"SELECT count(*), sum(x), regr_sxx(y,x), sum(y),regr_syy(y,x), regr_sxy(y,x)\nFROM regr_test","shape":"SELECT count(*), sum(x), regr_sxx(y, x), sum(y), regr_syy(y, x), regr_sxy(y, x) FROM regr_test;"}
+{"sql":"SELECT float8_accum('{4,140,2900}'::float8[], 100)","shape":"SELECT float8_accum('{4,140,2900}'::float8[], 100);"}
+{"sql":"SELECT float8_regr_accum('{4,140,2900,1290,83075,15050}'::float8[], 200, 100)","shape":"SELECT float8_regr_accum('{4,140,2900,1290,83075,15050}'::float8[], 200, 100);"}
+{"sql":"SELECT count(*), sum(x), regr_sxx(y,x), sum(y),regr_syy(y,x), regr_sxy(y,x)\nFROM regr_test WHERE x IN (10,20,30)","shape":"SELECT count(*), sum(x), regr_sxx(y, x), sum(y), regr_syy(y, x), regr_sxy(y, x) FROM regr_test WHERE x IN (10, 20, 30);"}
+{"sql":"SELECT count(*), sum(x), regr_sxx(y,x), sum(y),regr_syy(y,x), regr_sxy(y,x)\nFROM regr_test WHERE x IN (80,100)","shape":"SELECT count(*), sum(x), regr_sxx(y, x), sum(y), regr_syy(y, x), regr_sxy(y, x) FROM regr_test WHERE x IN (80, 100);"}
+{"sql":"SELECT float8_combine('{3,60,200}'::float8[], '{0,0,0}'::float8[])","shape":"SELECT float8_combine('{3,60,200}'::float8[], '{0,0,0}'::float8[]);"}
+{"sql":"SELECT float8_combine('{0,0,0}'::float8[], '{2,180,200}'::float8[])","shape":"SELECT float8_combine('{0,0,0}'::float8[], '{2,180,200}'::float8[]);"}
+{"sql":"SELECT float8_combine('{3,60,200}'::float8[], '{2,180,200}'::float8[])","shape":"SELECT float8_combine('{3,60,200}'::float8[], '{2,180,200}'::float8[]);"}
+{"sql":"SELECT float8_regr_combine('{3,60,200,750,20000,2000}'::float8[],\n                           '{0,0,0,0,0,0}'::float8[])","shape":"SELECT float8_regr_combine('{3,60,200,750,20000,2000}'::float8[], '{0,0,0,0,0,0}'::float8[]);"}
+{"sql":"SELECT float8_regr_combine('{0,0,0,0,0,0}'::float8[],\n                           '{2,180,200,740,57800,-3400}'::float8[])","shape":"SELECT float8_regr_combine('{0,0,0,0,0,0}'::float8[], '{2,180,200,740,57800,-3400}'::float8[]);"}
+{"sql":"SELECT float8_regr_combine('{3,60,200,750,20000,2000}'::float8[],\n                           '{2,180,200,740,57800,-3400}'::float8[])","shape":"SELECT float8_regr_combine('{3,60,200,750,20000,2000}'::float8[], '{2,180,200,740,57800,-3400}'::float8[]);"}
+{"sql":"DROP TABLE regr_test","shape":"DROP TABLE regr_test;"}
+{"sql":"SELECT count(four) AS cnt_1000 FROM onek","shape":"SELECT count(four) AS cnt_1000 FROM onek;"}
+{"sql":"SELECT count(DISTINCT four) AS cnt_4 FROM onek","shape":"SELECT count(DISTINCT four) AS cnt_4 FROM onek;"}
+{"sql":"select ten, count(*), sum(four) from onek\ngroup by ten order by ten","shape":"SELECT ten, count(*), sum(four) FROM onek GROUP BY ten ORDER BY ten;"}
+{"sql":"select ten, count(four), sum(DISTINCT four) from onek\ngroup by ten order by ten","shape":"SELECT ten, count(four), sum(DISTINCT four) FROM onek GROUP BY ten ORDER BY ten;"}
+{"sql":"SELECT newavg(four) AS avg_1 FROM onek","shape":"SELECT newavg(four) AS avg_1 FROM onek;"}
+{"sql":"SELECT newsum(four) AS sum_1500 FROM onek","shape":"SELECT newsum(four) AS sum_1500 FROM onek;"}
+{"sql":"SELECT newcnt(four) AS cnt_1000 FROM onek","shape":"SELECT newcnt(four) AS cnt_1000 FROM onek;"}
+{"sql":"SELECT newcnt(*) AS cnt_1000 FROM onek","shape":"SELECT newcnt(*) AS cnt_1000 FROM onek;"}
+{"sql":"SELECT oldcnt(*) AS cnt_1000 FROM onek","shape":"SELECT oldcnt(*) AS cnt_1000 FROM onek;"}
+{"sql":"SELECT sum2(q1,q2) FROM int8_tbl","shape":"SELECT sum2(q1, q2) FROM int8_tbl;"}
+{"sql":"select ten, sum(distinct four) from onek a\ngroup by ten\nhaving exists (select 1 from onek b where sum(distinct a.four) = b.four)","shape":"SELECT ten, sum(DISTINCT four) FROM onek AS a GROUP BY ten HAVING EXISTS (SELECT 1 FROM onek AS b WHERE sum(DISTINCT a.four) = b.four);"}
+{"sql":"select ten, sum(distinct four) from onek a\ngroup by ten\nhaving exists (select 1 from onek b\n               where sum(distinct a.four + b.four) = b.four)","shape":"SELECT ten, sum(DISTINCT four) FROM onek AS a GROUP BY ten HAVING EXISTS (SELECT 1 FROM onek AS b WHERE sum(DISTINCT a.four + b.four) = b.four);"}
+{"sql":"select\n  (select max((select i.unique2 from tenk1 i where i.unique1 = o.unique1)))\nfrom tenk1 o","shape":"SELECT (SELECT max((SELECT i.unique2 FROM tenk1 AS i WHERE i.unique1 = o.unique1))) FROM tenk1 AS o;"}
+{"sql":"explain (verbose, costs off)\nselect s1, s2, sm\nfrom generate_series(1, 3) s1,\n     lateral (select s2, sum(s1 + s2) sm\n              from generate_series(1, 3) s2 group by s2) ss\norder by 1, 2","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT s1, s2, sm FROM generate_series(1, 3) AS s1, LATERAL (SELECT s2, sum(s1 + s2) AS sm FROM generate_series(1, 3) AS s2 GROUP BY s2) AS ss ORDER BY 1, 2;"}
+{"sql":"select s1, s2, sm\nfrom generate_series(1, 3) s1,\n     lateral (select s2, sum(s1 + s2) sm\n              from generate_series(1, 3) s2 group by s2) ss\norder by 1, 2","shape":"SELECT s1, s2, sm FROM generate_series(1, 3) AS s1, LATERAL (SELECT s2, sum(s1 + s2) AS sm FROM generate_series(1, 3) AS s2 GROUP BY s2) AS ss ORDER BY 1, 2;"}
+{"sql":"explain (verbose, costs off)\nselect array(select sum(x+y) s\n            from generate_series(1,3) y group by y order by s)\n  from generate_series(1,3) x","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT ARRAY(SELECT sum(x + y) AS s FROM generate_series(1, 3) AS y GROUP BY y ORDER BY s) FROM generate_series(1, 3) AS x;"}
+{"sql":"select array(select sum(x+y) s\n            from generate_series(1,3) y group by y order by s)\n  from generate_series(1,3) x","shape":"SELECT ARRAY(SELECT sum(x + y) AS s FROM generate_series(1, 3) AS y GROUP BY y ORDER BY s) FROM generate_series(1, 3) AS x;"}
+{"sql":"CREATE TEMPORARY TABLE bitwise_test(\n  i2 INT2,\n  i4 INT4,\n  i8 INT8,\n  i INTEGER,\n  x INT2,\n  y BIT(4)\n)","shape":"CREATE TEMPORARY TABLE bitwise_test (i2 INT2, i4 INT4, i8 INT8, i INTEGER, x INT2, y BIT(4));"}
+{"sql":"SELECT\n  BIT_AND(i2) AS \"?\",\n  BIT_OR(i4)  AS \"?\",\n  BIT_XOR(i8) AS \"?\"\nFROM bitwise_test","shape":"SELECT BIT_AND(i2) AS \"?\", BIT_OR(i4) AS \"?\", BIT_XOR(i8) AS \"?\" FROM bitwise_test;"}
+{"sql":"COPY bitwise_test FROM STDIN NULL 'null'","shape":"COPY bitwise_test FROM STDIN NULL 'null';"}
+{"sql":"SELECT\n  BIT_AND(i2) AS \"1\",\n  BIT_AND(i4) AS \"1\",\n  BIT_AND(i8) AS \"1\",\n  BIT_AND(i)  AS \"?\",\n  BIT_AND(x)  AS \"0\",\n  BIT_AND(y)  AS \"0100\",\n\n  BIT_OR(i2)  AS \"7\",\n  BIT_OR(i4)  AS \"7\",\n  BIT_OR(i8)  AS \"7\",\n  BIT_OR(i)   AS \"?\",\n  BIT_OR(x)   AS \"7\",\n  BIT_OR(y)   AS \"1101\",\n\n  BIT_XOR(i2) AS \"5\",\n  BIT_XOR(i4) AS \"5\",\n  BIT_XOR(i8) AS \"5\",\n  BIT_XOR(i)  AS \"?\",\n  BIT_XOR(x)  AS \"7\",\n  BIT_XOR(y)  AS \"1101\"\nFROM bitwise_test","shape":"SELECT BIT_AND(i2) AS \"1\", BIT_AND(i4) AS \"1\", BIT_AND(i8) AS \"1\", BIT_AND(i) AS \"?\", BIT_AND(x) AS \"0\", BIT_AND(y) AS \"0100\", BIT_OR(i2) AS \"7\", BIT_OR(i4) AS \"7\", BIT_OR(i8) AS \"7\", BIT_OR(i) AS \"?\", BIT_OR(x) AS \"7\", BIT_OR(y) AS \"1101\", BIT_XOR(i2) AS \"5\", BIT_XOR(i4) AS \"5\", BIT_XOR(i8) AS \"5\", BIT_XOR(i) AS \"?\", BIT_XOR(x) AS \"7\", BIT_XOR(y) AS \"1101\" FROM bitwise_test;"}
+{"sql":"SELECT\n  -- boolean and transitions\n  -- null because strict\n  booland_statefunc(NULL, NULL)  IS NULL AS \"t\",\n  booland_statefunc(TRUE, NULL)  IS NULL AS \"t\",\n  booland_statefunc(FALSE, NULL) IS NULL AS \"t\",\n  booland_statefunc(NULL, TRUE)  IS NULL AS \"t\",\n  booland_statefunc(NULL, FALSE) IS NULL AS \"t\",\n  -- and actual computations\n  booland_statefunc(TRUE, TRUE) AS \"t\",\n  NOT booland_statefunc(TRUE, FALSE) AS \"t\",\n  NOT booland_statefunc(FALSE, TRUE) AS \"t\",\n  NOT booland_statefunc(FALSE, FALSE) AS \"t\"","shape":"SELECT booland_statefunc(NULL, NULL) IS NULL AS \"t\", booland_statefunc(TRUE, NULL) IS NULL AS \"t\", booland_statefunc(FALSE, NULL) IS NULL AS \"t\", booland_statefunc(NULL, TRUE) IS NULL AS \"t\", booland_statefunc(NULL, FALSE) IS NULL AS \"t\", booland_statefunc(TRUE, TRUE) AS \"t\", NOT booland_statefunc(TRUE, FALSE) AS \"t\", NOT booland_statefunc(FALSE, TRUE) AS \"t\", NOT booland_statefunc(FALSE, FALSE) AS \"t\";"}
+{"sql":"SELECT\n  -- boolean or transitions\n  -- null because strict\n  boolor_statefunc(NULL, NULL)  IS NULL AS \"t\",\n  boolor_statefunc(TRUE, NULL)  IS NULL AS \"t\",\n  boolor_statefunc(FALSE, NULL) IS NULL AS \"t\",\n  boolor_statefunc(NULL, TRUE)  IS NULL AS \"t\",\n  boolor_statefunc(NULL, FALSE) IS NULL AS \"t\",\n  -- actual computations\n  boolor_statefunc(TRUE, TRUE) AS \"t\",\n  boolor_statefunc(TRUE, FALSE) AS \"t\",\n  boolor_statefunc(FALSE, TRUE) AS \"t\",\n  NOT boolor_statefunc(FALSE, FALSE) AS \"t\"","shape":"SELECT boolor_statefunc(NULL, NULL) IS NULL AS \"t\", boolor_statefunc(TRUE, NULL) IS NULL AS \"t\", boolor_statefunc(FALSE, NULL) IS NULL AS \"t\", boolor_statefunc(NULL, TRUE) IS NULL AS \"t\", boolor_statefunc(NULL, FALSE) IS NULL AS \"t\", boolor_statefunc(TRUE, TRUE) AS \"t\", boolor_statefunc(TRUE, FALSE) AS \"t\", boolor_statefunc(FALSE, TRUE) AS \"t\", NOT boolor_statefunc(FALSE, FALSE) AS \"t\";"}
+{"sql":"CREATE TEMPORARY TABLE bool_test(\n  b1 BOOL,\n  b2 BOOL,\n  b3 BOOL,\n  b4 BOOL)","shape":"CREATE TEMPORARY TABLE bool_test (b1 BOOL, b2 BOOL, b3 BOOL, b4 BOOL);"}
+{"sql":"SELECT\n  BOOL_AND(b1)   AS \"n\",\n  BOOL_OR(b3)    AS \"n\"\nFROM bool_test","shape":"SELECT BOOL_AND(b1) AS \"n\", BOOL_OR(b3) AS \"n\" FROM bool_test;"}
+{"sql":"COPY bool_test FROM STDIN NULL 'null'","shape":"COPY bool_test FROM STDIN NULL 'null';"}
+{"sql":"SELECT\n  BOOL_AND(b1)     AS \"f\",\n  BOOL_AND(b2)     AS \"t\",\n  BOOL_AND(b3)     AS \"f\",\n  BOOL_AND(b4)     AS \"n\",\n  BOOL_AND(NOT b2) AS \"f\",\n  BOOL_AND(NOT b3) AS \"t\"\nFROM bool_test","shape":"SELECT BOOL_AND(b1) AS \"f\", BOOL_AND(b2) AS \"t\", BOOL_AND(b3) AS \"f\", BOOL_AND(b4) AS \"n\", BOOL_AND(NOT b2) AS \"f\", BOOL_AND(NOT b3) AS \"t\" FROM bool_test;"}
+{"sql":"SELECT\n  EVERY(b1)     AS \"f\",\n  EVERY(b2)     AS \"t\",\n  EVERY(b3)     AS \"f\",\n  EVERY(b4)     AS \"n\",\n  EVERY(NOT b2) AS \"f\",\n  EVERY(NOT b3) AS \"t\"\nFROM bool_test","shape":"SELECT EVERY(b1) AS \"f\", EVERY(b2) AS \"t\", EVERY(b3) AS \"f\", EVERY(b4) AS \"n\", EVERY(NOT b2) AS \"f\", EVERY(NOT b3) AS \"t\" FROM bool_test;"}
+{"sql":"SELECT\n  BOOL_OR(b1)      AS \"t\",\n  BOOL_OR(b2)      AS \"t\",\n  BOOL_OR(b3)      AS \"f\",\n  BOOL_OR(b4)      AS \"n\",\n  BOOL_OR(NOT b2)  AS \"f\",\n  BOOL_OR(NOT b3)  AS \"t\"\nFROM bool_test","shape":"SELECT BOOL_OR(b1) AS \"t\", BOOL_OR(b2) AS \"t\", BOOL_OR(b3) AS \"f\", BOOL_OR(b4) AS \"n\", BOOL_OR(NOT b2) AS \"f\", BOOL_OR(NOT b3) AS \"t\" FROM bool_test;"}
+{"sql":"explain (costs off)\n  select min(unique1) from tenk1","shape":"EXPLAIN (COSTS off) SELECT min(unique1) FROM tenk1;"}
+{"sql":"select min(unique1) from tenk1","shape":"SELECT min(unique1) FROM tenk1;"}
+{"sql":"explain (costs off)\n  select max(unique1) from tenk1","shape":"EXPLAIN (COSTS off) SELECT max(unique1) FROM tenk1;"}
+{"sql":"select max(unique1) from tenk1","shape":"SELECT max(unique1) FROM tenk1;"}
+{"sql":"explain (costs off)\n  select max(unique1) from tenk1 where unique1 < 42","shape":"EXPLAIN (COSTS off) SELECT max(unique1) FROM tenk1 WHERE unique1 < 42;"}
+{"sql":"select max(unique1) from tenk1 where unique1 < 42","shape":"SELECT max(unique1) FROM tenk1 WHERE unique1 < 42;"}
+{"sql":"explain (costs off)\n  select max(unique1) from tenk1 where unique1 > 42","shape":"EXPLAIN (COSTS off) SELECT max(unique1) FROM tenk1 WHERE unique1 > 42;"}
+{"sql":"select max(unique1) from tenk1 where unique1 > 42","shape":"SELECT max(unique1) FROM tenk1 WHERE unique1 > 42;"}
+{"sql":"begin","shape":"BEGIN;"}
+{"sql":"set local max_parallel_workers_per_gather = 0","shape":"SET LOCAL max_parallel_workers_per_gather TO 0;"}
+{"sql":"explain (costs off)\n  select max(unique1) from tenk1 where unique1 > 42000","shape":"EXPLAIN (COSTS off) SELECT max(unique1) FROM tenk1 WHERE unique1 > 42000;"}
+{"sql":"select max(unique1) from tenk1 where unique1 > 42000","shape":"SELECT max(unique1) FROM tenk1 WHERE unique1 > 42000;"}
+{"sql":"rollback","shape":"ROLLBACK;"}
+{"sql":"explain (costs off)\n  select max(tenthous) from tenk1 where thousand = 33","shape":"EXPLAIN (COSTS off) SELECT max(tenthous) FROM tenk1 WHERE thousand = 33;"}
+{"sql":"select max(tenthous) from tenk1 where thousand = 33","shape":"SELECT max(tenthous) FROM tenk1 WHERE thousand = 33;"}
+{"sql":"explain (costs off)\n  select min(tenthous) from tenk1 where thousand = 33","shape":"EXPLAIN (COSTS off) SELECT min(tenthous) FROM tenk1 WHERE thousand = 33;"}
+{"sql":"select min(tenthous) from tenk1 where thousand = 33","shape":"SELECT min(tenthous) FROM tenk1 WHERE thousand = 33;"}
+{"sql":"explain (costs off)\n  select f1, (select min(unique1) from tenk1 where unique1 > f1) AS gt\n    from int4_tbl","shape":"EXPLAIN (COSTS off) SELECT f1, (SELECT min(unique1) FROM tenk1 WHERE unique1 > f1) AS gt FROM int4_tbl;"}
+{"sql":"select f1, (select min(unique1) from tenk1 where unique1 > f1) AS gt\n  from int4_tbl","shape":"SELECT f1, (SELECT min(unique1) FROM tenk1 WHERE unique1 > f1) AS gt FROM int4_tbl;"}
+{"sql":"explain (costs off)\n  select distinct max(unique2) from tenk1","shape":"EXPLAIN (COSTS off) SELECT DISTINCT max(unique2) FROM tenk1;"}
+{"sql":"select distinct max(unique2) from tenk1","shape":"SELECT DISTINCT max(unique2) FROM tenk1;"}
+{"sql":"explain (costs off)\n  select max(unique2) from tenk1 order by 1","shape":"EXPLAIN (COSTS off) SELECT max(unique2) FROM tenk1 ORDER BY 1;"}
+{"sql":"select max(unique2) from tenk1 order by 1","shape":"SELECT max(unique2) FROM tenk1 ORDER BY 1;"}
+{"sql":"explain (costs off)\n  select max(unique2) from tenk1 order by max(unique2)","shape":"EXPLAIN (COSTS off) SELECT max(unique2) FROM tenk1 ORDER BY max(unique2);"}
+{"sql":"select max(unique2) from tenk1 order by max(unique2)","shape":"SELECT max(unique2) FROM tenk1 ORDER BY max(unique2);"}
+{"sql":"explain (costs off)\n  select max(unique2) from tenk1 order by max(unique2)+1","shape":"EXPLAIN (COSTS off) SELECT max(unique2) FROM tenk1 ORDER BY max(unique2) + 1;"}
+{"sql":"select max(unique2) from tenk1 order by max(unique2)+1","shape":"SELECT max(unique2) FROM tenk1 ORDER BY max(unique2) + 1;"}
+{"sql":"explain (costs off)\n  select max(unique2), generate_series(1,3) as g from tenk1 order by g desc","shape":"EXPLAIN (COSTS off) SELECT max(unique2), generate_series(1, 3) AS g FROM tenk1 ORDER BY g DESC;"}
+{"sql":"select max(unique2), generate_series(1,3) as g from tenk1 order by g desc","shape":"SELECT max(unique2), generate_series(1, 3) AS g FROM tenk1 ORDER BY g DESC;"}
+{"sql":"explain (costs off)\n  select max(100) from tenk1","shape":"EXPLAIN (COSTS off) SELECT max(100) FROM tenk1;"}
+{"sql":"select max(100) from tenk1","shape":"SELECT max(100) FROM tenk1;"}
+{"sql":"create table minmaxtest(f1 int)","shape":"CREATE TABLE minmaxtest (f1 int);"}
+{"sql":"create table minmaxtest1() inherits (minmaxtest)","shape":"CREATE TABLE minmaxtest1 () INHERITS (minmaxtest);"}
+{"sql":"create table minmaxtest2() inherits (minmaxtest)","shape":"CREATE TABLE minmaxtest2 () INHERITS (minmaxtest);"}
+{"sql":"create table minmaxtest3() inherits (minmaxtest)","shape":"CREATE TABLE minmaxtest3 () INHERITS (minmaxtest);"}
+{"sql":"create index minmaxtesti on minmaxtest(f1)","shape":"CREATE INDEX minmaxtesti ON minmaxtest (f1);"}
+{"sql":"create index minmaxtest1i on minmaxtest1(f1)","shape":"CREATE INDEX minmaxtest1i ON minmaxtest1 (f1);"}
+{"sql":"create index minmaxtest2i on minmaxtest2(f1 desc)","shape":"CREATE INDEX minmaxtest2i ON minmaxtest2 (f1 DESC);"}
+{"sql":"create index minmaxtest3i on minmaxtest3(f1) where f1 is not null","shape":"CREATE INDEX minmaxtest3i ON minmaxtest3 (f1) WHERE f1 IS NOT NULL;"}
+{"sql":"insert into minmaxtest values(11), (12)","shape":"INSERT INTO minmaxtest VALUES (11), (12);"}
+{"sql":"insert into minmaxtest1 values(13), (14)","shape":"INSERT INTO minmaxtest1 VALUES (13), (14);"}
+{"sql":"insert into minmaxtest2 values(15), (16)","shape":"INSERT INTO minmaxtest2 VALUES (15), (16);"}
+{"sql":"insert into minmaxtest3 values(17), (18)","shape":"INSERT INTO minmaxtest3 VALUES (17), (18);"}
+{"sql":"explain (costs off)\n  select min(f1), max(f1) from minmaxtest","shape":"EXPLAIN (COSTS off) SELECT min(f1), max(f1) FROM minmaxtest;"}
+{"sql":"select min(f1), max(f1) from minmaxtest","shape":"SELECT min(f1), max(f1) FROM minmaxtest;"}
+{"sql":"explain (costs off)\n  select distinct min(f1), max(f1) from minmaxtest","shape":"EXPLAIN (COSTS off) SELECT DISTINCT min(f1), max(f1) FROM minmaxtest;"}
+{"sql":"select distinct min(f1), max(f1) from minmaxtest","shape":"SELECT DISTINCT min(f1), max(f1) FROM minmaxtest;"}
+{"sql":"drop table minmaxtest cascade","shape":"DROP TABLE minmaxtest CASCADE;"}
+{"sql":"set local enable_sort = off","shape":"SET LOCAL enable_sort TO off;"}
+{"sql":"explain (costs off)\n  select f1, (select distinct min(t1.f1) from int4_tbl t1 where t1.f1 = t0.f1)\n  from int4_tbl t0","shape":"EXPLAIN (COSTS off) SELECT f1, (SELECT DISTINCT min(t1.f1) FROM int4_tbl AS t1 WHERE t1.f1 = t0.f1) FROM int4_tbl AS t0;"}
+{"sql":"select f1, (select distinct min(t1.f1) from int4_tbl t1 where t1.f1 = t0.f1)\nfrom int4_tbl t0","shape":"SELECT f1, (SELECT DISTINCT min(t1.f1) FROM int4_tbl AS t1 WHERE t1.f1 = t0.f1) FROM int4_tbl AS t0;"}
+{"sql":"select max(min(unique1)) from tenk1","shape":"SELECT max(min(unique1)) FROM tenk1;"}
+{"sql":"select (select max(min(unique1)) from int8_tbl) from tenk1","shape":"SELECT (SELECT max(min(unique1)) FROM int8_tbl) FROM tenk1;"}
+{"sql":"select avg((select avg(a1.col1 order by (select avg(a2.col2) from tenk1 a3))\n            from tenk1 a1(col1)))\nfrom tenk1 a2(col2)","shape":"SELECT avg((SELECT avg(a1.col1 ORDER BY (SELECT avg(a2.col2) FROM tenk1 AS a3)) FROM tenk1 AS a1(col1))) FROM tenk1 AS a2(col2);"}
+{"sql":"create temp table t1 (a int, b int, c int, d int, primary key (a, b))","shape":"CREATE TEMPORARY TABLE t1 (a int, b int, c int, d int, PRIMARY KEY (a, b));"}
+{"sql":"create temp table t2 (x int, y int, z int, primary key (x, y))","shape":"CREATE TEMPORARY TABLE t2 (x int, y int, z int, PRIMARY KEY (x, y));"}
+{"sql":"create temp table t3 (a int, b int, c int, primary key(a, b) deferrable)","shape":"CREATE TEMPORARY TABLE t3 (a int, b int, c int, PRIMARY KEY (a, b) DEFERRABLE);"}
+{"sql":"explain (costs off) select * from t1 group by a,b,c,d","shape":"EXPLAIN (COSTS off) SELECT * FROM t1 GROUP BY a, b, c, d;"}
+{"sql":"explain (costs off) select a,c from t1 group by a,c,d","shape":"EXPLAIN (COSTS off) SELECT a, c FROM t1 GROUP BY a, c, d;"}
+{"sql":"explain (costs off) select *\nfrom t1 inner join t2 on t1.a = t2.x and t1.b = t2.y\ngroup by t1.a,t1.b,t1.c,t1.d,t2.x,t2.y,t2.z","shape":"EXPLAIN (COSTS off) SELECT * FROM t1 JOIN t2 ON (t1.a = t2.x) AND (t1.b = t2.y) GROUP BY t1.a, t1.b, t1.c, t1.d, t2.x, t2.y, t2.z;"}
+{"sql":"explain (costs off) select t1.*,t2.x,t2.z\nfrom t1 inner join t2 on t1.a = t2.x and t1.b = t2.y\ngroup by t1.a,t1.b,t1.c,t1.d,t2.x,t2.z","shape":"EXPLAIN (COSTS off) SELECT t1.*, t2.x, t2.z FROM t1 JOIN t2 ON (t1.a = t2.x) AND (t1.b = t2.y) GROUP BY t1.a, t1.b, t1.c, t1.d, t2.x, t2.z;"}
+{"sql":"explain (costs off) select * from t3 group by a,b,c","shape":"EXPLAIN (COSTS off) SELECT * FROM t3 GROUP BY a, b, c;"}
+{"sql":"create temp table t1c () inherits (t1)","shape":"CREATE TEMPORARY TABLE t1c () INHERITS (t1);"}
+{"sql":"explain (costs off) select * from only t1 group by a,b,c,d","shape":"EXPLAIN (COSTS off) SELECT * FROM ONLY t1 GROUP BY a, b, c, d;"}
+{"sql":"create temp table p_t1 (\n  a int,\n  b int,\n  c int,\n  d int,\n  primary key(a,b)\n) partition by list(a)","shape":"CREATE TEMPORARY TABLE p_t1 (a int, b int, c int, d int, PRIMARY KEY (a, b)) PARTITION BY LIST (a);"}
+{"sql":"create temp table p_t1_1 partition of p_t1 for values in(1)","shape":"CREATE TEMPORARY TABLE p_t1_1 PARTITION OF p_t1 FOR VALUES IN (1);"}
+{"sql":"create temp table p_t1_2 partition of p_t1 for values in(2)","shape":"CREATE TEMPORARY TABLE p_t1_2 PARTITION OF p_t1 FOR VALUES IN (2);"}
+{"sql":"explain (costs off) select * from p_t1 group by a,b,c,d","shape":"EXPLAIN (COSTS off) SELECT * FROM p_t1 GROUP BY a, b, c, d;"}
+{"sql":"drop table t1 cascade","shape":"DROP TABLE t1 CASCADE;"}
+{"sql":"drop table t2","shape":"DROP TABLE t2;"}
+{"sql":"drop table t3","shape":"DROP TABLE t3;"}
+{"sql":"drop table p_t1","shape":"DROP TABLE p_t1;"}
+{"sql":"create temp table t1(f1 int, f2 int)","shape":"CREATE TEMPORARY TABLE t1 (f1 int, f2 int);"}
+{"sql":"create temp table t2(f1 bigint, f2 oid)","shape":"CREATE TEMPORARY TABLE t2 (f1 bigint, f2 oid);"}
+{"sql":"select f1 from t1 left join t2 using (f1) group by f1","shape":"SELECT f1 FROM t1 LEFT JOIN t2 USING (f1) GROUP BY f1;"}
+{"sql":"select f1 from t1 left join t2 using (f1) group by t1.f1","shape":"SELECT f1 FROM t1 LEFT JOIN t2 USING (f1) GROUP BY t1.f1;"}
+{"sql":"select t1.f1 from t1 left join t2 using (f1) group by t1.f1","shape":"SELECT t1.f1 FROM t1 LEFT JOIN t2 USING (f1) GROUP BY t1.f1;"}
+{"sql":"select t1.f1 from t1 left join t2 using (f1) group by f1","shape":"SELECT t1.f1 FROM t1 LEFT JOIN t2 USING (f1) GROUP BY f1;"}
+{"sql":"select f1, count(*) from\nt1 x(x0,x1) left join (t1 left join t2 using(f1)) on (x0 = 0)\ngroup by f1","shape":"SELECT f1, count(*) FROM t1 AS x(x0, x1) LEFT JOIN (t1 LEFT JOIN t2 USING (f1)) ON (x0 = 0) GROUP BY f1;"}
+{"sql":"select f2, count(*) from\nt1 x(x0,x1) left join (t1 left join t2 using(f2)) on (x0 = 0)\ngroup by f2","shape":"SELECT f2, count(*) FROM t1 AS x(x0, x1) LEFT JOIN (t1 LEFT JOIN t2 USING (f2)) ON (x0 = 0) GROUP BY f2;"}
+{"sql":"drop table t1, t2","shape":"DROP TABLE t1, t2;"}
+{"sql":"explain (costs off)\nselect sum(two order by two),max(four order by four), min(four order by four)\nfrom tenk1","shape":"EXPLAIN (COSTS off) SELECT sum(two ORDER BY two), max(four ORDER BY four), min(four ORDER BY four) FROM tenk1;"}
+{"sql":"explain (costs off)\nselect\n  sum(two order by two), max(four order by four),\n  min(four order by four), max(two order by two)\nfrom tenk1","shape":"EXPLAIN (COSTS off) SELECT sum(two ORDER BY two), max(four ORDER BY four), min(four ORDER BY four), max(two ORDER BY two) FROM tenk1;"}
+{"sql":"explain (costs off)\nselect\n  max(four order by four), sum(two order by two),\n  min(four order by four), max(two order by two)\nfrom tenk1","shape":"EXPLAIN (COSTS off) SELECT max(four ORDER BY four), sum(two ORDER BY two), min(four ORDER BY four), max(two ORDER BY two) FROM tenk1;"}
+{"sql":"explain (costs off)\nselect\n  max(four order by four), sum(two order by two),\n  min(four order by four), max(two order by two),\n  sum(ten order by ten), min(ten order by ten), max(ten order by ten)\nfrom tenk1","shape":"EXPLAIN (COSTS off) SELECT max(four ORDER BY four), sum(two ORDER BY two), min(four ORDER BY four), max(two ORDER BY two), sum(ten ORDER BY ten), min(ten ORDER BY ten), max(ten ORDER BY ten) FROM tenk1;"}
+{"sql":"explain (costs off)\nselect\n  sum(unique1 order by ten, two), sum(unique1 order by four),\n  sum(unique1 order by two, four)\nfrom tenk1\ngroup by ten","shape":"EXPLAIN (COSTS off) SELECT sum(unique1 ORDER BY ten, two), sum(unique1 ORDER BY four), sum(unique1 ORDER BY two, four) FROM tenk1 GROUP BY ten;"}
+{"sql":"explain (costs off)\nselect\n  sum(unique1 order by two), sum(unique1 order by four),\n  sum(unique1 order by four, two), sum(unique1 order by two, random()),\n  sum(unique1 order by two, random(), random() + 1)\nfrom tenk1\ngroup by ten","shape":"EXPLAIN (COSTS off) SELECT sum(unique1 ORDER BY two), sum(unique1 ORDER BY four), sum(unique1 ORDER BY four, two), sum(unique1 ORDER BY two, random()), sum(unique1 ORDER BY two, random(), random() + 1) FROM tenk1 GROUP BY ten;"}
+{"sql":"select array_agg(distinct val)\nfrom (select null as val from generate_series(1, 2))","shape":"SELECT array_agg(DISTINCT val) FROM (SELECT NULL AS val FROM generate_series(1, 2));"}
+{"sql":"set enable_presorted_aggregate to off","shape":"SET enable_presorted_aggregate TO off;"}
+{"sql":"explain (costs off)\nselect sum(two order by two) from tenk1","shape":"EXPLAIN (COSTS off) SELECT sum(two ORDER BY two) FROM tenk1;"}
+{"sql":"reset enable_presorted_aggregate","shape":"RESET enable_presorted_aggregate;"}
+{"sql":"explain (costs off)\nselect sum(two order by two) filter (where two > 1) from tenk1","shape":"EXPLAIN (COSTS off) SELECT sum(two ORDER BY two) FILTER (WHERE two > 1) FROM tenk1;"}
+{"sql":"explain (costs off)\nselect string_agg(distinct f1, ',') filter (where length(f1) > 1)\nfrom varchar_tbl","shape":"EXPLAIN (COSTS off) SELECT string_agg(DISTINCT f1, ',') FILTER (WHERE length(f1) > 1) FROM varchar_tbl;"}
+{"sql":"explain (costs off)\nselect string_agg(distinct f1::varchar(2), ',') filter (where length(f1) > 1)\nfrom varchar_tbl","shape":"EXPLAIN (COSTS off) SELECT string_agg(DISTINCT f1::varchar(2), ',') FILTER (WHERE length(f1) > 1) FROM varchar_tbl;"}
+{"sql":"select array_agg(a order by b)\n  from (values (1,4),(2,3),(3,1),(4,2)) v(a,b)","shape":"SELECT array_agg(a ORDER BY b) FROM (VALUES (1, 4), (2, 3), (3, 1), (4, 2)) AS v(a, b);"}
+{"sql":"select array_agg(a order by a)\n  from (values (1,4),(2,3),(3,1),(4,2)) v(a,b)","shape":"SELECT array_agg(a ORDER BY a) FROM (VALUES (1, 4), (2, 3), (3, 1), (4, 2)) AS v(a, b);"}
+{"sql":"select array_agg(a order by a desc)\n  from (values (1,4),(2,3),(3,1),(4,2)) v(a,b)","shape":"SELECT array_agg(a ORDER BY a DESC) FROM (VALUES (1, 4), (2, 3), (3, 1), (4, 2)) AS v(a, b);"}
+{"sql":"select array_agg(b order by a desc)\n  from (values (1,4),(2,3),(3,1),(4,2)) v(a,b)","shape":"SELECT array_agg(b ORDER BY a DESC) FROM (VALUES (1, 4), (2, 3), (3, 1), (4, 2)) AS v(a, b);"}
+{"sql":"select array_agg(distinct a)\n  from (values (1),(2),(1),(3),(null),(2)) v(a)","shape":"SELECT array_agg(DISTINCT a) FROM (VALUES (1), (2), (1), (3), (NULL), (2)) AS v(a);"}
+{"sql":"select array_agg(distinct a order by a)\n  from (values (1),(2),(1),(3),(null),(2)) v(a)","shape":"SELECT array_agg(DISTINCT a ORDER BY a) FROM (VALUES (1), (2), (1), (3), (NULL), (2)) AS v(a);"}
+{"sql":"select array_agg(distinct a order by a desc)\n  from (values (1),(2),(1),(3),(null),(2)) v(a)","shape":"SELECT array_agg(DISTINCT a ORDER BY a DESC) FROM (VALUES (1), (2), (1), (3), (NULL), (2)) AS v(a);"}
+{"sql":"select array_agg(distinct a order by a desc nulls last)\n  from (values (1),(2),(1),(3),(null),(2)) v(a)","shape":"SELECT array_agg(DISTINCT a ORDER BY a DESC NULLS LAST) FROM (VALUES (1), (2), (1), (3), (NULL), (2)) AS v(a);"}
+{"sql":"select aggfstr(a,b,c)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c)","shape":"SELECT aggfstr(a, b, c) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c);"}
+{"sql":"select aggfns(a,b,c)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c)","shape":"SELECT aggfns(a, b, c) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c);"}
+{"sql":"select aggfstr(distinct a,b,c)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,3) i","shape":"SELECT aggfstr(DISTINCT a, b, c) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 3) AS i;"}
+{"sql":"select aggfns(distinct a,b,c)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,3) i","shape":"SELECT aggfns(DISTINCT a, b, c) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 3) AS i;"}
+{"sql":"select aggfstr(distinct a,b,c order by b)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,3) i","shape":"SELECT aggfstr(DISTINCT a, b, c ORDER BY b) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 3) AS i;"}
+{"sql":"select aggfns(distinct a,b,c order by b)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,3) i","shape":"SELECT aggfns(DISTINCT a, b, c ORDER BY b) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 3) AS i;"}
+{"sql":"select aggfns(distinct a,a,c order by c using ~<~,a)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, a, c ORDER BY c USING ~<~, a) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select aggfns(distinct a,a,c order by c using ~<~)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, a, c ORDER BY c USING ~<~) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select aggfns(distinct a,a,c order by a)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, a, c ORDER BY a) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select aggfns(distinct a,b,c order by a,c using ~<~,b)\n  from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n       generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, b, c ORDER BY a, c USING ~<~, b) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select\n    string_agg(distinct 'a', ','),\n    sum((\n        select sum(1)\n        from (values(1)) b(id)\n        where a.id = b.id\n)) from unnest(array[1]) a(id)","shape":"SELECT string_agg(DISTINCT 'a', ','), sum((SELECT sum(1) FROM (VALUES (1)) AS b(id) WHERE a.id = b.id)) FROM unnest(ARRAY[1]) AS a(id);"}
+{"sql":"create view agg_view1 as\n  select aggfns(a,b,c)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c)","shape":"CREATE VIEW agg_view1 AS SELECT aggfns(a, b, c) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c);"}
+{"sql":"select * from agg_view1","shape":"SELECT * FROM agg_view1;"}
+{"sql":"select pg_get_viewdef('agg_view1'::regclass)","shape":"SELECT pg_get_viewdef('agg_view1'::regclass);"}
+{"sql":"create or replace view agg_view1 as\n  select aggfns(distinct a,b,c)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n         generate_series(1,3) i","shape":"CREATE OR REPLACE VIEW agg_view1 AS SELECT aggfns(DISTINCT a, b, c) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 3) AS i;"}
+{"sql":"create or replace view agg_view1 as\n  select aggfns(distinct a,b,c order by b)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n         generate_series(1,3) i","shape":"CREATE OR REPLACE VIEW agg_view1 AS SELECT aggfns(DISTINCT a, b, c ORDER BY b) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 3) AS i;"}
+{"sql":"create or replace view agg_view1 as\n  select aggfns(a,b,c order by b+1)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c)","shape":"CREATE OR REPLACE VIEW agg_view1 AS SELECT aggfns(a, b, c ORDER BY b + 1) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c);"}
+{"sql":"create or replace view agg_view1 as\n  select aggfns(a,a,c order by b)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c)","shape":"CREATE OR REPLACE VIEW agg_view1 AS SELECT aggfns(a, a, c ORDER BY b) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c);"}
+{"sql":"create or replace view agg_view1 as\n  select aggfns(a,b,c order by c using ~<~)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c)","shape":"CREATE OR REPLACE VIEW agg_view1 AS SELECT aggfns(a, b, c ORDER BY c USING ~<~) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c);"}
+{"sql":"create or replace view agg_view1 as\n  select aggfns(distinct a,b,c order by a,c using ~<~,b)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n         generate_series(1,2) i","shape":"CREATE OR REPLACE VIEW agg_view1 AS SELECT aggfns(DISTINCT a, b, c ORDER BY a, c USING ~<~, b) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"drop view agg_view1","shape":"DROP VIEW agg_view1;"}
+{"sql":"select aggfns(distinct a,b,c order by i)\n  from (values (1,1,'foo')) v(a,b,c), generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, b, c ORDER BY i) FROM (VALUES (1, 1, 'foo')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select aggfns(distinct a,b,c order by a,b+1)\n  from (values (1,1,'foo')) v(a,b,c), generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, b, c ORDER BY a, b + 1) FROM (VALUES (1, 1, 'foo')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select aggfns(distinct a,b,c order by a,b,i,c)\n  from (values (1,1,'foo')) v(a,b,c), generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, b, c ORDER BY a, b, i, c) FROM (VALUES (1, 1, 'foo')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select aggfns(distinct a,a,c order by a,b)\n  from (values (1,1,'foo')) v(a,b,c), generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, a, c ORDER BY a, b) FROM (VALUES (1, 1, 'foo')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select string_agg(a,',') from (values('aaaa'),('bbbb'),('cccc')) g(a)","shape":"SELECT string_agg(a, ',') FROM (VALUES ('aaaa'), ('bbbb'), ('cccc')) AS g(a);"}
+{"sql":"select string_agg(a,',') from (values('aaaa'),(null),('bbbb'),('cccc')) g(a)","shape":"SELECT string_agg(a, ',') FROM (VALUES ('aaaa'), (NULL), ('bbbb'), ('cccc')) AS g(a);"}
+{"sql":"select string_agg(a,'AB') from (values(null),(null),('bbbb'),('cccc')) g(a)","shape":"SELECT string_agg(a, 'AB') FROM (VALUES (NULL), (NULL), ('bbbb'), ('cccc')) AS g(a);"}
+{"sql":"select string_agg(a,',') from (values(null),(null)) g(a)","shape":"SELECT string_agg(a, ',') FROM (VALUES (NULL), (NULL)) AS g(a);"}
+{"sql":"select string_agg(distinct f1, ',' order by f1) from varchar_tbl","shape":"SELECT string_agg(DISTINCT f1, ',' ORDER BY f1) FROM varchar_tbl;"}
+{"sql":"select string_agg(distinct f1::text, ',' order by f1) from varchar_tbl","shape":"SELECT string_agg(DISTINCT f1::text, ',' ORDER BY f1) FROM varchar_tbl;"}
+{"sql":"select string_agg(distinct f1, ',' order by f1::text) from varchar_tbl","shape":"SELECT string_agg(DISTINCT f1, ',' ORDER BY f1::text) FROM varchar_tbl;"}
+{"sql":"select string_agg(distinct f1::text, ',' order by f1::text) from varchar_tbl","shape":"SELECT string_agg(DISTINCT f1::text, ',' ORDER BY f1::text) FROM varchar_tbl;"}
+{"sql":"create table bytea_test_table(v bytea)","shape":"CREATE TABLE bytea_test_table (v bytea);"}
+{"sql":"select string_agg(v, '') from bytea_test_table","shape":"SELECT string_agg(v, '') FROM bytea_test_table;"}
+{"sql":"insert into bytea_test_table values(decode('ff','hex'))","shape":"INSERT INTO bytea_test_table VALUES (decode('ff', 'hex'));"}
+{"sql":"insert into bytea_test_table values(decode('aa','hex'))","shape":"INSERT INTO bytea_test_table VALUES (decode('aa', 'hex'));"}
+{"sql":"select string_agg(v, NULL) from bytea_test_table","shape":"SELECT string_agg(v, NULL) FROM bytea_test_table;"}
+{"sql":"select string_agg(v, decode('ee', 'hex')) from bytea_test_table","shape":"SELECT string_agg(v, decode('ee', 'hex')) FROM bytea_test_table;"}
+{"sql":"drop table bytea_test_table","shape":"DROP TABLE bytea_test_table;"}
+{"sql":"create table pagg_test (x int, y int) with (autovacuum_enabled = off)","shape":"CREATE TABLE pagg_test (x int, y int) WITH (autovacuum_enabled = off);"}
+{"sql":"insert into pagg_test\nselect (case x % 4 when 1 then null else x end), x % 10\nfrom generate_series(1,5000) x","shape":"INSERT INTO pagg_test SELECT (CASE x % 4 WHEN 1 THEN NULL ELSE x END), x % 10 FROM generate_series(1, 5000) AS x;"}
+{"sql":"set parallel_setup_cost TO 0","shape":"SET parallel_setup_cost TO 0;"}
+{"sql":"set parallel_tuple_cost TO 0","shape":"SET parallel_tuple_cost TO 0;"}
+{"sql":"set parallel_leader_participation TO 0","shape":"SET parallel_leader_participation TO 0;"}
+{"sql":"set min_parallel_table_scan_size = 0","shape":"SET min_parallel_table_scan_size TO 0;"}
+{"sql":"set bytea_output = 'escape'","shape":"SET bytea_output TO 'escape';"}
+{"sql":"set max_parallel_workers_per_gather = 2","shape":"SET max_parallel_workers_per_gather TO 2;"}
+{"sql":"create view v_pagg_test AS\nselect\n\ty,\n\tmin(t) AS tmin,max(t) AS tmax,count(distinct t) AS tndistinct,\n\tmin(b) AS bmin,max(b) AS bmax,count(distinct b) AS bndistinct,\n\tmin(a) AS amin,max(a) AS amax,count(distinct a) AS andistinct,\n\tmin(aa) AS aamin,max(aa) AS aamax,count(distinct aa) AS aandistinct\nfrom (\n\tselect\n\t\ty,\n\t\tunnest(regexp_split_to_array(a1.t, ','))::int AS t,\n\t\tunnest(regexp_split_to_array(a1.b::text, ',')) AS b,\n\t\tunnest(a1.a) AS a,\n\t\tunnest(a1.aa) AS aa\n\tfrom (\n\t\tselect\n\t\t\ty,\n\t\t\tstring_agg(x::text, ',') AS t,\n\t\t\tstring_agg(x::text::bytea, ',') AS b,\n\t\t\tarray_agg(x) AS a,\n\t\t\tarray_agg(ARRAY[x]) AS aa\n\t\tfrom pagg_test\n\t\tgroup by y\n\t) a1\n) a2\ngroup by y","shape":"CREATE VIEW v_pagg_test AS SELECT y, min(t) AS tmin, max(t) AS tmax, count(DISTINCT t) AS tndistinct, min(b) AS bmin, max(b) AS bmax, count(DISTINCT b) AS bndistinct, min(a) AS amin, max(a) AS amax, count(DISTINCT a) AS andistinct, min(aa) AS aamin, max(aa) AS aamax, count(DISTINCT aa) AS aandistinct FROM (SELECT y, unnest(regexp_split_to_array(a1.t, ','))::int AS t, unnest(regexp_split_to_array(a1.b::text, ',')) AS b, unnest(a1.a) AS a, unnest(a1.aa) AS aa FROM (SELECT y, string_agg(x::text, ',') AS t, string_agg(x::text::bytea, ',') AS b, array_agg(x) AS a, array_agg(ARRAY[x]) AS aa FROM pagg_test GROUP BY y) AS a1) AS a2 GROUP BY y;"}
+{"sql":"select * from v_pagg_test order by y","shape":"SELECT * FROM v_pagg_test ORDER BY y;"}
+{"sql":"explain (costs off) select * from v_pagg_test order by y","shape":"EXPLAIN (COSTS off) SELECT * FROM v_pagg_test ORDER BY y;"}
+{"sql":"set max_parallel_workers_per_gather = 0","shape":"SET max_parallel_workers_per_gather TO 0;"}
+{"sql":"explain (costs off)\nselect array_dims(array_agg(s)) from (select * from pagg_test) s","shape":"EXPLAIN (COSTS off) SELECT array_dims(array_agg(s)) FROM (SELECT * FROM pagg_test) AS s;"}
+{"sql":"select array_dims(array_agg(s)) from (select * from pagg_test) s","shape":"SELECT array_dims(array_agg(s)) FROM (SELECT * FROM pagg_test) AS s;"}
+{"sql":"reset max_parallel_workers_per_gather","shape":"RESET max_parallel_workers_per_gather;"}
+{"sql":"reset bytea_output","shape":"RESET bytea_output;"}
+{"sql":"reset min_parallel_table_scan_size","shape":"RESET min_parallel_table_scan_size;"}
+{"sql":"reset parallel_leader_participation","shape":"RESET parallel_leader_participation;"}
+{"sql":"reset parallel_tuple_cost","shape":"RESET parallel_tuple_cost;"}
+{"sql":"reset parallel_setup_cost","shape":"RESET parallel_setup_cost;"}
+{"sql":"drop view v_pagg_test","shape":"DROP VIEW v_pagg_test;"}
+{"sql":"drop table pagg_test","shape":"DROP TABLE pagg_test;"}
+{"sql":"select min(unique1) filter (where unique1 > 100) from tenk1","shape":"SELECT min(unique1) FILTER (WHERE unique1 > 100) FROM tenk1;"}
+{"sql":"select sum(1/ten) filter (where ten > 0) from tenk1","shape":"SELECT sum(1 / ten) FILTER (WHERE ten > 0) FROM tenk1;"}
+{"sql":"select ten, sum(distinct four) filter (where four::text ~ '123') from onek a\ngroup by ten","shape":"SELECT ten, sum(DISTINCT four) FILTER (WHERE four::text ~ '123') FROM onek AS a GROUP BY ten;"}
+{"sql":"select ten, sum(distinct four) filter (where four > 10) from onek a\ngroup by ten\nhaving exists (select 1 from onek b where sum(distinct a.four) = b.four)","shape":"SELECT ten, sum(DISTINCT four) FILTER (WHERE four > 10) FROM onek AS a GROUP BY ten HAVING EXISTS (SELECT 1 FROM onek AS b WHERE sum(DISTINCT a.four) = b.four);"}
+{"sql":"select max(foo COLLATE \"C\") filter (where (bar collate \"POSIX\") > '0')\nfrom (values ('a', 'b')) AS v(foo,bar)","shape":"SELECT max(foo COLLATE \"C\") FILTER (WHERE (bar COLLATE \"POSIX\") > '0') FROM (VALUES ('a', 'b')) AS v(foo, bar);"}
+{"sql":"select any_value(v) filter (where v > 2) from (values (1), (2), (3)) as v (v)","shape":"SELECT any_value(v) FILTER (WHERE v > 2) FROM (VALUES (1), (2), (3)) AS v(v);"}
+{"sql":"select (select count(*)\n        from (values (1)) t0(inner_c))\nfrom (values (2),(3)) t1(outer_c)","shape":"SELECT (SELECT count(*) FROM (VALUES (1)) AS t0(inner_c)) FROM (VALUES (2), (3)) AS t1(outer_c);"}
+{"sql":"select (select count(*) filter (where outer_c <> 0)\n        from (values (1)) t0(inner_c))\nfrom (values (2),(3)) t1(outer_c)","shape":"SELECT (SELECT count(*) FILTER (WHERE outer_c <> 0) FROM (VALUES (1)) AS t0(inner_c)) FROM (VALUES (2), (3)) AS t1(outer_c);"}
+{"sql":"select (select count(inner_c) filter (where outer_c <> 0)\n        from (values (1)) t0(inner_c))\nfrom (values (2),(3)) t1(outer_c)","shape":"SELECT (SELECT count(inner_c) FILTER (WHERE outer_c <> 0) FROM (VALUES (1)) AS t0(inner_c)) FROM (VALUES (2), (3)) AS t1(outer_c);"}
+{"sql":"select\n  (select max((select i.unique2 from tenk1 i where i.unique1 = o.unique1))\n     filter (where o.unique1 < 10))\nfrom tenk1 o","shape":"SELECT (SELECT max((SELECT i.unique2 FROM tenk1 AS i WHERE i.unique1 = o.unique1)) FILTER (WHERE o.unique1 < 10)) FROM tenk1 AS o;"}
+{"sql":"select sum(unique1) FILTER (WHERE\n  unique1 IN (SELECT unique1 FROM onek where unique1 < 100)) FROM tenk1","shape":"SELECT sum(unique1) FILTER (WHERE unique1 IN (SELECT unique1 FROM onek WHERE unique1 < 100)) FROM tenk1;"}
+{"sql":"select aggfns(distinct a,b,c order by a,c using ~<~,b) filter (where a > 1)\n    from (values (1,3,'foo'),(0,null,null),(2,2,'bar'),(3,1,'baz')) v(a,b,c),\n    generate_series(1,2) i","shape":"SELECT aggfns(DISTINCT a, b, c ORDER BY a, c USING ~<~, b) FILTER (WHERE a > 1) FROM (VALUES (1, 3, 'foo'), (0, NULL, NULL), (2, 2, 'bar'), (3, 1, 'baz')) AS v(a, b, c), generate_series(1, 2) AS i;"}
+{"sql":"select max(0) filter (where b1) from bool_test","shape":"SELECT max(0) FILTER (WHERE b1) FROM bool_test;"}
+{"sql":"select (select max(0) filter (where b1)) from bool_test","shape":"SELECT (SELECT max(0) FILTER (WHERE b1)) FROM bool_test;"}
+{"sql":"select max(unique1) filter (where sum(ten) > 0) from tenk1","shape":"SELECT max(unique1) FILTER (WHERE sum(ten) > 0) FROM tenk1;"}
+{"sql":"select (select max(unique1) filter (where sum(ten) > 0) from int8_tbl) from tenk1","shape":"SELECT (SELECT max(unique1) FILTER (WHERE sum(ten) > 0) FROM int8_tbl) FROM tenk1;"}
+{"sql":"select max(unique1) filter (where bool_or(ten > 0)) from tenk1","shape":"SELECT max(unique1) FILTER (WHERE bool_or(ten > 0)) FROM tenk1;"}
+{"sql":"select (select max(unique1) filter (where bool_or(ten > 0)) from int8_tbl) from tenk1","shape":"SELECT (SELECT max(unique1) FILTER (WHERE bool_or(ten > 0)) FROM int8_tbl) FROM tenk1;"}
+{"sql":"select p, percentile_cont(p) within group (order by x::float8)\nfrom generate_series(1,5) x,\n     (values (0::float8),(0.1),(0.25),(0.4),(0.5),(0.6),(0.75),(0.9),(1)) v(p)\ngroup by p order by p","shape":"SELECT p, percentile_cont(p) WITHIN GROUP (ORDER BY x::float8) FROM generate_series(1, 5) AS x, (VALUES (0::float8), (0.1), (0.25), (0.4), (0.5), (0.6), (0.75), (0.9), (1)) AS v(p) GROUP BY p ORDER BY p;"}
+{"sql":"select p, percentile_cont(p order by p) within group (order by x)  -- error\nfrom generate_series(1,5) x,\n     (values (0::float8),(0.1),(0.25),(0.4),(0.5),(0.6),(0.75),(0.9),(1)) v(p)\ngroup by p order by p","reject":true}
+{"sql":"select p, sum() within group (order by x::float8)  -- error\nfrom generate_series(1,5) x,\n     (values (0::float8),(0.1),(0.25),(0.4),(0.5),(0.6),(0.75),(0.9),(1)) v(p)\ngroup by p order by p","shape":"SELECT p, sum() WITHIN GROUP (ORDER BY x::float8) FROM generate_series(1, 5) AS x, (VALUES (0::float8), (0.1), (0.25), (0.4), (0.5), (0.6), (0.75), (0.9), (1)) AS v(p) GROUP BY p ORDER BY p;"}
+{"sql":"select p, percentile_cont(p,p)  -- error\nfrom generate_series(1,5) x,\n     (values (0::float8),(0.1),(0.25),(0.4),(0.5),(0.6),(0.75),(0.9),(1)) v(p)\ngroup by p order by p","shape":"SELECT p, percentile_cont(p, p) FROM generate_series(1, 5) AS x, (VALUES (0::float8), (0.1), (0.25), (0.4), (0.5), (0.6), (0.75), (0.9), (1)) AS v(p) GROUP BY p ORDER BY p;"}
+{"sql":"select percentile_cont(0.5) within group (order by b) from aggtest","shape":"SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY b) FROM aggtest;"}
+{"sql":"select percentile_cont(0.5) within group (order by b), sum(b) from aggtest","shape":"SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY b), sum(b) FROM aggtest;"}
+{"sql":"select percentile_cont(0.5) within group (order by thousand) from tenk1","shape":"SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY thousand) FROM tenk1;"}
+{"sql":"select percentile_disc(0.5) within group (order by thousand) from tenk1","shape":"SELECT percentile_disc(0.5) WITHIN GROUP (ORDER BY thousand) FROM tenk1;"}
+{"sql":"select rank(3) within group (order by x)\nfrom (values (1),(1),(2),(2),(3),(3),(4)) v(x)","shape":"SELECT rank(3) WITHIN GROUP (ORDER BY x) FROM (VALUES (1), (1), (2), (2), (3), (3), (4)) AS v(x);"}
+{"sql":"select cume_dist(3) within group (order by x)\nfrom (values (1),(1),(2),(2),(3),(3),(4)) v(x)","shape":"SELECT cume_dist(3) WITHIN GROUP (ORDER BY x) FROM (VALUES (1), (1), (2), (2), (3), (3), (4)) AS v(x);"}
+{"sql":"select percent_rank(3) within group (order by x)\nfrom (values (1),(1),(2),(2),(3),(3),(4),(5)) v(x)","shape":"SELECT percent_rank(3) WITHIN GROUP (ORDER BY x) FROM (VALUES (1), (1), (2), (2), (3), (3), (4), (5)) AS v(x);"}
+{"sql":"select dense_rank(3) within group (order by x)\nfrom (values (1),(1),(2),(2),(3),(3),(4)) v(x)","shape":"SELECT dense_rank(3) WITHIN GROUP (ORDER BY x) FROM (VALUES (1), (1), (2), (2), (3), (3), (4)) AS v(x);"}
+{"sql":"select percentile_disc(array[0,0.1,0.25,0.5,0.75,0.9,1]) within group (order by thousand)\nfrom tenk1","shape":"SELECT percentile_disc(ARRAY[0, 0.1, 0.25, 0.5, 0.75, 0.9, 1]) WITHIN GROUP (ORDER BY thousand) FROM tenk1;"}
+{"sql":"select percentile_cont(array[0,0.25,0.5,0.75,1]) within group (order by thousand)\nfrom tenk1","shape":"SELECT percentile_cont(ARRAY[0, 0.25, 0.5, 0.75, 1]) WITHIN GROUP (ORDER BY thousand) FROM tenk1;"}
+{"sql":"select percentile_disc(array[[null,1,0.5],[0.75,0.25,null]]) within group (order by thousand)\nfrom tenk1","shape":"SELECT percentile_disc(ARRAY[[NULL, 1, 0.5], [0.75, 0.25, NULL]]) WITHIN GROUP (ORDER BY thousand) FROM tenk1;"}
+{"sql":"select percentile_cont(array[0,1,0.25,0.75,0.5,1,0.3,0.32,0.35,0.38,0.4]) within group (order by x)\nfrom generate_series(1,6) x","shape":"SELECT percentile_cont(ARRAY[0, 1, 0.25, 0.75, 0.5, 1, 0.3, 0.32, 0.35, 0.38, 0.4]) WITHIN GROUP (ORDER BY x) FROM generate_series(1, 6) AS x;"}
+{"sql":"select ten, mode() within group (order by string4) from tenk1 group by ten","shape":"SELECT ten, mode() WITHIN GROUP (ORDER BY string4) FROM tenk1 GROUP BY ten;"}
+{"sql":"select percentile_disc(array[0.25,0.5,0.75]) within group (order by x)\nfrom unnest('{fred,jim,fred,jack,jill,fred,jill,jim,jim,sheila,jim,sheila}'::text[]) u(x)","shape":"SELECT percentile_disc(ARRAY[0.25, 0.5, 0.75]) WITHIN GROUP (ORDER BY x) FROM unnest('{fred,jim,fred,jack,jill,fred,jill,jim,jim,sheila,jim,sheila}'::text[]) AS u(x);"}
+{"sql":"select pg_collation_for(percentile_disc(1) within group (order by x collate \"POSIX\"))\n  from (values ('fred'),('jim')) v(x)","shape":"SELECT pg_collation_for(percentile_disc(1) WITHIN GROUP (ORDER BY x COLLATE \"POSIX\")) FROM (VALUES ('fred'), ('jim')) AS v(x);"}
+{"sql":"select test_rank(3) within group (order by x)\nfrom (values (1),(1),(2),(2),(3),(3),(4)) v(x)","shape":"SELECT test_rank(3) WITHIN GROUP (ORDER BY x) FROM (VALUES (1), (1), (2), (2), (3), (3), (4)) AS v(x);"}
+{"sql":"select test_percentile_disc(0.5) within group (order by thousand) from tenk1","shape":"SELECT test_percentile_disc(0.5) WITHIN GROUP (ORDER BY thousand) FROM tenk1;"}
+{"sql":"select rank(x) within group (order by x) from generate_series(1,5) x","shape":"SELECT rank(x) WITHIN GROUP (ORDER BY x) FROM generate_series(1, 5) AS x;"}
+{"sql":"select array(select percentile_disc(a) within group (order by x)\n               from (values (0.3),(0.7)) v(a) group by a)\n  from generate_series(1,5) g(x)","shape":"SELECT ARRAY(SELECT percentile_disc(a) WITHIN GROUP (ORDER BY x) FROM (VALUES (0.3), (0.7)) AS v(a) GROUP BY a) FROM generate_series(1, 5) AS g(x);"}
+{"sql":"select rank(sum(x)) within group (order by x) from generate_series(1,5) x","shape":"SELECT rank(sum(x)) WITHIN GROUP (ORDER BY x) FROM generate_series(1, 5) AS x;"}
+{"sql":"select rank(3) within group (order by x) from (values ('fred'),('jim')) v(x)","shape":"SELECT rank(3) WITHIN GROUP (ORDER BY x) FROM (VALUES ('fred'), ('jim')) AS v(x);"}
+{"sql":"select rank(3) within group (order by stringu1,stringu2) from tenk1","shape":"SELECT rank(3) WITHIN GROUP (ORDER BY stringu1, stringu2) FROM tenk1;"}
+{"sql":"select rank('fred') within group (order by x) from generate_series(1,5) x","shape":"SELECT rank('fred') WITHIN GROUP (ORDER BY x) FROM generate_series(1, 5) AS x;"}
+{"sql":"select rank('adam'::text collate \"C\") within group (order by x collate \"POSIX\")\n  from (values ('fred'),('jim')) v(x)","shape":"SELECT rank('adam'::text COLLATE \"C\") WITHIN GROUP (ORDER BY x COLLATE \"POSIX\") FROM (VALUES ('fred'), ('jim')) AS v(x);"}
+{"sql":"select rank('adam'::varchar) within group (order by x) from (values ('fred'),('jim')) v(x)","shape":"SELECT rank('adam'::varchar) WITHIN GROUP (ORDER BY x) FROM (VALUES ('fred'), ('jim')) AS v(x);"}
+{"sql":"select rank('3') within group (order by x) from generate_series(1,5) x","shape":"SELECT rank('3') WITHIN GROUP (ORDER BY x) FROM generate_series(1, 5) AS x;"}
+{"sql":"select percent_rank(0) within group (order by x) from generate_series(1,0) x","shape":"SELECT percent_rank(0) WITHIN GROUP (ORDER BY x) FROM generate_series(1, 0) AS x;"}
+{"sql":"create view aggordview1 as\nselect ten,\n       percentile_disc(0.5) within group (order by thousand) as p50,\n       percentile_disc(0.5) within group (order by thousand) filter (where hundred=1) as px,\n       rank(5,'AZZZZ',50) within group (order by hundred, string4 desc, hundred)\n  from tenk1\n group by ten order by ten","shape":"CREATE VIEW aggordview1 AS SELECT ten, percentile_disc(0.5) WITHIN GROUP (ORDER BY thousand) AS p50, percentile_disc(0.5) WITHIN GROUP (ORDER BY thousand) FILTER (WHERE hundred = 1) AS px, rank(5, 'AZZZZ', 50) WITHIN GROUP (ORDER BY hundred, string4 DESC, hundred) FROM tenk1 GROUP BY ten ORDER BY ten;"}
+{"sql":"select pg_get_viewdef('aggordview1')","shape":"SELECT pg_get_viewdef('aggordview1');"}
+{"sql":"select * from aggordview1 order by ten","shape":"SELECT * FROM aggordview1 ORDER BY ten;"}
+{"sql":"drop view aggordview1","shape":"DROP VIEW aggordview1;"}
+{"sql":"select least_agg(q1,q2) from int8_tbl","shape":"SELECT least_agg(q1, q2) FROM int8_tbl;"}
+{"sql":"select least_agg(variadic array[q1,q2]) from int8_tbl","shape":"SELECT least_agg(VARIADIC ARRAY[q1, q2]) FROM int8_tbl;"}
+{"sql":"select cleast_agg(q1,q2) from int8_tbl","shape":"SELECT cleast_agg(q1, q2) FROM int8_tbl;"}
+{"sql":"select cleast_agg(4.5,f1) from int4_tbl","shape":"SELECT cleast_agg(4.5, f1) FROM int4_tbl;"}
+{"sql":"select cleast_agg(variadic array[4.5,f1]) from int4_tbl","shape":"SELECT cleast_agg(VARIADIC ARRAY[4.5, f1]) FROM int4_tbl;"}
+{"sql":"select pg_typeof(cleast_agg(variadic array[4.5,f1])) from int4_tbl","shape":"SELECT pg_typeof(cleast_agg(VARIADIC ARRAY[4.5, f1])) FROM int4_tbl;"}
+{"sql":"begin work","shape":"BEGIN;"}
+{"sql":"create type avg_state as (total bigint, count bigint)","shape":"CREATE TYPE avg_state AS (total bigint, count bigint);"}
+{"sql":"create or replace function avg_transfn(state avg_state, n int) returns avg_state as\n$$\ndeclare new_state avg_state;\nbegin\n\traise notice 'avg_transfn called with %', n;\n\tif state is null then\n\t\tif n is not null then\n\t\t\tnew_state.total := n;\n\t\t\tnew_state.count := 1;\n\t\t\treturn new_state;\n\t\tend if;\n\t\treturn null;\n\telsif n is not null then\n\t\tstate.total := state.total + n;\n\t\tstate.count := state.count + 1;\n\t\treturn state;\n\tend if;\n\n\treturn null;\nend\n$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION avg_transfn(state avg_state, n int) RETURNS avg_state AS '\ndeclare new_state avg_state;\nbegin\n\traise notice ''avg_transfn called with %'', n;\n\tif state is null then\n\t\tif n is not null then\n\t\t\tnew_state.total := n;\n\t\t\tnew_state.count := 1;\n\t\t\treturn new_state;\n\t\tend if;\n\t\treturn null;\n\telsif n is not null then\n\t\tstate.total := state.total + n;\n\t\tstate.count := state.count + 1;\n\t\treturn state;\n\tend if;\n\n\treturn null;\nend\n' LANGUAGE plpgsql;"}
+{"sql":"create function avg_finalfn(state avg_state) returns int4 as\n$$\nbegin\n\tif state is null then\n\t\treturn NULL;\n\telse\n\t\treturn state.total / state.count;\n\tend if;\nend\n$$ language plpgsql","shape":"CREATE FUNCTION avg_finalfn(state avg_state) RETURNS int4 AS '\nbegin\n\tif state is null then\n\t\treturn NULL;\n\telse\n\t\treturn state.total / state.count;\n\tend if;\nend\n' LANGUAGE plpgsql;"}
+{"sql":"create function sum_finalfn(state avg_state) returns int4 as\n$$\nbegin\n\tif state is null then\n\t\treturn NULL;\n\telse\n\t\treturn state.total;\n\tend if;\nend\n$$ language plpgsql","shape":"CREATE FUNCTION sum_finalfn(state avg_state) RETURNS int4 AS '\nbegin\n\tif state is null then\n\t\treturn NULL;\n\telse\n\t\treturn state.total;\n\tend if;\nend\n' LANGUAGE plpgsql;"}
+{"sql":"create aggregate my_avg(int4)\n(\n   stype = avg_state,\n   sfunc = avg_transfn,\n   finalfunc = avg_finalfn\n)"}
+{"sql":"create aggregate my_sum(int4)\n(\n   stype = avg_state,\n   sfunc = avg_transfn,\n   finalfunc = sum_finalfn\n)"}
+{"sql":"select my_avg(one),my_avg(one) from (values(1),(3)) t(one)","shape":"SELECT my_avg(one), my_avg(one) FROM (VALUES (1), (3)) AS t(one);"}
+{"sql":"select my_avg(one),my_sum(one) from (values(1),(3)) t(one)","shape":"SELECT my_avg(one), my_sum(one) FROM (VALUES (1), (3)) AS t(one);"}
+{"sql":"select my_avg(distinct one),my_sum(distinct one) from (values(1),(3),(1)) t(one)","shape":"SELECT my_avg(DISTINCT one), my_sum(DISTINCT one) FROM (VALUES (1), (3), (1)) AS t(one);"}
+{"sql":"select my_avg(distinct one),my_sum(one) from (values(1),(3)) t(one)","shape":"SELECT my_avg(DISTINCT one), my_sum(one) FROM (VALUES (1), (3)) AS t(one);"}
+{"sql":"select my_avg(one) filter (where one > 1),my_sum(one) from (values(1),(3)) t(one)","shape":"SELECT my_avg(one) FILTER (WHERE one > 1), my_sum(one) FROM (VALUES (1), (3)) AS t(one);"}
+{"sql":"select my_avg(one),my_sum(two) from (values(1,2),(3,4)) t(one,two)","shape":"SELECT my_avg(one), my_sum(two) FROM (VALUES (1, 2), (3, 4)) AS t(one, two);"}
+{"sql":"select\n  percentile_cont(0.5) within group (order by a),\n  percentile_disc(0.5) within group (order by a)\nfrom (values(1::float8),(3),(5),(7)) t(a)","shape":"SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY a), percentile_disc(0.5) WITHIN GROUP (ORDER BY a) FROM (VALUES (1::float8), (3), (5), (7)) AS t(a);"}
+{"sql":"select\n  percentile_cont(0.25) within group (order by a),\n  percentile_disc(0.5) within group (order by a)\nfrom (values(1::float8),(3),(5),(7)) t(a)","shape":"SELECT percentile_cont(0.25) WITHIN GROUP (ORDER BY a), percentile_disc(0.5) WITHIN GROUP (ORDER BY a) FROM (VALUES (1::float8), (3), (5), (7)) AS t(a);"}
+{"sql":"select\n  rank(4) within group (order by a),\n  dense_rank(4) within group (order by a)\nfrom (values(1),(3),(5),(7)) t(a)","shape":"SELECT rank(4) WITHIN GROUP (ORDER BY a), dense_rank(4) WITHIN GROUP (ORDER BY a) FROM (VALUES (1), (3), (5), (7)) AS t(a);"}
+{"sql":"create aggregate my_sum_init(int4)\n(\n   stype = avg_state,\n   sfunc = avg_transfn,\n   finalfunc = sum_finalfn,\n   initcond = '(10,0)'\n)"}
+{"sql":"create aggregate my_avg_init(int4)\n(\n   stype = avg_state,\n   sfunc = avg_transfn,\n   finalfunc = avg_finalfn,\n   initcond = '(10,0)'\n)"}
+{"sql":"create aggregate my_avg_init2(int4)\n(\n   stype = avg_state,\n   sfunc = avg_transfn,\n   finalfunc = avg_finalfn,\n   initcond = '(4,0)'\n)"}
+{"sql":"select my_sum_init(one),my_avg_init(one) from (values(1),(3)) t(one)","shape":"SELECT my_sum_init(one), my_avg_init(one) FROM (VALUES (1), (3)) AS t(one);"}
+{"sql":"select my_sum_init(one),my_avg_init2(one) from (values(1),(3)) t(one)","shape":"SELECT my_sum_init(one), my_avg_init2(one) FROM (VALUES (1), (3)) AS t(one);"}
+{"sql":"create or replace function sum_transfn(state int4, n int4) returns int4 as\n$$\ndeclare new_state int4;\nbegin\n\traise notice 'sum_transfn called with %', n;\n\tif state is null then\n\t\tif n is not null then\n\t\t\tnew_state := n;\n\t\t\treturn new_state;\n\t\tend if;\n\t\treturn null;\n\telsif n is not null then\n\t\tstate := state + n;\n\t\treturn state;\n\tend if;\n\n\treturn null;\nend\n$$ language plpgsql","shape":"CREATE OR REPLACE FUNCTION sum_transfn(state int4, n int4) RETURNS int4 AS '\ndeclare new_state int4;\nbegin\n\traise notice ''sum_transfn called with %'', n;\n\tif state is null then\n\t\tif n is not null then\n\t\t\tnew_state := n;\n\t\t\treturn new_state;\n\t\tend if;\n\t\treturn null;\n\telsif n is not null then\n\t\tstate := state + n;\n\t\treturn state;\n\tend if;\n\n\treturn null;\nend\n' LANGUAGE plpgsql;"}
+{"sql":"create function halfsum_finalfn(state int4) returns int4 as\n$$\nbegin\n\tif state is null then\n\t\treturn NULL;\n\telse\n\t\treturn state / 2;\n\tend if;\nend\n$$ language plpgsql","shape":"CREATE FUNCTION halfsum_finalfn(state int4) RETURNS int4 AS '\nbegin\n\tif state is null then\n\t\treturn NULL;\n\telse\n\t\treturn state / 2;\n\tend if;\nend\n' LANGUAGE plpgsql;"}
+{"sql":"create aggregate my_sum(int4)\n(\n   stype = int4,\n   sfunc = sum_transfn\n)"}
+{"sql":"create aggregate my_half_sum(int4)\n(\n   stype = int4,\n   sfunc = sum_transfn,\n   finalfunc = halfsum_finalfn\n)"}
+{"sql":"select my_sum(one),my_half_sum(one) from (values(1),(2),(3),(4)) t(one)","shape":"SELECT my_sum(one), my_half_sum(one) FROM (VALUES (1), (2), (3), (4)) AS t(one);"}
+{"sql":"CREATE FUNCTION balkifnull(int8, int4)\nRETURNS int8\nSTRICT\nLANGUAGE plpgsql AS $$\nBEGIN\n    IF $1 IS NULL THEN\n       RAISE 'erroneously called with NULL argument';\n    END IF;\n    RETURN NULL;\nEND$$","shape":"CREATE FUNCTION balkifnull(int8, int4) RETURNS int8 STRICT LANGUAGE plpgsql AS '\nBEGIN\n    IF $1 IS NULL THEN\n       RAISE ''erroneously called with NULL argument'';\n    END IF;\n    RETURN NULL;\nEND';"}
+{"sql":"CREATE AGGREGATE balk(int4)\n(\n    SFUNC = balkifnull(int8, int4),\n    STYPE = int8,\n    PARALLEL = SAFE,\n    INITCOND = '0'\n)"}
+{"sql":"SELECT balk(hundred) FROM tenk1","shape":"SELECT balk(hundred) FROM tenk1;"}
+{"sql":"CREATE FUNCTION balkifnull(int8, int8)\nRETURNS int8\nPARALLEL SAFE\nSTRICT\nLANGUAGE plpgsql AS $$\nBEGIN\n    IF $1 IS NULL THEN\n       RAISE 'erroneously called with NULL argument';\n    END IF;\n    RETURN NULL;\nEND$$","shape":"CREATE FUNCTION balkifnull(int8, int8) RETURNS int8 PARALLEL SAFE STRICT LANGUAGE plpgsql AS '\nBEGIN\n    IF $1 IS NULL THEN\n       RAISE ''erroneously called with NULL argument'';\n    END IF;\n    RETURN NULL;\nEND';"}
+{"sql":"CREATE AGGREGATE balk(int4)\n(\n    SFUNC = int4_sum(int8, int4),\n    STYPE = int8,\n    COMBINEFUNC = balkifnull(int8, int8),\n    PARALLEL = SAFE,\n    INITCOND = '0'\n)"}
+{"sql":"ALTER TABLE tenk1 set (parallel_workers = 4)"}
+{"sql":"SET LOCAL parallel_setup_cost=0","shape":"SET LOCAL parallel_setup_cost TO 0;"}
+{"sql":"SET LOCAL max_parallel_workers_per_gather=4","shape":"SET LOCAL max_parallel_workers_per_gather TO 4;"}
+{"sql":"EXPLAIN (COSTS OFF) SELECT balk(hundred) FROM tenk1","shape":"EXPLAIN (COSTS OFF) SELECT balk(hundred) FROM tenk1;"}
+{"sql":"CREATE FUNCTION rwagg_sfunc(x anyarray, y anyarray) RETURNS anyarray\nLANGUAGE plpgsql IMMUTABLE AS $$\nBEGIN\n    RETURN array_fill(y[1], ARRAY[4]);\nEND;\n$$","shape":"CREATE FUNCTION rwagg_sfunc(x anyarray, y anyarray) RETURNS anyarray LANGUAGE plpgsql IMMUTABLE AS '\nBEGIN\n    RETURN array_fill(y[1], ARRAY[4]);\nEND;\n';"}
+{"sql":"CREATE FUNCTION rwagg_finalfunc(x anyarray) RETURNS anyarray\nLANGUAGE plpgsql STRICT IMMUTABLE AS $$\nDECLARE\n    res x%TYPE;\nBEGIN\n    -- assignment is essential for this test, it expands the array to R/W\n    res := array_fill(x[1], ARRAY[4]);\n    RETURN res;\nEND;\n$$","shape":"CREATE FUNCTION rwagg_finalfunc(x anyarray) RETURNS anyarray LANGUAGE plpgsql STRICT IMMUTABLE AS '\nDECLARE\n    res x%TYPE;\nBEGIN\n    -- assignment is essential for this test, it expands the array to R/W\n    res := array_fill(x[1], ARRAY[4]);\n    RETURN res;\nEND;\n';"}
+{"sql":"CREATE AGGREGATE rwagg(anyarray) (\n    STYPE = anyarray,\n    SFUNC = rwagg_sfunc,\n    FINALFUNC = rwagg_finalfunc\n)"}
+{"sql":"CREATE FUNCTION eatarray(x real[]) RETURNS real[]\nLANGUAGE plpgsql STRICT IMMUTABLE AS $$\nBEGIN\n    x[1] := x[1] + 1;\n    RETURN x;\nEND;\n$$","shape":"CREATE FUNCTION eatarray(x real[]) RETURNS real[] LANGUAGE plpgsql STRICT IMMUTABLE AS '\nBEGIN\n    x[1] := x[1] + 1;\n    RETURN x;\nEND;\n';"}
+{"sql":"SELECT eatarray(rwagg(ARRAY[1.0::real])), eatarray(rwagg(ARRAY[1.0::real]))","shape":"SELECT eatarray(rwagg(ARRAY[1.0::real])), eatarray(rwagg(ARRAY[1.0::real]));"}
+{"sql":"SET parallel_setup_cost = 0","shape":"SET parallel_setup_cost TO 0;"}
+{"sql":"SET parallel_tuple_cost = 0","shape":"SET parallel_tuple_cost TO 0;"}
+{"sql":"SET min_parallel_table_scan_size = 0","shape":"SET min_parallel_table_scan_size TO 0;"}
+{"sql":"SET max_parallel_workers_per_gather = 4","shape":"SET max_parallel_workers_per_gather TO 4;"}
+{"sql":"SET parallel_leader_participation = off","shape":"SET parallel_leader_participation TO off;"}
+{"sql":"SET enable_indexonlyscan = off","shape":"SET enable_indexonlyscan TO off;"}
+{"sql":"EXPLAIN (COSTS OFF, VERBOSE)\nSELECT variance(unique1::int4), sum(unique1::int8), regr_count(unique1::float8, unique1::float8)\nFROM (SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1) u","shape":"EXPLAIN (COSTS OFF, VERBOSE) SELECT variance(unique1::int4), sum(unique1::int8), regr_count(unique1::float8, unique1::float8) FROM (((SELECT * FROM tenk1 UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) AS u;"}
+{"sql":"SELECT variance(unique1::int4), sum(unique1::int8), regr_count(unique1::float8, unique1::float8)\nFROM (SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1) u","shape":"SELECT variance(unique1::int4), sum(unique1::int8), regr_count(unique1::float8, unique1::float8) FROM (((SELECT * FROM tenk1 UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) AS u;"}
+{"sql":"EXPLAIN (COSTS OFF, VERBOSE)\nSELECT variance(unique1::int8), avg(unique1::numeric)\nFROM (SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1) u","shape":"EXPLAIN (COSTS OFF, VERBOSE) SELECT variance(unique1::int8), avg(unique1::numeric) FROM (((SELECT * FROM tenk1 UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) AS u;"}
+{"sql":"SELECT variance(unique1::int8), avg(unique1::numeric)\nFROM (SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1\n      UNION ALL SELECT * FROM tenk1) u","shape":"SELECT variance(unique1::int8), avg(unique1::numeric) FROM (((SELECT * FROM tenk1 UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) UNION ALL SELECT * FROM tenk1) AS u;"}
+{"sql":"SELECT dense_rank(x) WITHIN GROUP (ORDER BY x) FROM (VALUES (1),(1),(2),(2),(3),(3)) v(x) GROUP BY (x) ORDER BY 1","shape":"SELECT dense_rank(x) WITHIN GROUP (ORDER BY x) FROM (VALUES (1), (1), (2), (2), (3), (3)) AS v(x) GROUP BY (x) ORDER BY 1;"}
+{"sql":"SELECT min(x ORDER BY y) FROM (VALUES(1, NULL)) AS d(x,y)","shape":"SELECT min(x ORDER BY y) FROM (VALUES (1, NULL)) AS d(x, y);"}
+{"sql":"SELECT min(x ORDER BY y) FROM (VALUES(1, 2)) AS d(x,y)","shape":"SELECT min(x ORDER BY y) FROM (VALUES (1, 2)) AS d(x, y);"}
+{"sql":"select v||'a', case v||'a' when 'aa' then 1 else 0 end, count(*)\n  from unnest(array['a','b']) u(v)\n group by v||'a' order by 1","shape":"SELECT v || 'a', CASE v || 'a' WHEN 'aa' THEN 1 ELSE 0 END, count(*) FROM unnest(ARRAY['a', 'b']) AS u(v) GROUP BY v || 'a' ORDER BY 1;"}
+{"sql":"select v||'a', case when v||'a' = 'aa' then 1 else 0 end, count(*)\n  from unnest(array['a','b']) u(v)\n group by v||'a' order by 1","shape":"SELECT v || 'a', CASE WHEN (v || 'a') = 'aa' THEN 1 ELSE 0 END, count(*) FROM unnest(ARRAY['a', 'b']) AS u(v) GROUP BY v || 'a' ORDER BY 1;"}
+{"sql":"set enable_memoize to off","shape":"SET enable_memoize TO off;"}
+{"sql":"explain (costs off)\n  select 1 from tenk1\n   where (hundred, thousand) in (select twothousand, twothousand from onek)","shape":"EXPLAIN (COSTS off) SELECT 1 FROM tenk1 WHERE (hundred, thousand) IN (SELECT twothousand, twothousand FROM onek);"}
+{"sql":"reset enable_memoize","shape":"RESET enable_memoize;"}
+{"sql":"set enable_sort=false","shape":"SET enable_sort TO FALSE;"}
+{"sql":"set work_mem='64kB'","shape":"SET work_mem TO '64kB';"}
+{"sql":"select unique1, count(*), sum(twothousand) from tenk1\ngroup by unique1\nhaving sum(fivethous) > 4975\norder by sum(twothousand)","shape":"SELECT unique1, count(*), sum(twothousand) FROM tenk1 GROUP BY unique1 HAVING sum(fivethous) > 4975 ORDER BY sum(twothousand);"}
+{"sql":"set work_mem to default","shape":"SET work_mem TO DEFAULT;"}
+{"sql":"set enable_sort to default","shape":"SET enable_sort TO DEFAULT;"}
+{"sql":"create table agg_data_2k as\nselect g from generate_series(0, 1999) g","shape":"CREATE TABLE agg_data_2k AS SELECT g FROM generate_series(0, 1999) AS g;"}
+{"sql":"analyze agg_data_2k","shape":"ANALYZE agg_data_2k;"}
+{"sql":"create table agg_data_20k as\nselect g from generate_series(0, 19999) g","shape":"CREATE TABLE agg_data_20k AS SELECT g FROM generate_series(0, 19999) AS g;"}
+{"sql":"analyze agg_data_20k","shape":"ANALYZE agg_data_20k;"}
+{"sql":"set enable_hashagg = false","shape":"SET enable_hashagg TO FALSE;"}
+{"sql":"set jit_above_cost = 0","shape":"SET jit_above_cost TO 0;"}
+{"sql":"explain (costs off)\nselect g%10000 as c1, sum(g::numeric) as c2, count(*) as c3\n  from agg_data_20k group by g%10000","shape":"EXPLAIN (COSTS off) SELECT g % 10000 AS c1, sum(g::numeric) AS c2, count(*) AS c3 FROM agg_data_20k GROUP BY g % 10000;"}
+{"sql":"create table agg_group_1 as\nselect g%10000 as c1, sum(g::numeric) as c2, count(*) as c3\n  from agg_data_20k group by g%10000","shape":"CREATE TABLE agg_group_1 AS SELECT g % 10000 AS c1, sum(g::numeric) AS c2, count(*) AS c3 FROM agg_data_20k GROUP BY g % 10000;"}
+{"sql":"create table agg_group_2 as\nselect * from\n  (values (100), (300), (500)) as r(a),\n  lateral (\n    select (g/2)::numeric as c1,\n           array_agg(g::numeric) as c2,\n\t   count(*) as c3\n    from agg_data_2k\n    where g < r.a\n    group by g/2) as s","shape":"CREATE TABLE agg_group_2 AS SELECT * FROM (VALUES (100), (300), (500)) AS r(a), LATERAL (SELECT (g / 2)::numeric AS c1, array_agg(g::numeric) AS c2, count(*) AS c3 FROM agg_data_2k WHERE g < r.a GROUP BY g / 2) AS s;"}
+{"sql":"set jit_above_cost to default","shape":"SET jit_above_cost TO DEFAULT;"}
+{"sql":"create table agg_group_3 as\nselect (g/2)::numeric as c1, sum(7::int4) as c2, count(*) as c3\n  from agg_data_2k group by g/2","shape":"CREATE TABLE agg_group_3 AS SELECT (g / 2)::numeric AS c1, sum(7::int4) AS c2, count(*) AS c3 FROM agg_data_2k GROUP BY g / 2;"}
+{"sql":"create table agg_group_4 as\nselect (g/2)::numeric as c1, array_agg(g::numeric) as c2, count(*) as c3\n  from agg_data_2k group by g/2","shape":"CREATE TABLE agg_group_4 AS SELECT (g / 2)::numeric AS c1, array_agg(g::numeric) AS c2, count(*) AS c3 FROM agg_data_2k GROUP BY g / 2;"}
+{"sql":"set enable_hashagg = true","shape":"SET enable_hashagg TO TRUE;"}
+{"sql":"set enable_sort = false","shape":"SET enable_sort TO FALSE;"}
+{"sql":"create table agg_hash_1 as\nselect g%10000 as c1, sum(g::numeric) as c2, count(*) as c3\n  from agg_data_20k group by g%10000","shape":"CREATE TABLE agg_hash_1 AS SELECT g % 10000 AS c1, sum(g::numeric) AS c2, count(*) AS c3 FROM agg_data_20k GROUP BY g % 10000;"}
+{"sql":"create table agg_hash_2 as\nselect * from\n  (values (100), (300), (500)) as r(a),\n  lateral (\n    select (g/2)::numeric as c1,\n           array_agg(g::numeric) as c2,\n\t   count(*) as c3\n    from agg_data_2k\n    where g < r.a\n    group by g/2) as s","shape":"CREATE TABLE agg_hash_2 AS SELECT * FROM (VALUES (100), (300), (500)) AS r(a), LATERAL (SELECT (g / 2)::numeric AS c1, array_agg(g::numeric) AS c2, count(*) AS c3 FROM agg_data_2k WHERE g < r.a GROUP BY g / 2) AS s;"}
+{"sql":"create table agg_hash_3 as\nselect (g/2)::numeric as c1, sum(7::int4) as c2, count(*) as c3\n  from agg_data_2k group by g/2","shape":"CREATE TABLE agg_hash_3 AS SELECT (g / 2)::numeric AS c1, sum(7::int4) AS c2, count(*) AS c3 FROM agg_data_2k GROUP BY g / 2;"}
+{"sql":"create table agg_hash_4 as\nselect (g/2)::numeric as c1, array_agg(g::numeric) as c2, count(*) as c3\n  from agg_data_2k group by g/2","shape":"CREATE TABLE agg_hash_4 AS SELECT (g / 2)::numeric AS c1, array_agg(g::numeric) AS c2, count(*) AS c3 FROM agg_data_2k GROUP BY g / 2;"}
+{"sql":"set enable_sort = true","shape":"SET enable_sort TO TRUE;"}
+{"sql":"(select * from agg_hash_1 except select * from agg_group_1)\n  union all\n(select * from agg_group_1 except select * from agg_hash_1)","shape":"(SELECT * FROM agg_hash_1 EXCEPT SELECT * FROM agg_group_1) UNION ALL (SELECT * FROM agg_group_1 EXCEPT SELECT * FROM agg_hash_1);"}
+{"sql":"(select * from agg_hash_2 except select * from agg_group_2)\n  union all\n(select * from agg_group_2 except select * from agg_hash_2)","shape":"(SELECT * FROM agg_hash_2 EXCEPT SELECT * FROM agg_group_2) UNION ALL (SELECT * FROM agg_group_2 EXCEPT SELECT * FROM agg_hash_2);"}
+{"sql":"(select * from agg_hash_3 except select * from agg_group_3)\n  union all\n(select * from agg_group_3 except select * from agg_hash_3)","shape":"(SELECT * FROM agg_hash_3 EXCEPT SELECT * FROM agg_group_3) UNION ALL (SELECT * FROM agg_group_3 EXCEPT SELECT * FROM agg_hash_3);"}
+{"sql":"(select * from agg_hash_4 except select * from agg_group_4)\n  union all\n(select * from agg_group_4 except select * from agg_hash_4)","shape":"(SELECT * FROM agg_hash_4 EXCEPT SELECT * FROM agg_group_4) UNION ALL (SELECT * FROM agg_group_4 EXCEPT SELECT * FROM agg_hash_4);"}
+{"sql":"drop table agg_group_1","shape":"DROP TABLE agg_group_1;"}
+{"sql":"drop table agg_group_2","shape":"DROP TABLE agg_group_2;"}
+{"sql":"drop table agg_group_3","shape":"DROP TABLE agg_group_3;"}
+{"sql":"drop table agg_group_4","shape":"DROP TABLE agg_group_4;"}
+{"sql":"drop table agg_hash_1","shape":"DROP TABLE agg_hash_1;"}
+{"sql":"drop table agg_hash_2","shape":"DROP TABLE agg_hash_2;"}
+{"sql":"drop table agg_hash_3","shape":"DROP TABLE agg_hash_3;"}
+{"sql":"drop table agg_hash_4","shape":"DROP TABLE agg_hash_4;"}

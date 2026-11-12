@@ -1,0 +1,7 @@
+{"sql":"CREATE VIRTUAL TABLE t0 USING fts3(x)"}
+{"sql":"SELECT rowid FROM t0 WHERE x MATCH ''"}
+{"sql":"SELECT rowid FROM t0 WHERE x MATCH '\"\"'"}
+{"sql":"SELECT rowid FROM t0 WHERE x MATCH '\"\" \"\"'"}
+{"sql":"SELECT rowid FROM t0 WHERE x MATCH '\"\" OR \"\"'"}
+{"sql":"SELECT rowid FROM t0 WHERE x MATCH '\"\" NOT \"\"'"}
+{"sql":"SELECT rowid FROM t0 WHERE x MATCH '\"\"\"\"'"}

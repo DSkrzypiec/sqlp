@@ -1,0 +1,68 @@
+{"sql":"CREATE TABLE t1(a,b TEXT COLLATE nocase)"}
+{"sql":"INSERT INTO t1(a,b)\n     VALUES(1,'abc'),\n           (2,'ABX'),\n           (3,'BCD'),\n           (4,x'616263'),\n           (5,x'414258'),\n           (6,x'424344')"}
+{"sql":"CREATE INDEX t1ba ON t1(b,a)"}
+{"sql":"SELECT a, b FROM t1 WHERE b LIKE 'aB%' ORDER BY +a"}
+{"sql":"SELECT a, b FROM t1 WHERE +b LIKE 'aB%' ORDER BY +a"}
+{"sql":"CREATE TABLE t2(a, b TEXT)"}
+{"sql":"INSERT INTO t2 SELECT a, b FROM t1"}
+{"sql":"CREATE INDEX t2ba ON t2(b,a)"}
+{"sql":"SELECT a, b FROM t2 WHERE b GLOB 'ab*' ORDER BY +a"}
+{"sql":"SELECT a, b FROM t2 WHERE +b GLOB 'ab*' ORDER BY +a"}
+{"sql":"SELECT a, b FROM t2 WHERE b>=x'6162' AND b GLOB 'ab*'"}
+{"sql":"SELECT a, b FROM t2 WHERE +b>=x'6162' AND +b GLOB 'ab*'"}
+{"sql":"SELECT a, b FROM t2 WHERE b GLOB 'ab*' AND b>=x'6162'"}
+{"sql":"SELECT a, b FROM t2 WHERE +b GLOB 'ab*' AND +b>=x'6162'"}
+{"sql":"CREATE TABLE t3(x TEXT PRIMARY KEY COLLATE nocase)"}
+{"sql":"INSERT INTO t3(x) VALUES('aaa'),('abc'),('abd'),('abe'),('acz')"}
+{"sql":"INSERT INTO t3(x) SELECT CAST(x AS blob) FROM t3"}
+{"sql":"SELECT quote(x) FROM t3 WHERE x LIKE 'ab%' ORDER BY x"}
+{"sql":"SELECT quote(x) FROM t3 WHERE x LIKE 'ab%' ORDER BY x DESC"}
+{"sql":"SELECT quote(x) FROM t3 WHERE x LIKE 'ab%' ORDER BY +x DESC"}
+{"sql":"SELECT quote(x) FROM t3 WHERE x LIKE 'ab%' ORDER BY x ASC"}
+{"sql":"SELECT quote(x) FROM t3 WHERE x LIKE 'ab%' ORDER BY +x ASC"}
+{"sql":"CREATE INDEX t4x ON t4(x DESC)"}
+{"sql":"INSERT INTO t4(x) SELECT x FROM t3"}
+{"sql":"SELECT quote(x) FROM t4 WHERE x LIKE 'ab%' ORDER BY x"}
+{"sql":"SELECT quote(x) FROM t4 WHERE x LIKE 'ab%' ORDER BY x DESC"}
+{"sql":"SELECT quote(x) FROM t4 WHERE x LIKE 'ab%' ORDER BY +x DESC"}
+{"sql":"SELECT quote(x) FROM t4 WHERE x LIKE 'ab%' ORDER BY x ASC"}
+{"sql":"SELECT quote(x) FROM t4 WHERE x LIKE 'ab%' ORDER BY +x ASC"}
+{"sql":"CREATE TABLE t5a(x INT UNIQUE COLLATE nocase)"}
+{"sql":"INSERT INTO t5a(x) VALUES('/abc'),(123),(-234)"}
+{"sql":"SELECT x FROM t5a WHERE x LIKE '/%'"}
+{"sql":"SELECT x FROM t5a WHERE x LIKE '/a%'"}
+{"sql":"SELECT x FROM t5a WHERE x LIKE '^12%' ESCAPE '^'"}
+{"sql":"SELECT x FROM t5a WHERE x LIKE '^-2%' ESCAPE '^'"}
+{"sql":"CREATE TABLE t5b(x INT UNIQUE COLLATE binary)"}
+{"sql":"INSERT INTO t5b(x) VALUES('/abc'),(123),(-234)"}
+{"sql":"SELECT x FROM t5b WHERE x GLOB '/*'"}
+{"sql":"SELECT x FROM t5b WHERE x GLOB '/a*'"}
+{"sql":"CREATE TABLE t5c (c0 REAL)"}
+{"sql":"CREATE INDEX t5c_0 ON t5c(c0 COLLATE NOCASE)"}
+{"sql":"INSERT INTO t5c(rowid, c0) VALUES (99,'+/')"}
+{"sql":"SELECT * FROM t5c WHERE (c0 LIKE '+/')"}
+{"sql":"CREATE TABLE t0(c0 INT UNIQUE COLLATE NOCASE)"}
+{"sql":"INSERT INTO t0(c0) VALUES ('./')"}
+{"sql":"SELECT * FROM t0 WHERE t0.c0 LIKE './'"}
+{"sql":"INSERT INTO t0(c0) VALUES ('.1%')"}
+{"sql":"SELECT * FROM t0 WHERE t0.c0 LIKE '.1%'"}
+{"sql":"CREATE TABLE t0(c0 UNIQUE)"}
+{"sql":"INSERT INTO t0(c0) VALUES(-1)"}
+{"sql":"SELECT * FROM t0 WHERE t0.c0 GLOB '-*'"}
+{"sql":"SELECT t0.c0 GLOB '-*' FROM t0"}
+{"sql":"CREATE TABLE t1(path TEXT COLLATE nocase PRIMARY KEY,a,b,c) WITHOUT ROWID"}
+{"sql":"SELECT * FROM t1 WHERE path LIKE 'a%'"}
+{"sql":"SELECT * FROM t1 WHERE path LIKE 'a%' ESCAPE 'x'"}
+{"sql":"CREATE TABLE t2(path TEXT,x,y,z)"}
+{"sql":"CREATE INDEX t2path ON t2(path COLLATE nocase)"}
+{"sql":"CREATE INDEX t2path2 ON t2(path)"}
+{"sql":"SELECT * FROM t2 WHERE path LIKE 'a%'"}
+{"sql":"SELECT * FROM t2 WHERE path LIKE 'a%' ESCAPE '\\'"}
+{"sql":"PRAGMA encoding = 'UTF-16be'"}
+{"sql":"CREATE TABLE Example(word TEXT NOT NULL)"}
+{"sql":"CREATE INDEX Example_word on Example(word)"}
+{"sql":"INSERT INTO Example VALUES(char(0x307F))"}
+{"sql":"SELECT char(0x307F)=='み'"}
+{"sql":"SELECT * FROM Example WHERE word GLOB 'み*'"}
+{"sql":"SELECT * FROM Example WHERE word >= char(0x307F) AND word < char(0x3080)"}
+{"sql":"SELECT typeof(x) FROM t1"}

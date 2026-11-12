@@ -1,0 +1,11 @@
+{"sql":"CREATE VIRTUAL TABLE tv1 USING echo(t1)"}
+{"sql":"SELECT * FROM tv1 WHERE a = 1 OR b = 4"}
+{"sql":"SELECT * FROM tv1 WHERE a = 1 OR b = 1"}
+{"sql":"SELECT * FROM tv1 WHERE (a > 0 AND a < 5) OR (b > 15 AND b < 65)"}
+{"sql":"SELECT * FROM tv1 WHERE a < 500 OR b = 810000"}
+{"sql":"SELECT * FROM t1 WHERE a < 500"}
+{"sql":"SELECT * FROM t1 WHERE b = 810000 AND NOT (a < 500)"}
+{"sql":"SELECT * FROM tv1 WHERE a < 90000 OR b = 8100000000"}
+{"sql":"SELECT * FROM t1 WHERE a < 90000"}
+{"sql":"SELECT * FROM t1 WHERE b = 8100000000 AND NOT (a < 90000)"}
+{"sql":"SELECT * FROM tv1 WHERE a = 90001 OR b = 810000"}

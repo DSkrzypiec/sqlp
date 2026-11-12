@@ -1,0 +1,15 @@
+{"sql":"INSERT INTO t1 VALUES\n   (1, 7), (2, 3), (3, 5), (4, 30), (5, 26), (6, 23), (7, 27),\n   (8, 3), (9, 17), (10, 26), (11, 33), (12, 25), (13, NULL), (14, 47),\n   (15, 36), (16, 13), (17, 45), (18, 31), (19, 11), (20, 36), (21, 37),\n   (22, 21), (23, 22), (24, 14), (25, 16), (26, 3), (27, 7), (28, 29),\n   (29, 50), (30, 38), (31, 3), (32, 36), (33, 12), (34, 4), (35, 46),\n   (36, 3), (37, 48), (38, 23), (39, NULL), (40, 24), (41, 5), (42, 46),\n   (43, 11), (44, NULL), (45, 18), (46, 25), (47, 15), (48, 18), (49, 23)"}
+{"sql":"SELECT sum(b) FROM t1"}
+{"sql":"SELECT sum(b) FILTER (WHERE a<10) FROM t1"}
+{"sql":"SELECT count(DISTINCT b) FROM t1"}
+{"sql":"SELECT count(DISTINCT b) FILTER (WHERE a!=19) FROM t1"}
+{"sql":"SELECT min(b) FILTER (WHERE a>19),\n         min(b) FILTER (WHERE a>0),\n         max(a+b) FILTER (WHERE a>19),\n         max(b+a) FILTER (WHERE a BETWEEN 10 AND 40)\n  FROM t1"}
+{"sql":"SELECT min(b),\n         min(b),\n         max(a+b),\n         max(b+a)\n  FROM t1\n  GROUP BY (a%10)\n  ORDER BY 1, 2, 3, 4"}
+{"sql":"SELECT min(b) FILTER (WHERE a>19),\n         min(b) FILTER (WHERE a>0),\n         max(a+b) FILTER (WHERE a>19),\n         max(b+a) FILTER (WHERE a BETWEEN 10 AND 40)\n  FROM t1\n  GROUP BY (a%10)\n  ORDER BY 1, 2, 3, 4"}
+{"sql":"SELECT sum(a+b) FILTER (WHERE a=NULL) FROM t1"}
+{"sql":"SELECT (a%5) FROM t1 GROUP BY (a%5) \n  HAVING sum(b) FILTER (WHERE b<20) > 34\n  ORDER BY 1"}
+{"sql":"SELECT (a%5), sum(b) FILTER (WHERE b<20) AS bbb\n  FROM t1\n  GROUP BY (a%5) HAVING sum(b) FILTER (WHERE b<20) >34\n  ORDER BY 1"}
+{"sql":"SELECT (a%5), sum(b) FILTER (WHERE b<20) AS bbb\n  FROM t1\n  GROUP BY (a%5) HAVING sum(b) FILTER (WHERE b<20) >34\n  ORDER BY 2"}
+{"sql":"SELECT (a%5), \n    sum(b) FILTER (WHERE b<20) AS bbb,\n    count(distinct b) FILTER (WHERE b<20 OR a=13) AS ccc\n  FROM t1 GROUP BY (a%5)\n  ORDER BY 2"}
+{"sql":"SELECT \n    string_agg(CAST(b AS TEXT), '_') FILTER (WHERE b%2!=0),\n    group_concat(CAST(b AS TEXT), '_') FILTER (WHERE b%2!=1),\n    count(*) FILTER (WHERE b%2!=0),\n    count(*) FILTER (WHERE b%2!=1)\n  FROM t1"}
+{"sql":"SELECT \n    a/5,\n    sum(b) FILTER (WHERE a%5=0),\n    sum(b) FILTER (WHERE a%5=1),\n    sum(b) FILTER (WHERE a%5=2),\n    sum(b) FILTER (WHERE a%5=3),\n    sum(b) FILTER (WHERE a%5=4)\n  FROM t1 GROUP BY (a/5) ORDER BY 1"}

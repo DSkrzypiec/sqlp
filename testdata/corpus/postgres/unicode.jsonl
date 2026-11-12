@@ -1,0 +1,14 @@
+{"sql":"SELECT getdatabaseencoding() <> 'UTF8' AS skip_test","shape":"SELECT getdatabaseencoding() <> 'UTF8' AS skip_test;"}
+{"sql":"SELECT U&'\\0061\\0308bc' <> U&'\\00E4bc' COLLATE \"C\" AS sanity_check","shape":"SELECT U&'\\0061\\0308bc' <> (U&'\\00E4bc' COLLATE \"C\") AS sanity_check;"}
+{"sql":"SELECT normalize('')","shape":"SELECT normalize('');"}
+{"sql":"SELECT normalize(U&'\\0061\\0308\\24D1c') = U&'\\00E4\\24D1c' COLLATE \"C\" AS test_default","shape":"SELECT normalize(U&'\\0061\\0308\\24D1c') = (U&'\\00E4\\24D1c' COLLATE \"C\") AS test_default;"}
+{"sql":"SELECT normalize(U&'\\0061\\0308\\24D1c', NFC) = U&'\\00E4\\24D1c' COLLATE \"C\" AS test_nfc","shape":"SELECT normalize(U&'\\0061\\0308\\24D1c', NFC) = (U&'\\00E4\\24D1c' COLLATE \"C\") AS test_nfc;"}
+{"sql":"SELECT normalize(U&'\\00E4bc', NFC) = U&'\\00E4bc' COLLATE \"C\" AS test_nfc_idem","shape":"SELECT normalize(U&'\\00E4bc', NFC) = (U&'\\00E4bc' COLLATE \"C\") AS test_nfc_idem;"}
+{"sql":"SELECT normalize(U&'\\00E4\\24D1c', NFD) = U&'\\0061\\0308\\24D1c' COLLATE \"C\" AS test_nfd","shape":"SELECT normalize(U&'\\00E4\\24D1c', NFD) = (U&'\\0061\\0308\\24D1c' COLLATE \"C\") AS test_nfd;"}
+{"sql":"SELECT normalize(U&'\\0061\\0308\\24D1c', NFKC) = U&'\\00E4bc' COLLATE \"C\" AS test_nfkc","shape":"SELECT normalize(U&'\\0061\\0308\\24D1c', NFKC) = (U&'\\00E4bc' COLLATE \"C\") AS test_nfkc;"}
+{"sql":"SELECT normalize(U&'\\00E4\\24D1c', NFKD) = U&'\\0061\\0308bc' COLLATE \"C\" AS test_nfkd","shape":"SELECT normalize(U&'\\00E4\\24D1c', NFKD) = (U&'\\0061\\0308bc' COLLATE \"C\") AS test_nfkd;"}
+{"sql":"SELECT \"normalize\"('abc', 'def')","shape":"SELECT \"normalize\"('abc', 'def');"}
+{"sql":"SELECT U&'\\00E4\\24D1c' IS NORMALIZED AS test_default","shape":"SELECT U&'\\00E4\\24D1c' IS NORMALIZED AS test_default;"}
+{"sql":"SELECT U&'\\00E4\\24D1c' IS NFC NORMALIZED AS test_nfc","shape":"SELECT U&'\\00E4\\24D1c' IS NFC NORMALIZED AS test_nfc;"}
+{"sql":"SELECT num, val,\n    val IS NFC NORMALIZED AS NFC,\n    val IS NFD NORMALIZED AS NFD,\n    val IS NFKC NORMALIZED AS NFKC,\n    val IS NFKD NORMALIZED AS NFKD\nFROM\n  (VALUES (1, U&'\\00E4bc'),\n          (2, U&'\\0061\\0308bc'),\n          (3, U&'\\00E4\\24D1c'),\n          (4, U&'\\0061\\0308\\24D1c'),\n          (5, '')) vals (num, val)\nORDER BY num","shape":"SELECT num, val, val IS NFC NORMALIZED AS NFC, val IS NFD NORMALIZED AS NFD, val IS NFKC NORMALIZED AS NFKC, val IS NFKD NORMALIZED AS NFKD FROM (VALUES (1, U&'\\00E4bc'), (2, U&'\\0061\\0308bc'), (3, U&'\\00E4\\24D1c'), (4, U&'\\0061\\0308\\24D1c'), (5, '')) AS vals(num, val) ORDER BY num;"}
+{"sql":"SELECT is_normalized('abc', 'def')","shape":"SELECT is_normalized('abc', 'def');"}

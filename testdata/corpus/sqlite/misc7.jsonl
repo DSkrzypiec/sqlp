@@ -1,0 +1,20 @@
+{"sql":"INSERT INTO abc VALUES(2, 3, 4)"}
+{"sql":"INSERT INTO abc SELECT a+2, b, c FROM abc"}
+{"sql":"PRAGMA omit_readlock = 1"}
+{"sql":"CREATE TABLE aux.hello(world)"}
+{"sql":"SELECT * \n    FROM (SELECT name+1 AS one FROM sqlite_master LIMIT 1 OFFSET 1) \n    WHERE one LIKE 'hello%'"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING echo(abc)"}
+{"sql":"SELECT a FROM t1 WHERE a = 1 ORDER BY b"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES(12345,2,3) ON CONFLICT(a) DO NOTHING"}
+{"sql":"SELECT t1.a, t2.a FROM t1, t1 AS t2 ORDER BY 2 LIMIT 1"}
+{"sql":"SELECT * FROM abc AS t2 WHERE rowid = 1"}
+{"sql":"SELECT * FROM abc AS t2 WHERE a = 1"}
+{"sql":"SELECT * FROM abc AS t2 ORDER BY a"}
+{"sql":"INSERT INTO abc \n    VALUES(randstr(100,100), randstr(100,100), randstr(100,100))"}
+{"sql":"INSERT INTO abc SELECT \n            randstr(100,100), randstr(100,100), randstr(100,100) FROM abc"}
+{"sql":"DELETE FROM abc WHERE rowid > 12"}
+{"sql":"DELETE FROM t3 WHERE (oid%3)==0"}
+{"sql":"SELECT rootpage FROM sqlite_master WHERE type = 'table' AND name = 't3'"}
+{"sql":"CREATE TABLE table_1 (col_10)"}
+{"sql":"CREATE TABLE table_2 (\n      col_1, col_2, col_3, col_4, col_5,\n      col_6, col_7, col_8, col_9, col_10\n    )"}
+{"sql":"SELECT a.col_10\n    FROM\n      (SELECT table_1.col_10 AS col_10 FROM table_1) a,\n      (SELECT table_1.col_10, table_2.col_9 AS qcol_9\n         FROM table_1, table_2\n        GROUP BY table_1.col_10, qcol_9)"}

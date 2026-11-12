@@ -1,0 +1,11 @@
+{"sql":"INSERT INTO t1(x) VALUES(2)"}
+{"sql":"INSERT INTO t1(x) SELECT x+2 FROM t1"}
+{"sql":"INSERT INTO t1(x) SELECT x+4 FROM t1"}
+{"sql":"INSERT INTO t1(x) SELECT x+8 FROM t1"}
+{"sql":"#    DROP TABLE t1","reject":true}
+{"sql":"#    CREATE TABLE t1(a, b)","reject":true}
+{"sql":"#    INSERT INTO t1 VALUES(1, 'one')","reject":true}
+{"sql":"#    INSERT INTO t1 VALUES(100, 'one hundred')","reject":true}
+{"sql":"#    INSERT INTO t1 VALUES(100000, 'one hundred thousand')","reject":true}
+{"sql":"#    CREATE INDEX i1 ON t1(b)","reject":true}
+{"sql":"#    SELECT b FROM t1 WHERE b > 'o' AND b < 'p'","reject":true}

@@ -1,0 +1,1 @@
+{"sql":"PRAGMA main.synchronous = full"}

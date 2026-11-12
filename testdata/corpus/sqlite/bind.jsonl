@@ -1,0 +1,9 @@
+{"sql":"SELECT rowid, * FROM t1"}
+{"sql":"SELECT typeof(a), typeof(b), typeof(c) FROM t1"}
+{"sql":"SELECT  hex(a), hex(b), hex(c) FROM t1"}
+{"sql":"SELECT hex(a), hex(b), hex(c) FROM t1"}
+{"sql":"CREATE TABLE t2(a,b,c,d,e,f)"}
+{"sql":"pragma encoding"}
+{"sql":"CREATE TABLE t3(x BLOB)"}
+{"sql":"SELECT typeof(x), length(x), quote(x),\n             length(cast(x AS BLOB)), quote(cast(x AS BLOB)) FROM t3"}
+{"sql":"SELECT quote(cast(x_coalesce(x) AS blob)) FROM t3"}

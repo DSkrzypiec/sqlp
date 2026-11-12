@@ -1,0 +1,88 @@
+{"sql":"CREATE TABLE temptest(col int)","shape":"CREATE TABLE temptest (col int);"}
+{"sql":"CREATE INDEX i_temptest ON temptest(col)","shape":"CREATE INDEX i_temptest ON temptest (col);"}
+{"sql":"CREATE TEMP TABLE temptest(tcol int)","shape":"CREATE TEMPORARY TABLE temptest (tcol int);"}
+{"sql":"CREATE INDEX i_temptest ON temptest(tcol)","shape":"CREATE INDEX i_temptest ON temptest (tcol);"}
+{"sql":"SELECT * FROM temptest","shape":"SELECT * FROM temptest;"}
+{"sql":"DROP INDEX i_temptest","shape":"DROP INDEX i_temptest;"}
+{"sql":"DROP TABLE temptest","shape":"DROP TABLE temptest;"}
+{"sql":"INSERT INTO temptest VALUES (1)","shape":"INSERT INTO temptest VALUES (1);"}
+{"sql":"CREATE TEMP TABLE temptest(tcol float)","shape":"CREATE TEMPORARY TABLE temptest (tcol float);"}
+{"sql":"INSERT INTO temptest VALUES (2.1)","shape":"INSERT INTO temptest VALUES (2.1);"}
+{"sql":"CREATE TEMP TABLE temptest(col int)","shape":"CREATE TEMPORARY TABLE temptest (col int);"}
+{"sql":"CREATE TEMP TABLE temptest(col int) ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE temptest (col int) ON COMMIT DELETE ROWS;"}
+{"sql":"CREATE INDEX ON temptest(bit_length(''))","shape":"CREATE INDEX ON temptest (bit_length(''));"}
+{"sql":"INSERT INTO temptest VALUES (2)","shape":"INSERT INTO temptest VALUES (2);"}
+{"sql":"CREATE TEMP TABLE temptest(col) ON COMMIT DELETE ROWS AS SELECT 1","shape":"CREATE TEMPORARY TABLE temptest (col) ON COMMIT DELETE ROWS AS SELECT 1;"}
+{"sql":"CREATE TEMP TABLE temptest(col int) ON COMMIT DROP","shape":"CREATE TEMPORARY TABLE temptest (col int) ON COMMIT DROP;"}
+{"sql":"CREATE TEMP TABLE temptest(col) ON COMMIT DROP AS SELECT 1","shape":"CREATE TEMPORARY TABLE temptest (col) ON COMMIT DROP AS SELECT 1;"}
+{"sql":"do $$\nbegin\n  execute format($cmd$\n    CREATE TEMP TABLE temptest (col text CHECK (col < %L)) ON COMMIT DROP\n  $cmd$,\n    (SELECT string_agg(g.i::text || ':' || random()::text, '|')\n     FROM generate_series(1, 100) g(i)));\nend$$","shape":"DO '\nbegin\n  execute format($cmd$\n    CREATE TEMP TABLE temptest (col text CHECK (col < %L)) ON COMMIT DROP\n  $cmd$,\n    (SELECT string_agg(g.i::text || '':'' || random()::text, ''|'')\n     FROM generate_series(1, 100) g(i)));\nend';"}
+{"sql":"CREATE TABLE temptest(col int) ON COMMIT DELETE ROWS","shape":"CREATE TABLE temptest (col int) ON COMMIT DELETE ROWS;"}
+{"sql":"CREATE TABLE temptest(col) ON COMMIT DELETE ROWS AS SELECT 1","shape":"CREATE TABLE temptest (col) ON COMMIT DELETE ROWS AS SELECT 1;"}
+{"sql":"CREATE TEMP TABLE temptest1(col int PRIMARY KEY)","shape":"CREATE TEMPORARY TABLE temptest1 (col int PRIMARY KEY);"}
+{"sql":"CREATE TEMP TABLE temptest2(col int REFERENCES temptest1)\n  ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE temptest2 (col int REFERENCES temptest1) ON COMMIT DELETE ROWS;"}
+{"sql":"INSERT INTO temptest1 VALUES (1)","shape":"INSERT INTO temptest1 VALUES (1);"}
+{"sql":"INSERT INTO temptest2 VALUES (1)","shape":"INSERT INTO temptest2 VALUES (1);"}
+{"sql":"SELECT * FROM temptest1","shape":"SELECT * FROM temptest1;"}
+{"sql":"SELECT * FROM temptest2","shape":"SELECT * FROM temptest2;"}
+{"sql":"CREATE TEMP TABLE temptest3(col int PRIMARY KEY) ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE temptest3 (col int PRIMARY KEY) ON COMMIT DELETE ROWS;"}
+{"sql":"CREATE TEMP TABLE temptest4(col int REFERENCES temptest3)","shape":"CREATE TEMPORARY TABLE temptest4 (col int REFERENCES temptest3);"}
+{"sql":"create table public.whereami (f1 text)","shape":"CREATE TABLE public.whereami (f1 text);"}
+{"sql":"insert into public.whereami values ('public')","shape":"INSERT INTO public.whereami VALUES ('public');"}
+{"sql":"create temp table whereami (f1 text)","shape":"CREATE TEMPORARY TABLE whereami (f1 text);"}
+{"sql":"insert into whereami values ('temp')","shape":"INSERT INTO whereami VALUES ('temp');"}
+{"sql":"create function public.whoami() returns text\n  as $$select 'public'::text$$ language sql","shape":"CREATE FUNCTION public.whoami() RETURNS text AS 'select ''public''::text' LANGUAGE sql;"}
+{"sql":"create function pg_temp.whoami() returns text\n  as $$select 'temp'::text$$ language sql","shape":"CREATE FUNCTION pg_temp.whoami() RETURNS text AS 'select ''temp''::text' LANGUAGE sql;"}
+{"sql":"select * from whereami","shape":"SELECT * FROM whereami;"}
+{"sql":"select whoami()","shape":"SELECT whoami();"}
+{"sql":"set search_path = pg_temp, public","shape":"SET search_path TO pg_temp, public;"}
+{"sql":"set search_path = public, pg_temp","shape":"SET search_path TO public, pg_temp;"}
+{"sql":"select pg_temp.whoami()","shape":"SELECT pg_temp.whoami();"}
+{"sql":"drop table public.whereami","shape":"DROP TABLE public.whereami;"}
+{"sql":"create domain pg_temp.nonempty as text check (value <> '')","shape":"CREATE DOMAIN pg_temp.nonempty AS text CHECK (value <> '');"}
+{"sql":"select nonempty('')","shape":"SELECT nonempty('');"}
+{"sql":"select pg_temp.nonempty('')","shape":"SELECT pg_temp.nonempty('');"}
+{"sql":"select ''::nonempty","shape":"SELECT ''::nonempty;"}
+{"sql":"create temp table temp_parted_oncommit (a int)\n  partition by list (a) on commit delete rows","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit (a int) PARTITION BY LIST (a) ON COMMIT DELETE ROWS;"}
+{"sql":"create temp table temp_parted_oncommit_1\n  partition of temp_parted_oncommit\n  for values in (1) on commit delete rows","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit_1 PARTITION OF temp_parted_oncommit FOR VALUES IN (1) ON COMMIT DELETE ROWS;"}
+{"sql":"insert into temp_parted_oncommit values (1)","shape":"INSERT INTO temp_parted_oncommit VALUES (1);"}
+{"sql":"select * from temp_parted_oncommit","shape":"SELECT * FROM temp_parted_oncommit;"}
+{"sql":"drop table temp_parted_oncommit","shape":"DROP TABLE temp_parted_oncommit;"}
+{"sql":"create temp table temp_parted_oncommit_test (a int)\n  partition by list (a) on commit drop","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit_test (a int) PARTITION BY LIST (a) ON COMMIT DROP;"}
+{"sql":"create temp table temp_parted_oncommit_test1\n  partition of temp_parted_oncommit_test\n  for values in (1) on commit delete rows","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit_test1 PARTITION OF temp_parted_oncommit_test FOR VALUES IN (1) ON COMMIT DELETE ROWS;"}
+{"sql":"create temp table temp_parted_oncommit_test2\n  partition of temp_parted_oncommit_test\n  for values in (2) on commit drop","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit_test2 PARTITION OF temp_parted_oncommit_test FOR VALUES IN (2) ON COMMIT DROP;"}
+{"sql":"insert into temp_parted_oncommit_test values (1), (2)","shape":"INSERT INTO temp_parted_oncommit_test VALUES (1), (2);"}
+{"sql":"select relname from pg_class where relname ~ '^temp_parted_oncommit_test'","shape":"SELECT relname FROM pg_class WHERE relname ~ '^temp_parted_oncommit_test';"}
+{"sql":"create temp table temp_parted_oncommit_test (a int)\n  partition by list (a) on commit delete rows","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit_test (a int) PARTITION BY LIST (a) ON COMMIT DELETE ROWS;"}
+{"sql":"create temp table temp_parted_oncommit_test1\n  partition of temp_parted_oncommit_test\n  for values in (1) on commit preserve rows","shape":"CREATE TEMPORARY TABLE temp_parted_oncommit_test1 PARTITION OF temp_parted_oncommit_test FOR VALUES IN (1) ON COMMIT PRESERVE ROWS;"}
+{"sql":"select * from temp_parted_oncommit_test","shape":"SELECT * FROM temp_parted_oncommit_test;"}
+{"sql":"select relname from pg_class where relname ~ '^temp_parted_oncommit_test'\n  order by relname","shape":"SELECT relname FROM pg_class WHERE relname ~ '^temp_parted_oncommit_test' ORDER BY relname;"}
+{"sql":"drop table temp_parted_oncommit_test","shape":"DROP TABLE temp_parted_oncommit_test;"}
+{"sql":"create temp table temp_inh_oncommit_test (a int) on commit drop","shape":"CREATE TEMPORARY TABLE temp_inh_oncommit_test (a int) ON COMMIT DROP;"}
+{"sql":"create temp table temp_inh_oncommit_test1 ()\n  inherits(temp_inh_oncommit_test) on commit delete rows","shape":"CREATE TEMPORARY TABLE temp_inh_oncommit_test1 () INHERITS (temp_inh_oncommit_test) ON COMMIT DELETE ROWS;"}
+{"sql":"insert into temp_inh_oncommit_test1 values (1)","shape":"INSERT INTO temp_inh_oncommit_test1 VALUES (1);"}
+{"sql":"select relname from pg_class where relname ~ '^temp_inh_oncommit_test'","shape":"SELECT relname FROM pg_class WHERE relname ~ '^temp_inh_oncommit_test';"}
+{"sql":"create temp table temp_inh_oncommit_test (a int) on commit delete rows","shape":"CREATE TEMPORARY TABLE temp_inh_oncommit_test (a int) ON COMMIT DELETE ROWS;"}
+{"sql":"create temp table temp_inh_oncommit_test1 ()\n  inherits(temp_inh_oncommit_test) on commit drop","shape":"CREATE TEMPORARY TABLE temp_inh_oncommit_test1 () INHERITS (temp_inh_oncommit_test) ON COMMIT DROP;"}
+{"sql":"insert into temp_inh_oncommit_test values (1)","shape":"INSERT INTO temp_inh_oncommit_test VALUES (1);"}
+{"sql":"select * from temp_inh_oncommit_test","shape":"SELECT * FROM temp_inh_oncommit_test;"}
+{"sql":"drop table temp_inh_oncommit_test","shape":"DROP TABLE temp_inh_oncommit_test;"}
+{"sql":"create function pg_temp.twophase_func() returns void as\n  $$ select '2pc_func'::text $$ language sql","shape":"CREATE FUNCTION pg_temp.twophase_func() RETURNS void AS ' select ''2pc_func''::text ' LANGUAGE sql;"}
+{"sql":"prepare transaction 'twophase_func'","shape":"prepare transaction 'twophase_func';"}
+{"sql":"drop function pg_temp.twophase_func()"}
+{"sql":"create operator pg_temp.@@ (leftarg = int4, rightarg = int4, procedure = int4mi)"}
+{"sql":"prepare transaction 'twophase_operator'","shape":"prepare transaction 'twophase_operator';"}
+{"sql":"create type pg_temp.twophase_type as (a int)","shape":"CREATE TYPE pg_temp.twophase_type AS (a int);"}
+{"sql":"prepare transaction 'twophase_type'","shape":"prepare transaction 'twophase_type';"}
+{"sql":"create view pg_temp.twophase_view as select 1","shape":"CREATE VIEW pg_temp.twophase_view AS SELECT 1;"}
+{"sql":"prepare transaction 'twophase_view'","shape":"prepare transaction 'twophase_view';"}
+{"sql":"create sequence pg_temp.twophase_seq","shape":"CREATE SEQUENCE pg_temp.twophase_seq;"}
+{"sql":"prepare transaction 'twophase_sequence'","shape":"prepare transaction 'twophase_sequence';"}
+{"sql":"create temp table twophase_tab (a int)","shape":"CREATE TEMPORARY TABLE twophase_tab (a int);"}
+{"sql":"select a from twophase_tab","shape":"SELECT a FROM twophase_tab;"}
+{"sql":"prepare transaction 'twophase_tab'","shape":"prepare transaction 'twophase_tab';"}
+{"sql":"insert into twophase_tab values (1)","shape":"INSERT INTO twophase_tab VALUES (1);"}
+{"sql":"lock twophase_tab in access exclusive mode","shape":"LOCK TABLE twophase_tab IN ACCESS EXCLUSIVE MODE;"}
+{"sql":"drop table twophase_tab","shape":"DROP TABLE twophase_tab;"}
+{"sql":"SET search_path TO 'pg_temp'","shape":"SET search_path TO 'pg_temp';"}
+{"sql":"SELECT current_schema() ~ 'pg_temp' AS is_temp_schema","shape":"SELECT current_schema() ~ 'pg_temp' AS is_temp_schema;"}
+{"sql":"PREPARE TRANSACTION 'twophase_search'","shape":"PREPARE TRANSACTION 'twophase_search';"}

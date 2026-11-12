@@ -1,0 +1,139 @@
+{"sql":"SELECT x'616263'"}
+{"sql":"SELECT typeof(x'616263')"}
+{"sql":"SELECT CAST(x'616263' AS text)"}
+{"sql":"SELECT typeof(CAST(x'616263' AS text))"}
+{"sql":"SELECT CAST(x'616263' AS numeric)"}
+{"sql":"SELECT typeof(CAST(x'616263' AS numeric))"}
+{"sql":"SELECT CAST(x'616263' AS blob)"}
+{"sql":"SELECT typeof(CAST(x'616263' AS blob))"}
+{"sql":"SELECT CAST(x'616263' AS integer)"}
+{"sql":"SELECT typeof(CAST(x'616263' AS integer))"}
+{"sql":"SELECT null"}
+{"sql":"SELECT typeof(NULL)"}
+{"sql":"SELECT CAST(NULL AS text)"}
+{"sql":"SELECT typeof(CAST(NULL AS text))"}
+{"sql":"SELECT CAST(NULL AS numeric)"}
+{"sql":"SELECT typeof(CAST(NULL AS numeric))"}
+{"sql":"SELECT CAST(NULL AS blob)"}
+{"sql":"SELECT typeof(CAST(NULL AS blob))"}
+{"sql":"SELECT CAST(NULL AS integer)"}
+{"sql":"SELECT typeof(CAST(NULL AS integer))"}
+{"sql":"SELECT 123"}
+{"sql":"SELECT typeof(123)"}
+{"sql":"SELECT CAST(123 AS text)"}
+{"sql":"SELECT typeof(CAST(123 AS text))"}
+{"sql":"SELECT CAST(123 AS numeric)"}
+{"sql":"SELECT typeof(CAST(123 AS numeric))"}
+{"sql":"SELECT CAST(123 AS blob)"}
+{"sql":"SELECT typeof(CAST(123 AS blob))"}
+{"sql":"SELECT CAST(123 AS integer)"}
+{"sql":"SELECT typeof(CAST(123 AS integer))"}
+{"sql":"SELECT 123.456"}
+{"sql":"SELECT typeof(123.456)"}
+{"sql":"SELECT CAST(123.456 AS text)"}
+{"sql":"SELECT typeof(CAST(123.456 AS text))"}
+{"sql":"SELECT CAST(123.456 AS numeric)"}
+{"sql":"SELECT typeof(CAST(123.456 AS numeric))"}
+{"sql":"SELECT CAST(123.456 AS blob)"}
+{"sql":"SELECT typeof(CAST(123.456 AS blob))"}
+{"sql":"SELECT CAST(123.456 AS integer)"}
+{"sql":"SELECT typeof(CAST(123.456 AS integer))"}
+{"sql":"SELECT '123abc'"}
+{"sql":"SELECT typeof('123abc')"}
+{"sql":"SELECT CAST('123abc' AS text)"}
+{"sql":"SELECT typeof(CAST('123abc' AS text))"}
+{"sql":"SELECT CAST('123abc' AS numeric)"}
+{"sql":"SELECT typeof(CAST('123abc' AS numeric))"}
+{"sql":"SELECT CAST('123abc' AS blob)"}
+{"sql":"SELECT typeof(CAST('123abc' AS blob))"}
+{"sql":"SELECT CAST('123abc' AS integer)"}
+{"sql":"SELECT typeof(CAST('123abc' AS integer))"}
+{"sql":"SELECT CAST('123.5abc' AS numeric)"}
+{"sql":"SELECT CAST('123.5abc' AS integer)"}
+{"sql":"SELECT CAST(null AS REAL)"}
+{"sql":"SELECT typeof(CAST(null AS REAL))"}
+{"sql":"SELECT CAST(1 AS REAL)"}
+{"sql":"SELECT typeof(CAST(1 AS REAL))"}
+{"sql":"SELECT CAST('1' AS REAL)"}
+{"sql":"SELECT typeof(CAST('1' AS REAL))"}
+{"sql":"SELECT CAST('abc' AS REAL)"}
+{"sql":"SELECT typeof(CAST('abc' AS REAL))"}
+{"sql":"SELECT CAST(x'31' AS REAL)"}
+{"sql":"SELECT typeof(CAST(x'31' AS REAL))"}
+{"sql":"SELECT CAST('   123' AS integer)"}
+{"sql":"SELECT CAST('   -123.456' AS real)"}
+{"sql":"SELECT CAST(9223372036854774800 AS integer)"}
+{"sql":"SELECT CAST(9223372036854774800 AS numeric)"}
+{"sql":"SELECT CAST(9223372036854774800 AS real)"}
+{"sql":"SELECT CAST(CAST(9223372036854774800 AS real) AS integer)"}
+{"sql":"SELECT CAST(-9223372036854774800 AS integer)"}
+{"sql":"SELECT CAST(-9223372036854774800 AS numeric)"}
+{"sql":"SELECT CAST(-9223372036854774800 AS real)"}
+{"sql":"SELECT CAST(CAST(-9223372036854774800 AS real) AS integer)"}
+{"sql":"SELECT CAST('9223372036854774800' AS integer)"}
+{"sql":"SELECT CAST('9223372036854774800' AS numeric)"}
+{"sql":"SELECT CAST('9223372036854774800' AS real)"}
+{"sql":"SELECT CAST(CAST('9223372036854774800' AS real) AS integer)"}
+{"sql":"SELECT CAST('-9223372036854774800' AS integer)"}
+{"sql":"SELECT CAST('-9223372036854774800' AS numeric)"}
+{"sql":"SELECT CAST('-9223372036854774800' AS real)"}
+{"sql":"SELECT CAST(CAST('-9223372036854774800' AS real) AS integer)"}
+{"sql":"SELECT CAST(x'39323233333732303336383534373734383030' AS integer)"}
+{"sql":"SELECT CAST(x'39323233333732303336383534373734383030' AS numeric)"}
+{"sql":"SELECT CAST(x'39323233333732303336383534373734383030' AS real)"}
+{"sql":"SELECT CAST(CAST(x'39323233333732303336383534373734383030' AS real)\n                  AS integer)"}
+{"sql":"SELECT CAST('9223372036854775808' AS integer)"}
+{"sql":"SELECT CAST('  +000009223372036854775808' AS integer)"}
+{"sql":"SELECT CAST('12345678901234567890123' AS INTEGER)"}
+{"sql":"SELECT CAST('-9223372036854775808' AS integer)"}
+{"sql":"SELECT CAST('-9223372036854775809' AS integer)"}
+{"sql":"SELECT CAST('-12345678901234567890123' AS INTEGER)"}
+{"sql":"SELECT CAST('123e+5' AS INTEGER)"}
+{"sql":"SELECT CAST('123e+5' AS NUMERIC)"}
+{"sql":"SELECT CAST('123e+5' AS REAL)"}
+{"sql":"CREATE TABLE t1(a NUMERIC)"}
+{"sql":"INSERT INTO t1 VALUES\n     ('9000000000000000001'),\n     ('9000000000000000001 '),\n     (' 9000000000000000001'),\n     (' 9000000000000000001 ')"}
+{"sql":"SELECT CAST('-' AS NUMERIC)"}
+{"sql":"SELECT CAST('-0' AS NUMERIC)"}
+{"sql":"SELECT CAST('+' AS NUMERIC)"}
+{"sql":"SELECT CAST('/' AS NUMERIC)"}
+{"sql":"SELECT '' - 2851427734582196970"}
+{"sql":"SELECT 0 - 2851427734582196970"}
+{"sql":"SELECT '' - 1"}
+{"sql":"CREATE TABLE t0 (c0 TEXT)"}
+{"sql":"INSERT INTO t0(c0) VALUES ('1.0')"}
+{"sql":"SELECT CAST(c0 AS NUMERIC) FROM t0"}
+{"sql":"SELECT -'.'"}
+{"sql":"SELECT '.'+0"}
+{"sql":"SELECT CAST('.' AS numeric)"}
+{"sql":"SELECT -CAST('.' AS numeric)"}
+{"sql":"SELECT CAST('-0.0' AS numeric)"}
+{"sql":"SELECT CAST('0.0' AS numeric)"}
+{"sql":"SELECT CAST('+0.0' AS numeric)"}
+{"sql":"SELECT CAST('-1.0' AS numeric)"}
+{"sql":"PRAGMA encoding='utf16'"}
+{"sql":"SELECT quote(X'310032003300')==quote(substr(X'310032003300', 1))"}
+{"sql":"SELECT CAST(X'310032003300' AS TEXT)\n         ==CAST(substr(X'310032003300', 1) AS TEXT)"}
+{"sql":"INSERT INTO t0(c0) VALUES (0)"}
+{"sql":"CREATE VIEW v1(c0, c1) AS \n    SELECT CAST(0.0 AS NUMERIC), COUNT(*) OVER () FROM t0"}
+{"sql":"SELECT v1.c0 FROM v1, t0 WHERE v1.c0=0"}
+{"sql":"INSERT INTO dual VALUES('X')"}
+{"sql":"SELECT CAST(4 AS NUMERIC)"}
+{"sql":"SELECT CAST(4.0 AS NUMERIC)"}
+{"sql":"SELECT CAST(4.5 AS NUMERIC)"}
+{"sql":"SELECT x, typeof(x) FROM (SELECT CAST(4 AS NUMERIC) AS x) JOIN dual"}
+{"sql":"SELECT x, typeof(x) FROM dual CROSS JOIN (SELECT CAST(4 AS NUMERIC) AS x)"}
+{"sql":"SELECT x, typeof(x) FROM (SELECT CAST(4.0 AS NUMERIC) AS x) JOIN dual"}
+{"sql":"SELECT x, typeof(x) FROM dual CROSS JOIN (SELECT CAST(4.0 AS NUMERIC) AS x)"}
+{"sql":"SELECT x, typeof(x) FROM (SELECT CAST(4.5 AS NUMERIC) AS x) JOIN dual"}
+{"sql":"SELECT x, typeof(x) FROM dual CROSS JOIN (SELECT CAST(4.5 AS NUMERIC) AS x)"}
+{"sql":"VALUES(CAST(44 AS REAL)),(55)"}
+{"sql":"SELECT CAST(44 AS REAL) AS 'm' UNION ALL SELECT 55"}
+{"sql":"SELECT * FROM (VALUES(CAST(44 AS REAL)),(55))"}
+{"sql":"SELECT * FROM (SELECT CAST(44 AS REAL) AS 'm' UNION ALL SELECT 55)"}
+{"sql":"SELECT * FROM dual CROSS JOIN (VALUES(CAST(44 AS REAL)),(55))"}
+{"sql":"SELECT * FROM dual CROSS JOIN (SELECT CAST(44 AS REAL) AS 'm'\n                                 UNION ALL SELECT 55)"}
+{"sql":"CREATE VIEW v1 AS SELECT CAST(44 AS REAL) AS 'm' UNION ALL SELECT 55"}
+{"sql":"SELECT name, type FROM pragma_table_info('v1')"}
+{"sql":"CREATE VIEW v2 AS VALUES(CAST(44 AS REAL)),(55)"}
+{"sql":"SELECT type FROM pragma_table_info('v2')"}

@@ -1,0 +1,2 @@
+{"sql":"PRAGMA auto_vacuum=NONE"}
+{"sql":"CREATE INDEX i2 ON t2(b,a)"}

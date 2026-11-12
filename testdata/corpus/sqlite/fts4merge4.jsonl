@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES('a b c d e f g h i j k l')"}
+{"sql":"INSERT INTO t1(t1) VALUES('merge=8,50')"}
+{"sql":"SELECT count(*) FROM t1_segdir"}
+{"sql":"SELECT level, count(*) FROM t2_segdir GROUP BY level"}

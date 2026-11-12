@@ -1,0 +1,73 @@
+{"sql":"CREATE TABLE t1_c(e INTEGER PRIMARY KEY, f TEXT)"}
+{"sql":"INSERT INTO t1_a VALUES(1, 'one'), (4, 'four')"}
+{"sql":"INSERT INTO t1_b VALUES(2, 'two'), (5, 'five')"}
+{"sql":"INSERT INTO t1_c VALUES(3, 'three'), (6, 'six')"}
+{"sql":"CREATE VIEW t1 AS \n    SELECT a, b FROM t1_a   UNION ALL\n    SELECT c, d FROM t1_b   UNION ALL\n    SELECT e, f FROM t1_c"}
+{"sql":"CREATE TABLE i1(x)"}
+{"sql":"INSERT INTO i1 VALUES(2), (5), (6), (1)"}
+{"sql":"SELECT a, b FROM (\n    SELECT a, b FROM t1_a   UNION ALL\n    SELECT c, d FROM t1_b   UNION ALL\n    SELECT e, f FROM t1_c\n  ) ORDER BY a"}
+{"sql":"SELECT a, b FROM i1, t1 WHERE a=x ORDER BY a"}
+{"sql":"CREATE VIEW t1 AS SELECT a, b FROM t1_a UNION ALL SELECT c, c FROM t1_b"}
+{"sql":"SELECT * FROM (SELECT t1.a, t1.b AS b, t0.c0 FROM t0, t1)"}
+{"sql":"SELECT * FROM (SELECT t1.a, t1.b AS b, t0.c0 FROM t0, t1) WHERE b=2"}
+{"sql":"INSERT INTO t1 VALUES(1, 'ONE')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'TWO')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'THREE')"}
+{"sql":"WITH s(i) AS (\n      SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<3\n  )\n  SELECT * FROM (\n    SELECT 0 AS i UNION ALL SELECT i FROM s UNION ALL SELECT 0\n  ), t1 WHERE x=i"}
+{"sql":"WITH s(i) AS (\n      SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<3 UNION ALL SELECT 4\n  )\n  SELECT * FROM s, t1 WHERE x=i"}
+{"sql":"CREATE TABLE t2_a(k INTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"CREATE TABLE t2_b(k INTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"CREATE VIEW t2 AS \n    SELECT * FROM t2_a \n    UNION ALL \n    SELECT * FROM t2_b"}
+{"sql":"CREATE TRIGGER t2_insert INSTEAD OF INSERT ON t2 BEGIN\n    INSERT INTO t2_a SELECT new.k, new.v WHERE (new.k%2)==0;\n    INSERT INTO t2_b SELECT new.k, new.v WHERE (new.k%2)==1;\n  END"}
+{"sql":"INSERT INTO t2 VALUES(5, 'v'), (4, 'iv'), (3, 'iii'), (2, 'ii')"}
+{"sql":"SELECT * FROM t1, t2 WHERE x=k"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON (x=k)"}
+{"sql":"SELECT x1.*, x2.* FROM t2 AS x1, t2 AS x2 WHERE x1.k=x2.k+1"}
+{"sql":"SELECT * FROM t1, t2 WHERE x=k ORDER BY y"}
+{"sql":"SELECT * FROM t1, t2 WHERE x=k ORDER BY y||''"}
+{"sql":"SELECT * FROM t1, t2 WHERE x=k ORDER BY v"}
+{"sql":"SELECT * FROM t1, t2 WHERE x=k ORDER BY v||''"}
+{"sql":"SELECT * FROM t1, t2 WHERE x=k ORDER BY k,v||''"}
+{"sql":"SELECT * FROM t1, t2 ORDER BY +k"}
+{"sql":"SELECT * FROM t1, t2 ORDER BY k"}
+{"sql":"CREATE TABLE t1(c INTEGER PRIMARY KEY, d TEXT)"}
+{"sql":"CREATE TABLE t3_a(k INTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"INSERT INTO t3_a VALUES(2,'ii')"}
+{"sql":"CREATE TABLE t3_b(k INTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"CREATE VIEW t3 AS\n    SELECT * FROM t3_a\n    UNION ALL\n    SELECT * FROM t3_b"}
+{"sql":"SELECT * FROM t1, t3 ORDER BY k"}
+{"sql":"INSERT INTO t1_a VALUES(123, 't1_a')"}
+{"sql":"CREATE VIEW t1 AS\n    SELECT a, b FROM t1_a\n    UNION ALL\n    SELECT c, d FROM t1_b"}
+{"sql":"INSERT INTO t3_a VALUES(456, 't3_a')"}
+{"sql":"SELECT * FROM (SELECT * FROM t1, t3) ORDER BY k"}
+{"sql":"SELECT * FROM (SELECT * FROM t1, t3), (\n    SELECT max(a) OVER () FROM t1\n      UNION ALL\n    SELECT min(a) OVER () FROM t1\n  )\n  ORDER BY k"}
+{"sql":"SELECT * FROM (SELECT * FROM t1, t3), (\n    SELECT group_concat(a) OVER (ORDER BY a), \n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a),\n           group_concat(a) OVER (ORDER BY a)\n    FROM t1\n  )\n  ORDER BY k"}
+{"sql":"SELECT * FROM (SELECT * FROM t1, t3) AS o, (\n    SELECT * FROM t1 LEFT JOIN t3 ON a=k\n  )"}
+{"sql":"INSERT INTO t1_a VALUES(0,NULL)"}
+{"sql":"INSERT INTO t1_b VALUES(5,'five')"}
+{"sql":"INSERT INTO t1_c VALUES(3,'three')"}
+{"sql":"INSERT INTO t1_c VALUES(6,'six')"}
+{"sql":"INSERT INTO t2 VALUES(5,'v')"}
+{"sql":"INSERT INTO t2 VALUES(4,'iv')"}
+{"sql":"INSERT INTO t2 VALUES(3,'iii')"}
+{"sql":"INSERT INTO t2 VALUES(2,'ii')"}
+{"sql":"INSERT INTO t3_a VALUES(4,'iv')"}
+{"sql":"CREATE TABLE t3_b(k INTEG5R PRIMARY KEY, v TEXT)"}
+{"sql":"INSERT INTO t3_b VALUES(NULL,'iii')"}
+{"sql":"INSERT INTO t3_b VALUES(NULL,'v')"}
+{"sql":"CREATE VIEW t3 AS \n      SELECT * FROM t3_a \n      UNION ALL \n      SELECT * FROM t3_b"}
+{"sql":"CREATE TRIGGER t3_insert INSTEAD OF INSERT ON t3 BEGIN\n      INSERT INTO t3_a SELECT new.k, new.v WHERE (new.k%2)==0;\n      INSERT INTO t3_b SELECT new.k, new.v WHERE (new.k%2)==1;\n  END"}
+{"sql":"SELECT *, '+' FROM t1 LEFT JOIN t2 ON (a NOT IN(SELECT v FROM t1, t3 WHERE a=k)=NOT EXISTS(SELECT 1 FROM t1 LEFT JOIN t3 ON (a=k)))"}
+{"sql":"SELECT *, '+' FROM t1 LEFT JOIN t3 ON (a NOT IN(SELECT v FROM t1 LEFT JOIN t2 ON (a=k))=k)"}
+{"sql":"SELECT * FROM (t1 NATURAL JOIN pragma_table_xinfo('t1_a') NATURAL JOIN t3) t1\n                NATURAL JOIN t2 NATURAL JOIN t3\n   WHERE rowid ISNULL>0 AND 0%y"}
+{"sql":"INSERT INTO t3 VALUES(5,6)"}
+{"sql":"INSERT INTO t4 VALUES(7,8)"}
+{"sql":"INSERT INTO t5 VALUES(9,10)"}
+{"sql":"WITH x(c) AS (\n    SELECT 1000 FROM t1 UNION ALL SELECT 800 FROM t2\n  ),\n  y(d) AS (\n    SELECT  100 FROM t3 UNION ALL SELECT 400 FROM t4\n  )\n  SELECT * FROM t5, x, y"}
+{"sql":"WITH c1(x) AS (VALUES(0) UNION ALL SELECT 100+x FROM c1 WHERE x<100 UNION ALL SELECT 1+x FROM c1 WHERE x<1)\n  SELECT x, y, '|'\n    FROM c1 AS x1, (SELECT x+1 AS y FROM c1 WHERE x<1 UNION ALL SELECT 1+x FROM c1 WHERE 1<x) AS x2\n   ORDER BY x, y"}
+{"sql":"INSERT INTO t1_a VALUES(4,'four')"}
+{"sql":"CREATE VIEW t1 AS \n    SELECT a, b FROM t1_a   UNION ALL\n    SELECT c, c FROM t1_b   UNION ALL\n    SELECT e, f FROM t1_c"}
+{"sql":"SELECT t1.a, t1.b, t0.c0 AS c, v0.c0 AS d FROM t0 LEFT JOIN v0 ON v0.c0>'0',t1"}
+{"sql":"SELECT * FROM (SELECT t1.a, t1.b, t0.c0 AS c, v0.c0 AS d FROM t0 LEFT JOIN v0 ON v0.c0>'0',t1) WHERE b=2"}
+{"sql":"SELECT * FROM (SELECT t1.a, t1.b, t0.c0 AS c, v0.c0 AS d FROM t0 LEFT JOIN v0 ON v0.c0>'0',t1) WHERE b=2.0"}
+{"sql":"SELECT * FROM (SELECT t1.a, t1.b, t0.c0 AS c, v0.c0 AS d FROM t0 LEFT JOIN v0 ON v0.c0>'0',t1) WHERE b='2'"}

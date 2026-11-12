@@ -1,0 +1,17 @@
+{"sql":"CREATE TABLE t1(x,y)"}
+{"sql":"INSERT INTO t1 VALUES(1,1)"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT x*2,y FROM t1"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT x*3,y FROM t1"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT x*5,y FROM t1"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT x*7,y FROM t1"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT x*11,y FROM t1"}
+{"sql":"INSERT OR IGNORE INTO t1 SELECT x*13,y FROM t1"}
+{"sql":"CREATE TABLE t2 AS SELECT x,2 as y FROM t1 WHERE rowid%5!=0"}
+{"sql":"UPDATE t1 SET y=1"}
+{"sql":"UPDATE t2 SET y='abcdef-uvwxyz'"}
+{"sql":"DELETE FROM t1 WHERE x>13"}
+{"sql":"CREATE TABLE t3 AS SELECT x,3 as y FROM t2 WHERE rowid%5!=0"}
+{"sql":"DELETE FROM t1 WHERE rowid = (SELECT max(rowid) FROM t1)"}
+{"sql":"SELECT count(*) FROM t1 WHERE x>13"}
+{"sql":"SELECT count(*) FROM t2 WHERE x<13"}
+{"sql":"DELETE FROM t2 WHERE x<13"}

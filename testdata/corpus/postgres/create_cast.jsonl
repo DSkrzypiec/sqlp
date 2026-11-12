@@ -1,0 +1,19 @@
+{"sql":"CREATE TYPE casttesttype","shape":"CREATE TYPE casttesttype;"}
+{"sql":"CREATE FUNCTION casttesttype_in(cstring)\n   RETURNS casttesttype\n   AS 'textin'\n   LANGUAGE internal STRICT IMMUTABLE","shape":"CREATE FUNCTION casttesttype_in(cstring) RETURNS casttesttype AS 'textin' LANGUAGE internal STRICT IMMUTABLE;"}
+{"sql":"CREATE FUNCTION casttesttype_out(casttesttype)\n   RETURNS cstring\n   AS 'textout'\n   LANGUAGE internal STRICT IMMUTABLE","shape":"CREATE FUNCTION casttesttype_out(casttesttype) RETURNS cstring AS 'textout' LANGUAGE internal STRICT IMMUTABLE;"}
+{"sql":"CREATE TYPE casttesttype (\n   internallength = variable,\n   input = casttesttype_in,\n   output = casttesttype_out,\n   alignment = int4\n)"}
+{"sql":"CREATE FUNCTION casttestfunc(casttesttype) RETURNS int4 LANGUAGE SQL AS\n$$ SELECT 1; $$","shape":"CREATE FUNCTION casttestfunc(casttesttype) RETURNS int4 LANGUAGE SQL AS ' SELECT 1; ';"}
+{"sql":"SELECT casttestfunc('foo'::text)","shape":"SELECT casttestfunc('foo'::text);"}
+{"sql":"CREATE CAST (text AS casttesttype) WITHOUT FUNCTION"}
+{"sql":"SELECT casttestfunc('foo'::text::casttesttype)","shape":"SELECT casttestfunc('foo'::text::casttesttype);"}
+{"sql":"DROP CAST (text AS casttesttype)"}
+{"sql":"CREATE CAST (text AS casttesttype) WITHOUT FUNCTION AS IMPLICIT"}
+{"sql":"SELECT 1234::int4::casttesttype","shape":"SELECT 1234::int4::casttesttype;"}
+{"sql":"CREATE CAST (int4 AS casttesttype) WITH INOUT"}
+{"sql":"DROP CAST (int4 AS casttesttype)"}
+{"sql":"CREATE FUNCTION int4_casttesttype(int4) RETURNS casttesttype LANGUAGE SQL AS\n$$ SELECT ('foo'::text || $1::text)::casttesttype; $$","shape":"CREATE FUNCTION int4_casttesttype(int4) RETURNS casttesttype LANGUAGE SQL AS ' SELECT (''foo''::text || $1::text)::casttesttype; ';"}
+{"sql":"CREATE CAST (int4 AS casttesttype) WITH FUNCTION int4_casttesttype(int4) AS IMPLICIT"}
+{"sql":"DROP FUNCTION int4_casttesttype(int4) CASCADE"}
+{"sql":"CREATE FUNCTION bar_int4_text(int4) RETURNS text LANGUAGE SQL AS\n$$ SELECT ('bar'::text || $1::text); $$","shape":"CREATE FUNCTION bar_int4_text(int4) RETURNS text LANGUAGE SQL AS ' SELECT (''bar''::text || $1::text); ';"}
+{"sql":"CREATE CAST (int4 AS casttesttype) WITH FUNCTION bar_int4_text(int4) AS IMPLICIT"}
+{"sql":"SELECT pg_describe_object(classid, objid, objsubid) as obj,\n       pg_describe_object(refclassid, refobjid, refobjsubid) as objref,\n       deptype\nFROM pg_depend\nWHERE classid = 'pg_cast'::regclass AND\n      objid = (SELECT oid FROM pg_cast\n               WHERE castsource = 'int4'::regtype\n                 AND casttarget = 'casttesttype'::regtype)\nORDER BY refclassid","shape":"SELECT pg_describe_object(classid, objid, objsubid) AS obj, pg_describe_object(refclassid, refobjid, refobjsubid) AS objref, deptype FROM pg_depend WHERE (classid = 'pg_cast'::regclass) AND (objid = (SELECT oid FROM pg_cast WHERE (castsource = 'int4'::regtype) AND (casttarget = 'casttesttype'::regtype))) ORDER BY refclassid;"}

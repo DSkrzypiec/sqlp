@@ -1,0 +1,2 @@
+{"sql":"CREATE TABLE aux.t1(a INTEGER PRIMARY KEY, b UNIQUE)"}
+{"sql":"SELECT count(*) FROM t1 WHERE b IS NULL"}

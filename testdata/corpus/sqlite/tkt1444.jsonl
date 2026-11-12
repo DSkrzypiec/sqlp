@@ -1,0 +1,9 @@
+{"sql":"CREATE TABLE DemoTable (x INTEGER, TextKey TEXT, DKey Real)"}
+{"sql":"CREATE INDEX DemoTableIdx ON DemoTable (TextKey)"}
+{"sql":"INSERT INTO DemoTable VALUES(9,8,7)"}
+{"sql":"INSERT INTO DemoTable VALUES(1,2,3)"}
+{"sql":"CREATE VIEW DemoView AS SELECT * FROM DemoTable ORDER BY TextKey"}
+{"sql":"SELECT * FROM DemoTable UNION ALL SELECT * FROM DemoView ORDER BY 1"}
+{"sql":"SELECT * FROM DemoTable UNION ALL SELECT * FROM DemoView"}
+{"sql":"DROP VIEW DemoView"}
+{"sql":"CREATE VIEW DemoView AS SELECT * FROM DemoTable"}

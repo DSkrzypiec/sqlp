@@ -1,0 +1,46 @@
+{"sql":"CREATE TABLE d1(n int, log int)"}
+{"sql":"SELECT * FROM d1 ORDER BY n"}
+{"sql":"CREATE TABLE t1(log int, cnt int)"}
+{"sql":"EXPLAIN INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log"}
+{"sql":"INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log"}
+{"sql":"SELECT * FROM t1 ORDER BY log"}
+{"sql":"INSERT INTO t1 \n       SELECT log, count(*) FROM d1 GROUP BY log\n       EXCEPT SELECT n-1,log FROM d1"}
+{"sql":"INSERT INTO t1 \n       SELECT log, count(*) FROM d1 GROUP BY log\n       INTERSECT SELECT n-1,log FROM d1"}
+{"sql":"CREATE INDEX i1 ON t1(log)"}
+{"sql":"CREATE INDEX i2 ON t1(cnt)"}
+{"sql":"INSERT INTO t1 SELECT log, count() FROM d1 GROUP BY log"}
+{"sql":"SELECT cnt FROM t1 WHERE log=3"}
+{"sql":"SELECT log FROM t1 WHERE cnt=4 ORDER BY log"}
+{"sql":"INSERT INTO t4 VALUES(1,2)"}
+{"sql":"INSERT INTO t3(a,c) SELECT * FROM t4"}
+{"sql":"INSERT INTO t3(c,b) SELECT * FROM t4"}
+{"sql":"INSERT INTO t3(c,a,b) SELECT x, 'hi', y FROM t4"}
+{"sql":"SELECT * from t4"}
+{"sql":"INSERT INTO t4 VALUES(2,4)"}
+{"sql":"INSERT INTO t4 VALUES(3,6)"}
+{"sql":"INSERT INTO t4 VALUES(4,8)"}
+{"sql":"INSERT INTO t4 VALUES(5,10)"}
+{"sql":"INSERT INTO t4 VALUES(6,12)"}
+{"sql":"INSERT INTO t4 VALUES(7,14)"}
+{"sql":"INSERT INTO t4 VALUES(8,16)"}
+{"sql":"INSERT INTO t4 VALUES(9,18)"}
+{"sql":"INSERT INTO t4 VALUES(10,20)"}
+{"sql":"INSERT INTO t4 SELECT x+(SELECT max(x) FROM t4),y FROM t4"}
+{"sql":"SELECT max(x) FROM t4"}
+{"sql":"INSERT INTO t4 SELECT x+max_x_t4() ,y FROM t4"}
+{"sql":"UPDATE t4 SET y='lots of data for the row where x=' || x\n                     || ' and y=' || y || ' - even more data to fill space'"}
+{"sql":"INSERT INTO t4 SELECT x+(SELECT max(x)+1 FROM t4),y FROM t4"}
+{"sql":"SELECT count(*) from t4"}
+{"sql":"INSERT INTO t4 SELECT x+max_x_t4()+1,y FROM t4"}
+{"sql":"DELETE FROM t4 WHERE x!=123"}
+{"sql":"CREATE TABLE Dependencies(depId integer primary key,\n        class integer, name str, flag str)"}
+{"sql":"CREATE TEMPORARY TABLE DepCheck(troveId INT, depNum INT,\n        flagCount INT, isProvides BOOL, class INTEGER, name STRING,\n        flag STRING)"}
+{"sql":"INSERT INTO DepCheck \n         VALUES(-1, 0, 1, 0, 2, 'libc.so.6', 'GLIBC_2.0')"}
+{"sql":"INSERT INTO Dependencies \n         SELECT DISTINCT \n             NULL, \n             DepCheck.class, \n             DepCheck.name, \n             DepCheck.flag \n         FROM DepCheck LEFT OUTER JOIN Dependencies ON \n             DepCheck.class == Dependencies.class AND \n             DepCheck.name == Dependencies.name AND \n             DepCheck.flag == Dependencies.flag \n         WHERE \n             Dependencies.depId is NULL"}
+{"sql":"INSERT INTO t2 SELECT a, 3 FROM t2 WHERE a = 1"}
+{"sql":"INSERT INTO t2 SELECT (SELECT a FROM t2), 4"}
+{"sql":"CREATE TABLE t5(a, b, c DEFAULT 'c', d)"}
+{"sql":"INSERT INTO t5(a) SELECT 456 UNION ALL SELECT 123 ORDER BY 1"}
+{"sql":"SELECT * FROM t5 ORDER BY rowid"}
+{"sql":"CREATE VIRTUAL TABLE t0 USING fts4(a)"}
+{"sql":"INSERT INTO t0 SELECT 0 UNION SELECT 0 AS 'x' ORDER BY x"}

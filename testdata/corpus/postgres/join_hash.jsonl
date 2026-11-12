@@ -1,0 +1,97 @@
+{"sql":"set local min_parallel_table_scan_size = 0","shape":"SET LOCAL min_parallel_table_scan_size TO 0;"}
+{"sql":"set local parallel_setup_cost = 0","shape":"SET LOCAL parallel_setup_cost TO 0;"}
+{"sql":"set local enable_hashjoin = on","shape":"SET LOCAL enable_hashjoin TO on;"}
+{"sql":"create or replace function find_hash(node json)\nreturns json language plpgsql\nas\n$$\ndeclare\n  x json;\n  child json;\nbegin\n  if node->>'Node Type' = 'Hash' then\n    return node;\n  else\n    for child in select json_array_elements(node->'Plans')\n    loop\n      x := find_hash(child);\n      if x is not null then\n        return x;\n      end if;\n    end loop;\n    return null;\n  end if;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION find_hash(node json) RETURNS json LANGUAGE plpgsql AS '\ndeclare\n  x json;\n  child json;\nbegin\n  if node->>''Node Type'' = ''Hash'' then\n    return node;\n  else\n    for child in select json_array_elements(node->''Plans'')\n    loop\n      x := find_hash(child);\n      if x is not null then\n        return x;\n      end if;\n    end loop;\n    return null;\n  end if;\nend;\n';"}
+{"sql":"create or replace function hash_join_batches(query text)\nreturns table (original int, final int) language plpgsql\nas\n$$\ndeclare\n  whole_plan json;\n  hash_node json;\nbegin\n  for whole_plan in\n    execute 'explain (analyze, format ''json'') ' || query\n  loop\n    hash_node := find_hash(json_extract_path(whole_plan, '0', 'Plan'));\n    original := hash_node->>'Original Hash Batches';\n    final := hash_node->>'Hash Batches';\n    return next;\n  end loop;\nend;\n$$","shape":"CREATE OR REPLACE FUNCTION hash_join_batches(query text) RETURNS TABLE (original int, final int) LANGUAGE plpgsql AS '\ndeclare\n  whole_plan json;\n  hash_node json;\nbegin\n  for whole_plan in\n    execute ''explain (analyze, format ''''json'''') '' || query\n  loop\n    hash_node := find_hash(json_extract_path(whole_plan, ''0'', ''Plan''));\n    original := hash_node->>''Original Hash Batches'';\n    final := hash_node->>''Hash Batches'';\n    return next;\n  end loop;\nend;\n';"}
+{"sql":"create table simple as\n  select generate_series(1, 20000) AS id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'","shape":"CREATE TABLE simple AS SELECT generate_series(1, 20000) AS id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';"}
+{"sql":"alter table simple set (parallel_workers = 2)"}
+{"sql":"analyze simple","shape":"ANALYZE simple;"}
+{"sql":"create table bigger_than_it_looks as\n  select generate_series(1, 20000) as id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'","shape":"CREATE TABLE bigger_than_it_looks AS SELECT generate_series(1, 20000) AS id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';"}
+{"sql":"alter table bigger_than_it_looks set (autovacuum_enabled = 'false')"}
+{"sql":"alter table bigger_than_it_looks set (parallel_workers = 2)"}
+{"sql":"analyze bigger_than_it_looks","shape":"ANALYZE bigger_than_it_looks;"}
+{"sql":"update pg_class set reltuples = 1000 where relname = 'bigger_than_it_looks'","shape":"UPDATE pg_class SET reltuples = 1000 WHERE relname = 'bigger_than_it_looks';"}
+{"sql":"create table extremely_skewed (id int, t text)","shape":"CREATE TABLE extremely_skewed (id int, t text);"}
+{"sql":"alter table extremely_skewed set (autovacuum_enabled = 'false')"}
+{"sql":"alter table extremely_skewed set (parallel_workers = 2)"}
+{"sql":"analyze extremely_skewed","shape":"ANALYZE extremely_skewed;"}
+{"sql":"insert into extremely_skewed\n  select 42 as id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'\n  from generate_series(1, 20000)","shape":"INSERT INTO extremely_skewed SELECT 42 AS id, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' FROM generate_series(1, 20000);"}
+{"sql":"update pg_class\n  set reltuples = 2, relpages = pg_relation_size('extremely_skewed') / 8192\n  where relname = 'extremely_skewed'","shape":"UPDATE pg_class SET reltuples = 2, relpages = pg_relation_size('extremely_skewed') / 8192 WHERE relname = 'extremely_skewed';"}
+{"sql":"create table wide as select generate_series(1, 2) as id, rpad('', 320000, 'x') as t","shape":"CREATE TABLE wide AS SELECT generate_series(1, 2) AS id, rpad('', 320000, 'x') AS t;"}
+{"sql":"alter table wide set (parallel_workers = 2)"}
+{"sql":"savepoint settings","shape":"SAVEPOINT settings;"}
+{"sql":"set local work_mem = '4MB'","shape":"SET LOCAL work_mem TO '4MB';"}
+{"sql":"set local hash_mem_multiplier = 1.0","shape":"SET LOCAL hash_mem_multiplier TO 1.0;"}
+{"sql":"explain (costs off)\n  select count(*) from simple r join simple s using (id)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM simple AS r JOIN simple AS s USING (id);"}
+{"sql":"select count(*) from simple r join simple s using (id)","shape":"SELECT count(*) FROM simple AS r JOIN simple AS s USING (id);"}
+{"sql":"select original > 1 as initially_multibatch, final > original as increased_batches\n  from hash_join_batches(\n$$\n  select count(*) from simple r join simple s using (id);\n$$)","shape":"SELECT original > 1 AS initially_multibatch, final > original AS increased_batches FROM hash_join_batches('\n  select count(*) from simple r join simple s using (id);\n');"}
+{"sql":"rollback to settings","shape":"ROLLBACK TO SAVEPOINT settings;"}
+{"sql":"set local max_parallel_workers_per_gather = 2","shape":"SET LOCAL max_parallel_workers_per_gather TO 2;"}
+{"sql":"set local enable_parallel_hash = off","shape":"SET LOCAL enable_parallel_hash TO off;"}
+{"sql":"set local enable_parallel_hash = on","shape":"SET LOCAL enable_parallel_hash TO on;"}
+{"sql":"set local work_mem = '128kB'","shape":"SET LOCAL work_mem TO '128kB';"}
+{"sql":"set local work_mem = '192kB'","shape":"SET LOCAL work_mem TO '192kB';"}
+{"sql":"select count(*) from simple r full outer join simple s using (id)","shape":"SELECT count(*) FROM simple AS r FULL JOIN simple AS s USING (id);"}
+{"sql":"explain (costs off)\n  select count(*) FROM simple r JOIN bigger_than_it_looks s USING (id)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM simple AS r JOIN bigger_than_it_looks AS s USING (id);"}
+{"sql":"select count(*) FROM simple r JOIN bigger_than_it_looks s USING (id)","shape":"SELECT count(*) FROM simple AS r JOIN bigger_than_it_looks AS s USING (id);"}
+{"sql":"select original > 1 as initially_multibatch, final > original as increased_batches\n  from hash_join_batches(\n$$\n  select count(*) FROM simple r JOIN bigger_than_it_looks s USING (id);\n$$)","shape":"SELECT original > 1 AS initially_multibatch, final > original AS increased_batches FROM hash_join_batches('\n  select count(*) FROM simple r JOIN bigger_than_it_looks s USING (id);\n');"}
+{"sql":"explain (costs off)\n  select count(*) from simple r join bigger_than_it_looks s using (id)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM simple AS r JOIN bigger_than_it_looks AS s USING (id);"}
+{"sql":"select count(*) from simple r join bigger_than_it_looks s using (id)","shape":"SELECT count(*) FROM simple AS r JOIN bigger_than_it_looks AS s USING (id);"}
+{"sql":"select original > 1 as initially_multibatch, final > original as increased_batches\n  from hash_join_batches(\n$$\n  select count(*) from simple r join bigger_than_it_looks s using (id);\n$$)","shape":"SELECT original > 1 AS initially_multibatch, final > original AS increased_batches FROM hash_join_batches('\n  select count(*) from simple r join bigger_than_it_looks s using (id);\n');"}
+{"sql":"set local max_parallel_workers_per_gather = 1","shape":"SET LOCAL max_parallel_workers_per_gather TO 1;"}
+{"sql":"explain (costs off)\n  select count(*) from simple r join extremely_skewed s using (id)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM simple AS r JOIN extremely_skewed AS s USING (id);"}
+{"sql":"select count(*) from simple r join extremely_skewed s using (id)","shape":"SELECT count(*) FROM simple AS r JOIN extremely_skewed AS s USING (id);"}
+{"sql":"select * from hash_join_batches(\n$$\n  select count(*) from simple r join extremely_skewed s using (id);\n$$)","shape":"SELECT * FROM hash_join_batches('\n  select count(*) from simple r join extremely_skewed s using (id);\n');"}
+{"sql":"set local parallel_leader_participation = off","shape":"SET LOCAL parallel_leader_participation TO off;"}
+{"sql":"select * from hash_join_batches(\n$$\n  select count(*) from simple r join simple s using (id);\n$$)","shape":"SELECT * FROM hash_join_batches('\n  select count(*) from simple r join simple s using (id);\n');"}
+{"sql":"create table join_foo as select generate_series(1, 3) as id, 'xxxxx'::text as t","shape":"CREATE TABLE join_foo AS SELECT generate_series(1, 3) AS id, 'xxxxx'::text AS t;"}
+{"sql":"alter table join_foo set (parallel_workers = 0)"}
+{"sql":"create table join_bar as select generate_series(1, 10000) as id, 'xxxxx'::text as t","shape":"CREATE TABLE join_bar AS SELECT generate_series(1, 10000) AS id, 'xxxxx'::text AS t;"}
+{"sql":"alter table join_bar set (parallel_workers = 2)"}
+{"sql":"set enable_parallel_hash = off","shape":"SET enable_parallel_hash TO off;"}
+{"sql":"set parallel_leader_participation = off","shape":"SET parallel_leader_participation TO off;"}
+{"sql":"set enable_material = off","shape":"SET enable_material TO off;"}
+{"sql":"explain (costs off)\n  select count(*) from join_foo\n    left join (select b1.id, b1.t from join_bar b1 join join_bar b2 using (id)) ss\n    on join_foo.id < ss.id + 1 and join_foo.id > ss.id - 1","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM join_foo LEFT JOIN (SELECT b1.id, b1.t FROM join_bar AS b1 JOIN join_bar AS b2 USING (id)) AS ss ON (join_foo.id < (ss.id + 1)) AND (join_foo.id > (ss.id - 1));"}
+{"sql":"select count(*) from join_foo\n  left join (select b1.id, b1.t from join_bar b1 join join_bar b2 using (id)) ss\n  on join_foo.id < ss.id + 1 and join_foo.id > ss.id - 1","shape":"SELECT count(*) FROM join_foo LEFT JOIN (SELECT b1.id, b1.t FROM join_bar AS b1 JOIN join_bar AS b2 USING (id)) AS ss ON (join_foo.id < (ss.id + 1)) AND (join_foo.id > (ss.id - 1));"}
+{"sql":"select final > 1 as multibatch\n  from hash_join_batches(\n$$\n  select count(*) from join_foo\n    left join (select b1.id, b1.t from join_bar b1 join join_bar b2 using (id)) ss\n    on join_foo.id < ss.id + 1 and join_foo.id > ss.id - 1;\n$$)","shape":"SELECT final > 1 AS multibatch FROM hash_join_batches('\n  select count(*) from join_foo\n    left join (select b1.id, b1.t from join_bar b1 join join_bar b2 using (id)) ss\n    on join_foo.id < ss.id + 1 and join_foo.id > ss.id - 1;\n');"}
+{"sql":"set work_mem = '4MB'","shape":"SET work_mem TO '4MB';"}
+{"sql":"set enable_parallel_hash = on","shape":"SET enable_parallel_hash TO on;"}
+{"sql":"explain (costs off)\n     select  count(*) from simple r full outer join simple s using (id)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM simple AS r FULL JOIN simple AS s USING (id);"}
+{"sql":"select  count(*) from simple r full outer join simple s using (id)","shape":"SELECT count(*) FROM simple AS r FULL JOIN simple AS s USING (id);"}
+{"sql":"explain (costs off)\n     select  count(*) from simple r full outer join simple s on (r.id = 0 - s.id)","shape":"EXPLAIN (COSTS off) SELECT count(*) FROM simple AS r FULL JOIN simple AS s ON (r.id = (0 - s.id));"}
+{"sql":"select  count(*) from simple r full outer join simple s on (r.id = 0 - s.id)","shape":"SELECT count(*) FROM simple AS r FULL JOIN simple AS s ON (r.id = (0 - s.id));"}
+{"sql":"set work_mem = '128kB'","shape":"SET work_mem TO '128kB';"}
+{"sql":"explain (costs off)\n  select length(max(s.t))\n  from wide left join (select id, coalesce(t, '') || '' as t from wide) s using (id)","shape":"EXPLAIN (COSTS off) SELECT length(max(s.t)) FROM wide LEFT JOIN (SELECT id, coalesce(t, '') || '' AS t FROM wide) AS s USING (id);"}
+{"sql":"select length(max(s.t))\nfrom wide left join (select id, coalesce(t, '') || '' as t from wide) s using (id)","shape":"SELECT length(max(s.t)) FROM wide LEFT JOIN (SELECT id, coalesce(t, '') || '' AS t FROM wide) AS s USING (id);"}
+{"sql":"select final > 1 as multibatch\n  from hash_join_batches(\n$$\n  select length(max(s.t))\n  from wide left join (select id, coalesce(t, '') || '' as t from wide) s using (id);\n$$)","shape":"SELECT final > 1 AS multibatch FROM hash_join_batches('\n  select length(max(s.t))\n  from wide left join (select id, coalesce(t, '''') || '''' as t from wide) s using (id);\n');"}
+{"sql":"SAVEPOINT settings","shape":"SAVEPOINT settings;"}
+{"sql":"SET enable_parallel_hash = on","shape":"SET enable_parallel_hash TO on;"}
+{"sql":"CREATE TABLE hjtest_matchbits_t1(id int)","shape":"CREATE TABLE hjtest_matchbits_t1 (id int);"}
+{"sql":"CREATE TABLE hjtest_matchbits_t2(id int)","shape":"CREATE TABLE hjtest_matchbits_t2 (id int);"}
+{"sql":"INSERT INTO hjtest_matchbits_t1 VALUES (1)","shape":"INSERT INTO hjtest_matchbits_t1 VALUES (1);"}
+{"sql":"INSERT INTO hjtest_matchbits_t2 VALUES (2)","shape":"INSERT INTO hjtest_matchbits_t2 VALUES (2);"}
+{"sql":"UPDATE hjtest_matchbits_t2 set id = 2","shape":"UPDATE hjtest_matchbits_t2 SET id = 2;"}
+{"sql":"SELECT * FROM hjtest_matchbits_t1 t1 FULL JOIN hjtest_matchbits_t2 t2 ON t1.id = t2.id\n  ORDER BY t1.id","shape":"SELECT * FROM hjtest_matchbits_t1 AS t1 FULL JOIN hjtest_matchbits_t2 AS t2 ON t1.id = t2.id ORDER BY t1.id;"}
+{"sql":"RESET parallel_setup_cost","shape":"RESET parallel_setup_cost;"}
+{"sql":"SET enable_parallel_hash = off","shape":"SET enable_parallel_hash TO off;"}
+{"sql":"SELECT * FROM hjtest_matchbits_t1 t1 FULL JOIN hjtest_matchbits_t2 t2 ON t1.id = t2.id","shape":"SELECT * FROM hjtest_matchbits_t1 AS t1 FULL JOIN hjtest_matchbits_t2 AS t2 ON t1.id = t2.id;"}
+{"sql":"ROLLBACK TO settings","shape":"ROLLBACK TO SAVEPOINT settings;"}
+{"sql":"SET LOCAL enable_sort = OFF","shape":"SET LOCAL enable_sort TO OFF;"}
+{"sql":"SET LOCAL from_collapse_limit = 1","shape":"SET LOCAL from_collapse_limit TO 1;"}
+{"sql":"CREATE TABLE hjtest_1 (a text, b int, id int, c bool)","shape":"CREATE TABLE hjtest_1 (a text, b int, id int, c bool);"}
+{"sql":"CREATE TABLE hjtest_2 (a bool, id int, b text, c int)","shape":"CREATE TABLE hjtest_2 (a bool, id int, b text, c int);"}
+{"sql":"INSERT INTO hjtest_1(a, b, id, c) VALUES ('text', 2, 1, false)","shape":"INSERT INTO hjtest_1 (a, b, id, c) VALUES ('text', 2, 1, FALSE);"}
+{"sql":"INSERT INTO hjtest_1(a, b, id, c) VALUES ('text', 1, 2, false)","shape":"INSERT INTO hjtest_1 (a, b, id, c) VALUES ('text', 1, 2, FALSE);"}
+{"sql":"INSERT INTO hjtest_1(a, b, id, c) VALUES ('text', 20, 1, false)","shape":"INSERT INTO hjtest_1 (a, b, id, c) VALUES ('text', 20, 1, FALSE);"}
+{"sql":"INSERT INTO hjtest_1(a, b, id, c) VALUES ('text', 1, 1, false)","shape":"INSERT INTO hjtest_1 (a, b, id, c) VALUES ('text', 1, 1, FALSE);"}
+{"sql":"INSERT INTO hjtest_2(a, id, b, c) VALUES (true, 1, 'another', 2)","shape":"INSERT INTO hjtest_2 (a, id, b, c) VALUES (TRUE, 1, 'another', 2);"}
+{"sql":"INSERT INTO hjtest_2(a, id, b, c) VALUES (true, 3, 'another', 7)","shape":"INSERT INTO hjtest_2 (a, id, b, c) VALUES (TRUE, 3, 'another', 7);"}
+{"sql":"INSERT INTO hjtest_2(a, id, b, c) VALUES (true, 1, 'another', 90)","shape":"INSERT INTO hjtest_2 (a, id, b, c) VALUES (TRUE, 1, 'another', 90);"}
+{"sql":"INSERT INTO hjtest_2(a, id, b, c) VALUES (true, 1, 'another', 3)","shape":"INSERT INTO hjtest_2 (a, id, b, c) VALUES (TRUE, 1, 'another', 3);"}
+{"sql":"INSERT INTO hjtest_2(a, id, b, c) VALUES (true, 1, 'text', 1)","shape":"INSERT INTO hjtest_2 (a, id, b, c) VALUES (TRUE, 1, 'text', 1);"}
+{"sql":"EXPLAIN (COSTS OFF, VERBOSE)\nSELECT hjtest_1.a a1, hjtest_2.a a2,hjtest_1.tableoid::regclass t1, hjtest_2.tableoid::regclass t2\nFROM hjtest_1, hjtest_2\nWHERE\n    hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)\n    AND (SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c*5)\n    AND (SELECT hjtest_1.b * 5) < 50\n    AND (SELECT hjtest_2.c * 5) < 55\n    AND hjtest_1.a <> hjtest_2.b","shape":"EXPLAIN (COSTS OFF, VERBOSE) SELECT hjtest_1.a AS a1, hjtest_2.a AS a2, hjtest_1.tableoid::regclass AS t1, hjtest_2.tableoid::regclass AS t2 FROM hjtest_1, hjtest_2 WHERE ((((hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)) AND ((SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c * 5))) AND ((SELECT hjtest_1.b * 5) < 50)) AND ((SELECT hjtest_2.c * 5) < 55)) AND (hjtest_1.a <> hjtest_2.b);"}
+{"sql":"SELECT hjtest_1.a a1, hjtest_2.a a2,hjtest_1.tableoid::regclass t1, hjtest_2.tableoid::regclass t2\nFROM hjtest_1, hjtest_2\nWHERE\n    hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)\n    AND (SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c*5)\n    AND (SELECT hjtest_1.b * 5) < 50\n    AND (SELECT hjtest_2.c * 5) < 55\n    AND hjtest_1.a <> hjtest_2.b","shape":"SELECT hjtest_1.a AS a1, hjtest_2.a AS a2, hjtest_1.tableoid::regclass AS t1, hjtest_2.tableoid::regclass AS t2 FROM hjtest_1, hjtest_2 WHERE ((((hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)) AND ((SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c * 5))) AND ((SELECT hjtest_1.b * 5) < 50)) AND ((SELECT hjtest_2.c * 5) < 55)) AND (hjtest_1.a <> hjtest_2.b);"}
+{"sql":"EXPLAIN (COSTS OFF, VERBOSE)\nSELECT hjtest_1.a a1, hjtest_2.a a2,hjtest_1.tableoid::regclass t1, hjtest_2.tableoid::regclass t2\nFROM hjtest_2, hjtest_1\nWHERE\n    hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)\n    AND (SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c*5)\n    AND (SELECT hjtest_1.b * 5) < 50\n    AND (SELECT hjtest_2.c * 5) < 55\n    AND hjtest_1.a <> hjtest_2.b","shape":"EXPLAIN (COSTS OFF, VERBOSE) SELECT hjtest_1.a AS a1, hjtest_2.a AS a2, hjtest_1.tableoid::regclass AS t1, hjtest_2.tableoid::regclass AS t2 FROM hjtest_2, hjtest_1 WHERE ((((hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)) AND ((SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c * 5))) AND ((SELECT hjtest_1.b * 5) < 50)) AND ((SELECT hjtest_2.c * 5) < 55)) AND (hjtest_1.a <> hjtest_2.b);"}
+{"sql":"SELECT hjtest_1.a a1, hjtest_2.a a2,hjtest_1.tableoid::regclass t1, hjtest_2.tableoid::regclass t2\nFROM hjtest_2, hjtest_1\nWHERE\n    hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)\n    AND (SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c*5)\n    AND (SELECT hjtest_1.b * 5) < 50\n    AND (SELECT hjtest_2.c * 5) < 55\n    AND hjtest_1.a <> hjtest_2.b","shape":"SELECT hjtest_1.a AS a1, hjtest_2.a AS a2, hjtest_1.tableoid::regclass AS t1, hjtest_2.tableoid::regclass AS t2 FROM hjtest_2, hjtest_1 WHERE ((((hjtest_1.id = (SELECT 1 WHERE hjtest_2.id = 1)) AND ((SELECT hjtest_1.b * 5) = (SELECT hjtest_2.c * 5))) AND ((SELECT hjtest_1.b * 5) < 50)) AND ((SELECT hjtest_2.c * 5) < 55)) AND (hjtest_1.a <> hjtest_2.b);"}
+{"sql":"explain (costs off)\nselect i8.q2, ss.* from\nint8_tbl i8,\nlateral (select t1.fivethous, i4.f1 from tenk1 t1 join int4_tbl i4\n         on t1.fivethous = i4.f1+i8.q2 order by 1,2) ss","shape":"EXPLAIN (COSTS off) SELECT i8.q2, ss.* FROM int8_tbl AS i8, LATERAL (SELECT t1.fivethous, i4.f1 FROM tenk1 AS t1 JOIN int4_tbl AS i4 ON t1.fivethous = (i4.f1 + i8.q2) ORDER BY 1, 2) AS ss;"}
+{"sql":"select i8.q2, ss.* from\nint8_tbl i8,\nlateral (select t1.fivethous, i4.f1 from tenk1 t1 join int4_tbl i4\n         on t1.fivethous = i4.f1+i8.q2 order by 1,2) ss","shape":"SELECT i8.q2, ss.* FROM int8_tbl AS i8, LATERAL (SELECT t1.fivethous, i4.f1 FROM tenk1 AS t1 JOIN int4_tbl AS i4 ON t1.fivethous = (i4.f1 + i8.q2) ORDER BY 1, 2) AS ss;"}

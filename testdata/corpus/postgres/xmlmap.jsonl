@@ -1,0 +1,40 @@
+{"sql":"CREATE SCHEMA testxmlschema","shape":"CREATE SCHEMA testxmlschema;"}
+{"sql":"CREATE TABLE testxmlschema.test1 (a int, b text)","shape":"CREATE TABLE testxmlschema.test1 (a int, b text);"}
+{"sql":"INSERT INTO testxmlschema.test1 VALUES (1, 'one'), (2, 'two'), (-1, null)","shape":"INSERT INTO testxmlschema.test1 VALUES (1, 'one'), (2, 'two'), (-1, NULL);"}
+{"sql":"CREATE DOMAIN testxmldomain AS varchar","shape":"CREATE DOMAIN testxmldomain AS varchar;"}
+{"sql":"CREATE TABLE testxmlschema.test2 (z int, y varchar(500), x char(6),\n    w numeric(9,2), v smallint, u bigint, t real,\n    s time, stz timetz, r timestamp, rtz timestamptz, q date,\n    p xml, o testxmldomain, n bool, m bytea, aaa text)","shape":"CREATE TABLE testxmlschema.test2 (z int, y varchar(500), x char(6), w numeric(9, 2), v smallint, u bigint, t real, s time, stz timetz, r timestamp, rtz timestamptz, q date, p xml, o testxmldomain, n bool, m bytea, aaa text);"}
+{"sql":"ALTER TABLE testxmlschema.test2 DROP COLUMN aaa","shape":"ALTER TABLE testxmlschema.test2 DROP COLUMN aaa;"}
+{"sql":"INSERT INTO testxmlschema.test2 VALUES (55, 'abc', 'def',\n    98.6, 2, 999, 0,\n    '21:07', '21:11 +05', '2009-06-08 21:07:30', '2009-06-08 21:07:30 -07', '2009-06-08',\n    NULL, 'ABC', true, 'XYZ')","shape":"INSERT INTO testxmlschema.test2 VALUES (55, 'abc', 'def', 98.6, 2, 999, 0, '21:07', '21:11 +05', '2009-06-08 21:07:30', '2009-06-08 21:07:30 -07', '2009-06-08', NULL, 'ABC', TRUE, 'XYZ');"}
+{"sql":"SELECT table_to_xml('testxmlschema.test1', false, false, '')","shape":"SELECT table_to_xml('testxmlschema.test1', FALSE, FALSE, '');"}
+{"sql":"SELECT table_to_xml('testxmlschema.test1', true, false, 'foo')","shape":"SELECT table_to_xml('testxmlschema.test1', TRUE, FALSE, 'foo');"}
+{"sql":"SELECT table_to_xml('testxmlschema.test1', false, true, '')","shape":"SELECT table_to_xml('testxmlschema.test1', FALSE, TRUE, '');"}
+{"sql":"SELECT table_to_xml('testxmlschema.test1', true, true, '')","shape":"SELECT table_to_xml('testxmlschema.test1', TRUE, TRUE, '');"}
+{"sql":"SELECT table_to_xml('testxmlschema.test2', false, false, '')","shape":"SELECT table_to_xml('testxmlschema.test2', FALSE, FALSE, '');"}
+{"sql":"SELECT table_to_xmlschema('testxmlschema.test1', false, false, '')","shape":"SELECT table_to_xmlschema('testxmlschema.test1', FALSE, FALSE, '');"}
+{"sql":"SELECT table_to_xmlschema('testxmlschema.test1', true, false, '')","shape":"SELECT table_to_xmlschema('testxmlschema.test1', TRUE, FALSE, '');"}
+{"sql":"SELECT table_to_xmlschema('testxmlschema.test1', false, true, 'foo')","shape":"SELECT table_to_xmlschema('testxmlschema.test1', FALSE, TRUE, 'foo');"}
+{"sql":"SELECT table_to_xmlschema('testxmlschema.test1', true, true, '')","shape":"SELECT table_to_xmlschema('testxmlschema.test1', TRUE, TRUE, '');"}
+{"sql":"SELECT table_to_xmlschema('testxmlschema.test2', false, false, '')","shape":"SELECT table_to_xmlschema('testxmlschema.test2', FALSE, FALSE, '');"}
+{"sql":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', false, false, '')","shape":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', FALSE, FALSE, '');"}
+{"sql":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', true, false, '')","shape":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', TRUE, FALSE, '');"}
+{"sql":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', false, true, '')","shape":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', FALSE, TRUE, '');"}
+{"sql":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', true, true, 'foo')","shape":"SELECT table_to_xml_and_xmlschema('testxmlschema.test1', TRUE, TRUE, 'foo');"}
+{"sql":"SELECT query_to_xml('SELECT * FROM testxmlschema.test1', false, false, '')","shape":"SELECT query_to_xml('SELECT * FROM testxmlschema.test1', FALSE, FALSE, '');"}
+{"sql":"SELECT query_to_xmlschema('SELECT * FROM testxmlschema.test1', false, false, '')","shape":"SELECT query_to_xmlschema('SELECT * FROM testxmlschema.test1', FALSE, FALSE, '');"}
+{"sql":"SELECT query_to_xml_and_xmlschema('SELECT * FROM testxmlschema.test1', true, true, '')","shape":"SELECT query_to_xml_and_xmlschema('SELECT * FROM testxmlschema.test1', TRUE, TRUE, '');"}
+{"sql":"DECLARE xc CURSOR WITH HOLD FOR SELECT * FROM testxmlschema.test1 ORDER BY 1, 2","shape":"DECLARE xc CURSOR WITH HOLD FOR SELECT * FROM testxmlschema.test1 ORDER BY 1, 2;"}
+{"sql":"SELECT cursor_to_xml('xc'::refcursor, 5, false, true, '')","shape":"SELECT cursor_to_xml('xc'::refcursor, 5, FALSE, TRUE, '');"}
+{"sql":"SELECT cursor_to_xmlschema('xc'::refcursor, false, true, '')","shape":"SELECT cursor_to_xmlschema('xc'::refcursor, FALSE, TRUE, '');"}
+{"sql":"MOVE BACKWARD ALL IN xc","shape":"MOVE BACKWARD ALL IN xc;"}
+{"sql":"SELECT cursor_to_xml('xc'::refcursor, 5, true, false, '')","shape":"SELECT cursor_to_xml('xc'::refcursor, 5, TRUE, FALSE, '');"}
+{"sql":"SELECT cursor_to_xmlschema('xc'::refcursor, true, false, '')","shape":"SELECT cursor_to_xmlschema('xc'::refcursor, TRUE, FALSE, '');"}
+{"sql":"SELECT schema_to_xml('testxmlschema', false, true, '')","shape":"SELECT schema_to_xml('testxmlschema', FALSE, TRUE, '');"}
+{"sql":"SELECT schema_to_xml('testxmlschema', true, false, '')","shape":"SELECT schema_to_xml('testxmlschema', TRUE, FALSE, '');"}
+{"sql":"SELECT schema_to_xmlschema('testxmlschema', false, true, '')","shape":"SELECT schema_to_xmlschema('testxmlschema', FALSE, TRUE, '');"}
+{"sql":"SELECT schema_to_xmlschema('testxmlschema', true, false, '')","shape":"SELECT schema_to_xmlschema('testxmlschema', TRUE, FALSE, '');"}
+{"sql":"SELECT schema_to_xml_and_xmlschema('testxmlschema', true, true, 'foo')","shape":"SELECT schema_to_xml_and_xmlschema('testxmlschema', TRUE, TRUE, 'foo');"}
+{"sql":"CREATE DOMAIN testboolxmldomain AS bool","shape":"CREATE DOMAIN testboolxmldomain AS bool;"}
+{"sql":"CREATE DOMAIN testdatexmldomain AS date","shape":"CREATE DOMAIN testdatexmldomain AS date;"}
+{"sql":"CREATE TABLE testxmlschema.test3\n    AS SELECT true c1,\n              true::testboolxmldomain c2,\n              '2013-02-21'::date c3,\n              '2013-02-21'::testdatexmldomain c4","shape":"CREATE TABLE testxmlschema.test3 AS SELECT TRUE AS c1, TRUE::testboolxmldomain AS c2, '2013-02-21'::date AS c3, '2013-02-21'::testdatexmldomain AS c4;"}
+{"sql":"SELECT xmlforest(c1, c2, c3, c4) FROM testxmlschema.test3","shape":"SELECT xmlforest(c1, c2, c3, c4) FROM testxmlschema.test3;"}
+{"sql":"SELECT table_to_xml('testxmlschema.test3', true, true, '')","shape":"SELECT table_to_xml('testxmlschema.test3', TRUE, TRUE, '');"}

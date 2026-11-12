@@ -1,0 +1,33 @@
+{"sql":"INSERT INTO t1 VALUES('test renaming the table')"}
+{"sql":"INSERT INTO t1 VALUES(' after it has been written')"}
+{"sql":"INSERT INTO t1 VALUES('registers the FTS3 module')"}
+{"sql":"INSERT INTO t1 VALUES('various support functions')"}
+{"sql":"INSERT INTO t3(t3) VALUES('nodesize=50')"}
+{"sql":"SELECT * FROM t3 WHERE t3 MATCH 'x'"}
+{"sql":"SELECT count(rowid) FROM t3 WHERE t3 MATCH 'aa*'"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4"}
+{"sql":"INSERT INTO t4 VALUES('The British Government called on')"}
+{"sql":"INSERT INTO t4 VALUES('as pesetas then became much')"}
+{"sql":"SELECT content FROM t4"}
+{"sql":"CREATE VIRTUAL TABLE t5 USING fts4"}
+{"sql":"INSERT INTO t5 VALUES('The British Government called on')"}
+{"sql":"INSERT INTO t5 VALUES('as pesetas then became much')"}
+{"sql":"INSERT INTO t5 VALUES('influential in shaping his future outlook')"}
+{"sql":"INSERT INTO t5 VALUES('might be acceptable to the British electorate')"}
+{"sql":"SELECT rowid FROM t5 WHERE t5 MATCH 'british'"}
+{"sql":"CREATE VIRTUAL TABLE t6 USING fts4"}
+{"sql":"SELECT rowid FROM t6"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, b, matchinfo=fts3)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, b, matchinfo=fs3)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, b, matchnfo=fts3)"}
+{"sql":"CREATE VIRTUAL TABLE t8 USING fts4"}
+{"sql":"SELECT mit(matchinfo(t8, 'x')) FROM t8 WHERE t8 MATCH 'a b c'"}
+{"sql":"SELECT mit(matchinfo(t8, 's')) FROM t8 WHERE t8 MATCH 'a b c'"}
+{"sql":"SELECT mit(matchinfo(t8, 'a')) FROM t8 WHERE t8 MATCH 'a b c'"}
+{"sql":"SELECT mit(matchinfo(t8, 'l')) FROM t8 WHERE t8 MATCH 'a b c'"}
+{"sql":"SELECT mit(matchinfo(t8, 'l')) FROM t8 WHERE t8 MATCH '\"a b c\"'"}
+{"sql":"CREATE VIRTUAL TABLE t9 USING fts4(tokenize=porter)"}
+{"sql":"INSERT INTO t9 VALUES(\n      'this record is used toooooooooooooooooooooooooooooooooooooo try to'\n    )"}
+{"sql":"SELECT offsets(t9) FROM t9 WHERE t9 MATCH 'to*'"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(a, b, languageid=d)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(a, b)"}

@@ -1,0 +1,33 @@
+{"sql":"INSERT INTO t1 VALUES(randstr(100,100))"}
+{"sql":"INSERT INTO t1 VALUES(randstr(90,90))"}
+{"sql":"INSERT INTO t1 VALUES(randstr(80,80))"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(5,5) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(6,6) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(7,7) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(8,8) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(randstr(3000,3000))"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(9,9) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(10,10) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(11,11) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT x || randstr(12,12) FROM t1"}
+{"sql":"CREATE INDEX t1i1 ON t1(x)"}
+{"sql":"DELETE FROM t2 WHERE rowid%5!=0"}
+{"sql":"SELECT count(*) FROM t1 WHERE x>'abcdef'"}
+{"sql":"SELECT rootpage FROM sqlite_master WHERE name = 't1i1'"}
+{"sql":"SELECT rootpage FROM sqlite_master WHERE name = 't1'"}
+{"sql":"INSERT INTO t1 VALUES('abc')"}
+{"sql":"SELECT * FROM t1 WHERE oid = 10"}
+{"sql":"SELECT * FROM t1 WHERE x = 'abcde'"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT)"}
+{"sql":"DELETE FROM t1 WHERE rowid = 3"}
+{"sql":"INSERT INTO t1 VALUES( randomblob(10) )"}
+{"sql":"DELETE FROM t1 WHERE rowid=1"}
+{"sql":"INSERT INTO t1 VALUES(X'000100020003000400050006000700080009000A')"}
+{"sql":"UPDATE t1 SET x = X'870400020003000400050006000700080009000A' \n      WHERE rowid = 10"}
+{"sql":"PRAGMA secure_delete = on"}
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y)"}
+{"sql":"INSERT INTO t1 VALUES(5, randomblob(1900))"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(5, randomblob(1900))"}
+{"sql":"INSERT INTO t1 VALUES(5, randomblob(900))"}
+{"sql":"INSERT INTO t1 VALUES(6, randomblob(900))"}
+{"sql":"INSERT INTO t1 VALUES(4, randomblob(1900))"}

@@ -1,0 +1,198 @@
+{"sql":"DECLARE foo1 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo1 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo2 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo2 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo3 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo3 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo4 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo4 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo5 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo5 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo6 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo6 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo7 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo7 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo8 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo8 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo9 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo9 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo10 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo10 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo11 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo11 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo12 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo12 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo13 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo13 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo14 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo14 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo15 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo15 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo16 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo16 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo17 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo17 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo18 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo18 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo19 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo19 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo20 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo20 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo21 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo21 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"DECLARE foo22 SCROLL CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE foo22 SCROLL CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DECLARE foo23 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo23 SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"FETCH 1 in foo1","shape":"FETCH 1 in foo1;"}
+{"sql":"FETCH 2 in foo2","shape":"FETCH 2 in foo2;"}
+{"sql":"FETCH 3 in foo3","shape":"FETCH 3 in foo3;"}
+{"sql":"FETCH 4 in foo4","shape":"FETCH 4 in foo4;"}
+{"sql":"FETCH 5 in foo5","shape":"FETCH 5 in foo5;"}
+{"sql":"FETCH 6 in foo6","shape":"FETCH 6 in foo6;"}
+{"sql":"FETCH 7 in foo7","shape":"FETCH 7 in foo7;"}
+{"sql":"FETCH 8 in foo8","shape":"FETCH 8 in foo8;"}
+{"sql":"FETCH 9 in foo9","shape":"FETCH 9 in foo9;"}
+{"sql":"FETCH 10 in foo10","shape":"FETCH 10 in foo10;"}
+{"sql":"FETCH 11 in foo11","shape":"FETCH 11 in foo11;"}
+{"sql":"FETCH 12 in foo12","shape":"FETCH 12 in foo12;"}
+{"sql":"FETCH 13 in foo13","shape":"FETCH 13 in foo13;"}
+{"sql":"FETCH 14 in foo14","shape":"FETCH 14 in foo14;"}
+{"sql":"FETCH 15 in foo15","shape":"FETCH 15 in foo15;"}
+{"sql":"FETCH 16 in foo16","shape":"FETCH 16 in foo16;"}
+{"sql":"FETCH 17 in foo17","shape":"FETCH 17 in foo17;"}
+{"sql":"FETCH 18 in foo18","shape":"FETCH 18 in foo18;"}
+{"sql":"FETCH 19 in foo19","shape":"FETCH 19 in foo19;"}
+{"sql":"FETCH 20 in foo20","shape":"FETCH 20 in foo20;"}
+{"sql":"FETCH 21 in foo21","shape":"FETCH 21 in foo21;"}
+{"sql":"FETCH 22 in foo22","shape":"FETCH 22 in foo22;"}
+{"sql":"FETCH 23 in foo23","shape":"FETCH 23 in foo23;"}
+{"sql":"FETCH backward 1 in foo23","shape":"FETCH backward 1 in foo23;"}
+{"sql":"FETCH backward 2 in foo22","shape":"FETCH backward 2 in foo22;"}
+{"sql":"FETCH backward 3 in foo21","shape":"FETCH backward 3 in foo21;"}
+{"sql":"FETCH backward 4 in foo20","shape":"FETCH backward 4 in foo20;"}
+{"sql":"FETCH backward 5 in foo19","shape":"FETCH backward 5 in foo19;"}
+{"sql":"FETCH backward 6 in foo18","shape":"FETCH backward 6 in foo18;"}
+{"sql":"FETCH backward 7 in foo17","shape":"FETCH backward 7 in foo17;"}
+{"sql":"FETCH backward 8 in foo16","shape":"FETCH backward 8 in foo16;"}
+{"sql":"FETCH backward 9 in foo15","shape":"FETCH backward 9 in foo15;"}
+{"sql":"FETCH backward 10 in foo14","shape":"FETCH backward 10 in foo14;"}
+{"sql":"FETCH backward 11 in foo13","shape":"FETCH backward 11 in foo13;"}
+{"sql":"FETCH backward 12 in foo12","shape":"FETCH backward 12 in foo12;"}
+{"sql":"FETCH backward 13 in foo11","shape":"FETCH backward 13 in foo11;"}
+{"sql":"FETCH backward 14 in foo10","shape":"FETCH backward 14 in foo10;"}
+{"sql":"FETCH backward 15 in foo9","shape":"FETCH backward 15 in foo9;"}
+{"sql":"FETCH backward 16 in foo8","shape":"FETCH backward 16 in foo8;"}
+{"sql":"FETCH backward 17 in foo7","shape":"FETCH backward 17 in foo7;"}
+{"sql":"FETCH backward 18 in foo6","shape":"FETCH backward 18 in foo6;"}
+{"sql":"FETCH backward 19 in foo5","shape":"FETCH backward 19 in foo5;"}
+{"sql":"FETCH backward 20 in foo4","shape":"FETCH backward 20 in foo4;"}
+{"sql":"FETCH backward 21 in foo3","shape":"FETCH backward 21 in foo3;"}
+{"sql":"FETCH backward 22 in foo2","shape":"FETCH backward 22 in foo2;"}
+{"sql":"FETCH backward 23 in foo1","shape":"FETCH backward 23 in foo1;"}
+{"sql":"CLOSE foo1","shape":"CLOSE foo1;"}
+{"sql":"CLOSE foo2","shape":"CLOSE foo2;"}
+{"sql":"CLOSE foo3","shape":"CLOSE foo3;"}
+{"sql":"CLOSE foo4","shape":"CLOSE foo4;"}
+{"sql":"CLOSE foo5","shape":"CLOSE foo5;"}
+{"sql":"CLOSE foo6","shape":"CLOSE foo6;"}
+{"sql":"CLOSE foo7","shape":"CLOSE foo7;"}
+{"sql":"CLOSE foo8","shape":"CLOSE foo8;"}
+{"sql":"CLOSE foo9","shape":"CLOSE foo9;"}
+{"sql":"CLOSE foo10","shape":"CLOSE foo10;"}
+{"sql":"CLOSE foo11","shape":"CLOSE foo11;"}
+{"sql":"CLOSE foo12","shape":"CLOSE foo12;"}
+{"sql":"SELECT name, statement, is_holdable, is_binary, is_scrollable FROM pg_cursors ORDER BY 1","shape":"SELECT name, statement, is_holdable, is_binary, is_scrollable FROM pg_cursors ORDER BY 1;"}
+{"sql":"SELECT name, statement, is_holdable, is_binary, is_scrollable FROM pg_cursors","shape":"SELECT name, statement, is_holdable, is_binary, is_scrollable FROM pg_cursors;"}
+{"sql":"DECLARE foo24 NO SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo24 NO SCROLL CURSOR FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"FETCH 1 FROM foo24","shape":"FETCH 1 FROM foo24;"}
+{"sql":"FETCH BACKWARD 1 FROM foo24","shape":"FETCH BACKWARD 1 FROM foo24;"}
+{"sql":"FETCH ABSOLUTE 2 FROM foo24","shape":"FETCH ABSOLUTE 2 FROM foo24;"}
+{"sql":"FETCH ABSOLUTE 1 FROM foo24","shape":"FETCH ABSOLUTE 1 FROM foo24;"}
+{"sql":"DECLARE foo25 SCROLL CURSOR WITH HOLD FOR SELECT * FROM tenk2","shape":"DECLARE foo25 SCROLL CURSOR WITH HOLD FOR SELECT * FROM tenk2;"}
+{"sql":"FETCH FROM foo25","shape":"FETCH FROM foo25;"}
+{"sql":"FETCH BACKWARD FROM foo25","shape":"FETCH BACKWARD FROM foo25;"}
+{"sql":"FETCH ABSOLUTE -1 FROM foo25","shape":"FETCH ABSOLUTE -1 FROM foo25;"}
+{"sql":"CLOSE foo25","shape":"CLOSE foo25;"}
+{"sql":"DECLARE foo25ns NO SCROLL CURSOR WITH HOLD FOR SELECT * FROM tenk2","shape":"DECLARE foo25ns NO SCROLL CURSOR WITH HOLD FOR SELECT * FROM tenk2;"}
+{"sql":"FETCH FROM foo25ns","shape":"FETCH FROM foo25ns;"}
+{"sql":"FETCH ABSOLUTE 4 FROM foo25ns","shape":"FETCH ABSOLUTE 4 FROM foo25ns;"}
+{"sql":"CLOSE foo25ns","shape":"CLOSE foo25ns;"}
+{"sql":"DECLARE foo26 CURSOR WITH HOLD FOR SELECT * FROM tenk1 ORDER BY unique2","shape":"DECLARE foo26 CURSOR WITH HOLD FOR SELECT * FROM tenk1 ORDER BY unique2;"}
+{"sql":"FETCH FROM foo26","shape":"FETCH FROM foo26;"}
+{"sql":"CREATE FUNCTION declares_cursor(text)\n   RETURNS void\n   AS 'DECLARE c CURSOR FOR SELECT stringu1 FROM tenk1 WHERE stringu1 LIKE $1;'\n   LANGUAGE SQL","shape":"CREATE FUNCTION declares_cursor(text) RETURNS void AS 'DECLARE c CURSOR FOR SELECT stringu1 FROM tenk1 WHERE stringu1 LIKE $1;' LANGUAGE SQL;"}
+{"sql":"SELECT declares_cursor('AB%')","shape":"SELECT declares_cursor('AB%');"}
+{"sql":"create temp table tt1(f1 int)","shape":"CREATE TEMPORARY TABLE tt1 (f1 int);"}
+{"sql":"create function count_tt1_v() returns int8 as\n'select count(*) from tt1' language sql volatile","shape":"CREATE FUNCTION count_tt1_v() RETURNS int8 AS 'select count(*) from tt1' LANGUAGE sql VOLATILE;"}
+{"sql":"create function count_tt1_s() returns int8 as\n'select count(*) from tt1' language sql stable","shape":"CREATE FUNCTION count_tt1_s() RETURNS int8 AS 'select count(*) from tt1' LANGUAGE sql STABLE;"}
+{"sql":"insert into tt1 values(1)","shape":"INSERT INTO tt1 VALUES (1);"}
+{"sql":"declare c1 cursor for select count_tt1_v(), count_tt1_s()","shape":"declare c1 cursor for select count_tt1_v(), count_tt1_s();"}
+{"sql":"insert into tt1 values(2)","shape":"INSERT INTO tt1 VALUES (2);"}
+{"sql":"fetch all from c1","shape":"fetch all from c1;"}
+{"sql":"declare c2 cursor with hold for select count_tt1_v(), count_tt1_s()","shape":"declare c2 cursor with hold for select count_tt1_v(), count_tt1_s();"}
+{"sql":"delete from tt1","shape":"DELETE FROM tt1;"}
+{"sql":"fetch all from c2","shape":"fetch all from c2;"}
+{"sql":"drop function count_tt1_v()"}
+{"sql":"drop function count_tt1_s()"}
+{"sql":"DECLARE bc BINARY CURSOR FOR SELECT * FROM tenk1","shape":"DECLARE bc BINARY CURSOR FOR SELECT * FROM tenk1;"}
+{"sql":"PREPARE cprep AS\n  SELECT name, statement, is_holdable, is_binary, is_scrollable FROM pg_cursors","shape":"PREPARE cprep AS SELECT name, statement, is_holdable, is_binary, is_scrollable FROM pg_cursors;"}
+{"sql":"EXECUTE cprep","shape":"EXECUTE cprep;"}
+{"sql":"SELECT name FROM pg_cursors ORDER BY 1","shape":"SELECT name FROM pg_cursors ORDER BY 1;"}
+{"sql":"CLOSE ALL","shape":"CLOSE ALL;"}
+{"sql":"DECLARE foo1 CURSOR WITH HOLD FOR SELECT 1","shape":"DECLARE foo1 CURSOR WITH HOLD FOR SELECT 1;"}
+{"sql":"DECLARE foo2 CURSOR WITHOUT HOLD FOR SELECT 1","shape":"DECLARE foo2 CURSOR WITHOUT HOLD FOR SELECT 1;"}
+{"sql":"CREATE TEMP TABLE uctest(f1 int, f2 text)","shape":"CREATE TEMPORARY TABLE uctest (f1 int, f2 text);"}
+{"sql":"INSERT INTO uctest VALUES (1, 'one'), (2, 'two'), (3, 'three')","shape":"INSERT INTO uctest VALUES (1, 'one'), (2, 'two'), (3, 'three');"}
+{"sql":"SELECT * FROM uctest","shape":"SELECT * FROM uctest;"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT * FROM uctest","shape":"DECLARE c1 CURSOR FOR SELECT * FROM uctest;"}
+{"sql":"FETCH 2 FROM c1","shape":"FETCH 2 FROM c1;"}
+{"sql":"DELETE FROM uctest WHERE CURRENT OF c1","shape":"DELETE FROM uctest WHERE CURRENT OF c1;"}
+{"sql":"FETCH ALL FROM c1","shape":"FETCH ALL FROM c1;"}
+{"sql":"MOVE BACKWARD ALL IN c1","shape":"MOVE BACKWARD ALL IN c1;"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT * FROM uctest FOR UPDATE","shape":"DECLARE c1 CURSOR FOR SELECT * FROM uctest FOR UPDATE;"}
+{"sql":"FETCH c1","shape":"FETCH c1;"}
+{"sql":"UPDATE uctest SET f1 = 8 WHERE CURRENT OF c1","shape":"UPDATE uctest SET f1 = 8 WHERE CURRENT OF c1;"}
+{"sql":"UPDATE uctest SET f1 = f1 + 10 WHERE CURRENT OF c1","shape":"UPDATE uctest SET f1 = f1 + 10 WHERE CURRENT OF c1;"}
+{"sql":"FETCH RELATIVE 0 FROM c1","shape":"FETCH RELATIVE 0 FROM c1;"}
+{"sql":"DECLARE c1 INSENSITIVE CURSOR FOR SELECT * FROM uctest","shape":"DECLARE c1 INSENSITIVE CURSOR FOR SELECT * FROM uctest;"}
+{"sql":"INSERT INTO uctest VALUES (10, 'ten')","shape":"INSERT INTO uctest VALUES (10, 'ten');"}
+{"sql":"FETCH NEXT FROM c1","shape":"FETCH NEXT FROM c1;"}
+{"sql":"DELETE FROM uctest WHERE f1 = 10","shape":"DELETE FROM uctest WHERE f1 = 10;"}
+{"sql":"CREATE TEMP TABLE ucchild () inherits (uctest)","shape":"CREATE TEMPORARY TABLE ucchild () INHERITS (uctest);"}
+{"sql":"INSERT INTO ucchild values(100, 'hundred')","shape":"INSERT INTO ucchild VALUES (100, 'hundred');"}
+{"sql":"FETCH 1 FROM c1","shape":"FETCH 1 FROM c1;"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT * FROM uctest a, uctest b WHERE a.f1 = b.f1 + 5","shape":"DECLARE c1 CURSOR FOR SELECT * FROM uctest a, uctest b WHERE a.f1 = b.f1 + 5;"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT * FROM uctest a, uctest b WHERE a.f1 = b.f1 + 5 FOR UPDATE","shape":"DECLARE c1 CURSOR FOR SELECT * FROM uctest a, uctest b WHERE a.f1 = b.f1 + 5 FOR UPDATE;"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT * FROM uctest a, uctest b WHERE a.f1 = b.f1 + 5 FOR SHARE OF a","shape":"DECLARE c1 CURSOR FOR SELECT * FROM uctest a, uctest b WHERE a.f1 = b.f1 + 5 FOR SHARE OF a;"}
+{"sql":"DECLARE cx CURSOR WITH HOLD FOR SELECT * FROM uctest","shape":"DECLARE cx CURSOR WITH HOLD FOR SELECT * FROM uctest;"}
+{"sql":"DELETE FROM uctest WHERE CURRENT OF cx","shape":"DELETE FROM uctest WHERE CURRENT OF cx;"}
+{"sql":"DECLARE c CURSOR FOR SELECT * FROM tenk2","shape":"DECLARE c CURSOR FOR SELECT * FROM tenk2;"}
+{"sql":"DELETE FROM uctest WHERE CURRENT OF c","shape":"DELETE FROM uctest WHERE CURRENT OF c;"}
+{"sql":"DECLARE c CURSOR FOR SELECT * FROM tenk2 FOR SHARE","shape":"DECLARE c CURSOR FOR SELECT * FROM tenk2 FOR SHARE;"}
+{"sql":"DECLARE c CURSOR FOR SELECT * FROM tenk1 JOIN tenk2 USING (unique1)","shape":"DECLARE c CURSOR FOR SELECT * FROM tenk1 JOIN tenk2 USING (unique1);"}
+{"sql":"DELETE FROM tenk1 WHERE CURRENT OF c","shape":"DELETE FROM tenk1 WHERE CURRENT OF c;"}
+{"sql":"DECLARE c CURSOR FOR SELECT f1,count(*) FROM uctest GROUP BY f1","shape":"DECLARE c CURSOR FOR SELECT f1,count(*) FROM uctest GROUP BY f1;"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT MIN(f1) FROM uctest FOR UPDATE","shape":"DECLARE c1 CURSOR FOR SELECT MIN(f1) FROM uctest FOR UPDATE;"}
+{"sql":"CREATE TEMP VIEW ucview AS SELECT * FROM uctest","shape":"CREATE TEMPORARY VIEW ucview AS SELECT * FROM uctest;"}
+{"sql":"CREATE RULE ucrule AS ON DELETE TO ucview DO INSTEAD\n  DELETE FROM uctest WHERE f1 = OLD.f1"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT * FROM ucview","shape":"DECLARE c1 CURSOR FOR SELECT * FROM ucview;"}
+{"sql":"FETCH FROM c1","shape":"FETCH FROM c1;"}
+{"sql":"DELETE FROM ucview WHERE CURRENT OF c1","shape":"DELETE FROM ucview WHERE CURRENT OF c1;"}
+{"sql":"EXPLAIN (costs off)\nDECLARE c1 CURSOR FOR SELECT stringu1 FROM onek WHERE stringu1 = 'DZAAAA'","shape":"EXPLAIN (COSTS off) DECLARE c1 CURSOR FOR SELECT stringu1 FROM onek WHERE stringu1 = 'DZAAAA';"}
+{"sql":"DECLARE c1 CURSOR FOR SELECT stringu1 FROM onek WHERE stringu1 = 'DZAAAA'","shape":"DECLARE c1 CURSOR FOR SELECT stringu1 FROM onek WHERE stringu1 = 'DZAAAA';"}
+{"sql":"DELETE FROM onek WHERE CURRENT OF c1","shape":"DELETE FROM onek WHERE CURRENT OF c1;"}
+{"sql":"SELECT stringu1 FROM onek WHERE stringu1 = 'DZAAAA'","shape":"SELECT stringu1 FROM onek WHERE stringu1 = 'DZAAAA';"}
+{"sql":"CREATE TABLE current_check (currentid int, payload text)","shape":"CREATE TABLE current_check (currentid int, payload text);"}
+{"sql":"CREATE TABLE current_check_1 () INHERITS (current_check)","shape":"CREATE TABLE current_check_1 () INHERITS (current_check);"}
+{"sql":"CREATE TABLE current_check_2 () INHERITS (current_check)","shape":"CREATE TABLE current_check_2 () INHERITS (current_check);"}
+{"sql":"INSERT INTO current_check_1 SELECT i, 'p' || i FROM generate_series(1,9) i","shape":"INSERT INTO current_check_1 SELECT i, 'p' || i FROM generate_series(1, 9) AS i;"}
+{"sql":"INSERT INTO current_check_2 SELECT i, 'P' || i FROM generate_series(10,19) i","shape":"INSERT INTO current_check_2 SELECT i, 'P' || i FROM generate_series(10, 19) AS i;"}
+{"sql":"DECLARE c1 SCROLL CURSOR FOR SELECT * FROM current_check","shape":"DECLARE c1 SCROLL CURSOR FOR SELECT * FROM current_check;"}
+{"sql":"FETCH ABSOLUTE 12 FROM c1","shape":"FETCH ABSOLUTE 12 FROM c1;"}
+{"sql":"FETCH ABSOLUTE 8 FROM c1","shape":"FETCH ABSOLUTE 8 FROM c1;"}
+{"sql":"DELETE FROM current_check WHERE CURRENT OF c1 RETURNING *","shape":"DELETE FROM current_check WHERE CURRENT OF c1 RETURNING *;"}
+{"sql":"FETCH ABSOLUTE 13 FROM c1","shape":"FETCH ABSOLUTE 13 FROM c1;"}
+{"sql":"FETCH ABSOLUTE 1 FROM c1","shape":"FETCH ABSOLUTE 1 FROM c1;"}
+{"sql":"SELECT * FROM current_check","shape":"SELECT * FROM current_check;"}
+{"sql":"SET TRANSACTION ISOLATION LEVEL SERIALIZABLE"}
+{"sql":"CREATE TABLE cursor (a int)","shape":"CREATE TABLE cursor (a int);"}
+{"sql":"INSERT INTO cursor VALUES (1)","shape":"INSERT INTO cursor VALUES (1);"}
+{"sql":"DECLARE c1 NO SCROLL CURSOR FOR SELECT * FROM cursor FOR UPDATE","shape":"DECLARE c1 NO SCROLL CURSOR FOR SELECT * FROM cursor FOR UPDATE;"}
+{"sql":"UPDATE cursor SET a = 2","shape":"UPDATE cursor SET a = 2;"}
+{"sql":"DROP TABLE cursor","shape":"DROP TABLE cursor;"}
+{"sql":"create function nochange(int) returns int\n  as 'select $1 limit 1' language sql stable","shape":"CREATE FUNCTION nochange(int) RETURNS int AS 'select $1 limit 1' LANGUAGE sql STABLE;"}
+{"sql":"declare c cursor for select * from int8_tbl limit nochange(3)","shape":"declare c cursor for select * from int8_tbl limit nochange(3);"}
+{"sql":"fetch all from c","shape":"fetch all from c;"}
+{"sql":"move backward all in c","shape":"move backward all in c;"}
+{"sql":"explain (costs off) declare c1 cursor for select (select 42) as x","shape":"EXPLAIN (COSTS off) declare c1 cursor for select (select 42) as x;"}
+{"sql":"explain (costs off) declare c1 scroll cursor for select (select 42) as x","shape":"EXPLAIN (COSTS off) declare c1 scroll cursor for select (select 42) as x;"}
+{"sql":"declare c1 scroll cursor for select (select 42) as x","shape":"declare c1 scroll cursor for select (select 42) as x;"}
+{"sql":"explain (costs off) declare c2 cursor for select generate_series(1,3) as g","shape":"EXPLAIN (COSTS off) declare c2 cursor for select generate_series(1,3) as g;"}
+{"sql":"explain (costs off) declare c2 scroll cursor for select generate_series(1,3) as g","shape":"EXPLAIN (COSTS off) declare c2 scroll cursor for select generate_series(1,3) as g;"}
+{"sql":"declare c2 scroll cursor for select generate_series(1,3) as g","shape":"declare c2 scroll cursor for select generate_series(1,3) as g;"}
+{"sql":"set default_toast_compression = 'pglz'","shape":"SET default_toast_compression TO 'pglz';"}
+{"sql":"create table toasted_data (f1 int[])","shape":"CREATE TABLE toasted_data (f1 int[]);"}
+{"sql":"insert into toasted_data\n  select array_agg(i) from generate_series(12345678, 12345678 + 1000) i","shape":"INSERT INTO toasted_data SELECT array_agg(i) FROM generate_series(12345678, 12345678 + 1000) AS i;"}
+{"sql":"declare local_portal cursor for select * from toasted_data","shape":"declare local_portal cursor for select * from toasted_data;"}
+{"sql":"fetch all in local_portal","shape":"fetch all in local_portal;"}
+{"sql":"declare held_portal cursor with hold for select * from toasted_data","shape":"declare held_portal cursor with hold for select * from toasted_data;"}
+{"sql":"drop table toasted_data","shape":"DROP TABLE toasted_data;"}
+{"sql":"fetch all in held_portal","shape":"fetch all in held_portal;"}
+{"sql":"reset default_toast_compression","shape":"RESET default_toast_compression;"}

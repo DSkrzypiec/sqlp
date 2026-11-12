@@ -1,0 +1,37 @@
+{"sql":"SELECT 'abc' LIKE X'ABCD'"}
+{"sql":"SELECT 'abc' LIKE zeroblob(10)"}
+{"sql":"SELECT zeroblob(10) LIKE 'abc'"}
+{"sql":"SELECT (- -21) % NOT (456 LIKE zeroblob(10))"}
+{"sql":"SELECT (SELECT (\n        SELECT (SELECT -2147483648) FROM (SELECT 1) ORDER BY 1\n    ))"}
+{"sql":"SELECT 'abc', zeroblob(1) FROM (SELECT 1) ORDER BY 1"}
+{"sql":"SELECT 'abc', zeroblob(1)"}
+{"sql":"SELECT ( SELECT zeroblob(1000) FROM ( \n      SELECT * FROM (SELECT 'first') ORDER BY NOT 'in') \n    )"}
+{"sql":"SELECT zeroblob(1000)"}
+{"sql":"SELECT CAST(zeroblob(1000) AS text)"}
+{"sql":"SELECT 1 FROM (SELECT * FROM sqlite_master WHERE random())"}
+{"sql":"SELECT coalesce(1, substr( 1, 2, length('in' IN (SELECT 1))))"}
+{"sql":"SELECT 'A' FROM (SELECT 'B') ORDER BY EXISTS (\n      SELECT 'C' FROM (SELECT 'D' LIMIT 0)\n    )"}
+{"sql":"CREATE TABLE abc(b)"}
+{"sql":"INSERT INTO abc VALUES('ABCDE')"}
+{"sql":"SELECT 1 IN ( SELECT b UNION SELECT 1 ) FROM (SELECT b FROM abc)"}
+{"sql":"SELECT 'abcd' UNION SELECT 'efgh' ORDER BY 1 ASC, 1 ASC"}
+{"sql":"INSERT INTO abc VALUES(123, 456, 789)"}
+{"sql":"SELECT 1 FROM abc\n    GROUP BY c HAVING EXISTS (SELECT a UNION SELECT 123)"}
+{"sql":"SELECT hex(CAST(zeroblob(1000) AS integer))"}
+{"sql":"CREATE TABLE ghi(a, b, c)"}
+{"sql":"SELECT DISTINCT EXISTS(\n       SELECT 1\n       FROM (\n         SELECT C FROM (SELECT 1)\n       )\n       WHERE (SELECT c)\n    )\n    FROM abc"}
+{"sql":"SELECT DISTINCT substr(-456 ISNULL,zeroblob(1000), EXISTS(\n         SELECT DISTINCT EXISTS(\n           SELECT DISTINCT b FROM abc\n           ORDER BY EXISTS (\n             SELECT DISTINCT 2147483647 UNION ALL SELECT -2147483648\n           ) ASC\n         )\n         FROM (\n           SELECT c, c FROM (\n             SELECT 456, 'injection' ORDER BY 56.1 ASC, -56.1 DESC\n           )\n         )\n         GROUP BY (SELECT ALL (SELECT DISTINCT 'hardware')) \n         HAVING (\n           SELECT DISTINCT c\n           FROM (\n             SELECT ALL -2147483648, 'experiments'\n             ORDER BY -56.1 ASC, -56.1 DESC\n           )\n           GROUP BY (SELECT DISTINCT 456) IN \n                   (SELECT DISTINCT 'injection') NOT IN (SELECT ALL -456)\n           HAVING EXISTS (\n             SELECT ALL 'injection'\n           )\n         )\n         UNION ALL\n         SELECT a IN (\n           SELECT -2147483647\n           UNION ALL\n           SELECT ALL 'injection'\n         )\n         FROM sqlite_master\n       ) -- end EXISTS\n    ) /* end SUBSTR() */, c NOTNULL ISNULL\n    FROM abc\n    ORDER BY CAST(-56.1 AS blob) ASC"}
+{"sql":"DROP TABLE def"}
+{"sql":"DROP TABLE ghi"}
+{"sql":"SELECT 'hardware', 56.1 NOTNULL, random()&0\n    FROM (\n       SELECT ALL lower(~ EXISTS (\n           SELECT 1 NOT IN (SELECT ALL 1)\n       )), CAST(456 AS integer), -2147483647\n       FROM (\n         SELECT DISTINCT -456, CAST(1 AS integer) ISNULL\n         FROM (SELECT ALL 2147483647, typeof(2147483649))\n       )\n    )\n    GROUP BY CAST(CAST('experiments' AS blob) AS blob)\n    HAVING random()"}
+{"sql":"SELECT -2147483649 << upper('fault' NOT IN (\n        SELECT ALL (\n           SELECT ALL -1\n           ORDER BY -2147483649\n           LIMIT (\n              SELECT ALL (\n                 SELECT 0 EXCEPT SELECT DISTINCT 'experiments' ORDER BY 1 ASC\n              )\n           )\n           OFFSET EXISTS (\n              SELECT ALL \n                  (SELECT ALL -2147483648) NOT IN (\n                     SELECT ALL 123456789.1234567899\n                  ) IN (SELECT 2147483649) \n              FROM sqlite_master\n           ) NOT IN (SELECT ALL 'The')\n        )\n     ))"}
+{"sql":"INSERT INTO t1 VALUES( \n      CASE WHEN NULL THEN NULL ELSE ( SELECT 0 ORDER BY 456 ) END \n    )"}
+{"sql":"INSERT INTO def VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO def VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO def VALUES(7, 8, 9)"}
+{"sql":"INSERT INTO ghi VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO ghi VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO ghi VALUES(7, 8, 9)"}
+{"sql":"CREATE INDEX abc_i ON abc(a, b, c)"}
+{"sql":"CREATE INDEX def_i ON def(c, a, b)"}
+{"sql":"CREATE INDEX ghi_i ON ghi(b, c, a)"}

@@ -1,0 +1,54 @@
+{"sql":"CREATE TABLE collate3t1(c1 UNIQUE)"}
+{"sql":"SELECT * FROM collate3t1 ORDER BY 1 collate garbage"}
+{"sql":"SELECT DISTINCT c1 COLLATE garbage FROM collate3t1"}
+{"sql":"CREATE TABLE collate3t2(c1 collate garbage)"}
+{"sql":"CREATE INDEX collate3i1 ON collate3t1(c1 COLLATE garbage)"}
+{"sql":"DROP TABLE collate3t1"}
+{"sql":"CREATE TABLE t1(a COLLATE caseless)"}
+{"sql":"INSERT INTO t1 VALUES('Abc2')"}
+{"sql":"INSERT INTO t1 VALUES('abc1')"}
+{"sql":"INSERT INTO t1 VALUES('aBc3')"}
+{"sql":"REINDEX"}
+{"sql":"CREATE INDEX i1 ON t1(a COLLATE caseless)"}
+{"sql":"SELECT * FROM t1 ORDER BY a COLLATE caseless"}
+{"sql":"CREATE TABLE collate3t1(c1 COLLATE string_compare, c2)"}
+{"sql":"SELECT * FROM collate3t1 ORDER BY 1 COLLATE string_compare"}
+{"sql":"SELECT * FROM collate3t1 ORDER BY c1"}
+{"sql":"SELECT * FROM collate3t1 WHERE c1 = 'xxx'"}
+{"sql":"CREATE TABLE collate3t2(c1 COLLATE string_compare)"}
+{"sql":"CREATE INDEX collate3t1_i1 ON collate3t1(c1)"}
+{"sql":"SELECT * FROM collate3t1"}
+{"sql":"SELECT count(*) FROM collate3t1 GROUP BY c1"}
+{"sql":"#     SELECT * FROM collate3t1 GROUP BY c1","reject":true}
+{"sql":"SELECT * FROM collate3t1 GROUP BY c1"}
+{"sql":"SELECT DISTINCT c1 FROM collate3t1"}
+{"sql":"SELECT c1 FROM collate3t1 UNION SELECT c1 FROM collate3t1"}
+{"sql":"SELECT c1 FROM collate3t1 EXCEPT SELECT c1 FROM collate3t1"}
+{"sql":"SELECT c1 FROM collate3t1 INTERSECT SELECT c1 FROM collate3t1"}
+{"sql":"SELECT c1 FROM collate3t1 UNION ALL SELECT c1 FROM collate3t1"}
+{"sql":"SELECT 10 UNION ALL SELECT 20 ORDER BY 1 COLLATE string_compare"}
+{"sql":"SELECT 10 INTERSECT SELECT 20 ORDER BY 1 COLLATE string_compare"}
+{"sql":"SELECT 10 EXCEPT SELECT 20 ORDER BY 1 COLLATE string_compare"}
+{"sql":"SELECT 10 UNION SELECT 20 ORDER BY 1 COLLATE string_compare"}
+{"sql":"SELECT c1 FROM collate3t1 UNION ALL SELECT c1 FROM collate3t1 ORDER BY 1"}
+{"sql":"INSERT INTO collate3t1 VALUES('xxx', 'yyy')"}
+{"sql":"INSERT INTO collate3t1 VALUES('xxx', 0)"}
+{"sql":"UPDATE collate3t1 SET c1 = 'xxx'"}
+{"sql":"UPDATE collate3t1 SET c2 = 'xxx'"}
+{"sql":"DELETE FROM collate3t1 WHERE 1"}
+{"sql":"DELETE FROM collate3t1"}
+{"sql":"CREATE INDEX collate3t1_i2 ON collate3t1(c1)"}
+{"sql":"CREATE TABLE collate3t1(a, b)"}
+{"sql":"INSERT INTO collate3t1 VALUES('hello', NULL)"}
+{"sql":"CREATE INDEX collate3i1 ON collate3t1(a COLLATE user_defined)"}
+{"sql":"SELECT * FROM collate3t1 ORDER BY a COLLATE user_defined"}
+{"sql":"INSERT INTO collate3t1 VALUES('2', NULL)"}
+{"sql":"INSERT INTO collate3t1 VALUES('101', NULL)"}
+{"sql":"INSERT INTO collate3t1 VALUES('12', NULL)"}
+{"sql":"CREATE VIEW collate3v1 AS SELECT * FROM collate3t1 \n        ORDER BY 1 COLLATE user_defined"}
+{"sql":"SELECT * FROM collate3v1"}
+{"sql":"CREATE TABLE collate3t1(a)"}
+{"sql":"INSERT INTO collate3t1 VALUES(10)"}
+{"sql":"SELECT a FROM collate3t1 ORDER BY 1 COLLATE unk"}
+{"sql":"CREATE TABLE collate3t1(a COLLATE unk)"}
+{"sql":"SELECT a FROM collate3t1 ORDER BY 1"}

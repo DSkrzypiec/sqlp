@@ -1,0 +1,15 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content, tokenize porter)"}
+{"sql":"INSERT INTO t1(rowid, content) VALUES(1, 'running and jumping')"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'run jump'"}
+{"sql":"SELECT snippet(t1) FROM t1 WHERE t1 MATCH 'run jump'"}
+{"sql":"INSERT INTO t1(rowid, content) \n          VALUES(2, 'abcdefghijklmnopqrstuvwyxz')"}
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE t1 MATCH 'abcdefghijqrstuvwyxz'"}
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE t1 MATCH 'abcdefghijXXXXqrstuvwyxz'"}
+{"sql":"INSERT INTO t1(rowid, content) \n          VALUES(3, 'The value is 123456789')"}
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE t1 MATCH '123789'"}
+{"sql":"SELECT rowid, snippet(t1) FROM t1 WHERE t1 MATCH '123000000789'"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content, tokenize    porter)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content, tokenize=   porter)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content, tokenize=   simple)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content,   tokenize=   porter)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(content,\t   tokenize =   porter)"}

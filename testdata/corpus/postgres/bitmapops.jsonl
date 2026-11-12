@@ -1,0 +1,10 @@
+{"sql":"CREATE TABLE bmscantest (a int, b int, t text)","shape":"CREATE TABLE bmscantest (a int, b int, t text);"}
+{"sql":"INSERT INTO bmscantest\n  SELECT (r%53), (r%59), 'foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo'\n  FROM generate_series(1,70000) r","shape":"INSERT INTO bmscantest SELECT (r % 53), (r % 59), 'foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo' FROM generate_series(1, 70000) AS r;"}
+{"sql":"CREATE INDEX i_bmtest_a ON bmscantest(a)","shape":"CREATE INDEX i_bmtest_a ON bmscantest (a);"}
+{"sql":"CREATE INDEX i_bmtest_b ON bmscantest(b)","shape":"CREATE INDEX i_bmtest_b ON bmscantest (b);"}
+{"sql":"set enable_indexscan=false","shape":"SET enable_indexscan TO FALSE;"}
+{"sql":"set enable_seqscan=false","shape":"SET enable_seqscan TO FALSE;"}
+{"sql":"set work_mem = 64","shape":"SET work_mem TO 64;"}
+{"sql":"SELECT count(*) FROM bmscantest WHERE a = 1 AND b = 1","shape":"SELECT count(*) FROM bmscantest WHERE (a = 1) AND (b = 1);"}
+{"sql":"SELECT count(*) FROM bmscantest WHERE a = 1 OR b = 1","shape":"SELECT count(*) FROM bmscantest WHERE (a = 1) OR (b = 1);"}
+{"sql":"DROP TABLE bmscantest","shape":"DROP TABLE bmscantest;"}

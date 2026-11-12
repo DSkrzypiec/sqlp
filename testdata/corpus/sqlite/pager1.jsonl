@@ -1,0 +1,161 @@
+{"sql":"CREATE TABLE counter(\n      i CHECK (i<5), \n      u CHECK (u<10)\n    )"}
+{"sql":"INSERT INTO counter VALUES(0, 0)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n      UPDATE counter SET i = i+1;\n    END"}
+{"sql":"CREATE TRIGGER tr2 AFTER UPDATE ON t1 BEGIN\n      UPDATE counter SET u = u+1;\n    END"}
+{"sql":"SELECT * FROM counter"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(1500))"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(1500))"}
+{"sql":"INSERT INTO t1 VALUES(3, randomblob(1500))"}
+{"sql":"INSERT INTO t1 SELECT a+3, randomblob(1500) FROM t1"}
+{"sql":"CREATE TABLE z(x INTEGER PRIMARY KEY, y)"}
+{"sql":"INSERT INTO z VALUES(NULL, a_string(800))"}
+{"sql":"INSERT INTO z SELECT NULL, a_string(800) FROM z"}
+{"sql":"UPDATE z SET y = NULL WHERE x>256"}
+{"sql":"SELECT count(*) FROM z WHERE x < 100"}
+{"sql":"UPDATE z SET y = y||x"}
+{"sql":"SELECT count(*) FROM z"}
+{"sql":"CREATE TABLE x(y, z)"}
+{"sql":"INSERT INTO x VALUES(1, 2)"}
+{"sql":"PRAGMA main.cache_size = 10"}
+{"sql":"PRAGMA aux.cache_size = 10"}
+{"sql":"CREATE TABLE aux.t2(a UNIQUE, b UNIQUE)"}
+{"sql":"INSERT INTO t1 SELECT a_string(201), a_string(301) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(202), a_string(302) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(203), a_string(303) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a_string(204), a_string(304) FROM t1"}
+{"sql":"REPLACE INTO t2 SELECT * FROM t1"}
+{"sql":"INSERT INTO a SELECT * FROM b WHERE rowid<=3"}
+{"sql":"INSERT INTO b SELECT * FROM a WHERE rowid<=3"}
+{"sql":"SELECT * FROM a"}
+{"sql":"SELECT * FROM b"}
+{"sql":"INSERT INTO t1 VALUES('I', 'II')"}
+{"sql":"ATTACH 'test.db2' AS two"}
+{"sql":"INSERT INTO t1 VALUES(1, 't1.1')"}
+{"sql":"INSERT INTO t2 VALUES(1, 't2.1')"}
+{"sql":"UPDATE t1 SET b = 't1.2'"}
+{"sql":"UPDATE t2 SET b = 't2.2'"}
+{"sql":"ATTACH 'test.db3' AS three"}
+{"sql":"CREATE TABLE three.t3(a, b)"}
+{"sql":"INSERT INTO t3 VALUES(1, 't3.1')"}
+{"sql":"UPDATE t2 SET b = 't2.3'"}
+{"sql":"UPDATE t3 SET b = 't3.3'"}
+{"sql":"INSERT INTO t1 VALUES('I',   'one')"}
+{"sql":"INSERT INTO t1 VALUES('II',  'four')"}
+{"sql":"INSERT INTO t1 VALUES('III', 'nine')"}
+{"sql":"INSERT INTO t1 VALUES('IV', 'sixteen')"}
+{"sql":"INSERT INTO t1 VALUES('V' , 'twentyfive')"}
+{"sql":"INSERT INTO t1 VALUES(17, 'Lenin')"}
+{"sql":"INSERT INTO t1 VALUES(22, 'Stalin')"}
+{"sql":"INSERT INTO t1 VALUES(53, 'Khrushchev')"}
+{"sql":"INSERT INTO t1 VALUES(64, 'Brezhnev')"}
+{"sql":"INSERT INTO t1 VALUES(84, 'Andropov')"}
+{"sql":"INSERT INTO t2 VALUES(84, 'Andropov')"}
+{"sql":"INSERT INTO t1 VALUES(85, 'Gorbachev')"}
+{"sql":"INSERT INTO t2 VALUES(85, 'Gorbachev')"}
+{"sql":"PRAGMA synchronous = NORMAL"}
+{"sql":"DELETE FROM t1 WHERE b = 'Lenin'"}
+{"sql":"DELETE FROM t2 WHERE b = 'Lenin'"}
+{"sql":"INSERT INTO t3 SELECT randomblob(1500), randomblob(1500) FROM t1"}
+{"sql":"UPDATE t3 SET b = randomblob(1501)"}
+{"sql":"DELETE FROM t1 WHERE b = 'Stalin'"}
+{"sql":"DELETE FROM t2 WHERE b = 'Stalin'"}
+{"sql":"PRAGMA max_page_count = 10"}
+{"sql":"CREATE TABLE t11(a, b)"}
+{"sql":"PRAGMA max_page_count"}
+{"sql":"PRAGMA max_page_count = 15"}
+{"sql":"INSERT INTO t11 VALUES(1, 2)"}
+{"sql":"PRAGMA max_page_count = 13"}
+{"sql":"INSERT INTO t11 VALUES(3, 4)"}
+{"sql":"INSERT INTO x1 VALUES('Charles')"}
+{"sql":"INSERT INTO x1 VALUES('James')"}
+{"sql":"INSERT INTO x1 VALUES('Mary')"}
+{"sql":"INSERT INTO x1 VALUES('William')"}
+{"sql":"INSERT INTO x1 VALUES('Anne')"}
+{"sql":"CREATE TABLE ab(a, b, UNIQUE(a, b))"}
+{"sql":"INSERT INTO ab VALUES( a_string(200), a_string(300) )"}
+{"sql":"INSERT INTO ab SELECT a_string(200), a_string(300) FROM ab"}
+{"sql":"UPDATE ab SET a = a_string(201)"}
+{"sql":"UPDATE ab SET b = a_string(301)"}
+{"sql":"SELECT count(*) FROM ab"}
+{"sql":"UPDATE ab SET a = a_string(202)"}
+{"sql":"PRAGMA synchronous = OFF"}
+{"sql":"INSERT INTO t3 VALUES(a_string(300), a_string(300))"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(900))"}
+{"sql":"CREATE TABLE zz(top PRIMARY KEY)"}
+{"sql":"INSERT INTO zz VALUES(a_string(222))"}
+{"sql":"INSERT INTO zz SELECT a_string((SELECT 222+max(rowid) FROM zz)) FROM zz"}
+{"sql":"UPDATE zz SET top = a_string(345)"}
+{"sql":"SELECT count(*) FROM zz"}
+{"sql":"SELECT count(*) FROM v"}
+{"sql":"INSERT INTO t1 VALUES(NULL, a_string(400))"}
+{"sql":"INSERT INTO t1 SELECT NULL, a_string(400) FROM t1"}
+{"sql":"UPDATE t1 SET b = a_string(400)"}
+{"sql":"SELECT sum(length(b)) FROM t1"}
+{"sql":"PRAGMA journal_mode = OFF"}
+{"sql":"INSERT INTO t1(rowid, a, b) SELECT a+3, b, b FROM t1"}
+{"sql":"INSERT INTO tx VALUES('Ayutthaya', 'Beijing')"}
+{"sql":"INSERT INTO tx VALUES('London', 'Tokyo')"}
+{"sql":"INSERT INTO t1 VALUES(a_string(500), a_string(200))"}
+{"sql":"INSERT INTO t1 SELECT a_string(500), a_string(200) FROM t1"}
+{"sql":"INSERT INTO t2 VALUES(a_string(5000))"}
+{"sql":"SELECT typeof(x) FROM t2"}
+{"sql":"SELECT length(x||'') FROM t2"}
+{"sql":"INSERT INTO t2 VALUES(randomblob(5000))"}
+{"sql":"SELECT length(x), typeof(x) FROM t2"}
+{"sql":"UPDATE sqlite_master SET rootpage=5 WHERE tbl_name = 't1'"}
+{"sql":"ALTER TABLE t1 RENAME TO x1"}
+{"sql":"INSERT INTO t1 VALUES(a_string(800))"}
+{"sql":"SELECT length(x) FROM t1"}
+{"sql":"CREATE TABLE t1(aa, ab, ac, ad, ae, af, ag, ah, ai, aj, ak, al, am, an,\n                    ba, bb, bc, bd, be, bf, bg, bh, bi, bj, bk, bl, bm, bn,\n                    ca, cb, cc, cd, ce, cf, cg, ch, ci, cj, ck, cl, cm, cn,\n                    da, db, dc, dd, de, df, dg, dh, di, dj, dk, dl, dm, dn,\n                    ea, eb, ec, ed, ee, ef, eg, eh, ei, ej, ek, el, em, en,\n                    fa, fb, fc, fd, fe, ff, fg, fh, fi, fj, fk, fl, fm, fn,\n                    ga, gb, gc, gd, ge, gf, gg, gh, gi, gj, gk, gl, gm, gn,\n                    ha, hb, hc, hd, he, hf, hg, hh, hi, hj, hk, hl, hm, hn,\n                    ia, ib, ic, id, ie, if, ig, ih, ii, ij, ik, il, im, ix,\n                    ja, jb, jc, jd, je, jf, jg, jh, ji, jj, jk, jl, jm, jn,\n                    ka, kb, kc, kd, ke, kf, kg, kh, ki, kj, kk, kl, km, kn,\n                    la, lb, lc, ld, le, lf, lg, lh, li, lj, lk, ll, lm, ln,\n                    ma, mb, mc, md, me, mf, mg, mh, mi, mj, mk, ml, mm, mn\n    )"}
+{"sql":"CREATE TABLE t2(aa, ab, ac, ad, ae, af, ag, ah, ai, aj, ak, al, am, an,\n                    ba, bb, bc, bd, be, bf, bg, bh, bi, bj, bk, bl, bm, bn,\n                    ca, cb, cc, cd, ce, cf, cg, ch, ci, cj, ck, cl, cm, cn,\n                    da, db, dc, dd, de, df, dg, dh, di, dj, dk, dl, dm, dn,\n                    ea, eb, ec, ed, ee, ef, eg, eh, ei, ej, ek, el, em, en,\n                    fa, fb, fc, fd, fe, ff, fg, fh, fi, fj, fk, fl, fm, fn,\n                    ga, gb, gc, gd, ge, gf, gg, gh, gi, gj, gk, gl, gm, gn,\n                    ha, hb, hc, hd, he, hf, hg, hh, hi, hj, hk, hl, hm, hn,\n                    ia, ib, ic, id, ie, if, ig, ih, ii, ij, ik, il, im, ix,\n                    ja, jb, jc, jd, je, jf, jg, jh, ji, jj, jk, jl, jm, jn,\n                    ka, kb, kc, kd, ke, kf, kg, kh, ki, kj, kk, kl, km, kn,\n                    la, lb, lc, ld, le, lf, lg, lh, li, lj, lk, ll, lm, ln,\n                    ma, mb, mc, md, me, mf, mg, mh, mi, mj, mk, ml, mm, mn\n    )"}
+{"sql":"INSERT INTO t1(aa) VALUES( a_string(100000) )"}
+{"sql":"INSERT INTO t2(aa) VALUES( a_string(100000) )"}
+{"sql":"CREATE TABLE one(two, three)"}
+{"sql":"INSERT INTO one VALUES('a', 'b')"}
+{"sql":"INSERT INTO t1 SELECT a_string(800) FROM t1"}
+{"sql":"INSERT INTO t2 VALUES('xxxx')"}
+{"sql":"CREATE TABLE ko(c DEFAULT 'abc', b DEFAULT 'def')"}
+{"sql":"INSERT INTO ko DEFAULT VALUES"}
+{"sql":"SELECT * FROM ko"}
+{"sql":"INSERT INTO t1 VALUES('Canberra', 'ACT')"}
+{"sql":"INSERT INTO t1 VALUES('Darwin', 'NT')"}
+{"sql":"INSERT INTO t1 VALUES('Adelaide', 'SA')"}
+{"sql":"PRAGMA main.locking_mode"}
+{"sql":"CREATE TABLE x1(x, y, z, PRIMARY KEY(y, z))"}
+{"sql":"CREATE TABLE x2(x, y, z, PRIMARY KEY(y, z))"}
+{"sql":"INSERT INTO x2 VALUES(a_string(400), a_string(500), a_string(600))"}
+{"sql":"INSERT INTO x2 SELECT a_string(600), a_string(400), a_string(500) FROM x2"}
+{"sql":"INSERT INTO x2 SELECT a_string(500), a_string(600), a_string(400) FROM x2"}
+{"sql":"INSERT INTO x2 SELECT a_string(400), a_string(500), a_string(600) FROM x2"}
+{"sql":"INSERT INTO x1 SELECT * FROM x2"}
+{"sql":"DELETE FROM x1 WHERE rowid<32"}
+{"sql":"UPDATE x1 SET z = a_string(300) WHERE rowid>40"}
+{"sql":"SELECT count(*) FROM x1"}
+{"sql":"DELETE FROM x1"}
+{"sql":"UPDATE x1 SET z = a_string(299) WHERE rowid>40"}
+{"sql":"CREATE TABLE tbl(a PRIMARY KEY, b UNIQUE)"}
+{"sql":"INSERT INTO tbl VALUES(a_string(25), a_string(600))"}
+{"sql":"INSERT INTO tbl SELECT a_string(25), a_string(600) FROM tbl"}
+{"sql":"UPDATE tbl SET b = a_string(550)"}
+{"sql":"PRAGMA locking_mode=exclusive"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(1500), randomblob(1500))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(1500), randomblob(1500) FROM t1"}
+{"sql":"UPDATE t1 SET y = randomblob(1499)"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(10000))"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(10000))"}
+{"sql":"INSERT INTO t1 SELECT x+2, randomblob(10000) from t1"}
+{"sql":"INSERT INTO t1 SELECT x+4, randomblob(10000) from t1"}
+{"sql":"INSERT INTO t1 SELECT x+8, randomblob(10000) from t1"}
+{"sql":"INSERT INTO t1 SELECT x+16, randomblob(10000) from t1"}
+{"sql":"INSERT INTO t1 VALUES('xxx')"}
+{"sql":"UPDATE t1 SET x = 'one' WHERE rowid=1"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(1200))"}
+{"sql":"DELETE FROM t1 WHERE rowid%4"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(200), randomblob(200))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(200), randomblob(200) FROM t1"}
+{"sql":"SELECT sum(length(y)) FROM t1"}
+{"sql":"UPDATE t1 SET x = randomblob(200)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b ANY)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<50)\n  INSERT INTO t1(a,b) SELECT x, zeroblob(1000) FROM c"}
+{"sql":"PRAGMA incremental_vacuum=50"}
+{"sql":"PRAGMA max_page_count=2"}

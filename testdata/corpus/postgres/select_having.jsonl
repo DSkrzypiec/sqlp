@@ -1,0 +1,23 @@
+{"sql":"CREATE TABLE test_having (a int, b int, c char(8), d char)","shape":"CREATE TABLE test_having (a int, b int, c char(8), d char);"}
+{"sql":"INSERT INTO test_having VALUES (0, 1, 'XXXX', 'A')","shape":"INSERT INTO test_having VALUES (0, 1, 'XXXX', 'A');"}
+{"sql":"INSERT INTO test_having VALUES (1, 2, 'AAAA', 'b')","shape":"INSERT INTO test_having VALUES (1, 2, 'AAAA', 'b');"}
+{"sql":"INSERT INTO test_having VALUES (2, 2, 'AAAA', 'c')","shape":"INSERT INTO test_having VALUES (2, 2, 'AAAA', 'c');"}
+{"sql":"INSERT INTO test_having VALUES (3, 3, 'BBBB', 'D')","shape":"INSERT INTO test_having VALUES (3, 3, 'BBBB', 'D');"}
+{"sql":"INSERT INTO test_having VALUES (4, 3, 'BBBB', 'e')","shape":"INSERT INTO test_having VALUES (4, 3, 'BBBB', 'e');"}
+{"sql":"INSERT INTO test_having VALUES (5, 3, 'bbbb', 'F')","shape":"INSERT INTO test_having VALUES (5, 3, 'bbbb', 'F');"}
+{"sql":"INSERT INTO test_having VALUES (6, 4, 'cccc', 'g')","shape":"INSERT INTO test_having VALUES (6, 4, 'cccc', 'g');"}
+{"sql":"INSERT INTO test_having VALUES (7, 4, 'cccc', 'h')","shape":"INSERT INTO test_having VALUES (7, 4, 'cccc', 'h');"}
+{"sql":"INSERT INTO test_having VALUES (8, 4, 'CCCC', 'I')","shape":"INSERT INTO test_having VALUES (8, 4, 'CCCC', 'I');"}
+{"sql":"INSERT INTO test_having VALUES (9, 4, 'CCCC', 'j')","shape":"INSERT INTO test_having VALUES (9, 4, 'CCCC', 'j');"}
+{"sql":"SELECT b, c FROM test_having\n\tGROUP BY b, c HAVING count(*) = 1 ORDER BY b, c","shape":"SELECT b, c FROM test_having GROUP BY b, c HAVING count(*) = 1 ORDER BY b, c;"}
+{"sql":"SELECT b, c FROM test_having\n\tGROUP BY b, c HAVING b = 3 ORDER BY b, c","shape":"SELECT b, c FROM test_having GROUP BY b, c HAVING b = 3 ORDER BY b, c;"}
+{"sql":"SELECT lower(c), count(c) FROM test_having\n\tGROUP BY lower(c) HAVING count(*) > 2 OR min(a) = max(a)\n\tORDER BY lower(c)","shape":"SELECT lower(c), count(c) FROM test_having GROUP BY lower(c) HAVING (count(*) > 2) OR (min(a) = max(a)) ORDER BY lower(c);"}
+{"sql":"SELECT c, max(a) FROM test_having\n\tGROUP BY c HAVING count(*) > 2 OR min(a) = max(a)\n\tORDER BY c","shape":"SELECT c, max(a) FROM test_having GROUP BY c HAVING (count(*) > 2) OR (min(a) = max(a)) ORDER BY c;"}
+{"sql":"SELECT min(a), max(a) FROM test_having HAVING min(a) = max(a)","shape":"SELECT min(a), max(a) FROM test_having HAVING min(a) = max(a);"}
+{"sql":"SELECT min(a), max(a) FROM test_having HAVING min(a) < max(a)","shape":"SELECT min(a), max(a) FROM test_having HAVING min(a) < max(a);"}
+{"sql":"SELECT a FROM test_having HAVING min(a) < max(a)","shape":"SELECT a FROM test_having HAVING min(a) < max(a);"}
+{"sql":"SELECT 1 AS one FROM test_having HAVING a > 1","shape":"SELECT 1 AS one FROM test_having HAVING a > 1;"}
+{"sql":"SELECT 1 AS one FROM test_having HAVING 1 > 2","shape":"SELECT 1 AS one FROM test_having HAVING 1 > 2;"}
+{"sql":"SELECT 1 AS one FROM test_having HAVING 1 < 2","shape":"SELECT 1 AS one FROM test_having HAVING 1 < 2;"}
+{"sql":"SELECT 1 AS one FROM test_having WHERE 1/a = 1 HAVING 1 < 2","shape":"SELECT 1 AS one FROM test_having WHERE (1 / a) = 1 HAVING 1 < 2;"}
+{"sql":"DROP TABLE test_having","shape":"DROP TABLE test_having;"}

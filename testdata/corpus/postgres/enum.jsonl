@@ -1,0 +1,133 @@
+{"sql":"CREATE TYPE rainbow AS ENUM ('red', 'orange', 'yellow', 'green', 'blue', 'purple')","shape":"CREATE TYPE rainbow AS ENUM ('red', 'orange', 'yellow', 'green', 'blue', 'purple');"}
+{"sql":"SELECT COUNT(*) FROM pg_enum WHERE enumtypid = 'rainbow'::regtype","shape":"SELECT COUNT(*) FROM pg_enum WHERE enumtypid = 'rainbow'::regtype;"}
+{"sql":"SELECT 'red'::rainbow","shape":"SELECT 'red'::rainbow;"}
+{"sql":"SELECT 'mauve'::rainbow","shape":"SELECT 'mauve'::rainbow;"}
+{"sql":"SELECT pg_input_is_valid('red', 'rainbow')","shape":"SELECT pg_input_is_valid('red', 'rainbow');"}
+{"sql":"SELECT pg_input_is_valid('mauve', 'rainbow')","shape":"SELECT pg_input_is_valid('mauve', 'rainbow');"}
+{"sql":"SELECT * FROM pg_input_error_info('mauve', 'rainbow')","shape":"SELECT * FROM pg_input_error_info('mauve', 'rainbow');"}
+{"sql":"SELECT * FROM pg_input_error_info(repeat('too_long', 32), 'rainbow')","shape":"SELECT * FROM pg_input_error_info(repeat('too_long', 32), 'rainbow');"}
+{"sql":"CREATE TYPE planets AS ENUM ( 'venus', 'earth', 'mars' )","shape":"CREATE TYPE planets AS ENUM ('venus', 'earth', 'mars');"}
+{"sql":"SELECT enumlabel, enumsortorder\nFROM pg_enum\nWHERE enumtypid = 'planets'::regtype\nORDER BY 2","shape":"SELECT enumlabel, enumsortorder FROM pg_enum WHERE enumtypid = 'planets'::regtype ORDER BY 2;"}
+{"sql":"ALTER TYPE planets ADD VALUE 'uranus'"}
+{"sql":"ALTER TYPE planets ADD VALUE 'mercury' BEFORE 'venus'"}
+{"sql":"ALTER TYPE planets ADD VALUE 'saturn' BEFORE 'uranus'"}
+{"sql":"ALTER TYPE planets ADD VALUE 'jupiter' AFTER 'mars'"}
+{"sql":"ALTER TYPE planets ADD VALUE 'neptune' AFTER 'uranus'"}
+{"sql":"SELECT enumlabel, enumsortorder\nFROM pg_enum\nWHERE enumtypid = 'planets'::regtype\nORDER BY enumlabel::planets","shape":"SELECT enumlabel, enumsortorder FROM pg_enum WHERE enumtypid = 'planets'::regtype ORDER BY enumlabel::planets;"}
+{"sql":"ALTER TYPE planets ADD VALUE\n  'plutoplutoplutoplutoplutoplutoplutoplutoplutoplutoplutoplutoplutopluto'"}
+{"sql":"ALTER TYPE planets ADD VALUE 'pluto' AFTER 'zeus'"}
+{"sql":"ALTER TYPE planets ADD VALUE 'mercury'"}
+{"sql":"ALTER TYPE planets ADD VALUE IF NOT EXISTS 'mercury'"}
+{"sql":"SELECT enum_last(NULL::planets)","shape":"SELECT enum_last(NULL::planets);"}
+{"sql":"ALTER TYPE planets ADD VALUE IF NOT EXISTS 'pluto'"}
+{"sql":"create type insenum as enum ('L1', 'L2')","shape":"CREATE TYPE insenum AS ENUM ('L1', 'L2');"}
+{"sql":"alter type insenum add value 'i1' before 'L2'"}
+{"sql":"alter type insenum add value 'i2' before 'L2'"}
+{"sql":"alter type insenum add value 'i3' before 'L2'"}
+{"sql":"alter type insenum add value 'i4' before 'L2'"}
+{"sql":"alter type insenum add value 'i5' before 'L2'"}
+{"sql":"alter type insenum add value 'i6' before 'L2'"}
+{"sql":"alter type insenum add value 'i7' before 'L2'"}
+{"sql":"alter type insenum add value 'i8' before 'L2'"}
+{"sql":"alter type insenum add value 'i9' before 'L2'"}
+{"sql":"alter type insenum add value 'i10' before 'L2'"}
+{"sql":"alter type insenum add value 'i11' before 'L2'"}
+{"sql":"alter type insenum add value 'i12' before 'L2'"}
+{"sql":"alter type insenum add value 'i13' before 'L2'"}
+{"sql":"alter type insenum add value 'i14' before 'L2'"}
+{"sql":"alter type insenum add value 'i15' before 'L2'"}
+{"sql":"alter type insenum add value 'i16' before 'L2'"}
+{"sql":"alter type insenum add value 'i17' before 'L2'"}
+{"sql":"alter type insenum add value 'i18' before 'L2'"}
+{"sql":"alter type insenum add value 'i19' before 'L2'"}
+{"sql":"alter type insenum add value 'i20' before 'L2'"}
+{"sql":"alter type insenum add value 'i21' before 'L2'"}
+{"sql":"alter type insenum add value 'i22' before 'L2'"}
+{"sql":"alter type insenum add value 'i23' before 'L2'"}
+{"sql":"alter type insenum add value 'i24' before 'L2'"}
+{"sql":"alter type insenum add value 'i25' before 'L2'"}
+{"sql":"alter type insenum add value 'i26' before 'L2'"}
+{"sql":"alter type insenum add value 'i27' before 'L2'"}
+{"sql":"alter type insenum add value 'i28' before 'L2'"}
+{"sql":"alter type insenum add value 'i29' before 'L2'"}
+{"sql":"alter type insenum add value 'i30' before 'L2'"}
+{"sql":"SELECT enumlabel,\n       case when enumsortorder > 20 then null else enumsortorder end as so\nFROM pg_enum\nWHERE enumtypid = 'insenum'::regtype\nORDER BY enumsortorder","shape":"SELECT enumlabel, CASE WHEN enumsortorder > 20 THEN NULL ELSE enumsortorder END AS so FROM pg_enum WHERE enumtypid = 'insenum'::regtype ORDER BY enumsortorder;"}
+{"sql":"CREATE TABLE enumtest (col rainbow)","shape":"CREATE TABLE enumtest (col rainbow);"}
+{"sql":"INSERT INTO enumtest values ('red'), ('orange'), ('yellow'), ('green')","shape":"INSERT INTO enumtest VALUES ('red'), ('orange'), ('yellow'), ('green');"}
+{"sql":"COPY enumtest FROM stdin","shape":"COPY enumtest FROM STDIN;"}
+{"sql":"SELECT * FROM enumtest","shape":"SELECT * FROM enumtest;"}
+{"sql":"SELECT * FROM enumtest WHERE col = 'orange'","shape":"SELECT * FROM enumtest WHERE col = 'orange';"}
+{"sql":"SELECT * FROM enumtest WHERE col <> 'orange' ORDER BY col","shape":"SELECT * FROM enumtest WHERE col <> 'orange' ORDER BY col;"}
+{"sql":"SELECT * FROM enumtest WHERE col > 'yellow' ORDER BY col","shape":"SELECT * FROM enumtest WHERE col > 'yellow' ORDER BY col;"}
+{"sql":"SELECT * FROM enumtest WHERE col >= 'yellow' ORDER BY col","shape":"SELECT * FROM enumtest WHERE col >= 'yellow' ORDER BY col;"}
+{"sql":"SELECT * FROM enumtest WHERE col < 'green' ORDER BY col","shape":"SELECT * FROM enumtest WHERE col < 'green' ORDER BY col;"}
+{"sql":"SELECT * FROM enumtest WHERE col <= 'green' ORDER BY col","shape":"SELECT * FROM enumtest WHERE col <= 'green' ORDER BY col;"}
+{"sql":"SELECT 'red'::rainbow::text || 'hithere'","shape":"SELECT 'red'::rainbow::text || 'hithere';"}
+{"sql":"SELECT 'red'::text::rainbow = 'red'::rainbow","shape":"SELECT 'red'::text::rainbow = 'red'::rainbow;"}
+{"sql":"SELECT min(col) FROM enumtest","shape":"SELECT min(col) FROM enumtest;"}
+{"sql":"SELECT max(col) FROM enumtest","shape":"SELECT max(col) FROM enumtest;"}
+{"sql":"SELECT max(col) FROM enumtest WHERE col < 'green'","shape":"SELECT max(col) FROM enumtest WHERE col < 'green';"}
+{"sql":"SET enable_bitmapscan = off","shape":"SET enable_bitmapscan TO off;"}
+{"sql":"CREATE UNIQUE INDEX enumtest_btree ON enumtest USING btree (col)","shape":"CREATE UNIQUE INDEX enumtest_btree ON enumtest USING btree (col);"}
+{"sql":"DROP INDEX enumtest_btree","shape":"DROP INDEX enumtest_btree;"}
+{"sql":"CREATE INDEX enumtest_hash ON enumtest USING hash (col)","shape":"CREATE INDEX enumtest_hash ON enumtest USING hash (col);"}
+{"sql":"DROP INDEX enumtest_hash","shape":"DROP INDEX enumtest_hash;"}
+{"sql":"CREATE DOMAIN rgb AS rainbow CHECK (VALUE IN ('red', 'green', 'blue'))","shape":"CREATE DOMAIN rgb AS rainbow CHECK (VALUE IN ('red', 'green', 'blue'));"}
+{"sql":"SELECT 'red'::rgb","shape":"SELECT 'red'::rgb;"}
+{"sql":"SELECT 'purple'::rgb","shape":"SELECT 'purple'::rgb;"}
+{"sql":"SELECT 'purple'::rainbow::rgb","shape":"SELECT 'purple'::rainbow::rgb;"}
+{"sql":"DROP DOMAIN rgb","shape":"DROP DOMAIN rgb;"}
+{"sql":"SELECT '{red,green,blue}'::rainbow[]","shape":"SELECT '{red,green,blue}'::rainbow[];"}
+{"sql":"SELECT ('{red,green,blue}'::rainbow[])[2]","shape":"SELECT ('{red,green,blue}'::rainbow[])[2];"}
+{"sql":"SELECT 'red' = ANY ('{red,green,blue}'::rainbow[])","shape":"SELECT 'red' = ANY ('{red,green,blue}'::rainbow[]);"}
+{"sql":"SELECT 'yellow' = ANY ('{red,green,blue}'::rainbow[])","shape":"SELECT 'yellow' = ANY ('{red,green,blue}'::rainbow[]);"}
+{"sql":"SELECT 'red' = ALL ('{red,green,blue}'::rainbow[])","shape":"SELECT 'red' = ALL ('{red,green,blue}'::rainbow[]);"}
+{"sql":"SELECT 'red' = ALL ('{red,red}'::rainbow[])","shape":"SELECT 'red' = ALL ('{red,red}'::rainbow[]);"}
+{"sql":"SELECT enum_first(NULL::rainbow)","shape":"SELECT enum_first(NULL::rainbow);"}
+{"sql":"SELECT enum_last('green'::rainbow)","shape":"SELECT enum_last('green'::rainbow);"}
+{"sql":"SELECT enum_range(NULL::rainbow)","shape":"SELECT enum_range(NULL::rainbow);"}
+{"sql":"SELECT enum_range('orange'::rainbow, 'green'::rainbow)","shape":"SELECT enum_range('orange'::rainbow, 'green'::rainbow);"}
+{"sql":"SELECT enum_range(NULL, 'green'::rainbow)","shape":"SELECT enum_range(NULL, 'green'::rainbow);"}
+{"sql":"SELECT enum_range('orange'::rainbow, NULL)","shape":"SELECT enum_range('orange'::rainbow, NULL);"}
+{"sql":"SELECT enum_range(NULL::rainbow, NULL)","shape":"SELECT enum_range(NULL::rainbow, NULL);"}
+{"sql":"CREATE FUNCTION echo_me(anyenum) RETURNS text AS $$\nBEGIN\nRETURN $1::text || 'omg';\nEND\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION echo_me(anyenum) RETURNS text AS '\nBEGIN\nRETURN $1::text || ''omg'';\nEND\n' LANGUAGE plpgsql;"}
+{"sql":"SELECT echo_me('red'::rainbow)","shape":"SELECT echo_me('red'::rainbow);"}
+{"sql":"CREATE FUNCTION echo_me(rainbow) RETURNS text AS $$\nBEGIN\nRETURN $1::text || 'wtf';\nEND\n$$ LANGUAGE plpgsql","shape":"CREATE FUNCTION echo_me(rainbow) RETURNS text AS '\nBEGIN\nRETURN $1::text || ''wtf'';\nEND\n' LANGUAGE plpgsql;"}
+{"sql":"DROP FUNCTION echo_me(anyenum)"}
+{"sql":"SELECT echo_me('red')","shape":"SELECT echo_me('red');"}
+{"sql":"DROP FUNCTION echo_me(rainbow)"}
+{"sql":"CREATE TABLE enumtest_parent (id rainbow PRIMARY KEY)","shape":"CREATE TABLE enumtest_parent (id rainbow PRIMARY KEY);"}
+{"sql":"CREATE TABLE enumtest_child (parent rainbow REFERENCES enumtest_parent)","shape":"CREATE TABLE enumtest_child (parent rainbow REFERENCES enumtest_parent);"}
+{"sql":"INSERT INTO enumtest_parent VALUES ('red')","shape":"INSERT INTO enumtest_parent VALUES ('red');"}
+{"sql":"INSERT INTO enumtest_child VALUES ('red')","shape":"INSERT INTO enumtest_child VALUES ('red');"}
+{"sql":"INSERT INTO enumtest_child VALUES ('blue')","shape":"INSERT INTO enumtest_child VALUES ('blue');"}
+{"sql":"DELETE FROM enumtest_parent","shape":"DELETE FROM enumtest_parent;"}
+{"sql":"CREATE TYPE bogus AS ENUM('good', 'bad', 'ugly')","shape":"CREATE TYPE bogus AS ENUM ('good', 'bad', 'ugly');"}
+{"sql":"CREATE TABLE enumtest_bogus_child(parent bogus REFERENCES enumtest_parent)","shape":"CREATE TABLE enumtest_bogus_child (parent bogus REFERENCES enumtest_parent);"}
+{"sql":"DROP TYPE bogus","shape":"DROP TYPE bogus;"}
+{"sql":"ALTER TYPE rainbow RENAME VALUE 'red' TO 'crimson'"}
+{"sql":"SELECT enumlabel, enumsortorder\nFROM pg_enum\nWHERE enumtypid = 'rainbow'::regtype\nORDER BY 2","shape":"SELECT enumlabel, enumsortorder FROM pg_enum WHERE enumtypid = 'rainbow'::regtype ORDER BY 2;"}
+{"sql":"ALTER TYPE rainbow RENAME VALUE 'blue' TO 'green'"}
+{"sql":"CREATE TYPE bogus AS ENUM('good')","shape":"CREATE TYPE bogus AS ENUM ('good');"}
+{"sql":"ALTER TYPE bogus ADD VALUE 'new'"}
+{"sql":"SAVEPOINT x","shape":"SAVEPOINT x;"}
+{"sql":"SELECT 'new'::bogus","shape":"SELECT 'new'::bogus;"}
+{"sql":"ROLLBACK TO x","shape":"ROLLBACK TO SAVEPOINT x;"}
+{"sql":"SELECT enum_first(null::bogus)","shape":"SELECT enum_first(NULL::bogus);"}
+{"sql":"SELECT enum_last(null::bogus)","shape":"SELECT enum_last(NULL::bogus);"}
+{"sql":"SELECT enum_range(null::bogus)","shape":"SELECT enum_range(NULL::bogus);"}
+{"sql":"SELECT enumlabel, enumsortorder\nFROM pg_enum\nWHERE enumtypid = 'bogus'::regtype\nORDER BY 2","shape":"SELECT enumlabel, enumsortorder FROM pg_enum WHERE enumtypid = 'bogus'::regtype ORDER BY 2;"}
+{"sql":"ALTER TYPE bogus RENAME TO bogon"}
+{"sql":"ALTER TYPE bogon ADD VALUE 'bad'"}
+{"sql":"SELECT 'bad'::bogon","shape":"SELECT 'bad'::bogon;"}
+{"sql":"ALTER TYPE bogus RENAME VALUE 'good' to 'bad'"}
+{"sql":"SELECT 'bad'::bogus","shape":"SELECT 'bad'::bogus;"}
+{"sql":"CREATE TYPE bogus AS ENUM('good','bad','ugly')","shape":"CREATE TYPE bogus AS ENUM ('good', 'bad', 'ugly');"}
+{"sql":"select enum_range(null::bogon)","shape":"SELECT enum_range(NULL::bogon);"}
+{"sql":"ALTER TYPE bogon ADD VALUE 'ugly'"}
+{"sql":"DROP TABLE enumtest_child","shape":"DROP TABLE enumtest_child;"}
+{"sql":"DROP TABLE enumtest_parent","shape":"DROP TABLE enumtest_parent;"}
+{"sql":"DROP TABLE enumtest","shape":"DROP TABLE enumtest;"}
+{"sql":"DROP TYPE rainbow","shape":"DROP TYPE rainbow;"}
+{"sql":"SELECT COUNT(*) FROM pg_type WHERE typname = 'rainbow'","shape":"SELECT COUNT(*) FROM pg_type WHERE typname = 'rainbow';"}
+{"sql":"SELECT * FROM pg_enum WHERE NOT EXISTS\n  (SELECT 1 FROM pg_type WHERE pg_type.oid = enumtypid)","shape":"SELECT * FROM pg_enum WHERE NOT EXISTS (SELECT 1 FROM pg_type WHERE pg_type.oid = enumtypid);"}

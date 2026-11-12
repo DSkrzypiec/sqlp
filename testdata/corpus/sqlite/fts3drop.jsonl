@@ -1,0 +1,7 @@
+{"sql":"CREATE VIRTUAL TABLE f1 USING fts3"}
+{"sql":"INSERT INTO f1 VALUES('a b c')"}
+{"sql":"INSERT INTO f1 VALUES('d e f')"}
+{"sql":"INSERT INTO f1 VALUES('g h i')"}
+{"sql":"DROP TABLE f1"}
+{"sql":"SELECT * FROM f1"}
+{"sql":"INSERT INTO f1 VALUES('j k l')"}

@@ -1,0 +1,15 @@
+{"sql":"INSERT INTO t1 SELECT 'hello'"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING echo(t2)"}
+{"sql":"CREATE TABLE d1(a,b,c)"}
+{"sql":"INSERT INTO d1 VALUES(1,2,3)"}
+{"sql":"INSERT INTO d1 VALUES('a','b','c')"}
+{"sql":"INSERT INTO d1 VALUES(NULL,'x',123.456)"}
+{"sql":"INSERT INTO d1 VALUES(x'6869',123456789,-12345)"}
+{"sql":"INSERT INTO t3(a,b,c) SELECT * FROM d1"}
+{"sql":"#     CREATE TABLE t4(a)","reject":true}
+{"sql":"#     CREATE VIRTUAL TABLE t5 USING echo(t4)","reject":true}
+{"sql":"#     INSERT INTO t4 VALUES('hello')","reject":true}
+{"sql":"#     SELECT rowid, a FROM t5","reject":true}
+{"sql":"#     INSERT INTO t5(rowid, a) VALUES(1, 'goodbye')","reject":true}
+{"sql":"#     REPLACE INTO t5(rowid, a) VALUES(1, 'goodbye')","reject":true}
+{"sql":"#     SELECT * FROM t5","reject":true}

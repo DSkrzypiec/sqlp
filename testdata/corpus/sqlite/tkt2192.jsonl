@@ -1,0 +1,29 @@
+{"sql":"create table records (\n      date          real,\n      type          text,\n      description   text,\n      value         integer,\n      acc_name      text,\n      acc_no        text\n    )"}
+{"sql":"create view direct_debits as\n      select * from records where type = 'D/D'"}
+{"sql":"create view monthly_direct_debits as\n      select strftime('%Y-%m', date) as date, (-1 * sum(value)) as value\n        from direct_debits\n       group by strftime('%Y-%m', date)"}
+{"sql":"create view energy as\n      select strftime('%Y-%m', date) as date, (-1 * sum(value)) as value\n        from direct_debits\n       where description like '%NPOWER%'\n       group by strftime('%Y-%m', date)"}
+{"sql":"create view phone_internet as\n      select strftime('%Y-%m', date) as date, (-1 * sum(value)) as value\n        from direct_debits\n       where description like '%BT DIRECT%'\n          or description like '%SUPANET%'\n          or description like '%ORANGE%'\n       group by strftime('%Y-%m', date)"}
+{"sql":"create view credit_cards as\n      select strftime('%Y-%m', date) as date, (-1 * sum(value)) as value\n        from direct_debits where description like '%VISA%'\n       group by strftime('%Y-%m', date)"}
+{"sql":"create view expense_overview as\n      select 'Energy' as expense, date, value from energy\n      union\n      select 'Phone/Internet' as expense, date, value from phone_internet\n      union\n      select 'Credit Card' as expense, date, value from credit_cards"}
+{"sql":"create view jan as\n      select 'jan', expense, value from expense_overview\n       where date like '%-01'"}
+{"sql":"create view nov as\n      select 'nov', expense, value from expense_overview\n       where date like '%-11'"}
+{"sql":"create view summary as\n      select * from jan join nov on (jan.expense = nov.expense)"}
+{"sql":"select * from summary"}
+{"sql":"CREATE VIEW v1 AS\n      SELECT * FROM t1 WHERE b%7=0 UNION SELECT * FROM t1 WHERE b%5=0"}
+{"sql":"INSERT INTO t1 VALUES(1,7)"}
+{"sql":"INSERT INTO t1 VALUES(2,10)"}
+{"sql":"INSERT INTO t1 VALUES(3,14)"}
+{"sql":"INSERT INTO t1 VALUES(4,15)"}
+{"sql":"INSERT INTO t1 VALUES(1,16)"}
+{"sql":"INSERT INTO t1 VALUES(2,17)"}
+{"sql":"INSERT INTO t1 VALUES(3,20)"}
+{"sql":"INSERT INTO t1 VALUES(4,21)"}
+{"sql":"INSERT INTO t1 VALUES(1,22)"}
+{"sql":"INSERT INTO t1 VALUES(2,24)"}
+{"sql":"INSERT INTO t1 VALUES(3,25)"}
+{"sql":"INSERT INTO t1 VALUES(4,26)"}
+{"sql":"INSERT INTO t1 VALUES(1,27)"}
+{"sql":"SELECT b FROM v1 ORDER BY b"}
+{"sql":"SELECT * FROM v1 ORDER BY a, b"}
+{"sql":"SELECT x.a || '/' || x.b || '/' || y.b\n      FROM v1 AS x JOIN v1 AS y ON x.a=y.a AND x.b<y.b\n     ORDER BY x.a, x.b, y.b"}
+{"sql":"CREATE VIEW v2 AS\n    SELECT x.a || '/' || x.b || '/' || y.b AS z\n      FROM v1 AS x JOIN v1 AS y ON x.a=y.a AND x.b<y.b\n     ORDER BY x.a, x.b, y.b"}

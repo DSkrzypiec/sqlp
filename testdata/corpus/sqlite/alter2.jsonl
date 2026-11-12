@@ -1,0 +1,60 @@
+{"sql":"SELECT substr('abcdefg',1,3)"}
+{"sql":"CREATE TABLE abc(a, b)"}
+{"sql":"INSERT INTO abc VALUES(1, 2)"}
+{"sql":"INSERT INTO abc VALUES(3, 4)"}
+{"sql":"INSERT INTO abc VALUES(5, 6)"}
+{"sql":"SELECT * FROM abc"}
+{"sql":"UPDATE abc SET c = 10 WHERE a = 1"}
+{"sql":"CREATE INDEX abc_i ON abc(c)"}
+{"sql":"SELECT c FROM abc ORDER BY c"}
+{"sql":"SELECT * FROM abc WHERE c = 10"}
+{"sql":"SELECT sum(a), c FROM abc GROUP BY c"}
+{"sql":"UPDATE abc SET d = 11 WHERE c IS NULL AND a<4"}
+{"sql":"SELECT typeof(d) FROM abc"}
+{"sql":"DROP TABLE abc"}
+{"sql":"CREATE TABLE abc2(a, b, c)"}
+{"sql":"INSERT INTO abc2 VALUES(1, 2, 10)"}
+{"sql":"INSERT INTO abc2 VALUES(3, 4, NULL)"}
+{"sql":"INSERT INTO abc2 VALUES(5, 6, NULL)"}
+{"sql":"CREATE VIEW abc2_v AS SELECT * FROM abc2"}
+{"sql":"SELECT * FROM abc2_v"}
+{"sql":"DROP TABLE abc2"}
+{"sql":"DROP VIEW abc2_v"}
+{"sql":"CREATE TABLE abc3(a, b)"}
+{"sql":"CREATE TABLE blog(o, n)"}
+{"sql":"CREATE TRIGGER abc3_t AFTER UPDATE OF b ON abc3 BEGIN\n        INSERT INTO blog VALUES(old.b, new.b);\n      END"}
+{"sql":"INSERT INTO abc3 VALUES(1, 4)"}
+{"sql":"UPDATE abc3 SET b = 2 WHERE b = 4"}
+{"sql":"SELECT * FROM blog"}
+{"sql":"INSERT INTO abc3 VALUES(3, 4)"}
+{"sql":"INSERT INTO abc3 VALUES(5, 6)"}
+{"sql":"SELECT * FROM abc3"}
+{"sql":"UPDATE abc3 SET b = b*2 WHERE a<4"}
+{"sql":"CREATE TABLE clog(o, n)"}
+{"sql":"CREATE TRIGGER abc3_t2 AFTER UPDATE OF c ON abc3 BEGIN\n        INSERT INTO clog VALUES(old.c, new.c);\n      END"}
+{"sql":"UPDATE abc3 SET c = a*2"}
+{"sql":"SELECT * FROM clog"}
+{"sql":"SELECT * FROM sqlite_master"}
+{"sql":"SELECT 1 FROM sqlite_master LIMIT 1"}
+{"sql":"VACUUM"}
+{"sql":"CREATE TABLE aux.t1(a, b)"}
+{"sql":"CREATE TABLE t1(a, b)"}
+{"sql":"DROP TABLE t1"}
+{"sql":"INSERT INTO t1 VALUES(4)"}
+{"sql":"SELECT * FROM t1"}
+{"sql":"SELECT * FROM t1 LIMIT 1"}
+{"sql":"SELECT a, typeof(a), b, typeof(b), c, typeof(c) FROM t1 LIMIT 1"}
+{"sql":"CREATE TRIGGER trig1 BEFORE UPDATE ON t1 BEGIN\n      SELECT set_val(\n          old.b||' '||typeof(old.b)||' '||old.c||' '||typeof(old.c)||' '||\n          new.b||' '||typeof(new.b)||' '||new.c||' '||typeof(new.c) \n      );\n      END"}
+{"sql":"UPDATE t1 SET c = 10 WHERE a = 1"}
+{"sql":"CREATE TRIGGER trig2 BEFORE DELETE ON t1 BEGIN\n      SELECT set_val(\n          old.b||' '||typeof(old.b)||' '||old.c||' '||typeof(old.c)\n      );\n      END"}
+{"sql":"DELETE FROM t1 WHERE a = 2"}
+{"sql":"CREATE TABLE t2(a)"}
+{"sql":"INSERT INTO t2 VALUES('a')"}
+{"sql":"INSERT INTO t2 VALUES('b')"}
+{"sql":"INSERT INTO t2 VALUES('c')"}
+{"sql":"INSERT INTO t2 VALUES('d')"}
+{"sql":"SELECT quote(a), quote(b), quote(c) FROM t2 LIMIT 1"}
+{"sql":"CREATE INDEX i1 ON t2(b)"}
+{"sql":"SELECT a FROM t2 WHERE b = X'ABCD'"}
+{"sql":"DELETE FROM t2 WHERE a = 'c'"}
+{"sql":"SELECT count(b) FROM t2 WHERE b = X'ABCD'"}

@@ -1,0 +1,13 @@
+{"sql":"CREATE TABLE parameters1(\n       mountcnt    INT NOT NULL CHECK (typeof(mountcnt) == 'integer'),\n       version     REAL NOT NULL\n    )"}
+{"sql":"INSERT INTO parameters1(mountcnt, version) VALUES(1, 1.0)"}
+{"sql":"CREATE TABLE parameters2(\n       mountcnt    INT NOT NULL CHECK (typeof(mountcnt) == 'integer'),\n       version     REAL CHECK (typeof(version) == 'real')\n    )"}
+{"sql":"INSERT INTO parameters2(mountcnt, version) VALUES(1, 1.0)"}
+{"sql":"UPDATE parameters1 SET mountcnt = mountcnt + 1"}
+{"sql":"SELECT * FROM parameters1"}
+{"sql":"UPDATE parameters2 SET mountcnt = mountcnt + 1"}
+{"sql":"SELECT * FROM parameters2"}
+{"sql":"ALTER TABLE t1 ADD COLUMN c DEFAULT 3"}
+{"sql":"UPDATE t1 SET a = 'one'"}
+{"sql":"CREATE TABLE t2(a REAL, b REAL, c REAL)"}
+{"sql":"CREATE TRIGGER tr2 BEFORE UPDATE ON t2 BEGIN\n        SELECT tcl('set res', typeof(new.c));\n      END"}
+{"sql":"UPDATE t2 SET a = 'I'"}

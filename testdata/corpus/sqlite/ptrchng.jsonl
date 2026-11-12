@@ -1,0 +1,34 @@
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y BLOB)"}
+{"sql":"INSERT INTO t1 VALUES(1, 'abc')"}
+{"sql":"INSERT INTO t1 VALUES(2, \n       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234356789')"}
+{"sql":"INSERT INTO t1 VALUES(3, x'626c6f62')"}
+{"sql":"INSERT INTO t1 VALUES(4,\n x'000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324'\n    )"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'blob') FROM t1 WHERE x=1"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text') FROM t1 WHERE x=1"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'text16') FROM t1 WHERE x=1"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text16') FROM t1 WHERE x=1"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'blob') FROM t1 WHERE x=1"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'text') FROM t1 WHERE x=1"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'blob') FROM t1 WHERE x=3"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text') FROM t1 WHERE x=3"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'text16') FROM t1 WHERE x=3"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text16') FROM t1 WHERE x=3"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'blob') FROM t1 WHERE x=3"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'text') FROM t1 WHERE x=3"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'blob') FROM t1 WHERE x=2"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text') FROM t1 WHERE x=2"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'text16') FROM t1 WHERE x=2"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text16') FROM t1 WHERE x=2"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'blob') FROM t1 WHERE x=2"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'text') FROM t1 WHERE x=2"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'blob') FROM t1 WHERE x=4"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text') FROM t1 WHERE x=4"}
+{"sql":"SELECT pointer_change(y, 'text', 'noop', 'text16') FROM t1 WHERE x=4"}
+{"sql":"SELECT pointer_change(y, 'blob', 'noop', 'text16') FROM t1 WHERE x=4"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'blob') FROM t1 WHERE x=4"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'text') FROM t1 WHERE x=4"}
+{"sql":"SELECT pointer_change(y, 'text', 'bytes', 'text') FROM t1"}
+{"sql":"SELECT pointer_change(y, 'blob', 'bytes', 'blob') FROM t1"}
+{"sql":"SELECT pointer_change(y, 'text', 'bytes', 'blob') FROM t1"}
+{"sql":"SELECT pointer_change(y, 'text16', 'noop', 'blob') FROM t1"}
+{"sql":"SELECT pointer_change(y, 'text16', 'bytes16', 'blob') FROM t1"}

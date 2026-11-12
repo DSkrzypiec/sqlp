@@ -1,0 +1,298 @@
+{"sql":"PRAGMA foreign_key_check(t1)"}
+{"sql":"PRAGMA foreign_key_check(t2)"}
+{"sql":"PRAGMA foreign_key_check(t3)"}
+{"sql":"PRAGMA foreign_key_check(t4)"}
+{"sql":"PRAGMA foreign_key_check(t7)"}
+{"sql":"PRAGMA foreign_key_check(t8)"}
+{"sql":"PRAGMA count_changes = 1"}
+{"sql":"PRAGMA count_changes = 0"}
+{"sql":"CREATE TABLE i(i INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE j(j REFERENCES i)"}
+{"sql":"INSERT INTO i VALUES(35)"}
+{"sql":"INSERT INTO j VALUES('35.0')"}
+{"sql":"SELECT j, typeof(j) FROM j"}
+{"sql":"DELETE FROM i"}
+{"sql":"CREATE TABLE i(i INT UNIQUE)"}
+{"sql":"CREATE TABLE j(j REFERENCES i(i))"}
+{"sql":"INSERT INTO i VALUES('35.0')"}
+{"sql":"SELECT i, typeof(i) FROM i"}
+{"sql":"CREATE TABLE i(i TEXT COLLATE nocase PRIMARY KEY)"}
+{"sql":"CREATE TABLE j(j TEXT COLLATE binary REFERENCES i(i))"}
+{"sql":"INSERT INTO i VALUES('SQLite')"}
+{"sql":"INSERT INTO j VALUES('sqlite')"}
+{"sql":"CREATE TABLE i(i TEXT PRIMARY KEY)"}
+{"sql":"CREATE TABLE j(j TEXT COLLATE nocase REFERENCES i(i))"}
+{"sql":"INSERT INTO i VALUES('sqlite')"}
+{"sql":"DELETE FROM i WHERE i = 'SQLite'"}
+{"sql":"DELETE FROM i WHERE i = 'sqlite'"}
+{"sql":"CREATE TABLE ab(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE cd(\n      c PRIMARY KEY REFERENCES ab ON UPDATE CASCADE ON DELETE CASCADE, \n      d\n    )"}
+{"sql":"CREATE TABLE ef(\n      e REFERENCES cd ON UPDATE CASCADE, \n      f, CHECK (e!=5)\n    )"}
+{"sql":"INSERT INTO ab VALUES(1, 'b')"}
+{"sql":"INSERT INTO cd VALUES(1, 'd')"}
+{"sql":"INSERT INTO ef VALUES(1, 'e')"}
+{"sql":"UPDATE ab SET a = 5"}
+{"sql":"SELECT * FROM ab"}
+{"sql":"SELECT * FROM cd"}
+{"sql":"SELECT * FROM ef"}
+{"sql":"DELETE FROM ab"}
+{"sql":"CREATE TABLE t1(\n      node PRIMARY KEY, \n      parent REFERENCES t1 ON DELETE CASCADE\n    )"}
+{"sql":"CREATE TABLE t2(node PRIMARY KEY, parent)"}
+{"sql":"CREATE TRIGGER t2t AFTER DELETE ON t2 BEGIN\n      DELETE FROM t2 WHERE parent = old.node;\n    END"}
+{"sql":"INSERT INTO t1 VALUES(3, 1)"}
+{"sql":"INSERT INTO t1 VALUES(4, 2)"}
+{"sql":"INSERT INTO t1 VALUES(5, 2)"}
+{"sql":"INSERT INTO t1 VALUES(6, 3)"}
+{"sql":"INSERT INTO t1 VALUES(7, 3)"}
+{"sql":"PRAGMA recursive_triggers = off"}
+{"sql":"DELETE FROM t1 WHERE node = 1"}
+{"sql":"SELECT node FROM t1"}
+{"sql":"DELETE FROM t2 WHERE node = 1"}
+{"sql":"SELECT node FROM t2"}
+{"sql":"PRAGMA recursive_triggers = on"}
+{"sql":"CREATE TABLE t2(a PRIMARY KEY, b REFERENCES t1(a))"}
+{"sql":"INSERT INTO t2 VALUES('key', 'hello')"}
+{"sql":"PRAGMA foreign_keys = off"}
+{"sql":"CREATE TABLE t1(a REFERENCES t2(c), b)"}
+{"sql":"CREATE TABLE t2(c UNIQUE, b)"}
+{"sql":"CREATE TABLE t2(c INTEGER PRIMARY KEY REFERENCES t1, b)"}
+{"sql":"INSERT INTO t1 VALUES(2, 3)"}
+{"sql":"UPDATE t2 SET c = 2"}
+{"sql":"UPDATE t2 SET c = 3"}
+{"sql":"UPDATE t1 SET a = 3"}
+{"sql":"UPDATE t2 SET rowid = 3"}
+{"sql":"CREATE TABLE t2(\n      c INTEGER PRIMARY KEY,\n      d INTEGER DEFAULT 1 REFERENCES t1 ON DELETE SET DEFAULT\n    )"}
+{"sql":"UPDATE t2 SET d = 2"}
+{"sql":"CREATE TABLE pp(a, b, c, PRIMARY KEY(b, c))"}
+{"sql":"CREATE TABLE cc(d DEFAULT 3, e DEFAULT 1, f DEFAULT 2,\n        FOREIGN KEY(f, d) REFERENCES pp \n        ON UPDATE SET DEFAULT \n        ON DELETE SET NULL\n    )"}
+{"sql":"INSERT INTO pp VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO pp VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO pp VALUES(7, 8, 9)"}
+{"sql":"INSERT INTO cc VALUES(6, 'A', 5)"}
+{"sql":"INSERT INTO cc VALUES(6, 'B', 5)"}
+{"sql":"INSERT INTO cc VALUES(9, 'A', 8)"}
+{"sql":"INSERT INTO cc VALUES(9, 'B', 8)"}
+{"sql":"UPDATE pp SET b = 1 WHERE a = 7"}
+{"sql":"SELECT * FROM cc"}
+{"sql":"DELETE FROM pp WHERE a = 4"}
+{"sql":"CREATE TABLE t3(x PRIMARY KEY REFERENCES t3 ON DELETE SET NULL)"}
+{"sql":"INSERT INTO t3(x) VALUES(12345)"}
+{"sql":"INSERT INTO c DEFAULT VALUES"}
+{"sql":"CREATE TABLE t2(c, d, FOREIGN KEY(rowid) REFERENCES t1(a))"}
+{"sql":"CREATE TABLE t2(rowid, d, FOREIGN KEY(rowid) REFERENCES t1(a))"}
+{"sql":"CREATE TABLE t2(c, d, FOREIGN KEY(c) REFERENCES t1(rowid))"}
+{"sql":"INSERT INTO t1(rowid, a, b) VALUES(1, 1, 1)"}
+{"sql":"CREATE TABLE t1(rowid PRIMARY KEY, b)"}
+{"sql":"INSERT INTO t1(rowid, b) VALUES(1, 1)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, rowid, _rowid_, oid)"}
+{"sql":"CREATE TABLE t2(c, d, FOREIGN KEY(c) REFERENCES t1(a) ON UPDATE CASCADE)"}
+{"sql":"INSERT INTO t1 VALUES(10, 100, 'abc', 'def', 'ghi')"}
+{"sql":"INSERT INTO t2 VALUES(10, 100)"}
+{"sql":"UPDATE t1 SET a = 15"}
+{"sql":"CREATE TABLE t2(\n      x REFERENCES t1 ON UPDATE RESTRICT DEFERRABLE INITIALLY DEFERRED \n    )"}
+{"sql":"CREATE TABLE t1(x COLLATE NOCASE PRIMARY KEY)"}
+{"sql":"CREATE TRIGGER tt1 AFTER DELETE ON t1 \n      WHEN EXISTS ( SELECT 1 FROM t2 WHERE old.x = y )\n    BEGIN\n      INSERT INTO t1 VALUES(old.x);\n    END"}
+{"sql":"CREATE TABLE t2(y REFERENCES t1)"}
+{"sql":"INSERT INTO t1 VALUES('A')"}
+{"sql":"CREATE TABLE t2(y REFERENCES t1 ON DELETE RESTRICT)"}
+{"sql":"CREATE TABLE up(\n      c00, c01, c02, c03, c04, c05, c06, c07, c08, c09,\n      c10, c11, c12, c13, c14, c15, c16, c17, c18, c19,\n      c20, c21, c22, c23, c24, c25, c26, c27, c28, c29,\n      c30, c31, c32, c33, c34, c35, c36, c37, c38, c39,\n      PRIMARY KEY(c34, c35)\n    )"}
+{"sql":"CREATE TABLE down(\n      c00, c01, c02, c03, c04, c05, c06, c07, c08, c09,\n      c10, c11, c12, c13, c14, c15, c16, c17, c18, c19,\n      c20, c21, c22, c23, c24, c25, c26, c27, c28, c29,\n      c30, c31, c32, c33, c34, c35, c36, c37, c38, c39,\n      FOREIGN KEY(c39, c38) REFERENCES up ON UPDATE CASCADE\n    )"}
+{"sql":"INSERT INTO up(c34, c35) VALUES('yes', 'no')"}
+{"sql":"INSERT INTO down(c39, c38) VALUES('yes', 'no')"}
+{"sql":"UPDATE up SET c34 = 'possibly'"}
+{"sql":"SELECT c38, c39 FROM down"}
+{"sql":"DELETE FROM down"}
+{"sql":"DELETE FROM up WHERE c34 = 'yes'"}
+{"sql":"DELETE FROM up WHERE c34 = 'possibly'"}
+{"sql":"SELECT c34, c35 FROM up"}
+{"sql":"SELECT c39, c38 FROM down"}
+{"sql":"CREATE TABLE pp(a UNIQUE, b, c, PRIMARY KEY(b, c))"}
+{"sql":"CREATE TABLE cc(d, e, f UNIQUE, FOREIGN KEY(d, e) REFERENCES pp)"}
+{"sql":"INSERT INTO cc VALUES(2, 3, 1)"}
+{"sql":"SELECT * FROM pp"}
+{"sql":"REPLACE INTO pp(rowid, a, b, c) VALUES(1, 2, 2, 3)"}
+{"sql":"SELECT rowid, * FROM pp"}
+{"sql":"REPLACE INTO pp(rowid, a, b, c) VALUES(2, 2, 2, 3)"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY)"}
+{"sql":"ALTER TABLE t2 ADD COLUMN c REFERENCES t1"}
+{"sql":"ALTER TABLE t2 ADD COLUMN d DEFAULT NULL REFERENCES t1"}
+{"sql":"ALTER TABLE t2 ADD COLUMN e REFERENCES t1 DEFAULT NULL"}
+{"sql":"ALTER TABLE t2 ADD COLUMN f REFERENCES t1 DEFAULT 'text'"}
+{"sql":"ALTER TABLE t2 ADD COLUMN g DEFAULT CURRENT_TIME REFERENCES t1"}
+{"sql":"ALTER TABLE t2 ADD COLUMN h DEFAULT 'text' REFERENCES t1"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='t2'"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b REFERENCES t1)"}
+{"sql":"CREATE TABLE t2(a PRIMARY KEY, b REFERENCES t1, c REFERENCES t2)"}
+{"sql":"CREATE TABLE t3(a REFERENCES t1, b REFERENCES t2, c REFERENCES t1)"}
+{"sql":"INSERT INTO t4 VALUES(1, NULL)"}
+{"sql":"UPDATE t4 SET b = 5"}
+{"sql":"UPDATE t4 SET b = 1"}
+{"sql":"INSERT INTO t3 VALUES(1, NULL, 1)"}
+{"sql":"CREATE TEMP TABLE t1(a PRIMARY KEY)"}
+{"sql":"CREATE TEMP TABLE t2(a, b)"}
+{"sql":"INSERT INTO temp.t2 VALUES(1,2)"}
+{"sql":"SELECT sql FROM temp.sqlite_master WHERE name='t2'"}
+{"sql":"CREATE TEMP TABLE t1(a PRIMARY KEY, b REFERENCES t1)"}
+{"sql":"CREATE TEMP TABLE t2(a PRIMARY KEY, b REFERENCES t1, c REFERENCES t2)"}
+{"sql":"CREATE TEMP TABLE t3(a REFERENCES t1, b REFERENCES t2, c REFERENCES t1)"}
+{"sql":"SELECT sql FROM sqlite_temp_master WHERE type = 'table'"}
+{"sql":"SELECT sql FROM temp.sqlite_master WHERE type = 'table'"}
+{"sql":"ATTACH ':memory:' AS aux"}
+{"sql":"CREATE TABLE aux.t1(a PRIMARY KEY)"}
+{"sql":"CREATE TABLE aux.t2(a, b)"}
+{"sql":"INSERT INTO aux.t2(a,b) VALUES(1,2)"}
+{"sql":"SELECT sql FROM aux.sqlite_master WHERE name='t2'"}
+{"sql":"CREATE TABLE aux.t1(a PRIMARY KEY, b REFERENCES t1)"}
+{"sql":"CREATE TABLE aux.t2(a PRIMARY KEY, b REFERENCES t1, c REFERENCES t2)"}
+{"sql":"CREATE TABLE aux.t3(a REFERENCES t1, b REFERENCES t2, c REFERENCES t1)"}
+{"sql":"SELECT sql FROM aux.sqlite_master WHERE type = 'table'"}
+{"sql":"CREATE TABLE t1(a, b REFERENCES nosuchtable)"}
+{"sql":"INSERT INTO t1 VALUES('a', 1)"}
+{"sql":"CREATE TABLE t2(x REFERENCES t1)"}
+{"sql":"INSERT INTO t2 VALUES('x')"}
+{"sql":"CREATE TABLE pp(x, y, PRIMARY KEY(x, y))"}
+{"sql":"CREATE TABLE cc(a, b, FOREIGN KEY(a, b) REFERENCES pp(x, z))"}
+{"sql":"INSERT INTO cc VALUES(1, 2)"}
+{"sql":"DROP TABLE cc"}
+{"sql":"CREATE TABLE cc(a, b, \n      FOREIGN KEY(a, b) REFERENCES pp DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"INSERT INTO pp VALUES('a', 'b')"}
+{"sql":"INSERT INTO cc VALUES('a', 'b')"}
+{"sql":"DROP TABLE pp"}
+{"sql":"INSERT INTO pp VALUES(1, 'a', 'b')"}
+{"sql":"CREATE TABLE b1(a, b)"}
+{"sql":"CREATE TABLE b2(a, b REFERENCES b1)"}
+{"sql":"DROP TABLE b1"}
+{"sql":"CREATE TABLE b3(a, b REFERENCES b2 DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"DROP TABLE b2"}
+{"sql":"CREATE TABLE t1(x REFERENCES v)"}
+{"sql":"CREATE VIEW v AS SELECT * FROM t1"}
+{"sql":"CREATE VIRTUAL TABLE v USING echo(t1)"}
+{"sql":"DROP TABLE v"}
+{"sql":"CREATE TABLE pp(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE cc(x, y REFERENCES pp DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"INSERT INTO pp VALUES(1, 'one')"}
+{"sql":"INSERT INTO pp VALUES(2, 'two')"}
+{"sql":"INSERT INTO cc VALUES('neung', 1)"}
+{"sql":"INSERT INTO cc VALUES('song', 2)"}
+{"sql":"INSERT INTO cc VALUES('see', 4)"}
+{"sql":"DELETE FROM cc WHERE x = 'see'"}
+{"sql":"DELETE FROM pp WHERE a = 2"}
+{"sql":"INSERT INTO self VALUES(13, 13)"}
+{"sql":"UPDATE self SET a = 14, b = 14"}
+{"sql":"UPDATE self SET b = 15"}
+{"sql":"UPDATE self SET a = 15"}
+{"sql":"UPDATE self SET a = 15, b = 16"}
+{"sql":"UPDATE self SET a = 17, b = 17"}
+{"sql":"DELETE FROM self"}
+{"sql":"INSERT INTO self VALUES(20, 21)"}
+{"sql":"CREATE TABLE one(a, b, c, UNIQUE(b, c))"}
+{"sql":"CREATE TABLE two(d, e, f, FOREIGN KEY(e, f) REFERENCES one(b, c))"}
+{"sql":"INSERT INTO one VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO one VALUES(2, 3, 4)"}
+{"sql":"INSERT INTO one VALUES(3, 4, 5)"}
+{"sql":"INSERT INTO two VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO two VALUES(2, 3, 4)"}
+{"sql":"INSERT INTO two VALUES(3, 4, 5)"}
+{"sql":"INSERT INTO one VALUES(0, 0, 0)"}
+{"sql":"UPDATE two SET e=e+1, f=f+1"}
+{"sql":"SELECT * FROM one"}
+{"sql":"SELECT * FROM two"}
+{"sql":"CREATE TABLE three(\n      g, h, i, \n      FOREIGN KEY(h, i) REFERENCES one(b, c) DEFERRABLE INITIALLY DEFERRED\n    )"}
+{"sql":"CREATE TABLE high(\"a'b!\" PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE low(\n      c, \n      \"d&6\" REFERENCES high ON UPDATE CASCADE ON DELETE CASCADE\n    )"}
+{"sql":"INSERT INTO high VALUES('a', 'b')"}
+{"sql":"INSERT INTO low VALUES('b', 'a')"}
+{"sql":"UPDATE high SET \"a'b!\" = 'c'"}
+{"sql":"SELECT * FROM high"}
+{"sql":"SELECT * FROM low"}
+{"sql":"DELETE FROM high"}
+{"sql":"CREATE TABLE long(a, b PRIMARY KEY, c)"}
+{"sql":"CREATE TABLE short(d, e, f REFERENCES long)"}
+{"sql":"CREATE TABLE mid(g, h, i REFERENCES long DEFERRABLE INITIALLY DEFERRED)"}
+{"sql":"INSERT INTO long VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO short VALUES(1, 3, 2)"}
+{"sql":"INSERT INTO mid VALUES(1, 3, 2)"}
+{"sql":"CREATE TABLE nought(a, b PRIMARY KEY, c)"}
+{"sql":"CREATE TABLE cross(d, e, f,\n        FOREIGN KEY(e) REFERENCES nought(b) ON UPDATE CASCADE\n      )"}
+{"sql":"INSERT INTO nought VALUES(2, 1, 2)"}
+{"sql":"INSERT INTO cross VALUES(0, 1, 0)"}
+{"sql":"UPDATE nought SET b = 5"}
+{"sql":"SELECT * FROM cross"}
+{"sql":"CREATE TABLE one(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE two(b, c REFERENCES one)"}
+{"sql":"INSERT INTO one VALUES(101, 102)"}
+{"sql":"INSERT INTO two VALUES(100, 101)"}
+{"sql":"INSERT INTO short VALUES(1, 3, NULL)"}
+{"sql":"SELECT * FROM short"}
+{"sql":"UPDATE short SET f = 2 WHERE f IS NULL"}
+{"sql":"CREATE TABLE main(id INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE sub(id INT REFERENCES main(id))"}
+{"sql":"INSERT INTO main VALUES(1)"}
+{"sql":"INSERT INTO main VALUES(2)"}
+{"sql":"INSERT INTO sub VALUES(2)"}
+{"sql":"CREATE TABLE cc(c PRIMARY KEY, d REFERENCES pp)"}
+{"sql":"DELETE FROM cc"}
+{"sql":"DELETE FROM pp"}
+{"sql":"INSERT INTO pp VALUES(3, 'three')"}
+{"sql":"INSERT INTO cc VALUES(2, 2)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, c, UNIQUE(b, c))"}
+{"sql":"CREATE TABLE t2(e REFERENCES t1, f)"}
+{"sql":"CREATE TABLE t3(g, h, i, FOREIGN KEY (h, i) REFERENCES t1(b, c))"}
+{"sql":"INSERT INTO t2 VALUES(NULL, 3)"}
+{"sql":"UPDATE t2 SET e = 5 WHERE e IS NULL"}
+{"sql":"UPDATE t2 SET e = 1 WHERE e IS NULL"}
+{"sql":"UPDATE t2 SET e = NULL WHERE f = 3"}
+{"sql":"UPDATE t1 SET a = 10"}
+{"sql":"UPDATE t1 SET a = NULL"}
+{"sql":"UPDATE t2 SET e = NULL"}
+{"sql":"INSERT INTO t3 VALUES(1, NULL, NULL)"}
+{"sql":"INSERT INTO t3 VALUES(1, 2, NULL)"}
+{"sql":"INSERT INTO t3 VALUES(1, NULL, 3)"}
+{"sql":"INSERT INTO t3 VALUES(3, 1, 4)"}
+{"sql":"INSERT INTO t1 VALUES(1, 1, 4)"}
+{"sql":"UPDATE t1 SET b = 10"}
+{"sql":"UPDATE t3 SET h = 'hello' WHERE i = 3"}
+{"sql":"CREATE TABLE t2(e REFERENCES t1 ON UPDATE CASCADE ON DELETE CASCADE, f)"}
+{"sql":"CREATE TABLE t3(g, h, i, \n        FOREIGN KEY (h, i) \n        REFERENCES t1(b, c) ON UPDATE CASCADE ON DELETE CASCADE\n    )"}
+{"sql":"INSERT INTO t2 VALUES(1, 'one')"}
+{"sql":"INSERT INTO t2 VALUES(4, 'four')"}
+{"sql":"UPDATE t1 SET a = 2 WHERE a = 1"}
+{"sql":"DELETE FROM t1 WHERE a = 4"}
+{"sql":"INSERT INTO t3 VALUES('hello', 2, 3)"}
+{"sql":"UPDATE t1 SET c = 2"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, c, UNIQUE(c, b))"}
+{"sql":"CREATE TABLE t2(e REFERENCES t1 ON UPDATE SET NULL ON DELETE SET NULL, f)"}
+{"sql":"CREATE TABLE t3(g, h, i, \n        FOREIGN KEY (h, i) \n        REFERENCES t1(b, c) ON UPDATE SET NULL ON DELETE SET NULL\n    )"}
+{"sql":"UPDATE t3 SET h = 2, i = 2"}
+{"sql":"CREATE TABLE tdd08(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE UNIQUE INDEX idd08 ON tdd08(a,b)"}
+{"sql":"INSERT INTO tdd08 VALUES(200,300)"}
+{"sql":"CREATE TABLE tdd08_b(w,x,y, FOREIGN KEY(x,y) REFERENCES tdd08(a,b))"}
+{"sql":"INSERT INTO tdd08_b VALUES(100,200,300)"}
+{"sql":"DELETE FROM tdd08"}
+{"sql":"SELECT * FROM tdd08"}
+{"sql":"INSERT INTO tdd08_b VALUES(400,500,300)"}
+{"sql":"UPDATE tdd08_b SET x=x+1"}
+{"sql":"UPDATE tdd08 SET a=a+1"}
+{"sql":"CREATE TABLE tce71(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE UNIQUE INDEX ice71 ON tce71(a,b)"}
+{"sql":"INSERT INTO tce71 VALUES(100,200)"}
+{"sql":"CREATE TABLE tce72(w, x, y, FOREIGN KEY(x,y) REFERENCES tce71(a,b))"}
+{"sql":"INSERT INTO tce72 VALUES(300,100,200)"}
+{"sql":"UPDATE tce71 set b = 200 where a = 100"}
+{"sql":"SELECT * FROM tce71, tce72"}
+{"sql":"UPDATE tce71 set b = 201 where a = 100"}
+{"sql":"UPDATE tce71 set a = 101 where a = 100"}
+{"sql":"CREATE TABLE tce73(a INTEGER PRIMARY KEY, b, UNIQUE(a,b))"}
+{"sql":"INSERT INTO tce73 VALUES(100,200)"}
+{"sql":"CREATE TABLE tce74(w, x, y, FOREIGN KEY(x,y) REFERENCES tce73(a,b))"}
+{"sql":"INSERT INTO tce74 VALUES(300,100,200)"}
+{"sql":"UPDATE tce73 set b = 200 where a = 100"}
+{"sql":"SELECT * FROM tce73, tce74"}
+{"sql":"UPDATE tce73 set b = 201 where a = 100"}
+{"sql":"UPDATE tce73 set a = 101 where a = 100"}
+{"sql":"PRAGMA foreign_keys=1"}
+{"sql":"CREATE TABLE t(y REFERENCES t0(x)ON DELETE SET DEFAULT)"}
+{"sql":"CREATE TABLE t0(y REFERENCES t1 ON DELETE SET NULL)"}
+{"sql":"REPLACE INTO t1 SELECT(0)"}
+{"sql":"CREATE TABLE t3","reject":true}

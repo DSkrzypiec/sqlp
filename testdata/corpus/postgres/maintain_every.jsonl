@@ -1,0 +1,13 @@
+{"sql":"CREATE ROLE regress_maintain"}
+{"sql":"SET ROLE regress_maintain"}
+{"sql":"CREATE TEMP TABLE past_inh_db_other ()","shape":"CREATE TEMPORARY TABLE past_inh_db_other ();"}
+{"sql":"CREATE TEMP TABLE past_inh_db_parent () ON COMMIT DELETE ROWS","shape":"CREATE TEMPORARY TABLE past_inh_db_parent () ON COMMIT DELETE ROWS;"}
+{"sql":"CREATE TEMP TABLE past_inh_db_child () INHERITS (past_inh_db_parent)","shape":"CREATE TEMPORARY TABLE past_inh_db_child () INHERITS (past_inh_db_parent);"}
+{"sql":"CREATE INDEX ON past_inh_db_parent ((1))","shape":"CREATE INDEX ON past_inh_db_parent ((1));"}
+{"sql":"ANALYZE past_inh_db_parent","shape":"ANALYZE past_inh_db_parent;"}
+{"sql":"SELECT reltuples, relhassubclass\n  FROM pg_class WHERE oid = 'past_inh_db_parent'::regclass","shape":"SELECT reltuples, relhassubclass FROM pg_class WHERE oid = 'past_inh_db_parent'::regclass;"}
+{"sql":"DROP TABLE past_inh_db_child","shape":"DROP TABLE past_inh_db_child;"}
+{"sql":"SET client_min_messages = error","shape":"SET client_min_messages TO error;"}
+{"sql":"ANALYZE","shape":"ANALYZE;"}
+{"sql":"DROP TABLE past_inh_db_parent, past_inh_db_other","shape":"DROP TABLE past_inh_db_parent, past_inh_db_other;"}
+{"sql":"DROP ROLE regress_maintain","shape":"DROP ROLE regress_maintain;"}

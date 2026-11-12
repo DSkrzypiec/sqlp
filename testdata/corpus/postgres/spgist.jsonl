@@ -1,0 +1,30 @@
+{"sql":"create table spgist_point_tbl(id int4, p point)","shape":"CREATE TABLE spgist_point_tbl (id int4, p point);"}
+{"sql":"create index spgist_point_idx on spgist_point_tbl using spgist(p) with (fillfactor = 75)","shape":"CREATE INDEX spgist_point_idx ON spgist_point_tbl USING spgist (p) WITH (fillfactor = 75);"}
+{"sql":"insert into spgist_point_tbl (id, p)\nselect g, point(g*10, g*10) from generate_series(1, 10) g","shape":"INSERT INTO spgist_point_tbl (id, p) SELECT g, point(g * 10, g * 10) FROM generate_series(1, 10) AS g;"}
+{"sql":"delete from spgist_point_tbl where id < 5","shape":"DELETE FROM spgist_point_tbl WHERE id < 5;"}
+{"sql":"vacuum spgist_point_tbl","shape":"VACUUM spgist_point_tbl;"}
+{"sql":"insert into spgist_point_tbl (id, p)\nselect g,      point(g*10, g*10) from generate_series(1, 10000) g","shape":"INSERT INTO spgist_point_tbl (id, p) SELECT g, point(g * 10, g * 10) FROM generate_series(1, 10000) AS g;"}
+{"sql":"insert into spgist_point_tbl (id, p)\nselect g+100000, point(g*10+1, g*10+1) from generate_series(1, 10000) g","shape":"INSERT INTO spgist_point_tbl (id, p) SELECT g + 100000, point((g * 10) + 1, (g * 10) + 1) FROM generate_series(1, 10000) AS g;"}
+{"sql":"delete from spgist_point_tbl where id % 2 = 1","shape":"DELETE FROM spgist_point_tbl WHERE (id % 2) = 1;"}
+{"sql":"delete from spgist_point_tbl where id < 10000","shape":"DELETE FROM spgist_point_tbl WHERE id < 10000;"}
+{"sql":"create table spgist_box_tbl(id serial, b box)","shape":"CREATE TABLE spgist_box_tbl (id serial, b box);"}
+{"sql":"insert into spgist_box_tbl(b)\nselect box(point(i,j),point(i+s,j+s))\n  from generate_series(1,100,5) i,\n       generate_series(1,100,5) j,\n       generate_series(1,10) s","shape":"INSERT INTO spgist_box_tbl (b) SELECT box(point(i, j), point(i + s, j + s)) FROM generate_series(1, 100, 5) AS i, generate_series(1, 100, 5) AS j, generate_series(1, 10) AS s;"}
+{"sql":"create index spgist_box_idx on spgist_box_tbl using spgist (b)","shape":"CREATE INDEX spgist_box_idx ON spgist_box_tbl USING spgist (b);"}
+{"sql":"select count(*)\n  from (values (point(5,5)),(point(8,8)),(point(12,12))) v(p)\n where exists(select * from spgist_box_tbl b where b.b && box(v.p,v.p))","shape":"SELECT count(*) FROM (VALUES (point(5, 5)), (point(8, 8)), (point(12, 12))) AS v(p) WHERE EXISTS (SELECT * FROM spgist_box_tbl AS b WHERE b.b && box(v.p, v.p));"}
+{"sql":"create table spgist_text_tbl(id int4, t text)","shape":"CREATE TABLE spgist_text_tbl (id int4, t text);"}
+{"sql":"create index spgist_text_idx on spgist_text_tbl using spgist(t)","shape":"CREATE INDEX spgist_text_idx ON spgist_text_tbl USING spgist (t);"}
+{"sql":"insert into spgist_text_tbl (id, t)\nselect g, 'f' || repeat('o', 100) || g from generate_series(1, 10000) g\nunion all\nselect g, 'baaaaaaaaaaaaaar' || g from generate_series(1, 1000) g","shape":"INSERT INTO spgist_text_tbl (id, t) SELECT g, ('f' || repeat('o', 100)) || g FROM generate_series(1, 10000) AS g UNION ALL SELECT g, 'baaaaaaaaaaaaaar' || g FROM generate_series(1, 1000) AS g;"}
+{"sql":"insert into spgist_text_tbl (id, t)\nselect -g, 'f' || repeat('o', 100-g) || 'surprise' from generate_series(1, 100) g","shape":"INSERT INTO spgist_text_tbl (id, t) SELECT -g, ('f' || repeat('o', 100 - g)) || 'surprise' FROM generate_series(1, 100) AS g;"}
+{"sql":"create index spgist_point_idx2 on spgist_point_tbl using spgist(p) with (fillfactor = 9)","shape":"CREATE INDEX spgist_point_idx2 ON spgist_point_tbl USING spgist (p) WITH (fillfactor = 9);"}
+{"sql":"create index spgist_point_idx2 on spgist_point_tbl using spgist(p) with (fillfactor = 101)","shape":"CREATE INDEX spgist_point_idx2 ON spgist_point_tbl USING spgist (p) WITH (fillfactor = 101);"}
+{"sql":"alter index spgist_point_idx set (fillfactor = 90)"}
+{"sql":"reindex index spgist_point_idx","shape":"REINDEX INDEX spgist_point_idx;"}
+{"sql":"create domain spgist_text as varchar","shape":"CREATE DOMAIN spgist_text AS varchar;"}
+{"sql":"create table spgist_domain_tbl (f1 spgist_text)","shape":"CREATE TABLE spgist_domain_tbl (f1 spgist_text);"}
+{"sql":"create index spgist_domain_idx on spgist_domain_tbl using spgist(f1)","shape":"CREATE INDEX spgist_domain_idx ON spgist_domain_tbl USING spgist (f1);"}
+{"sql":"insert into spgist_domain_tbl values('fee'), ('fi'), ('fo'), ('fum')","shape":"INSERT INTO spgist_domain_tbl VALUES ('fee'), ('fi'), ('fo'), ('fum');"}
+{"sql":"explain (costs off)\nselect * from spgist_domain_tbl where f1 = 'fo'","shape":"EXPLAIN (COSTS off) SELECT * FROM spgist_domain_tbl WHERE f1 = 'fo';"}
+{"sql":"select * from spgist_domain_tbl where f1 = 'fo'","shape":"SELECT * FROM spgist_domain_tbl WHERE f1 = 'fo';"}
+{"sql":"create unlogged table spgist_unlogged_tbl(id serial, b box)","shape":"CREATE UNLOGGED TABLE spgist_unlogged_tbl (id serial, b box);"}
+{"sql":"create index spgist_unlogged_idx on spgist_unlogged_tbl using spgist (b)","shape":"CREATE INDEX spgist_unlogged_idx ON spgist_unlogged_tbl USING spgist (b);"}
+{"sql":"insert into spgist_unlogged_tbl(b)\nselect box(point(i,j))\n  from generate_series(1,100,5) i,\n       generate_series(1,10,5) j","shape":"INSERT INTO spgist_unlogged_tbl (b) SELECT box(point(i, j)) FROM generate_series(1, 100, 5) AS i, generate_series(1, 10, 5) AS j;"}

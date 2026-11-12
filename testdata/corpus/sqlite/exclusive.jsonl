@@ -1,0 +1,26 @@
+{"sql":"pragma locking_mode"}
+{"sql":"pragma main.locking_mode"}
+{"sql":"pragma temp.locking_mode"}
+{"sql":"pragma locking_mode = exclusive"}
+{"sql":"pragma locking_mode = normal"}
+{"sql":"pragma locking_mode = invalid"}
+{"sql":"pragma aux.locking_mode"}
+{"sql":"pragma main.locking_mode = normal"}
+{"sql":"pragma aux2.locking_mode"}
+{"sql":"pragma aux.locking_mode = normal"}
+{"sql":"ATTACH 'test4.db' as aux3"}
+{"sql":"pragma aux3.locking_mode"}
+{"sql":"DETACH aux3"}
+{"sql":"PRAGMA locking_mode = exclusive"}
+{"sql":"PRAGMA locking_mode = normal"}
+{"sql":"DELETE FROM abc"}
+{"sql":"INSERT INTO abc VALUES('A', 'B', 'C')"}
+{"sql":"UPDATE abc SET a = 1, b = 2, c = 3"}
+{"sql":"CREATE TABLE abc(a UNIQUE, b UNIQUE, c UNIQUE)"}
+{"sql":"INSERT INTO abc SELECT a+1, b+1, c+1 FROM abc"}
+{"sql":"INSERT INTO abc VALUES(5, 6, 7)"}
+{"sql":"INSERT INTO abc SELECT a+10, b+10, c+10 FROM abc"}
+{"sql":"INSERT INTO t4 VALUES('Eden', 1955)"}
+{"sql":"INSERT INTO t4 VALUES('Macmillan', 1957)"}
+{"sql":"INSERT INTO t4 VALUES('Douglas-Home', 1963)"}
+{"sql":"INSERT INTO t4 VALUES('Wilson', 1964)"}

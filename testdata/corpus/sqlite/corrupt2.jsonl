@@ -1,0 +1,5 @@
+{"sql":"PRAGMA auto_vacuum=0"}
+{"sql":"PRAGMA quick_check"}
+{"sql":"DELETE FROM t1 WHERE rowid < 30"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(3500))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(2500))"}

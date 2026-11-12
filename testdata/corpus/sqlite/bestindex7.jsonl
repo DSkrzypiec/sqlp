@@ -1,0 +1,10 @@
+{"sql":"INSERT INTO t1 VALUES(0), (2)"}
+{"sql":"select * from vt1"}
+{"sql":"select * from vt1 WHERE a=0"}
+{"sql":"select * from vt1 WHERE a=1"}
+{"sql":"select * from vt1 WHERE a=1 OR a=0"}
+{"sql":"UPDATE t1 SET x=NULL WHERE x=2"}
+{"sql":"select * from vt1 WHERE a IN (2)"}
+{"sql":"select * from vt1 WHERE a IN (0,1,2,3)"}
+{"sql":"select * from vt1 WHERE a IN (0, NULL)"}
+{"sql":"select * from vt1 WHERE a IN (NULL)"}

@@ -1,0 +1,2 @@
+{"sql":"PRAGMA mmap_size = 10000000"}
+{"sql":"WITH x(i, j) AS (\n        SELECT 1, randomblob(100)\n        UNION ALL\n        SELECT i+1, randomblob(100) FROM x WHERE i<10000\n      )\n      SELECT * FROM x ORDER BY j"}

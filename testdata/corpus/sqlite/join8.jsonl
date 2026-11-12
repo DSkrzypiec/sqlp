@@ -1,0 +1,222 @@
+{"sql":"CREATE INDEX t2x ON t2(x)"}
+{"sql":"SELECT avg(DISTINCT b) FROM (SELECT * FROM t2 LEFT RIGHT JOIN t1 ON c)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY AUTOINCREMENT,b,c,d,e,f,g,h,j,k,l,m,n,o,p,q,r,s)"}
+{"sql":"CREATE INDEX t1x1 ON t1(g+h,j,k)"}
+{"sql":"CREATE INDEX t1x2 ON t1(b)"}
+{"sql":"SELECT a\n    FROM (\n          SELECT a\n            FROM (\n                  SELECT a\n                    FROM (\n                          SELECT a FROM t1 NATURAL LEFT JOIN t1\n                           WHERE (b, 2 ) IS ( SELECT 2 IN(2,2),2)\n                         )\n                    NATURAL LEFT FULL JOIN t1\n                   WHERE ( rowid , 1 )<=(CASE 5 WHEN 619 THEN 841 ELSE 3374391096 END,0)\n                   ORDER BY a ASC\n                 )\n            NATURAL LEFT JOIN t1\n           WHERE (b, 2 ) IS ( SELECT 3 IN(3,3),3)\n         )\n    NATURAL LEFT FULL JOIN t1\n   WHERE ( rowid , 1 )<=(CASE 5 WHEN 619 THEN 841 ELSE 3374391096 END,0)\n   ORDER BY a ASC"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3),(4,5,6)"}
+{"sql":"CREATE TABLE t2(d int, e int)"}
+{"sql":"INSERT INTO t2 VALUES(3,333),(4,444)"}
+{"sql":"CREATE TABLE t3(f int, g int)"}
+{"sql":"PRAGMA automatic_index=off"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON c=d JOIN t3 ON f=e"}
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY, a INT)"}
+{"sql":"CREATE TABLE t2(id INTEGER PRIMARY KEY, b INT)"}
+{"sql":"CREATE TABLE t3(id INTEGER PRIMARY KEY, c INT)"}
+{"sql":"CREATE TABLE t4(id INTEGER PRIMARY KEY, d INT)"}
+{"sql":"CREATE TABLE t5(id INTEGER PRIMARY KEY, e INT)"}
+{"sql":"CREATE TABLE t6(id INTEGER PRIMARY KEY, f INT)"}
+{"sql":"CREATE TABLE t7(id INTEGER PRIMARY KEY, g INT)"}
+{"sql":"CREATE TABLE t8(id INTEGER PRIMARY KEY, h INT)"}
+{"sql":"INSERT INTO t1 SELECT value, 1 FROM generate_series(1,256) WHERE value & 1"}
+{"sql":"INSERT INTO t2 SELECT value, 1 FROM generate_series(1,256) WHERE value & 2"}
+{"sql":"INSERT INTO t3 SELECT value, 1 FROM generate_series(1,256) WHERE value & 4"}
+{"sql":"INSERT INTO t4 SELECT value, 1 FROM generate_series(1,256) WHERE value & 8"}
+{"sql":"INSERT INTO t5 SELECT value, 1 FROM generate_series(1,256) WHERE value & 16"}
+{"sql":"INSERT INTO t6 SELECT value, 1 FROM generate_series(1,256) WHERE value & 32"}
+{"sql":"INSERT INTO t7 SELECT value, 1 FROM generate_series(1,256) WHERE value & 64"}
+{"sql":"INSERT INTO t8 SELECT value, 1 FROM generate_series(1,256) WHERE value & 128"}
+{"sql":"CREATE TABLE t9 AS\n    SELECT id, h, g, f, e, d, c, b, a\n      FROM t1\n      NATURAL FULL JOIN t2\n      NATURAL FULL JOIN t3\n      NATURAL FULL JOIN t4\n      NATURAL FULL JOIN t5\n      NATURAL FULL JOIN t6\n      NATURAL FULL JOIN t7\n      NATURAL FULL JOIN t8"}
+{"sql":"SELECT count(*) FROM t9"}
+{"sql":"SELECT id, count(*) FROM t9 GROUP BY id HAVING count(*)!=1"}
+{"sql":"UPDATE t9 SET a=0 WHERE a IS NULL"}
+{"sql":"UPDATE t9 SET b=0 WHERE b IS NULL"}
+{"sql":"UPDATE t9 SET c=0 WHERE c IS NULL"}
+{"sql":"UPDATE t9 SET d=0 WHERE d IS NULL"}
+{"sql":"UPDATE t9 SET e=0 WHERE e IS NULL"}
+{"sql":"UPDATE t9 SET f=0 WHERE f IS NULL"}
+{"sql":"UPDATE t9 SET g=0 WHERE g IS NULL"}
+{"sql":"UPDATE t9 SET h=0 WHERE h IS NULL"}
+{"sql":"SELECT count(*) FROM t9 WHERE id=128*h+64*g+32*f+16*e+8*d+4*c+2*b+a"}
+{"sql":"SELECT * FROM t9 WHERE id<>128*h+64*g+32*f+16*e+8*d+4*c+2*b+a"}
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, a, b)"}
+{"sql":"INSERT INTO t1 VALUES(1,5555,4)"}
+{"sql":"SELECT a FROM t1 NATURAL RIGHT JOIN t1 WHERE a=5555 OR (1,b)==(SELECT 2 IN (2,2),4)"}
+{"sql":"INSERT INTO t1(x) VALUES(NULL),(NULL)"}
+{"sql":"INSERT INTO t2(c,d) SELECT x, x FROM t1"}
+{"sql":"CREATE INDEX t2dc ON t2(d, c)"}
+{"sql":"SELECT (SELECT c FROM sqlite_temp_schema FULL JOIN t2 ON d IN (1,2,3) ORDER BY d) AS x FROM t1"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c TEXT, d REAL)"}
+{"sql":"INSERT INTO t1 VALUES(1,'A','aa',2.5)"}
+{"sql":"SELECT * FROM t1 AS t2 NATURAL RIGHT JOIN t1 AS t3\n   WHERE (a,b) IN (SELECT rowid, b FROM t1)"}
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b TEXT, c TEXT, d INT) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(15,'xray','baker',42)"}
+{"sql":"SELECT value, t1.* FROM json_each('7') NATURAL RIGHT JOIN t1\n   WHERE (a,b) IN (SELECT a, b FROM t1)"}
+{"sql":"INSERT INTO t1 VALUES(0,NULL),(1,2)"}
+{"sql":"SELECT value, t1.* FROM json_each('17') NATURAL RIGHT JOIN t1\n   WHERE (a,b) IN (SELECT rowid, b FROM t1)"}
+{"sql":"SELECT value, t1.* FROM json_each('null') NATURAL RIGHT JOIN t1\n   WHERE (a,b) IN (SELECT rowid, b FROM t1)"}
+{"sql":"CREATE TABLE a(key TEXT)"}
+{"sql":"INSERT INTO a(key) VALUES('a'),('b')"}
+{"sql":"CREATE TABLE t1(a INT, b INT, c INT, d INT)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(0) UNION ALL SELECT x+1 FROM c WHERE x<10)\n    INSERT INTO t1(a,b,c,d) SELECT x, x+100, x+200, x+300 FROM c"}
+{"sql":"INSERT INTO t2(b,x) SELECT b, a FROM t1 WHERE a%2=0"}
+{"sql":"INSERT INTO t3(c,y) SELECT c, a FROM t1 WHERE a%3=0"}
+{"sql":"CREATE TABLE t4(d INT, z INT)"}
+{"sql":"INSERT INTO t4(d,z) SELECT d, a FROM t1 WHERE a%5=0"}
+{"sql":"CREATE INDEX t4d ON t4(d)"}
+{"sql":"INSERT INTO t1(a,b,c,d) VALUES\n    (96,NULL,296,396),\n    (97,197,NULL,397),\n    (98,198,298,NULL),\n    (99,NULL,NULL,NULL)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t4','t4d','20 1')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t3','t3c','32 1')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t2','t2b','48 1')"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t1',NULL,'100')"}
+{"sql":"WITH t0 AS MATERIALIZED (\n    SELECT t1.*, t2.*, t3.*\n      FROM t1 INNER JOIN t2 ON t1.b=t2.b AND t2.x>0\n        RIGHT JOIN t3 ON t1.c=t3.c AND t3.y>0\n  )\n  SELECT * FROM t0 FULL JOIN t4 ON t0.a=t4.d AND t4.z>0\n   ORDER BY coalesce(t0.a, t0.y+200, t4.d)"}
+{"sql":"WITH t0 AS MATERIALIZED (\n    SELECT t1.*, t2.*, t3.*\n      FROM t1 INNER JOIN t2 ON t1.b=t2.b AND t2.x>0\n        RIGHT JOIN t3 ON t1.c=t3.c AND t3.y>0\n  )\n  SELECT * FROM t0 LEFT RIGHT JOIN t4 ON t0.a=t4.d AND t4.z>0\n   ORDER BY coalesce(t0.a, t0.y+200, t4.d)"}
+{"sql":"EXPLAIN QUERY PLAN\n  WITH t0 AS MATERIALIZED (\n    SELECT t1.*, t2.*, t3.*\n      FROM t1 INNER JOIN t2 ON t1.b=t2.b AND t2.x>0\n        RIGHT JOIN t3 ON t1.c=t3.c AND t3.y>0\n  )\n  SELECT * FROM t0 FULL JOIN t4 ON t0.a=t4.d AND t4.z>0\n   ORDER BY coalesce(t0.a, t0.y+200, t4.d)"}
+{"sql":"CREATE TABLE t3(e INT, f INT)"}
+{"sql":"INSERT INTO t3 VALUES(5, 6)"}
+{"sql":"SELECT *\n    FROM t3 LEFT JOIN t2 ON true\n            JOIN t1 ON (t3.e IS t2.c)"}
+{"sql":"SELECT *\n    FROM t3 LEFT JOIN t2 ON true\n            JOIN t1 ON (t3.e IS NOT DISTINCT FROM t2.c)"}
+{"sql":"INSERT INTO t1 VALUES(1,'E','bb',NULL),(2,NULL,NULL,NULL)"}
+{"sql":"SELECT * FROM t1 NATURAL RIGHT JOIN t1 AS t2 WHERE (a,b) IN (SELECT a+0, b FROM t1)"}
+{"sql":"CREATE TABLE t1(c0 INT UNIQUE)"}
+{"sql":"CREATE TABLE t2(c0)"}
+{"sql":"CREATE TABLE t2i(c0 INT)"}
+{"sql":"CREATE TABLE t3(c0 INT)"}
+{"sql":"INSERT INTO t2i VALUES(2)"}
+{"sql":"SELECT DISTINCT t1.c0, t3.c0\n    FROM t2 NATURAL JOIN t1 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT t1.c0, t3.c0\n    FROM t2 NATURAL JOIN t1 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT DISTINCT t1.c0, t3.c0\n    FROM t2 NATURAL CROSS JOIN t1 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT t1.c0, t3.c0\n    FROM t1 NATURAL CROSS JOIN t2 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT DISTINCT t1.c0, t3.c0\n    FROM t2i NATURAL JOIN t1 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT DISTINCT +t1.c0, t3.c0\n    FROM t2 NATURAL JOIN t1 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT DISTINCT +t1.c0, t3.c0\n    FROM t1 NATURAL CROSS JOIN t2 RIGHT JOIN t3 ON t1.c0"}
+{"sql":"SELECT DISTINCT t1.c0, t3.c0\n    FROM t2 NATURAL JOIN t1 RIGHT JOIN t3 ON t1.c0<>0"}
+{"sql":"INSERT INTO t2 VALUES(0),(1),(2)"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON (a=b) WHERE 99+(b+1)!=99"}
+{"sql":"CREATE INDEX t2b ON t2(b+1) WHERE b IS NOT NULL"}
+{"sql":"INSERT INTO t2 VALUES(1, 3, 'not-4')"}
+{"sql":"SELECT b, d FROM t1 RIGHT JOIN t2 WHERE (b+0)=1 AND d!=4"}
+{"sql":"CREATE INDEX i2 ON t2((b+0), d)"}
+{"sql":"CREATE INDEX i2 ON t2((b+0), d) WHERE d IS NOT NULL"}
+{"sql":"INSERT INTO t1 VALUES(0),(1)"}
+{"sql":"INSERT INTO t2 VALUES(0),(2)"}
+{"sql":"CREATE TABLE t3(a INT)"}
+{"sql":"INSERT INTO t3 VALUES(0),(3)"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON t2.a<>0 NATURAL RIGHT JOIN t3"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON t2.a<>0 NATURAL LEFT JOIN t3"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON t2.a<>0 NATURAL RIGHT JOIN t3"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON t2.a<>0 NATURAL LEFT JOIN t3"}
+{"sql":"CREATE TABLE t0(t TEXT, u TEXT)"}
+{"sql":"INSERT INTO t0 VALUES('t', 'u')"}
+{"sql":"CREATE TABLE t1(v TEXT, w TEXT)"}
+{"sql":"INSERT INTO t1 VALUES('v', 'w')"}
+{"sql":"CREATE TABLE t2(x TEXT, y TEXT)"}
+{"sql":"SELECT * FROM t0 JOIN t1 ON (t2.x NOTNULL) LEFT JOIN t2 ON false"}
+{"sql":"SELECT * FROM t0 JOIN t1 ON (t2.x NOTNULL) LEFT JOIN t2 ON false\n   WHERE t2.y ISNULL"}
+{"sql":"CREATE TABLE t0(a TEXT, b TEXT, c TEXT)"}
+{"sql":"CREATE VIEW v0 AS SELECT 'xyz' AS d"}
+{"sql":"SELECT * FROM v0 RIGHT JOIN t1 ON t1.a<>'' INNER JOIN t0 ON t0.c<>''"}
+{"sql":"SELECT * FROM v0 RIGHT JOIN t1 ON t1.a<>'' INNER JOIN t0 ON t0.c<>'' WHERE b ISNULL"}
+{"sql":"CREATE TABLE y0(a INT)"}
+{"sql":"CREATE TABLE y1(b INT)"}
+{"sql":"INSERT INTO y1 VALUES(1), (2)"}
+{"sql":"CREATE TABLE y2(c INT)"}
+{"sql":"INSERT INTO y2 VALUES(3), (4)"}
+{"sql":"SELECT * FROM y0 RIGHT JOIN y1 ON true INNER JOIN y2 ON true WHERE y2.c!=99 AND y2.c!=98"}
+{"sql":"CREATE TABLE t2(y INT)"}
+{"sql":"INSERT INTO t3 VALUES(20),(30)"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON true JOIN t3 ON t2.y IS NOT NULL"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON true JOIN t3 ON t2.y IS NOT NULL\n   WHERE (t3.z!=400 AND t3.z!=500 AND t3.z!=600)"}
+{"sql":"CREATE TABLE t4(x TEXT)"}
+{"sql":"CREATE TABLE t5(y TEXT)"}
+{"sql":"CREATE TABLE t6(z TEXT)"}
+{"sql":"INSERT INTO t4 VALUES('a'), ('b')"}
+{"sql":"INSERT INTO t5 VALUES('b'), ('c')"}
+{"sql":"INSERT INTO t6 VALUES('a'), ('d')"}
+{"sql":"SELECT * FROM t4 LEFT JOIN t5 ON x=y LEFT JOIN t6 ON (x=z) ORDER BY +x"}
+{"sql":"SELECT * FROM t4 LEFT JOIN t5 ON x=y LEFT JOIN t6 ON (x=z)\n   WHERE t5.y!='x' AND t4.x!='x'"}
+{"sql":"CREATE TABLE t3(c TEXT)"}
+{"sql":"INSERT INTO t2(b) VALUES ('x')"}
+{"sql":"INSERT INTO t3(c) VALUES ('y'), ('z')"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true LEFT JOIN t3 ON a<>''"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true LEFT JOIN t3 ON a<>'' WHERE c IS NULL"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true JOIN t3 ON a<>'' WHERE c IS NULL"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true JOIN t3 ON a<>''"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true LEFT JOIN t3 ON a<>'' WHERE c<>''"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true LEFT JOIN t3 ON a<>'' WHERE c IS NOT NULL"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true JOIN t3 ON a<>'' WHERE c<>''"}
+{"sql":"SELECT * FROM t1 RIGHT JOIN t2 ON true JOIN t3 ON a<>'' WHERE c IS NOT NULL"}
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY, x INT, y INT)"}
+{"sql":"CREATE TABLE t2(z INT)"}
+{"sql":"INSERT INTO t1(id,x,y) VALUES(1, 0, 0)"}
+{"sql":"SELECT 99=id AND 0=y AS \"truth\" FROM t2 RIGHT JOIN t1 ON true"}
+{"sql":"SELECT (99, 0)==(id, y) AS \"truth\" FROM t2 RIGHT JOIN t1"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE 99=id AND 0=y"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE 99=+id AND 0=y"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE (99, 0)==(id,y)"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE (99, 0)==(+id,y)"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE 1=id AND 0=y"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE 1=+id AND 0=y"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE (1, 0)==(id,y)"}
+{"sql":"SELECT * FROM t2 RIGHT JOIN t1 WHERE (1, 0)==(+id,y)"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY, b INT)"}
+{"sql":"INSERT INTO t3(a,b) VALUES(1, 3)"}
+{"sql":"SELECT t3.a FROM t4 RIGHT JOIN t3 ON (x=a) WHERE (b, 4)=(SELECT 3, 4)"}
+{"sql":"SELECT t3.a FROM t4 RIGHT JOIN t3 ON (x=a) WHERE (b, 4) IS (SELECT 3, 4)"}
+{"sql":"CREATE TABLE t1(a BOOLEAN)"}
+{"sql":"INSERT INTO t1 VALUES (false)"}
+{"sql":"INSERT INTO t2 VALUES (0)"}
+{"sql":"SELECT *, x NOTNULL, (x NOTNULL)=a FROM t2 RIGHT JOIN t1 ON true WHERE (x NOTNULL)=a"}
+{"sql":"INSERT INTO t3 VALUES('t3value')"}
+{"sql":"SELECT *, x NOTNULL, (x NOTNULL)=a FROM t2 RIGHT JOIN t1 ON true INNER JOIN t3 ON (x NOTNULL)=a"}
+{"sql":"CREATE VIRTUAL TABLE rtree1 USING rtree(a, x1, x2)"}
+{"sql":"INSERT INTO rtree1 VALUES(0, 0, 0)"}
+{"sql":"SELECT *, x NOTNULL, (x NOTNULL)=a FROM t2 \n      RIGHT JOIN rtree1 ON true INNER JOIN t3 ON (x NOTNULL)=+a"}
+{"sql":"SELECT *, x NOTNULL, (x NOTNULL)=a FROM t2 \n      RIGHT JOIN rtree1 ON true INNER JOIN t3 ON (x NOTNULL)=a"}
+{"sql":"CREATE TABLE t2(b INT, c INT)"}
+{"sql":"INSERT INTO t2 VALUES(50,51)"}
+{"sql":"INSERT INTO t3 VALUES(299)"}
+{"sql":"CREATE INDEX t2b ON t2( (b IS NOT NULL) )"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON true INNER JOIN t3 ON (b IS NOT NULL)=0"}
+{"sql":"INSERT INTO t1(x) VALUES('aaa')"}
+{"sql":"CREATE VIEW v0(y) AS SELECT x FROM t1"}
+{"sql":"CREATE TABLE t2(z TEXT)"}
+{"sql":"SELECT * FROM t2 JOIN v0 ON z<>'bbb' RIGHT JOIN t1 ON z<>'ccc'"}
+{"sql":"SELECT * FROM t2 JOIN v0 ON z<>'bbb' RIGHT JOIN t1 ON z<>'ccc' ORDER BY z"}
+{"sql":"SELECT 99 as \"m\" FROM t2 JOIN v0 ON z<>'bbb' RIGHT JOIN t1 ON z<>'ccc'"}
+{"sql":"SELECT 99 as \"m\" FROM t2 JOIN v0 ON z<>'bbb' RIGHT JOIN t1 ON z<>'ccc' ORDER BY z"}
+{"sql":"SELECT count(*)\n    FROM (SELECT 99 as \"m\" FROM t2 JOIN v0 ON z<>'' RIGHT JOIN t1 ON z<>'') AS \"t3\""}
+{"sql":"SELECT count(*) \n    FROM (SELECT 99 as \"m\" FROM t2 JOIN v0 ON z<>'' RIGHT JOIN t1 ON z<>'' ORDER BY z) AS \"t3\""}
+{"sql":"CREATE TABLE t1(a INT,b BOOLEAN)"}
+{"sql":"SELECT (b IS TRUE) FROM t1 JOIN t3 ON (b=TRUE) RIGHT JOIN t2 ON TRUE"}
+{"sql":"SELECT * FROM t1 JOIN t3 ON (b=TRUE) RIGHT JOIN t2 ON TRUE WHERE (b IS TRUE)"}
+{"sql":"CREATE TABLE t3(c INTEGER PRIMARY KEY, d INT)"}
+{"sql":"CREATE INDEX t3d ON t3(d)"}
+{"sql":"INSERT INTO t3 VALUES(0, 0)"}
+{"sql":"SELECT * FROM t1 JOIN t2 ON d>b RIGHT JOIN t3 ON true WHERE +d = 0"}
+{"sql":"SELECT * FROM t1 JOIN t2 ON d>b RIGHT JOIN t3 ON true WHERE d = 0"}
+{"sql":"INSERT INTO t3 VALUES('x')"}
+{"sql":"CREATE TABLE t4(d TEXT)"}
+{"sql":"INSERT INTO t4 VALUES('y')"}
+{"sql":"SELECT 99\n    FROM t1\n         LEFT JOIN t2 ON true\n         RIGHT JOIN t3 ON true\n         RIGHT JOIN t4 ON true\n   WHERE a=b"}
+{"sql":"CREATE TABLE t2(b TEXT, c TEXT NOT NULL)"}
+{"sql":"CREATE TABLE t4(e TEXT)"}
+{"sql":"SELECT *\n    FROM t1\n         LEFT JOIN t2 ON TRUE\n         JOIN t3 ON c=''\n         RIGHT JOIN t4 ON b=''"}
+{"sql":"SELECT *\n    FROM t1\n         LEFT JOIN t2 ON TRUE\n         JOIN t3 ON c=''\n         RIGHT JOIN t4 ON b=''\n   WHERE d ISNULL"}
+{"sql":"CREATE TABLE t4(b INT, c INT)"}
+{"sql":"CREATE TABLE t5(a INT, f INT)"}
+{"sql":"INSERT INTO t5 VALUES(1,2)"}
+{"sql":"WITH t7(x, y) AS (SELECT 100, 200 FROM t5)\n    SELECT * FROM t4 JOIN t7 ON true RIGHT JOIN (SELECT y AS z FROM t7) AS t6 ON (x=z)"}
+{"sql":"CREATE TABLE t1(a1 INT)"}
+{"sql":"CREATE TABLE t2(b2 INT)"}
+{"sql":"CREATE TABLE t3(c3 INT, d3 INT UNIQUE)"}
+{"sql":"CREATE TABLE t4(e4 INT, f4 TEXT)"}
+{"sql":"INSERT INTO t3(c3, d3) VALUES (2, 1)"}
+{"sql":"INSERT INTO t4(f4) VALUES ('x')"}
+{"sql":"CREATE INDEX i0 ON t3(c3) WHERE d3 ISNULL"}
+{"sql":"SELECT * FROM t1 LEFT JOIN t2 ON true JOIN t3 ON (b2 IN (a1)) FULL JOIN t4 ON true"}
+{"sql":"SELECT 1 FROM t1 LEFT JOIN t2 ON true JOIN t3 ON (b2 IN (a1)) FULL JOIN t4 ON true"}
+{"sql":"CREATE VIEW t3(d) AS SELECT NULL FROM t2 FULL OUTER JOIN t1 ON c=a UNION ALL SELECT b FROM t2"}
+{"sql":"INSERT INTO t1(a) VALUES (NULL)"}
+{"sql":"INSERT INTO t2(b, c) VALUES (99, NULL)"}
+{"sql":"SELECT DISTINCT b, c, d FROM t2, t3 WHERE b<>0\n   UNION SELECT DISTINCT b, c, d FROM t2, t3 WHERE b ISNULL"}

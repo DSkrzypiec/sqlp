@@ -1,0 +1,13 @@
+{"sql":"INSERT INTO t1 VALUES (3, 'a')"}
+{"sql":"INSERT INTO t1 VALUES (1, 'a')"}
+{"sql":"INSERT INTO t1 VALUES (2, 'b')"}
+{"sql":"INSERT INTO t1 VALUES (2, 'a')"}
+{"sql":"INSERT INTO t1 VALUES (3, 'b')"}
+{"sql":"INSERT INTO t1 VALUES (1, 'b')"}
+{"sql":"drop table if exists t1"}
+{"sql":"create table t1(id int)"}
+{"sql":"insert into t1(id) values(1),(2),(3),(4),(5)"}
+{"sql":"create index t1_idx_id on t1(id asc)"}
+{"sql":"select * from t1 group by id order by id"}
+{"sql":"select * from t1 group by id order by id asc"}
+{"sql":"select * from t1 group by id order by id desc"}

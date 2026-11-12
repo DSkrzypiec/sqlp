@@ -1,0 +1,32 @@
+{"sql":"CREATE TABLE t1(\n    a INT,\n    b INTEGER,\n    c TEXT,\n    d REAL,\n    e BLOB\n  ) STRICT"}
+{"sql":"CREATE TABLE t1nn(\n    a INT NOT NULL,\n    b INTEGER NOT NULL,\n    c TEXT NOT NULL,\n    d REAL NOT NULL,\n    e BLOB NOT NULL\n  ) STRICT"}
+{"sql":"CREATE TABLE t2(a,b,c,d,e)"}
+{"sql":"INSERT INTO t1(a,b,c,d,e) VALUES(1,1,'one',1.0,x'b1'),(2,2,'two',2.25,x'b2b2b2')"}
+{"sql":"UPDATE sqlite_schema SET rootpage=(SELECT rootpage FROM sqlite_schema WHERE name='t1')"}
+{"sql":"PRAGMA quick_check('t1')"}
+{"sql":"UPDATE t2 SET a=2.5 WHERE b=2"}
+{"sql":"UPDATE t2 SET a='xyz' WHERE b=2"}
+{"sql":"UPDATE t2 SET a=x'445566' WHERE b=2"}
+{"sql":"PRAGMA quick_check('t1nn')"}
+{"sql":"UPDATE t2 SET a=2 WHERE b=2"}
+{"sql":"UPDATE t2 SET b=2.5 WHERE a=2"}
+{"sql":"UPDATE t2 SET b='two' WHERE a=2"}
+{"sql":"UPDATE t2 SET b=x'b0b1b2b3b4' WHERE a=2"}
+{"sql":"UPDATE t2 SET b=NULL WHERE a=2"}
+{"sql":"UPDATE t2 SET b=2 WHERE a=2"}
+{"sql":"UPDATE t2 SET c=9 WHERE a=2"}
+{"sql":"UPDATE t2 SET c=9.5 WHERE a=2"}
+{"sql":"UPDATE t2 SET c=x'b0b1b2b3b4' WHERE a=2"}
+{"sql":"UPDATE t2 SET c='two' WHERE a=2"}
+{"sql":"UPDATE t2 SET d=9 WHERE a=2"}
+{"sql":"UPDATE t2 SET d='nine' WHERE a=2"}
+{"sql":"UPDATE t2 SET d=x'b0b1b2b3b4' WHERE a=2"}
+{"sql":"UPDATE t2 SET d=2.5 WHERE a=2"}
+{"sql":"UPDATE t2 SET e=9 WHERE a=2"}
+{"sql":"UPDATE t2 SET e=9.5 WHERE a=2"}
+{"sql":"UPDATE t2 SET e='hello' WHERE a=2"}
+{"sql":"CREATE TABLE t2(a INT, b ANY) STRICT"}
+{"sql":"INSERT INTO t2(a,b) VALUES(1,2),(3,4.5),(5,'six'),(7,x'8888'),(9,NULL)"}
+{"sql":"CREATE TABLE t1(id ANY PRIMARY KEY, x TEXT)"}
+{"sql":"INSERT INTO t1 VALUES(1,2),('three','four'),(x'5555','six'),(NULL,'eight')"}
+{"sql":"UPDATE sqlite_schema SET sql=(sql||'STRICT') WHERE name='t1'"}

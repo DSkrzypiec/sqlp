@@ -1,0 +1,142 @@
+{"sql":"DROP TABLE test_exists","shape":"DROP TABLE test_exists;"}
+{"sql":"DROP TABLE IF EXISTS test_exists","shape":"DROP TABLE IF EXISTS test_exists;"}
+{"sql":"CREATE TABLE test_exists (a int, b text)","shape":"CREATE TABLE test_exists (a int, b text);"}
+{"sql":"DROP VIEW test_view_exists","shape":"DROP VIEW test_view_exists;"}
+{"sql":"DROP VIEW IF EXISTS test_view_exists","shape":"DROP VIEW IF EXISTS test_view_exists;"}
+{"sql":"CREATE VIEW test_view_exists AS select * from test_exists","shape":"CREATE VIEW test_view_exists AS SELECT * FROM test_exists;"}
+{"sql":"DROP INDEX test_index_exists","shape":"DROP INDEX test_index_exists;"}
+{"sql":"DROP INDEX IF EXISTS test_index_exists","shape":"DROP INDEX IF EXISTS test_index_exists;"}
+{"sql":"CREATE INDEX test_index_exists on test_exists(a)","shape":"CREATE INDEX test_index_exists ON test_exists (a);"}
+{"sql":"DROP SEQUENCE test_sequence_exists","shape":"DROP SEQUENCE test_sequence_exists;"}
+{"sql":"DROP SEQUENCE IF EXISTS test_sequence_exists","shape":"DROP SEQUENCE IF EXISTS test_sequence_exists;"}
+{"sql":"CREATE SEQUENCE test_sequence_exists","shape":"CREATE SEQUENCE test_sequence_exists;"}
+{"sql":"DROP SCHEMA test_schema_exists","shape":"DROP SCHEMA test_schema_exists;"}
+{"sql":"DROP SCHEMA IF EXISTS test_schema_exists","shape":"DROP SCHEMA IF EXISTS test_schema_exists;"}
+{"sql":"CREATE SCHEMA test_schema_exists","shape":"CREATE SCHEMA test_schema_exists;"}
+{"sql":"DROP TYPE test_type_exists","shape":"DROP TYPE test_type_exists;"}
+{"sql":"DROP TYPE IF EXISTS test_type_exists","shape":"DROP TYPE IF EXISTS test_type_exists;"}
+{"sql":"CREATE type test_type_exists as (a int, b text)","shape":"CREATE TYPE test_type_exists AS (a int, b text);"}
+{"sql":"DROP DOMAIN test_domain_exists","shape":"DROP DOMAIN test_domain_exists;"}
+{"sql":"DROP DOMAIN IF EXISTS test_domain_exists","shape":"DROP DOMAIN IF EXISTS test_domain_exists;"}
+{"sql":"CREATE domain test_domain_exists as int not null check (value > 0)","shape":"CREATE DOMAIN test_domain_exists AS int NOT NULL CHECK (value > 0);"}
+{"sql":"CREATE USER regress_test_u1"}
+{"sql":"CREATE ROLE regress_test_r1"}
+{"sql":"CREATE GROUP regress_test_g1"}
+{"sql":"DROP USER regress_test_u2","shape":"DROP USER regress_test_u2;"}
+{"sql":"DROP USER IF EXISTS regress_test_u1, regress_test_u2","shape":"DROP USER IF EXISTS regress_test_u1, regress_test_u2;"}
+{"sql":"DROP USER regress_test_u1","shape":"DROP USER regress_test_u1;"}
+{"sql":"DROP ROLE regress_test_r2","shape":"DROP ROLE regress_test_r2;"}
+{"sql":"DROP ROLE IF EXISTS regress_test_r1, regress_test_r2","shape":"DROP ROLE IF EXISTS regress_test_r1, regress_test_r2;"}
+{"sql":"DROP ROLE regress_test_r1","shape":"DROP ROLE regress_test_r1;"}
+{"sql":"DROP GROUP regress_test_g2"}
+{"sql":"DROP GROUP IF EXISTS regress_test_g1, regress_test_g2"}
+{"sql":"DROP GROUP regress_test_g1"}
+{"sql":"DROP COLLATION IF EXISTS test_collation_exists"}
+{"sql":"DROP CONVERSION test_conversion_exists"}
+{"sql":"DROP CONVERSION IF EXISTS test_conversion_exists"}
+{"sql":"CREATE CONVERSION test_conversion_exists\n    FOR 'LATIN1' TO 'UTF8' FROM iso8859_1_to_utf8"}
+{"sql":"DROP TEXT SEARCH PARSER test_tsparser_exists"}
+{"sql":"DROP TEXT SEARCH PARSER IF EXISTS test_tsparser_exists"}
+{"sql":"DROP TEXT SEARCH DICTIONARY test_tsdict_exists"}
+{"sql":"DROP TEXT SEARCH DICTIONARY IF EXISTS test_tsdict_exists"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY test_tsdict_exists (\n        Template=ispell,\n        DictFile=ispell_sample,\n        AffFile=ispell_sample\n)"}
+{"sql":"DROP TEXT SEARCH TEMPLATE test_tstemplate_exists"}
+{"sql":"DROP TEXT SEARCH TEMPLATE IF EXISTS test_tstemplate_exists"}
+{"sql":"DROP TEXT SEARCH CONFIGURATION test_tsconfig_exists"}
+{"sql":"DROP TEXT SEARCH CONFIGURATION IF EXISTS test_tsconfig_exists"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION test_tsconfig_exists (COPY=english)"}
+{"sql":"DROP EXTENSION test_extension_exists","shape":"DROP EXTENSION test_extension_exists;"}
+{"sql":"DROP EXTENSION IF EXISTS test_extension_exists","shape":"DROP EXTENSION IF EXISTS test_extension_exists;"}
+{"sql":"DROP FUNCTION test_function_exists()"}
+{"sql":"DROP FUNCTION IF EXISTS test_function_exists()"}
+{"sql":"DROP FUNCTION test_function_exists(int, text, int[])"}
+{"sql":"DROP FUNCTION IF EXISTS test_function_exists(int, text, int[])"}
+{"sql":"DROP AGGREGATE test_aggregate_exists(*)"}
+{"sql":"DROP AGGREGATE IF EXISTS test_aggregate_exists(*)"}
+{"sql":"DROP AGGREGATE test_aggregate_exists(int)"}
+{"sql":"DROP AGGREGATE IF EXISTS test_aggregate_exists(int)"}
+{"sql":"DROP OPERATOR @#@ (int, int)"}
+{"sql":"DROP OPERATOR IF EXISTS @#@ (int, int)"}
+{"sql":"CREATE OPERATOR @#@\n        (leftarg = int8, rightarg = int8, procedure = int8xor)"}
+{"sql":"DROP OPERATOR @#@ (int8, int8)"}
+{"sql":"DROP LANGUAGE test_language_exists"}
+{"sql":"DROP LANGUAGE IF EXISTS test_language_exists"}
+{"sql":"DROP CAST (text AS text)"}
+{"sql":"DROP CAST IF EXISTS (text AS text)"}
+{"sql":"DROP TRIGGER test_trigger_exists ON test_exists","shape":"DROP TRIGGER test_trigger_exists ON test_exists;"}
+{"sql":"DROP TRIGGER IF EXISTS test_trigger_exists ON test_exists","shape":"DROP TRIGGER IF EXISTS test_trigger_exists ON test_exists;"}
+{"sql":"DROP TRIGGER test_trigger_exists ON no_such_table","shape":"DROP TRIGGER test_trigger_exists ON no_such_table;"}
+{"sql":"DROP TRIGGER IF EXISTS test_trigger_exists ON no_such_table","shape":"DROP TRIGGER IF EXISTS test_trigger_exists ON no_such_table;"}
+{"sql":"DROP TRIGGER test_trigger_exists ON no_such_schema.no_such_table","shape":"DROP TRIGGER test_trigger_exists ON no_such_schema.no_such_table;"}
+{"sql":"DROP TRIGGER IF EXISTS test_trigger_exists ON no_such_schema.no_such_table","shape":"DROP TRIGGER IF EXISTS test_trigger_exists ON no_such_schema.no_such_table;"}
+{"sql":"CREATE TRIGGER test_trigger_exists\n    BEFORE UPDATE ON test_exists\n    FOR EACH ROW EXECUTE PROCEDURE suppress_redundant_updates_trigger()","shape":"CREATE TRIGGER test_trigger_exists BEFORE UPDATE ON test_exists FOR EACH ROW EXECUTE FUNCTION suppress_redundant_updates_trigger();"}
+{"sql":"DROP RULE test_rule_exists ON test_exists"}
+{"sql":"DROP RULE IF EXISTS test_rule_exists ON test_exists"}
+{"sql":"DROP RULE test_rule_exists ON no_such_table"}
+{"sql":"DROP RULE IF EXISTS test_rule_exists ON no_such_table"}
+{"sql":"DROP RULE test_rule_exists ON no_such_schema.no_such_table"}
+{"sql":"DROP RULE IF EXISTS test_rule_exists ON no_such_schema.no_such_table"}
+{"sql":"CREATE RULE test_rule_exists AS ON INSERT TO test_exists\n    DO INSTEAD\n    INSERT INTO test_exists VALUES (NEW.a, NEW.b || NEW.a::text)"}
+{"sql":"DROP FOREIGN DATA WRAPPER test_fdw_exists"}
+{"sql":"DROP FOREIGN DATA WRAPPER IF EXISTS test_fdw_exists"}
+{"sql":"DROP SERVER test_server_exists"}
+{"sql":"DROP SERVER IF EXISTS test_server_exists"}
+{"sql":"DROP OPERATOR CLASS test_operator_class USING btree"}
+{"sql":"DROP OPERATOR CLASS IF EXISTS test_operator_class USING btree"}
+{"sql":"DROP OPERATOR CLASS test_operator_class USING no_such_am"}
+{"sql":"DROP OPERATOR CLASS IF EXISTS test_operator_class USING no_such_am"}
+{"sql":"DROP OPERATOR FAMILY test_operator_family USING btree"}
+{"sql":"DROP OPERATOR FAMILY IF EXISTS test_operator_family USING btree"}
+{"sql":"DROP OPERATOR FAMILY test_operator_family USING no_such_am"}
+{"sql":"DROP OPERATOR FAMILY IF EXISTS test_operator_family USING no_such_am"}
+{"sql":"DROP ACCESS METHOD no_such_am"}
+{"sql":"DROP ACCESS METHOD IF EXISTS no_such_am"}
+{"sql":"DROP AGGREGATE IF EXISTS no_such_schema.foo(int)"}
+{"sql":"DROP AGGREGATE IF EXISTS foo(no_such_type)"}
+{"sql":"DROP AGGREGATE IF EXISTS foo(no_such_schema.no_such_type)"}
+{"sql":"DROP CAST IF EXISTS (INTEGER AS no_such_type2)"}
+{"sql":"DROP CAST IF EXISTS (no_such_type1 AS INTEGER)"}
+{"sql":"DROP CAST IF EXISTS (INTEGER AS no_such_schema.bar)"}
+{"sql":"DROP CAST IF EXISTS (no_such_schema.foo AS INTEGER)"}
+{"sql":"DROP COLLATION IF EXISTS no_such_schema.foo"}
+{"sql":"DROP CONVERSION IF EXISTS no_such_schema.foo"}
+{"sql":"DROP DOMAIN IF EXISTS no_such_schema.foo","shape":"DROP DOMAIN IF EXISTS no_such_schema.foo;"}
+{"sql":"DROP FOREIGN TABLE IF EXISTS no_such_schema.foo"}
+{"sql":"DROP FUNCTION IF EXISTS no_such_schema.foo()"}
+{"sql":"DROP FUNCTION IF EXISTS foo(no_such_type)"}
+{"sql":"DROP FUNCTION IF EXISTS foo(no_such_schema.no_such_type)"}
+{"sql":"DROP INDEX IF EXISTS no_such_schema.foo","shape":"DROP INDEX IF EXISTS no_such_schema.foo;"}
+{"sql":"DROP MATERIALIZED VIEW IF EXISTS no_such_schema.foo","shape":"DROP MATERIALIZED VIEW IF EXISTS no_such_schema.foo;"}
+{"sql":"DROP OPERATOR IF EXISTS no_such_schema.+ (int, int)"}
+{"sql":"DROP OPERATOR IF EXISTS + (no_such_type, no_such_type)"}
+{"sql":"DROP OPERATOR IF EXISTS + (no_such_schema.no_such_type, no_such_schema.no_such_type)"}
+{"sql":"DROP OPERATOR IF EXISTS # (NONE, no_such_schema.no_such_type)"}
+{"sql":"DROP OPERATOR CLASS IF EXISTS no_such_schema.widget_ops USING btree"}
+{"sql":"DROP OPERATOR FAMILY IF EXISTS no_such_schema.float_ops USING btree"}
+{"sql":"DROP RULE IF EXISTS foo ON no_such_schema.bar"}
+{"sql":"DROP SEQUENCE IF EXISTS no_such_schema.foo","shape":"DROP SEQUENCE IF EXISTS no_such_schema.foo;"}
+{"sql":"DROP TABLE IF EXISTS no_such_schema.foo","shape":"DROP TABLE IF EXISTS no_such_schema.foo;"}
+{"sql":"DROP TEXT SEARCH CONFIGURATION IF EXISTS no_such_schema.foo"}
+{"sql":"DROP TEXT SEARCH DICTIONARY IF EXISTS no_such_schema.foo"}
+{"sql":"DROP TEXT SEARCH PARSER IF EXISTS no_such_schema.foo"}
+{"sql":"DROP TEXT SEARCH TEMPLATE IF EXISTS no_such_schema.foo"}
+{"sql":"DROP TRIGGER IF EXISTS foo ON no_such_schema.bar","shape":"DROP TRIGGER IF EXISTS foo ON no_such_schema.bar;"}
+{"sql":"DROP TYPE IF EXISTS no_such_schema.foo","shape":"DROP TYPE IF EXISTS no_such_schema.foo;"}
+{"sql":"DROP VIEW IF EXISTS no_such_schema.foo","shape":"DROP VIEW IF EXISTS no_such_schema.foo;"}
+{"sql":"CREATE FUNCTION test_ambiguous_funcname(int) returns int as $$ select $1; $$ language sql","shape":"CREATE FUNCTION test_ambiguous_funcname(int) RETURNS int AS ' select $1; ' LANGUAGE sql;"}
+{"sql":"CREATE FUNCTION test_ambiguous_funcname(text) returns text as $$ select $1; $$ language sql","shape":"CREATE FUNCTION test_ambiguous_funcname(text) RETURNS text AS ' select $1; ' LANGUAGE sql;"}
+{"sql":"DROP FUNCTION test_ambiguous_funcname"}
+{"sql":"DROP FUNCTION IF EXISTS test_ambiguous_funcname"}
+{"sql":"DROP FUNCTION test_ambiguous_funcname(int)"}
+{"sql":"DROP FUNCTION test_ambiguous_funcname(text)"}
+{"sql":"CREATE PROCEDURE test_ambiguous_procname(int) as $$ begin end; $$ language plpgsql","shape":"CREATE PROCEDURE test_ambiguous_procname(int) AS ' begin end; ' LANGUAGE plpgsql;"}
+{"sql":"CREATE PROCEDURE test_ambiguous_procname(text) as $$ begin end; $$ language plpgsql","shape":"CREATE PROCEDURE test_ambiguous_procname(text) AS ' begin end; ' LANGUAGE plpgsql;"}
+{"sql":"DROP PROCEDURE test_ambiguous_procname"}
+{"sql":"DROP PROCEDURE IF EXISTS test_ambiguous_procname"}
+{"sql":"DROP ROUTINE IF EXISTS test_ambiguous_procname"}
+{"sql":"DROP PROCEDURE test_ambiguous_procname(int)"}
+{"sql":"DROP PROCEDURE test_ambiguous_procname(text)"}
+{"sql":"drop database test_database_exists (force)"}
+{"sql":"drop database test_database_exists with (force)"}
+{"sql":"drop database if exists test_database_exists (force)"}
+{"sql":"drop database if exists test_database_exists with (force)"}

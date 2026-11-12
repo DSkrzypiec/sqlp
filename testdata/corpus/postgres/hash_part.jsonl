@@ -1,0 +1,28 @@
+{"sql":"CREATE TABLE mchash (a int, b text, c jsonb)\n  PARTITION BY HASH (a part_test_int4_ops, b part_test_text_ops)","shape":"CREATE TABLE mchash (a int, b text, c jsonb) PARTITION BY HASH (a part_test_int4_ops, b part_test_text_ops);"}
+{"sql":"CREATE TABLE mchash1\n  PARTITION OF mchash FOR VALUES WITH (MODULUS 4, REMAINDER 0)","shape":"CREATE TABLE mchash1 PARTITION OF mchash FOR VALUES WITH (MODULUS 4, REMAINDER 0);"}
+{"sql":"SELECT satisfies_hash_partition(0, 4, 0, NULL)","shape":"SELECT satisfies_hash_partition(0, 4, 0, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('tenk1'::regclass, 4, 0, NULL)","shape":"SELECT satisfies_hash_partition('tenk1'::regclass, 4, 0, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash1'::regclass, 4, 0, NULL)","shape":"SELECT satisfies_hash_partition('mchash1'::regclass, 4, 0, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 0, 0, NULL)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 0, 0, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 1, -1, NULL)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 1, -1, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 1, 1, NULL)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 1, 1, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, NULL, 0, NULL)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, NULL, 0, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 4, NULL, NULL)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 4, NULL, NULL);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 4, 0, NULL::int, NULL::text, NULL::json)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 4, 0, NULL::int, NULL::text, NULL::json);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 3, 1, NULL::int)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 3, 1, NULL::int);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 2, 1, NULL::int, NULL::int)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 2, 1, NULL::int, NULL::int);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 4, 0, 0, ''::text)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 4, 0, 0, ''::text);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 4, 0, 2, ''::text)","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 4, 0, 2, ''::text);"}
+{"sql":"SELECT satisfies_hash_partition('mchash'::regclass, 2, 1,\n\t\t\t\t\t\t\t\tvariadic array[1,2]::int[])","shape":"SELECT satisfies_hash_partition('mchash'::regclass, 2, 1, VARIADIC ARRAY[1, 2]::int[]);"}
+{"sql":"CREATE TABLE mcinthash (a int, b int, c jsonb)\n  PARTITION BY HASH (a part_test_int4_ops, b part_test_int4_ops)","shape":"CREATE TABLE mcinthash (a int, b int, c jsonb) PARTITION BY HASH (a part_test_int4_ops, b part_test_int4_ops);"}
+{"sql":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0,\n\t\t\t\t\t\t\t\tvariadic array[0, 0])","shape":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0, VARIADIC ARRAY[0, 0]);"}
+{"sql":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0,\n\t\t\t\t\t\t\t\tvariadic array[0, 1])","shape":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0, VARIADIC ARRAY[0, 1]);"}
+{"sql":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0,\n\t\t\t\t\t\t\t\tvariadic array[]::int[])","shape":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0, VARIADIC ARRAY[]::int[]);"}
+{"sql":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0,\n\t\t\t\t\t\t\t\tvariadic array[now(), now()])","shape":"SELECT satisfies_hash_partition('mcinthash'::regclass, 4, 0, VARIADIC ARRAY[now(), now()]);"}
+{"sql":"create table text_hashp (a text) partition by hash (a)","shape":"CREATE TABLE text_hashp (a text) PARTITION BY HASH (a);"}
+{"sql":"create table text_hashp0 partition of text_hashp for values with (modulus 2, remainder 0)","shape":"CREATE TABLE text_hashp0 PARTITION OF text_hashp FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"create table text_hashp1 partition of text_hashp for values with (modulus 2, remainder 1)","shape":"CREATE TABLE text_hashp1 PARTITION OF text_hashp FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"select satisfies_hash_partition('text_hashp'::regclass, 2, 0, 'xxx'::text) OR\n\t   satisfies_hash_partition('text_hashp'::regclass, 2, 1, 'xxx'::text) AS satisfies","shape":"SELECT satisfies_hash_partition('text_hashp'::regclass, 2, 0, 'xxx'::text) OR satisfies_hash_partition('text_hashp'::regclass, 2, 1, 'xxx'::text) AS satisfies;"}
+{"sql":"DROP TABLE mchash","shape":"DROP TABLE mchash;"}
+{"sql":"DROP TABLE mcinthash","shape":"DROP TABLE mcinthash;"}
+{"sql":"DROP TABLE text_hashp","shape":"DROP TABLE text_hashp;"}

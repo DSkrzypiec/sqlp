@@ -1,0 +1,21 @@
+{"sql":"CREATE TABLE cross(cross,full,inner,left,natural,outer,right)"}
+{"sql":"CREATE TABLE full(cross,full,inner,left,natural,outer,right)"}
+{"sql":"CREATE TABLE inner(cross,full,inner,left,natural,outer,right)"}
+{"sql":"CREATE TABLE left(cross,full,inner,left,natural,outer,right)"}
+{"sql":"CREATE TABLE natural(cross,full,inner,left,natural,outer,right)"}
+{"sql":"CREATE TABLE outer(cross,full,inner,left,natural,outer,right)"}
+{"sql":"CREATE TABLE right(cross,full,inner,left,natural,outer,right)"}
+{"sql":"INSERT INTO cross VALUES(1,2,3,4,5,6,7)"}
+{"sql":"INSERT INTO full VALUES(1,2,3,4,5,6,7)"}
+{"sql":"INSERT INTO inner VALUES(1,2,3,4,5,6,7)"}
+{"sql":"INSERT INTO left VALUES(1,2,3,4,5,6,7)"}
+{"sql":"INSERT INTO natural VALUES(1,2,3,4,5,6,7)"}
+{"sql":"INSERT INTO outer VALUES(1,2,3,4,5,6,7)"}
+{"sql":"INSERT INTO right VALUES(1,2,3,4,5,6,7)"}
+{"sql":"SELECT cross(cross,full,inner,left,natural,outer,right) FROM cross"}
+{"sql":"SELECT full(cross,full,inner,left,natural,outer,right) FROM full"}
+{"sql":"SELECT inner(cross,full,inner,left,natural,outer,right) FROM inner"}
+{"sql":"SELECT left(cross,full,inner,left,natural,outer,right) FROM left"}
+{"sql":"SELECT natural(cross,full,inner,left,natural,outer,right) FROM natural"}
+{"sql":"SELECT outer(cross,full,inner,left,natural,outer,right) FROM outer"}
+{"sql":"SELECT right(cross,full,inner,left,natural,outer,right) FROM right"}

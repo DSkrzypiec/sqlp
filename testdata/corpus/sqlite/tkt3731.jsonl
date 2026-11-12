@@ -1,0 +1,1 @@
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n      INSERT INTO t1 VALUES(new.a || '+', new.b || '+');\n    END"}

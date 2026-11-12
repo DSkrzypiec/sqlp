@@ -1,0 +1,10 @@
+{"sql":"INSERT INTO t1 VALUES(0, 1)"}
+{"sql":"SELECT * FROM t1 WHERE b>=1"}
+{"sql":"CREATE TABLE t2(a INTEGER PRIMARY KEY, b, c, d)"}
+{"sql":"INSERT INTO t2 VALUES(0, 1, 'hello', x'012345')"}
+{"sql":"INSERT INTO t2 VALUES(1, 1, 'hello', x'012345')"}
+{"sql":"INSERT INTO t2 VALUES(2, 1, 'hello', x'012345')"}
+{"sql":"CREATE INDEX i2 ON t2(b,c,d)"}
+{"sql":"SELECT a FROM t2 WHERE b=1 AND c='hello' AND d>=x'012345'"}
+{"sql":"INSERT INTO t2 VALUES(3, 1, 'hello', x'012344')"}
+{"sql":"INSERT INTO t2 VALUES(4, 1, 'hello', x'012346')"}

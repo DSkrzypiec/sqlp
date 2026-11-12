@@ -1,0 +1,8 @@
+{"sql":"SELECT * FROM t1 WHERE b=2 AND a IS NULL"}
+{"sql":"SELECT * FROM t1 WHERE b=2 AND a IS NOT NULL"}
+{"sql":"PRAGMA reverse_unordered_selects=on"}
+{"sql":"SELECT a FROM t1 WHERE b=-99 OR b>1"}
+{"sql":"CREATE INDEX t1aa ON t1(a,a)"}
+{"sql":"UPDATE sqlite_stat1 SET stat='27 3 3' WHERE idx='t1aa'"}
+{"sql":"PRAGMA reverse_unordered_selects (1)"}
+{"sql":"SELECT a FROM t1 WHERE  a=1 OR a=2"}

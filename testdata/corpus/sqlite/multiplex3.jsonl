@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(randomblob(15), randomblob(2000))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(15), randomblob(2000) FROM t1"}
+{"sql":"SELECT md5sum(a, b) FROM t1 ORDER BY a"}
+{"sql":"UPDATE t1 SET a=randomblob(12), b=randomblob(1500) WHERE (rowid%32)=0"}

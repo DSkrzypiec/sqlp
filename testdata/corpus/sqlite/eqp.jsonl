@@ -1,0 +1,50 @@
+{"sql":"CREATE TABLE t1(a INT, b INT, ex TEXT)"}
+{"sql":"CREATE TABLE t2(a INT, b INT, ex TEXT)"}
+{"sql":"CREATE TABLE t3(a INT, b INT, ex TEXT)"}
+{"sql":"SELECT * FROM t2, t1 WHERE t1.a=1 OR t1.b=2"}
+{"sql":"SELECT * FROM t2 CROSS JOIN t1 WHERE t1.a=1 OR t1.b=2"}
+{"sql":"SELECT a FROM t1 WHERE a=4"}
+{"sql":"SELECT DISTINCT count(*) FROM t3 GROUP BY a"}
+{"sql":"SELECT * FROM t3 JOIN (SELECT 1)"}
+{"sql":"SELECT * FROM t3 JOIN (SELECT 1) AS v1"}
+{"sql":"SELECT * FROM t3 AS xx JOIN (SELECT 1) AS yy"}
+{"sql":"SELECT * FROM t3 JOIN (SELECT 1 UNION SELECT 2)"}
+{"sql":"SELECT * FROM t3 JOIN (SELECT 1 EXCEPT SELECT a FROM t3 LIMIT 17) AS abc"}
+{"sql":"SELECT * FROM t3 JOIN (SELECT 1 INTERSECT SELECT a FROM t3 LIMIT 17) AS abc"}
+{"sql":"SELECT * FROM t3 JOIN (SELECT 1 UNION ALL SELECT a FROM t3 LIMIT 17) abc"}
+{"sql":"CREATE TABLE t1(x INT, y INT, ex TEXT)"}
+{"sql":"CREATE TABLE t2(x INT, y INT, ex TEXT)"}
+{"sql":"SELECT (SELECT x FROM t1 AS sub) FROM t1"}
+{"sql":"SELECT * FROM t1 WHERE (SELECT x FROM t1 AS sub)"}
+{"sql":"SELECT * FROM t1 WHERE (SELECT x FROM t1 AS sub ORDER BY y)"}
+{"sql":"SELECT * FROM t1 WHERE (SELECT x FROM t2 ORDER BY x)"}
+{"sql":"SELECT * FROM t1 UNION ALL SELECT * FROM t2 ORDER BY 2"}
+{"sql":"SELECT * FROM t1 UNION SELECT * FROM t2 ORDER BY 2"}
+{"sql":"SELECT * FROM t1 INTERSECT SELECT * FROM t2 ORDER BY 2"}
+{"sql":"SELECT * FROM t1 EXCEPT SELECT * FROM t2 ORDER BY 2"}
+{"sql":"SELECT * FROM t1 UNION ALL SELECT * FROM t2 ORDER BY 1"}
+{"sql":"SELECT * FROM t1 UNION SELECT * FROM t2 ORDER BY 1"}
+{"sql":"SELECT * FROM t1 INTERSECT SELECT * FROM t2 ORDER BY 1"}
+{"sql":"SELECT * FROM t1 EXCEPT SELECT * FROM t2 ORDER BY 1"}
+{"sql":"SELECT x FROM t1 UNION SELECT x FROM t2"}
+{"sql":"SELECT x FROM t1 UNION SELECT x FROM t2 UNION SELECT x FROM t1"}
+{"sql":"SELECT x FROM t1 UNION SELECT x FROM t2 UNION SELECT x FROM t1 ORDER BY 1"}
+{"sql":"CREATE INDEX i2 ON t1(a, b)"}
+{"sql":"CREATE TABLE t2(c INT, d INT, ex TEXT)"}
+{"sql":"CREATE INDEX i3 ON t1(b)"}
+{"sql":"CREATE INDEX i4 ON t2(c)"}
+{"sql":"CREATE TABLE t1(a INT, b INT, ex CHAR(100))"}
+{"sql":"CREATE TABLE t2(a INT, b INT, ex CHAR(100))"}
+{"sql":"CREATE INDEX i1 ON t2(a)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1, 2)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(3, 4)"}
+{"sql":"INSERT INTO t2(a,b) VALUES(1, 2)"}
+{"sql":"INSERT INTO t2(a,b) VALUES(3, 4)"}
+{"sql":"INSERT INTO t2(a,b) VALUES(5, 6)"}
+{"sql":"CREATE TABLE t1(a, b, c, PRIMARY KEY(b, c)) WITHOUT ROWID"}
+{"sql":"CREATE TABLE forumpost(\n    fpid INTEGER PRIMARY KEY,\n    froot INT,\n    fprev INT,\n    firt INT,\n    fmtime REAL\n  )"}
+{"sql":"CREATE INDEX forumthread ON forumpost(froot,fmtime)"}
+{"sql":"CREATE TABLE event(\n    type TEXT,\n    mtime DATETIME,\n    objid INTEGER PRIMARY KEY,\n    tagid INTEGER,\n    uid INTEGER REFERENCES user,\n    bgcolor TEXT,\n    euser TEXT,\n    user TEXT,\n    ecomment TEXT,\n    comment TEXT,\n    brief TEXT,\n    omtime DATETIME\n  )"}
+{"sql":"CREATE INDEX event_i1 ON event(mtime)"}
+{"sql":"CREATE TABLE private(rid INTEGER PRIMARY KEY)"}
+{"sql":"WITH thread(age,duration,cnt,root,last) AS (\n    SELECT\n      julianday('now') - max(fmtime) AS age,\n      max(fmtime) - min(fmtime) AS duration,\n      sum(fprev IS NULL) AS msg_count,\n      froot,\n      (SELECT fpid FROM forumpost\n        WHERE froot=x.froot\n          AND fpid NOT IN private\n        ORDER BY fmtime DESC LIMIT 1)\n    FROM forumpost AS x\n    WHERE fpid NOT IN private  --- Ensure this table mentioned in EQP output!\n    GROUP BY froot\n    ORDER BY 1 LIMIT 26 OFFSET 5\n  )\n  SELECT\n    thread.age,\n    thread.duration,\n    thread.cnt,\n    blob.uuid,\n    substr(event.comment,instr(event.comment,':')+1)\n  FROM thread, blob, event\n  WHERE blob.rid=thread.last\n    AND event.objid=thread.last\n  ORDER BY 1"}

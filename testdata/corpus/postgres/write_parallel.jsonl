@@ -1,0 +1,14 @@
+{"sql":"explain (costs off) create table parallel_write as\n    select length(stringu1) from tenk1 group by length(stringu1)","shape":"EXPLAIN (COSTS off) CREATE TABLE parallel_write AS SELECT length(stringu1) FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"create table parallel_write as\n    select length(stringu1) from tenk1 group by length(stringu1)","shape":"CREATE TABLE parallel_write AS SELECT length(stringu1) FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"drop table parallel_write","shape":"DROP TABLE parallel_write;"}
+{"sql":"explain (costs off) select length(stringu1) into parallel_write\n    from tenk1 group by length(stringu1)","shape":"EXPLAIN (COSTS off) SELECT length(stringu1) INTO parallel_write FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"select length(stringu1) into parallel_write\n    from tenk1 group by length(stringu1)","shape":"SELECT length(stringu1) INTO parallel_write FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"explain (costs off) create materialized view parallel_mat_view as\n    select length(stringu1) from tenk1 group by length(stringu1)","shape":"EXPLAIN (COSTS off) CREATE MATERIALIZED VIEW parallel_mat_view AS SELECT length(stringu1) FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"create materialized view parallel_mat_view as\n    select length(stringu1) from tenk1 group by length(stringu1)","shape":"CREATE MATERIALIZED VIEW parallel_mat_view AS SELECT length(stringu1) FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"create unique index on parallel_mat_view(length)","shape":"CREATE UNIQUE INDEX ON parallel_mat_view (length);"}
+{"sql":"refresh materialized view parallel_mat_view","shape":"REFRESH MATERIALIZED VIEW parallel_mat_view;"}
+{"sql":"refresh materialized view concurrently parallel_mat_view","shape":"REFRESH MATERIALIZED VIEW CONCURRENTLY parallel_mat_view;"}
+{"sql":"drop materialized view parallel_mat_view","shape":"DROP MATERIALIZED VIEW parallel_mat_view;"}
+{"sql":"prepare prep_stmt as select length(stringu1) from tenk1 group by length(stringu1)","shape":"PREPARE prep_stmt AS SELECT length(stringu1) FROM tenk1 GROUP BY length(stringu1);"}
+{"sql":"explain (costs off) create table parallel_write as execute prep_stmt","shape":"EXPLAIN (COSTS off) CREATE TABLE parallel_write AS EXECUTE prep_stmt;"}
+{"sql":"create table parallel_write as execute prep_stmt","shape":"CREATE TABLE parallel_write AS EXECUTE prep_stmt;"}

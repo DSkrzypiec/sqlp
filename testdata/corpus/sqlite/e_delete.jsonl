@@ -1,0 +1,44 @@
+{"sql":"CREATE TABLE %T%(x, y)","reject":true}
+{"sql":"INSERT INTO %T% VALUES(1, 'one')","reject":true}
+{"sql":"INSERT INTO %T% VALUES(2, 'two')","reject":true}
+{"sql":"INSERT INTO %T% VALUES(3, 'three')","reject":true}
+{"sql":"INSERT INTO %T% VALUES(4, 'four')","reject":true}
+{"sql":"INSERT INTO %T% VALUES(5, 'five')","reject":true}
+{"sql":"ATTACH 'test.db3' AS aux2"}
+{"sql":"CREATE TABLE temp.t7(a, b)"}
+{"sql":"INSERT INTO temp.t7 VALUES(1, 2)"}
+{"sql":"CREATE TABLE main.t7(a, b)"}
+{"sql":"INSERT INTO main.t7 VALUES(3, 4)"}
+{"sql":"CREATE TABLE aux.t7(a, b)"}
+{"sql":"INSERT INTO aux.t7 VALUES(5, 6)"}
+{"sql":"CREATE TABLE aux2.t7(a, b)"}
+{"sql":"INSERT INTO aux2.t7 VALUES(7, 8)"}
+{"sql":"CREATE TABLE main.t8(a, b)"}
+{"sql":"INSERT INTO main.t8 VALUES(1, 2)"}
+{"sql":"CREATE TABLE aux.t8(a, b)"}
+{"sql":"INSERT INTO aux.t8 VALUES(3, 4)"}
+{"sql":"CREATE TABLE aux2.t8(a, b)"}
+{"sql":"INSERT INTO aux2.t8 VALUES(5, 6)"}
+{"sql":"CREATE TABLE aux.t9(a, b)"}
+{"sql":"INSERT INTO aux.t9 VALUES(1, 2)"}
+{"sql":"CREATE TABLE aux2.t9(a, b)"}
+{"sql":"INSERT INTO aux2.t9 VALUES(3, 4)"}
+{"sql":"CREATE TABLE aux2.t10(a, b)"}
+{"sql":"INSERT INTO aux2.t10 VALUES(1, 2)"}
+{"sql":"DROP TRIGGER main.tr1"}
+{"sql":"DROP TRIGGER aux.tr2"}
+{"sql":"DELETE FROM main.t8 WHERE oid>1"}
+{"sql":"DELETE FROM aux.t8 WHERE oid>1"}
+{"sql":"SELECT count(*) FROM temp.t7 UNION ALL SELECT count(*) FROM main.t7 UNION ALL\n  SELECT count(*) FROM aux.t7  UNION ALL SELECT count(*) FROM aux2.t7"}
+{"sql":"SELECT count(*) FROM main.t8 UNION ALL SELECT count(*) FROM aux.t8  \n  UNION ALL SELECT count(*) FROM aux2.t8"}
+{"sql":"SELECT count(*) FROM aux.t9  UNION ALL SELECT count(*) FROM aux2.t9"}
+{"sql":"SELECT count(*) FROM aux2.t10"}
+{"sql":"CREATE TRIGGER temp.tr1 AFTER INSERT ON t7 BEGIN\n    DELETE FROM t7;\n    DELETE FROM t8;\n    DELETE FROM t9;\n    DELETE FROM t10;\n  END"}
+{"sql":"INSERT INTO temp.t7 VALUES('hello', 'world')"}
+{"sql":"CREATE INDEX i8 ON t8(a, b)"}
+{"sql":"INSERT INTO t1 VALUES(3, 'three')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'four')"}
+{"sql":"INSERT INTO t1 VALUES(5, 'five')"}
+{"sql":"DROP TABLE t1log"}
+{"sql":"CREATE TABLE t1log(x)"}
+{"sql":"CREATE TRIGGER tr1 AFTER DELETE ON t1 BEGIN\n      INSERT INTO t1log VALUES(old.a);\n    END"}

@@ -1,0 +1,29 @@
+{"sql":"INSERT INTO t1 VALUES(3, 4)"}
+{"sql":"INSERT INTO t1 VALUES(5, 6)"}
+{"sql":"INSERT INTO t2 VALUES('a', 'b')"}
+{"sql":"INSERT INTO t1 VALUES(7, 8)"}
+{"sql":"INSERT INTO t2 VALUES('c', 'd')"}
+{"sql":"INSERT INTO t3 VALUES('i', 'ii')"}
+{"sql":"INSERT INTO t1 VALUES(9, 10)"}
+{"sql":"CREATE TABLE aux.t4(x, y)"}
+{"sql":"INSERT INTO t4 VALUES('A', 'B')"}
+{"sql":"INSERT INTO t1 VALUES(11, 12)"}
+{"sql":"INSERT INTO t4 VALUES('C', 'D')"}
+{"sql":"INSERT INTO t1 VALUES(13, 14)"}
+{"sql":"INSERT INTO t4 VALUES('E', 'F')"}
+{"sql":"CREATE TABLE ta(a, aa)"}
+{"sql":"CREATE TABLE tb(b, bb)"}
+{"sql":"INSERT INTO ta VALUES('a', randomblob(500))"}
+{"sql":"INSERT INTO tb VALUES('b', randomblob(500))"}
+{"sql":"UPDATE ta SET a = 'A'"}
+{"sql":"SAVEPOINT one"}
+{"sql":"UPDATE tb SET b = 'B'"}
+{"sql":"ROLLBACK TO one"}
+{"sql":"INSERT INTO tb VALUES('c', randomblob(10))"}
+{"sql":"INSERT INTO tb VALUES('d', randomblob(10))"}
+{"sql":"INSERT INTO tb VALUES('e', randomblob(10))"}
+{"sql":"SAVEPOINT two"}
+{"sql":"UPDATE tb SET b = upper(b)"}
+{"sql":"ROLLBACK TO two"}
+{"sql":"SELECT a FROM ta"}
+{"sql":"SELECT b FROM tb"}

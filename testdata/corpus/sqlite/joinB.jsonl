@@ -1,0 +1,512 @@
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  INNER JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  INNER JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  INNER JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL INNER JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  LEFT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  LEFT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  LEFT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL LEFT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  RIGHT JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  RIGHT JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL RIGHT JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 INNER JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  INNER JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  INNER JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL INNER JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 LEFT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  LEFT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  LEFT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL LEFT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 RIGHT JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  RIGHT JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  RIGHT JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL RIGHT JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  INNER JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  INNER JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  INNER JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL INNER JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  LEFT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  LEFT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  LEFT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL LEFT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  RIGHT JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  RIGHT JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  RIGHT JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL RIGHT JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  INNER JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  INNER JOIN t5 USING(a,b)\n  WHERE a<>13\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  LEFT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, c, d, e, f, g\n  FROM t1\n  FULL JOIN (t2 FULL JOIN t3 USING(a)) USING(a)\n  FULL JOIN (t4 LEFT JOIN t5 USING(a)) USING(a)\n  WHERE a<=18\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  RIGHT JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, b, c, d, e, f, g\n  FROM t1\n  FULL JOIN t2 USING(a,b)\n  FULL JOIN t3 USING(a,b)\n  FULL JOIN t4 USING(a,b)\n  RIGHT JOIN t5 USING(a,b)\n  WHERE d<>33 OR d IS NULL\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT a, t1.a, t2.a, t3.a, t4.a, t5.a\n  FROM t1\n  FULL JOIN t2 USING(a)\n  FULL JOIN t3 USING(a)\n  FULL JOIN t4 USING(a)\n  FULL JOIN t5 USING(a)\n  ORDER BY 1 NULLS FIRST"}
+{"sql":"SELECT b, c, d, e, f, g\n  FROM t1\n  NATURAL FULL JOIN t2\n  NATURAL FULL JOIN t3\n  NATURAL FULL JOIN t4\n  NATURAL FULL JOIN t5\n  WHERE b BETWEEN 12 AND 17\n  ORDER BY 1 NULLS FIRST"}

@@ -1,0 +1,3 @@
+{"sql":"create function infinite_recurse() returns int as\n'select infinite_recurse()' language sql","shape":"CREATE FUNCTION infinite_recurse() RETURNS int AS 'select infinite_recurse()' LANGUAGE sql;"}
+{"sql":"SELECT version() ~ 'powerpc64[^,]*-linux-gnu'\n       AS skip_test","shape":"SELECT version() ~ 'powerpc64[^,]*-linux-gnu' AS skip_test;"}
+{"sql":"select infinite_recurse()","shape":"SELECT infinite_recurse();"}

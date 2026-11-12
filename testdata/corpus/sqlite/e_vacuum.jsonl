@@ -1,0 +1,43 @@
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(400))"}
+{"sql":"INSERT INTO t1 SELECT a+1,  randomblob(400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+2,  randomblob(400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+4,  randomblob(400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+8,  randomblob(400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+16, randomblob(400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+32, randomblob(400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+64, randomblob(400) FROM t1"}
+{"sql":"CREATE TABLE t2(a PRIMARY KEY, b UNIQUE)"}
+{"sql":"CREATE VIRTUAL TABLE temp.stat USING dbstat"}
+{"sql":"DROP TABLE temp.stat"}
+{"sql":"DELETE FROM t1 WHERE a%2"}
+{"sql":"INSERT INTO t1 SELECT b, a FROM t2 WHERE a%2"}
+{"sql":"UPDATE t1 SET b=randomblob(600) WHERE (a%2)==0"}
+{"sql":"PRAGMA page_size"}
+{"sql":"PRAGMA auto_vacuum = NONE"}
+{"sql":"PRAGMA journal_mode = delete"}
+{"sql":"PRAGMA auto_vacuum = FULL"}
+{"sql":"PRAGMA aux.page_size = 1024"}
+{"sql":"CREATE TABLE aux.t3 AS SELECT * FROM t1"}
+{"sql":"VACUUM aux"}
+{"sql":"INSERT INTO t4(x) VALUES('x')"}
+{"sql":"INSERT INTO t4(x) VALUES('y')"}
+{"sql":"INSERT INTO t4(x) VALUES('z')"}
+{"sql":"DELETE FROM t4 WHERE x = 'y'"}
+{"sql":"SELECT rowid, x FROM t4"}
+{"sql":"CREATE TABLE t5(x, y INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t5(x) VALUES('x')"}
+{"sql":"INSERT INTO t5(x) VALUES('y')"}
+{"sql":"INSERT INTO t5(x) VALUES('z')"}
+{"sql":"DELETE FROM t5 WHERE x = 'y'"}
+{"sql":"SELECT rowid, x FROM t5"}
+{"sql":"VACUUM INTO 'test2.db'"}
+{"sql":"ATTACH 'test2.db' AS aux1"}
+{"sql":"SELECT rowid, x FROM aux1.t5"}
+{"sql":"DETACH aux1"}
+{"sql":"CREATE TABLE t5(x,y,z)"}
+{"sql":"UPDATE t5 SET y=x, z=random()"}
+{"sql":"CREATE INDEX t5x ON t5(x)"}
+{"sql":"CREATE UNIQUE INDEX t5y ON t5(y)"}
+{"sql":"CREATE INDEX t5zxy ON t5(z,x,y)"}
+{"sql":"SAVEPOINT x"}

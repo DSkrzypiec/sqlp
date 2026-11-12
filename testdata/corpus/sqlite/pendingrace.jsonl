@@ -1,0 +1,2 @@
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<10\n  )\n  INSERT INTO t1 SELECT hex(randomblob(100)), hex(randomblob(100)) FROM s"}
+{"sql":"UPDATE t1 SET b=hex(randomblob(100))"}

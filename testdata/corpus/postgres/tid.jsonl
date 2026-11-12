@@ -1,0 +1,36 @@
+{"sql":"SELECT\n  '(0,0)'::tid as tid00,\n  '(0,1)'::tid as tid01,\n  '(-1,0)'::tid as tidm10,\n  '(4294967295,65535)'::tid as tidmax","shape":"SELECT '(0,0)'::tid AS tid00, '(0,1)'::tid AS tid01, '(-1,0)'::tid AS tidm10, '(4294967295,65535)'::tid AS tidmax;"}
+{"sql":"SELECT '(4294967296,1)'::tid","shape":"SELECT '(4294967296,1)'::tid;"}
+{"sql":"SELECT '(1,65536)'::tid","shape":"SELECT '(1,65536)'::tid;"}
+{"sql":"SELECT pg_input_is_valid('(0)', 'tid')","shape":"SELECT pg_input_is_valid('(0)', 'tid');"}
+{"sql":"SELECT * FROM pg_input_error_info('(0)', 'tid')","shape":"SELECT * FROM pg_input_error_info('(0)', 'tid');"}
+{"sql":"SELECT pg_input_is_valid('(0,-1)', 'tid')","shape":"SELECT pg_input_is_valid('(0,-1)', 'tid');"}
+{"sql":"SELECT * FROM pg_input_error_info('(0,-1)', 'tid')","shape":"SELECT * FROM pg_input_error_info('(0,-1)', 'tid');"}
+{"sql":"CREATE TABLE tid_tab (a int)","shape":"CREATE TABLE tid_tab (a int);"}
+{"sql":"INSERT INTO tid_tab VALUES (1), (2)","shape":"INSERT INTO tid_tab VALUES (1), (2);"}
+{"sql":"SELECT min(ctid) FROM tid_tab","shape":"SELECT min(ctid) FROM tid_tab;"}
+{"sql":"SELECT max(ctid) FROM tid_tab","shape":"SELECT max(ctid) FROM tid_tab;"}
+{"sql":"TRUNCATE tid_tab","shape":"TRUNCATE TABLE tid_tab;"}
+{"sql":"CREATE MATERIALIZED VIEW tid_matview AS SELECT a FROM tid_tab","shape":"CREATE MATERIALIZED VIEW tid_matview AS SELECT a FROM tid_tab;"}
+{"sql":"SELECT currtid2('tid_matview'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_matview'::text, '(0,1)'::tid);"}
+{"sql":"INSERT INTO tid_tab VALUES (1)","shape":"INSERT INTO tid_tab VALUES (1);"}
+{"sql":"REFRESH MATERIALIZED VIEW tid_matview","shape":"REFRESH MATERIALIZED VIEW tid_matview;"}
+{"sql":"DROP MATERIALIZED VIEW tid_matview","shape":"DROP MATERIALIZED VIEW tid_matview;"}
+{"sql":"CREATE SEQUENCE tid_seq","shape":"CREATE SEQUENCE tid_seq;"}
+{"sql":"SELECT currtid2('tid_seq'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_seq'::text, '(0,1)'::tid);"}
+{"sql":"DROP SEQUENCE tid_seq","shape":"DROP SEQUENCE tid_seq;"}
+{"sql":"CREATE INDEX tid_ind ON tid_tab(a)","shape":"CREATE INDEX tid_ind ON tid_tab (a);"}
+{"sql":"SELECT currtid2('tid_ind'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_ind'::text, '(0,1)'::tid);"}
+{"sql":"DROP INDEX tid_ind","shape":"DROP INDEX tid_ind;"}
+{"sql":"CREATE TABLE tid_part (a int) PARTITION BY RANGE (a)","shape":"CREATE TABLE tid_part (a int) PARTITION BY RANGE (a);"}
+{"sql":"SELECT currtid2('tid_part'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_part'::text, '(0,1)'::tid);"}
+{"sql":"DROP TABLE tid_part","shape":"DROP TABLE tid_part;"}
+{"sql":"CREATE VIEW tid_view_no_ctid AS SELECT a FROM tid_tab","shape":"CREATE VIEW tid_view_no_ctid AS SELECT a FROM tid_tab;"}
+{"sql":"SELECT currtid2('tid_view_no_ctid'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_view_no_ctid'::text, '(0,1)'::tid);"}
+{"sql":"DROP VIEW tid_view_no_ctid","shape":"DROP VIEW tid_view_no_ctid;"}
+{"sql":"CREATE VIEW tid_view_with_ctid AS SELECT ctid, a FROM tid_tab","shape":"CREATE VIEW tid_view_with_ctid AS SELECT ctid, a FROM tid_tab;"}
+{"sql":"SELECT currtid2('tid_view_with_ctid'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_view_with_ctid'::text, '(0,1)'::tid);"}
+{"sql":"DROP VIEW tid_view_with_ctid","shape":"DROP VIEW tid_view_with_ctid;"}
+{"sql":"CREATE VIEW tid_view_fake_ctid AS SELECT 1 AS ctid, 2 AS a","shape":"CREATE VIEW tid_view_fake_ctid AS SELECT 1 AS ctid, 2 AS a;"}
+{"sql":"SELECT currtid2('tid_view_fake_ctid'::text, '(0,1)'::tid)","shape":"SELECT currtid2('tid_view_fake_ctid'::text, '(0,1)'::tid);"}
+{"sql":"DROP VIEW tid_view_fake_ctid","shape":"DROP VIEW tid_view_fake_ctid;"}
+{"sql":"DROP TABLE tid_tab CASCADE","shape":"DROP TABLE tid_tab CASCADE;"}

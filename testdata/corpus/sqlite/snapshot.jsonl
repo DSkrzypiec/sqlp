@@ -1,0 +1,16 @@
+{"sql":"DELETE FROM t1 WHERE a>6"}
+{"sql":"INSERT INTO t1 VALUES('c', 'd')"}
+{"sql":"INSERT INTO t1 VALUES('x','y')"}
+{"sql":"INSERT INTO t2 VALUES('g', 'h')"}
+{"sql":"CREATE TABLE t3(i, j)"}
+{"sql":"INSERT INTO t3 VALUES('o', 't')"}
+{"sql":"INSERT INTO t3 VALUES('t', 'f')"}
+{"sql":"INSERT INTO t3 VALUES('f', 's')"}
+{"sql":"INSERT INTO t3 VALUES('s', 'e')"}
+{"sql":"INSERT INTO t3 VALUES('n', 't')"}
+{"sql":"INSERT INTO t3 VALUES('e', 't')"}
+{"sql":"CREATE TABLE x1(x, xx, xxx)"}
+{"sql":"INSERT INTO x1 VALUES('z', 'zz', 'zzz')"}
+{"sql":"INSERT INTO x1 VALUES('a', 'aa', 'aaa')"}
+{"sql":"INSERT INTO t1 VALUES(13)"}
+{"sql":"INSERT INTO t1 VALUES(14)"}

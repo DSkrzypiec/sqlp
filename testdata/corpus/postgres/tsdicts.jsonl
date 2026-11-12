@@ -1,0 +1,121 @@
+{"sql":"CREATE TEXT SEARCH DICTIONARY ispell (\n                        Template=ispell,\n                        DictFile=ispell_sample,\n                        AffFile=ispell_sample\n)"}
+{"sql":"SELECT ts_lexize('ispell', 'skies')","shape":"SELECT ts_lexize('ispell', 'skies');"}
+{"sql":"SELECT ts_lexize('ispell', 'bookings')","shape":"SELECT ts_lexize('ispell', 'bookings');"}
+{"sql":"SELECT ts_lexize('ispell', 'booking')","shape":"SELECT ts_lexize('ispell', 'booking');"}
+{"sql":"SELECT ts_lexize('ispell', 'foot')","shape":"SELECT ts_lexize('ispell', 'foot');"}
+{"sql":"SELECT ts_lexize('ispell', 'foots')","shape":"SELECT ts_lexize('ispell', 'foots');"}
+{"sql":"SELECT ts_lexize('ispell', 'rebookings')","shape":"SELECT ts_lexize('ispell', 'rebookings');"}
+{"sql":"SELECT ts_lexize('ispell', 'rebooking')","shape":"SELECT ts_lexize('ispell', 'rebooking');"}
+{"sql":"SELECT ts_lexize('ispell', 'rebook')","shape":"SELECT ts_lexize('ispell', 'rebook');"}
+{"sql":"SELECT ts_lexize('ispell', 'unbookings')","shape":"SELECT ts_lexize('ispell', 'unbookings');"}
+{"sql":"SELECT ts_lexize('ispell', 'unbooking')","shape":"SELECT ts_lexize('ispell', 'unbooking');"}
+{"sql":"SELECT ts_lexize('ispell', 'unbook')","shape":"SELECT ts_lexize('ispell', 'unbook');"}
+{"sql":"SELECT ts_lexize('ispell', 'footklubber')","shape":"SELECT ts_lexize('ispell', 'footklubber');"}
+{"sql":"SELECT ts_lexize('ispell', 'footballklubber')","shape":"SELECT ts_lexize('ispell', 'footballklubber');"}
+{"sql":"SELECT ts_lexize('ispell', 'ballyklubber')","shape":"SELECT ts_lexize('ispell', 'ballyklubber');"}
+{"sql":"SELECT ts_lexize('ispell', 'footballyklubber')","shape":"SELECT ts_lexize('ispell', 'footballyklubber');"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell (\n                        Template=ispell,\n                        DictFile=ispell_sample,\n                        AffFile=hunspell_sample\n)"}
+{"sql":"SELECT ts_lexize('hunspell', 'skies')","shape":"SELECT ts_lexize('hunspell', 'skies');"}
+{"sql":"SELECT ts_lexize('hunspell', 'bookings')","shape":"SELECT ts_lexize('hunspell', 'bookings');"}
+{"sql":"SELECT ts_lexize('hunspell', 'booking')","shape":"SELECT ts_lexize('hunspell', 'booking');"}
+{"sql":"SELECT ts_lexize('hunspell', 'foot')","shape":"SELECT ts_lexize('hunspell', 'foot');"}
+{"sql":"SELECT ts_lexize('hunspell', 'foots')","shape":"SELECT ts_lexize('hunspell', 'foots');"}
+{"sql":"SELECT ts_lexize('hunspell', 'rebookings')","shape":"SELECT ts_lexize('hunspell', 'rebookings');"}
+{"sql":"SELECT ts_lexize('hunspell', 'rebooking')","shape":"SELECT ts_lexize('hunspell', 'rebooking');"}
+{"sql":"SELECT ts_lexize('hunspell', 'rebook')","shape":"SELECT ts_lexize('hunspell', 'rebook');"}
+{"sql":"SELECT ts_lexize('hunspell', 'unbookings')","shape":"SELECT ts_lexize('hunspell', 'unbookings');"}
+{"sql":"SELECT ts_lexize('hunspell', 'unbooking')","shape":"SELECT ts_lexize('hunspell', 'unbooking');"}
+{"sql":"SELECT ts_lexize('hunspell', 'unbook')","shape":"SELECT ts_lexize('hunspell', 'unbook');"}
+{"sql":"SELECT ts_lexize('hunspell', 'footklubber')","shape":"SELECT ts_lexize('hunspell', 'footklubber');"}
+{"sql":"SELECT ts_lexize('hunspell', 'footballklubber')","shape":"SELECT ts_lexize('hunspell', 'footballklubber');"}
+{"sql":"SELECT ts_lexize('hunspell', 'ballyklubber')","shape":"SELECT ts_lexize('hunspell', 'ballyklubber');"}
+{"sql":"SELECT ts_lexize('hunspell', 'footballyklubber')","shape":"SELECT ts_lexize('hunspell', 'footballyklubber');"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_long (\n                        Template=ispell,\n                        DictFile=hunspell_sample_long,\n                        AffFile=hunspell_sample_long\n)"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'skies')","shape":"SELECT ts_lexize('hunspell_long', 'skies');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'bookings')","shape":"SELECT ts_lexize('hunspell_long', 'bookings');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'booking')","shape":"SELECT ts_lexize('hunspell_long', 'booking');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'foot')","shape":"SELECT ts_lexize('hunspell_long', 'foot');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'foots')","shape":"SELECT ts_lexize('hunspell_long', 'foots');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'rebookings')","shape":"SELECT ts_lexize('hunspell_long', 'rebookings');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'rebooking')","shape":"SELECT ts_lexize('hunspell_long', 'rebooking');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'rebook')","shape":"SELECT ts_lexize('hunspell_long', 'rebook');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'unbookings')","shape":"SELECT ts_lexize('hunspell_long', 'unbookings');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'unbooking')","shape":"SELECT ts_lexize('hunspell_long', 'unbooking');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'unbook')","shape":"SELECT ts_lexize('hunspell_long', 'unbook');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'booked')","shape":"SELECT ts_lexize('hunspell_long', 'booked');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'footklubber')","shape":"SELECT ts_lexize('hunspell_long', 'footklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'footballklubber')","shape":"SELECT ts_lexize('hunspell_long', 'footballklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'ballyklubber')","shape":"SELECT ts_lexize('hunspell_long', 'ballyklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'ballsklubber')","shape":"SELECT ts_lexize('hunspell_long', 'ballsklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'footballyklubber')","shape":"SELECT ts_lexize('hunspell_long', 'footballyklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_long', 'ex-machina')","shape":"SELECT ts_lexize('hunspell_long', 'ex-machina');"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_num (\n                        Template=ispell,\n                        DictFile=hunspell_sample_num,\n                        AffFile=hunspell_sample_num\n)"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'skies')","shape":"SELECT ts_lexize('hunspell_num', 'skies');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'sk')","shape":"SELECT ts_lexize('hunspell_num', 'sk');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'bookings')","shape":"SELECT ts_lexize('hunspell_num', 'bookings');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'booking')","shape":"SELECT ts_lexize('hunspell_num', 'booking');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'foot')","shape":"SELECT ts_lexize('hunspell_num', 'foot');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'foots')","shape":"SELECT ts_lexize('hunspell_num', 'foots');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'rebookings')","shape":"SELECT ts_lexize('hunspell_num', 'rebookings');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'rebooking')","shape":"SELECT ts_lexize('hunspell_num', 'rebooking');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'rebook')","shape":"SELECT ts_lexize('hunspell_num', 'rebook');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'unbookings')","shape":"SELECT ts_lexize('hunspell_num', 'unbookings');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'unbooking')","shape":"SELECT ts_lexize('hunspell_num', 'unbooking');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'unbook')","shape":"SELECT ts_lexize('hunspell_num', 'unbook');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'booked')","shape":"SELECT ts_lexize('hunspell_num', 'booked');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'footklubber')","shape":"SELECT ts_lexize('hunspell_num', 'footklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'footballklubber')","shape":"SELECT ts_lexize('hunspell_num', 'footballklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'ballyklubber')","shape":"SELECT ts_lexize('hunspell_num', 'ballyklubber');"}
+{"sql":"SELECT ts_lexize('hunspell_num', 'footballyklubber')","shape":"SELECT ts_lexize('hunspell_num', 'footballyklubber');"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_err (\n\t\t\t\t\t\tTemplate=ispell,\n\t\t\t\t\t\tDictFile=ispell_sample,\n\t\t\t\t\t\tAffFile=hunspell_sample_long\n)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_err (\n\t\t\t\t\t\tTemplate=ispell,\n\t\t\t\t\t\tDictFile=ispell_sample,\n\t\t\t\t\t\tAffFile=hunspell_sample_num\n)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_invalid_1 (\n\t\t\t\t\t\tTemplate=ispell,\n\t\t\t\t\t\tDictFile=hunspell_sample_long,\n\t\t\t\t\t\tAffFile=ispell_sample\n)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_invalid_2 (\n\t\t\t\t\t\tTemplate=ispell,\n\t\t\t\t\t\tDictFile=hunspell_sample_long,\n\t\t\t\t\t\tAffFile=hunspell_sample_num\n)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_invalid_3 (\n\t\t\t\t\t\tTemplate=ispell,\n\t\t\t\t\t\tDictFile=hunspell_sample_num,\n\t\t\t\t\t\tAffFile=ispell_sample\n)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY hunspell_err (\n\t\t\t\t\t\tTemplate=ispell,\n\t\t\t\t\t\tDictFile=hunspell_sample_num,\n\t\t\t\t\t\tAffFile=hunspell_sample_long\n)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY synonym (\n\t\t\t\t\t\tTemplate=synonym,\n\t\t\t\t\t\tSynonyms=synonym_sample\n)"}
+{"sql":"SELECT ts_lexize('synonym', 'PoStGrEs')","shape":"SELECT ts_lexize('synonym', 'PoStGrEs');"}
+{"sql":"SELECT ts_lexize('synonym', 'Gogle')","shape":"SELECT ts_lexize('synonym', 'Gogle');"}
+{"sql":"SELECT ts_lexize('synonym', 'indices')","shape":"SELECT ts_lexize('synonym', 'indices');"}
+{"sql":"SELECT dictinitoption FROM pg_ts_dict WHERE dictname = 'synonym'","shape":"SELECT dictinitoption FROM pg_ts_dict WHERE dictname = 'synonym';"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY synonym (CaseSensitive = 1)"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY synonym (CaseSensitive = 2)"}
+{"sql":"ALTER TEXT SEARCH DICTIONARY synonym (CaseSensitive = off)"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY thesaurus (\n                        Template=thesaurus,\n\t\t\t\t\t\tDictFile=thesaurus_sample,\n\t\t\t\t\t\tDictionary=english_stem\n)"}
+{"sql":"SELECT ts_lexize('thesaurus', 'one')","shape":"SELECT ts_lexize('thesaurus', 'one');"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION ispell_tst (\n\t\t\t\t\t\tCOPY=english\n)"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION ispell_tst ALTER MAPPING FOR\n\tword, numword, asciiword, hword, numhword, asciihword, hword_part, hword_numpart, hword_asciipart\n\tWITH ispell, english_stem"}
+{"sql":"SELECT to_tsvector('ispell_tst', 'Booking the skies after rebookings for footballklubber from a foot')","shape":"SELECT to_tsvector('ispell_tst', 'Booking the skies after rebookings for footballklubber from a foot');"}
+{"sql":"SELECT to_tsquery('ispell_tst', 'footballklubber')","shape":"SELECT to_tsquery('ispell_tst', 'footballklubber');"}
+{"sql":"SELECT to_tsquery('ispell_tst', 'footballyklubber:b & rebookings:A & sky')","shape":"SELECT to_tsquery('ispell_tst', 'footballyklubber:b & rebookings:A & sky');"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION hunspell_tst (\n\t\t\t\t\t\tCOPY=ispell_tst\n)"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION hunspell_tst ALTER MAPPING\n\tREPLACE ispell WITH hunspell"}
+{"sql":"SELECT to_tsvector('hunspell_tst', 'Booking the skies after rebookings for footballklubber from a foot')","shape":"SELECT to_tsvector('hunspell_tst', 'Booking the skies after rebookings for footballklubber from a foot');"}
+{"sql":"SELECT to_tsquery('hunspell_tst', 'footballklubber')","shape":"SELECT to_tsquery('hunspell_tst', 'footballklubber');"}
+{"sql":"SELECT to_tsquery('hunspell_tst', 'footballyklubber:b & rebookings:A & sky')","shape":"SELECT to_tsquery('hunspell_tst', 'footballyklubber:b & rebookings:A & sky');"}
+{"sql":"SELECT to_tsquery('hunspell_tst', 'footballyklubber:b <-> sky')","shape":"SELECT to_tsquery('hunspell_tst', 'footballyklubber:b <-> sky');"}
+{"sql":"SELECT phraseto_tsquery('hunspell_tst', 'footballyklubber sky')","shape":"SELECT phraseto_tsquery('hunspell_tst', 'footballyklubber sky');"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION hunspell_tst ALTER MAPPING\n\tREPLACE hunspell WITH hunspell_long"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION hunspell_tst ALTER MAPPING\n\tREPLACE hunspell_long WITH hunspell_num"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION synonym_tst (\n\t\t\t\t\t\tCOPY=english\n)"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION synonym_tst ALTER MAPPING FOR\n\tasciiword, hword_asciipart, asciihword\n\tWITH synonym, english_stem"}
+{"sql":"SELECT to_tsvector('synonym_tst', 'Postgresql is often called as postgres or pgsql and pronounced as postgre')","shape":"SELECT to_tsvector('synonym_tst', 'Postgresql is often called as postgres or pgsql and pronounced as postgre');"}
+{"sql":"SELECT to_tsvector('synonym_tst', 'Most common mistake is to write Gogle instead of Google')","shape":"SELECT to_tsvector('synonym_tst', 'Most common mistake is to write Gogle instead of Google');"}
+{"sql":"SELECT to_tsvector('synonym_tst', 'Indexes or indices - Which is right plural form of index?')","shape":"SELECT to_tsvector('synonym_tst', 'Indexes or indices - Which is right plural form of index?');"}
+{"sql":"SELECT to_tsquery('synonym_tst', 'Index & indices')","shape":"SELECT to_tsquery('synonym_tst', 'Index & indices');"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION thesaurus_tst (\n\t\t\t\t\t\tCOPY=synonym_tst\n)"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION thesaurus_tst ALTER MAPPING FOR\n\tasciiword, hword_asciipart, asciihword\n\tWITH synonym, thesaurus, english_stem"}
+{"sql":"SELECT to_tsvector('thesaurus_tst', 'one postgres one two one two three one')","shape":"SELECT to_tsvector('thesaurus_tst', 'one postgres one two one two three one');"}
+{"sql":"SELECT to_tsvector('thesaurus_tst', 'Supernovae star is very new star and usually called supernovae (abbreviation SN)')","shape":"SELECT to_tsvector('thesaurus_tst', 'Supernovae star is very new star and usually called supernovae (abbreviation SN)');"}
+{"sql":"SELECT to_tsvector('thesaurus_tst', 'Booking tickets is looking like a booking a tickets')","shape":"SELECT to_tsvector('thesaurus_tst', 'Booking tickets is looking like a booking a tickets');"}
+{"sql":"CREATE TEXT SEARCH DICTIONARY tsdict_case\n(\n\tTemplate = ispell,\n\t\"DictFile\" = ispell_sample,\n\t\"AffFile\" = ispell_sample\n)"}
+{"sql":"CREATE TEXT SEARCH CONFIGURATION dummy_tst (COPY=english)"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  ALTER MAPPING FOR word, word WITH ispell"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  DROP MAPPING FOR not_a_token, not_a_token"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  DROP MAPPING IF EXISTS FOR not_a_token, not_a_token"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  DROP MAPPING FOR word, word"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  DROP MAPPING FOR word"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  DROP MAPPING IF EXISTS FOR word, word"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  ADD MAPPING FOR word, word WITH ispell"}
+{"sql":"ALTER TEXT SEARCH CONFIGURATION dummy_tst\n  ADD MAPPING FOR not_a_token WITH ispell"}
+{"sql":"DROP TEXT SEARCH CONFIGURATION dummy_tst"}

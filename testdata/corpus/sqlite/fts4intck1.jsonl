@@ -1,0 +1,8 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c TEXT AS (slang(b)))"}
+{"sql":"INSERT INTO t1(b) VALUES('the quick fox jumps over the lazy brown dog')"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(content=\"t1\", c)"}
+{"sql":"INSERT INTO t2(t2) VALUES('rebuild')"}
+{"sql":"SELECT docid FROM t2 WHERE t2 MATCH 'deh'"}
+{"sql":"PRAGMA integrity_check(t2)"}
+{"sql":"INSERT INTO x1 VALUES('one', 'two')"}
+{"sql":"INSERT INTO x1 VALUES('three', 'four')"}

@@ -1,0 +1,37 @@
+{"sql":"INSERT INTO t3 VALUES(1,1)"}
+{"sql":"INSERT INTO t3 VALUES(3,27)"}
+{"sql":"INSERT INTO t3 VALUES(5,125)"}
+{"sql":"INSERT INTO t3 VALUES(7,343)"}
+{"sql":"SELECT a FROM t1\n     WHERE b IN (SELECT x+1 FROM (SELECT DISTINCT f/(a*a) AS x FROM t3))"}
+{"sql":"SELECT a FROM t1\n     WHERE +b=(SELECT x+1 FROM (SELECT DISTINCT f/(a*a) AS x FROM t3))"}
+{"sql":"SELECT a FROM t1\n     WHERE b=(SELECT x+1 FROM (SELECT DISTINCT f/(a*a) AS x FROM t3))"}
+{"sql":"SELECT a FROM t1\n     WHERE +b=(SELECT x+1 FROM \n                 (SELECT DISTINCT f/d AS x FROM t2 JOIN t3 ON d*a=f))"}
+{"sql":"SELECT a FROM t1\n     WHERE b=(SELECT x+1 FROM \n                 (SELECT DISTINCT f/d AS x FROM t2 JOIN t3 ON d*a=f))"}
+{"sql":"INSERT INTO t5 VALUES(3, 5)"}
+{"sql":"INSERT INTO t4 VALUES(1, 1)"}
+{"sql":"INSERT INTO t4 VALUES(2, 3)"}
+{"sql":"INSERT INTO t4 VALUES(3, 6)"}
+{"sql":"INSERT INTO t4 VALUES(4, 10)"}
+{"sql":"INSERT INTO t4 VALUES(5, 15)"}
+{"sql":"SELECT * \n  FROM (SELECT * FROM t4 ORDER BY a LIMIT -1 OFFSET 1) \n  LIMIT (SELECT a FROM t5)"}
+{"sql":"CREATE TABLE t1 (id INTEGER PRIMARY KEY, data TEXT)"}
+{"sql":"INSERT INTO t1(id,data) VALUES(9,'nine-a')"}
+{"sql":"INSERT INTO t1(id,data) VALUES(10,'ten-a')"}
+{"sql":"INSERT INTO t1(id,data) VALUES(11,'eleven-a')"}
+{"sql":"CREATE TABLE t2 (id INTEGER PRIMARY KEY, data TEXT)"}
+{"sql":"INSERT INTO t2(id,data) VALUES(9,'nine-b')"}
+{"sql":"INSERT INTO t2(id,data) VALUES(10,'ten-b')"}
+{"sql":"INSERT INTO t2(id,data) VALUES(11,'eleven-b')"}
+{"sql":"SELECT id FROM (\n    SELECT id,data FROM (\n       SELECT * FROM t1 UNION ALL SELECT * FROM t2\n    )\n    WHERE id=10 ORDER BY data\n  )"}
+{"sql":"SELECT data FROM (\n     SELECT 'dummy', data FROM (\n       SELECT data FROM t1 UNION ALL SELECT data FROM t1\n     ) ORDER BY data\n  )"}
+{"sql":"CREATE TABLE t3(id INTEGER, data TEXT)"}
+{"sql":"CREATE TABLE t4(id INTEGER, data TEXT)"}
+{"sql":"INSERT INTO t3 VALUES(4, 'a'),(2,'c')"}
+{"sql":"INSERT INTO t4 VALUES(3, 'b'),(1,'d')"}
+{"sql":"SELECT data, id FROM (\n    SELECT id, data FROM (\n       SELECT * FROM t3 UNION ALL SELECT * FROM t4\n    ) ORDER BY data\n  )"}
+{"sql":"INSERT INTO t1 VALUES('ALFKI')"}
+{"sql":"INSERT INTO t1 VALUES('ANATR')"}
+{"sql":"CREATE INDEX t2y ON t2 (y)"}
+{"sql":"INSERT INTO t2 VALUES('ANATR', '1997-08-08 00:00:00')"}
+{"sql":"INSERT INTO t2 VALUES('ALFKI', '1997-08-25 00:00:00')"}
+{"sql":"SELECT ( SELECT y FROM t2 WHERE x = y ORDER BY y, z) FROM t1"}

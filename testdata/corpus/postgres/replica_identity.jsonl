@@ -1,0 +1,45 @@
+{"sql":"CREATE TABLE test_replica_identity (\n       id serial primary key,\n       keya text not null,\n       keyb text not null,\n       nonkey text,\n       CONSTRAINT test_replica_identity_unique_defer UNIQUE (keya, keyb) DEFERRABLE,\n       CONSTRAINT test_replica_identity_unique_nondefer UNIQUE (keya, keyb)\n)","shape":"CREATE TABLE test_replica_identity (id serial PRIMARY KEY, keya text NOT NULL, keyb text NOT NULL, nonkey text, CONSTRAINT test_replica_identity_unique_defer UNIQUE (keya, keyb) DEFERRABLE, CONSTRAINT test_replica_identity_unique_nondefer UNIQUE (keya, keyb));"}
+{"sql":"CREATE TABLE test_replica_identity_othertable (id serial primary key)","shape":"CREATE TABLE test_replica_identity_othertable (id serial PRIMARY KEY);"}
+{"sql":"CREATE INDEX test_replica_identity_keyab ON test_replica_identity (keya, keyb)","shape":"CREATE INDEX test_replica_identity_keyab ON test_replica_identity (keya, keyb);"}
+{"sql":"CREATE UNIQUE INDEX test_replica_identity_keyab_key ON test_replica_identity (keya, keyb)","shape":"CREATE UNIQUE INDEX test_replica_identity_keyab_key ON test_replica_identity (keya, keyb);"}
+{"sql":"CREATE UNIQUE INDEX test_replica_identity_nonkey ON test_replica_identity (keya, nonkey)","shape":"CREATE UNIQUE INDEX test_replica_identity_nonkey ON test_replica_identity (keya, nonkey);"}
+{"sql":"CREATE INDEX test_replica_identity_hash ON test_replica_identity USING hash (nonkey)","shape":"CREATE INDEX test_replica_identity_hash ON test_replica_identity USING hash (nonkey);"}
+{"sql":"CREATE UNIQUE INDEX test_replica_identity_expr ON test_replica_identity (keya, keyb, (3))","shape":"CREATE UNIQUE INDEX test_replica_identity_expr ON test_replica_identity (keya, keyb, (3));"}
+{"sql":"CREATE UNIQUE INDEX test_replica_identity_partial ON test_replica_identity (keya, keyb) WHERE keyb != '3'","shape":"CREATE UNIQUE INDEX test_replica_identity_partial ON test_replica_identity (keya, keyb) WHERE keyb != '3';"}
+{"sql":"SELECT relreplident FROM pg_class WHERE oid = 'test_replica_identity'::regclass","shape":"SELECT relreplident FROM pg_class WHERE oid = 'test_replica_identity'::regclass;"}
+{"sql":"SELECT relreplident FROM pg_class WHERE oid = 'pg_class'::regclass","shape":"SELECT relreplident FROM pg_class WHERE oid = 'pg_class'::regclass;"}
+{"sql":"SELECT relreplident FROM pg_class WHERE oid = 'pg_constraint'::regclass","shape":"SELECT relreplident FROM pg_class WHERE oid = 'pg_constraint'::regclass;"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_keyab"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_nonkey"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_hash"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_expr"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_partial"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_othertable_pkey"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_unique_defer"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_pkey"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_unique_nondefer"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY USING INDEX test_replica_identity_keyab_key"}
+{"sql":"SELECT count(*) FROM pg_index WHERE indrelid = 'test_replica_identity'::regclass AND indisreplident","shape":"SELECT count(*) FROM pg_index WHERE (indrelid = 'test_replica_identity'::regclass) AND indisreplident;"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY DEFAULT"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY FULL"}
+{"sql":"ALTER TABLE test_replica_identity REPLICA IDENTITY NOTHING"}
+{"sql":"CREATE TABLE test_replica_identity2 (id int UNIQUE NOT NULL)","shape":"CREATE TABLE test_replica_identity2 (id int UNIQUE NOT NULL);"}
+{"sql":"ALTER TABLE test_replica_identity2 REPLICA IDENTITY USING INDEX test_replica_identity2_id_key"}
+{"sql":"ALTER TABLE test_replica_identity2 ALTER COLUMN id TYPE bigint","shape":"ALTER TABLE test_replica_identity2 ALTER COLUMN id SET DATA TYPE bigint;"}
+{"sql":"CREATE TABLE test_replica_identity3 (id int NOT NULL)","shape":"CREATE TABLE test_replica_identity3 (id int NOT NULL);"}
+{"sql":"CREATE UNIQUE INDEX test_replica_identity3_id_key ON test_replica_identity3 (id)","shape":"CREATE UNIQUE INDEX test_replica_identity3_id_key ON test_replica_identity3 (id);"}
+{"sql":"ALTER TABLE test_replica_identity3 REPLICA IDENTITY USING INDEX test_replica_identity3_id_key"}
+{"sql":"ALTER TABLE test_replica_identity3 ALTER COLUMN id TYPE bigint","shape":"ALTER TABLE test_replica_identity3 ALTER COLUMN id SET DATA TYPE bigint;"}
+{"sql":"ALTER TABLE test_replica_identity3 ALTER COLUMN id DROP NOT NULL","shape":"ALTER TABLE test_replica_identity3 ALTER COLUMN id DROP NOT NULL;"}
+{"sql":"CREATE TABLE test_replica_identity4(id integer NOT NULL) PARTITION BY LIST (id)","shape":"CREATE TABLE test_replica_identity4 (id integer NOT NULL) PARTITION BY LIST (id);"}
+{"sql":"CREATE TABLE test_replica_identity4_1(id integer NOT NULL)","shape":"CREATE TABLE test_replica_identity4_1 (id integer NOT NULL);"}
+{"sql":"ALTER TABLE ONLY test_replica_identity4\n  ATTACH PARTITION test_replica_identity4_1 FOR VALUES IN (1)"}
+{"sql":"ALTER TABLE ONLY test_replica_identity4\n  ADD CONSTRAINT test_replica_identity4_pkey PRIMARY KEY (id)","shape":"ALTER TABLE ONLY test_replica_identity4 ADD CONSTRAINT test_replica_identity4_pkey PRIMARY KEY (id);"}
+{"sql":"ALTER TABLE ONLY test_replica_identity4\n  REPLICA IDENTITY USING INDEX test_replica_identity4_pkey"}
+{"sql":"ALTER TABLE ONLY test_replica_identity4_1\n  ADD CONSTRAINT test_replica_identity4_1_pkey PRIMARY KEY (id)","shape":"ALTER TABLE ONLY test_replica_identity4_1 ADD CONSTRAINT test_replica_identity4_1_pkey PRIMARY KEY (id);"}
+{"sql":"ALTER INDEX test_replica_identity4_pkey\n  ATTACH PARTITION test_replica_identity4_1_pkey"}
+{"sql":"DROP TABLE test_replica_identity","shape":"DROP TABLE test_replica_identity;"}
+{"sql":"DROP TABLE test_replica_identity2","shape":"DROP TABLE test_replica_identity2;"}
+{"sql":"DROP TABLE test_replica_identity3","shape":"DROP TABLE test_replica_identity3;"}
+{"sql":"DROP TABLE test_replica_identity4","shape":"DROP TABLE test_replica_identity4;"}
+{"sql":"DROP TABLE test_replica_identity_othertable","shape":"DROP TABLE test_replica_identity_othertable;"}

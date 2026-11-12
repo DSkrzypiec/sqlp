@@ -1,0 +1,11 @@
+{"sql":"SELECT docid FROM t1 ORDER BY docid"}
+{"sql":"SELECT docid FROM t1 WHERE c LIKE '%test' ORDER BY docid"}
+{"sql":"SELECT docid FROM t1 WHERE c LIKE 'That%' ORDER BY docid"}
+{"sql":"SELECT docid FROM t1 WHERE docid in (1, 2, 10)"}
+{"sql":"SELECT rowid FROM t1 WHERE rowid in (1, 2, 10)"}
+{"sql":"SELECT docid, weight FROM t1, t2 WHERE t2.id = t1.docid ORDER BY weight"}
+{"sql":"SELECT t1.rowid, weight FROM t1, t2 WHERE t2.id = t1.rowid ORDER BY weight"}
+{"sql":"SELECT docid, weight FROM t1, t2\n           WHERE t2.weight>5 AND t2.id = t1.docid ORDER BY weight"}
+{"sql":"SELECT t1.rowid, weight FROM t1, t2\n           WHERE t2.weight>5 AND t2.id = t1.rowid ORDER BY weight"}
+{"sql":"SELECT docid FROM t1 WHERE t1 MATCH 'this' ORDER BY docid"}
+{"sql":"SELECT docid, weight FROM t1, t2\n     WHERE t1 MATCH 'this' AND t1.docid = t2.id ORDER BY weight"}

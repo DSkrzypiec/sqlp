@@ -1,0 +1,4 @@
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b) WITHOUT ROWID"}
+{"sql":"INSERT OR REPLACE INTO t1 VALUES(2, 'three')"}
+{"sql":"UPDATE OR REPLACE t1 SET a=3 WHERE a=2"}
+{"sql":"SELECT * FROM log ORDER BY rowid"}

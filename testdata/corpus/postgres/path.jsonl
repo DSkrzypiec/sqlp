@@ -1,0 +1,23 @@
+{"sql":"CREATE TABLE PATH_TBL (f1 path)","shape":"CREATE TABLE PATH_TBL (f1 path);"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('[(1,2),(3,4)]')","shape":"INSERT INTO PATH_TBL VALUES ('[(1,2),(3,4)]');"}
+{"sql":"INSERT INTO PATH_TBL VALUES (' ( ( 1 , 2 ) , ( 3 , 4 ) ) ')","shape":"INSERT INTO PATH_TBL VALUES (' ( ( 1 , 2 ) , ( 3 , 4 ) ) ');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('[ (0,0),(3,0),(4,5),(1,6) ]')","shape":"INSERT INTO PATH_TBL VALUES ('[ (0,0),(3,0),(4,5),(1,6) ]');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('((1,2) ,(3,4 ))')","shape":"INSERT INTO PATH_TBL VALUES ('((1,2) ,(3,4 ))');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('1,2 ,3,4 ')","shape":"INSERT INTO PATH_TBL VALUES ('1,2 ,3,4 ');"}
+{"sql":"INSERT INTO PATH_TBL VALUES (' [1,2,3, 4] ')","shape":"INSERT INTO PATH_TBL VALUES (' [1,2,3, 4] ');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('((10,20))')","shape":"INSERT INTO PATH_TBL VALUES ('((10,20))');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('[ 11,12,13,14 ]')","shape":"INSERT INTO PATH_TBL VALUES ('[ 11,12,13,14 ]');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('( 11,12,13,14) ')","shape":"INSERT INTO PATH_TBL VALUES ('( 11,12,13,14) ');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('[]')","shape":"INSERT INTO PATH_TBL VALUES ('[]');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('[(,2),(3,4)]')","shape":"INSERT INTO PATH_TBL VALUES ('[(,2),(3,4)]');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('[(1,2),(3,4)')","shape":"INSERT INTO PATH_TBL VALUES ('[(1,2),(3,4)');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('(1,2,3,4')","shape":"INSERT INTO PATH_TBL VALUES ('(1,2,3,4');"}
+{"sql":"INSERT INTO PATH_TBL VALUES ('(1,2),(3,4)]')","shape":"INSERT INTO PATH_TBL VALUES ('(1,2),(3,4)]');"}
+{"sql":"SELECT f1 AS open_path FROM PATH_TBL WHERE isopen(f1)","shape":"SELECT f1 AS open_path FROM PATH_TBL WHERE isopen(f1);"}
+{"sql":"SELECT f1 AS closed_path FROM PATH_TBL WHERE isclosed(f1)","shape":"SELECT f1 AS closed_path FROM PATH_TBL WHERE isclosed(f1);"}
+{"sql":"SELECT pclose(f1) AS closed_path FROM PATH_TBL","shape":"SELECT pclose(f1) AS closed_path FROM PATH_TBL;"}
+{"sql":"SELECT popen(f1) AS open_path FROM PATH_TBL","shape":"SELECT popen(f1) AS open_path FROM PATH_TBL;"}
+{"sql":"SELECT pg_input_is_valid('[(1,2),(3)]', 'path')","shape":"SELECT pg_input_is_valid('[(1,2),(3)]', 'path');"}
+{"sql":"SELECT * FROM pg_input_error_info('[(1,2),(3)]', 'path')","shape":"SELECT * FROM pg_input_error_info('[(1,2),(3)]', 'path');"}
+{"sql":"SELECT pg_input_is_valid('[(1,2,6),(3,4,6)]', 'path')","shape":"SELECT pg_input_is_valid('[(1,2,6),(3,4,6)]', 'path');"}
+{"sql":"SELECT * FROM pg_input_error_info('[(1,2,6),(3,4,6)]', 'path')","shape":"SELECT * FROM pg_input_error_info('[(1,2,6),(3,4,6)]', 'path');"}

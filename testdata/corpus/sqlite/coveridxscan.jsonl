@@ -1,0 +1,2 @@
+{"sql":"SELECT * FROM t1 ORDER BY c1, c2"}
+{"sql":"SELECT * FROM t2 ORDER BY c1, c2"}

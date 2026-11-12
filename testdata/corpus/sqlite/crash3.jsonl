@@ -1,0 +1,5 @@
+{"sql":"CREATE TABLE abc(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE TABLE def(d PRIMARY KEY, e, f)"}
+{"sql":"PRAGMA default_cache_size = 10"}
+{"sql":"INSERT INTO abc VALUES(randstr(10,1000),randstr(10,1000),randstr(10,1000))"}
+{"sql":"INSERT INTO abc \n      SELECT randstr(10,1000),randstr(10,1000),randstr(10,1000) FROM abc"}

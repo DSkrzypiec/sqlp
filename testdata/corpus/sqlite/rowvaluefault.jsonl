@@ -1,0 +1,14 @@
+{"sql":"CREATE TABLE xyz(one, two, thr, fou)"}
+{"sql":"INSERT INTO xyz VALUES('A', 'A', 'A',  1)"}
+{"sql":"INSERT INTO xyz VALUES('B', 'B', 'B',  2)"}
+{"sql":"INSERT INTO xyz VALUES('C', 'C', 'C',  3)"}
+{"sql":"INSERT INTO xyz VALUES('D', 'D', 'D',  4)"}
+{"sql":"CREATE UNIQUE INDEX xyz_one_two ON xyz(one, two)"}
+{"sql":"SELECT fou FROM xyz WHERE (one, two, thr) = ('B', 'B', 'B')"}
+{"sql":"SELECT fou FROM xyz WHERE (two, thr) IS ('C', 'C')"}
+{"sql":"SELECT fou FROM xyz WHERE (one, two, thr) > ('B', 'B', 'B')"}
+{"sql":"SELECT fou FROM xyz WHERE (one, two) IN (SELECT one, two FROM xyz)"}
+{"sql":"SELECT fou FROM xyz \n    WHERE (one, two, thr) IN (SELECT one, two, thr FROM xyz)"}
+{"sql":"SELECT fou FROM xyz \n    WHERE (one, two, thr) BETWEEN ('B', 'B', 'B') AND ('C', 'C', 'C')"}
+{"sql":"SELECT fou FROM xyz \n    WHERE (one, two, thr) IN ( ('a','b','c'), ('A','A','A'), (1,2,3) )"}
+{"sql":"SELECT fou FROM xyz \n    WHERE (two, one) IN ( ('a','b','c'), ('A','A','A'), (1,2,3) )"}

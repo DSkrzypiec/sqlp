@@ -1,0 +1,4 @@
+{"sql":"PRAGMA main.synchronous = NORMAL"}
+{"sql":"PRAGMA main.synchronous"}
+{"sql":"PRAGMA main.synchronous = OFF"}
+{"sql":"PRAGMA main.synchronous = FULL"}

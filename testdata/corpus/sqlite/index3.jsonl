@@ -1,0 +1,14 @@
+{"sql":"CREATE TABLE t1(a, b, c, d, e, \n                  PRIMARY KEY('a'), UNIQUE('b' COLLATE nocase DESC))"}
+{"sql":"CREATE INDEX t1c ON t1('c')"}
+{"sql":"CREATE INDEX t1d ON t1('d' COLLATE binary ASC)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION SELECT x+1 FROM c WHERE x<30)\n    INSERT INTO t1(a,b,c,d,e) \n      SELECT x, printf('ab%03xxy',x), x, x, x FROM c"}
+{"sql":"SELECT a FROM t1 WHERE b='ab005xy' COLLATE nocase"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT a FROM t1 WHERE b='ab005xy' COLLATE nocase"}
+{"sql":"SELECT name FROM sqlite_master WHERE tbl_name='t1' ORDER BY name"}
+{"sql":"CREATE TABLE t2a(a integer, b, PRIMARY KEY(a))"}
+{"sql":"CREATE TABLE t2b(\"a\" integer, b, PRIMARY KEY(\"a\"))"}
+{"sql":"CREATE TABLE t2c([a] integer, b, PRIMARY KEY([a]))"}
+{"sql":"CREATE TABLE t2d('a' integer, b, PRIMARY KEY('a'))"}
+{"sql":"SELECT name FROM sqlite_master WHERE tbl_name LIKE 't2_' ORDER BY name"}
+{"sql":"UPDATE sqlite_master SET sql='nonsense' WHERE name='t1d'"}
+{"sql":"DROP INDEX t1c"}

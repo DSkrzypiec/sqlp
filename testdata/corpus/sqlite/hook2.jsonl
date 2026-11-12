@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b) WITHOUT ROWID"}
+{"sql":"CREATE TABLE t2(a DEFAULT 4, b, c, PRIMARY KEY(b, c)) WITHOUT ROWID"}
+{"sql":"CREATE UNIQUE INDEX t2a ON t2(a)"}
+{"sql":"CREATE TABLE d1(a DEFAULT 4, b, c, PRIMARY KEY(b, c)) WITHOUT ROWID"}
+{"sql":"CREATE UNIQUE INDEX d1a ON d1(a)"}
+{"sql":"INSERT INTO d1 VALUES(11, 12, 13)"}
+{"sql":"SELECT * FROM t2 ORDER BY b, c"}
+{"sql":"SELECT * FROM t2 ORDER BY b,c"}
+{"sql":"CREATE TABLE t3(x, y PRIMARY KEY, z UNIQUE) WITHOUT ROWID"}
+{"sql":"INSERT INTO t3 VALUES('a', 'b', 'c')"}
+{"sql":"INSERT INTO t3 VALUES('d', 'e', 'f')"}

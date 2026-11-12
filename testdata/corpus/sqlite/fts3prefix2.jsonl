@@ -1,0 +1,5 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(x, prefix=\"2,3\")"}
+{"sql":"INSERT INTO t1 VALUES('T TX T TX T TX T TX T TX')"}
+{"sql":"INSERT INTO t1 SELECT * FROM t1 LIMIT 10"}
+{"sql":"DELETE FROM t1 WHERE docid > 5"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'T*'"}

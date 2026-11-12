@@ -1,0 +1,18 @@
+{"sql":"SELECT test_getsubtype('hello')"}
+{"sql":"SELECT test_getsubtype(test_setsubtype('hello',123))"}
+{"sql":"SELECT typeof(test_setsubtype('hello',123))"}
+{"sql":"SELECT test_setsubtype('hello',123)"}
+{"sql":"INSERT INTO t1 VALUES ('x')"}
+{"sql":"CREATE VIEW t2(b) AS SELECT json(TRUE)"}
+{"sql":"CREATE TABLE t3(b)"}
+{"sql":"INSERT INTO t3 VALUES(json(TRUE))"}
+{"sql":"SELECT * FROM t3, t1 WHERE NOT json_quote(b)"}
+{"sql":"SELECT * FROM t2, t1 WHERE NOT json_quote(b)"}
+{"sql":"WITH t4(a) AS MATERIALIZED (SELECT json(1)) SELECT subtype(a) FROM t4"}
+{"sql":"WITH t4(a) AS NOT MATERIALIZED (SELECT json(1)) SELECT subtype(a) FROM t4"}
+{"sql":"INSERT INTO t0 VALUES ('1')"}
+{"sql":"CREATE VIEW v0(c0) AS SELECT CASE WHEN 1 THEN json_patch('1', '1') END \n                        FROM t0 GROUP BY t0.c0"}
+{"sql":"SELECT * FROM v0 WHERE json_quote(v0.c0) != '1'"}
+{"sql":"SELECT *, json_quote(y) FROM (SELECT +json('1') AS y)"}
+{"sql":"SELECT *, json_quote(y) FROM (SELECT +json('1') AS y)\n   WHERE json_quote(y)='\"1\"'"}
+{"sql":"WITH t400(id,j) AS (VALUES\n    (1,'{a:{x:1,y:2},b:{x:3,y:4}}'),\n    (2,'not json')\n  )\n  SELECT id, subtype(if(json_valid(j,6),j->'a')) FROM t400"}

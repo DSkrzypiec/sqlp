@@ -1,0 +1,31 @@
+{"sql":"CREATE TABLE PG_LSN_TBL (f1 pg_lsn)","shape":"CREATE TABLE PG_LSN_TBL (f1 pg_lsn);"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES ('0/0')","shape":"INSERT INTO PG_LSN_TBL VALUES ('0/0');"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES ('FFFFFFFF/FFFFFFFF')","shape":"INSERT INTO PG_LSN_TBL VALUES ('FFFFFFFF/FFFFFFFF');"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES ('G/0')","shape":"INSERT INTO PG_LSN_TBL VALUES ('G/0');"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES ('-1/0')","shape":"INSERT INTO PG_LSN_TBL VALUES ('-1/0');"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES (' 0/12345678')","shape":"INSERT INTO PG_LSN_TBL VALUES (' 0/12345678');"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES ('ABCD/')","shape":"INSERT INTO PG_LSN_TBL VALUES ('ABCD/');"}
+{"sql":"INSERT INTO PG_LSN_TBL VALUES ('/ABCD')","shape":"INSERT INTO PG_LSN_TBL VALUES ('/ABCD');"}
+{"sql":"SELECT pg_input_is_valid('16AE7F7', 'pg_lsn')","shape":"SELECT pg_input_is_valid('16AE7F7', 'pg_lsn');"}
+{"sql":"SELECT * FROM pg_input_error_info('16AE7F7', 'pg_lsn')","shape":"SELECT * FROM pg_input_error_info('16AE7F7', 'pg_lsn');"}
+{"sql":"SELECT MIN(f1), MAX(f1) FROM PG_LSN_TBL","shape":"SELECT MIN(f1), MAX(f1) FROM PG_LSN_TBL;"}
+{"sql":"DROP TABLE PG_LSN_TBL","shape":"DROP TABLE PG_LSN_TBL;"}
+{"sql":"SELECT '0/16AE7F8' = '0/16AE7F8'::pg_lsn","shape":"SELECT '0/16AE7F8' = '0/16AE7F8'::pg_lsn;"}
+{"sql":"SELECT '0/16AE7F8'::pg_lsn != '0/16AE7F7'","shape":"SELECT '0/16AE7F8'::pg_lsn != '0/16AE7F7';"}
+{"sql":"SELECT '0/16AE7F7' < '0/16AE7F8'::pg_lsn","shape":"SELECT '0/16AE7F7' < '0/16AE7F8'::pg_lsn;"}
+{"sql":"SELECT '0/16AE7F8' > pg_lsn '0/16AE7F7'","shape":"SELECT '0/16AE7F8' > pg_lsn '0/16AE7F7';"}
+{"sql":"SELECT '0/16AE7F7'::pg_lsn - '0/16AE7F8'::pg_lsn","shape":"SELECT '0/16AE7F7'::pg_lsn - '0/16AE7F8'::pg_lsn;"}
+{"sql":"SELECT '0/16AE7F8'::pg_lsn - '0/16AE7F7'::pg_lsn","shape":"SELECT '0/16AE7F8'::pg_lsn - '0/16AE7F7'::pg_lsn;"}
+{"sql":"SELECT '0/16AE7F7'::pg_lsn + 16::numeric","shape":"SELECT '0/16AE7F7'::pg_lsn + 16::numeric;"}
+{"sql":"SELECT 16::numeric + '0/16AE7F7'::pg_lsn","shape":"SELECT 16::numeric + '0/16AE7F7'::pg_lsn;"}
+{"sql":"SELECT '0/16AE7F7'::pg_lsn - 16::numeric","shape":"SELECT '0/16AE7F7'::pg_lsn - 16::numeric;"}
+{"sql":"SELECT 'FFFFFFFF/FFFFFFFE'::pg_lsn + 1::numeric","shape":"SELECT 'FFFFFFFF/FFFFFFFE'::pg_lsn + 1::numeric;"}
+{"sql":"SELECT 'FFFFFFFF/FFFFFFFE'::pg_lsn + 2::numeric","shape":"SELECT 'FFFFFFFF/FFFFFFFE'::pg_lsn + 2::numeric;"}
+{"sql":"SELECT '0/1'::pg_lsn - 1::numeric","shape":"SELECT '0/1'::pg_lsn - 1::numeric;"}
+{"sql":"SELECT '0/1'::pg_lsn - 2::numeric","shape":"SELECT '0/1'::pg_lsn - 2::numeric;"}
+{"sql":"SELECT '0/0'::pg_lsn + ('FFFFFFFF/FFFFFFFF'::pg_lsn - '0/0'::pg_lsn)","shape":"SELECT '0/0'::pg_lsn + ('FFFFFFFF/FFFFFFFF'::pg_lsn - '0/0'::pg_lsn);"}
+{"sql":"SELECT 'FFFFFFFF/FFFFFFFF'::pg_lsn - ('FFFFFFFF/FFFFFFFF'::pg_lsn - '0/0'::pg_lsn)","shape":"SELECT 'FFFFFFFF/FFFFFFFF'::pg_lsn - ('FFFFFFFF/FFFFFFFF'::pg_lsn - '0/0'::pg_lsn);"}
+{"sql":"SELECT '0/16AE7F7'::pg_lsn + 'NaN'::numeric","shape":"SELECT '0/16AE7F7'::pg_lsn + 'NaN'::numeric;"}
+{"sql":"SELECT '0/16AE7F7'::pg_lsn - 'NaN'::numeric","shape":"SELECT '0/16AE7F7'::pg_lsn - 'NaN'::numeric;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT DISTINCT (i || '/' || j)::pg_lsn f\n  FROM generate_series(1, 10) i,\n       generate_series(1, 10) j,\n       generate_series(1, 5) k\n  WHERE i <= 10 AND j > 0 AND j <= 10\n  ORDER BY f","shape":"EXPLAIN (COSTS OFF) SELECT DISTINCT ((i || '/') || j)::pg_lsn AS f FROM generate_series(1, 10) AS i, generate_series(1, 10) AS j, generate_series(1, 5) AS k WHERE ((i <= 10) AND (j > 0)) AND (j <= 10) ORDER BY f;"}
+{"sql":"SELECT DISTINCT (i || '/' || j)::pg_lsn f\n  FROM generate_series(1, 10) i,\n       generate_series(1, 10) j,\n       generate_series(1, 5) k\n  WHERE i <= 10 AND j > 0 AND j <= 10\n  ORDER BY f","shape":"SELECT DISTINCT ((i || '/') || j)::pg_lsn AS f FROM generate_series(1, 10) AS i, generate_series(1, 10) AS j, generate_series(1, 5) AS k WHERE ((i <= 10) AND (j > 0)) AND (j <= 10) ORDER BY f;"}

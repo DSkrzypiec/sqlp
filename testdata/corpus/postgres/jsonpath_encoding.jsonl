@@ -1,0 +1,30 @@
+{"sql":"SELECT '\"\\u\"'::jsonpath","shape":"SELECT '\"\\u\"'::jsonpath;"}
+{"sql":"SELECT '\"\\u00\"'::jsonpath","shape":"SELECT '\"\\u00\"'::jsonpath;"}
+{"sql":"SELECT '\"\\u000g\"'::jsonpath","shape":"SELECT '\"\\u000g\"'::jsonpath;"}
+{"sql":"SELECT '\"\\u0000\"'::jsonpath","shape":"SELECT '\"\\u0000\"'::jsonpath;"}
+{"sql":"SELECT '\"\\uaBcD\"'::jsonpath","shape":"SELECT '\"\\uaBcD\"'::jsonpath;"}
+{"sql":"select '\"\\ud83d\\ude04\\ud83d\\udc36\"'::jsonpath as correct_in_utf8","shape":"SELECT '\"\\ud83d\\ude04\\ud83d\\udc36\"'::jsonpath AS correct_in_utf8;"}
+{"sql":"select '\"\\ud83d\\ud83d\"'::jsonpath","shape":"SELECT '\"\\ud83d\\ud83d\"'::jsonpath;"}
+{"sql":"select '\"\\ude04\\ud83d\"'::jsonpath","shape":"SELECT '\"\\ude04\\ud83d\"'::jsonpath;"}
+{"sql":"select '\"\\ud83dX\"'::jsonpath","shape":"SELECT '\"\\ud83dX\"'::jsonpath;"}
+{"sql":"select '\"\\ude04X\"'::jsonpath","shape":"SELECT '\"\\ude04X\"'::jsonpath;"}
+{"sql":"select '\"the Copyright \\u00a9 sign\"'::jsonpath as correct_in_utf8","shape":"SELECT '\"the Copyright \\u00a9 sign\"'::jsonpath AS correct_in_utf8;"}
+{"sql":"select '\"dollar \\u0024 character\"'::jsonpath as correct_everywhere","shape":"SELECT '\"dollar \\u0024 character\"'::jsonpath AS correct_everywhere;"}
+{"sql":"select '\"dollar \\\\u0024 character\"'::jsonpath as not_an_escape","shape":"SELECT '\"dollar \\\\u0024 character\"'::jsonpath AS not_an_escape;"}
+{"sql":"select '\"null \\u0000 escape\"'::jsonpath as not_unescaped","shape":"SELECT '\"null \\u0000 escape\"'::jsonpath AS not_unescaped;"}
+{"sql":"select '\"null \\\\u0000 escape\"'::jsonpath as not_an_escape","shape":"SELECT '\"null \\\\u0000 escape\"'::jsonpath AS not_an_escape;"}
+{"sql":"SELECT '$.\"\\u\"'::jsonpath","shape":"SELECT '$.\"\\u\"'::jsonpath;"}
+{"sql":"SELECT '$.\"\\u00\"'::jsonpath","shape":"SELECT '$.\"\\u00\"'::jsonpath;"}
+{"sql":"SELECT '$.\"\\u000g\"'::jsonpath","shape":"SELECT '$.\"\\u000g\"'::jsonpath;"}
+{"sql":"SELECT '$.\"\\u0000\"'::jsonpath","shape":"SELECT '$.\"\\u0000\"'::jsonpath;"}
+{"sql":"SELECT '$.\"\\uaBcD\"'::jsonpath","shape":"SELECT '$.\"\\uaBcD\"'::jsonpath;"}
+{"sql":"select '$.\"\\ud83d\\ude04\\ud83d\\udc36\"'::jsonpath as correct_in_utf8","shape":"SELECT '$.\"\\ud83d\\ude04\\ud83d\\udc36\"'::jsonpath AS correct_in_utf8;"}
+{"sql":"select '$.\"\\ud83d\\ud83d\"'::jsonpath","shape":"SELECT '$.\"\\ud83d\\ud83d\"'::jsonpath;"}
+{"sql":"select '$.\"\\ude04\\ud83d\"'::jsonpath","shape":"SELECT '$.\"\\ude04\\ud83d\"'::jsonpath;"}
+{"sql":"select '$.\"\\ud83dX\"'::jsonpath","shape":"SELECT '$.\"\\ud83dX\"'::jsonpath;"}
+{"sql":"select '$.\"\\ude04X\"'::jsonpath","shape":"SELECT '$.\"\\ude04X\"'::jsonpath;"}
+{"sql":"select '$.\"the Copyright \\u00a9 sign\"'::jsonpath as correct_in_utf8","shape":"SELECT '$.\"the Copyright \\u00a9 sign\"'::jsonpath AS correct_in_utf8;"}
+{"sql":"select '$.\"dollar \\u0024 character\"'::jsonpath as correct_everywhere","shape":"SELECT '$.\"dollar \\u0024 character\"'::jsonpath AS correct_everywhere;"}
+{"sql":"select '$.\"dollar \\\\u0024 character\"'::jsonpath as not_an_escape","shape":"SELECT '$.\"dollar \\\\u0024 character\"'::jsonpath AS not_an_escape;"}
+{"sql":"select '$.\"null \\u0000 escape\"'::jsonpath as not_unescaped","shape":"SELECT '$.\"null \\u0000 escape\"'::jsonpath AS not_unescaped;"}
+{"sql":"select '$.\"null \\\\u0000 escape\"'::jsonpath as not_an_escape","shape":"SELECT '$.\"null \\\\u0000 escape\"'::jsonpath AS not_an_escape;"}

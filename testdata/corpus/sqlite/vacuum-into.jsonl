@@ -1,0 +1,17 @@
+{"sql":"CREATE TABLE t1(\n    a INTEGER PRIMARY KEY,\n    b ANY,\n    c INT AS (b+1),                          --- See \"2024-04-09\" block\n    CHECK( typeof(b)!='integer' OR b>a-5 )   --- comment below\n  )"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n  INSERT INTO t1(a,b) SELECT x, randomblob(600) FROM c"}
+{"sql":"SELECT count(*), sum(a), sum(length(b)) FROM t1"}
+{"sql":"VACUUM main INTO 'out.db'"}
+{"sql":"VACUUM INTO 'out.db'"}
+{"sql":"VACUUM INTO 'out2.db'"}
+{"sql":"VACUUM main INTO ':memory:'"}
+{"sql":"CREATE TABLE t2(name TEXT)"}
+{"sql":"INSERT INTO t2 VALUES(':memory:')"}
+{"sql":"VACUUM main INTO (SELECT name FROM t2)"}
+{"sql":"VACUUM INTO null"}
+{"sql":"VACUUM INTO x"}
+{"sql":"VACUUM INTO t1.nosuchcol"}
+{"sql":"VACUUM INTO main.t1.nosuchcol"}
+{"sql":"VACUUM INTO target()"}
+{"sql":"VACUUM INTO target2()"}
+{"sql":"VACUUM INTO 'test.db2'"}

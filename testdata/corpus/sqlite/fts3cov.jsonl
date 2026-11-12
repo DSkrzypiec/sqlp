@@ -1,0 +1,62 @@
+{"sql":"INSERT INTO t1 VALUES('Is the night chilly and dark?')"}
+{"sql":"INSERT INTO t1 VALUES('The night is chilly, but not dark.')"}
+{"sql":"INSERT INTO t1 VALUES('The thin gray cloud is spread on high,')"}
+{"sql":"INSERT INTO t1 VALUES('It covers but not hides the sky.')"}
+{"sql":"SELECT count(*)>0 FROM t1_segments"}
+{"sql":"INSERT INTO t1 VALUES('The moon is behind, and at the full;')"}
+{"sql":"INSERT INTO t1 VALUES('And yet she looks both small and dull.')"}
+{"sql":"INSERT INTO t1 VALUES('The night is chill, the cloud is gray:')"}
+{"sql":"INSERT INTO t1 VALUES('''T is a month before the month of May,')"}
+{"sql":"INSERT INTO t1 VALUES('And the Spring comes slowly up this way.')"}
+{"sql":"INSERT INTO t1 VALUES('The lovely lady, Christabel,')"}
+{"sql":"INSERT INTO t1 VALUES('Whom her father loves so well,')"}
+{"sql":"INSERT INTO t1 VALUES('What makes her in the wood so late,')"}
+{"sql":"INSERT INTO t1 VALUES('A furlong from the castle gate?')"}
+{"sql":"INSERT INTO t1 VALUES('She had dreams all yesternight')"}
+{"sql":"INSERT INTO t1 VALUES('Of her own betrothed knight;')"}
+{"sql":"INSERT INTO t1 VALUES('And she in the midnight wood will pray')"}
+{"sql":"INSERT INTO t1 VALUES('For the weal of her lover that''s far away.')"}
+{"sql":"SELECT substr(hex(root), 1, 2) FROM t1_segdir"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts3(x)"}
+{"sql":"INSERT INTO t3(t3) VALUES('nodesize=24')"}
+{"sql":"INSERT INTO t3(t3) VALUES('maxpending=100')"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts3(x)"}
+{"sql":"INSERT INTO t4(t4) VALUES('nodesize=24')"}
+{"sql":"INSERT INTO t4 VALUES('extra!')"}
+{"sql":"INSERT INTO t4 VALUES('more extra!')"}
+{"sql":"CREATE VIRTUAL TABLE t5 USING fts3(x)"}
+{"sql":"SELECT count(*) FROM t5_segdir"}
+{"sql":"CREATE VIRTUAL TABLE t7 USING fts3(a, b, c)"}
+{"sql":"INSERT INTO t7 VALUES('A', 'B', 'C')"}
+{"sql":"UPDATE t7 SET docid = 5"}
+{"sql":"SELECT docid, * FROM t7"}
+{"sql":"INSERT INTO t7 VALUES('D', 'E', 'F')"}
+{"sql":"UPDATE t7 SET docid = 1 WHERE docid = 6"}
+{"sql":"CREATE VIRTUAL TABLE xx USING fts3"}
+{"sql":"INSERT INTO xx(xx) VALUES('optimize')"}
+{"sql":"INSERT INTO xx VALUES('one two three')"}
+{"sql":"INSERT INTO xx VALUES('four five six')"}
+{"sql":"DELETE FROM xx WHERE docid = 1"}
+{"sql":"SELECT * FROM xx WHERE xx MATCH 'two'"}
+{"sql":"CREATE VIRTUAL TABLE t14 USING fts4(a, b)"}
+{"sql":"INSERT INTO t14 VALUES('one two three', 'one three four')"}
+{"sql":"INSERT INTO t14 VALUES('a b c', 'd e a')"}
+{"sql":"SELECT rowid FROM t14 WHERE t14 MATCH '\"one two three\"'"}
+{"sql":"SELECT rowid FROM t14 WHERE t14 MATCH '\"one four\"'"}
+{"sql":"SELECT rowid FROM t14 WHERE t14 MATCH '\"e a\"'"}
+{"sql":"SELECT rowid FROM t14 WHERE t14 MATCH '\"e b\"'"}
+{"sql":"SELECT rowid FROM t14 WHERE rowid MATCH 'one'"}
+{"sql":"SELECT rowid FROM t14 WHERE docid MATCH 'one'"}
+{"sql":"CREATE VIRTUAL TABLE t15 USING fts4(a, b, c)"}
+{"sql":"INSERT INTO t15 VALUES('abc def ghi', 'abc2 def2 ghi2', 'abc3 def3 ghi3')"}
+{"sql":"INSERT INTO t15 VALUES('abc2 def2 ghi2', 'abc2 def2 ghi2', 'abc def3 ghi3')"}
+{"sql":"SELECT rowid FROM t15 WHERE t15 MATCH '\"abc* def2\"'"}
+{"sql":"CREATE VIRTUAL TABLE t16 USING fts4"}
+{"sql":"INSERT INTO t16 VALUES('theoretical work to examine the relationship')"}
+{"sql":"INSERT INTO t16 VALUES('solution of our problems on the invisible')"}
+{"sql":"DELETE FROM t16_content WHERE rowid = 2"}
+{"sql":"SELECT * FROM t16 WHERE t16 MATCH 'invisible'"}
+{"sql":"CREATE VIRTUAL TABLE t17 USING fts4"}
+{"sql":"INSERT INTO t17(content) VALUES('one one one')"}
+{"sql":"UPDATE t17_segdir SET root = X'00036F6E65FFFFFFFFFFFFFFFFFFFFFF02030300'"}
+{"sql":"SELECT * FROM t17 WHERE t17 MATCH 'one'"}

@@ -1,0 +1,3 @@
+{"sql":"PRAGMA locking_mode = EXCLUSIVE"}
+{"sql":"PRAGMA locking_mode = NORMAL"}
+{"sql":"PRAGMA journal_mode = wAL"}

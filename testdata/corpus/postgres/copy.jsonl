@@ -1,0 +1,65 @@
+{"sql":"create temp table copytest (\n\tstyle\ttext,\n\ttest \ttext,\n\tfiller\tint)","shape":"CREATE TEMPORARY TABLE copytest (style text, test text, filler int);"}
+{"sql":"insert into copytest values('DOS',E'abc\\r\\ndef',1)","shape":"INSERT INTO copytest VALUES ('DOS', E'abc\\r\\ndef', 1);"}
+{"sql":"insert into copytest values('Unix',E'abc\\ndef',2)","shape":"INSERT INTO copytest VALUES ('Unix', E'abc\\ndef', 2);"}
+{"sql":"insert into copytest values('Mac',E'abc\\rdef',3)","shape":"INSERT INTO copytest VALUES ('Mac', E'abc\\rdef', 3);"}
+{"sql":"insert into copytest values(E'esc\\\\ape',E'a\\\\r\\\\\\r\\\\\\n\\\\nb',4)","shape":"INSERT INTO copytest VALUES (E'esc\\\\ape', E'a\\\\r\\\\\\r\\\\\\n\\\\nb', 4);"}
+{"sql":"create temp table copytest2 (like copytest)","shape":"CREATE TEMPORARY TABLE copytest2 (LIKE copytest);"}
+{"sql":"select * from copytest except select * from copytest2","shape":"SELECT * FROM copytest EXCEPT SELECT * FROM copytest2;"}
+{"sql":"truncate copytest2","shape":"TRUNCATE TABLE copytest2;"}
+{"sql":"create temp table copytest3 (\n\tc1 int,\n\t\"col with , comma\" text,\n\t\"col with \"\" quote\"  int)","shape":"CREATE TEMPORARY TABLE copytest3 (c1 int, \"col with , comma\" text, \"col with \"\" quote\" int);"}
+{"sql":"copy copytest3 from stdin csv header","shape":"COPY copytest3 FROM STDIN CSV HEADER;"}
+{"sql":"copy copytest3 to stdout csv header","shape":"COPY copytest3 TO STDOUT CSV HEADER;"}
+{"sql":"create temp table copytest4 (\n\tc1 int,\n\t\"colname with tab: \t\" text)","shape":"CREATE TEMPORARY TABLE copytest4 (c1 int, \"colname with tab: \t\" text);"}
+{"sql":"copy copytest4 from stdin (header)","shape":"COPY copytest4 FROM STDIN WITH (HEADER);"}
+{"sql":"copy copytest4 to stdout (header)","shape":"COPY copytest4 TO STDOUT WITH (HEADER);"}
+{"sql":"create table parted_copytest (\n\ta int,\n\tb int,\n\tc text\n) partition by list (b)","shape":"CREATE TABLE parted_copytest (a int, b int, c text) PARTITION BY LIST (b);"}
+{"sql":"create table parted_copytest_a1 (c text, b int, a int)","shape":"CREATE TABLE parted_copytest_a1 (c text, b int, a int);"}
+{"sql":"create table parted_copytest_a2 (a int, c text, b int)","shape":"CREATE TABLE parted_copytest_a2 (a int, c text, b int);"}
+{"sql":"alter table parted_copytest attach partition parted_copytest_a1 for values in(1)"}
+{"sql":"alter table parted_copytest attach partition parted_copytest_a2 for values in(2)"}
+{"sql":"insert into parted_copytest select x,1,'One' from generate_series(1,1000) x","shape":"INSERT INTO parted_copytest SELECT x, 1, 'One' FROM generate_series(1, 1000) AS x;"}
+{"sql":"insert into parted_copytest select x,2,'Two' from generate_series(1001,1010) x","shape":"INSERT INTO parted_copytest SELECT x, 2, 'Two' FROM generate_series(1001, 1010) AS x;"}
+{"sql":"insert into parted_copytest select x,1,'One' from generate_series(1011,1020) x","shape":"INSERT INTO parted_copytest SELECT x, 1, 'One' FROM generate_series(1011, 1020) AS x;"}
+{"sql":"truncate parted_copytest","shape":"TRUNCATE TABLE parted_copytest;"}
+{"sql":"select tableoid::regclass,count(*),sum(a) from parted_copytest\ngroup by tableoid order by tableoid::regclass::name","shape":"SELECT tableoid::regclass, count(*), sum(a) FROM parted_copytest GROUP BY tableoid ORDER BY tableoid::regclass::name;"}
+{"sql":"create function part_ins_func() returns trigger language plpgsql as $$\nbegin\n  return new;\nend;\n$$","shape":"CREATE FUNCTION part_ins_func() RETURNS trigger LANGUAGE plpgsql AS '\nbegin\n  return new;\nend;\n';"}
+{"sql":"create trigger part_ins_trig\n\tbefore insert on parted_copytest_a2\n\tfor each row\n\texecute procedure part_ins_func()","shape":"CREATE TRIGGER part_ins_trig BEFORE INSERT ON parted_copytest_a2 FOR EACH ROW EXECUTE FUNCTION part_ins_func();"}
+{"sql":"truncate table parted_copytest","shape":"TRUNCATE TABLE parted_copytest;"}
+{"sql":"create index on parted_copytest (b)","shape":"CREATE INDEX ON parted_copytest (b);"}
+{"sql":"drop trigger part_ins_trig on parted_copytest_a2","shape":"DROP TRIGGER part_ins_trig ON parted_copytest_a2;"}
+{"sql":"copy parted_copytest from stdin","shape":"COPY parted_copytest FROM STDIN;"}
+{"sql":"select * from parted_copytest where b = 1","shape":"SELECT * FROM parted_copytest WHERE b = 1;"}
+{"sql":"select * from parted_copytest where b = 2","shape":"SELECT * FROM parted_copytest WHERE b = 2;"}
+{"sql":"drop table parted_copytest","shape":"DROP TABLE parted_copytest;"}
+{"sql":"create table tab_progress_reporting (\n\tname text,\n\tage int4,\n\tlocation point,\n\tsalary int4,\n\tmanager name\n)","shape":"CREATE TABLE tab_progress_reporting (name text, age int4, location point, salary int4, manager name);"}
+{"sql":"create function notice_after_tab_progress_reporting() returns trigger AS\n$$\ndeclare report record;\nbegin\n  -- The fields ignored here are the ones that may not remain\n  -- consistent across multiple runs.  The sizes reported may differ\n  -- across platforms, so just check if these are strictly positive.\n  with progress_data as (\n    select\n       relid::regclass::text as relname,\n       command,\n       type,\n       bytes_processed > 0 as has_bytes_processed,\n       bytes_total > 0 as has_bytes_total,\n       tuples_processed,\n       tuples_excluded\n      from pg_stat_progress_copy\n      where pid = pg_backend_pid())\n  select into report (to_jsonb(r)) as value\n    from progress_data r;\n\n  raise info 'progress: %', report.value::text;\n  return new;\nend;\n$$ language plpgsql","shape":"CREATE FUNCTION notice_after_tab_progress_reporting() RETURNS trigger AS '\ndeclare report record;\nbegin\n  -- The fields ignored here are the ones that may not remain\n  -- consistent across multiple runs.  The sizes reported may differ\n  -- across platforms, so just check if these are strictly positive.\n  with progress_data as (\n    select\n       relid::regclass::text as relname,\n       command,\n       type,\n       bytes_processed > 0 as has_bytes_processed,\n       bytes_total > 0 as has_bytes_total,\n       tuples_processed,\n       tuples_excluded\n      from pg_stat_progress_copy\n      where pid = pg_backend_pid())\n  select into report (to_jsonb(r)) as value\n    from progress_data r;\n\n  raise info ''progress: %'', report.value::text;\n  return new;\nend;\n' LANGUAGE plpgsql;"}
+{"sql":"create trigger check_after_tab_progress_reporting\n\tafter insert on tab_progress_reporting\n\tfor each statement\n\texecute function notice_after_tab_progress_reporting()","shape":"CREATE TRIGGER check_after_tab_progress_reporting AFTER INSERT ON tab_progress_reporting FOR EACH STATEMENT EXECUTE FUNCTION notice_after_tab_progress_reporting();"}
+{"sql":"copy tab_progress_reporting from stdin","shape":"COPY tab_progress_reporting FROM STDIN;"}
+{"sql":"truncate tab_progress_reporting","shape":"TRUNCATE TABLE tab_progress_reporting;"}
+{"sql":"drop trigger check_after_tab_progress_reporting on tab_progress_reporting","shape":"DROP TRIGGER check_after_tab_progress_reporting ON tab_progress_reporting;"}
+{"sql":"drop function notice_after_tab_progress_reporting()"}
+{"sql":"drop table tab_progress_reporting","shape":"DROP TABLE tab_progress_reporting;"}
+{"sql":"create table header_copytest (\n\ta int,\n\tb int,\n\tc text\n)","shape":"CREATE TABLE header_copytest (a int, b int, c text);"}
+{"sql":"alter table header_copytest drop column c","shape":"ALTER TABLE header_copytest DROP COLUMN c;"}
+{"sql":"alter table header_copytest add column c text","shape":"ALTER TABLE header_copytest ADD COLUMN c text;"}
+{"sql":"copy header_copytest to stdout with (header match)","shape":"COPY header_copytest TO STDOUT WITH (HEADER match);"}
+{"sql":"copy header_copytest from stdin with (header wrong_choice)","shape":"COPY header_copytest FROM STDIN WITH (HEADER wrong_choice);"}
+{"sql":"copy header_copytest (c, a, b) from stdin with (header match)","shape":"COPY header_copytest (c, a, b) FROM STDIN WITH (HEADER match);"}
+{"sql":"copy header_copytest from stdin with (header match, format csv)","shape":"COPY header_copytest FROM STDIN WITH (HEADER match, FORMAT csv);"}
+{"sql":"copy header_copytest (c, b, a) from stdin with (header match)","shape":"COPY header_copytest (c, b, a) FROM STDIN WITH (HEADER match);"}
+{"sql":"copy header_copytest from stdin with (header match)","shape":"COPY header_copytest FROM STDIN WITH (HEADER match);"}
+{"sql":"SELECT * FROM header_copytest ORDER BY a","shape":"SELECT * FROM header_copytest ORDER BY a;"}
+{"sql":"alter table header_copytest drop column b","shape":"ALTER TABLE header_copytest DROP COLUMN b;"}
+{"sql":"copy header_copytest (c, a) from stdin with (header match)","shape":"COPY header_copytest (c, a) FROM STDIN WITH (HEADER match);"}
+{"sql":"copy header_copytest (a, c) from stdin with (header match)","shape":"COPY header_copytest (a, c) FROM STDIN WITH (HEADER match);"}
+{"sql":"drop table header_copytest","shape":"DROP TABLE header_copytest;"}
+{"sql":"create temp table oversized_column_default (\n    col1 varchar(5) DEFAULT 'more than 5 chars',\n    col2 varchar(5))","shape":"CREATE TEMPORARY TABLE oversized_column_default (col1 varchar(5) DEFAULT 'more than 5 chars', col2 varchar(5));"}
+{"sql":"copy oversized_column_default from stdin","shape":"COPY oversized_column_default FROM STDIN;"}
+{"sql":"copy oversized_column_default (col2) from stdin","shape":"COPY oversized_column_default (col2) FROM STDIN;"}
+{"sql":"copy oversized_column_default from stdin (default '')","shape":"COPY oversized_column_default FROM STDIN WITH (DEFAULT '');"}
+{"sql":"drop table oversized_column_default","shape":"DROP TABLE oversized_column_default;"}
+{"sql":"CREATE TABLE parted_si (\n  id int not null,\n  data text not null,\n  -- prevent use of bulk insert by having a volatile function\n  rand float8 not null default random()\n)\nPARTITION BY LIST((id % 2))","shape":"CREATE TABLE parted_si (id int NOT NULL, data text NOT NULL, rand float8 NOT NULL DEFAULT random()) PARTITION BY LIST ((id % 2));"}
+{"sql":"CREATE TABLE parted_si_p_even PARTITION OF parted_si FOR VALUES IN (0)","shape":"CREATE TABLE parted_si_p_even PARTITION OF parted_si FOR VALUES IN (0);"}
+{"sql":"CREATE TABLE parted_si_p_odd PARTITION OF parted_si FOR VALUES IN (1)","shape":"CREATE TABLE parted_si_p_odd PARTITION OF parted_si FOR VALUES IN (1);"}
+{"sql":"SELECT tableoid::regclass, id % 2 = 0 is_even, count(*) from parted_si GROUP BY 1, 2 ORDER BY 1","shape":"SELECT tableoid::regclass, (id % 2) = 0 AS is_even, count(*) FROM parted_si GROUP BY 1, 2 ORDER BY 1;"}
+{"sql":"DROP TABLE parted_si","shape":"DROP TABLE parted_si;"}

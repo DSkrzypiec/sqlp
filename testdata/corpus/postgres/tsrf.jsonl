@@ -1,0 +1,71 @@
+{"sql":"SELECT generate_series(1, 3)","shape":"SELECT generate_series(1, 3);"}
+{"sql":"SELECT generate_series(1, 3), generate_series(3,5)","shape":"SELECT generate_series(1, 3), generate_series(3, 5);"}
+{"sql":"SELECT generate_series(1, 2), generate_series(1,4)","shape":"SELECT generate_series(1, 2), generate_series(1, 4);"}
+{"sql":"SELECT generate_series(1, generate_series(1, 3))","shape":"SELECT generate_series(1, generate_series(1, 3));"}
+{"sql":"SELECT * FROM generate_series(1, generate_series(1, 3))","shape":"SELECT * FROM generate_series(1, generate_series(1, 3));"}
+{"sql":"SELECT generate_series(generate_series(1,3), generate_series(2, 4))","shape":"SELECT generate_series(generate_series(1, 3), generate_series(2, 4));"}
+{"sql":"explain (verbose, costs off)\nSELECT generate_series(1, generate_series(1, 3)), generate_series(2, 4)","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT generate_series(1, generate_series(1, 3)), generate_series(2, 4);"}
+{"sql":"SELECT generate_series(1, generate_series(1, 3)), generate_series(2, 4)","shape":"SELECT generate_series(1, generate_series(1, 3)), generate_series(2, 4);"}
+{"sql":"CREATE TABLE few(id int, dataa text, datab text)","shape":"CREATE TABLE few (id int, dataa text, datab text);"}
+{"sql":"INSERT INTO few VALUES(1, 'a', 'foo'),(2, 'a', 'bar'),(3, 'b', 'bar')","shape":"INSERT INTO few VALUES (1, 'a', 'foo'), (2, 'a', 'bar'), (3, 'b', 'bar');"}
+{"sql":"explain (verbose, costs off)\nSELECT unnest(ARRAY[1, 2]) FROM few WHERE false","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT unnest(ARRAY[1, 2]) FROM few WHERE FALSE;"}
+{"sql":"SELECT unnest(ARRAY[1, 2]) FROM few WHERE false","shape":"SELECT unnest(ARRAY[1, 2]) FROM few WHERE FALSE;"}
+{"sql":"explain (verbose, costs off)\nSELECT * FROM few f1,\n  (SELECT unnest(ARRAY[1,2]) FROM few f2 WHERE false OFFSET 0) ss","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM few AS f1, (SELECT unnest(ARRAY[1, 2]) FROM few AS f2 WHERE FALSE OFFSET 0) AS ss;"}
+{"sql":"SELECT * FROM few f1,\n  (SELECT unnest(ARRAY[1,2]) FROM few f2 WHERE false OFFSET 0) ss","shape":"SELECT * FROM few AS f1, (SELECT unnest(ARRAY[1, 2]) FROM few AS f2 WHERE FALSE OFFSET 0) AS ss;"}
+{"sql":"SELECT few.id, generate_series(1,3) g FROM few ORDER BY id DESC","shape":"SELECT few.id, generate_series(1, 3) AS g FROM few ORDER BY id DESC;"}
+{"sql":"SELECT few.id, generate_series(1,3) g FROM few ORDER BY id, g DESC","shape":"SELECT few.id, generate_series(1, 3) AS g FROM few ORDER BY id, g DESC;"}
+{"sql":"SELECT few.id, generate_series(1,3) g FROM few ORDER BY id, generate_series(1,3) DESC","shape":"SELECT few.id, generate_series(1, 3) AS g FROM few ORDER BY id, generate_series(1, 3) DESC;"}
+{"sql":"SELECT few.id FROM few ORDER BY id, generate_series(1,3) DESC","shape":"SELECT few.id FROM few ORDER BY id, generate_series(1, 3) DESC;"}
+{"sql":"SET enable_hashagg TO 0","shape":"SET enable_hashagg TO 0;"}
+{"sql":"SELECT few.dataa, count(*), min(id), max(id), unnest('{1,1,3}'::int[]) FROM few WHERE few.id = 1 GROUP BY few.dataa","shape":"SELECT few.dataa, count(*), min(id), max(id), unnest('{1,1,3}'::int[]) FROM few WHERE few.id = 1 GROUP BY few.dataa;"}
+{"sql":"SELECT few.dataa, count(*), min(id), max(id), unnest('{1,1,3}'::int[]) FROM few WHERE few.id = 1 GROUP BY few.dataa, unnest('{1,1,3}'::int[])","shape":"SELECT few.dataa, count(*), min(id), max(id), unnest('{1,1,3}'::int[]) FROM few WHERE few.id = 1 GROUP BY few.dataa, unnest('{1,1,3}'::int[]);"}
+{"sql":"SELECT few.dataa, count(*), min(id), max(id), unnest('{1,1,3}'::int[]) FROM few WHERE few.id = 1 GROUP BY few.dataa, 5","shape":"SELECT few.dataa, count(*), min(id), max(id), unnest('{1,1,3}'::int[]) FROM few WHERE few.id = 1 GROUP BY few.dataa, 5;"}
+{"sql":"SELECT dataa, generate_series(1,1), count(*) FROM few GROUP BY 1 HAVING count(*) > 1","shape":"SELECT dataa, generate_series(1, 1), count(*) FROM few GROUP BY 1 HAVING count(*) > 1;"}
+{"sql":"SELECT dataa, generate_series(1,1), count(*) FROM few GROUP BY 1, 2 HAVING count(*) > 1","shape":"SELECT dataa, generate_series(1, 1), count(*) FROM few GROUP BY 1, 2 HAVING count(*) > 1;"}
+{"sql":"SELECT few.dataa, count(*) FROM few WHERE dataa = 'a' GROUP BY few.dataa ORDER BY 2","shape":"SELECT few.dataa, count(*) FROM few WHERE dataa = 'a' GROUP BY few.dataa ORDER BY 2;"}
+{"sql":"SELECT few.dataa, count(*) FROM few WHERE dataa = 'a' GROUP BY few.dataa, unnest('{1,1,3}'::int[]) ORDER BY 2","shape":"SELECT few.dataa, count(*) FROM few WHERE dataa = 'a' GROUP BY few.dataa, unnest('{1,1,3}'::int[]) ORDER BY 2;"}
+{"sql":"SELECT q1, case when q1 > 0 then generate_series(1,3) else 0 end FROM int8_tbl","shape":"SELECT q1, CASE WHEN q1 > 0 THEN generate_series(1, 3) ELSE 0 END FROM int8_tbl;"}
+{"sql":"SELECT q1, coalesce(generate_series(1,3), 0) FROM int8_tbl","shape":"SELECT q1, coalesce(generate_series(1, 3), 0) FROM int8_tbl;"}
+{"sql":"SELECT min(generate_series(1, 3)) FROM few","shape":"SELECT min(generate_series(1, 3)) FROM few;"}
+{"sql":"SELECT sum((3 = ANY(SELECT generate_series(1,4)))::int)","shape":"SELECT sum((3 = ANY (SELECT generate_series(1, 4)))::int);"}
+{"sql":"SELECT sum((3 = ANY(SELECT lag(x) over(order by x)\n                    FROM generate_series(1,4) x))::int)","shape":"SELECT sum((3 = ANY (SELECT lag(x) OVER (ORDER BY x) FROM generate_series(1, 4) AS x))::int);"}
+{"sql":"SELECT min(generate_series(1, 3)) OVER() FROM few","shape":"SELECT min(generate_series(1, 3)) OVER () FROM few;"}
+{"sql":"SELECT id,lag(id) OVER(), count(*) OVER(), generate_series(1,3) FROM few","shape":"SELECT id, lag(id) OVER (), count(*) OVER (), generate_series(1, 3) FROM few;"}
+{"sql":"SELECT SUM(count(*)) OVER(PARTITION BY generate_series(1,3) ORDER BY generate_series(1,3)), generate_series(1,3) g FROM few GROUP BY g","shape":"SELECT SUM(count(*)) OVER (PARTITION BY generate_series(1, 3) ORDER BY generate_series(1, 3)), generate_series(1, 3) AS g FROM few GROUP BY g;"}
+{"sql":"SELECT few.dataa, count(*), min(id), max(id), generate_series(1,3) FROM few GROUP BY few.dataa ORDER BY 5, 1","shape":"SELECT few.dataa, count(*), min(id), max(id), generate_series(1, 3) FROM few GROUP BY few.dataa ORDER BY 5, 1;"}
+{"sql":"SELECT dataa, datab b, generate_series(1,2) g, count(*) FROM few GROUP BY CUBE(dataa, datab)","shape":"SELECT dataa, datab AS b, generate_series(1, 2) AS g, count(*) FROM few GROUP BY CUBE (dataa, datab);"}
+{"sql":"SELECT dataa, datab b, generate_series(1,2) g, count(*) FROM few GROUP BY CUBE(dataa, datab) ORDER BY dataa","shape":"SELECT dataa, datab AS b, generate_series(1, 2) AS g, count(*) FROM few GROUP BY CUBE (dataa, datab) ORDER BY dataa;"}
+{"sql":"SELECT dataa, datab b, generate_series(1,2) g, count(*) FROM few GROUP BY CUBE(dataa, datab) ORDER BY g","shape":"SELECT dataa, datab AS b, generate_series(1, 2) AS g, count(*) FROM few GROUP BY CUBE (dataa, datab) ORDER BY g;"}
+{"sql":"SELECT dataa, datab b, generate_series(1,2) g, count(*) FROM few GROUP BY CUBE(dataa, datab, g)","shape":"SELECT dataa, datab AS b, generate_series(1, 2) AS g, count(*) FROM few GROUP BY CUBE (dataa, datab, g);"}
+{"sql":"SELECT dataa, datab b, generate_series(1,2) g, count(*) FROM few GROUP BY CUBE(dataa, datab, g) ORDER BY dataa","shape":"SELECT dataa, datab AS b, generate_series(1, 2) AS g, count(*) FROM few GROUP BY CUBE (dataa, datab, g) ORDER BY dataa;"}
+{"sql":"SELECT dataa, datab b, generate_series(1,2) g, count(*) FROM few GROUP BY CUBE(dataa, datab, g) ORDER BY g","shape":"SELECT dataa, datab AS b, generate_series(1, 2) AS g, count(*) FROM few GROUP BY CUBE (dataa, datab, g) ORDER BY g;"}
+{"sql":"explain (verbose, costs off)\nselect 'foo' as f, generate_series(1,2) as g from few order by 1","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT 'foo' AS f, generate_series(1, 2) AS g FROM few ORDER BY 1;"}
+{"sql":"select 'foo' as f, generate_series(1,2) as g from few order by 1","shape":"SELECT 'foo' AS f, generate_series(1, 2) AS g FROM few ORDER BY 1;"}
+{"sql":"CREATE TABLE fewmore AS SELECT generate_series(1,3) AS data","shape":"CREATE TABLE fewmore AS SELECT generate_series(1, 3) AS data;"}
+{"sql":"INSERT INTO fewmore VALUES(generate_series(4,5))","shape":"INSERT INTO fewmore VALUES (generate_series(4, 5));"}
+{"sql":"SELECT * FROM fewmore","shape":"SELECT * FROM fewmore;"}
+{"sql":"UPDATE fewmore SET data = generate_series(4,9)","shape":"UPDATE fewmore SET data = generate_series(4, 9);"}
+{"sql":"INSERT INTO fewmore VALUES(1) RETURNING generate_series(1,3)","shape":"INSERT INTO fewmore VALUES (1) RETURNING generate_series(1, 3);"}
+{"sql":"VALUES(1, generate_series(1,2))","shape":"VALUES (1, generate_series(1, 2));"}
+{"sql":"SELECT int4mul(generate_series(1,2), 10)","shape":"SELECT int4mul(generate_series(1, 2), 10);"}
+{"sql":"SELECT generate_series(1,3) IS DISTINCT FROM 2","shape":"SELECT generate_series(1, 3) IS DISTINCT FROM 2;"}
+{"sql":"SELECT * FROM int4mul(generate_series(1,2), 10)","shape":"SELECT * FROM int4mul(generate_series(1, 2), 10);"}
+{"sql":"SELECT DISTINCT ON (a) a, b, generate_series(1,3) g\nFROM (VALUES (3, 2), (3,1), (1,1), (1,4), (5,3), (5,1)) AS t(a, b)","shape":"SELECT DISTINCT ON (a) a, b, generate_series(1, 3) AS g FROM (VALUES (3, 2), (3, 1), (1, 1), (1, 4), (5, 3), (5, 1)) AS t(a, b);"}
+{"sql":"SELECT DISTINCT ON (a) a, b, generate_series(1,3) g\nFROM (VALUES (3, 2), (3,1), (1,1), (1,4), (5,3), (5,1)) AS t(a, b)\nORDER BY a, b DESC","shape":"SELECT DISTINCT ON (a) a, b, generate_series(1, 3) AS g FROM (VALUES (3, 2), (3, 1), (1, 1), (1, 4), (5, 3), (5, 1)) AS t(a, b) ORDER BY a, b DESC;"}
+{"sql":"SELECT DISTINCT ON (a) a, b, generate_series(1,3) g\nFROM (VALUES (3, 2), (3,1), (1,1), (1,4), (5,3), (5,1)) AS t(a, b)\nORDER BY a, b DESC, g DESC","shape":"SELECT DISTINCT ON (a) a, b, generate_series(1, 3) AS g FROM (VALUES (3, 2), (3, 1), (1, 1), (1, 4), (5, 3), (5, 1)) AS t(a, b) ORDER BY a, b DESC, g DESC;"}
+{"sql":"SELECT DISTINCT ON (a, b, g) a, b, generate_series(1,3) g\nFROM (VALUES (3, 2), (3,1), (1,1), (1,4), (5,3), (5,1)) AS t(a, b)\nORDER BY a, b DESC, g DESC","shape":"SELECT DISTINCT ON (a, b, g) a, b, generate_series(1, 3) AS g FROM (VALUES (3, 2), (3, 1), (1, 1), (1, 4), (5, 3), (5, 1)) AS t(a, b) ORDER BY a, b DESC, g DESC;"}
+{"sql":"SELECT DISTINCT ON (g) a, b, generate_series(1,3) g\nFROM (VALUES (3, 2), (3,1), (1,1), (1,4), (5,3), (5,1)) AS t(a, b)","shape":"SELECT DISTINCT ON (g) a, b, generate_series(1, 3) AS g FROM (VALUES (3, 2), (3, 1), (1, 1), (1, 4), (5, 3), (5, 1)) AS t(a, b);"}
+{"sql":"SELECT a, generate_series(1,2) FROM (VALUES(1),(2),(3)) r(a) LIMIT 2 OFFSET 2","shape":"SELECT a, generate_series(1, 2) FROM (VALUES (1), (2), (3)) AS r(a) LIMIT 2 OFFSET 2;"}
+{"sql":"SELECT 1 LIMIT generate_series(1,3)","shape":"SELECT 1 LIMIT generate_series(1, 3);"}
+{"sql":"SELECT (SELECT generate_series(1,3) LIMIT 1 OFFSET few.id) FROM few","shape":"SELECT (SELECT generate_series(1, 3) LIMIT 1 OFFSET few.id) FROM few;"}
+{"sql":"SELECT (SELECT generate_series(1,3) LIMIT 1 OFFSET g.i) FROM generate_series(0,3) g(i)","shape":"SELECT (SELECT generate_series(1, 3) LIMIT 1 OFFSET g.i) FROM generate_series(0, 3) AS g(i);"}
+{"sql":"CREATE OPERATOR |@| (PROCEDURE = unnest, RIGHTARG = ANYARRAY)"}
+{"sql":"SELECT |@|ARRAY[1,2,3]","shape":"SELECT |@| ARRAY[1, 2, 3];"}
+{"sql":"explain (verbose, costs off)\nselect generate_series(1,3) as x, generate_series(1,3) + 1 as xp1","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT generate_series(1, 3) AS x, generate_series(1, 3) + 1 AS xp1;"}
+{"sql":"select generate_series(1,3) as x, generate_series(1,3) + 1 as xp1","shape":"SELECT generate_series(1, 3) AS x, generate_series(1, 3) + 1 AS xp1;"}
+{"sql":"explain (verbose, costs off)\nselect generate_series(1,3)+1 order by generate_series(1,3)","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT generate_series(1, 3) + 1 ORDER BY generate_series(1, 3);"}
+{"sql":"select generate_series(1,3)+1 order by generate_series(1,3)","shape":"SELECT generate_series(1, 3) + 1 ORDER BY generate_series(1, 3);"}
+{"sql":"explain (verbose, costs off)\nselect generate_series(1,3) as x, generate_series(3,6) + 1 as y","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT generate_series(1, 3) AS x, generate_series(3, 6) + 1 AS y;"}
+{"sql":"select generate_series(1,3) as x, generate_series(3,6) + 1 as y","shape":"SELECT generate_series(1, 3) AS x, generate_series(3, 6) + 1 AS y;"}
+{"sql":"DROP TABLE few","shape":"DROP TABLE few;"}
+{"sql":"DROP TABLE fewmore","shape":"DROP TABLE fewmore;"}

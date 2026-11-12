@@ -1,0 +1,44 @@
+{"sql":"create table t1 (k integer primary key)"}
+{"sql":"insert into t1 values (1)"}
+{"sql":"insert into t1 values (NULL)"}
+{"sql":"select last_insert_rowid()"}
+{"sql":"create table t1w (k integer primary key) WITHOUT ROWID"}
+{"sql":"insert into t1w values (123456)"}
+{"sql":"update t1 set k=4 where k=2"}
+{"sql":"delete from t1 where k=4"}
+{"sql":"create table t2 (k integer primary key, val1, val2, val3)"}
+{"sql":"create view v as select * from t1"}
+{"sql":"delete from t2"}
+{"sql":"create trigger r1 after insert on t1 for each row begin\n            insert into t2 values (NEW.k*2, last_insert_rowid(), NULL, NULL);\n            update t2 set k=k+10, val2=100+last_insert_rowid();\n            update t2 set val3=1000+last_insert_rowid();\n        end"}
+{"sql":"insert into t1 values (13)"}
+{"sql":"select val1 from t2"}
+{"sql":"select val2 from t2"}
+{"sql":"select val3 from t2"}
+{"sql":"drop trigger r1"}
+{"sql":"create trigger r1 after update on t1 for each row begin\n            insert into t2 values (NEW.k*2, last_insert_rowid(), NULL, NULL);\n            update t2 set k=k+10, val2=100+last_insert_rowid();\n            update t2 set val3=1000+last_insert_rowid();\n        end"}
+{"sql":"update t1 set k=14 where k=3"}
+{"sql":"create trigger r1 instead of insert on v for each row begin\n            insert into t2 values (NEW.k*2, last_insert_rowid(), NULL, NULL);\n            update t2 set k=k+10, val2=100+last_insert_rowid();\n            update t2 set val3=1000+last_insert_rowid();\n        end"}
+{"sql":"insert into v values (15)"}
+{"sql":"create trigger r1 before delete on t1 for each row begin\n            insert into t2 values (77, last_insert_rowid(), NULL, NULL);\n            update t2 set k=k+10, val2=100+last_insert_rowid();\n            update t2 set val3=1000+last_insert_rowid();\n        end"}
+{"sql":"delete from t1 where k=1"}
+{"sql":"create trigger r1 instead of update on v for each row begin\n            insert into t2 values (NEW.k*2, last_insert_rowid(), NULL, NULL);\n            update t2 set k=k+10, val2=100+last_insert_rowid();\n            update t2 set val3=1000+last_insert_rowid();\n        end"}
+{"sql":"update v set k=16 where k=14"}
+{"sql":"drop table t1"}
+{"sql":"drop table t2"}
+{"sql":"create temp table t1 (k integer primary key)"}
+{"sql":"create temp table t2 (k integer primary key)"}
+{"sql":"create temp view v1 as select * from t1"}
+{"sql":"create temp view v2 as select * from t2"}
+{"sql":"create temp table rid (k integer primary key, rin, rout)"}
+{"sql":"insert into rid values (1, NULL, NULL)"}
+{"sql":"insert into rid values (2, NULL, NULL)"}
+{"sql":"create temp trigger r1 instead of insert on v1 for each row begin\n            update rid set rin=last_insert_rowid() where k=1;\n            insert into t1 values (100+NEW.k);\n            insert into v2 values (100+last_insert_rowid());\n            update rid set rout=last_insert_rowid() where k=1;\n        end"}
+{"sql":"create temp trigger r2 instead of insert on v2 for each row begin\n            update rid set rin=last_insert_rowid() where k=2;\n            insert into t2 values (1000+NEW.k);\n            update rid set rout=last_insert_rowid() where k=2;\n        end"}
+{"sql":"insert into t1 values (77)"}
+{"sql":"insert into v1 values (5)"}
+{"sql":"select rin from rid where k=1"}
+{"sql":"select rout from rid where k=1"}
+{"sql":"select rin from rid where k=2"}
+{"sql":"select rout from rid where k=2"}
+{"sql":"CREATE TRIGGER after_t2 AFTER INSERT ON t2 BEGIN\n      INSERT INTO t3 VALUES(new.x, new.y);\n    END"}
+{"sql":"INSERT INTO t2 VALUES(5000000000, 1)"}

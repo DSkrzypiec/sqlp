@@ -1,0 +1,46 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts3(x)"}
+{"sql":"INSERT INTO t1(rowid, x) VALUES(1, 'a b c d')"}
+{"sql":"INSERT INTO t1(rowid, x) VALUES(2, 'e f g h')"}
+{"sql":"CREATE TABLE source(a, b)"}
+{"sql":"INSERT INTO source VALUES(4, 'z')"}
+{"sql":"INSERT INTO source VALUES(2, 'y')"}
+{"sql":"INSERT INTO t1(rowid, x) VALUES(3, 'i j k l')"}
+{"sql":"INSERT INTO t1 VALUES('a b c')"}
+{"sql":"INSERT INTO t1 VALUES('x y z')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(0, 'a b c')"}
+{"sql":"INSERT INTO t1(docid, x) VALUES(1, 'a b c')"}
+{"sql":"REPLACE INTO t1(docid, x) VALUES('zero', 'd e f')"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4"}
+{"sql":"REPLACE INTO t3(docid, content) VALUES (1, 'one two')"}
+{"sql":"SELECT quote(matchinfo(t3, 'na')) FROM t3 WHERE t3 MATCH 'one'"}
+{"sql":"REPLACE INTO t3(docid, content) VALUES (2, 'one two three four')"}
+{"sql":"SELECT quote(matchinfo(t3, 'na')) FROM t3 WHERE t3 MATCH 'four'"}
+{"sql":"REPLACE INTO t3(docid, content) VALUES (1, 'one two three four five six')"}
+{"sql":"SELECT quote(matchinfo(t3, 'na')) FROM t3 WHERE t3 MATCH 'six'"}
+{"sql":"UPDATE OR REPLACE t3 SET docid = 2 WHERE docid=1"}
+{"sql":"UPDATE OR REPLACE t3 SET docid = 3 WHERE docid=2"}
+{"sql":"REPLACE INTO t3(docid, content) VALUES (3, 'one two')"}
+{"sql":"REPLACE INTO t3(docid, content) VALUES(NULL,'one two three four')"}
+{"sql":"REPLACE INTO t3(docid, content) VALUES(NULL,'one two three four five six')"}
+{"sql":"SELECT docid FROM t3"}
+{"sql":"UPDATE OR REPLACE t3 SET docid = 5, content='three four' WHERE docid = 4"}
+{"sql":"CREATE VIRTUAL TABLE t0 USING fts4"}
+{"sql":"INSERT INTO t0(rowid, content) SELECT\n      1, 'abc' UNION ALL SELECT\n      2, 'def' UNION ALL SELECT\n      1, 'ghi'"}
+{"sql":"SELECT * FROM t0 WHERE t0 MATCH 'abc'"}
+{"sql":"INSERT INTO t0(t0) VALUES('integrity-check')"}
+{"sql":"CREATE VIRTUAL TABLE t01 USING fts4"}
+{"sql":"INSERT INTO t01 VALUES('a b c')"}
+{"sql":"SELECT * FROM t01 WHERE t01 MATCH 'b'"}
+{"sql":"INSERT INTO t01(t01) VALUES('integrity-check')"}
+{"sql":"CREATE VIRTUAL TABLE t02 USING fts4"}
+{"sql":"INSERT INTO t01 VALUES('1 1 1')"}
+{"sql":"INSERT INTO t02 VALUES('2 2 2')"}
+{"sql":"INSERT INTO t02 VALUES('a b c')"}
+{"sql":"CREATE TABLE A(ID INTEGER PRIMARY KEY, AnotherID INTEGER, Notes TEXT)"}
+{"sql":"CREATE VIRTUAL TABLE AFTS USING FTS4 (Notes)"}
+{"sql":"CREATE TRIGGER A_DeleteTrigger AFTER DELETE ON A FOR EACH ROW BEGIN \n    DELETE FROM AFTS WHERE rowid=OLD.ID; \n  END"}
+{"sql":"CREATE TABLE B(ID INTEGER PRIMARY KEY,Notes TEXT)"}
+{"sql":"CREATE VIRTUAL TABLE BFTS USING FTS3 (Notes)"}
+{"sql":"CREATE TRIGGER B_DeleteTrigger AFTER DELETE ON B FOR EACH ROW BEGIN \n    DELETE FROM BFTS WHERE rowid=OLD.ID; \n  END"}
+{"sql":"DELETE FROM A WHERE AnotherID=1"}
+{"sql":"DELETE FROM B WHERE ID=1"}

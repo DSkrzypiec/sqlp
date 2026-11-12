@@ -1,0 +1,7 @@
+{"sql":"CREATE VIRTUAL TABLE temp.echo_test1 USING echo(t1)"}
+{"sql":"DROP TABLE echo_test1"}
+{"sql":"SELECT * FROM t1 WHERE x IN (SELECT rowid FROM t2)"}
+{"sql":"SELECT rowid FROM echo_t2"}
+{"sql":"SELECT * FROM t1 WHERE x IN (SELECT rowid FROM echo_t2)"}
+{"sql":"SELECT * FROM t1 WHERE x IN (SELECT y FROM t2)"}
+{"sql":"SELECT * FROM t1 WHERE x IN (SELECT y FROM echo_t2)"}

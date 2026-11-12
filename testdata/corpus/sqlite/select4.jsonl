@@ -1,0 +1,121 @@
+{"sql":"SELECT DISTINCT log FROM t1"}
+{"sql":"SELECT n FROM t1 WHERE log=3"}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log"}
+{"sql":"CREATE TABLE t2 AS\n      SELECT DISTINCT log FROM t1\n      UNION ALL\n      SELECT n FROM t1 WHERE log=3\n      ORDER BY log"}
+{"sql":"CREATE TABLE t2 AS\n      SELECT DISTINCT log FROM t1\n      UNION ALL\n      SELECT n FROM t1 WHERE log=3\n      ORDER BY log DESC"}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=2"}
+{"sql":"CREATE TABLE t2 AS \n      SELECT DISTINCT log FROM t1\n      UNION ALL\n      SELECT n FROM t1 WHERE log=2"}
+{"sql":"SELECT log FROM t1 WHERE n IN \n        (SELECT DISTINCT log FROM t1 UNION ALL\n         SELECT n FROM t1 WHERE log=3)\n      ORDER BY log"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log","reject":true}
+{"sql":"SELECT (VALUES(0) INTERSECT SELECT(0) UNION SELECT(0) ORDER BY 1 UNION\n          SELECT 0 UNION SELECT 0 ORDER BY 1)","reject":true}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log"}
+{"sql":"SELECT log FROM t1 WHERE n IN \n        (SELECT DISTINCT log FROM t1 UNION\n         SELECT n FROM t1 WHERE log=3)\n      ORDER BY log"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log\n    UNION\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log","reject":true}
+{"sql":"SELECT 0 ORDER BY (SELECT 0) UNION SELECT 0","reject":true}
+{"sql":"SELECT 123 AS x ORDER BY (SELECT x ORDER BY 1)"}
+{"sql":"SELECT DISTINCT log FROM t1\n    EXCEPT\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log"}
+{"sql":"CREATE TABLE t2 AS \n      SELECT DISTINCT log FROM t1\n      EXCEPT\n      SELECT n FROM t1 WHERE log=3\n      ORDER BY log"}
+{"sql":"CREATE TABLE t2 AS \n      SELECT DISTINCT log FROM t1\n      EXCEPT\n      SELECT n FROM t1 WHERE log=3\n      ORDER BY log DESC"}
+{"sql":"SELECT log FROM t1 WHERE n IN \n        (SELECT DISTINCT log FROM t1 EXCEPT\n         SELECT n FROM t1 WHERE log=3)\n      ORDER BY log"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log\n    EXCEPT\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log","reject":true}
+{"sql":"SELECT DISTINCT log FROM t1\n    INTERSECT\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log"}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT 6\n    INTERSECT\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY t1.log"}
+{"sql":"CREATE TABLE t2 AS\n      SELECT DISTINCT log FROM t1 UNION ALL SELECT 6\n      INTERSECT\n      SELECT n FROM t1 WHERE log=3\n      ORDER BY log"}
+{"sql":"CREATE TABLE t2 AS\n      SELECT DISTINCT log FROM t1 UNION ALL SELECT 6\n      INTERSECT\n      SELECT n FROM t1 WHERE log=3\n      ORDER BY log DESC"}
+{"sql":"SELECT log FROM t1 WHERE n IN \n        (SELECT DISTINCT log FROM t1 INTERSECT\n         SELECT n FROM t1 WHERE log=3)\n      ORDER BY log"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log\n    INTERSECT\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log","reject":true}
+{"sql":"SELECT 3 IN (\n    SELECT 0 ORDER BY 1\n    INTERSECT\n    SELECT 1\n    INTERSECT \n    SELECT 2\n    ORDER BY 1\n  )","reject":true}
+{"sql":"SELECT DISTINCT log FROM t2\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log"}
+{"sql":"SELECT DISTINCT log AS \"xyzzy\" FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY xyzzy"}
+{"sql":"SELECT DISTINCT log AS xyzzy FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY \"xyzzy\""}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY \"xyzzy\""}
+{"sql":"SELECT DISTINCT log FROM t1\n    INTERSECT\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY \"xyzzy\""}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY n"}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY 1"}
+{"sql":"SELECT DISTINCT log FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY 2"}
+{"sql":"SELECT DISTINCT 1, log FROM t1\n    UNION ALL\n    SELECT 2, n FROM t1 WHERE log=3\n    ORDER BY 2, 1"}
+{"sql":"SELECT DISTINCT 1, log FROM t1\n    UNION ALL\n    SELECT 2, n FROM t1 WHERE log=3\n    ORDER BY 1, 2 DESC"}
+{"sql":"SELECT DISTINCT 1, log FROM t1\n    UNION ALL\n    SELECT 2, n FROM t1 WHERE log=3\n    ORDER BY n, 1"}
+{"sql":"SELECT DISTINCT log, n FROM t1\n    UNION ALL\n    SELECT n FROM t1 WHERE log=3\n    ORDER BY log"}
+{"sql":"SELECT 1 UNION SELECT 2, 3 UNION SELECT 4, 5 ORDER BY 1"}
+{"sql":"SELECT log FROM t1 WHERE n=2\n    UNION ALL\n    SELECT log FROM t1 WHERE n=3\n    UNION ALL\n    SELECT log FROM t1 WHERE n=4\n    UNION ALL\n    SELECT log FROM t1 WHERE n=5\n    ORDER BY log"}
+{"sql":"SELECT log, count(*) as cnt FROM t1 GROUP BY log\n    UNION\n    SELECT log, n FROM t1 WHERE n=7\n    ORDER BY cnt, log"}
+{"sql":"SELECT log, count(*) FROM t1 GROUP BY log\n    UNION\n    SELECT log, n FROM t1 WHERE n=7\n    ORDER BY count(*), log"}
+{"sql":"SELECT NULL UNION SELECT NULL UNION\n    SELECT 1 UNION SELECT 2 AS 'x'\n    ORDER BY x"}
+{"sql":"SELECT NULL UNION ALL SELECT NULL UNION ALL\n    SELECT 1 UNION ALL SELECT 2 AS 'x'\n    ORDER BY x"}
+{"sql":"SELECT * FROM (\n         SELECT NULL, 1 UNION ALL SELECT NULL, 1\n      )"}
+{"sql":"SELECT DISTINCT * FROM (\n         SELECT NULL, 1 UNION ALL SELECT NULL, 1\n      )"}
+{"sql":"SELECT DISTINCT * FROM (\n         SELECT 1,2  UNION ALL SELECT 1,2\n      )"}
+{"sql":"SELECT NULL EXCEPT SELECT NULL"}
+{"sql":"CREATE TABLE t2 AS SELECT log AS 'x', count(*) AS 'y' FROM t1 GROUP BY log"}
+{"sql":"CREATE TABLE t3(a text, b float, c text)"}
+{"sql":"INSERT INTO t3 VALUES(1, 1.1, '1.1')"}
+{"sql":"INSERT INTO t3 VALUES(2, 1.10, '1.10')"}
+{"sql":"INSERT INTO t3 VALUES(3, 1.10, '1.1')"}
+{"sql":"INSERT INTO t3 VALUES(4, 1.1, '1.10')"}
+{"sql":"INSERT INTO t3 VALUES(5, 1.2, '1.2')"}
+{"sql":"INSERT INTO t3 VALUES(6, 1.3, '1.3')"}
+{"sql":"SELECT DISTINCT b FROM t3 ORDER BY c"}
+{"sql":"SELECT DISTINCT c FROM t3 ORDER BY c"}
+{"sql":"SELECT 0 AS x, 1 AS y\n    UNION\n    SELECT 2 AS y, -3 AS x\n    ORDER BY x LIMIT 1"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 4"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 0"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log LIMIT -1"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log LIMIT -1 OFFSET 2"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 3 OFFSET 2"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY +log LIMIT 3 OFFSET 20"}
+{"sql":"SELECT DISTINCT log FROM t1 ORDER BY log LIMIT 0 OFFSET 3"}
+{"sql":"SELECT DISTINCT max(n), log FROM t1 ORDER BY +log"}
+{"sql":"SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    UNION\n    SELECT x FROM t2"}
+{"sql":"SELECT x FROM t2\n    UNION\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2"}
+{"sql":"SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    UNION ALL\n    SELECT x FROM t2"}
+{"sql":"SELECT x FROM t2\n    UNION ALL\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2"}
+{"sql":"SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    EXCEPT\n    SELECT x FROM t2"}
+{"sql":"SELECT x FROM t2\n    EXCEPT\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2"}
+{"sql":"SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    INTERSECT\n    SELECT x FROM t2"}
+{"sql":"SELECT x FROM t2\n    INTERSECT\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2"}
+{"sql":"SELECT x FROM t2\n    UNION\n    SELECT x FROM t2\n    UNION ALL\n    SELECT x FROM t2\n    EXCEPT\n    SELECT x FROM t2\n    INTERSECT\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2"}
+{"sql":"SELECT x FROM t2\n    UNION\n    SELECT x FROM t2\n    UNION ALL\n    SELECT x FROM t2\n    EXCEPT\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    EXCEPT\n    SELECT x FROM t2"}
+{"sql":"SELECT x FROM t2\n    UNION\n    SELECT x FROM t2\n    UNION ALL\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    UNION ALL\n    SELECT x FROM t2\n    EXCEPT\n    SELECT x FROM t2"}
+{"sql":"SELECT x FROM t2\n    UNION\n    SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    UNION\n    SELECT x FROM t2\n    UNION ALL\n    SELECT x FROM t2\n    EXCEPT\n    SELECT x FROM t2"}
+{"sql":"SELECT x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x FROM t2\n    UNION\n    SELECT x FROM t2\n    INTERSECT\n    SELECT x FROM t2\n    UNION ALL\n    SELECT x FROM t2\n    EXCEPT\n    SELECT x FROM t2"}
+{"sql":"INSERT INTO t2(rowid) VALUES(2) UNION SELECT 3,4 UNION SELECT 5,6 ORDER BY 1"}
+{"sql":"SELECT 1 UNION SELECT 2,3 UNION SELECT 4,5 ORDER BY 1"}
+{"sql":"CREATE TABLE t14(a,b,c)"}
+{"sql":"INSERT INTO t14 VALUES(1,2,3),(4,5,6)"}
+{"sql":"SELECT * FROM t14 INTERSECT VALUES(3,2,1),(2,3,1),(1,2,3),(2,1,3)"}
+{"sql":"SELECT * FROM t14 INTERSECT VALUES(1,2,3)"}
+{"sql":"SELECT * FROM t14\n   UNION VALUES(3,2,1),(2,3,1),(1,2,3),(7,8,9),(4,5,6)\n   UNION SELECT * FROM t14 ORDER BY 1, 2, 3"}
+{"sql":"SELECT * FROM t14\n   UNION VALUES(3,2,1)\n   UNION SELECT * FROM t14 ORDER BY 1, 2, 3"}
+{"sql":"SELECT * FROM t14 EXCEPT VALUES(3,2,1),(2,3,1),(1,2,3),(2,1,3)"}
+{"sql":"SELECT * FROM t14 EXCEPT VALUES(1,2,3)"}
+{"sql":"SELECT * FROM t14 EXCEPT VALUES(1,2,3) EXCEPT VALUES(4,5,6)"}
+{"sql":"SELECT * FROM t14 EXCEPT VALUES('a','b','c') EXCEPT VALUES(4,5,6)"}
+{"sql":"SELECT * FROM t14 UNION ALL VALUES(3,2,1),(2,3,1),(1,2,3),(2,1,3)"}
+{"sql":"SELECT (VALUES(1),(2),(3),(4))"}
+{"sql":"SELECT (SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4)"}
+{"sql":"VALUES(1) UNION VALUES(2)"}
+{"sql":"VALUES(1),(2),(3) EXCEPT VALUES(2)"}
+{"sql":"VALUES(1),(2),(3) EXCEPT VALUES(1),(3)"}
+{"sql":"SELECT * FROM (SELECT 123), (SELECT 456) ON likely(0 OR 1) OR 0"}
+{"sql":"VALUES(1),(2),(3),(4) UNION ALL SELECT 5 LIMIT 99"}
+{"sql":"VALUES(1),(2),(3),(4) UNION ALL SELECT 5 LIMIT 3"}
+{"sql":"CREATE TABLE tx(id INTEGER PRIMARY KEY, a, b)"}
+{"sql":"INSERT INTO tx(a,b) VALUES(33,456)"}
+{"sql":"INSERT INTO tx(a,b) VALUES(33,789)"}
+{"sql":"SELECT DISTINCT t0.id, t0.a, t0.b\n    FROM tx AS t0, tx AS t1\n   WHERE t0.a=t1.a AND t1.a=33 AND t0.b=456\n  UNION\n  SELECT DISTINCT t0.id, t0.a, t0.b\n    FROM tx AS t0, tx AS t1\n   WHERE t0.a=t1.a AND t1.a=33 AND t0.b=789\n   ORDER BY 1"}
+{"sql":"CREATE TABLE t1(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,\n  PRIMARY KEY(a,b DESC)) WITHOUT ROWID"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n  INSERT INTO t1(a,b,c,d)\n    SELECT x%10, x/10, x, printf('xyz%dabc',x) FROM c"}
+{"sql":"SELECT t3.c FROM \n    (SELECT a,max(b) AS m FROM t1 WHERE a>=5 GROUP BY a) AS t2\n    JOIN t1 AS t3\n  WHERE t2.a=t3.a AND t2.m=t3.b\n  ORDER BY t3.a"}
+{"sql":"SELECT t3.c FROM \n    (SELECT a,max(b) AS m FROM t1 WHERE a>=5 GROUP BY a) AS t2\n    CROSS JOIN t1 AS t3\n  WHERE t2.a=t3.a AND t2.m=t3.b\n  ORDER BY t3.a"}
+{"sql":"SELECT t3.c FROM \n    (SELECT a,max(b) AS m FROM t1 WHERE a>=5 GROUP BY a) AS t2\n    LEFT JOIN t1 AS t3\n  WHERE t2.a=t3.a AND t2.m=t3.b\n  ORDER BY t3.a"}
+{"sql":"INSERT INTO t1 VALUES(1,2),(1,18),(2,19)"}
+{"sql":"SELECT x, y FROM (\n    SELECT 98 AS x, 99 AS y\n    UNION\n    SELECT a AS x, sum(b) AS y FROM t1 GROUP BY a\n  ) AS w WHERE y>=20\n  ORDER BY +x"}
+{"sql":"SELECT x, y FROM (\n    SELECT a AS x, sum(b) AS y FROM t1 GROUP BY a\n    UNION\n    SELECT 98 AS x, 99 AS y\n  ) AS w WHERE y>=20\n  ORDER BY +x"}
+{"sql":"SELECT x, y FROM (\n    SELECT a AS x, sum(b) AS y FROM t1 GROUP BY a LIMIT 3\n    UNION\n    SELECT 98 AS x, 99 AS y\n  ) AS w WHERE y>=20\n  ORDER BY +x","reject":true}
+{"sql":"CREATE VIEW v0(v0) AS WITH v0 AS(SELECT 0 v0) SELECT(SELECT min(v0) OVER()) FROM v0 GROUP BY v0"}
+{"sql":"SELECT *FROM v0 v1 JOIN v0 USING(v0) WHERE datetime(v0) = (v0.v0)AND v0 = 10"}
+{"sql":"CREATE VIEW t1(aa) AS\n     WITH t2(bb) AS (SELECT 123)\n     SELECT (SELECT min(bb) OVER()) FROM t2 GROUP BY bb"}
+{"sql":"SELECT * FROM t1 AS z1 JOIN t1 AS z2 USING(aa)\n   WHERE abs(z1.aa)=z2.aa AND z1.aa=123"}
+{"sql":"INSERT INTO t1 VALUES(99)"}
+{"sql":"SELECT sum((SELECT 1 FROM (SELECT 2 WHERE x IS NULL) WHERE 0)) FROM t1"}

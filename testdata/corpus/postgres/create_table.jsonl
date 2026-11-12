@@ -1,0 +1,303 @@
+{"sql":"CREATE TABLE unknowntab (\n\tu unknown    -- fail\n)","shape":"CREATE TABLE unknowntab (u unknown);"}
+{"sql":"CREATE TYPE unknown_comptype AS (\n\tu unknown    -- fail\n)","shape":"CREATE TYPE unknown_comptype AS (u unknown);"}
+{"sql":"CREATE TABLE tas_case WITH (\"Fillfactor\" = 10) AS SELECT 1 a","shape":"CREATE TABLE tas_case WITH (\"Fillfactor\" = 10) AS SELECT 1 AS a;"}
+{"sql":"CREATE UNLOGGED TABLE unlogged1 (a int primary key)","shape":"CREATE UNLOGGED TABLE unlogged1 (a int PRIMARY KEY);"}
+{"sql":"CREATE TEMPORARY TABLE unlogged2 (a int primary key)","shape":"CREATE TEMPORARY TABLE unlogged2 (a int PRIMARY KEY);"}
+{"sql":"SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^unlogged\\d' ORDER BY relname","shape":"SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^unlogged\\d' ORDER BY relname;"}
+{"sql":"REINDEX INDEX unlogged1_pkey","shape":"REINDEX INDEX unlogged1_pkey;"}
+{"sql":"REINDEX INDEX unlogged2_pkey","shape":"REINDEX INDEX unlogged2_pkey;"}
+{"sql":"INSERT INTO unlogged1 VALUES (42)","shape":"INSERT INTO unlogged1 VALUES (42);"}
+{"sql":"CREATE UNLOGGED TABLE public.unlogged2 (a int primary key)","shape":"CREATE UNLOGGED TABLE public.unlogged2 (a int PRIMARY KEY);"}
+{"sql":"CREATE UNLOGGED TABLE pg_temp.unlogged3 (a int primary key)","shape":"CREATE UNLOGGED TABLE pg_temp.unlogged3 (a int PRIMARY KEY);"}
+{"sql":"CREATE TABLE pg_temp.implicitly_temp (a int primary key)","shape":"CREATE TABLE pg_temp.implicitly_temp (a int PRIMARY KEY);"}
+{"sql":"CREATE TEMP TABLE explicitly_temp (a int primary key)","shape":"CREATE TEMPORARY TABLE explicitly_temp (a int PRIMARY KEY);"}
+{"sql":"CREATE TEMP TABLE pg_temp.doubly_temp (a int primary key)","shape":"CREATE TEMPORARY TABLE pg_temp.doubly_temp (a int PRIMARY KEY);"}
+{"sql":"CREATE TEMP TABLE public.temp_to_perm (a int primary key)","shape":"CREATE TEMPORARY TABLE public.temp_to_perm (a int PRIMARY KEY);"}
+{"sql":"DROP TABLE unlogged1, public.unlogged2","shape":"DROP TABLE unlogged1, public.unlogged2;"}
+{"sql":"CREATE TABLE as_select1 AS SELECT * FROM pg_class WHERE relkind = 'r'","shape":"CREATE TABLE as_select1 AS SELECT * FROM pg_class WHERE relkind = 'r';"}
+{"sql":"CREATE TABLE IF NOT EXISTS as_select1 AS SELECT * FROM pg_class WHERE relkind = 'r'","shape":"CREATE TABLE IF NOT EXISTS as_select1 AS SELECT * FROM pg_class WHERE relkind = 'r';"}
+{"sql":"DROP TABLE as_select1","shape":"DROP TABLE as_select1;"}
+{"sql":"PREPARE select1 AS SELECT 1 as a","shape":"PREPARE select1 AS SELECT 1 AS a;"}
+{"sql":"CREATE TABLE as_select1 AS EXECUTE select1","shape":"CREATE TABLE as_select1 AS EXECUTE select1;"}
+{"sql":"SELECT * FROM as_select1","shape":"SELECT * FROM as_select1;"}
+{"sql":"CREATE TABLE IF NOT EXISTS as_select1 AS EXECUTE select1","shape":"CREATE TABLE IF NOT EXISTS as_select1 AS EXECUTE select1;"}
+{"sql":"DEALLOCATE select1","shape":"DEALLOCATE select1;"}
+{"sql":"SELECT 'CREATE TABLE extra_wide_table(firstc text, '|| array_to_string(array_agg('c'||i||' bool'),',')||', lastc text);'\nFROM generate_series(1, 1100) g(i)\nINSERT INTO extra_wide_table(firstc, lastc) VALUES('first col', 'last col')","reject":true}
+{"sql":"SELECT firstc, lastc FROM extra_wide_table","shape":"SELECT firstc, lastc FROM extra_wide_table;"}
+{"sql":"CREATE TABLE withoid() WITH OIDS","reject":true}
+{"sql":"CREATE TABLE withoid() WITH (oids)","shape":"CREATE TABLE withoid () WITH (oids);"}
+{"sql":"CREATE TABLE withoid() WITH (oids = true)","shape":"CREATE TABLE withoid () WITH (oids = TRUE);"}
+{"sql":"CREATE TEMP TABLE withoutoid() WITHOUT OIDS","shape":"CREATE TEMPORARY TABLE withoutoid ();"}
+{"sql":"DROP TABLE withoutoid","shape":"DROP TABLE withoutoid;"}
+{"sql":"CREATE TEMP TABLE withoutoid() WITH (oids = false)","shape":"CREATE TEMPORARY TABLE withoutoid () WITH (oids = FALSE);"}
+{"sql":"CREATE TEMP TABLE relation_filenode_check(c1 int)","shape":"CREATE TEMPORARY TABLE relation_filenode_check (c1 int);"}
+{"sql":"SELECT relpersistence,\n  pg_filenode_relation (reltablespace, pg_relation_filenode(oid))\n  FROM pg_class\n  WHERE relname = 'relation_filenode_check'","shape":"SELECT relpersistence, pg_filenode_relation(reltablespace, pg_relation_filenode(oid)) FROM pg_class WHERE relname = 'relation_filenode_check';"}
+{"sql":"DROP TABLE relation_filenode_check","shape":"DROP TABLE relation_filenode_check;"}
+{"sql":"CREATE TABLE default_expr_column (id int DEFAULT (id))","shape":"CREATE TABLE default_expr_column (id int DEFAULT (id));"}
+{"sql":"CREATE TABLE default_expr_column (id int DEFAULT (bar.id))","shape":"CREATE TABLE default_expr_column (id int DEFAULT (bar.id));"}
+{"sql":"CREATE TABLE default_expr_agg_column (id int DEFAULT (avg(id)))","shape":"CREATE TABLE default_expr_agg_column (id int DEFAULT (avg(id)));"}
+{"sql":"CREATE TABLE default_expr_non_column (a int DEFAULT (avg(non_existent)))","shape":"CREATE TABLE default_expr_non_column (a int DEFAULT (avg(non_existent)));"}
+{"sql":"CREATE TABLE default_expr_agg (a int DEFAULT (avg(1)))","shape":"CREATE TABLE default_expr_agg (a int DEFAULT (avg(1)));"}
+{"sql":"CREATE TABLE default_expr_agg (a int DEFAULT (select 1))","shape":"CREATE TABLE default_expr_agg (a int DEFAULT (SELECT 1));"}
+{"sql":"CREATE TABLE default_expr_agg (a int DEFAULT (generate_series(1,3)))","shape":"CREATE TABLE default_expr_agg (a int DEFAULT (generate_series(1, 3)));"}
+{"sql":"CREATE TABLE remember_create_subid (c int)","shape":"CREATE TABLE remember_create_subid (c int);"}
+{"sql":"SAVEPOINT q","shape":"SAVEPOINT q;"}
+{"sql":"DROP TABLE remember_create_subid","shape":"DROP TABLE remember_create_subid;"}
+{"sql":"ROLLBACK TO q","shape":"ROLLBACK TO SAVEPOINT q;"}
+{"sql":"CREATE TABLE remember_node_subid (c int)","shape":"CREATE TABLE remember_node_subid (c int);"}
+{"sql":"ALTER TABLE remember_node_subid ALTER c TYPE bigint","shape":"ALTER TABLE remember_node_subid ALTER COLUMN c SET DATA TYPE bigint;"}
+{"sql":"DROP TABLE remember_node_subid","shape":"DROP TABLE remember_node_subid;"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) INHERITS (some_table) PARTITION BY LIST (a)","shape":"CREATE TABLE partitioned (a int) INHERITS (some_table) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE partitioned (\n\ta1 int,\n\ta2 int\n) PARTITION BY LIST (a1, a2)","shape":"CREATE TABLE partitioned (a1 int, a2 int) PARTITION BY LIST (a1, a2);"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tEXCLUDE USING gist (a WITH &&)\n) PARTITION BY RANGE (a)","shape":"CREATE TABLE partitioned (a int, EXCLUDE USING gist (a WITH &&)) PARTITION BY RANGE (a);"}
+{"sql":"CREATE FUNCTION retset (a int) RETURNS SETOF int AS $$ SELECT 1; $$ LANGUAGE SQL IMMUTABLE","shape":"CREATE FUNCTION retset(a int) RETURNS SETOF int AS ' SELECT 1; ' LANGUAGE SQL IMMUTABLE;"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE (retset(a))","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE (retset(a));"}
+{"sql":"DROP FUNCTION retset(int)"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE ((avg(a)))","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE ((avg(a)));"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tb int\n) PARTITION BY RANGE ((avg(a) OVER (PARTITION BY b)))","shape":"CREATE TABLE partitioned (a int, b int) PARTITION BY RANGE ((avg(a) OVER (PARTITION BY b)));"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY LIST ((a LIKE (SELECT 1)))","shape":"CREATE TABLE partitioned (a int) PARTITION BY LIST ((a LIKE (SELECT 1)));"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE ((42))","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE ((42));"}
+{"sql":"CREATE FUNCTION const_func () RETURNS int AS $$ SELECT 1; $$ LANGUAGE SQL IMMUTABLE","shape":"CREATE FUNCTION const_func() RETURNS int AS ' SELECT 1; ' LANGUAGE SQL IMMUTABLE;"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE (const_func())","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE (const_func());"}
+{"sql":"DROP FUNCTION const_func()"}
+{"sql":"CREATE TABLE partitioned (\n    a int\n) PARTITION BY MAGIC (a)","reject":true}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE (b)","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE (b);"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE (xmin)","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE (xmin);"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tb int\n) PARTITION BY RANGE (((a, b)))","shape":"CREATE TABLE partitioned (a int, b int) PARTITION BY RANGE (((a, b)));"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tb int\n) PARTITION BY RANGE (a, ('unknown'))","shape":"CREATE TABLE partitioned (a int, b int) PARTITION BY RANGE (a, ('unknown'));"}
+{"sql":"CREATE FUNCTION immut_func (a int) RETURNS int AS $$ SELECT a + random()::int; $$ LANGUAGE SQL","shape":"CREATE FUNCTION immut_func(a int) RETURNS int AS ' SELECT a + random()::int; ' LANGUAGE SQL;"}
+{"sql":"CREATE TABLE partitioned (\n\ta int\n) PARTITION BY RANGE (immut_func(a))","shape":"CREATE TABLE partitioned (a int) PARTITION BY RANGE (immut_func(a));"}
+{"sql":"DROP FUNCTION immut_func(int)"}
+{"sql":"CREATE TABLE partitioned (\n\ta point\n) PARTITION BY LIST (a)","shape":"CREATE TABLE partitioned (a point) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE partitioned (\n\ta point\n) PARTITION BY LIST (a point_ops)","shape":"CREATE TABLE partitioned (a point) PARTITION BY LIST (a point_ops);"}
+{"sql":"CREATE TABLE partitioned (\n\ta point\n) PARTITION BY RANGE (a)","shape":"CREATE TABLE partitioned (a point) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE partitioned (\n\ta point\n) PARTITION BY RANGE (a point_ops)","shape":"CREATE TABLE partitioned (a point) PARTITION BY RANGE (a point_ops);"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tCONSTRAINT check_a CHECK (a > 0) NO INHERIT\n) PARTITION BY RANGE (a)","shape":"CREATE TABLE partitioned (a int, CONSTRAINT check_a CHECK (a > 0) NO INHERIT) PARTITION BY RANGE (a);"}
+{"sql":"CREATE FUNCTION plusone(a int) RETURNS INT AS $$ SELECT a+1; $$ LANGUAGE SQL","shape":"CREATE FUNCTION plusone(a int) RETURNS INT AS ' SELECT a+1; ' LANGUAGE SQL;"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tb int,\n\tc text,\n\td text\n) PARTITION BY RANGE (a oid_ops, plusone(b), c collate \"default\", d collate \"C\")","shape":"CREATE TABLE partitioned (a int, b int, c text, d text) PARTITION BY RANGE (a oid_ops, plusone(b), c COLLATE \"default\", d COLLATE \"C\");"}
+{"sql":"SELECT relkind FROM pg_class WHERE relname = 'partitioned'","shape":"SELECT relkind FROM pg_class WHERE relname = 'partitioned';"}
+{"sql":"DROP FUNCTION plusone(int)"}
+{"sql":"CREATE TABLE partitioned2 (\n\ta int,\n\tb text\n) PARTITION BY RANGE ((a+1), substr(b, 1, 5))","shape":"CREATE TABLE partitioned2 (a int, b text) PARTITION BY RANGE ((a + 1), substr(b, 1, 5));"}
+{"sql":"CREATE TABLE fail () INHERITS (partitioned2)","shape":"CREATE TABLE fail () INHERITS (partitioned2);"}
+{"sql":"INSERT INTO partitioned2 VALUES (1, 'hello')","shape":"INSERT INTO partitioned2 VALUES (1, 'hello');"}
+{"sql":"CREATE TABLE part2_1 PARTITION OF partitioned2 FOR VALUES FROM (-1, 'aaaaa') TO (100, 'ccccc')","shape":"CREATE TABLE part2_1 PARTITION OF partitioned2 FOR VALUES FROM (-1, 'aaaaa') TO (100, 'ccccc');"}
+{"sql":"DROP TABLE partitioned, partitioned2","shape":"DROP TABLE partitioned, partitioned2;"}
+{"sql":"create table partitioned (a int, b int)\n  partition by list ((row(a, b)::partitioned))","shape":"CREATE TABLE partitioned (a int, b int) PARTITION BY LIST ((ROW(a, b)::partitioned));"}
+{"sql":"create table partitioned1\n  partition of partitioned for values in ('(1,2)'::partitioned)","shape":"CREATE TABLE partitioned1 PARTITION OF partitioned FOR VALUES IN ('(1,2)'::partitioned);"}
+{"sql":"create table partitioned2\n  partition of partitioned for values in ('(2,4)'::partitioned)","shape":"CREATE TABLE partitioned2 PARTITION OF partitioned FOR VALUES IN ('(2,4)'::partitioned);"}
+{"sql":"explain (costs off)\nselect * from partitioned where row(a,b)::partitioned = '(1,2)'::partitioned","shape":"EXPLAIN (COSTS off) SELECT * FROM partitioned WHERE ROW(a, b)::partitioned = '(1,2)'::partitioned;"}
+{"sql":"drop table partitioned","shape":"DROP TABLE partitioned;"}
+{"sql":"create table partitioned (a int, b int)\n  partition by list ((partitioned))","shape":"CREATE TABLE partitioned (a int, b int) PARTITION BY LIST ((partitioned));"}
+{"sql":"create table partitioned1\n  partition of partitioned for values in ('(1,2)')","shape":"CREATE TABLE partitioned1 PARTITION OF partitioned FOR VALUES IN ('(1,2)');"}
+{"sql":"create table partitioned2\n  partition of partitioned for values in ('(2,4)')","shape":"CREATE TABLE partitioned2 PARTITION OF partitioned FOR VALUES IN ('(2,4)');"}
+{"sql":"explain (costs off)\nselect * from partitioned where partitioned = '(1,2)'::partitioned","shape":"EXPLAIN (COSTS off) SELECT * FROM partitioned WHERE partitioned = '(1,2)'::partitioned;"}
+{"sql":"create domain intdom1 as int","shape":"CREATE DOMAIN intdom1 AS int;"}
+{"sql":"create table partitioned (\n\ta intdom1,\n\tb text\n) partition by range (a)","shape":"CREATE TABLE partitioned (a intdom1, b text) PARTITION BY RANGE (a);"}
+{"sql":"alter table partitioned drop column a","shape":"ALTER TABLE partitioned DROP COLUMN a;"}
+{"sql":"drop domain intdom1","shape":"DROP DOMAIN intdom1;"}
+{"sql":"drop domain intdom1 cascade","shape":"DROP DOMAIN intdom1 CASCADE;"}
+{"sql":"table partitioned","shape":"TABLE partitioned;"}
+{"sql":"create table partitioned (\n\ta intdom1,\n\tb text\n) partition by range (plusone(a))","shape":"CREATE TABLE partitioned (a intdom1, b text) PARTITION BY RANGE (plusone(a));"}
+{"sql":"CREATE TABLE list_parted (\n\ta int\n) PARTITION BY LIST (a)","shape":"CREATE TABLE list_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE part_p1 PARTITION OF list_parted FOR VALUES IN ('1')","shape":"CREATE TABLE part_p1 PARTITION OF list_parted FOR VALUES IN ('1');"}
+{"sql":"CREATE TABLE part_p2 PARTITION OF list_parted FOR VALUES IN (2)","shape":"CREATE TABLE part_p2 PARTITION OF list_parted FOR VALUES IN (2);"}
+{"sql":"CREATE TABLE part_p3 PARTITION OF list_parted FOR VALUES IN ((2+1))","shape":"CREATE TABLE part_p3 PARTITION OF list_parted FOR VALUES IN ((2 + 1));"}
+{"sql":"CREATE TABLE part_null PARTITION OF list_parted FOR VALUES IN (null)","shape":"CREATE TABLE part_null PARTITION OF list_parted FOR VALUES IN (NULL);"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (somename)","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (somename);"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (somename.somename)","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (somename.somename);"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (a)","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (a);"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (sum(a))","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (sum(a));"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (sum(somename))","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (sum(somename));"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (sum(1))","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (sum(1));"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN ((select 1))","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN ((SELECT 1));"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (generate_series(4, 6))","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN (generate_series(4, 6));"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN ((1+1) collate \"POSIX\")","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF list_parted FOR VALUES IN ((1 + 1) COLLATE \"POSIX\");"}
+{"sql":"CREATE TABLE fail_part PARTITION OF list_parted FOR VALUES IN ()","reject":true}
+{"sql":"CREATE TABLE fail_part PARTITION OF list_parted FOR VALUES FROM (1) TO (2)","shape":"CREATE TABLE fail_part PARTITION OF list_parted FOR VALUES FROM (1) TO (2);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF list_parted FOR VALUES WITH (MODULUS 10, REMAINDER 1)","shape":"CREATE TABLE fail_part PARTITION OF list_parted FOR VALUES WITH (MODULUS 10, REMAINDER 1);"}
+{"sql":"CREATE TABLE part_default PARTITION OF list_parted DEFAULT","shape":"CREATE TABLE part_default PARTITION OF list_parted DEFAULT;"}
+{"sql":"CREATE TABLE fail_default_part PARTITION OF list_parted DEFAULT","shape":"CREATE TABLE fail_default_part PARTITION OF list_parted DEFAULT;"}
+{"sql":"CREATE TABLE bools (\n\ta bool\n) PARTITION BY LIST (a)","shape":"CREATE TABLE bools (a bool) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE bools_true PARTITION OF bools FOR VALUES IN (1)","shape":"CREATE TABLE bools_true PARTITION OF bools FOR VALUES IN (1);"}
+{"sql":"DROP TABLE bools","shape":"DROP TABLE bools;"}
+{"sql":"CREATE TABLE moneyp (\n\ta money\n) PARTITION BY LIST (a)","shape":"CREATE TABLE moneyp (a money) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE moneyp_10 PARTITION OF moneyp FOR VALUES IN (10)","shape":"CREATE TABLE moneyp_10 PARTITION OF moneyp FOR VALUES IN (10);"}
+{"sql":"CREATE TABLE moneyp_11 PARTITION OF moneyp FOR VALUES IN ('11')","shape":"CREATE TABLE moneyp_11 PARTITION OF moneyp FOR VALUES IN ('11');"}
+{"sql":"CREATE TABLE moneyp_12 PARTITION OF moneyp FOR VALUES IN (to_char(12, '99')::int)","shape":"CREATE TABLE moneyp_12 PARTITION OF moneyp FOR VALUES IN (to_char(12, '99')::int);"}
+{"sql":"DROP TABLE moneyp","shape":"DROP TABLE moneyp;"}
+{"sql":"CREATE TABLE bigintp (\n\ta bigint\n) PARTITION BY LIST (a)","shape":"CREATE TABLE bigintp (a bigint) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE bigintp_10 PARTITION OF bigintp FOR VALUES IN (10)","shape":"CREATE TABLE bigintp_10 PARTITION OF bigintp FOR VALUES IN (10);"}
+{"sql":"CREATE TABLE bigintp_10_2 PARTITION OF bigintp FOR VALUES IN ('10')","shape":"CREATE TABLE bigintp_10_2 PARTITION OF bigintp FOR VALUES IN ('10');"}
+{"sql":"DROP TABLE bigintp","shape":"DROP TABLE bigintp;"}
+{"sql":"CREATE TABLE range_parted (\n\ta date\n) PARTITION BY RANGE (a)","shape":"CREATE TABLE range_parted (a date) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (somename) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (somename) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (somename.somename) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (somename.somename) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (a) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (a) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (max(a)) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (max(a)) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (max(somename)) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (max(somename)) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (max('2019-02-01'::date)) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (max('2019-02-01'::date)) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM ((select 1)) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM ((SELECT 1)) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted\n  FOR VALUES FROM (generate_series(1, 3)) TO ('2019-01-01')","shape":"CREATE TABLE part_bogus_expr_fail PARTITION OF range_parted FOR VALUES FROM (generate_series(1, 3)) TO ('2019-01-01');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES IN ('a')","shape":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES IN ('a');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES WITH (MODULUS 10, REMAINDER 1)","shape":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES WITH (MODULUS 10, REMAINDER 1);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES FROM ('a', 1) TO ('z')","shape":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES FROM ('a', 1) TO ('z');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES FROM ('a') TO ('z', 1)","shape":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES FROM ('a') TO ('z', 1);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES FROM (null) TO (maxvalue)","shape":"CREATE TABLE fail_part PARTITION OF range_parted FOR VALUES FROM (NULL) TO (maxvalue);"}
+{"sql":"CREATE TABLE hash_parted (\n\ta int\n) PARTITION BY HASH (a)","shape":"CREATE TABLE hash_parted (a int) PARTITION BY HASH (a);"}
+{"sql":"CREATE TABLE hpart_1 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 10, REMAINDER 0)","shape":"CREATE TABLE hpart_1 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 10, REMAINDER 0);"}
+{"sql":"CREATE TABLE hpart_2 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 50, REMAINDER 1)","shape":"CREATE TABLE hpart_2 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 50, REMAINDER 1);"}
+{"sql":"CREATE TABLE hpart_3 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 200, REMAINDER 2)","shape":"CREATE TABLE hpart_3 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 200, REMAINDER 2);"}
+{"sql":"CREATE TABLE hpart_4 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 10, REMAINDER 3)","shape":"CREATE TABLE hpart_4 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 10, REMAINDER 3);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES WITH (MODULUS 25, REMAINDER 3)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES WITH (MODULUS 25, REMAINDER 3);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES WITH (MODULUS 150, REMAINDER 3)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES WITH (MODULUS 150, REMAINDER 3);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES WITH (MODULUS 100, REMAINDER 3)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES WITH (MODULUS 100, REMAINDER 3);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES FROM ('a', 1) TO ('z')","shape":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES FROM ('a', 1) TO ('z');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES IN (1000)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted FOR VALUES IN (1000);"}
+{"sql":"CREATE TABLE fail_default_part PARTITION OF hash_parted DEFAULT","shape":"CREATE TABLE fail_default_part PARTITION OF hash_parted DEFAULT;"}
+{"sql":"CREATE TABLE fail_part PARTITION OF unparted FOR VALUES IN ('a')","shape":"CREATE TABLE fail_part PARTITION OF unparted FOR VALUES IN ('a');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF unparted FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE fail_part PARTITION OF unparted FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"DROP TABLE unparted","shape":"DROP TABLE unparted;"}
+{"sql":"CREATE TEMP TABLE temp_parted (\n\ta int\n) PARTITION BY LIST (a)","shape":"CREATE TEMPORARY TABLE temp_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF temp_parted FOR VALUES IN ('a')","shape":"CREATE TABLE fail_part PARTITION OF temp_parted FOR VALUES IN ('a');"}
+{"sql":"DROP TABLE temp_parted","shape":"DROP TABLE temp_parted;"}
+{"sql":"CREATE TABLE list_parted2 (\n\ta varchar\n) PARTITION BY LIST (a)","shape":"CREATE TABLE list_parted2 (a varchar) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE part_null_z PARTITION OF list_parted2 FOR VALUES IN (null, 'z')","shape":"CREATE TABLE part_null_z PARTITION OF list_parted2 FOR VALUES IN (NULL, 'z');"}
+{"sql":"CREATE TABLE part_ab PARTITION OF list_parted2 FOR VALUES IN ('a', 'b')","shape":"CREATE TABLE part_ab PARTITION OF list_parted2 FOR VALUES IN ('a', 'b');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF list_parted2 FOR VALUES IN (null)","shape":"CREATE TABLE fail_part PARTITION OF list_parted2 FOR VALUES IN (NULL);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF list_parted2 FOR VALUES IN ('b', 'c')","shape":"CREATE TABLE fail_part PARTITION OF list_parted2 FOR VALUES IN ('b', 'c');"}
+{"sql":"INSERT INTO list_parted2 VALUES('X')","shape":"INSERT INTO list_parted2 VALUES ('X');"}
+{"sql":"CREATE TABLE fail_part PARTITION OF list_parted2 FOR VALUES IN ('W', 'X', 'Y')","shape":"CREATE TABLE fail_part PARTITION OF list_parted2 FOR VALUES IN ('W', 'X', 'Y');"}
+{"sql":"CREATE TABLE range_parted2 (\n\ta int\n) PARTITION BY RANGE (a)","shape":"CREATE TABLE range_parted2 (a int) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (1) TO (0)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (1) TO (0);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (1) TO (1)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (1) TO (1);"}
+{"sql":"CREATE TABLE part0 PARTITION OF range_parted2 FOR VALUES FROM (minvalue) TO (1)","shape":"CREATE TABLE part0 PARTITION OF range_parted2 FOR VALUES FROM (minvalue) TO (1);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (minvalue) TO (2)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (minvalue) TO (2);"}
+{"sql":"CREATE TABLE part1 PARTITION OF range_parted2 FOR VALUES FROM (1) TO (10)","shape":"CREATE TABLE part1 PARTITION OF range_parted2 FOR VALUES FROM (1) TO (10);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (-1) TO (1)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (-1) TO (1);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (9) TO (maxvalue)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (9) TO (maxvalue);"}
+{"sql":"CREATE TABLE part2 PARTITION OF range_parted2 FOR VALUES FROM (20) TO (30)","shape":"CREATE TABLE part2 PARTITION OF range_parted2 FOR VALUES FROM (20) TO (30);"}
+{"sql":"CREATE TABLE part3 PARTITION OF range_parted2 FOR VALUES FROM (30) TO (40)","shape":"CREATE TABLE part3 PARTITION OF range_parted2 FOR VALUES FROM (30) TO (40);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (10) TO (30)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (10) TO (30);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (10) TO (50)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (10) TO (50);"}
+{"sql":"CREATE TABLE range2_default PARTITION OF range_parted2 DEFAULT","shape":"CREATE TABLE range2_default PARTITION OF range_parted2 DEFAULT;"}
+{"sql":"CREATE TABLE fail_default_part PARTITION OF range_parted2 DEFAULT","shape":"CREATE TABLE fail_default_part PARTITION OF range_parted2 DEFAULT;"}
+{"sql":"INSERT INTO range_parted2 VALUES (85)","shape":"INSERT INTO range_parted2 VALUES (85);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (80) TO (90)","shape":"CREATE TABLE fail_part PARTITION OF range_parted2 FOR VALUES FROM (80) TO (90);"}
+{"sql":"CREATE TABLE part4 PARTITION OF range_parted2 FOR VALUES FROM (90) TO (100)","shape":"CREATE TABLE part4 PARTITION OF range_parted2 FOR VALUES FROM (90) TO (100);"}
+{"sql":"CREATE TABLE range_parted3 (\n\ta int,\n\tb int\n) PARTITION BY RANGE (a, (b+1))","shape":"CREATE TABLE range_parted3 (a int, b int) PARTITION BY RANGE (a, (b + 1));"}
+{"sql":"CREATE TABLE part00 PARTITION OF range_parted3 FOR VALUES FROM (0, minvalue) TO (0, maxvalue)","shape":"CREATE TABLE part00 PARTITION OF range_parted3 FOR VALUES FROM (0, minvalue) TO (0, maxvalue);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted3 FOR VALUES FROM (0, minvalue) TO (0, 1)","shape":"CREATE TABLE fail_part PARTITION OF range_parted3 FOR VALUES FROM (0, minvalue) TO (0, 1);"}
+{"sql":"CREATE TABLE part10 PARTITION OF range_parted3 FOR VALUES FROM (1, minvalue) TO (1, 1)","shape":"CREATE TABLE part10 PARTITION OF range_parted3 FOR VALUES FROM (1, minvalue) TO (1, 1);"}
+{"sql":"CREATE TABLE part11 PARTITION OF range_parted3 FOR VALUES FROM (1, 1) TO (1, 10)","shape":"CREATE TABLE part11 PARTITION OF range_parted3 FOR VALUES FROM (1, 1) TO (1, 10);"}
+{"sql":"CREATE TABLE part12 PARTITION OF range_parted3 FOR VALUES FROM (1, 10) TO (1, maxvalue)","shape":"CREATE TABLE part12 PARTITION OF range_parted3 FOR VALUES FROM (1, 10) TO (1, maxvalue);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted3 FOR VALUES FROM (1, 10) TO (1, 20)","shape":"CREATE TABLE fail_part PARTITION OF range_parted3 FOR VALUES FROM (1, 10) TO (1, 20);"}
+{"sql":"CREATE TABLE range3_default PARTITION OF range_parted3 DEFAULT","shape":"CREATE TABLE range3_default PARTITION OF range_parted3 DEFAULT;"}
+{"sql":"CREATE TABLE fail_part PARTITION OF range_parted3 FOR VALUES FROM (1, minvalue) TO (1, maxvalue)","shape":"CREATE TABLE fail_part PARTITION OF range_parted3 FOR VALUES FROM (1, minvalue) TO (1, maxvalue);"}
+{"sql":"CREATE TABLE hash_parted2 (\n\ta varchar\n) PARTITION BY HASH (a)","shape":"CREATE TABLE hash_parted2 (a varchar) PARTITION BY HASH (a);"}
+{"sql":"CREATE TABLE h2part_1 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 4, REMAINDER 2)","shape":"CREATE TABLE h2part_1 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 4, REMAINDER 2);"}
+{"sql":"CREATE TABLE h2part_2 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 0)","shape":"CREATE TABLE h2part_2 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 0);"}
+{"sql":"CREATE TABLE h2part_3 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 4)","shape":"CREATE TABLE h2part_3 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 4);"}
+{"sql":"CREATE TABLE h2part_4 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 5)","shape":"CREATE TABLE h2part_4 PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 5);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 0, REMAINDER 1)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 0, REMAINDER 1);"}
+{"sql":"CREATE TABLE fail_part PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 8)","shape":"CREATE TABLE fail_part PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 8, REMAINDER 8);"}
+{"sql":"CREATE TABLE parted (\n\ta text,\n\tb int NOT NULL DEFAULT 0,\n\tCONSTRAINT check_a CHECK (length(a) > 0)\n) PARTITION BY LIST (a)","shape":"CREATE TABLE parted (a text, b int NOT NULL DEFAULT 0, CONSTRAINT check_a CHECK (length(a) > 0)) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE part_a PARTITION OF parted FOR VALUES IN ('a')","shape":"CREATE TABLE part_a PARTITION OF parted FOR VALUES IN ('a');"}
+{"sql":"SELECT attname, attislocal, attinhcount FROM pg_attribute\n  WHERE attrelid = 'part_a'::regclass and attnum > 0\n  ORDER BY attnum","shape":"SELECT attname, attislocal, attinhcount FROM pg_attribute WHERE (attrelid = 'part_a'::regclass) AND (attnum > 0) ORDER BY attnum;"}
+{"sql":"CREATE TABLE part_b PARTITION OF parted (\n\tb NOT NULL,\n\tb DEFAULT 1,\n\tb CHECK (b >= 0),\n\tCONSTRAINT check_a CHECK (length(a) > 0)\n) FOR VALUES IN ('b')","shape":"CREATE TABLE part_b PARTITION OF parted (b NOT NULL, b DEFAULT 1, b CHECK (b >= 0), CONSTRAINT check_a CHECK (length(a) > 0)) FOR VALUES IN ('b');"}
+{"sql":"CREATE TABLE part_b PARTITION OF parted (\n\tb NOT NULL DEFAULT 1,\n\tCONSTRAINT check_a CHECK (length(a) > 0),\n\tCONSTRAINT check_b CHECK (b >= 0)\n) FOR VALUES IN ('b')","shape":"CREATE TABLE part_b PARTITION OF parted (b NOT NULL DEFAULT 1, CONSTRAINT check_a CHECK (length(a) > 0), CONSTRAINT check_b CHECK (b >= 0)) FOR VALUES IN ('b');"}
+{"sql":"SELECT conislocal, coninhcount FROM pg_constraint WHERE conrelid = 'part_b'::regclass ORDER BY conislocal, coninhcount","shape":"SELECT conislocal, coninhcount FROM pg_constraint WHERE conrelid = 'part_b'::regclass ORDER BY conislocal, coninhcount;"}
+{"sql":"ALTER TABLE parted ADD CONSTRAINT check_b CHECK (b >= 0)","shape":"ALTER TABLE parted ADD CONSTRAINT check_b CHECK (b >= 0);"}
+{"sql":"SELECT conislocal, coninhcount FROM pg_constraint WHERE conrelid = 'part_b'::regclass","shape":"SELECT conislocal, coninhcount FROM pg_constraint WHERE conrelid = 'part_b'::regclass;"}
+{"sql":"ALTER TABLE part_b DROP CONSTRAINT check_a","shape":"ALTER TABLE part_b DROP CONSTRAINT check_a;"}
+{"sql":"ALTER TABLE part_b DROP CONSTRAINT check_b","shape":"ALTER TABLE part_b DROP CONSTRAINT check_b;"}
+{"sql":"ALTER TABLE parted DROP CONSTRAINT check_a, DROP CONSTRAINT check_b","shape":"ALTER TABLE parted DROP CONSTRAINT check_a, DROP CONSTRAINT check_b;"}
+{"sql":"CREATE TABLE fail_part_col_not_found PARTITION OF parted FOR VALUES IN ('c') PARTITION BY RANGE (c)","shape":"CREATE TABLE fail_part_col_not_found PARTITION OF parted FOR VALUES IN ('c') PARTITION BY RANGE (c);"}
+{"sql":"CREATE TABLE part_c PARTITION OF parted (b WITH OPTIONS NOT NULL DEFAULT 0) FOR VALUES IN ('c') PARTITION BY RANGE ((b))","shape":"CREATE TABLE part_c PARTITION OF parted (b NOT NULL DEFAULT 0) FOR VALUES IN ('c') PARTITION BY RANGE ((b));"}
+{"sql":"CREATE TABLE part_c_1_10 PARTITION OF part_c FOR VALUES FROM (1) TO (10)","shape":"CREATE TABLE part_c_1_10 PARTITION OF part_c FOR VALUES FROM (1) TO (10);"}
+{"sql":"create table parted_notnull_inh_test (a int default 1, b int not null default 0) partition by list (a)","shape":"CREATE TABLE parted_notnull_inh_test (a int DEFAULT 1, b int NOT NULL DEFAULT 0) PARTITION BY LIST (a);"}
+{"sql":"create table parted_notnull_inh_test1 partition of parted_notnull_inh_test (a not null, b default 1) for values in (1)","shape":"CREATE TABLE parted_notnull_inh_test1 PARTITION OF parted_notnull_inh_test (a NOT NULL, b DEFAULT 1) FOR VALUES IN (1);"}
+{"sql":"insert into parted_notnull_inh_test (b) values (null)","shape":"INSERT INTO parted_notnull_inh_test (b) VALUES (NULL);"}
+{"sql":"drop table parted_notnull_inh_test","shape":"DROP TABLE parted_notnull_inh_test;"}
+{"sql":"create table parted_boolean_col (a bool, b text) partition by list(a)","shape":"CREATE TABLE parted_boolean_col (a bool, b text) PARTITION BY LIST (a);"}
+{"sql":"create table parted_boolean_less partition of parted_boolean_col\n  for values in ('foo' < 'bar')","shape":"CREATE TABLE parted_boolean_less PARTITION OF parted_boolean_col FOR VALUES IN ('foo' < 'bar');"}
+{"sql":"create table parted_boolean_greater partition of parted_boolean_col\n  for values in ('foo' > 'bar')","shape":"CREATE TABLE parted_boolean_greater PARTITION OF parted_boolean_col FOR VALUES IN ('foo' > 'bar');"}
+{"sql":"drop table parted_boolean_col","shape":"DROP TABLE parted_boolean_col;"}
+{"sql":"create table parted_collate_must_match (a text collate \"C\", b text collate \"C\")\n  partition by range (a)","shape":"CREATE TABLE parted_collate_must_match (a text COLLATE \"C\", b text COLLATE \"C\") PARTITION BY RANGE (a);"}
+{"sql":"create table parted_collate_must_match1 partition of parted_collate_must_match\n  (a collate \"POSIX\") for values from ('a') to ('m')","shape":"CREATE TABLE parted_collate_must_match1 PARTITION OF parted_collate_must_match (a COLLATE \"POSIX\") FOR VALUES FROM ('a') TO ('m');"}
+{"sql":"create table parted_collate_must_match2 partition of parted_collate_must_match\n  (b collate \"POSIX\") for values from ('m') to ('z')","shape":"CREATE TABLE parted_collate_must_match2 PARTITION OF parted_collate_must_match (b COLLATE \"POSIX\") FOR VALUES FROM ('m') TO ('z');"}
+{"sql":"drop table parted_collate_must_match","shape":"DROP TABLE parted_collate_must_match;"}
+{"sql":"create table test_part_coll_posix (a text) partition by range (a collate \"POSIX\")","shape":"CREATE TABLE test_part_coll_posix (a text) PARTITION BY RANGE (a COLLATE \"POSIX\");"}
+{"sql":"create table test_part_coll partition of test_part_coll_posix for values from ('a' collate \"C\") to ('g')","shape":"CREATE TABLE test_part_coll PARTITION OF test_part_coll_posix FOR VALUES FROM ('a' COLLATE \"C\") TO ('g');"}
+{"sql":"create table test_part_coll2 partition of test_part_coll_posix for values from ('g') to ('m')","shape":"CREATE TABLE test_part_coll2 PARTITION OF test_part_coll_posix FOR VALUES FROM ('g') TO ('m');"}
+{"sql":"create table test_part_coll_cast partition of test_part_coll_posix for values from (name 'm' collate \"C\") to ('s')","shape":"CREATE TABLE test_part_coll_cast PARTITION OF test_part_coll_posix FOR VALUES FROM (name 'm' COLLATE \"C\") TO ('s');"}
+{"sql":"create table test_part_coll_cast2 partition of test_part_coll_posix for values from (name 's') to ('z')","shape":"CREATE TABLE test_part_coll_cast2 PARTITION OF test_part_coll_posix FOR VALUES FROM (name 's') TO ('z');"}
+{"sql":"drop table test_part_coll_posix","shape":"DROP TABLE test_part_coll_posix;"}
+{"sql":"CREATE TABLE range_parted4 (a int, b int, c int) PARTITION BY RANGE (abs(a), abs(b), c)","shape":"CREATE TABLE range_parted4 (a int, b int, c int) PARTITION BY RANGE (abs(a), abs(b), c);"}
+{"sql":"CREATE TABLE unbounded_range_part PARTITION OF range_parted4 FOR VALUES FROM (MINVALUE, MINVALUE, MINVALUE) TO (MAXVALUE, MAXVALUE, MAXVALUE)","shape":"CREATE TABLE unbounded_range_part PARTITION OF range_parted4 FOR VALUES FROM (MINVALUE, MINVALUE, MINVALUE) TO (MAXVALUE, MAXVALUE, MAXVALUE);"}
+{"sql":"DROP TABLE unbounded_range_part","shape":"DROP TABLE unbounded_range_part;"}
+{"sql":"CREATE TABLE range_parted4_1 PARTITION OF range_parted4 FOR VALUES FROM (MINVALUE, MINVALUE, MINVALUE) TO (1, MAXVALUE, MAXVALUE)","shape":"CREATE TABLE range_parted4_1 PARTITION OF range_parted4 FOR VALUES FROM (MINVALUE, MINVALUE, MINVALUE) TO (1, MAXVALUE, MAXVALUE);"}
+{"sql":"CREATE TABLE range_parted4_2 PARTITION OF range_parted4 FOR VALUES FROM (3, 4, 5) TO (6, 7, MAXVALUE)","shape":"CREATE TABLE range_parted4_2 PARTITION OF range_parted4 FOR VALUES FROM (3, 4, 5) TO (6, 7, MAXVALUE);"}
+{"sql":"CREATE TABLE range_parted4_3 PARTITION OF range_parted4 FOR VALUES FROM (6, 8, MINVALUE) TO (9, MAXVALUE, MAXVALUE)","shape":"CREATE TABLE range_parted4_3 PARTITION OF range_parted4 FOR VALUES FROM (6, 8, MINVALUE) TO (9, MAXVALUE, MAXVALUE);"}
+{"sql":"DROP TABLE range_parted4","shape":"DROP TABLE range_parted4;"}
+{"sql":"CREATE FUNCTION my_int4_sort(int4,int4) RETURNS int LANGUAGE sql\n  AS $$ SELECT CASE WHEN $1 = $2 THEN 0 WHEN $1 > $2 THEN 1 ELSE -1 END; $$","shape":"CREATE FUNCTION my_int4_sort(int4, int4) RETURNS int LANGUAGE sql AS ' SELECT CASE WHEN $1 = $2 THEN 0 WHEN $1 > $2 THEN 1 ELSE -1 END; ';"}
+{"sql":"CREATE OPERATOR CLASS test_int4_ops FOR TYPE int4 USING btree AS\n  OPERATOR 1 < (int4,int4), OPERATOR 2 <= (int4,int4),\n  OPERATOR 3 = (int4,int4), OPERATOR 4 >= (int4,int4),\n  OPERATOR 5 > (int4,int4), FUNCTION 1 my_int4_sort(int4,int4)"}
+{"sql":"CREATE TABLE partkey_t (a int4) PARTITION BY RANGE (a test_int4_ops)","shape":"CREATE TABLE partkey_t (a int4) PARTITION BY RANGE (a test_int4_ops);"}
+{"sql":"CREATE TABLE partkey_t_1 PARTITION OF partkey_t FOR VALUES FROM (0) TO (1000)","shape":"CREATE TABLE partkey_t_1 PARTITION OF partkey_t FOR VALUES FROM (0) TO (1000);"}
+{"sql":"INSERT INTO partkey_t VALUES (100)","shape":"INSERT INTO partkey_t VALUES (100);"}
+{"sql":"INSERT INTO partkey_t VALUES (200)","shape":"INSERT INTO partkey_t VALUES (200);"}
+{"sql":"DROP TABLE parted, list_parted, range_parted, list_parted2, range_parted2, range_parted3","shape":"DROP TABLE parted, list_parted, range_parted, list_parted2, range_parted2, range_parted3;"}
+{"sql":"DROP TABLE partkey_t, hash_parted, hash_parted2","shape":"DROP TABLE partkey_t, hash_parted, hash_parted2;"}
+{"sql":"DROP OPERATOR CLASS test_int4_ops USING btree"}
+{"sql":"DROP FUNCTION my_int4_sort(int4,int4)"}
+{"sql":"CREATE TABLE parted_col_comment (a int, b text) PARTITION BY LIST (a)","shape":"CREATE TABLE parted_col_comment (a int, b text) PARTITION BY LIST (a);"}
+{"sql":"COMMENT ON TABLE parted_col_comment IS 'Am partitioned table'","shape":"COMMENT ON TABLE parted_col_comment IS 'Am partitioned table';"}
+{"sql":"COMMENT ON COLUMN parted_col_comment.a IS 'Partition key'","shape":"COMMENT ON COLUMN parted_col_comment.a IS 'Partition key';"}
+{"sql":"SELECT obj_description('parted_col_comment'::regclass)","shape":"SELECT obj_description('parted_col_comment'::regclass);"}
+{"sql":"DROP TABLE parted_col_comment","shape":"DROP TABLE parted_col_comment;"}
+{"sql":"CREATE TABLE parted_col_comment (a int, b text) PARTITION BY LIST (a) WITH (fillfactor=100)","shape":"CREATE TABLE parted_col_comment (a int, b text) PARTITION BY LIST (a) WITH (fillfactor = 100);"}
+{"sql":"CREATE TABLE arrlp (a int[]) PARTITION BY LIST (a)","shape":"CREATE TABLE arrlp (a int[]) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE arrlp12 PARTITION OF arrlp FOR VALUES IN ('{1}', '{2}')","shape":"CREATE TABLE arrlp12 PARTITION OF arrlp FOR VALUES IN ('{1}', '{2}');"}
+{"sql":"DROP TABLE arrlp","shape":"DROP TABLE arrlp;"}
+{"sql":"create table boolspart (a bool) partition by list (a)","shape":"CREATE TABLE boolspart (a bool) PARTITION BY LIST (a);"}
+{"sql":"create table boolspart_t partition of boolspart for values in (true)","shape":"CREATE TABLE boolspart_t PARTITION OF boolspart FOR VALUES IN (TRUE);"}
+{"sql":"create table boolspart_f partition of boolspart for values in (false)","shape":"CREATE TABLE boolspart_f PARTITION OF boolspart FOR VALUES IN (FALSE);"}
+{"sql":"drop table boolspart","shape":"DROP TABLE boolspart;"}
+{"sql":"create table perm_parted (a int) partition by list (a)","shape":"CREATE TABLE perm_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"create temporary table temp_parted (a int) partition by list (a)","shape":"CREATE TEMPORARY TABLE temp_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"create table perm_part partition of temp_parted default","shape":"CREATE TABLE perm_part PARTITION OF temp_parted DEFAULT;"}
+{"sql":"create temp table temp_part partition of perm_parted default","shape":"CREATE TEMPORARY TABLE temp_part PARTITION OF perm_parted DEFAULT;"}
+{"sql":"create temp table temp_part partition of temp_parted default","shape":"CREATE TEMPORARY TABLE temp_part PARTITION OF temp_parted DEFAULT;"}
+{"sql":"drop table perm_parted cascade","shape":"DROP TABLE perm_parted CASCADE;"}
+{"sql":"drop table temp_parted cascade","shape":"DROP TABLE temp_parted CASCADE;"}
+{"sql":"create table tab_part_create (a int) partition by list (a)","shape":"CREATE TABLE tab_part_create (a int) PARTITION BY LIST (a);"}
+{"sql":"create or replace function func_part_create() returns trigger\n  language plpgsql as $$\n  begin\n    execute 'create table tab_part_create_1 partition of tab_part_create for values in (1)';\n    return null;\n  end $$","shape":"CREATE OR REPLACE FUNCTION func_part_create() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    execute ''create table tab_part_create_1 partition of tab_part_create for values in (1)'';\n    return null;\n  end ';"}
+{"sql":"create trigger trig_part_create before insert on tab_part_create\n  for each statement execute procedure func_part_create()","shape":"CREATE TRIGGER trig_part_create BEFORE INSERT ON tab_part_create FOR EACH STATEMENT EXECUTE FUNCTION func_part_create();"}
+{"sql":"insert into tab_part_create values (1)","shape":"INSERT INTO tab_part_create VALUES (1);"}
+{"sql":"drop table tab_part_create","shape":"DROP TABLE tab_part_create;"}
+{"sql":"drop function func_part_create()"}
+{"sql":"create table volatile_partbound_test (partkey timestamp) partition by range (partkey)","shape":"CREATE TABLE volatile_partbound_test (partkey timestamp) PARTITION BY RANGE (partkey);"}
+{"sql":"create table volatile_partbound_test1 partition of volatile_partbound_test for values from (minvalue) to (current_timestamp)","shape":"CREATE TABLE volatile_partbound_test1 PARTITION OF volatile_partbound_test FOR VALUES FROM (minvalue) TO (current_timestamp);"}
+{"sql":"create table volatile_partbound_test2 partition of volatile_partbound_test for values from (current_timestamp) to (maxvalue)","shape":"CREATE TABLE volatile_partbound_test2 PARTITION OF volatile_partbound_test FOR VALUES FROM (current_timestamp) TO (maxvalue);"}
+{"sql":"insert into volatile_partbound_test values (current_timestamp)","shape":"INSERT INTO volatile_partbound_test VALUES (current_timestamp);"}
+{"sql":"select tableoid::regclass from volatile_partbound_test","shape":"SELECT tableoid::regclass FROM volatile_partbound_test;"}
+{"sql":"drop table volatile_partbound_test","shape":"DROP TABLE volatile_partbound_test;"}
+{"sql":"create table defcheck (a int, b int) partition by list (b)","shape":"CREATE TABLE defcheck (a int, b int) PARTITION BY LIST (b);"}
+{"sql":"create table defcheck_def (a int, c int, b int)","shape":"CREATE TABLE defcheck_def (a int, c int, b int);"}
+{"sql":"alter table defcheck_def drop c","shape":"ALTER TABLE defcheck_def DROP COLUMN c;"}
+{"sql":"alter table defcheck attach partition defcheck_def default"}
+{"sql":"alter table defcheck_def add check (b <= 0 and b is not null)","shape":"ALTER TABLE defcheck_def ADD CHECK ((b <= 0) AND (b IS NOT NULL));"}
+{"sql":"create table defcheck_1 partition of defcheck for values in (1, null)","shape":"CREATE TABLE defcheck_1 PARTITION OF defcheck FOR VALUES IN (1, NULL);"}
+{"sql":"insert into defcheck_def values (0, 0)","shape":"INSERT INTO defcheck_def VALUES (0, 0);"}
+{"sql":"create table defcheck_0 partition of defcheck for values in (0)","shape":"CREATE TABLE defcheck_0 PARTITION OF defcheck FOR VALUES IN (0);"}
+{"sql":"drop table defcheck","shape":"DROP TABLE defcheck;"}
+{"sql":"create table part_column_drop (\n  useless_1 int,\n  id int,\n  useless_2 int,\n  d int,\n  b int,\n  useless_3 int\n) partition by range (id)","shape":"CREATE TABLE part_column_drop (useless_1 int, id int, useless_2 int, d int, b int, useless_3 int) PARTITION BY RANGE (id);"}
+{"sql":"alter table part_column_drop drop column useless_1","shape":"ALTER TABLE part_column_drop DROP COLUMN useless_1;"}
+{"sql":"alter table part_column_drop drop column useless_2","shape":"ALTER TABLE part_column_drop DROP COLUMN useless_2;"}
+{"sql":"alter table part_column_drop drop column useless_3","shape":"ALTER TABLE part_column_drop DROP COLUMN useless_3;"}
+{"sql":"create index part_column_drop_b_pred on part_column_drop(b) where b = 1","shape":"CREATE INDEX part_column_drop_b_pred ON part_column_drop (b) WHERE b = 1;"}
+{"sql":"create index part_column_drop_b_expr on part_column_drop((b = 1))","shape":"CREATE INDEX part_column_drop_b_expr ON part_column_drop ((b = 1));"}
+{"sql":"create index part_column_drop_d_pred on part_column_drop(d) where d = 2","shape":"CREATE INDEX part_column_drop_d_pred ON part_column_drop (d) WHERE d = 2;"}
+{"sql":"create index part_column_drop_d_expr on part_column_drop((d = 2))","shape":"CREATE INDEX part_column_drop_d_expr ON part_column_drop ((d = 2));"}
+{"sql":"create table part_column_drop_1_10 partition of\n  part_column_drop for values from (1) to (10)","shape":"CREATE TABLE part_column_drop_1_10 PARTITION OF part_column_drop FOR VALUES FROM (1) TO (10);"}
+{"sql":"drop table part_column_drop","shape":"DROP TABLE part_column_drop;"}

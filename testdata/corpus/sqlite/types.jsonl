@@ -1,0 +1,18 @@
+{"sql":"CREATE TABLE t1(i integer, n numeric, t text, o blob)"}
+{"sql":"SELECT typeof(i), typeof(n), typeof(t), typeof(o) FROM t1"}
+{"sql":"CREATE TABLE t1(a integer)"}
+{"sql":"INSERT INTO t1 VALUES(120)"}
+{"sql":"INSERT INTO t1 VALUES(-120)"}
+{"sql":"INSERT INTO t1 VALUES(30000)"}
+{"sql":"INSERT INTO t1 VALUES(-30000)"}
+{"sql":"INSERT INTO t1 VALUES(2100000000)"}
+{"sql":"INSERT INTO t1 VALUES(-2100000000)"}
+{"sql":"INSERT INTO t1 VALUES(9000000*1000000*1000000)"}
+{"sql":"INSERT INTO t1 VALUES(-9000000*1000000*1000000)"}
+{"sql":"CREATE TABLE t2(a float)"}
+{"sql":"INSERT INTO t2 VALUES(0.0)"}
+{"sql":"INSERT INTO t2 VALUES(12345.678)"}
+{"sql":"INSERT INTO t2 VALUES(-12345.678)"}
+{"sql":"CREATE TABLE t3(a nullvalue)"}
+{"sql":"SELECT a ISNULL FROM t3"}
+{"sql":"SELECT a FROM t4"}

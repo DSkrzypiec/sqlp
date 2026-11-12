@@ -1,0 +1,26 @@
+{"sql":"PRAGMA compile_options()","reject":true}
+{"sql":"PRAGMA compile_options(NULL)","reject":true}
+{"sql":"PRAGMA compile_options *","reject":true}
+{"sql":"PRAGMA compile_options"}
+{"sql":"SELECT sqlite_compileoption_used('SQLITE_THREADSAFE')"}
+{"sql":"SELECT sqlite_compileoption_used('THREADSAFE')"}
+{"sql":"SELECT sqlite_compileoption_used(\"THREADSAFE\")"}
+{"sql":"SELECT sqlite_compileoption_used('THREADSAFE=0')"}
+{"sql":"SELECT sqlite_compileoption_used('THREADSAFE=1')"}
+{"sql":"SELECT sqlite_compileoption_used('THREADSAFE=2')"}
+{"sql":"SELECT sqlite_compileoption_used('THREADSAFE=')"}
+{"sql":"SELECT sqlite_compileoption_used('SQLITE_OMIT_COMPILEOPTION_DIAGS')"}
+{"sql":"SELECT sqlite_compileoption_used('OMIT_COMPILEOPTION_DIAGS')"}
+{"sql":"SELECT sqlite_compileoption_used()"}
+{"sql":"SELECT sqlite_compileoption_used(NULL)"}
+{"sql":"SELECT sqlite_compileoption_used(\"\")"}
+{"sql":"SELECT sqlite_compileoption_used('')"}
+{"sql":"SELECT sqlite_compileoption_used(foo)"}
+{"sql":"SELECT sqlite_compileoption_used('THREADSAFE', 0)"}
+{"sql":"SELECT sqlite_compileoption_used(0)"}
+{"sql":"SELECT sqlite_compileoption_used('0')"}
+{"sql":"SELECT sqlite_compileoption_used(1.0)"}
+{"sql":"SELECT sqlite_compileoption_get()"}
+{"sql":"SELECT sqlite_compileoption_get(0, 0)"}
+{"sql":"SELECT sqlite_compileoption_used(sqlite_compileoption_get(0))"}
+{"sql":"SELECT sqlite_compileoption_get(0)"}

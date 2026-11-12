@@ -1,0 +1,2 @@
+{"sql":"PRAGMA mmap_size = 8000000"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(1000), randomblob(1000))"}

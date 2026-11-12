@@ -1,0 +1,6 @@
+{"sql":"CREATE TRIGGER tr1 BEFORE UPDATE ON t1 BEGIN\n        INSERT INTO log VALUES(old.z || '->' || new.z);\n      END"}
+{"sql":"CREATE TRIGGER tr2 AFTER UPDATE ON t1 BEGIN\n        INSERT INTO log VALUES(old.y || '->' || new.y);\n      END"}
+{"sql":"WITH data(k, v) AS (\n          VALUES(3, 'thirty'), (1, 'ten')\n      )\n      UPDATE t1 SET z=v FROM data WHERE x=k"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n      UPDATE t2 SET x=a FROM t1 WHERE c=z;\n    END"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    UPDATE t1 SET a=x FROM t2 WHERE c=z;\n  END"}
+{"sql":"INSERT INTO t1 VALUES(NULL, NULL, 1), (NULL, NULL, 3)"}

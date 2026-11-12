@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE datasource(dsid INT, name TEXT)"}
+{"sql":"INSERT INTO datasource VALUES(1,'ds-one'),(2,'ds-two'),(3,'ds-three')"}
+{"sql":"CREATE INDEX ds1 ON datasource(name, dsid)"}
+{"sql":"CREATE TABLE rule(rid INT, team_id INT, dsid INT)"}
+{"sql":"WITH RECURSIVE c(n) AS (VALUES(1) UNION ALL SELECT n+1 FROM c WHERE n<9)\n    INSERT INTO rule(rid,team_id,dsid) SELECT n, 1, 1 FROM c"}
+{"sql":"WITH RECURSIVE c(n) AS (VALUES(10) UNION ALL SELECT n+1 FROM c WHERE n<24)\n    INSERT INTO rule(rid,team_id,dsid) SELECT n, 2, 2 FROM c"}
+{"sql":"CREATE INDEX rule2 ON rule(dsid, rid)"}
+{"sql":"CREATE TABLE violation(vid INT, rid INT, vx BLOB)"}
+{"sql":"CREATE INDEX v1 ON violation(rid, vid)"}
+{"sql":"CREATE INDEX v2 ON violation(vid)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES\n    ('violation','v2','376661 1'),\n    ('violation','v1','376661 28974 1'),\n    ('rule','rule2','24 12 1'),\n    ('datasource','ds1','3 1 1')"}

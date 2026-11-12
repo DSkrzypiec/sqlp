@@ -1,0 +1,30 @@
+{"sql":"SELECT rowid FROM email WHERE email MATCH 'mark'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH 'susan'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH 'mark susan'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH 'susan mark'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH '\"mark susan\"'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH 'mark -susan'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH '-mark susan'"}
+{"sql":"SELECT rowid FROM email WHERE email MATCH 'mark OR susan'"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE email MATCH 'gas reminder'"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE email MATCH 'subject:gas reminder'"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE email MATCH 'body:gas reminder'"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE subject MATCH 'gas reminder'"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE body MATCH 'gas reminder'"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE body MATCH 'child product' AND +rowid=32"}
+{"sql":"SELECT rowid, offsets(email) FROM email\n     WHERE body MATCH '\"child product\"'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'subject:gas reminder'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'christmas candlelight'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'deal sheet potential reuse'"}
+{"sql":"SELECT snippet(email,'<<<','>>>',' ') FROM email\n     WHERE email MATCH 'deal sheet potential reuse'"}
+{"sql":"SELECT snippet(email,'<<<','>>>',' ') FROM email\n     WHERE email MATCH 'first things'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'chris is here'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH '\"pursuant to\"'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'ancillary load davis'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'questar enron OR com'"}
+{"sql":"SELECT snippet(email) FROM email\n     WHERE email MATCH 'enron OR com questar'"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3(one, two)"}
+{"sql":"INSERT INTO ft VALUES('', 'foo')"}
+{"sql":"INSERT INTO ft VALUES('foo', 'foo')"}
+{"sql":"SELECT offsets(ft) FROM ft WHERE ft MATCH 'foo'"}
+{"sql":"DELETE FROM ft WHERE one = 'foo'"}

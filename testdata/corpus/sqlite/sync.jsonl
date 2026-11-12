@@ -1,0 +1,7 @@
+{"sql":"CREATE TABLE db2.t2(x,y)"}
+{"sql":"PRAGMA main.synchronous=on"}
+{"sql":"PRAGMA db2.synchronous=on"}
+{"sql":"PRAGMA main.synchronous=full"}
+{"sql":"PRAGMA db2.synchronous=full"}
+{"sql":"PRAGMA main.synchronous=off"}
+{"sql":"PRAGMA db2.synchronous=off"}

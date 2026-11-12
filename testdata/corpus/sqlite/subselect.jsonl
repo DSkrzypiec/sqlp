@@ -1,0 +1,36 @@
+{"sql":"SELECT * FROM t1 WHERE a = (SELECT count(*) FROM t1)"}
+{"sql":"SELECT * FROM t1 WHERE a = (SELECT * FROM t1)"}
+{"sql":"SELECT b from t1 where a = (SELECT a FROM t1 WHERE b=2)"}
+{"sql":"SELECT b from t1 where a = (SELECT a FROM t1 WHERE b=4)"}
+{"sql":"SELECT b from t1 where a = (SELECT a FROM t1 WHERE b=6)"}
+{"sql":"SELECT b from t1 where a = (SELECT a FROM t1 WHERE b=8)"}
+{"sql":"SELECT b FROM t1\n       WHERE a = (SELECT a FROM t1 UNION SELECT b FROM t1 ORDER BY 1)"}
+{"sql":"SELECT b from t1 where a = coalesce((SELECT a FROM t1 WHERE b=5),1)"}
+{"sql":"INSERT INTO t2 VALUES(2,4)"}
+{"sql":"INSERT INTO t2 VALUES(3,8)"}
+{"sql":"INSERT INTO t2 VALUES(4,16)"}
+{"sql":"SELECT y from t2 \n    WHERE x = (SELECT sum(b) FROM t1 where a notnull) - (SELECT sum(a) FROM t1)"}
+{"sql":"DELETE FROM t2 WHERE x < 0.5*(SELECT max(x) FROM t2)"}
+{"sql":"SELECT (SELECT a FROM t1 ORDER BY a), (SELECT a FROM t1 ORDER BY a DESC)"}
+{"sql":"SELECT 1 IN (SELECT a FROM t1 ORDER BY a)"}
+{"sql":"SELECT 2 IN (SELECT a FROM t1 ORDER BY a DESC)"}
+{"sql":"CREATE TABLE t3(x int)"}
+{"sql":"INSERT INTO t3 SELECT a FROM t1 UNION ALL SELECT b FROM t1"}
+{"sql":"SELECT * FROM t3 ORDER BY x"}
+{"sql":"INSERT INTO t3 SELECT b FROM t1"}
+{"sql":"SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x LIMIT 2)"}
+{"sql":"SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x DESC LIMIT 2)"}
+{"sql":"SELECT (SELECT x FROM t3 ORDER BY x)"}
+{"sql":"SELECT (SELECT x FROM t3 ORDER BY x DESC)"}
+{"sql":"SELECT (SELECT x FROM t3 ORDER BY x LIMIT 1)"}
+{"sql":"SELECT (SELECT x FROM t3 ORDER BY x DESC LIMIT 1)"}
+{"sql":"SELECT (SELECT x FROM t3 ORDER BY x LIMIT 1 OFFSET 2)"}
+{"sql":"SELECT (SELECT x FROM t3 ORDER BY x DESC LIMIT 1 OFFSET 2)"}
+{"sql":"SELECT x FROM t3 WHERE x IN\n       (SELECT x FROM t3 ORDER BY x DESC LIMIT 1 OFFSET 2)"}
+{"sql":"CREATE TABLE t4(a TEXT, b TEXT)"}
+{"sql":"INSERT INTO t4 VALUES('a','1')"}
+{"sql":"INSERT INTO t4 VALUES('b','2')"}
+{"sql":"INSERT INTO t4 VALUES('c','3')"}
+{"sql":"SELECT a FROM t4 WHERE b IN (SELECT b FROM t4 ORDER BY b)"}
+{"sql":"SELECT a FROM t4 WHERE b IN (SELECT b FROM t4 ORDER BY b LIMIT 1)"}
+{"sql":"SELECT a FROM t4 WHERE b IN (SELECT b FROM t4 ORDER BY b DESC LIMIT 1)"}

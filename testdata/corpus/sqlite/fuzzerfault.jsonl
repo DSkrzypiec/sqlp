@@ -1,0 +1,17 @@
+{"sql":"INSERT INTO x1_rules VALUES(0, 'a', 'b', 1)"}
+{"sql":"INSERT INTO x1_rules VALUES(0, 'a', 'c', 2)"}
+{"sql":"INSERT INTO x1_rules VALUES(0, 'a', 'd', 3)"}
+{"sql":"SELECT word FROM x1 WHERE word MATCH 'xax'"}
+{"sql":"CREATE TABLE x2_rules(ruleset, cFrom, cTo, cost)"}
+{"sql":"INSERT INTO x2_rules VALUES(0, 'a', 'x', 1)"}
+{"sql":"INSERT INTO x2_rules VALUES(0, 'b', 'x', 2)"}
+{"sql":"INSERT INTO x2_rules VALUES(0, 'c', 'x', 3)"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING fuzzer(x2_rules)"}
+{"sql":"SELECT count(*) FROM x2 WHERE word MATCH 'abc'"}
+{"sql":"INSERT INTO x1_rules VALUES(0, 'a', \n      '123456789012345678901234567890a1234567890123456789', 10\n    )"}
+{"sql":"SELECT count(*) FROM (SELECT * FROM x1 WHERE word MATCH 'a' LIMIT 2)"}
+{"sql":"CREATE TABLE t1_a(a INTEFDR PRIMARY KEY, b TEXT)"}
+{"sql":"CREATE TABLE t3_a(k FnTEGER PRIMARY KEY, v TEXT)"}
+{"sql":"CREATE TABLE t3_b(k INTEÀ5R PRIMARY KEY, v TEXT)"}
+{"sql":"CREATE VIEW t3 AS SELECT * FROM t3_a UNION ALL SELECT * FROM t3_b"}
+{"sql":"SELECT 1 FROM t1_a LEFT JOIN t3 ON ((1+1) AND k=1)"}

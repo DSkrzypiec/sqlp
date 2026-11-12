@@ -1,0 +1,363 @@
+{"sql":"SELECT sum(b) OVER () FROM t1"}
+{"sql":"SELECT a, sum(b) OVER () FROM t1"}
+{"sql":"SELECT a, 4 + sum(b) OVER () FROM t1"}
+{"sql":"SELECT a + 4 + sum(b) OVER () FROM t1"}
+{"sql":"SELECT a, sum(b) OVER (PARTITION BY c) FROM t1"}
+{"sql":"INSERT INTO t2 VALUES(0, 0, 0)"}
+{"sql":"INSERT INTO t2 VALUES(2, 0, 2)"}
+{"sql":"INSERT INTO t2 VALUES(3, 1, 0)"}
+{"sql":"INSERT INTO t2 VALUES(4, 0, 1)"}
+{"sql":"INSERT INTO t2 VALUES(5, 1, 2)"}
+{"sql":"INSERT INTO t2 VALUES(6, 0, 0)"}
+{"sql":"SELECT a, sum(a) OVER (PARTITION BY b) FROM t2"}
+{"sql":"SELECT a, sum(a) OVER (PARTITION BY b) FROM t2 ORDER BY a"}
+{"sql":"SELECT a, sum(a) OVER () FROM t2 ORDER BY a"}
+{"sql":"SELECT a, sum(a) OVER (ORDER BY a) FROM t2"}
+{"sql":"SELECT a, sum(a) OVER (PARTITION BY b ORDER BY a) FROM t2 ORDER BY a"}
+{"sql":"SELECT a, sum(a) OVER (PARTITION BY c ORDER BY a) FROM t2 ORDER BY a"}
+{"sql":"SELECT a, sum(a) OVER (PARTITION BY b ORDER BY a DESC) FROM t2 ORDER BY a"}
+{"sql":"SELECT a, \n    sum(a) OVER (PARTITION BY b ORDER BY a DESC),\n    sum(a) OVER (PARTITION BY c ORDER BY a) \n  FROM t2 ORDER BY a"}
+{"sql":"SELECT a, \n    sum(a) OVER (ORDER BY a), \n    avg(a) OVER (ORDER BY a) \n  FROM t2 ORDER BY a"}
+{"sql":"SELECT a, \n    count() OVER (ORDER BY a DESC),\n    string_agg(a, '.') OVER (ORDER BY a DESC) \n  FROM t2 ORDER BY a DESC"}
+{"sql":"SELECT a, \n    count(*) OVER (ORDER BY a DESC),\n    group_concat(a, '.') OVER (ORDER BY a DESC) \n  FROM t2 ORDER BY a DESC"}
+{"sql":"SELECT ntile(0) OVER (ORDER BY a) FROM t2"}
+{"sql":"SELECT ntile(-1) OVER (ORDER BY a) FROM t2"}
+{"sql":"SELECT ntile('zbc') OVER (ORDER BY a) FROM t2"}
+{"sql":"SELECT ntile(1) OVER (ORDER BY a) FROM t4"}
+{"sql":"INSERT INTO t1 VALUES(7), (6), (5), (4), (3), (2), (1)"}
+{"sql":"INSERT INTO t2 VALUES('b'), ('a')"}
+{"sql":"SELECT x, count(*) OVER (ORDER BY x) FROM t1"}
+{"sql":"SELECT * FROM t2, (SELECT x, count(*) OVER (ORDER BY x) FROM t1)\n  ORDER BY 1, 2"}
+{"sql":"SELECT x, lag(x) FILTER (WHERE (x%2)=0) OVER w FROM t1 \n  WINDOW w AS (ORDER BY x)"}
+{"sql":"SELECT nth_value(x, 1) FROM t1"}
+{"sql":"SELECT * FROM t1 WHERE nth_value(x, 1) OVER (ORDER BY y)"}
+{"sql":"SELECT count(*) FROM t1 GROUP BY y HAVING nth_value(x, 1) OVER (ORDER BY y)"}
+{"sql":"SELECT count(*) FROM t1 GROUP BY nth_value(x, 1) OVER (ORDER BY y)"}
+{"sql":"SELECT count(*) FROM t1 LIMIT nth_value(x, 1) OVER ()"}
+{"sql":"SELECT trim(x) OVER (ORDER BY y) FROM t1"}
+{"sql":"SELECT max(x) OVER abc FROM t1 WINDOW def AS (ORDER BY y)"}
+{"sql":"SELECT row_number(x) OVER () FROM t1"}
+{"sql":"SELECT \n    lead(y) OVER win, \n    lead(y, 2) OVER win, \n    lead(y, 3, 'default') OVER win\n  FROM t1\n  WINDOW win AS (ORDER BY x)"}
+{"sql":"SELECT row_number() OVER (ORDER BY x) FROM t1"}
+{"sql":"SELECT \n    row_number() OVER win,\n    lead(x) OVER win\n  FROM t1\n  WINDOW win AS (ORDER BY x ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)"}
+{"sql":"WITH s(i) AS ( VALUES(1) UNION ALL SELECT i+1 FROM s WHERE i<6 )\n  INSERT INTO t3 SELECT i, i, i FROM s"}
+{"sql":"CREATE VIEW v1 AS SELECT\n    sum(b) OVER (ORDER BY c),\n    min(b) OVER (ORDER BY c),\n    max(b) OVER (ORDER BY c)\n  FROM t3"}
+{"sql":"CREATE VIEW v2 AS SELECT\n    sum(b) OVER win,\n    min(b) OVER win,\n    max(b) OVER win\n  FROM t3\n  WINDOW win AS (ORDER BY c)"}
+{"sql":"INSERT INTO t4 VALUES(1, 'g')"}
+{"sql":"INSERT INTO t4 VALUES(2, 'i')"}
+{"sql":"INSERT INTO t4 VALUES(3, 'l')"}
+{"sql":"INSERT INTO t4 VALUES(4, 'g')"}
+{"sql":"INSERT INTO t4 VALUES(5, 'a')"}
+{"sql":"CREATE TABLE t5(x, y, m)"}
+{"sql":"CREATE TRIGGER t4i AFTER INSERT ON t4 BEGIN\n    DELETE FROM t5;\n    INSERT INTO t5 \n      SELECT x, y, max(y) OVER xyz FROM t4\n      WINDOW xyz AS (PARTITION BY (x%2) ORDER BY x);\n  END"}
+{"sql":"SELECT x, y, max(y) OVER xyz FROM t4\n      WINDOW xyz AS (PARTITION BY (x%2) ORDER BY x) ORDER BY 1"}
+{"sql":"INSERT INTO t4 VALUES(6, 'm')"}
+{"sql":"WITH aaa(x, y, z) AS (\n    SELECT x, y, max(y) OVER xyz FROM t4\n    WINDOW xyz AS (PARTITION BY (x%2) ORDER BY x)\n  )\n  SELECT * FROM aaa ORDER BY 1"}
+{"sql":"WITH aaa(x, y, z) AS (\n    SELECT x, y, max(y) OVER xyz FROM t4\n    WINDOW xyz AS (ORDER BY x)\n  )\n  SELECT *, min(z) OVER (ORDER BY x) FROM aaa ORDER BY 1"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t2(x,y)\n      SELECT a, max(d) OVER w1 FROM t1\n        WINDOW w1 AS (PARTITION BY EXISTS(SELECT 1 FROM t1 WHERE c=?1) );\n  END"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t1(a,b) \n        SELECT a, max(d) OVER w1 FROM t1\n        WINDOW w1 AS (\n          ORDER BY a ROWS BETWEEN ? PRECEDING AND UNBOUNDED FOLLOWING\n        );\n  END"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t1(a,b) \n        SELECT a, max(d) OVER w1 FROM t1\n        WINDOW w1 AS (\n          ORDER BY a ROWS BETWEEN UNBOUNDED PRECEDING AND ? FOLLOWING\n        );\n  END"}
+{"sql":"CREATE TABLE sales(emp TEXT PRIMARY KEY, region, total)"}
+{"sql":"INSERT INTO sales VALUES\n      ('Alice',     'North', 34),\n      ('Frank',     'South', 22),\n      ('Charles',   'North', 45),\n      ('Darrell',   'South', 8),\n      ('Grant',     'South', 23),\n      ('Brad' ,     'North', 22),\n      ('Elizabeth', 'South', 99),\n      ('Horace',    'East',   1)"}
+{"sql":"SELECT emp, region, total FROM (\n    SELECT \n      emp, region, total,\n      row_number() OVER (PARTITION BY region ORDER BY total DESC) AS rank\n    FROM sales\n  ) WHERE rank<=2 ORDER BY region, total DESC"}
+{"sql":"SELECT emp, region, sum(total) OVER win FROM sales\n  WINDOW win AS (PARTITION BY region ORDER BY total)"}
+{"sql":"SELECT emp, region, sum(total) OVER win FROM sales\n  WINDOW win AS (PARTITION BY region ORDER BY total)\n  LIMIT 5"}
+{"sql":"SELECT emp, region, sum(total) OVER win FROM sales\n  WINDOW win AS (PARTITION BY region ORDER BY total)\n  LIMIT 5 OFFSET 2"}
+{"sql":"SELECT emp, region, sum(total) OVER win FROM sales\n  WINDOW win AS (\n    PARTITION BY region ORDER BY total \n    ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING\n  )"}
+{"sql":"SELECT emp, region, sum(total) OVER win FROM sales\n  WINDOW win AS (\n    PARTITION BY region ORDER BY total \n    ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING\n  ) LIMIT 5 OFFSET 2"}
+{"sql":"SELECT emp, region, (\n    SELECT sum(total) OVER (\n      ORDER BY total RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\n    ) || outer.emp FROM sales\n  ) FROM sales AS outer"}
+{"sql":"SELECT emp, region, (\n    SELECT sum(total) FILTER (WHERE sales.emp!=outer.emp) OVER (\n      ORDER BY total RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\n    ) FROM sales\n  ) FROM sales AS outer"}
+{"sql":"CREATE INDEX t6i ON t6(a) WHERE sum(b) OVER ()"}
+{"sql":"CREATE INDEX t6i ON t6(a) WHERE lead(b) OVER ()"}
+{"sql":"CREATE INDEX t6i ON t6(sum(b) OVER ())"}
+{"sql":"CREATE INDEX t6i ON t6(lead(b) OVER ())"}
+{"sql":"CREATE TABLE t1(id INT, b VARCHAR, c VARCHAR)"}
+{"sql":"INSERT INTO t1 VALUES(1, 'A', 'one')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'B', 'two')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'C', 'three')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'D', 'one')"}
+{"sql":"INSERT INTO t1 VALUES(5, 'E', 'two')"}
+{"sql":"SELECT id, b, lead(c,1) OVER(ORDER BY c) AS x \n    FROM t1 WHERE id>1\n   ORDER BY b LIMIT 1"}
+{"sql":"INSERT INTO t1 VALUES(6, 'F', 'three')"}
+{"sql":"INSERT INTO t1 VALUES(7, 'G', 'one')"}
+{"sql":"SELECT id, b, lead(c,1) OVER(ORDER BY c) AS x\n    FROM t1 WHERE id>1\n   ORDER BY b LIMIT 2"}
+{"sql":"INSERT INTO t1 VALUES(2,12)"}
+{"sql":"SELECT a, rank() OVER(ORDER BY b) FROM t1"}
+{"sql":"SELECT a, rank() OVER(ORDER BY b DESC) FROM t1"}
+{"sql":"SELECT a, rank() OVER(ORDER BY b) FROM t1\n    UNION ALL\n  SELECT a, rank() OVER(ORDER BY b DESC) FROM t1"}
+{"sql":"SELECT a, rank() OVER(ORDER BY b) FROM t1\n    UNION \n  SELECT a, rank() OVER(ORDER BY b DESC) FROM t1"}
+{"sql":"SELECT a, rank() OVER(ORDER BY b) FROM t1\n    EXCEPT \n  SELECT a, rank() OVER(ORDER BY b DESC) FROM t1"}
+{"sql":"SELECT a, rank() OVER(ORDER BY b) FROM t1\n    INTERSECT \n  SELECT a, rank() OVER(ORDER BY b DESC) FROM t1"}
+{"sql":"SELECT * FROM(\n    SELECT * FROM (SELECT 1 AS c) WHERE c IN (\n        SELECT (row_number() OVER()) FROM (VALUES (0))\n    )\n  )"}
+{"sql":"INSERT INTO t1(x) VALUES(12345)"}
+{"sql":"INSERT INTO t2(c) VALUES(1)"}
+{"sql":"SELECT y, y+1, y+2 FROM (\n    SELECT c IN (\n      SELECT (row_number() OVER()) FROM t1\n    ) AS y FROM t2\n  )"}
+{"sql":"WITH t(id, parent) AS (\n  SELECT CAST(1 AS INT), CAST(NULL AS INT)\n  UNION ALL\n  SELECT 2, NULL\n  UNION ALL\n  SELECT 3, 1\n  UNION ALL\n  SELECT 4, 1\n  UNION ALL\n  SELECT 5, 2\n  UNION ALL\n  SELECT 6, 2\n  ), q AS (\n  SELECT t.*, ROW_NUMBER() OVER (ORDER BY t.id) AS rn\n    FROM t\n   WHERE parent IS NULL\n   UNION ALL\n  SELECT t.*, ROW_NUMBER() OVER (ORDER BY t.id) AS rn\n    FROM q\n    JOIN t\n      ON t.parent = q.id\n  )\n  SELECT *\n    FROM q"}
+{"sql":"INSERT INTO t1 VALUES('a'), ('b'), ('c')"}
+{"sql":"INSERT INTO t2 VALUES('X', 1), ('X', 2), ('Y', 2), ('Y', 3)"}
+{"sql":"SELECT x, (\n    SELECT sum(b)\n      OVER (PARTITION BY a ROWS BETWEEN UNBOUNDED PRECEDING\n                                    AND UNBOUNDED FOLLOWING)\n    FROM t2 WHERE b<x\n  ) FROM t1"}
+{"sql":"SELECT(\n    WITH c AS(\n      VALUES(1)\n    ) SELECT '' FROM c,c\n  ) x WHERE x+x"}
+{"sql":"INSERT INTO t7(rowid, a, b) VALUES\n      (1, 1, 3),\n      (2, 10, 4),\n      (3, 100, 2)"}
+{"sql":"SELECT rowid, sum(a) OVER (PARTITION BY b IN (SELECT rowid FROM t7)) FROM t7"}
+{"sql":"SELECT rowid, sum(a) OVER w1 FROM t7 \n  WINDOW w1 AS (PARTITION BY b IN (SELECT rowid FROM t7))"}
+{"sql":"CREATE TABLE t8(a)"}
+{"sql":"INSERT INTO t8 VALUES(1), (2), (3)"}
+{"sql":"SELECT +sum(0) OVER () ORDER BY +sum(0) OVER ()"}
+{"sql":"select +sum(a) OVER () FROM t8 ORDER BY +sum(a) OVER () DESC"}
+{"sql":"SELECT 10+sum(a) OVER (ORDER BY a) \n  FROM t8 \n  ORDER BY 10+sum(a) OVER (ORDER BY a) DESC"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c TEXT, d INTEGER)"}
+{"sql":"INSERT INTO t1 VALUES(1, 'odd',  'one',   1)"}
+{"sql":"INSERT INTO t1 VALUES(2, 'even', 'two',   2)"}
+{"sql":"INSERT INTO t1 VALUES(3, 'odd',  'three', 3)"}
+{"sql":"INSERT INTO t1 VALUES(4, 'even', 'four',  4)"}
+{"sql":"INSERT INTO t1 VALUES(5, 'odd',  'five',  5)"}
+{"sql":"INSERT INTO t1 VALUES(6, 'even', 'six',   6)"}
+{"sql":"SELECT string_agg(c, '.') OVER (PARTITION BY b ORDER BY c)\n  FROM t1"}
+{"sql":"SELECT group_concat(c, '.') OVER (win1 ORDER BY c)\n  FROM t1\n  WINDOW win1 AS (PARTITION BY b)"}
+{"sql":"SELECT string_agg(c, '.') OVER win2\n  FROM t1\n  WINDOW win1 AS (PARTITION BY b),\n         win2 AS (win1 ORDER BY c)"}
+{"sql":"SELECT group_concat(c, '.') OVER (win2)\n  FROM t1\n  WINDOW win1 AS (PARTITION BY b),\n         win2 AS (win1 ORDER BY c)"}
+{"sql":"SELECT string_agg(c, '.') OVER win5\n  FROM t1\n  WINDOW win1 AS (PARTITION BY b),\n         win2 AS (win1),\n         win3 AS (win2),\n         win4 AS (win3),\n         win5 AS (win4 ORDER BY c)"}
+{"sql":"INSERT INTO t1 VALUES\n    (1, 1), (2, 2), (3, 3), (4, 4), (5, 5),\n    ('a', 6), ('b', 7), ('c', 8), ('d', 9), ('e', 10)"}
+{"sql":"SELECT a, sum(b) OVER (ORDER BY a) FROM t1"}
+{"sql":"SELECT a, sum(b) OVER (\n    ORDER BY a RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING\n  ) FROM t1"}
+{"sql":"SELECT a, sum(b) OVER (\n    ORDER BY a DESC RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING\n  ) FROM t1 ORDER BY a ASC"}
+{"sql":"SELECT a, sum(b) OVER (\n    ORDER BY a RANGE BETWEEN 2 PRECEDING AND 1 FOLLOWING\n  ) FROM t1"}
+{"sql":"SELECT a, sum(b) OVER (\n    ORDER BY a DESC RANGE BETWEEN 1 PRECEDING AND 2 FOLLOWING\n  ) FROM t1 ORDER BY a ASC"}
+{"sql":"INSERT INTO t1 VALUES\n    (NULL, 100), (NULL, 100), \n    (1, 1), (2, 2), (3, 3), (4, 4), (5, 5),\n    ('a', 6), ('b', 7), ('c', 8), ('d', 9), ('e', 10)"}
+{"sql":"CREATE TABLE keyword_tab(\n    current, exclude, filter, following, groups, no, others, over,\n    partition, preceding, range, ties, unbounded, window\n  )"}
+{"sql":"SELECT\n    current, exclude, filter, following, groups, no, others, over,\n    partition, preceding, range, ties, unbounded, window\n  FROM keyword_tab"}
+{"sql":"CREATE INDEX t5ab ON t5(a, b)"}
+{"sql":"SELECT sum(44) OVER ()"}
+{"sql":"SELECT lead(44) OVER ()"}
+{"sql":"CREATE TABLE t1 ( t1_id INTEGER PRIMARY KEY )"}
+{"sql":"CREATE TABLE t2 ( t2_id INTEGER PRIMARY KEY )"}
+{"sql":"CREATE TABLE t3 ( t3_id INTEGER PRIMARY KEY )"}
+{"sql":"INSERT INTO t1 VALUES(1),  (3), (5)"}
+{"sql":"INSERT INTO t2 VALUES      (3), (5)"}
+{"sql":"INSERT INTO t3 VALUES(10), (11), (12)"}
+{"sql":"SELECT t1.* FROM t1, t2 WHERE \n    t1_id=t2_id AND t1_id IN (\n        SELECT t1_id + row_number() OVER ( ORDER BY t1_id ) FROM t3\n    )"}
+{"sql":"SELECT t1.* FROM t1, t2 WHERE \n    t1_id=t2_id AND t1_id IN (\n        SELECT         row_number() OVER ( ORDER BY t1_id ) FROM t3\n    )"}
+{"sql":"SELECT ( SELECT row_number() OVER () FROM ( SELECT c FROM t1 ) ) FROM t2"}
+{"sql":"INSERT INTO t2 VALUES(2), (6), (8), (4)"}
+{"sql":"SELECT c, c IN ( \n    SELECT row_number() OVER () FROM ( SELECT c FROM t1 )\n  ) FROM t2"}
+{"sql":"INSERT INTO t2 VALUES(1), (2), (3), (4)"}
+{"sql":"INSERT INTO t1 VALUES(1), (1), (2), (3), (3), (3), (3), (4), (4)"}
+{"sql":"SELECT c, c IN ( \n    SELECT row_number() OVER () FROM ( SELECT 1 FROM t1 WHERE x=c )\n  ) FROM t2"}
+{"sql":"INSERT INTO t1 VALUES(NULL), (1), (2), (3), (4), (5)"}
+{"sql":"SELECT min(x) OVER win FROM t1\n  WINDOW win AS (ORDER BY rowid ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b CHAR(1), c CHAR(2), d ANY)"}
+{"sql":"INSERT INTO t1 VALUES (3, 'C', 'cc', 1.0)"}
+{"sql":"INSERT INTO t1 VALUES (13,'M', 'cc', NULL)"}
+{"sql":"SELECT string_agg(b,'') OVER w1 FROM t1\n    WINDOW w1 AS (ORDER BY a RANGE BETWEEN 3 PRECEDING AND 1 PRECEDING)"}
+{"sql":"CREATE TABLE t2(a TEXT, b INTEGER)"}
+{"sql":"INSERT INTO t2 VALUES('A', NULL)"}
+{"sql":"INSERT INTO t2 VALUES('B', NULL)"}
+{"sql":"INSERT INTO t1 VALUES\n    (10,'J', 'cc', NULL),\n    (11,'K', 'cc', 'xyz'),\n    (13,'M', 'cc', NULL)"}
+{"sql":"SELECT a, b, c, quote(d), group_concat(b,'') OVER w1, '|' FROM t1\n    WINDOW w1 AS\n    (ORDER BY d DESC RANGE BETWEEN 7.0 PRECEDING AND 2.5 PRECEDING)\n    ORDER BY c, d, a"}
+{"sql":"INSERT INTO t1 VALUES\n    (1, 'A', 'aa', 2.5),\n    (2, 'B', 'bb', 3.75),\n    (3, 'C', 'cc', 1.0),\n    (4, 'D', 'cc', 8.25),\n    (5, 'E', 'bb', 6.5),\n    (6, 'F', 'aa', 6.5),\n    (7, 'G', 'aa', 6.0),\n    (8, 'H', 'bb', 9.0),\n    (9, 'I', 'aa', 3.75),\n    (10,'J', 'cc', NULL),\n    (11,'K', 'cc', 'xyz'),\n    (12,'L', 'cc', 'xyZ'),\n    (13,'M', 'cc', NULL)"}
+{"sql":"SELECT a, b, c, quote(d), group_concat(b,'') OVER w1, '|' FROM t1\n    WINDOW w1 AS\n    (PARTITION BY c ORDER BY d DESC\n     RANGE BETWEEN 7.0 PRECEDING AND 2.5 PRECEDING)\n    ORDER BY c, d, a"}
+{"sql":"INSERT INTO t1 VALUES('BB','aa',399)"}
+{"sql":"SELECT\n    count () OVER win1 NOT BETWEEN 'a' AND 'mmm',\n    count () OVER win3\n  FROM t1\n  WINDOW win1 AS (ORDER BY a GROUPS BETWEEN 4 PRECEDING AND 1 FOLLOWING\n                  EXCLUDE CURRENT ROW),\n         win2 AS (PARTITION BY b ORDER BY a),\n         win3 AS (win2 RANGE BETWEEN 5.2 PRECEDING AND true PRECEDING )"}
+{"sql":"SELECT d IN (SELECT sum(c) OVER (ORDER BY e+c) FROM t3) FROM (\n    SELECT * FROM t2\n  )"}
+{"sql":"SELECT d IN (SELECT sum(c) OVER (PARTITION BY d ORDER BY e+c) FROM t3) FROM (\n    SELECT * FROM t2\n  )"}
+{"sql":"SELECT d IN (\n    SELECT sum(c) OVER ( ROWS BETWEEN d FOLLOWING AND UNBOUNDED FOLLOWING) \n    FROM t3\n  )\n  FROM (\n    SELECT * FROM t2\n  )"}
+{"sql":"SELECT d IN (\n    SELECT sum(c) OVER ( ROWS BETWEEN CURRENT ROW AND c FOLLOWING) \n    FROM t3\n  )\n  FROM (\n    SELECT * FROM t2\n  )"}
+{"sql":"CREATE VIEW a AS SELECT NULL INTERSECT SELECT NULL ORDER BY s() OVER R"}
+{"sql":"CREATE TABLE a0 AS SELECT 0"}
+{"sql":"ALTER TABLE a0 RENAME TO S"}
+{"sql":"SELECT (SELECT DISTINCT sum(aa) OVER() FROM t1 ORDER BY 1), x FROM t2 \n  ORDER BY 1"}
+{"sql":"SELECT avg(a) OVER (\n      ORDER BY (SELECT sum(b) OVER ()\n        FROM t1 ORDER BY (\n          SELECT total(d) OVER (ORDER BY c)\n          FROM (SELECT 1 AS d) ORDER BY 1\n          )\n        )\n      )\n  FROM t1"}
+{"sql":"SELECT * WINDOW f AS () ORDER BY name COLLATE nocase"}
+{"sql":"VALUES(1) INTERSECT SELECT * WINDOW f AS () ORDER BY x COLLATE nocase"}
+{"sql":"VALUES(1) INTERSECT \n  SELECT sum(x) OVER f FROM t1 WINDOW f AS (ORDER BY x) ORDER BY 1"}
+{"sql":"VALUES(8) EXCEPT \n  SELECT sum(x) OVER f FROM t1 WINDOW f AS (ORDER BY x) ORDER BY 1"}
+{"sql":"VALUES(1) UNION \n  SELECT sum(x) OVER f FROM t1 WINDOW f AS (ORDER BY x) ORDER BY 1"}
+{"sql":"VALUES(count(*)OVER())"}
+{"sql":"VALUES(count(*)OVER()),(2)"}
+{"sql":"VALUES(2),(count(*)OVER())"}
+{"sql":"VALUES(2),(3),(count(*)OVER()),(4),(5)"}
+{"sql":"CREATE TABLE t0(a UNIQUE, b PRIMARY KEY)"}
+{"sql":"CREATE VIEW v0(c) AS SELECT max((SELECT count(a)OVER(ORDER BY 1))) FROM t0"}
+{"sql":"SELECT c FROM v0 WHERE c BETWEEN 10 AND 20"}
+{"sql":"DROP VIEW v0"}
+{"sql":"CREATE VIEW v0(c) AS SELECT max((SELECT count(a)OVER(ORDER BY 1234))) FROM t0"}
+{"sql":"SELECT c FROM v0 WHERE c BETWEEN -10 AND 20"}
+{"sql":"CREATE TABLE t1(c0, c1 UNIQUE)"}
+{"sql":"INSERT INTO t0(c0) VALUES(1)"}
+{"sql":"INSERT INTO t1(c0,c1) VALUES(2,3)"}
+{"sql":"SELECT COUNT(*) FROM t0, t1 WHERE (SELECT AVG(0) FILTER(WHERE t1.c1))"}
+{"sql":"SELECT COUNT(*), AVG(1) FILTER(WHERE t1.c1) FROM t0, t1"}
+{"sql":"SELECT COUNT(*) FROM t0, t1 WHERE (SELECT AVG(1) FILTER(WHERE t1.c1))"}
+{"sql":"SELECT FIRST_VALUE(0) OVER()"}
+{"sql":"SELECT * FROM t0 WHERE(c0, 0) IN(SELECT FIRST_VALUE(0) OVER(), 0)"}
+{"sql":"SELECT * FROM t0 WHERE (t0.c0, 1) IN(SELECT NTILE(1) OVER(), 0 FROM t0)"}
+{"sql":"CREATE VIRTUAL TABLE t0 USING rtree(c0, c1, c2)"}
+{"sql":"SELECT * FROM t0\n     WHERE ((0,0) IN (SELECT COUNT(*),LAG(5)OVER(PARTITION BY 0) FROM t0),0)<=(c1,0)"}
+{"sql":"INSERT INTO t1 VALUES(NULL,'bb',355)"}
+{"sql":"INSERT INTO t1 VALUES('CC','aa',158)"}
+{"sql":"INSERT INTO t1 VALUES('GG','bb',929)"}
+{"sql":"INSERT INTO t1 VALUES('FF','Rb',574)"}
+{"sql":"SELECT min(c) OVER (\n    ORDER BY a RANGE BETWEEN 5.2 PRECEDING AND 0.1 PRECEDING\n  ) FROM t1"}
+{"sql":"SELECT min(c) OVER (\n    ORDER BY a RANGE BETWEEN 5.2 PRECEDING AND 0.1 PRECEDING\n  ) << 100 FROM t1"}
+{"sql":"SELECT\n    min(c) OVER win3 << first_value(c) OVER win3,\n    min(c) OVER win3 << first_value(c) OVER win3\n  FROM t1\n  WINDOW win3 AS (\n    PARTITION BY 6 ORDER BY a RANGE BETWEEN 5.2 PRECEDING AND 0.1 PRECEDING\n  )"}
+{"sql":"SELECT * FROM t1 WHERE (0, 0) IN ( SELECT count(*), 0 FROM t1 )"}
+{"sql":"SELECT * FROM t1 WHERE (2, 0) IN ( SELECT count(*), 0 FROM t1 )"}
+{"sql":"SELECT count(*), max(a) OVER () FROM t1 GROUP BY c"}
+{"sql":"SELECT sum(a), max(b) OVER () FROM t1"}
+{"sql":"INSERT INTO t2 VALUES('a', 1)"}
+{"sql":"INSERT INTO t2 VALUES('a', 2)"}
+{"sql":"INSERT INTO t2 VALUES('a', 3)"}
+{"sql":"INSERT INTO t2 VALUES('b', 4)"}
+{"sql":"INSERT INTO t2 VALUES('b', 5)"}
+{"sql":"INSERT INTO t2 VALUES('b', 6)"}
+{"sql":"SELECT a, sum(b), sum( sum(b) ) OVER (ORDER BY a) FROM t2 GROUP BY a"}
+{"sql":"SELECT sum(b), sum( sum(b) ) OVER (ORDER BY a) FROM t2"}
+{"sql":"INSERT INTO t1 VALUES (10)"}
+{"sql":"SELECT count() OVER() AS m FROM t1 ORDER BY (SELECT m)"}
+{"sql":"INSERT INTO t1(a, b) VALUES(1,  10)"}
+{"sql":"INSERT INTO t1(a, b) VALUES(2,  15)"}
+{"sql":"INSERT INTO t1(a, b) VALUES(3,  -5)"}
+{"sql":"INSERT INTO t1(a, b) VALUES(4,  -5)"}
+{"sql":"INSERT INTO t1(a, b) VALUES(5,  20)"}
+{"sql":"INSERT INTO t1(a, b) VALUES(6, -11)"}
+{"sql":"SELECT a, sum(b) OVER (ORDER BY a) AS abc FROM t1 ORDER BY 2"}
+{"sql":"SELECT a, sum(b) OVER (ORDER BY a) AS abc FROM t1 ORDER BY abc"}
+{"sql":"SELECT a, sum(b) OVER (ORDER BY a) AS abc FROM t1 ORDER BY abc+5"}
+{"sql":"SELECT a, sum(b) OVER (ORDER BY a) AS abc FROM t1 ORDER BY (SELECT abc)"}
+{"sql":"SELECT a, 1+sum(b) OVER (ORDER BY a) AS abc FROM t1 ORDER BY (SELECT abc)"}
+{"sql":"SELECT ntile(0) OVER ()"}
+{"sql":"SELECT (0, 0) IN(SELECT MIN(c0), NTILE(0) OVER()) FROM t0"}
+{"sql":"SELECT ntile(1) OVER ()"}
+{"sql":"SELECT (0, 0) IN(SELECT MIN(c0), NTILE(1) OVER()) FROM t0"}
+{"sql":"INSERT INTO t0 VALUES(2), (1), (0)"}
+{"sql":"SELECT (0, 1) IN(SELECT MIN(c0), NTILE(1) OVER()) FROM t0"}
+{"sql":"INSERT INTO t1 VALUES(1000)"}
+{"sql":"INSERT INTO t0 VALUES(10000)"}
+{"sql":"SELECT * FROM (\n      SELECT sum (a) OVER() FROM t1 UNION ALL SELECT x FROM t0\n  )"}
+{"sql":"SELECT (SELECT sum(a) OVER(ORDER BY a)) FROM t1"}
+{"sql":"SELECT * FROM t1 WHERE (SELECT sum(a) OVER(ORDER BY a))"}
+{"sql":"SELECT * FROM t1 NATURAL JOIN t1\n    WHERE a=1\n    OR ((SELECT sum(a)OVER(ORDER BY a)) AND a<=10)"}
+{"sql":"CREATE TABLE t1(\n      a,\n      e,\n      f,\n      g UNIQUE,\n      h UNIQUE\n  )"}
+{"sql":"CREATE VIEW t2(k) AS\n     SELECT e FROM t1 WHERE g = 'abc' OR h BETWEEN 10 AND f"}
+{"sql":"SELECT 234 FROM t2\n    WHERE k=1\n    OR (SELECT k FROM t2 WHERE (SELECT sum(a) OVER() FROM t1 GROUP BY 1))"}
+{"sql":"SELECT (SELECT max(x)OVER(ORDER BY x) + min(x)OVER(ORDER BY x))\n    FROM (SELECT (SELECT sum(a) FROM t1) AS x FROM t1)"}
+{"sql":"SELECT (SELECT max(x)OVER(ORDER BY x) + min(x)OVER(ORDER BY x))\n    FROM (SELECT (SELECT sum(a) FROM t1 GROUP BY a) AS x FROM t1)"}
+{"sql":"CREATE TABLE t1 (a PRIMARY KEY)"}
+{"sql":"SELECT b AS c FROM (\n    SELECT a AS b FROM (\n      SELECT a FROM t1 WHERE a=1 OR (SELECT sum(a) OVER ())\n    ) \n    WHERE b=1 OR b<10\n  ) \n  WHERE c=1 OR c>=10"}
+{"sql":"CREATE TABLE t1 (a DOUBLE PRIMARY KEY)"}
+{"sql":"INSERT INTO t1 VALUES(10.0)"}
+{"sql":"SELECT * FROM t1 WHERE a%1 OR (SELECT sum(a) OVER (ORDER BY a%2))"}
+{"sql":"SELECT * FROM (\n    SELECT * FROM t1 WHERE a%1 OR (SELECT sum(a) OVER (ORDER BY a%2))\n  ) \n  WHERE a=1 OR ( (SELECT sum(a) OVER (ORDER BY a%4)) AND a<=10 )"}
+{"sql":"SELECT a FROM (\n    SELECT * FROM (\n      SELECT * FROM t1 WHERE a%1 OR (SELECT sum(a) OVER (ORDER BY a%2))\n    ) \n    WHERE a=1 OR ( (SELECT sum(a) OVER (ORDER BY a%4)) AND a<=10 )\n  ) \n  WHERE a=1 OR a=10.0"}
+{"sql":"SELECT a FROM (\n    SELECT * FROM (\n      SELECT * FROM t1 WHERE a%1 OR (SELECT sum(a) OVER (ORDER BY a%2))\n    ) \n    WHERE a=1 OR ( (SELECT sum(a) OVER (ORDER BY a%4)) AND a<=10 )\n  ) \n  WHERE a=1 OR ((SELECT sum(a) OVER(ORDER BY a%8)) AND 10<=a)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 NATURAL JOIN t1 WHERE a%1 OR ((SELECT sum(a)OVER(ORDER BY a)) AND a<=10)) NATURAL JOIN t1 WHERE a=1 OR ((SELECT sum((SELECT * FROM (SELECT * FROM (SELECT * FROM t1 NATURAL JOIN t1 WHERE a%1 OR ((SELECT sum(a)OVER(ORDER BY a)) AND a<=10)) NATURAL JOIN t1 WHERE a=1 OR ((SELECT sum((SELECT * FROM t1 NATURAL JOIN t1 WHERE a=1 OR ((SELECT sum(a)OVER(ORDER BY a)) AND a<=10)))OVER(ORDER BY a% 1 )) AND a<=10)) NATURAL JOIN t1 WHERE a=1 OR ((SELECT sum(a)OVER(ORDER BY a)) AND 10<=a)))OVER(ORDER BY a%5)) AND a<=10)"}
+{"sql":"CREATE TABLE a(b, c)"}
+{"sql":"SELECT c FROM a GROUP BY c\n    HAVING(SELECT(sum(b) OVER(ORDER BY b),\n                  sum(b) OVER(PARTITION BY min(DISTINCT c), c ORDER BY b)))"}
+{"sql":"INSERT INTO t1 VALUES('AA','bb',356)"}
+{"sql":"INSERT INTO t1 VALUES('FF','bb',938)"}
+{"sql":"SELECT\n    count() OVER win1,\n    sum(c) OVER win2, \n    first_value(c) OVER win2,\n    count(a) OVER (ORDER BY b)\n      FROM t1\n      WINDOW\n      win1 AS (ORDER BY a),\n    win2 AS (PARTITION BY 6 ORDER BY a\n        RANGE BETWEEN 5 PRECEDING AND 0 PRECEDING )"}
+{"sql":"SELECT\n  count() OVER (),\n  sum(c) OVER win2, \n  first_value(c) OVER win2,\n  count(a) OVER (ORDER BY b)\nFROM t1\nWINDOW\n  win1 AS (ORDER BY a),\n  win2 AS (PARTITION BY 6 COLLATE binary ORDER BY a\n           RANGE BETWEEN 5 PRECEDING AND 0 PRECEDING )"}
+{"sql":"SELECT\n    count() OVER win1,\n    sum(c) OVER win2, \n    first_value(c) OVER win2,\n    count(a) OVER (ORDER BY b)\n  FROM t1\n  WINDOW\n    win1 AS (ORDER BY a),\n    win2 AS (PARTITION BY 6 COLLATE binary ORDER BY a\n             RANGE BETWEEN 5 PRECEDING AND 0 PRECEDING )"}
+{"sql":"CREATE TABLE a(c UNIQUE)"}
+{"sql":"INSERT INTO a VALUES(4),(0),(9),(-9)"}
+{"sql":"SELECT a.c\n    FROM a\n    JOIN a AS b ON a.c=4\n    JOIN a AS e ON a.c=e.c\n   WHERE a.c=(SELECT (SELECT coalesce(lead(2) OVER(),0) + sum(d.c))\n                FROM a AS d\n               WHERE a.c)"}
+{"sql":"CREATE TABLE t1(a VARCHAR(20), b FLOAT)"}
+{"sql":"INSERT INTO t1 VALUES('1',10.0)"}
+{"sql":"SELECT * FROM ( \n    SELECT sum(b) OVER() AS c FROM t1 \n      UNION\n    SELECT b AS c FROM t1\n  ) WHERE c>10"}
+{"sql":"INSERT INTO t1 VALUES('2',5.0)"}
+{"sql":"INSERT INTO t1 VALUES('3',15.0)"}
+{"sql":"SELECT\n      (SELECT b FROM a\n        GROUP BY b\n        HAVING (SELECT COUNT()OVER() + lead(b)OVER(ORDER BY SUM(DISTINCT b) + b))\n      ) \n    FROM a\n  UNION\n   SELECT 99\n    ORDER BY 1"}
+{"sql":"CREATE TABLE t1(a, b INTEGER)"}
+{"sql":"SELECT avg(b) FROM t1 \n    UNION ALL \n  SELECT min(c) OVER () FROM t2 \n  ORDER BY nosuchcolumn"}
+{"sql":"CREATE TABLE t4(a, b, c, d, e)"}
+{"sql":"SELECT b FROM t4\n  UNION\n  SELECT a FROM t4\n  ORDER BY (\n    SELECT sum(x) OVER() FROM (\n      SELECT c AS x FROM t4\n      UNION\n      SELECT d FROM t4\n      ORDER BY (SELECT e FROM t4)\n    )\n  )"}
+{"sql":"SELECT \n    sum(a),\n    min(b) OVER (),\n    count(c) OVER (ORDER BY b)\n  FROM t1"}
+{"sql":"CREATE TABLE v0 ( v1 INTEGER PRIMARY KEY )"}
+{"sql":"INSERT INTO v0 VALUES ( 10 )"}
+{"sql":"SELECT DISTINCT v1, lead(v1) OVER() FROM v0 GROUP BY v1 ORDER BY 2"}
+{"sql":"INSERT INTO t1(a) VALUES(22)"}
+{"sql":"INSERT INTO t3(y) VALUES(5),(11),(-9)"}
+{"sql":"SELECT (\n    SELECT max(y) OVER( ORDER BY (SELECT x FROM (SELECT sum(y) AS x FROM t1)))\n  )\n  FROM t3"}
+{"sql":"CREATE TABLE a(a, b, c)"}
+{"sql":"INSERT INTO a VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO a VALUES(4, 5, 6)"}
+{"sql":"SELECT sum(345+b)      OVER (ORDER BY b),\n         sum(avg(678)) OVER (ORDER BY c) FROM a"}
+{"sql":"INSERT INTO t1 VALUES (123)"}
+{"sql":"SELECT\n     ntile( (SELECT sum(x)) ) OVER(ORDER BY x),\n     min(x) OVER(ORDER BY x)\n    FROM t1"}
+{"sql":"CREATE TABLE t1 (x INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t1 VALUES (99)"}
+{"sql":"SELECT EXISTS(SELECT count(*) OVER() FROM t1 ORDER BY sum(x) OVER())"}
+{"sql":"INSERT INTO t1 VALUES(5),(NULL),('seventeen')"}
+{"sql":"SELECT (SELECT max(x)OVER(ORDER BY x) % min(x)OVER(ORDER BY CASE x WHEN 889 THEN x WHEN x THEN x END)) FROM (SELECT (SELECT sum(CAST(a IN(SELECT (SELECT max(x)OVER(ORDER BY CASE x WHEN 889 THEN 299 WHEN 863 THEN 863 END)) FROM (SELECT (SELECT sum(CAST((SELECT (SELECT max(x)OVER(ORDER BY x) / min(x)OVER(ORDER BY CASE x WHEN 889 THEN 299 WHEN -true THEN 863 END)) FROM (SELECT (SELECT sum(CAST(a IN(SELECT (SELECT max(x) & sum ( a )OVER(ORDER BY CASE x WHEN -8 THEN 299 WHEN 863 THEN 863 END)) FROM (SELECT (SELECT sum(CAST(a AS )) FROM t1) AS x FROM t1)) AS t1 )) FROM t1) AS x FROM t1)) AS x )) FROM t1) AS x FROM t1)) AS real)) FROM t1) AS x FROM t1)"}
+{"sql":"SELECT \n      (SELECT max(x)OVER(ORDER BY x) / min(x) OVER() ) \n    FROM (\n      SELECT (SELECT sum(a) FROM t1 ) AS x FROM t1\n    )"}
+{"sql":"SELECT (\n    SELECT count(a) OVER ( ORDER BY (SELECT sum(y) FROM t2) )\n         + total(a) OVER() \n  )\n  FROM t1"}
+{"sql":"SELECT (\n    SELECT count(a) OVER ( ORDER BY sum(a) )\n         + total(a) OVER() \n  )\n  FROM t1"}
+{"sql":"SELECT \n    sum(a) OVER ( ORDER BY a ) \n  FROM t1 \n  ORDER BY (SELECT sum(a) FROM t2)"}
+{"sql":"SELECT \n    sum(a) OVER ( ORDER BY a ) \n  FROM t1 \n  ORDER BY (SELECT sum(y) FROM t2)"}
+{"sql":"SELECT * FROM ( \n      SELECT sum(b) OVER() AS c FROM t1 \n      UNION\n      SELECT b AS c FROM t1\n      ) WHERE c>10"}
+{"sql":"CREATE TABLE t1(b, x)"}
+{"sql":"SELECT max(b) OVER(\n      ORDER BY SUM(\n        (SELECT c FROM t2 UNION SELECT x ORDER BY c)\n      )\n  ) FROM t1"}
+{"sql":"SELECT sum(b) over(\n      ORDER BY (\n        SELECT max(b) OVER(\n          ORDER BY sum(\n            (SELECT x AS c UNION SELECT 1234 ORDER BY c)\n          )\n        ) AS e\n        ORDER BY e\n      )\n    )\n  FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(1, 'abcd')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'BCDE')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'cdef')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'DEFG')"}
+{"sql":"SELECT rowid, max(b COLLATE nocase)||'' \n  FROM t1 \n  GROUP BY rowid\n  ORDER BY max(b COLLATE nocase)||''"}
+{"sql":"SELECT count() OVER (), rowid, max(b COLLATE nocase)||'' \n  FROM t1 \n  GROUP BY rowid\n  ORDER BY max(b COLLATE nocase)||''"}
+{"sql":"SELECT count() OVER (), rowid, max(b COLLATE nocase)\n  FROM t1 \n  GROUP BY rowid\n  ORDER BY max(b COLLATE nocase)"}
+{"sql":"INSERT INTO t1 VALUES('abcd')"}
+{"sql":"SELECT max(c1 COLLATE nocase) IN (SELECT 'aBCd') FROM t1"}
+{"sql":"SELECT \n     count() OVER (), \n     group_concat(c1 COLLATE nocase) IN (SELECT 'aBCd') FROM t1"}
+{"sql":"SELECT COUNT() OVER () LIKE lead(102030) OVER(\n      ORDER BY sum('abcdef' COLLATE nocase) IN (SELECT 54321) \n  )\n  FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(3578824042033200656)"}
+{"sql":"INSERT INTO t1 VALUES(3029012920382354029)"}
+{"sql":"INSERT INTO t2 VALUES(30)"}
+{"sql":"SELECT a,c,b FROM t1 INTERSECT SELECT a,b,c FROM t1 ORDER BY (             \n      SELECT nth_value(a,2) OVER w1 \n      WINDOW w1 AS ( ORDER BY ((SELECT 1 FROM v1)) )\n  )"}
+{"sql":"SELECT a,c,b FROM t1 INTERSECT SELECT a,b,c FROM t1 ORDER BY (             \n      SELECT nth_value(a,2) OVER w1 \n      WINDOW w1 AS ( ORDER BY ((SELECT 1 FROM t2)) )\n  )"}
+{"sql":"INSERT INTO t1(a,b) VALUES(0,0),(1,1),(2,4),(3,9),(4,99)"}
+{"sql":"SELECT rowid, a, b, sum(a)OVER() FROM t1 ORDER BY count(b)"}
+{"sql":"SELECT * FROM t1 WHERE b = (SELECT b FROM t1 ORDER BY lead(b) OVER () AND sum(a))"}
+{"sql":"SELECT * FROM t1 WHERE b >= (SELECT b FROM t1 ORDER BY lead(b) OVER () AND sum(a))"}
+{"sql":"SELECT * FROM t1 WHERE b <= (SELECT b FROM t1 ORDER BY lead(b) OVER () AND sum(a))"}
+{"sql":"SELECT substr(a,4,lag(a,7) OVER(PARTITION BY 'cf23' ORDER BY 2)) AS ca0 FROM t1 ORDER BY ca0"}
+{"sql":"SELECT substr(a,4,lag(a,7) OVER(PARTITION BY 'cf23' ORDER BY likely(2))) AS ca0 FROM t1 ORDER BY ca0"}
+{"sql":"SELECT a FROM t0, (SELECT a AS b FROM t0)\n   WHERE (a,1)=(SELECT 2,2 UNION SELECT sum(b),max(b) OVER(ORDER BY b) ORDER BY 2)\n     AND b=4\n   ORDER BY b"}
+{"sql":"CREATE VIEW v1(x,y) AS SELECT RANK() OVER (PARTITION BY 0), SUM(0) FROM dual"}
+{"sql":"SELECT * FROM v1 WHERE true"}
+{"sql":"CREATE VIEW v0(c0) AS SELECT TOTAL(0) OVER (PARTITION BY t0.c0) FROM t0"}
+{"sql":"SELECT COUNT(*) FROM (\n      SELECT TOTAL(0) OVER (PARTITION BY t0.c0) FROM t0\n      )\n  WHERE ('1' IS NOT ('abcde' NOTNULL))"}
+{"sql":"INSERT INTO t1(a) VALUES(1),(2),(4)"}
+{"sql":"CREATE VIEW t2(b,c) AS SELECT * FROM t1 JOIN t1 A ORDER BY sum(0) OVER(PARTITION BY 0)"}
+{"sql":"CREATE TRIGGER x1 INSTEAD OF UPDATE ON t2 BEGIN SELECT true; END"}
+{"sql":"UPDATE t2 SET c=99 WHERE b=4 RETURNING *"}
+{"sql":"SELECT *, nth_value(15,2) OVER() FROM t2, t1 WHERE b=4"}
+{"sql":"UPDATE t2 SET c=nth_value(15,2) OVER() FROM (SELECT * FROM t1) WHERE b=4 RETURNING *"}
+{"sql":"DROP TRIGGER x1"}
+{"sql":"CREATE TABLE t1 (a INT, b INT)"}
+{"sql":"CREATE TABLE t2 (c INT, d INT)"}
+{"sql":"CREATE INDEX idx ON t1(abs(a))"}
+{"sql":"INSERT INTO t2 VALUES(5,6),(7,8)"}
+{"sql":"SELECT (\n    SELECT count( a ) FROM t2 LIMIT 1\n  )\n  FROM t1"}
+{"sql":"SELECT (\n    SELECT count( a+c ) FROM t2 LIMIT 1\n  )\n  FROM t1"}
+{"sql":"SELECT (\n    SELECT count( ( SELECT(sum(0) OVER(ORDER BY c, abs(a))) ) )\n      FROM t2 GROUP BY c LIMIT 1\n  ) \n  FROM t1"}
+{"sql":"CREATE INDEX t1x ON t1(a+b)"}
+{"sql":"SELECT count((SELECT count(a0.a+a0.b) ORDER BY sum(0) OVER (PARTITION BY 0)))\n    FROM t1 AS a0 JOIN t1 AS a1\n   GROUP BY a1.a"}
+{"sql":"INSERT INTO t1(a,b) VALUES (111,222),(111,223),(118,229)"}
+{"sql":"INSERT INTO t2 VALUES (333),(444),(555)"}
+{"sql":"SELECT c, (SELECT c + sum(1) OVER ()) AS \"res\"\n    FROM t2 LEFT JOIN (SELECT +a AS c FROM t1) AS v1 ON true\n   GROUP BY c\n   ORDER by c"}
+{"sql":"INSERT INTO t3 VALUES(100), (200), (400)"}
+{"sql":"INSERT INTO t4 VALUES(100), (300), (400)"}
+{"sql":"SELECT (SELECT y+sum(0) OVER ()) FROM t3 LEFT JOIN t4 ON x=y"}
+{"sql":"SELECT (SELECT y+sum(0) OVER ()) FROM t3 LEFT JOIN t4 ON x=y GROUP BY x"}
+{"sql":"SELECT (SELECT max(y)+sum(0) OVER ()) FROM t3 LEFT JOIN t4 ON x=y GROUP BY x"}
+{"sql":"CREATE INDEX t1x ON t1(likely(x))"}
+{"sql":"INSERT INTO t1 VALUES(1),(2),(4),(8)"}
+{"sql":"SELECT max(~likely(x)) FILTER (WHERE true) FROM t1 INDEXED BY t1x GROUP BY x"}
+{"sql":"SELECT quote(group_concat(x) OVER ()) FROM (SELECT '' AS x)"}
+{"sql":"SELECT quote(group_concat(x) OVER (\n      ORDER BY y RANGE BETWEEN 1 FOLLOWING AND 2 FOLLOWING\n    )) FROM (SELECT 'abc' AS x, 1 AS y)"}
+{"sql":"CREATE TABLE t0 (c0 INTEGER )"}
+{"sql":"INSERT INTO t0 VALUES(1)"}
+{"sql":"INSERT INTO t0 VALUES(3)"}
+{"sql":"SELECT COUNT(*) \n  OVER ( ROWS BETWEEN 0 FOLLOWING AND 100 FOLLOWING) \n  FROM t0"}
+{"sql":"SELECT COUNT(*) \n  OVER ( ORDER BY c0 RANGE BETWEEN 0 FOLLOWING AND 10_000_000_000 FOLLOWING ) \n  FROM t0"}
+{"sql":"SELECT sum(c0), COUNT(*) \n  OVER ( ORDER BY c0 RANGE BETWEEN 0 FOLLOWING AND 10_000_000_000 FOLLOWING ) \n  FROM t0"}

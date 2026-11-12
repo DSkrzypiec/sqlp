@@ -1,0 +1,66 @@
+{"sql":"CREATE TABLE t3(a INTEGER)"}
+{"sql":"INSERT INTO t3 VALUES(NULL), (10), (30), (20), (NULL)"}
+{"sql":"CREATE INDEX i1 ON t3(a)"}
+{"sql":"CREATE INDEX i1 ON t3(a DESC)"}
+{"sql":"INSERT INTO t2 VALUES(1, NULL, 2)"}
+{"sql":"INSERT INTO t2 VALUES(1, NULL, 3)"}
+{"sql":"INSERT INTO t2 VALUES(1, 4, 4)"}
+{"sql":"SELECT * FROM t2 WHERE a=1 ORDER BY b NULLS LAST"}
+{"sql":"SELECT * FROM t2 WHERE a=1 ORDER BY b DESC NULLS FIRST"}
+{"sql":"CREATE TABLE t1(a, b, c, d, UNIQUE (b))"}
+{"sql":"CREATE TABLE first(nulls, last)"}
+{"sql":"INSERT INTO first(last, nulls) VALUES(100,200), (300,400), (200,300)"}
+{"sql":"SELECT * FROM first ORDER BY nulls"}
+{"sql":"CREATE TABLE tx(a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"CREATE INDEX i1 ON tx(b)"}
+{"sql":"INSERT INTO tx VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO tx VALUES(2, NULL, 2)"}
+{"sql":"INSERT INTO tx VALUES(3, 3, 3)"}
+{"sql":"INSERT INTO tx VALUES(4, NULL, 4)"}
+{"sql":"INSERT INTO tx VALUES(5, 5, 5)"}
+{"sql":"CREATE VIRTUAL TABLE te USING echo(tx)"}
+{"sql":"SELECT * FROM tx ORDER BY b NULLS FIRST"}
+{"sql":"SELECT * FROM te ORDER BY b NULLS FIRST"}
+{"sql":"SELECT * FROM tx ORDER BY b NULLS LAST"}
+{"sql":"SELECT * FROM te ORDER BY b NULLS LAST"}
+{"sql":"INSERT INTO t4 VALUES(1, 1, 11)"}
+{"sql":"INSERT INTO t4 VALUES(1, 2, 12)"}
+{"sql":"INSERT INTO t4 VALUES(1, NULL, 1)"}
+{"sql":"INSERT INTO t4 VALUES(2, NULL, 1)"}
+{"sql":"INSERT INTO t4 VALUES(2, 2, 12)"}
+{"sql":"INSERT INTO t4 VALUES(2, 1, 11)"}
+{"sql":"INSERT INTO t4 VALUES(3, NULL, 1)"}
+{"sql":"INSERT INTO t4 VALUES(3, 2, 12)"}
+{"sql":"INSERT INTO t4 VALUES(3, NULL, 3)"}
+{"sql":"SELECT * FROM t4 WHERE a IN (1, 2, 3) ORDER BY a, b NULLS LAST"}
+{"sql":"CREATE INDEX t4ab ON t4(a, b)"}
+{"sql":"SELECT * FROM t4 WHERE a IN (1, 2, 3) ORDER BY a DESC, b DESC NULLS FIRST"}
+{"sql":"WITH s(i) AS (\n    VALUES(1) UNION ALL SELECT i+1 FROM s WHERE i<200\n  ) \n  INSERT INTO t5 SELECT i%2, CASE WHEN (i%10)==0 THEN NULL ELSE i END, i FROM s"}
+{"sql":"CREATE INDEX t5ab ON t5(a, b, c)"}
+{"sql":"SELECT a,b FROM t5 WHERE a=1 ORDER BY b NULLS LAST, c"}
+{"sql":"SELECT a,b FROM t5 WHERE a=1 ORDER BY b DESC NULLS FIRST, c DESC"}
+{"sql":"CREATE TABLE t71(a, b, c)"}
+{"sql":"CREATE INDEX t71abc ON t71(a, b, c)"}
+{"sql":"SELECT * FROM t71 WHERE a=1 AND b=2 ORDER BY c NULLS LAST"}
+{"sql":"SELECT * FROM t71 WHERE a=1 AND b=2 ORDER BY c DESC NULLS FIRST"}
+{"sql":"SELECT * FROM t71 ORDER BY a NULLS LAST"}
+{"sql":"SELECT * FROM t71 ORDER BY a DESC NULLS FIRST"}
+{"sql":"CREATE TABLE t80(a, b INTEGER, PRIMARY KEY(b NULLS LAST)) WITHOUT ROWID"}
+{"sql":"CREATE TABLE v0 (c1, c2, c3)"}
+{"sql":"CREATE INDEX v3 ON v0 (c1, c2, c3)"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('v0','v3','648 324 81')"}
+{"sql":"INSERT INTO v0 VALUES\n      (1, 10, 'b'),\n      (1, 10, 'd'),\n      (1, 10, NULL),\n      (2, 10, 'a'),\n      (2, 10, NULL),\n      (1, 10, 'c'),\n      (2, 10, 'b'),\n      (1, 10, 'a'),\n      (1, 10, NULL),\n      (2, 10, NULL),\n      (2, 10, 'd'),\n      (2, 10, 'c')"}
+{"sql":"SELECT c1, c2, ifnull(c3, 'NULL') FROM v0 \n  WHERE c2=10 ORDER BY c1, c3 NULLS LAST"}
+{"sql":"INSERT INTO t1(x) VALUES('X')"}
+{"sql":"SELECT c FROM t1 LEFT JOIN t2 ON d=NULL ORDER BY d, c NULLS LAST"}
+{"sql":"INSERT INTO t2(c,d) VALUES(5,'X'),(6,'Y'),(7,'Z'),(3,'A'),(4,'B')"}
+{"sql":"SELECT c FROM t1 LEFT JOIN t2 ON d=x ORDER BY d, c NULLS LAST"}
+{"sql":"UPDATE t2 SET d='X'"}
+{"sql":"UPDATE t2 SET c=NULL WHERE c=6"}
+{"sql":"SELECT c FROM t1 LEFT JOIN t2 ON d=x ORDER BY d NULLS FIRST, c NULLS FIRST"}
+{"sql":"SELECT c FROM t1 LEFT JOIN t2 ON d=x ORDER BY d NULLS LAST, c NULLS LAST"}
+{"sql":"SELECT c FROM t1 LEFT JOIN t2 ON d=x ORDER BY c NULLS LAST"}
+{"sql":"SELECT c FROM t1 LEFT JOIN t2 ON d=x ORDER BY +d NULLS LAST, +c NULLS LAST"}
+{"sql":"INSERT INTO t1(x) VALUES(NULL),('Y')"}
+{"sql":"SELECT x, c, d, '|' FROM t1 LEFT JOIN t2 ON d=x\n   ORDER BY d NULLS LAST, c NULLS LAST"}
+{"sql":"SELECT x, c, d, '|' FROM t1 LEFT JOIN t2 ON d=x\n   ORDER BY +d NULLS LAST, +c NULLS LAST"}

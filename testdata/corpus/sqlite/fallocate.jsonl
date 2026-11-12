@@ -1,0 +1,7 @@
+{"sql":"INSERT INTO t1 VALUES(1, zeroblob(1024*900))"}
+{"sql":"INSERT INTO t1 VALUES(2, zeroblob(1024*900))"}
+{"sql":"PRAGMA max_page_count = 100"}
+{"sql":"INSERT INTO t1 VALUES(1, zeroblob(35*1024))"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(35*1024))"}
+{"sql":"INSERT INTO t1 VALUES(3, randomblob(128))"}
+{"sql":"INSERT INTO t1 VALUES(4, randomblob(128))"}

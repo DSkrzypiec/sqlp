@@ -1,0 +1,98 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4"}
+{"sql":"INSERT INTO t1 VALUES('one two three four')"}
+{"sql":"INSERT INTO t1 VALUES('three four five six')"}
+{"sql":"INSERT INTO t1 VALUES('one three five seven')"}
+{"sql":"CREATE VIRTUAL TABLE terms USING fts4aux(t1)"}
+{"sql":"SELECT term, documents, occurrences FROM terms WHERE col = '*'"}
+{"sql":"INSERT INTO t1 VALUES('one one one three three three')"}
+{"sql":"INSERT INTO t1 VALUES('a b a b a b a')"}
+{"sql":"DROP TABLE terms"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING fts4(x)"}
+{"sql":"INSERT INTO x1(x1) VALUES('nodesize=24')"}
+{"sql":"CREATE VIRTUAL TABLE terms USING fts4aux(x1)"}
+{"sql":"CREATE VIEW terms_v AS \n  SELECT term, documents, occurrences FROM terms WHERE col = '*'"}
+{"sql":"INSERT INTO x1 VALUES('braes brag bragged bragger bragging')"}
+{"sql":"INSERT INTO x1 VALUES('brags braid braided braiding braids')"}
+{"sql":"INSERT INTO x1 VALUES('brain brainchild brained braining brains')"}
+{"sql":"INSERT INTO x1 VALUES('brainstem brainstems brainstorm brainstorms')"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE term='braid'"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE +term='braid'"}
+{"sql":"SELECT * FROM terms_v WHERE rec('cnt', term) AND term='braid'"}
+{"sql":"SELECT * FROM terms_v WHERE rec('cnt', term) AND +term='braid'"}
+{"sql":"SELECT * FROM terms_v WHERE rec('cnt', term) AND term='breakfast'"}
+{"sql":"SELECT * FROM terms_v WHERE rec('cnt', term) AND +term='breakfast'"}
+{"sql":"SELECT * FROM terms_v WHERE term='braid'"}
+{"sql":"SELECT * FROM terms_v WHERE +term='braid'"}
+{"sql":"SELECT * FROM terms_v WHERE term='breakfast'"}
+{"sql":"SELECT * FROM terms_v WHERE +term='breakfast'"}
+{"sql":"SELECT * FROM terms_v WHERE term='cba'"}
+{"sql":"SELECT * FROM terms_v WHERE +term='cba'"}
+{"sql":"SELECT * FROM terms_v WHERE term='abc'"}
+{"sql":"SELECT * FROM terms_v WHERE +term='abc'"}
+{"sql":"SELECT * FROM terms WHERE term=NULL"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE term>'brain'"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE +term>'brain'"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE term<'brain'"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE +term<'brain'"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE term BETWEEN 'brags' AND 'brain'"}
+{"sql":"EXPLAIN QUERY PLAN SELECT * FROM terms WHERE +term BETWEEN 'brags' AND 'brain'"}
+{"sql":"SELECT * FROM terms WHERE rec('cnt', term) AND term>'brain'"}
+{"sql":"SELECT * FROM terms WHERE rec('cnt', term) AND +term>'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE term>'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE +term>'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE term>='brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE +term>='brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE term>='abc'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE +term>='abc'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE term>='brainstorms'"}
+{"sql":"SELECT * FROM terms_v WHERE term>'brainstorms'"}
+{"sql":"SELECT * FROM terms_v WHERE term>'cba'"}
+{"sql":"SELECT * FROM terms WHERE rec('cnt', term) AND term<'brain'"}
+{"sql":"SELECT * FROM terms WHERE rec('cnt', term) AND +term<'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE term<'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE +term<'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE term<='brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v WHERE +term<='brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms \n    WHERE rec('cnt', term) AND term BETWEEN 'brags' AND 'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms \n    WHERE rec('cnt', term) AND +term BETWEEN 'brags' AND 'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v \n  WHERE rec('cnt', term) AND term BETWEEN 'brags' AND 'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v \n  WHERE rec('cnt', term) AND +term BETWEEN 'brags' AND 'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v \n  WHERE rec('cnt', term) AND term > 'brags' AND term < 'brain'"}
+{"sql":"SELECT term, documents, occurrences FROM terms_v \n  WHERE rec('cnt', term) AND +term > 'brags' AND +term < 'brain'"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4"}
+{"sql":"CREATE VIRTUAL TABLE terms2 USING fts4aux"}
+{"sql":"CREATE VIRTUAL TABLE terms2 USING fts4aux(t2, t2)"}
+{"sql":"CREATE VIRTUAL TABLE terms3 USING fts4aux(does_not_exist)"}
+{"sql":"SELECT * FROM terms3"}
+{"sql":"SELECT * FROM terms3 WHERE term = 'abc'"}
+{"sql":"INSERT INTO terms VALUES(1,2,3)"}
+{"sql":"DELETE FROM terms"}
+{"sql":"UPDATE terms set documents = documents+1"}
+{"sql":"CREATE TABLE x2(y)"}
+{"sql":"CREATE TABLE x3(y)"}
+{"sql":"CREATE INDEX i1 ON x3(y)"}
+{"sql":"INSERT INTO x1 VALUES('a b c d e')"}
+{"sql":"INSERT INTO x1 VALUES('f g h i j')"}
+{"sql":"INSERT INTO x1 VALUES('k k l l a')"}
+{"sql":"INSERT INTO x2 SELECT term FROM terms WHERE col = '*'"}
+{"sql":"INSERT INTO x3 SELECT term FROM terms WHERE col = '*'"}
+{"sql":"CREATE VIRTUAL TABLE \"abc '!' def\" USING fts4(x, y)"}
+{"sql":"INSERT INTO \"abc '!' def\" VALUES('XX', 'YY')"}
+{"sql":"CREATE VIRTUAL TABLE terms3 USING fts4aux(\"abc '!' def\")"}
+{"sql":"CREATE VIRTUAL TABLE \"%%^^%%\" USING fts4aux('abc ''!'' def')"}
+{"sql":"SELECT * FROM \"%%^^%%\""}
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts4(x, y)"}
+{"sql":"INSERT INTO ft1 VALUES('a b', 'c d')"}
+{"sql":"INSERT INTO ft1 VALUES('e e', 'c d')"}
+{"sql":"INSERT INTO ft1 VALUES('a a', 'b b')"}
+{"sql":"CREATE VIRTUAL TABLE temp.aux1 USING fts4aux(main, ft1)"}
+{"sql":"SELECT * FROM aux1"}
+{"sql":"ATTACH 'test.db2' AS att"}
+{"sql":"CREATE VIRTUAL TABLE att.ft1 USING fts4(x, y)"}
+{"sql":"INSERT INTO att.ft1 VALUES('v w', 'x y')"}
+{"sql":"INSERT INTO att.ft1 VALUES('z z', 'x y')"}
+{"sql":"INSERT INTO att.ft1 VALUES('v v', 'w w')"}
+{"sql":"CREATE VIRTUAL TABLE temp.aux2 USING fts4aux(att, ft1)"}
+{"sql":"SELECT * FROM aux2"}
+{"sql":"CREATE VIRTUAL TABLE att.aux3 USING fts4aux(main, ft1)"}
+{"sql":"DETACH att"}

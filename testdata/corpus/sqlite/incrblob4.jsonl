@@ -1,0 +1,10 @@
+{"sql":"CREATE TABLE t1(k INTEGER PRIMARY KEY, v)"}
+{"sql":"DELETE FROM t1 WHERE k=10"}
+{"sql":"DELETE FROM t1 WHERE k=9"}
+{"sql":"DELETE FROM t1 WHERE k=19"}
+{"sql":"INSERT INTO t2 VALUES(456, '0123456789')"}
+{"sql":"INSERT INTO t2 VALUES(1000, 'abcdefghijklmnopqrstuvwxyz')"}
+{"sql":"INSERT INTO t2 VALUES(2000, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"}
+{"sql":"INSERT INTO t2 VALUES(3000, 'abcdefghijklmnopqrstuvwxyz')"}
+{"sql":"DELETE FROM t2 WHERE a=3000"}
+{"sql":"UPDATE t2 SET b='abcdefghijklmnopqrstuvwxyz' WHERE a=2000"}

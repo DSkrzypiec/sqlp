@@ -1,0 +1,26 @@
+{"sql":"CREATE TABLE '@abc' ( '#xyz' int, '!pqr' text )"}
+{"sql":"INSERT INTO '@abc' VALUES(5,'hello')"}
+{"sql":"SELECT * FROM '@abc'"}
+{"sql":"SELECT * FROM [@abc]"}
+{"sql":"SELECT * FROM `@abc`"}
+{"sql":"SELECT '@abc'.'!pqr', '@abc'.'#xyz'+5 FROM '@abc'"}
+{"sql":"SELECT '!pqr', '#xyz'+5 FROM '@abc'"}
+{"sql":"SELECT \"!pqr\", \"#xyz\"+5 FROM '@abc'"}
+{"sql":"SELECT [!pqr], `#xyz`+5 FROM '@abc'"}
+{"sql":"UPDATE '@abc' SET '#xyz'=11"}
+{"sql":"DROP TABLE '@abc'"}
+{"sql":"CREATE TABLE xyz(a, b, c CHECK (c!=\"null\") )"}
+{"sql":"CREATE INDEX i2 ON t1(x, y, z||\"abc\")"}
+{"sql":"CREATE INDEX i3 ON t1(\"w\"||\"\")"}
+{"sql":"CREATE INDEX i4 ON t1(x) WHERE z=\"w\""}
+{"sql":"INSERT INTO xyz VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO xyz VALUES(1, 2, 'null')"}
+{"sql":"INSERT INTO t1 VALUES(4, 5, 'w')"}
+{"sql":"SELECT * FROM t1 WHERE z='w'"}
+{"sql":"CREATE INDEX x1 on t1(\"b\")"}
+{"sql":"CREATE TABLE t1(a,\"b\")"}
+{"sql":"CREATE TABLE t1(a,'b')"}
+{"sql":"CREATE INDEX x1 on t1('b')"}
+{"sql":"CREATE INDEX x1 ON t1(\"a\"||\"b\")"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3),(1,4,5)"}
+{"sql":"CREATE INDEX x1 ON t1(\"a\"||\"x\")"}

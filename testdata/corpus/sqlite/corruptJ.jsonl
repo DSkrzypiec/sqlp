@@ -1,0 +1,2 @@
+{"sql":"WITH RECURSIVE c(i) AS (VALUES(1) UNION ALL SELECT i+1 FROM c WHERE i<10)\n    INSERT INTO t1(a,b) SELECT i, zeroblob(700) FROM c"}
+{"sql":"PRAGMA secure_delete=ON"}

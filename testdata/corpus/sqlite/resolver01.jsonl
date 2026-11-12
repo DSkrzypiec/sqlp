@@ -1,0 +1,45 @@
+{"sql":"INSERT INTO t1 VALUES(11,22)"}
+{"sql":"CREATE TABLE t2(y, z)"}
+{"sql":"INSERT INTO t2 VALUES(33,44)"}
+{"sql":"SELECT 1 AS y FROM t1, t2 ORDER BY y"}
+{"sql":"SELECT 1 AS yy FROM t1, t2 ORDER BY y"}
+{"sql":"INSERT INTO t3 VALUES(11,44),(33,22)"}
+{"sql":"SELECT x AS y FROM t3 ORDER BY y"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY y"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY yy"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY 1"}
+{"sql":"SELECT 2 AS y FROM t1, t2 ORDER BY y COLLATE nocase"}
+{"sql":"SELECT 2 AS yy FROM t1, t2 ORDER BY y COLLATE nocase"}
+{"sql":"SELECT x AS y FROM t3 ORDER BY y COLLATE nocase"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY y COLLATE nocase"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY yy COLLATE nocase"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY 1 COLLATE nocase"}
+{"sql":"SELECT 3 AS y FROM t1, t2 ORDER BY +y"}
+{"sql":"SELECT 2 AS yy FROM t1, t2 ORDER BY +y"}
+{"sql":"SELECT x AS y FROM t3 ORDER BY +y"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY +y"}
+{"sql":"SELECT x AS yy FROM t3 ORDER BY +yy"}
+{"sql":"CREATE TABLE t4(m CHAR(2))"}
+{"sql":"INSERT INTO t4 VALUES('az')"}
+{"sql":"INSERT INTO t4 VALUES('by')"}
+{"sql":"INSERT INTO t4 VALUES('cx')"}
+{"sql":"SELECT '1', substr(m,2) AS m FROM t4 ORDER BY m"}
+{"sql":"SELECT '2', substr(m,2) AS m FROM t4 ORDER BY m COLLATE binary"}
+{"sql":"SELECT '3', substr(m,2) AS m FROM t4 ORDER BY lower(m)"}
+{"sql":"CREATE TABLE t5(m CHAR(2))"}
+{"sql":"INSERT INTO t5 VALUES('ax')"}
+{"sql":"INSERT INTO t5 VALUES('bx')"}
+{"sql":"INSERT INTO t5 VALUES('cy')"}
+{"sql":"SELECT count(*), substr(m,2,1) AS m FROM t5 GROUP BY m ORDER BY 1, 2"}
+{"sql":"SELECT count(*), substr(m,2,1) AS mx FROM t5 GROUP BY m ORDER BY 1, 2"}
+{"sql":"SELECT count(*), substr(m,2,1) AS mx FROM t5 GROUP BY mx ORDER BY 1, 2"}
+{"sql":"SELECT count(*), substr(m,2,1) AS mx FROM t5\n   GROUP BY substr(m,2,1) ORDER BY 1, 2"}
+{"sql":"CREATE TABLE t61(name)"}
+{"sql":"SELECT min(name) FROM t61 GROUP BY lower(name)"}
+{"sql":"SELECT min(name) AS name FROM t61 GROUP BY lower(name)"}
+{"sql":"CREATE TABLE t63(name)"}
+{"sql":"INSERT INTO t63 VALUES (NULL)"}
+{"sql":"INSERT INTO t63 VALUES ('abc')"}
+{"sql":"SELECT count(),\n       NULLIF(name,'abc') AS name\n    FROM t63\n   GROUP BY lower(name)"}
+{"sql":"SELECT 2 AS x WHERE (SELECT x AS y WHERE 3>y)"}
+{"sql":"SELECT 2 AS x WHERE (SELECT x AS y WHERE 1>y)"}

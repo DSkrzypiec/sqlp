@@ -1,0 +1,19 @@
+{"sql":"CREATE TEMP TABLE tt1(a, b)"}
+{"sql":"CREATE TEMP TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n      INSERT INTO tt1 VALUES(new.a, new.b);\n    END"}
+{"sql":"SELECT * FROM tt1"}
+{"sql":"INSERT INTO t1 VALUES(10, 20)"}
+{"sql":"INSERT INTO t1 VALUES(30, 40)"}
+{"sql":"CREATE TEMP TABLE tt2(a, b)"}
+{"sql":"CREATE TEMP TRIGGER tr2 AFTER INSERT ON aux.t2 BEGIN\n      INSERT INTO tt2 VALUES(new.a, new.b);\n    END"}
+{"sql":"INSERT INTO aux.t2 VALUES(1, 2)"}
+{"sql":"SELECT * FROM aux.t2"}
+{"sql":"SELECT * FROM tt2"}
+{"sql":"INSERT INTO aux.t2 VALUES(3, 4)"}
+{"sql":"DROP TRIGGER tr2"}
+{"sql":"CREATE TEMP TRIGGER tr1 BEFORE INSERT ON t1 BEGIN\n    SELECT 1,2,3;\n  END"}
+{"sql":"CREATE TEMP TRIGGER tr1 BEFORE INSERT ON t1 BEGIN SELECT 1,2,3; END"}
+{"sql":"SELECT * FROM temp.sqlite_master"}
+{"sql":"CREATE TEMP TRIGGER tr1 BEFORE INSERT ON t1 BEGIN \n    SELECT raise(ABORT, 'error'); \n  END"}
+{"sql":"SELECT type,name,tbl_name,sql FROM aux.sqlite_master"}
+{"sql":"INSERT INTO aux.t1 VALUES(1,2,3)"}
+{"sql":"INSERT INTO main.t1 VALUES(1)"}

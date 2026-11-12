@@ -1,0 +1,3 @@
+{"sql":"CREATE TABLE elephant(\n      name VARCHAR(32), \n      color VARCHAR(16), \n      age INTEGER, \n      UNIQUE(name, color)\n    )"}
+{"sql":"CREATE VIRTUAL TABLE pachyderm USING echo(elephant)"}
+{"sql":"DROP TABLE pachyderm"}

@@ -1,0 +1,77 @@
+{"sql":"INSERT INTO t1 VALUES(NULL, 3)"}
+{"sql":"SELECT sum(b) OVER win FROM t1\n  WINDOW win AS (\n    ORDER BY a DESC NULLS FIRST RANGE BETWEEN 1 PRECEDING AND 1 FOLLOWING\n  )"}
+{"sql":"INSERT INTO t1 VALUES(2, 45)"}
+{"sql":"INSERT INTO t1 VALUES(3, 66.2)"}
+{"sql":"INSERT INTO t1 VALUES(4, 'hello world')"}
+{"sql":"INSERT INTO t1 VALUES(5, 'hello world')"}
+{"sql":"INSERT INTO t1 VALUES(6, X'1234')"}
+{"sql":"INSERT INTO t1 VALUES(7, X'1234')"}
+{"sql":"INSERT INTO t1 VALUES(8, NULL)"}
+{"sql":"CREATE TABLE testjson(id INTEGER PRIMARY KEY, j TEXT, x TEXT)"}
+{"sql":"INSERT INTO testjson VALUES(1, '{\"a\":1}', 'a')"}
+{"sql":"INSERT INTO testjson VALUES(2, '{\"b\":2}', 'b')"}
+{"sql":"INSERT INTO testjson VALUES(4, '{\"d\":4}', 'd')"}
+{"sql":"SELECT json_group_array(json(j)) FROM testjson"}
+{"sql":"SELECT json_group_array(json(j)) OVER (ORDER BY id) FROM testjson"}
+{"sql":"SELECT json_group_array(json(j)) OVER (\n      ORDER BY id RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n      EXCLUDE TIES\n    ) FROM testjson"}
+{"sql":"SELECT json_group_array(json(j)) OVER (\n      ORDER BY id ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING\n    ) FROM testjson"}
+{"sql":"SELECT json_group_array(json(j)) OVER (\n      ORDER BY id ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING\n    ) FROM testjson"}
+{"sql":"UPDATE testjson SET j = replace(j,char(125),',\"e\":9'||char(125))"}
+{"sql":"SELECT j FROM testjson"}
+{"sql":"SELECT group_concat(x,'') OVER (\n      ORDER BY id ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING\n    ) FROM testjson ORDER BY id"}
+{"sql":"SELECT json_group_array(json(j)) OVER (\n      ORDER BY id ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING\n    ) FROM testjson"}
+{"sql":"SELECT json_group_object(x,json(j)) OVER (\n      ORDER BY id ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING\n    ) FROM testjson"}
+{"sql":"SELECT group_concat(x,'') FILTER (WHERE id!=2) OVER (\n      ORDER BY id ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING\n    ) FROM testjson"}
+{"sql":"SELECT json_group_array(json(j)) FILTER (WHERE id!=2) OVER (\n      ORDER BY id ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING\n    ) FROM testjson"}
+{"sql":"SELECT json_group_object(x,json(j)) FILTER (WHERE id!=2) OVER (\n      ORDER BY id ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING\n    ) FROM testjson"}
+{"sql":"INSERT INTO x VALUES(2)"}
+{"sql":"WITH y AS (\n      SELECT Row_Number() OVER (win) FROM x WINDOW win AS (PARTITION BY a)\n  )\n  SELECT * FROM y"}
+{"sql":"WITH y AS (\n    SELECT Row_Number() OVER (win) FROM x WINDOW win AS (PARTITION\n  BY fake_column))\n  SELECT * FROM y"}
+{"sql":"SELECT 1 WINDOW win AS (PARTITION BY fake_column)"}
+{"sql":"CREATE TABLE t1(a, c)"}
+{"sql":"INSERT INTO t1 VALUES(0, 421)"}
+{"sql":"INSERT INTO t1 VALUES(1, 844)"}
+{"sql":"INSERT INTO t1 VALUES(2, 1001)"}
+{"sql":"SELECT a, sum(c) OVER (\n    ORDER BY a RANGE BETWEEN 0 PRECEDING AND 3 PRECEDING\n  ) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 123)"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 111)"}
+{"sql":"INSERT INTO t1 VALUES('xyz', 222)"}
+{"sql":"INSERT INTO t1 VALUES('xyz', 333)"}
+{"sql":"SELECT a, sum(c) OVER (\n    ORDER BY a RANGE BETWEEN 2 FOLLOWING AND 0 FOLLOWING\n  ) FROM t1"}
+{"sql":"SELECT a, sum(c) OVER (\n    ORDER BY a RANGE BETWEEN 0 PRECEDING AND 3 PRECEDING EXCLUDE NO OTHERS\n  ) FROM t1"}
+{"sql":"SELECT a, sum(c) OVER (\n    ORDER BY a RANGE BETWEEN 2 FOLLOWING AND 0 FOLLOWING EXCLUDE NO OTHERS\n  ) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(7,  997)"}
+{"sql":"INSERT INTO t1 VALUES(8,  997)"}
+{"sql":"INSERT INTO t1 VALUES('abc', 1001)"}
+{"sql":"SELECT a, sum(c) OVER (\n    ORDER BY a RANGE BETWEEN 2 FOLLOWING AND 0 FOLLOWING \n  ) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 46)"}
+{"sql":"INSERT INTO t1 VALUES(NULL, 45)"}
+{"sql":"INSERT INTO t1 VALUES(7,  1000)"}
+{"sql":"INSERT INTO t1 VALUES(8,  1000)"}
+{"sql":"INSERT INTO t1 VALUES('abc', 1004)"}
+{"sql":"INSERT INTO t1 VALUES('xyz', 3333)"}
+{"sql":"SELECT a, max(c) OVER (\n    ORDER BY a RANGE BETWEEN 2 FOLLOWING AND 0 FOLLOWING\n  ) FROM t1"}
+{"sql":"SELECT a, min(c) OVER (\n    ORDER BY a RANGE BETWEEN 2 FOLLOWING AND 0 FOLLOWING\n  ) FROM t1"}
+{"sql":"SELECT a, max(c) OVER (\n    ORDER BY a RANGE BETWEEN 0 PRECEDING AND 2 PRECEDING\n  ) FROM t1"}
+{"sql":"SELECT a, min(c) OVER (\n    ORDER BY a RANGE BETWEEN 0 PRECEDING AND 2 PRECEDING\n  ) FROM t1"}
+{"sql":"INSERT INTO t1 VALUES('aa', 111)"}
+{"sql":"INSERT INTO t1 VALUES('BB', 660)"}
+{"sql":"INSERT INTO t1 VALUES('CC', 938)"}
+{"sql":"INSERT INTO t1 VALUES('dd', 979)"}
+{"sql":"CREATE INDEX i1 ON t1(a COLLATE nocase)"}
+{"sql":"SELECT sum(c) OVER\n    (ORDER BY a COLLATE nocase RANGE BETWEEN 10.0 PRECEDING AND 5.0 PRECEDING)\n  FROM t1"}
+{"sql":"CREATE TABLE seps(x)"}
+{"sql":"INSERT INTO seps(x) VALUES ('1'), ('22'), ('333'), ('4444')"}
+{"sql":"SELECT group_concat('-', x)\n    OVER ( ORDER BY x ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING )\n  FROM seps"}
+{"sql":"CREATE TABLE t1(i INTEGER PRIMARY KEY, v)"}
+{"sql":"INSERT INTO t1 VALUES( 1, 'one' )"}
+{"sql":"INSERT INTO t1 VALUES( 2, 'two' )"}
+{"sql":"SELECT \n    json_group_array( v ) OVER w,\n    json_group_array( v ) OVER w\n  FROM t1\n  window w as ( \n    range between unbounded preceding and unbounded following \n  )"}
+{"sql":"SELECT \n    group_concat( v ) OVER w,\n    json_group_array( v ) OVER w,\n    json_group_array( v ) OVER w,\n    group_concat( v ) OVER w\n  FROM t1\n  window w as ( \n    range between unbounded preceding and unbounded following \n  )"}
+{"sql":"SELECT value FROM json_each('[1,2,3,4,5]')"}
+{"sql":"SELECT key, value FROM json_each('[1,2,3,4,5]')"}
+{"sql":"SELECT rowid, value FROM json_each('[1,2,3,4,5]')"}
+{"sql":"SELECT sum(value) OVER (ORDER BY rowid) FROM json_each('[1,2,3,4,5]')"}
+{"sql":"SELECT sum(value) OVER (\n        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n    ) FROM json_each('[1,2,3,4,5]')"}
+{"sql":"SELECT sum(value) OVER (ORDER BY rowid DESC) FROM json_each('[1,2,3,4,5]')"}
+{"sql":"SELECT sum(value) OVER (ORDER BY value ASC) FROM json_each('[2,1,4,3,5]')"}

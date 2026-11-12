@@ -1,0 +1,25 @@
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y INTEGER)"}
+{"sql":"WITH RECURSIVE\n    cnt(i) AS (VALUES(1) UNION ALL SELECT i+1 FROM cnt LIMIT 131072)\n  INSERT INTO t1(x, y) SELECT i, nullif(i,1)/2 FROM cnt"}
+{"sql":"CREATE VIRTUAL TABLE cx \n   USING transitive_closure(tablename=t1, idcolumn=x, parentcolumn=y)"}
+{"sql":"SELECT id, depth, root, tablename, idcolumn, parentcolumn FROM cx\n   WHERE root=16384\n     AND depth=1\n   ORDER BY id"}
+{"sql":"SELECT count(*), depth FROM cx WHERE root=1 AND depth<=5\n   GROUP BY depth ORDER BY 1"}
+{"sql":"SELECT count(*), depth FROM cx WHERE root=1 AND depth=5\n   GROUP BY depth ORDER BY 1"}
+{"sql":"SELECT count(*), depth FROM cx WHERE root=1 AND depth BETWEEN 3 AND 5\n   GROUP BY depth ORDER BY 1"}
+{"sql":"SELECT count(*), min(id), max(id) FROM c2 WHERE root=1"}
+{"sql":"SELECT id FROM c2 WHERE root=10"}
+{"sql":"SELECT id FROM c2 WHERE root=12"}
+{"sql":"SELECT id FROM c2 WHERE root IN (10,12) ORDER BY id"}
+{"sql":"SELECT id FROM c2 WHERE root IN (10,12) ORDER BY +id"}
+{"sql":"CREATE VIRTUAL TABLE c2up USING transitive_closure(\n    tablename = t2,\n    idcolumn = y,\n    parentcolumn = x\n  )"}
+{"sql":"SELECT id FROM c2up WHERE root=20"}
+{"sql":"SELECT id FROM cx\n   WHERE root=20\n     AND tablename='t2'\n     AND idcolumn='y'\n     AND parentcolumn='x'"}
+{"sql":"SELECT DISTINCT id FROM c2\n   WHERE root IN (SELECT id FROM c2up\n                   WHERE root=20 AND depth<=2)\n   ORDER BY id"}
+{"sql":"SELECT id FROM c2\n   WHERE root=(SELECT id FROM c2up\n               WHERE root=20 AND depth=2)\n     AND depth=2\n  EXCEPT\n  SELECT id FROM c2\n   WHERE root=(SELECT id FROM c2up\n               WHERE root=20 AND depth=1)\n     AND depth<=1\n   ORDER BY id"}
+{"sql":"SELECT id FROM cx\n     WHERE root=20\n       AND tablename='t3'\n       AND idcolumn='y'\n       AND parentcolumn='x'"}
+{"sql":"SELECT id FROM cx\n     WHERE root=20\n       AND tablename='t2'\n       AND idcolumn='xyz'\n       AND parentcolumn='x'"}
+{"sql":"SELECT id FROM cx\n     WHERE root=20\n       AND tablename='t2'\n       AND idcolumn='x'\n       AND parentcolumn='pqr'"}
+{"sql":"CREATE VIRTUAL TABLE temp.closure USING transitive_closure"}
+{"sql":"SELECT id FROM closure\n   WHERE root=1\n     AND depth=3\n     AND tablename='t1'\n     AND idcolumn='x'\n     AND parentcolumn='y'\n  ORDER BY id"}
+{"sql":"CREATE TABLE t4 (\n    id INTEGER PRIMARY KEY, \n    name TEXT NOT NULL,\n    parent_id INTEGER\n  )"}
+{"sql":"CREATE VIRTUAL TABLE vt4 USING transitive_closure (\n    idcolumn=id, parentcolumn=parent_id, tablename=t4\n  )"}
+{"sql":"SELECT * FROM t4, vt4 WHERE t4.id = vt4.root AND vt4.id=4 AND vt4.depth=2"}

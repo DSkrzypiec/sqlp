@@ -1,0 +1,50 @@
+{"sql":"CREATE TABLE t1(x INTEGER PRIMARY KEY, y BOOLEAN)"}
+{"sql":"INSERT INTO t1 VALUES(1, true),(2, false),(3, null)"}
+{"sql":"SELECT x FROM t1 WHERE y IS TRUE"}
+{"sql":"SELECT x FROM t1 WHERE y IS FALSE"}
+{"sql":"SELECT x FROM t1 WHERE y IS NULL"}
+{"sql":"SELECT x FROM t1 WHERE y IS NOT TRUE"}
+{"sql":"SELECT x FROM t1 WHERE y IS NOT FALSE"}
+{"sql":"SELECT x FROM t1 WHERE y IS NOT NULL"}
+{"sql":"SELECT x,\n         y IS TRUE, y IS FALSE, y is NULL,\n         y IS NOT TRUE, y IS NOT FALSE, y IS NOT NULL, '|'\n    FROM t1 ORDER BY x"}
+{"sql":"SELECT x FROM t1 WHERE true"}
+{"sql":"SELECT x FROM t1 WHERE false"}
+{"sql":"CREATE TABLE t2(\n     a INTEGER PRIMARY KEY,\n     b BOOLEAN DEFAULT true,\n     c BOOLEAN DEFAULT(true),\n     d BOOLEAN DEFAULT false,\n     e BOOLEAN DEFAULT(false)\n  )"}
+{"sql":"INSERT INTO t2 DEFAULT VALUES"}
+{"sql":"CREATE TABLE t2(\n     a INTEGER PRIMARY KEY,\n     b BOOLEAN DEFAULT(not true),\n     c BOOLEAN DEFAULT(not false)\n  )"}
+{"sql":"INSERT INTO t2(a) VALUES(99)"}
+{"sql":"CREATE TABLE t2(\n     a INTEGER PRIMARY KEY,\n     b BOOLEAN CHECK(b IS TRUE),\n     c BOOLEAN CHECK(c IS FALSE),\n     d BOOLEAN CHECK(d IS NOT TRUE),\n     e BOOLEAN CHECK(e IS NOT FALSE)\n  )"}
+{"sql":"INSERT INTO t2 VALUES(1,true,false,null,null)"}
+{"sql":"INSERT INTO t2 VALUES(2,false,false,null,null)"}
+{"sql":"INSERT INTO t2 VALUES(2,true,true,null,null)"}
+{"sql":"INSERT INTO t2 VALUES(2,true,false,true,null)"}
+{"sql":"INSERT INTO t2 VALUES(2,true,false,null,false)"}
+{"sql":"SELECT x IS TRUE FROM t1"}
+{"sql":"SELECT x IS FALSE FROM t1"}
+{"sql":"CREATE TABLE t7(\n      a INTEGER PRIMARY KEY,\n      b BOOLEAN DEFAULT false,\n      c BOOLEAN DEFAULT true\n    )"}
+{"sql":"INSERT INTO t7(a) VALUES(1)"}
+{"sql":"INSERT INTO t7(a,b,c) VALUES(2,true,false)"}
+{"sql":"ALTER TABLE t7 ADD COLUMN d BOOLEAN DEFAULT false"}
+{"sql":"ALTER TABLE t7 ADD COLUMN e BOOLEAN DEFAULT true"}
+{"sql":"INSERT INTO t7(a,b,c) VALUES(3,true,false)"}
+{"sql":"INSERT INTO t7 VALUES(4,false,true,true,false)"}
+{"sql":"SELECT *,'x' FROM t7 ORDER BY a"}
+{"sql":"SELECT 0.5 IS TRUE COLLATE NOCASE"}
+{"sql":"SELECT 0.5 IS TRUE COLLATE RTRIM"}
+{"sql":"SELECT 0.5 IS TRUE COLLATE BINARY"}
+{"sql":"SELECT 0.5 IS TRUE"}
+{"sql":"SELECT 0.5 COLLATE NOCASE IS TRUE"}
+{"sql":"SELECT 0.0 IS FALSE"}
+{"sql":"SELECT 0.0 IS FALSE COLLATE NOCASE"}
+{"sql":"SELECT 0.0 IS FALSE COLLATE RTRIM"}
+{"sql":"SELECT 0.0 IS FALSE COLLATE BINARY"}
+{"sql":"SELECT 9 IN (false.false)"}
+{"sql":"CREATE TABLE t8(a INT, true INT, false INT, d INT)"}
+{"sql":"INSERT INTO t8(a,true,false,d) VALUES(5,6,7,8),(4,3,2,1),('a','b','c','d')"}
+{"sql":"SELECT * FROM t8 ORDER BY false"}
+{"sql":"SELECT 9 IN (false.false) FROM t8"}
+{"sql":"CREATE TABLE false(true INT, false INT, x INT CHECK (5 IN (false.false)))"}
+{"sql":"INSERT INTO False VALUES(4,5,6)"}
+{"sql":"INSERT INTO False VALUES(5,6,7)"}
+{"sql":"SELECT 9 IN (false.false) FROM false"}
+{"sql":"SELECT 5 IN (false.false) FROM false"}

@@ -1,0 +1,44 @@
+{"sql":"CREATE TABLE TIME_TBL (f1 time(2))","shape":"CREATE TABLE TIME_TBL (f1 time(2));"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('00:00')","shape":"INSERT INTO TIME_TBL VALUES ('00:00');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('01:00')","shape":"INSERT INTO TIME_TBL VALUES ('01:00');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('02:03 PST')","shape":"INSERT INTO TIME_TBL VALUES ('02:03 PST');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('11:59 EDT')","shape":"INSERT INTO TIME_TBL VALUES ('11:59 EDT');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('12:00')","shape":"INSERT INTO TIME_TBL VALUES ('12:00');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('12:01')","shape":"INSERT INTO TIME_TBL VALUES ('12:01');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('23:59')","shape":"INSERT INTO TIME_TBL VALUES ('23:59');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('11:59:59.99 PM')","shape":"INSERT INTO TIME_TBL VALUES ('11:59:59.99 PM');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('2003-03-07 15:36:39 America/New_York')","shape":"INSERT INTO TIME_TBL VALUES ('2003-03-07 15:36:39 America/New_York');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('2003-07-07 15:36:39 America/New_York')","shape":"INSERT INTO TIME_TBL VALUES ('2003-07-07 15:36:39 America/New_York');"}
+{"sql":"INSERT INTO TIME_TBL VALUES ('15:36:39 America/New_York')","shape":"INSERT INTO TIME_TBL VALUES ('15:36:39 America/New_York');"}
+{"sql":"SELECT f1 AS \"Time\" FROM TIME_TBL","shape":"SELECT f1 AS \"Time\" FROM TIME_TBL;"}
+{"sql":"SELECT f1 AS \"Three\" FROM TIME_TBL WHERE f1 < '05:06:07'","shape":"SELECT f1 AS \"Three\" FROM TIME_TBL WHERE f1 < '05:06:07';"}
+{"sql":"SELECT f1 AS \"Five\" FROM TIME_TBL WHERE f1 > '05:06:07'","shape":"SELECT f1 AS \"Five\" FROM TIME_TBL WHERE f1 > '05:06:07';"}
+{"sql":"SELECT f1 AS \"None\" FROM TIME_TBL WHERE f1 < '00:00'","shape":"SELECT f1 AS \"None\" FROM TIME_TBL WHERE f1 < '00:00';"}
+{"sql":"SELECT f1 AS \"Eight\" FROM TIME_TBL WHERE f1 >= '00:00'","shape":"SELECT f1 AS \"Eight\" FROM TIME_TBL WHERE f1 >= '00:00';"}
+{"sql":"SELECT '23:59:59.999999'::time","shape":"SELECT '23:59:59.999999'::time;"}
+{"sql":"SELECT '23:59:59.9999999'::time","shape":"SELECT '23:59:59.9999999'::time;"}
+{"sql":"SELECT '23:59:60'::time","shape":"SELECT '23:59:60'::time;"}
+{"sql":"SELECT '24:00:00'::time","shape":"SELECT '24:00:00'::time;"}
+{"sql":"SELECT '24:00:00.01'::time","shape":"SELECT '24:00:00.01'::time;"}
+{"sql":"SELECT '23:59:60.01'::time","shape":"SELECT '23:59:60.01'::time;"}
+{"sql":"SELECT '24:01:00'::time","shape":"SELECT '24:01:00'::time;"}
+{"sql":"SELECT '25:00:00'::time","shape":"SELECT '25:00:00'::time;"}
+{"sql":"SELECT pg_input_is_valid('12:00:00', 'time')","shape":"SELECT pg_input_is_valid('12:00:00', 'time');"}
+{"sql":"SELECT pg_input_is_valid('25:00:00', 'time')","shape":"SELECT pg_input_is_valid('25:00:00', 'time');"}
+{"sql":"SELECT pg_input_is_valid('15:36:39 America/New_York', 'time')","shape":"SELECT pg_input_is_valid('15:36:39 America/New_York', 'time');"}
+{"sql":"SELECT * FROM pg_input_error_info('25:00:00', 'time')","shape":"SELECT * FROM pg_input_error_info('25:00:00', 'time');"}
+{"sql":"SELECT * FROM pg_input_error_info('15:36:39 America/New_York', 'time')","shape":"SELECT * FROM pg_input_error_info('15:36:39 America/New_York', 'time');"}
+{"sql":"SELECT f1 + time '00:01' AS \"Illegal\" FROM TIME_TBL","shape":"SELECT f1 + time '00:01' AS \"Illegal\" FROM TIME_TBL;"}
+{"sql":"SELECT EXTRACT(MICROSECOND FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(MICROSECOND FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(MILLISECOND FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(MILLISECOND FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(SECOND      FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(SECOND FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(MINUTE      FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(MINUTE FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(HOUR        FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(HOUR FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(DAY         FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(DAY FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(FORTNIGHT   FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(FORTNIGHT FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(TIMEZONE    FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(TIMEZONE FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT EXTRACT(EPOCH       FROM TIME '2020-05-26 13:30:25.575401')","shape":"SELECT EXTRACT(EPOCH FROM TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT date_part('microsecond', TIME '2020-05-26 13:30:25.575401')","shape":"SELECT date_part('microsecond', TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT date_part('millisecond', TIME '2020-05-26 13:30:25.575401')","shape":"SELECT date_part('millisecond', TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT date_part('second',      TIME '2020-05-26 13:30:25.575401')","shape":"SELECT date_part('second', TIME '2020-05-26 13:30:25.575401');"}
+{"sql":"SELECT date_part('epoch',       TIME '2020-05-26 13:30:25.575401')","shape":"SELECT date_part('epoch', TIME '2020-05-26 13:30:25.575401');"}

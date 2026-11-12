@@ -1,0 +1,53 @@
+{"sql":"CREATE VIRTUAL TABLE ff USING fts5(a, b)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON rr BEGIN\n      INSERT INTO ff VALUES(new.a, new.b);\n    END"}
+{"sql":"INSERT INTO rr VALUES('hello', 'world')"}
+{"sql":"SELECT * FROM ff"}
+{"sql":"ALTER TABLE ff RENAME TO ffff"}
+{"sql":"INSERT INTO rr VALUES('in', 'tcl')"}
+{"sql":"SELECT * FROM ffff"}
+{"sql":"CREATE TABLE p1(a PRIMARY KEY, b)"}
+{"sql":"CREATE TABLE c1(x REFERENCES p1)"}
+{"sql":"CREATE TABLE c2(x, FOREIGN KEY (x) REFERENCES p1)"}
+{"sql":"CREATE TABLE c3(x, FOREIGN KEY (x) REFERENCES p1(a))"}
+{"sql":"ALTER TABLE p1 RENAME TO p2"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name LIKE 'c%'"}
+{"sql":"ALTER TABLE p2 RENAME TO p3"}
+{"sql":"ALTER TABLE p3 RENAME TO p2"}
+{"sql":"ALTER TABLE log_entry RENAME TO newname"}
+{"sql":"ALTER TABLE log_entry RENAME col1 TO newname"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 WHEN new.a NOT NULL BEGIN\n    UPDATE t1 SET (c,d)=(a,b);\n  END"}
+{"sql":"SELECT sql FROM sqlite_master WHERE type = 'trigger'"}
+{"sql":"ALTER TABLE t1x RENAME a TO aaa"}
+{"sql":"ALTER TABLE t1x RENAME d TO ddd"}
+{"sql":"CREATE TRIGGER r2 AFTER INSERT ON t2 WHEN new.a NOT NULL BEGIN\n    SELECT a, sum(a) OVER w1 FROM t2\n      WINDOW w1 AS (\n        PARTITION BY a ORDER BY a \n        ROWS BETWEEN 2 PRECEDING AND 3 FOLLOWING\n      ),\n      w2 AS (\n        PARTITION BY a\n        ORDER BY rowid ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING\n      );\n  END"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'r2'"}
+{"sql":"ALTER TABLE t2x RENAME a TO aaaa"}
+{"sql":"INSERT INTO t2x VALUES(1)"}
+{"sql":"CREATE TABLE t3(a,b,c,d)"}
+{"sql":"CREATE TRIGGER r3 AFTER INSERT ON t3 WHEN new.a NOT NULL BEGIN\n    SELECT a,b,c FROM t3 EXCEPT SELECT a,b,c FROM t3 ORDER BY a;\n    SELECT rowid, * FROM t3;\n  END"}
+{"sql":"ALTER TABLE t3 RENAME TO t3x"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'r3'"}
+{"sql":"ALTER TABLE t3x RENAME a TO abcd"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3,4,5,6)"}
+{"sql":"SELECT a,b,c FROM t1 UNION SELECT d,e,f FROM t1 ORDER BY b,c"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t2\n    SELECT a,b,c FROM t1 UNION SELECT d,e,f FROM t1 ORDER BY b,c;\n  END"}
+{"sql":"INSERT INTO t1 VALUES(2,3,4,5,6,7)"}
+{"sql":"ALTER TABLE t1 RENAME TO xyzzy"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='r1'"}
+{"sql":"ALTER TABLE xyzzy RENAME c TO ccc"}
+{"sql":"CREATE TABLE t2(a, b, c)"}
+{"sql":"CREATE TABLE t3(d, e, f)"}
+{"sql":"CREATE TRIGGER tr AFTER INSERT ON t3 BEGIN\n    UPDATE t2 SET a = new.d;\n    SELECT a, b, c FROM v1;\n  END"}
+{"sql":"INSERT INTO t3 VALUES(1, 2, 3)"}
+{"sql":"ALTER TABLE t1 RENAME a TO aaa"}
+{"sql":"INSERT INTO t3 VALUES(4, 5, 6)"}
+{"sql":"CREATE TABLE t4(a, b)"}
+{"sql":"CREATE VIEW v4 AS SELECT * FROM t4 WHERE (a=1 AND 0) OR b=2"}
+{"sql":"ALTER TABLE t4 RENAME a TO c"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'v4'"}
+{"sql":"CREATE TABLE t0(c0)"}
+{"sql":"CREATE INDEX i0 ON t0(likelihood(1,2) AND 0)"}
+{"sql":"ALTER TABLE t0 RENAME TO t1"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='i0'"}
+{"sql":"CREATE TRIGGER AFTER INSERT ON t2 BEGIN\n\n    SELECT group_conct(\n        123 ORDER BY (\n          SELECT 1 FROM ( VALUES(a, 'b'), ('c') )\n          )) \n    FROM t1;\n\n  END"}
+{"sql":"ALTER TABLE t2 RENAME TO newname"}

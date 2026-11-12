@@ -1,0 +1,6 @@
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(words)"}
+{"sql":"SELECT min(docid), max(docid) FROM t1"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(order=DESC)"}
+{"sql":"INSERT INTO t2(t2) VALUES('optimize')"}
+{"sql":"SELECT count(*) FROM t2 WHERE t2 MATCH '\"never zero\"'"}
+{"sql":"SELECT count(*) FROM t2 WHERE t2 MATCH '\"two zero\"'"}

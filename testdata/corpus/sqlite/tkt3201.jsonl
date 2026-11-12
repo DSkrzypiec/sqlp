@@ -1,0 +1,6 @@
+{"sql":"SELECT l.a, r.a FROM t1 AS l, t1 AS r WHERE l.a < r.a"}
+{"sql":"SELECT l.a, r.a FROM t1 AS l, t2 AS r WHERE l.a < r.a"}
+{"sql":"SELECT t1.a, t1.b, t2.a, t2.b FROM t1, t2"}
+{"sql":"CREATE TABLE t3(c INTEGER PRIMARY KEY, d TEXT)"}
+{"sql":"SELECT a, b, c, d FROM t1, t3"}
+{"sql":"SELECT a, b, c, d FROM t1, t3 WHERE a < c"}

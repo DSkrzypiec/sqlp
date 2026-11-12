@@ -1,0 +1,5 @@
+{"sql":"WITH r(x,y) AS (\n      SELECT 1, randomblob(100)\n      UNION ALL\n      SELECT x+1, randomblob(100) FROM r\n      LIMIT 100000\n    )\n    SELECT count(x), length(y) FROM r GROUP BY (x%5)"}
+{"sql":"WITH r(x,y) AS (\n      SELECT 1, randomblob(100)\n      UNION ALL\n      SELECT x+1, randomblob(100) FROM r\n      LIMIT 10000\n    ) INSERT INTO t1 SELECT * FROM r"}
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(b, a)"}
+{"sql":"CREATE UNIQUE INDEX i2 ON t1(a)"}
+{"sql":"WITH r(x,y) AS (\n          SELECT 1, randomblob(100)\n          UNION ALL\n          SELECT x+1, randomblob(100) FROM r\n          LIMIT 1000000\n          )\n        SELECT count(x), length(y) FROM r GROUP BY (x%5)"}

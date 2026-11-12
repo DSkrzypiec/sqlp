@@ -1,0 +1,43 @@
+{"sql":"CREATE TABLE pxtest1 (foobar VARCHAR(10))","shape":"CREATE TABLE pxtest1 (foobar VARCHAR(10));"}
+{"sql":"INSERT INTO pxtest1 VALUES ('aaa')","shape":"INSERT INTO pxtest1 VALUES ('aaa');"}
+{"sql":"BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE","shape":"BEGIN ISOLATION LEVEL SERIALIZABLE;"}
+{"sql":"UPDATE pxtest1 SET foobar = 'bbb' WHERE foobar = 'aaa'","shape":"UPDATE pxtest1 SET foobar = 'bbb' WHERE foobar = 'aaa';"}
+{"sql":"SELECT * FROM pxtest1","shape":"SELECT * FROM pxtest1;"}
+{"sql":"PREPARE TRANSACTION 'foo1'","shape":"PREPARE TRANSACTION 'foo1';"}
+{"sql":"SELECT gid FROM pg_prepared_xacts","shape":"SELECT gid FROM pg_prepared_xacts;"}
+{"sql":"ROLLBACK PREPARED 'foo1'","shape":"ROLLBACK PREPARED 'foo1';"}
+{"sql":"INSERT INTO pxtest1 VALUES ('ddd')","shape":"INSERT INTO pxtest1 VALUES ('ddd');"}
+{"sql":"PREPARE TRANSACTION 'foo2'","shape":"PREPARE TRANSACTION 'foo2';"}
+{"sql":"COMMIT PREPARED 'foo2'","shape":"COMMIT PREPARED 'foo2';"}
+{"sql":"UPDATE pxtest1 SET foobar = 'eee' WHERE foobar = 'ddd'","shape":"UPDATE pxtest1 SET foobar = 'eee' WHERE foobar = 'ddd';"}
+{"sql":"PREPARE TRANSACTION 'foo3'","shape":"PREPARE TRANSACTION 'foo3';"}
+{"sql":"INSERT INTO pxtest1 VALUES ('fff')","shape":"INSERT INTO pxtest1 VALUES ('fff');"}
+{"sql":"ROLLBACK PREPARED 'foo3'","shape":"ROLLBACK PREPARED 'foo3';"}
+{"sql":"PREPARE TRANSACTION 'foo4'","shape":"PREPARE TRANSACTION 'foo4';"}
+{"sql":"PREPARE TRANSACTION 'foo5'","shape":"PREPARE TRANSACTION 'foo5';"}
+{"sql":"ROLLBACK PREPARED 'foo4'","shape":"ROLLBACK PREPARED 'foo4';"}
+{"sql":"DROP TABLE pxtest1","shape":"DROP TABLE pxtest1;"}
+{"sql":"SELECT pg_advisory_lock(1)","shape":"SELECT pg_advisory_lock(1);"}
+{"sql":"SELECT pg_advisory_xact_lock_shared(1)","shape":"SELECT pg_advisory_xact_lock_shared(1);"}
+{"sql":"PREPARE TRANSACTION 'foo6'","shape":"PREPARE TRANSACTION 'foo6';"}
+{"sql":"CREATE TABLE pxtest2 (a int)","shape":"CREATE TABLE pxtest2 (a int);"}
+{"sql":"INSERT INTO pxtest2 VALUES (1)","shape":"INSERT INTO pxtest2 VALUES (1);"}
+{"sql":"INSERT INTO pxtest2 VALUES (2)","shape":"INSERT INTO pxtest2 VALUES (2);"}
+{"sql":"SAVEPOINT b","shape":"SAVEPOINT b;"}
+{"sql":"INSERT INTO pxtest2 VALUES (3)","shape":"INSERT INTO pxtest2 VALUES (3);"}
+{"sql":"PREPARE TRANSACTION 'regress-one'","shape":"PREPARE TRANSACTION 'regress-one';"}
+{"sql":"CREATE TABLE pxtest3(fff int)","shape":"CREATE TABLE pxtest3 (fff int);"}
+{"sql":"DROP TABLE pxtest3","shape":"DROP TABLE pxtest3;"}
+{"sql":"CREATE TABLE pxtest4 (a int)","shape":"CREATE TABLE pxtest4 (a int);"}
+{"sql":"INSERT INTO pxtest4 VALUES (1)","shape":"INSERT INTO pxtest4 VALUES (1);"}
+{"sql":"INSERT INTO pxtest4 VALUES (2)","shape":"INSERT INTO pxtest4 VALUES (2);"}
+{"sql":"DECLARE foo CURSOR FOR SELECT * FROM pxtest4","shape":"DECLARE foo CURSOR FOR SELECT * FROM pxtest4;"}
+{"sql":"FETCH 1 FROM foo","shape":"FETCH 1 FROM foo;"}
+{"sql":"PREPARE TRANSACTION 'regress-two'","shape":"PREPARE TRANSACTION 'regress-two';"}
+{"sql":"SELECT * FROM pxtest2","shape":"SELECT * FROM pxtest2;"}
+{"sql":"lock table pxtest3 in access share mode nowait","shape":"LOCK TABLE pxtest3 IN ACCESS SHARE MODE NOWAIT;"}
+{"sql":"COMMIT PREPARED 'regress-one'","shape":"COMMIT PREPARED 'regress-one';"}
+{"sql":"COMMIT PREPARED 'regress-two'","shape":"COMMIT PREPARED 'regress-two';"}
+{"sql":"SELECT * FROM pxtest3","shape":"SELECT * FROM pxtest3;"}
+{"sql":"DROP TABLE pxtest2","shape":"DROP TABLE pxtest2;"}
+{"sql":"DROP TABLE pxtest4","shape":"DROP TABLE pxtest4;"}

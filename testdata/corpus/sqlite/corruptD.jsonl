@@ -1,0 +1,5 @@
+{"sql":"DELETE FROM t1 WHERE a = 10"}
+{"sql":"DELETE FROM t1 WHERE a = 20"}
+{"sql":"DELETE FROM t1 WHERE a = 30"}
+{"sql":"DELETE FROM t1 WHERE a = 40"}
+{"sql":"SELECT * FROM t1 ORDER BY rowid"}

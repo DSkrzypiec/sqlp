@@ -1,0 +1,97 @@
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY,b,c DEFAULT 'pax')"}
+{"sql":"INSERT INTO t1(b) VALUES(10),('happy'),(NULL) RETURNING a,b,c"}
+{"sql":"INSERT INTO t1(b,c) VALUES(5,99) RETURNING b,c,a,rowid"}
+{"sql":"INSERT INTO t1 DEFAULT VALUES RETURNING *"}
+{"sql":"INSERT INTO t2 VALUES(11,12,13),(21,'b','c'),(31,'b-value',4.75)"}
+{"sql":"INSERT INTO t1 SELECT * FROM t2 RETURNING *"}
+{"sql":"SELECT *, '|' FROM t1"}
+{"sql":"UPDATE t1 SET c='bellum' WHERE c='pax' RETURNING rowid, b, '|'"}
+{"sql":"DELETE FROM t1 WHERE c='bellum' RETURNING rowid, *, '|'"}
+{"sql":"CREATE TABLE t4(a INT, b INT DEFAULT 1234, c INT DEFAULT -16)"}
+{"sql":"INSERT INTO t4(a,b,c) VALUES(1,2,3)"}
+{"sql":"INSERT INTO t4(a,b,c) VALUES(1,22,33)\n  ON CONFLICT(a) DO UPDATE SET b=44\n  RETURNING *"}
+{"sql":"INSERT INTO t4 VALUES(1,2,3),(4,5,6),(7,8,9)"}
+{"sql":"INSERT INTO t4(a,b,c) VALUES(2,3,4),(4,5,6),(5,6,7)\n  ON CONFLICT(a) DO UPDATE SET b=100\n  RETURNING *, '|'"}
+{"sql":"CREATE TABLE t1(xyz)"}
+{"sql":"CREATE TABLE t2(a as (1+1), b)"}
+{"sql":"UPDATE t2 SET b='123' WHERE b='abc' RETURNING (SELECT b FROM t1)"}
+{"sql":"INSERT INTO t2(b) VALUES('abc')"}
+{"sql":"INSERT INTO t1(xyz) VALUES(1)"}
+{"sql":"UPDATE t2 SET b='123' WHERE b='abc' RETURNING b"}
+{"sql":"INSERT INTO t1 VALUES(1),(2),(4),(9)"}
+{"sql":"INSERT INTO t2 VALUES(3,7), (4,25), (5,99)"}
+{"sql":"UPDATE t1 SET id=id+y FROM t2 WHERE t1.id=t2.x RETURNING t2.*"}
+{"sql":"UPDATE t1 SET id=id+y FROM t2 WHERE t1.id=t2.x RETURNING *, '|'"}
+{"sql":"SELECT * FROM t1 ORDER BY id"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2)"}
+{"sql":"INSERT INTO t2(x,y) VALUES(1,30)"}
+{"sql":"UPDATE t1 SET b=b+1 RETURNING new.b"}
+{"sql":"UPDATE t1 SET b=b+1 RETURNING old.b"}
+{"sql":"UPDATE t1 SET b=b+1 RETURNING another.b"}
+{"sql":"UPDATE t1 SET b=b+y FROM t2 WHERE t2.x=t1.a RETURNING t2.x"}
+{"sql":"UPDATE t1 SET b=b+y FROM t2 WHERE t2.x=t1.a RETURNING t1.b"}
+{"sql":"UPDATE t1 AS alias SET b=123 RETURNING alias.b"}
+{"sql":"UPDATE t1 AS alias SET b=alias.b+1000 RETURNING t1.b"}
+{"sql":"INSERT INTO t2 VALUES(3,40)"}
+{"sql":"INSERT INTO t1 VALUES(3) RETURNING a, (SELECT c FROM t2 WHERE new.a=t2.b) AS x"}
+{"sql":"INSERT INTO t1 VALUES(3) RETURNING a, (SELECT c FROM t2 WHERE old.a=t2.b) AS x"}
+{"sql":"INSERT INTO t1 VALUES(3) RETURNING a, (SELECT c FROM t2 WHERE t1.a=t2.b) AS x"}
+{"sql":"UPDATE pragma_encoding SET encoding='UTF-8' RETURNING a, b, *"}
+{"sql":"CREATE TABLE t1_a(a, b)"}
+{"sql":"CREATE VIEW t1 AS SELECT a, b FROM t1_a"}
+{"sql":"INSERT INTO t1_a VALUES('x', 'y')"}
+{"sql":"CREATE TABLE log(op, r, a, b)"}
+{"sql":"CREATE TRIGGER tr1 INSTEAD OF INSERT ON t1 BEGIN\n    INSERT INTO log VALUES('insert', new.rowid, new.a, new.b);\n  END"}
+{"sql":"CREATE TRIGGER tr2 INSTEAD OF UPDATE ON t1 BEGIN\n    INSERT INTO log VALUES('update', new.rowid, new.a, new.b);\n  END"}
+{"sql":"INSERT INTO t1(a, b) VALUES(1234, 5678) RETURNING rowid"}
+{"sql":"UPDATE t1 SET a='z' WHERE b='y' RETURNING rowid"}
+{"sql":"CREATE TEMP TABLE t1(a,b)"}
+{"sql":"CREATE TEMP TABLE t2(c,d)"}
+{"sql":"CREATE TEMP TABLE t3(e,f)"}
+{"sql":"CREATE TEMP TABLE log(op,x,y)"}
+{"sql":"CREATE TEMP TRIGGER t1r1 AFTER INSERT ON t1 BEGIN\n     INSERT INTO log(op,x,y) VALUES('I1',new.a,new.b);\n  END"}
+{"sql":"CREATE TEMP TRIGGER t1r2 BEFORE DELETE ON t1 BEGIN\n     INSERT INTO log(op,x,y) VALUES('D1',old.a,old.b);\n  END"}
+{"sql":"CREATE TEMP TRIGGER t2r3 AFTER UPDATE ON t1 BEGIN\n     INSERT INTO log(op,x,y) VALUES('U1',new.a,new.b);\n  END"}
+{"sql":"CREATE TEMP TRIGGER t2r1 BEFORE INSERT ON t2 BEGIN\n     INSERT INTO log(op,x,y) VALUES('I2',new.c,new.d);\n  END"}
+{"sql":"CREATE TEMP TRIGGER t3r1 AFTER DELETE ON t3 BEGIN\n     INSERT INTO log(op,x,y) VALUES('D3',old.e,old.f);\n  END"}
+{"sql":"CREATE TEMP TRIGGER t3r2 BEFORE UPDATE ON t3 BEGIN\n     INSERT INTO log(op,x,y) VALUES('U3',new.e,new.f);\n  END"}
+{"sql":"INSERT INTO t1(a,b) VALUES(1,2),('happy','glad') RETURNING a, b, '|'"}
+{"sql":"UPDATE t1 SET b=9 WHERE a=1 RETURNING a, b, 'x'"}
+{"sql":"DELETE FROM t1 WHERE a<>'xray' RETURNING a, b, '@'"}
+{"sql":"DELETE FROM log"}
+{"sql":"INSERT INTO t2 VALUES('bravo','charlie') RETURNING d, c, 'z'"}
+{"sql":"INSERT INTO t3(e) VALUES(1),(2),(3) RETURNING 'I', e"}
+{"sql":"UPDATE t3 SET f=e+100 RETURNING 'U', e, f"}
+{"sql":"DELETE FROM t3 WHERE f>100 RETURNING 'D', e, f"}
+{"sql":"CREATE TRIGGER r1 BEFORE INSERT ON t1 BEGIN SELECT 1; END"}
+{"sql":"DELETE FROM t1 RETURNING *"}
+{"sql":"INSERT INTO t1 VALUES(5,30)"}
+{"sql":"INSERT INTO t1(a,b,c) VALUES(1,2,3) \n  RETURNING (SELECT b FROM t2)"}
+{"sql":"PRAGMA foreign_keys(1)"}
+{"sql":"CREATE TABLE Parent(id INTEGER PRIMARY KEY)"}
+{"sql":"CREATE TABLE Child(id INTEGER PRIMARY KEY, parent_id INTEGER REFERENCES Parent(id))"}
+{"sql":"INSERT INTO child(parent_id) VALUES(123) RETURNING id"}
+{"sql":"INSERT INTO t1(x) VALUES(5.0) RETURNING x, affinity(x)"}
+{"sql":"UPDATE t1 SET x=x+1 RETURNING x, affinity(x)"}
+{"sql":"DELETE FROM t1 RETURNING x, affinity(x)"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3),('a','b','c')"}
+{"sql":"CREATE TEMP TABLE t2(x,y,z)"}
+{"sql":"INSERT INTO t2 SELECT * FROM t1 RETURNING *"}
+{"sql":"INSERT INTO foo (fooval) VALUES (17), (4711), (17)\n      ON CONFLICT DO\n      UPDATE SET refcnt = refcnt+1\n    RETURNING fooid"}
+{"sql":"CREATE TABLE bug(id INTEGER PRIMARY KEY NOT NULL, x)"}
+{"sql":"INSERT INTO bug(id,x) VALUES(20, NULL)"}
+{"sql":"UPDATE bug SET x=NULL WHERE id = 20 RETURNING quote(x), x IS NULL"}
+{"sql":"CREATE TABLE v0(c1 INT)"}
+{"sql":"CREATE VIEW view_2(c1) AS SELECT CASE WHEN c1 COLLATE TRUE THEN TRUE ELSE TRUE END FROM v0"}
+{"sql":"CREATE TRIGGER x1 INSTEAD OF INSERT ON view_2 BEGIN SELECT true; END"}
+{"sql":"INSERT INTO view_2 DEFAULT VALUES RETURNING *"}
+{"sql":"CREATE TRIGGER r1 AFTER UPDATE ON t1 BEGIN VALUES(0); END"}
+{"sql":"CREATE TRIGGER IF NOT EXISTS r1 AFTER DELETE ON t1 BEGIN\n    INSERT  INTO t1(a) VALUES (1) RETURNING FALSE;\n    INSERT  INTO t1(a) VALUES (2) RETURNING TRUE;\n  END"}
+{"sql":"INSERT INTO t1 VALUES(1,10),(2,20),(3,30),(4,40),(6,60),(8,80)"}
+{"sql":"DELETE FROM t1 WHERE a<>3\n    RETURNING a,\n              (SELECT min(a) FROM t1),\n              (SELECT max(a) FROM t1),\n              (SELECT round(avg(a),2) FROM t1)"}
+{"sql":"DELETE FROM t1\n    RETURNING a,\n              (SELECT min(a) FROM t1),\n              (SELECT max(a) FROM t1),\n              (SELECT round(avg(a),2) FROM t1)"}
+{"sql":"DELETE FROM t1\n    RETURNING a,\n              (SELECT min(t2.a)+t1.a*100 FROM t1 AS t2),\n              (SELECT max(t2.a)+t1.a*100 FROM t1 AS t2),\n              (SELECT round(avg(t2.a),2)+t1.a*100 FROM t1 AS t2)"}
+{"sql":"INSERT INTO sqlite_schema DEFAULT VALUES RETURNING sqlite_schema.name"}
+{"sql":"INSERT INTO sqlite_temp_schema DEFAULT VALUES RETURNING sqlite_temp_schema.name"}
+{"sql":"CREATE TABLE xyz (a)"}
+{"sql":"INSERT INTO sqlite_temp_schema DEFAULT VALUES \n    RETURNING\n    (SELECT * FROM xyz AS sqlite_master WHERE a=sqlite_master.name)"}

@@ -1,0 +1,196 @@
+{"sql":"INSERT INTO t1 VALUES(1, 2, 3)"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN b TO d"}
+{"sql":"SELECT sql FROM sqlite_master WHERE tbl_name='t1' AND sql!=''"}
+{"sql":"CREATE TABLE t3(a, b, c, d, e, f, g, h, i, j, k, l, m, FOREIGN KEY (b, c, d, e, f, g, h, i, j, k, l, m) REFERENCES t4)"}
+{"sql":"SELECT b FROM t3"}
+{"sql":"ALTER TABLE t3 RENAME b TO biglongname"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='t3'"}
+{"sql":"SELECT biglongname FROM t3"}
+{"sql":"CREATE TABLE t4(x, y, z)"}
+{"sql":"CREATE TRIGGER ttt AFTER INSERT ON t4 WHEN new.y<0 BEGIN\n    SELECT x, y, z FROM t4;\n    DELETE FROM t4 WHERE y=32;\n    UPDATE t4 SET x=y+1, y=0 WHERE y=32;\n    INSERT INTO t4(x, y, z) SELECT 4, 5, 6 WHERE 0;\n  END"}
+{"sql":"INSERT INTO t4 VALUES(3, 2, 1)"}
+{"sql":"ALTER TABLE t4 RENAME y TO abc"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='t4'"}
+{"sql":"SELECT * FROM t4"}
+{"sql":"INSERT INTO t4 VALUES(6, 5, 4)"}
+{"sql":"SELECT sql FROM sqlite_master WHERE type='trigger'"}
+{"sql":"CREATE TABLE c1(a, b, FOREIGN KEY (a, b) REFERENCES p1(c, d))"}
+{"sql":"CREATE TABLE p1(c, d, PRIMARY KEY(c, d))"}
+{"sql":"PRAGMA foreign_keys = 1"}
+{"sql":"INSERT INTO p1 VALUES(1, 2)"}
+{"sql":"INSERT INTO p1 VALUES(3, 4)"}
+{"sql":"ALTER TABLE p1 RENAME d TO \"silly name\""}
+{"sql":"SELECT sql FROM sqlite_master WHERE name IN ('c1', 'p1')"}
+{"sql":"INSERT INTO c1 VALUES(1, 2)"}
+{"sql":"CREATE TABLE c2(a, b, FOREIGN KEY (a, b) REFERENCES p1)"}
+{"sql":"ALTER TABLE p1 RENAME \"silly name\" TO reasonable"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name IN ('c1', 'c2', 'p1')"}
+{"sql":"CREATE TABLE t5(a, b, c)"}
+{"sql":"CREATE INDEX t5a ON t5(a)"}
+{"sql":"INSERT INTO t5 VALUES(1, 2, 3), (4, 5, 6)"}
+{"sql":"ANALYZE"}
+{"sql":"ALTER TABLE t5 RENAME b TO big"}
+{"sql":"SELECT big FROM t5"}
+{"sql":"ALTER TABLE sqlite_stat1 RENAME tbl TO thetable"}
+{"sql":"CREATE TABLE blob(\n    rid INTEGER PRIMARY KEY,\n    rcvid INTEGER,\n    size INTEGER,\n    uuid TEXT UNIQUE NOT NULL,\n    content BLOB,\n    CHECK( length(uuid)>=40 AND rid>0 )\n  )"}
+{"sql":"ALTER TABLE \"blob\" RENAME COLUMN \"rid\" TO \"a1\""}
+{"sql":"ALTER TABLE \"blob\" RENAME COLUMN \"a1\" TO [where]"}
+{"sql":"SELECT \"where\" FROM blob"}
+{"sql":"CREATE TABLE c(x)"}
+{"sql":"INSERT INTO c VALUES(0)"}
+{"sql":"CREATE TABLE t6(\"col a\", \"col b\", \"col c\")"}
+{"sql":"CREATE TRIGGER zzz AFTER UPDATE OF \"col a\", \"col c\" ON t6 BEGIN\n    UPDATE c SET x=x+1;\n  END"}
+{"sql":"INSERT INTO t6 VALUES(0, 0, 0)"}
+{"sql":"UPDATE t6 SET \"col c\" = 1"}
+{"sql":"SELECT * FROM c"}
+{"sql":"ALTER TABLE t6 RENAME \"col c\" TO \"col 3\""}
+{"sql":"UPDATE t6 SET \"col 3\" = 0"}
+{"sql":"CREATE TABLE a1(x INTEGER, y TEXT, z BLOB, PRIMARY KEY(x))"}
+{"sql":"CREATE TABLE a2(a, b, c)"}
+{"sql":"CREATE VIEW v1 AS SELECT x, y, z FROM a1"}
+{"sql":"ALTER TABLE a1 RENAME y TO yyy"}
+{"sql":"SELECT sql FROM sqlite_master WHERE type='view'"}
+{"sql":"DROP VIEW v1"}
+{"sql":"CREATE VIEW v2 AS SELECT x, x+x, a, a+a FROM a1, a2"}
+{"sql":"ALTER TABLE a1 RENAME x TO xxx"}
+{"sql":"DROP TABLE a2"}
+{"sql":"DROP VIEW v2"}
+{"sql":"CREATE TABLE a2(a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"CREATE VIEW v2 AS SELECT xxx, xxx+xxx, a, a+a FROM a1, a2"}
+{"sql":"ALTER TABLE a1 RENAME xxx TO x"}
+{"sql":"CREATE TABLE b1(a, b, c)"}
+{"sql":"CREATE TABLE b2(x, y, z)"}
+{"sql":"CREATE VIEW vvv AS SELECT c+c || coalesce(c, c) FROM b1, b2 WHERE x=c GROUP BY c HAVING c>0"}
+{"sql":"ALTER TABLE b1 RENAME c TO \"a;b\""}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='vvv'"}
+{"sql":"CREATE VIEW www AS SELECT b FROM b1 UNION ALL SELECT y FROM b2"}
+{"sql":"ALTER TABLE b1 RENAME b TO bbb"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='www'"}
+{"sql":"CREATE VIEW xxx AS SELECT a FROM b1 UNION SELECT x FROM b2 ORDER BY 1 COLLATE nocase"}
+{"sql":"ALTER TABLE b2 RENAME x TO hello"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='xxx'"}
+{"sql":"CREATE VIEW zzz AS SELECT george, ringo FROM b1"}
+{"sql":"ALTER TABLE b1 RENAME a TO aaa"}
+{"sql":"DROP VIEW zzz"}
+{"sql":"CREATE TABLE t5(a TEXT, b INT)"}
+{"sql":"INSERT INTO t5(a,b) VALUES('aaa',7),('bbb',3),('ccc',4)"}
+{"sql":"CREATE VIEW vt5(x) AS SELECT group_concat(a ORDER BY b) FROM t5"}
+{"sql":"SELECT x FROM vt5"}
+{"sql":"ALTER TABLE t5 RENAME COLUMN b TO bbb"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='vt5'"}
+{"sql":"SELECT sql FROM sqlite_master WHERE sql!='' ORDER BY 1"}
+{"sql":"SELECT sql FROM sqlite_master ORDER BY 1"}
+{"sql":"CREATE TABLE x1(a, b, c)"}
+{"sql":"CREATE VIRTUAL TABLE e1 USING echo(x1)"}
+{"sql":"ALTER TABLE x1 RENAME b TO bbb"}
+{"sql":"CREATE VIEW v1 AS SELECT e1.*, x1.c FROM e1, x1"}
+{"sql":"ALTER TABLE x1 RENAME c TO ccc"}
+{"sql":"CREATE INDEX t1a ON t1(a)"}
+{"sql":"INSERT INTO t1 VALUES(1, 1), (2, 2), (3, 4)"}
+{"sql":"ALTER TABLE sqlite_stat1 RENAME idx TO theindex"}
+{"sql":"SELECT sql FROM sqlite_master WHERE tbl_name = 'sqlite_stat1'"}
+{"sql":"CREATE VIEW v2(c, d) AS SELECT * FROM t1"}
+{"sql":"ALTER TABLE v1 RENAME a TO z"}
+{"sql":"ALTER TABLE v2 RENAME c TO y"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts5(a, b, c)"}
+{"sql":"ALTER TABLE ft RENAME a TO z"}
+{"sql":"CREATE TABLE t2(x, y, z)"}
+{"sql":"ALTER TABLE t2 RENAME COLUMN a TO b"}
+{"sql":"ALTER TABLE t3 RENAME COLUMN a TO b"}
+{"sql":"CREATE TABLE x1(i INTEGER, t TEXT UNIQUE)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON x1 BEGIN\n    SELECT * FROM nosuchtable;\n  END"}
+{"sql":"ALTER TABLE x1 RENAME COLUMN t TO ttt"}
+{"sql":"DROP TRIGGER tr1"}
+{"sql":"CREATE INDEX x1i ON x1(i)"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='x1i'"}
+{"sql":"PRAGMA writable_schema = ON"}
+{"sql":"UPDATE sqlite_master SET sql = 'CREATE INDEX x1i ON x1(j)' WHERE name='x1i'"}
+{"sql":"PRAGMA writable_schema = OFF"}
+{"sql":"UPDATE sqlite_master SET sql = '' WHERE name='x1i'"}
+{"sql":"DELETE FROM sqlite_master WHERE name = 'x1i'"}
+{"sql":"CREATE TABLE data(x UNIQUE, y, z)"}
+{"sql":"CREATE TABLE ddd(sql, type, object, db, tbl, icol, znew, bquote)"}
+{"sql":"INSERT INTO ddd VALUES(\n      'CREATE TABLE x1(i INTEGER, t TEXT)',\n      'table', 'x1', 'main', 'x1', -1, 'zzz', 0\n  ), (\n      'CREATE TABLE x1(i INTEGER, t TEXT)',\n      'table', 'x1', 'main', 'x1', 2, 'zzz', 0\n  ), (\n      'CREATE TABLE x1(i INTEGER, t TEXT)',\n      'table', 'x1', 'main', 'notable', 0, 'zzz', 0\n  ), (\n      'CREATE TABLE x1(i INTEGER, t TEXT)',\n      'table', 'x1', 'main', 'ddd', -1, 'zzz', 0\n  )"}
+{"sql":"SELECT \n  sqlite_rename_column(sql, type, object, db, tbl, icol, znew, bquote, 0)\n  FROM ddd"}
+{"sql":"SELECT sqlite_rename_column(0,0,0,0,0,0,0,0,0)"}
+{"sql":"CREATE TABLE xxx(a, b, c)"}
+{"sql":"SELECT a AS d FROM xxx WHERE d=0"}
+{"sql":"CREATE VIEW vvv AS SELECT a AS d FROM xxx WHERE d=0"}
+{"sql":"ALTER TABLE xxx RENAME a TO xyz"}
+{"sql":"CREATE TABLE t2(d,e,f)"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3)"}
+{"sql":"INSERT INTO t2 VALUES(4,5,6)"}
+{"sql":"CREATE VIEW v4 AS SELECT a, d FROM t1, t2"}
+{"sql":"SELECT * FROM v4"}
+{"sql":"ALTER TABLE t2 RENAME d TO a"}
+{"sql":"CREATE UNIQUE INDEX t2d ON t2(d)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t2 VALUES(new.a, new.b, new.c)\n      ON CONFLICT(d) DO UPDATE SET f = excluded.f;\n  END"}
+{"sql":"INSERT INTO t1 VALUES(4, 8, 456)"}
+{"sql":"SELECT * FROM t2"}
+{"sql":"ALTER TABLE t2 RENAME COLUMN f TO \"big f\""}
+{"sql":"INSERT INTO t1 VALUES(4, 0, 20456)"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN c TO \"big c\""}
+{"sql":"INSERT INTO t1 VALUES(4, 0, 0)"}
+{"sql":"CREATE VIEW temp.v5 AS SELECT \"big c\" FROM t1"}
+{"sql":"SELECT * FROM v5"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN \"big c\" TO reallybigc"}
+{"sql":"CREATE TABLE u7(x, y, z)"}
+{"sql":"CREATE TRIGGER u7t AFTER INSERT ON u7 BEGIN\n    INSERT INTO u8 VALUES(new.x, new.y, new.z);\n  END"}
+{"sql":"ALTER TABLE u7 RENAME x TO xxx"}
+{"sql":"CREATE TEMP TABLE uu7(x, y, z)"}
+{"sql":"CREATE TRIGGER uu7t AFTER INSERT ON uu7 BEGIN\n    INSERT INTO u8 VALUES(new.x, new.y, new.z);\n  END"}
+{"sql":"ALTER TABLE uu7 RENAME x TO xxx"}
+{"sql":"ATTACH 'test.db2' AS aux"}
+{"sql":"CREATE TABLE aux.log(v)"}
+{"sql":"CREATE TEMP TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO log VALUES(new.a);\n  END"}
+{"sql":"INSERT INTO t1 VALUES(111)"}
+{"sql":"SELECT v FROM log"}
+{"sql":"ALTER TABLE t1 RENAME a TO b"}
+{"sql":"CREATE TABLE t2(c, d)"}
+{"sql":"CREATE VIEW v2(e) AS SELECT coalesce(t2.c,t1.a) FROM t1, t2 WHERE t1.b=t2.d"}
+{"sql":"ALTER TABLE t1 RENAME a TO f"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name = 'v2'"}
+{"sql":"CREATE TABLE t1(aaa,b,c,UNIQUE(aaA),PRIMARY KEY(aAa),UNIQUE(aAA))"}
+{"sql":"ALTER TABLE t1 RENAME aaa TO bbb"}
+{"sql":"SELECT sql FROM sqlite_master WHERE name='t1'"}
+{"sql":"CREATE TABLE t1(aaa,b,c,UNIQUE(aaA),PRIMARY KEY(aAa),UNIQUE(aAA))WITHOUT ROWID"}
+{"sql":"CREATE TABLE t1(aa UNIQUE,bb UNIQUE,cc UNIQUE,UNIQUE(aA),PRIMARY KEY(bB),UNIQUE(cC))"}
+{"sql":"ALTER TABLE t1 RENAME aa TO xx"}
+{"sql":"ALTER TABLE t1 RENAME bb TO yy"}
+{"sql":"ALTER TABLE t1 RENAME cc TO zz"}
+{"sql":"CREATE TABLE t1(a, b, c NOT NULL)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 WHEN new.c IS NOT NULL BEGIN\n    SELECT c NOT NULL FROM t1;\n  END"}
+{"sql":"ALTER TABLE t1 RENAME c TO d"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name IS 'tr1'"}
+{"sql":"CREATE TABLE t2(c, othername, extra AS (c + 1))"}
+{"sql":"ALTER TABLE t1 RENAME a to othername"}
+{"sql":"SELECT sql FROM sqlite_schema"}
+{"sql":"INSERT INTO t1 VALUES('a', 'a')"}
+{"sql":"INSERT INTO t1 VALUES('b', 'b')"}
+{"sql":"INSERT INTO t1 VALUES('c', 'c')"}
+{"sql":"PRAGMA integrity_check"}
+{"sql":"CREATE TABLE t1('a'\"b\",c)"}
+{"sql":"CREATE INDEX i1 ON t1('a')"}
+{"sql":"INSERT INTO t1 VALUES(1,2), (3,4)"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN a TO x"}
+{"sql":"SELECT sql FROM sqlite_schema WHERE name='t1'"}
+{"sql":"CREATE TABLE t1(a INT, b REAL, c TEXT, d BLOB, e ANY)"}
+{"sql":"CREATE INDEX t1abx ON t1(a, b, a+b) WHERE c IS NOT NULL"}
+{"sql":"CREATE VIEW t2 AS SELECT a+10, b*5.0, xyz FROM t1"}
+{"sql":"CREATE TABLE schema_copy(name TEXT, sql TEXT)"}
+{"sql":"INSERT INTO schema_copy(name,sql) SELECT name, sql FROM sqlite_schema WHERE sql IS NOT NULL"}
+{"sql":"ALTER TABLE t1 RENAME COLUMN e TO eeee"}
+{"sql":"SELECT name, sql FROM sqlite_master\n    EXCEPT SELECT name, sql FROM schema_copy"}
+{"sql":"BEGIN"}
+{"sql":"PRAGMA writable_schema=ON"}
+{"sql":"PRAGMA writable_schema=OFF"}
+{"sql":"SELECT name FROM sqlite_master\n     WHERE (name, sql) NOT IN (SELECT name, sql FROM schema_copy)"}
+{"sql":"ROLLBACK"}
+{"sql":"DROP VIEW t2"}
+{"sql":"CREATE TRIGGER r3 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t3(x,y) VALUES(new.a, new.b);\n    INSERT INTO t4(p) VALUES(new.c);    -- no such table \"t4\"\n  END"}
+{"sql":"DELETE FROM schema_copy"}
+{"sql":"CREATE TABLE t4(id INTEGER PRIMARY KEY, c1 INT, c2 INT)"}
+{"sql":"CREATE VIEW t4v1 AS SELECT id, c1, c99 FROM t4"}
+{"sql":"INSERT INTO schema_copy SELECT name, sql FROM sqlite_schema"}
+{"sql":"ALTER TABLE t4 RENAME to t4new"}
+{"sql":"SELECT name FROM sqlite_schema WHERE (name,sql) NOT IN (SELECT * FROM schema_copy)"}

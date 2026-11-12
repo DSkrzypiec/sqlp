@@ -1,0 +1,73 @@
+{"sql":"SELECT * FROM pg_partition_tree(NULL)","shape":"SELECT * FROM pg_partition_tree(NULL);"}
+{"sql":"SELECT * FROM pg_partition_tree(0)","shape":"SELECT * FROM pg_partition_tree(0);"}
+{"sql":"SELECT * FROM pg_partition_ancestors(NULL)","shape":"SELECT * FROM pg_partition_ancestors(NULL);"}
+{"sql":"SELECT * FROM pg_partition_ancestors(0)","shape":"SELECT * FROM pg_partition_ancestors(0);"}
+{"sql":"SELECT pg_partition_root(NULL)","shape":"SELECT pg_partition_root(NULL);"}
+{"sql":"SELECT pg_partition_root(0)","shape":"SELECT pg_partition_root(0);"}
+{"sql":"CREATE TABLE ptif_test (a int, b int) PARTITION BY range (a)","shape":"CREATE TABLE ptif_test (a int, b int) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE ptif_test0 PARTITION OF ptif_test\n  FOR VALUES FROM (minvalue) TO (0) PARTITION BY list (b)","shape":"CREATE TABLE ptif_test0 PARTITION OF ptif_test FOR VALUES FROM (minvalue) TO (0) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE ptif_test01 PARTITION OF ptif_test0 FOR VALUES IN (1)","shape":"CREATE TABLE ptif_test01 PARTITION OF ptif_test0 FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE ptif_test1 PARTITION OF ptif_test\n  FOR VALUES FROM (0) TO (100) PARTITION BY list (b)","shape":"CREATE TABLE ptif_test1 PARTITION OF ptif_test FOR VALUES FROM (0) TO (100) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE ptif_test11 PARTITION OF ptif_test1 FOR VALUES IN (1)","shape":"CREATE TABLE ptif_test11 PARTITION OF ptif_test1 FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE ptif_test2 PARTITION OF ptif_test\n  FOR VALUES FROM (100) TO (200)","shape":"CREATE TABLE ptif_test2 PARTITION OF ptif_test FOR VALUES FROM (100) TO (200);"}
+{"sql":"CREATE TABLE ptif_test3 PARTITION OF ptif_test\n  FOR VALUES FROM (200) TO (maxvalue) PARTITION BY list (b)","shape":"CREATE TABLE ptif_test3 PARTITION OF ptif_test FOR VALUES FROM (200) TO (maxvalue) PARTITION BY LIST (b);"}
+{"sql":"SELECT pg_partition_root('ptif_test')","shape":"SELECT pg_partition_root('ptif_test');"}
+{"sql":"SELECT pg_partition_root('ptif_test0')","shape":"SELECT pg_partition_root('ptif_test0');"}
+{"sql":"SELECT pg_partition_root('ptif_test01')","shape":"SELECT pg_partition_root('ptif_test01');"}
+{"sql":"SELECT pg_partition_root('ptif_test3')","shape":"SELECT pg_partition_root('ptif_test3');"}
+{"sql":"CREATE INDEX ptif_test_index ON ONLY ptif_test (a)","shape":"CREATE INDEX ptif_test_index ON ONLY ptif_test (a);"}
+{"sql":"CREATE INDEX ptif_test0_index ON ONLY ptif_test0 (a)","shape":"CREATE INDEX ptif_test0_index ON ONLY ptif_test0 (a);"}
+{"sql":"ALTER INDEX ptif_test_index ATTACH PARTITION ptif_test0_index"}
+{"sql":"CREATE INDEX ptif_test01_index ON ptif_test01 (a)","shape":"CREATE INDEX ptif_test01_index ON ptif_test01 (a);"}
+{"sql":"ALTER INDEX ptif_test0_index ATTACH PARTITION ptif_test01_index"}
+{"sql":"CREATE INDEX ptif_test1_index ON ONLY ptif_test1 (a)","shape":"CREATE INDEX ptif_test1_index ON ONLY ptif_test1 (a);"}
+{"sql":"ALTER INDEX ptif_test_index ATTACH PARTITION ptif_test1_index"}
+{"sql":"CREATE INDEX ptif_test11_index ON ptif_test11 (a)","shape":"CREATE INDEX ptif_test11_index ON ptif_test11 (a);"}
+{"sql":"ALTER INDEX ptif_test1_index ATTACH PARTITION ptif_test11_index"}
+{"sql":"CREATE INDEX ptif_test2_index ON ptif_test2 (a)","shape":"CREATE INDEX ptif_test2_index ON ptif_test2 (a);"}
+{"sql":"ALTER INDEX ptif_test_index ATTACH PARTITION ptif_test2_index"}
+{"sql":"CREATE INDEX ptif_test3_index ON ptif_test3 (a)","shape":"CREATE INDEX ptif_test3_index ON ptif_test3 (a);"}
+{"sql":"ALTER INDEX ptif_test_index ATTACH PARTITION ptif_test3_index"}
+{"sql":"SELECT pg_partition_root('ptif_test_index')","shape":"SELECT pg_partition_root('ptif_test_index');"}
+{"sql":"SELECT pg_partition_root('ptif_test0_index')","shape":"SELECT pg_partition_root('ptif_test0_index');"}
+{"sql":"SELECT pg_partition_root('ptif_test01_index')","shape":"SELECT pg_partition_root('ptif_test01_index');"}
+{"sql":"SELECT pg_partition_root('ptif_test3_index')","shape":"SELECT pg_partition_root('ptif_test3_index');"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test')","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test');"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test0') p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test0') AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test01') p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test01') AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test3') p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test3') AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_test01')","shape":"SELECT * FROM pg_partition_ancestors('ptif_test01');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_test')","shape":"SELECT * FROM pg_partition_ancestors('ptif_test');"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree(pg_partition_root('ptif_test01')) p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree(pg_partition_root('ptif_test01')) AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test_index')","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test_index');"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test0_index') p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test0_index') AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test01_index') p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test01_index') AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_test3_index') p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_test3_index') AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree(pg_partition_root('ptif_test01_index')) p\n  JOIN pg_class c ON (p.relid = c.oid)","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree(pg_partition_root('ptif_test01_index')) AS p JOIN pg_class AS c ON (p.relid = c.oid);"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_test01_index')","shape":"SELECT * FROM pg_partition_ancestors('ptif_test01_index');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_test_index')","shape":"SELECT * FROM pg_partition_ancestors('ptif_test_index');"}
+{"sql":"DROP TABLE ptif_test","shape":"DROP TABLE ptif_test;"}
+{"sql":"CREATE TABLE ptif_normal_table(a int)","shape":"CREATE TABLE ptif_normal_table (a int);"}
+{"sql":"SELECT relid, parentrelid, level, isleaf\n  FROM pg_partition_tree('ptif_normal_table')","shape":"SELECT relid, parentrelid, level, isleaf FROM pg_partition_tree('ptif_normal_table');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_normal_table')","shape":"SELECT * FROM pg_partition_ancestors('ptif_normal_table');"}
+{"sql":"SELECT pg_partition_root('ptif_normal_table')","shape":"SELECT pg_partition_root('ptif_normal_table');"}
+{"sql":"DROP TABLE ptif_normal_table","shape":"DROP TABLE ptif_normal_table;"}
+{"sql":"CREATE VIEW ptif_test_view AS SELECT 1","shape":"CREATE VIEW ptif_test_view AS SELECT 1;"}
+{"sql":"CREATE MATERIALIZED VIEW ptif_test_matview AS SELECT 1","shape":"CREATE MATERIALIZED VIEW ptif_test_matview AS SELECT 1;"}
+{"sql":"CREATE TABLE ptif_li_parent ()","shape":"CREATE TABLE ptif_li_parent ();"}
+{"sql":"CREATE TABLE ptif_li_child () INHERITS (ptif_li_parent)","shape":"CREATE TABLE ptif_li_child () INHERITS (ptif_li_parent);"}
+{"sql":"SELECT * FROM pg_partition_tree('ptif_test_view')","shape":"SELECT * FROM pg_partition_tree('ptif_test_view');"}
+{"sql":"SELECT * FROM pg_partition_tree('ptif_test_matview')","shape":"SELECT * FROM pg_partition_tree('ptif_test_matview');"}
+{"sql":"SELECT * FROM pg_partition_tree('ptif_li_parent')","shape":"SELECT * FROM pg_partition_tree('ptif_li_parent');"}
+{"sql":"SELECT * FROM pg_partition_tree('ptif_li_child')","shape":"SELECT * FROM pg_partition_tree('ptif_li_child');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_test_view')","shape":"SELECT * FROM pg_partition_ancestors('ptif_test_view');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_test_matview')","shape":"SELECT * FROM pg_partition_ancestors('ptif_test_matview');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_li_parent')","shape":"SELECT * FROM pg_partition_ancestors('ptif_li_parent');"}
+{"sql":"SELECT * FROM pg_partition_ancestors('ptif_li_child')","shape":"SELECT * FROM pg_partition_ancestors('ptif_li_child');"}
+{"sql":"SELECT pg_partition_root('ptif_test_view')","shape":"SELECT pg_partition_root('ptif_test_view');"}
+{"sql":"SELECT pg_partition_root('ptif_test_matview')","shape":"SELECT pg_partition_root('ptif_test_matview');"}
+{"sql":"SELECT pg_partition_root('ptif_li_parent')","shape":"SELECT pg_partition_root('ptif_li_parent');"}
+{"sql":"SELECT pg_partition_root('ptif_li_child')","shape":"SELECT pg_partition_root('ptif_li_child');"}
+{"sql":"DROP VIEW ptif_test_view","shape":"DROP VIEW ptif_test_view;"}
+{"sql":"DROP MATERIALIZED VIEW ptif_test_matview","shape":"DROP MATERIALIZED VIEW ptif_test_matview;"}
+{"sql":"DROP TABLE ptif_li_parent, ptif_li_child","shape":"DROP TABLE ptif_li_parent, ptif_li_child;"}

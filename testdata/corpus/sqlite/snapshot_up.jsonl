@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t1 VALUES(13, 14, 15)"}
+{"sql":"INSERT INTO t1 VALUES(16, 17, 18)"}
+{"sql":"INSERT INTO t1 VALUES(19, 20, 21)"}
+{"sql":"PRAGMA wal_checkpoint = restart"}

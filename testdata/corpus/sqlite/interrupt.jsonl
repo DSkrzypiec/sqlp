@@ -1,0 +1,13 @@
+{"sql":"INSERT INTO t1 VALUES(1,randstr(300,400))"}
+{"sql":"INSERT INTO t1 SELECT a+1, randstr(300,400) FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+2, a || '-' || b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+4, a || '-' || b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+8, a || '-' || b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+16, a || '-' || b FROM t1"}
+{"sql":"INSERT INTO t1 SELECT a+32, a || '-' || b FROM t1"}
+{"sql":"UPDATE t1 SET b=substr(b,-5,5)"}
+{"sql":"SELECT count(*) from t1"}
+{"sql":"SELECT md5sum(a || b) FROM t1"}
+{"sql":"CREATE TEMP TABLE t2(x,y)"}
+{"sql":"INSERT INTO t2 SELECT round(a/10), randstr(50,80), randstr(50,60) FROM t1"}
+{"sql":"CREATE INDEX fake ON fake1(a COLLATE fake_collation, b, c DESC)"}

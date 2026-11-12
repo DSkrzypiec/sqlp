@@ -1,0 +1,13 @@
+{"sql":"CREATE VIRTUAL TABLE abc2 USING echo(abc)"}
+{"sql":"INSERT INTO log VALUES('xSync')"}
+{"sql":"CREATE TABLE newtab(d, e, f)"}
+{"sql":"DROP TABLE newtab"}
+{"sql":"CREATE TABLE db2.stuff(description, shape, color)"}
+{"sql":"INSERT INTO db2.stuff VALUES('abc', 'square', 'green')"}
+{"sql":"SELECT * from stuff"}
+{"sql":"INSERT INTO log VALUES('hello')"}
+{"sql":"#     INSERT INTO abc2 VALUES(1, 2, 3)","reject":true}
+{"sql":"CREATE VIRTUAL TABLE def2 USING echo(def)"}
+{"sql":"INSERT INTO def2 VALUES(1, 2, 3)"}
+{"sql":"CREATE VIRTUAL TABLE def3 USING echo(def)"}
+{"sql":"DROP TABLE def2"}

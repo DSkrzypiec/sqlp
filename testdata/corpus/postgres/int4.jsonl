@@ -1,0 +1,94 @@
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('34.5')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('34.5');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('1000000000000')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('1000000000000');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('asdf')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('asdf');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('     ')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('     ');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('   asdf   ')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('   asdf   ');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('- 1234')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('- 1234');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('123       5')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('123       5');"}
+{"sql":"INSERT INTO INT4_TBL(f1) VALUES ('')","shape":"INSERT INTO INT4_TBL (f1) VALUES ('');"}
+{"sql":"SELECT * FROM INT4_TBL","shape":"SELECT * FROM INT4_TBL;"}
+{"sql":"SELECT pg_input_is_valid('34', 'int4')","shape":"SELECT pg_input_is_valid('34', 'int4');"}
+{"sql":"SELECT pg_input_is_valid('asdf', 'int4')","shape":"SELECT pg_input_is_valid('asdf', 'int4');"}
+{"sql":"SELECT pg_input_is_valid('1000000000000', 'int4')","shape":"SELECT pg_input_is_valid('1000000000000', 'int4');"}
+{"sql":"SELECT * FROM pg_input_error_info('1000000000000', 'int4')","shape":"SELECT * FROM pg_input_error_info('1000000000000', 'int4');"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 <> int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 <> int2 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 <> int4 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 <> int4 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 = int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 = int2 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 = int4 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 = int4 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 < int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 < int2 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 < int4 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 < int4 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 <= int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 <= int2 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 <= int4 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 <= int4 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 > int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 > int2 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 > int4 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 > int4 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 >= int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 >= int2 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE i.f1 >= int4 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE i.f1 >= int4 '0';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE (i.f1 % int2 '2') = int2 '1'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE (i.f1 % int2 '2') = int2 '1';"}
+{"sql":"SELECT i.* FROM INT4_TBL i WHERE (i.f1 % int4 '2') = int2 '0'","shape":"SELECT i.* FROM INT4_TBL AS i WHERE (i.f1 % int4 '2') = int2 '0';"}
+{"sql":"SELECT i.f1, i.f1 * int2 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 * int2 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 * int2 '2' AS x FROM INT4_TBL i\nWHERE abs(f1) < 1073741824","shape":"SELECT i.f1, i.f1 * int2 '2' AS x FROM INT4_TBL AS i WHERE abs(f1) < 1073741824;"}
+{"sql":"SELECT i.f1, i.f1 * int4 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 * int4 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 * int4 '2' AS x FROM INT4_TBL i\nWHERE abs(f1) < 1073741824","shape":"SELECT i.f1, i.f1 * int4 '2' AS x FROM INT4_TBL AS i WHERE abs(f1) < 1073741824;"}
+{"sql":"SELECT i.f1, i.f1 + int2 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 + int2 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 + int2 '2' AS x FROM INT4_TBL i\nWHERE f1 < 2147483646","shape":"SELECT i.f1, i.f1 + int2 '2' AS x FROM INT4_TBL AS i WHERE f1 < 2147483646;"}
+{"sql":"SELECT i.f1, i.f1 + int4 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 + int4 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 + int4 '2' AS x FROM INT4_TBL i\nWHERE f1 < 2147483646","shape":"SELECT i.f1, i.f1 + int4 '2' AS x FROM INT4_TBL AS i WHERE f1 < 2147483646;"}
+{"sql":"SELECT i.f1, i.f1 - int2 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 - int2 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 - int2 '2' AS x FROM INT4_TBL i\nWHERE f1 > -2147483647","shape":"SELECT i.f1, i.f1 - int2 '2' AS x FROM INT4_TBL AS i WHERE f1 > (-2147483647);"}
+{"sql":"SELECT i.f1, i.f1 - int4 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 - int4 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 - int4 '2' AS x FROM INT4_TBL i\nWHERE f1 > -2147483647","shape":"SELECT i.f1, i.f1 - int4 '2' AS x FROM INT4_TBL AS i WHERE f1 > (-2147483647);"}
+{"sql":"SELECT i.f1, i.f1 / int2 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 / int2 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT i.f1, i.f1 / int4 '2' AS x FROM INT4_TBL i","shape":"SELECT i.f1, i.f1 / int4 '2' AS x FROM INT4_TBL AS i;"}
+{"sql":"SELECT -2+3 AS one","shape":"SELECT (-2) + 3 AS one;"}
+{"sql":"SELECT 4-2 AS two","shape":"SELECT 4 - 2 AS two;"}
+{"sql":"SELECT 2- -1 AS three","shape":"SELECT 2 - (-1) AS three;"}
+{"sql":"SELECT 2 - -2 AS four","shape":"SELECT 2 - (-2) AS four;"}
+{"sql":"SELECT int2 '2' * int2 '2' = int2 '16' / int2 '4' AS true","shape":"SELECT (int2 '2' * int2 '2') = (int2 '16' / int2 '4') AS true;"}
+{"sql":"SELECT int4 '2' * int2 '2' = int2 '16' / int4 '4' AS true","shape":"SELECT (int4 '2' * int2 '2') = (int2 '16' / int4 '4') AS true;"}
+{"sql":"SELECT int2 '2' * int4 '2' = int4 '16' / int2 '4' AS true","shape":"SELECT (int2 '2' * int4 '2') = (int4 '16' / int2 '4') AS true;"}
+{"sql":"SELECT int4 '1000' < int4 '999' AS false","shape":"SELECT int4 '1000' < int4 '999' AS false;"}
+{"sql":"SELECT 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 AS ten","shape":"SELECT ((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1 AS ten;"}
+{"sql":"SELECT 2 + 2 / 2 AS three","shape":"SELECT 2 + (2 / 2) AS three;"}
+{"sql":"SELECT (2 + 2) / 2 AS two","shape":"SELECT (2 + 2) / 2 AS two;"}
+{"sql":"SELECT (-1::int4<<31)::text","shape":"SELECT ((-1::int4) << 31)::text;"}
+{"sql":"SELECT ((-1::int4<<31)+1)::text","shape":"SELECT (((-1::int4) << 31) + 1)::text;"}
+{"sql":"SELECT (-2147483648)::int4 * (-1)::int4","shape":"SELECT (-2147483648)::int4 * (-1)::int4;"}
+{"sql":"SELECT (-2147483648)::int4 / (-1)::int4","shape":"SELECT (-2147483648)::int4 / (-1)::int4;"}
+{"sql":"SELECT (-2147483648)::int4 % (-1)::int4","shape":"SELECT (-2147483648)::int4 % (-1)::int4;"}
+{"sql":"SELECT (-2147483648)::int4 * (-1)::int2","shape":"SELECT (-2147483648)::int4 * (-1)::int2;"}
+{"sql":"SELECT (-2147483648)::int4 / (-1)::int2","shape":"SELECT (-2147483648)::int4 / (-1)::int2;"}
+{"sql":"SELECT (-2147483648)::int4 % (-1)::int2","shape":"SELECT (-2147483648)::int4 % (-1)::int2;"}
+{"sql":"SELECT x, x::int4 AS int4_value\nFROM (VALUES (-2.5::float8),\n             (-1.5::float8),\n             (-0.5::float8),\n             (0.0::float8),\n             (0.5::float8),\n             (1.5::float8),\n             (2.5::float8)) t(x)","shape":"SELECT x, x::int4 AS int4_value FROM (VALUES (-2.5::float8), (-1.5::float8), (-0.5::float8), (0.0::float8), (0.5::float8), (1.5::float8), (2.5::float8)) AS t(x);"}
+{"sql":"SELECT x, x::int4 AS int4_value\nFROM (VALUES (-2.5::numeric),\n             (-1.5::numeric),\n             (-0.5::numeric),\n             (0.0::numeric),\n             (0.5::numeric),\n             (1.5::numeric),\n             (2.5::numeric)) t(x)","shape":"SELECT x, x::int4 AS int4_value FROM (VALUES (-2.5::numeric), (-1.5::numeric), (-0.5::numeric), (0.0::numeric), (0.5::numeric), (1.5::numeric), (2.5::numeric)) AS t(x);"}
+{"sql":"SELECT a, b, gcd(a, b), gcd(a, -b), gcd(b, a), gcd(-b, a)\nFROM (VALUES (0::int4, 0::int4),\n             (0::int4, 6410818::int4),\n             (61866666::int4, 6410818::int4),\n             (-61866666::int4, 6410818::int4),\n             ((-2147483648)::int4, 1::int4),\n             ((-2147483648)::int4, 2147483647::int4),\n             ((-2147483648)::int4, 1073741824::int4)) AS v(a, b)","shape":"SELECT a, b, gcd(a, b), gcd(a, -b), gcd(b, a), gcd(-b, a) FROM (VALUES (0::int4, 0::int4), (0::int4, 6410818::int4), (61866666::int4, 6410818::int4), (-61866666::int4, 6410818::int4), ((-2147483648)::int4, 1::int4), ((-2147483648)::int4, 2147483647::int4), ((-2147483648)::int4, 1073741824::int4)) AS v(a, b);"}
+{"sql":"SELECT gcd((-2147483648)::int4, 0::int4)","shape":"SELECT gcd((-2147483648)::int4, 0::int4);"}
+{"sql":"SELECT gcd((-2147483648)::int4, (-2147483648)::int4)","shape":"SELECT gcd((-2147483648)::int4, (-2147483648)::int4);"}
+{"sql":"SELECT a, b, lcm(a, b), lcm(a, -b), lcm(b, a), lcm(-b, a)\nFROM (VALUES (0::int4, 0::int4),\n             (0::int4, 42::int4),\n             (42::int4, 42::int4),\n             (330::int4, 462::int4),\n             (-330::int4, 462::int4),\n             ((-2147483648)::int4, 0::int4)) AS v(a, b)","shape":"SELECT a, b, lcm(a, b), lcm(a, -b), lcm(b, a), lcm(-b, a) FROM (VALUES (0::int4, 0::int4), (0::int4, 42::int4), (42::int4, 42::int4), (330::int4, 462::int4), (-330::int4, 462::int4), ((-2147483648)::int4, 0::int4)) AS v(a, b);"}
+{"sql":"SELECT lcm((-2147483648)::int4, 1::int4)","shape":"SELECT lcm((-2147483648)::int4, 1::int4);"}
+{"sql":"SELECT lcm(2147483647::int4, 2147483646::int4)","shape":"SELECT lcm(2147483647::int4, 2147483646::int4);"}
+{"sql":"SELECT int4 '0b100101'","shape":"SELECT int4 '0b100101';"}
+{"sql":"SELECT int4 '0o273'","shape":"SELECT int4 '0o273';"}
+{"sql":"SELECT int4 '0x42F'","shape":"SELECT int4 '0x42F';"}
+{"sql":"SELECT int4 '0b'","shape":"SELECT int4 '0b';"}
+{"sql":"SELECT int4 '0o'","shape":"SELECT int4 '0o';"}
+{"sql":"SELECT int4 '0x'","shape":"SELECT int4 '0x';"}
+{"sql":"SELECT int4 '0b1111111111111111111111111111111'","shape":"SELECT int4 '0b1111111111111111111111111111111';"}
+{"sql":"SELECT int4 '0b10000000000000000000000000000000'","shape":"SELECT int4 '0b10000000000000000000000000000000';"}
+{"sql":"SELECT int4 '0o17777777777'","shape":"SELECT int4 '0o17777777777';"}
+{"sql":"SELECT int4 '0o20000000000'","shape":"SELECT int4 '0o20000000000';"}
+{"sql":"SELECT int4 '0x7FFFFFFF'","shape":"SELECT int4 '0x7FFFFFFF';"}
+{"sql":"SELECT int4 '0x80000000'","shape":"SELECT int4 '0x80000000';"}
+{"sql":"SELECT int4 '-0b10000000000000000000000000000000'","shape":"SELECT int4 '-0b10000000000000000000000000000000';"}
+{"sql":"SELECT int4 '-0b10000000000000000000000000000001'","shape":"SELECT int4 '-0b10000000000000000000000000000001';"}
+{"sql":"SELECT int4 '-0o20000000000'","shape":"SELECT int4 '-0o20000000000';"}
+{"sql":"SELECT int4 '-0o20000000001'","shape":"SELECT int4 '-0o20000000001';"}
+{"sql":"SELECT int4 '-0x80000000'","shape":"SELECT int4 '-0x80000000';"}
+{"sql":"SELECT int4 '-0x80000001'","shape":"SELECT int4 '-0x80000001';"}
+{"sql":"SELECT int4 '1_000_000'","shape":"SELECT int4 '1_000_000';"}
+{"sql":"SELECT int4 '1_2_3'","shape":"SELECT int4 '1_2_3';"}
+{"sql":"SELECT int4 '0x1EEE_FFFF'","shape":"SELECT int4 '0x1EEE_FFFF';"}
+{"sql":"SELECT int4 '0o2_73'","shape":"SELECT int4 '0o2_73';"}
+{"sql":"SELECT int4 '0b_10_0101'","shape":"SELECT int4 '0b_10_0101';"}
+{"sql":"SELECT int4 '_100'","shape":"SELECT int4 '_100';"}
+{"sql":"SELECT int4 '100_'","shape":"SELECT int4 '100_';"}
+{"sql":"SELECT int4 '100__000'","shape":"SELECT int4 '100__000';"}

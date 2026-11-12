@@ -1,0 +1,147 @@
+{"sql":"CREATE VIEW IF NOT EXISTS v1 AS SELECT a,b FROM t1"}
+{"sql":"SELECT * FROM v1 ORDER BY a"}
+{"sql":"CREATE TEMP VIEW v1temp AS SELECT a, b FROM t1"}
+{"sql":"SELECT * FROM v1temp ORDER BY a"}
+{"sql":"SELECT name, type FROM pragma_table_list('v1')"}
+{"sql":"CREATE VIEW v1 AS SELECT a,b FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(1,2,3,4)"}
+{"sql":"INSERT INTO t1 VALUES(4,5,6,7)"}
+{"sql":"INSERT INTO t1 VALUES(7,8,9,10)"}
+{"sql":"CREATE TABLE t9(x INTEGER)"}
+{"sql":"CREATE VIEW v9a AS SELECT x FROM t9"}
+{"sql":"CREATE VIEW v9b AS SELECT * FROM t9"}
+{"sql":"CREATE VIEW v9c(x) AS SELECT x FROM t9"}
+{"sql":"CREATE VIEW v9d(x) AS SELECT * FROM t9"}
+{"sql":"PRAGMA table_info(v9a)"}
+{"sql":"PRAGMA table_info(v9b)"}
+{"sql":"PRAGMA table_info(v9c)"}
+{"sql":"PRAGMA table_info(v9d)"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM t1 WHERE a>5"}
+{"sql":"INSERT INTO v2 VALUES(1,2,3,4)"}
+{"sql":"UPDATE v2 SET a=10 WHERE a=5"}
+{"sql":"DELETE FROM v2"}
+{"sql":"INSERT INTO t1 VALUES(11,12,13,14)"}
+{"sql":"SELECT * FROM v2 ORDER BY x"}
+{"sql":"SELECT x FROM v2 WHERE a>10"}
+{"sql":"CREATE VIEW v1err(x,y DESC,z) AS SELECT a, b+c, c-b FROM t1","reject":true}
+{"sql":"DROP VIEW IF EXISTS v1err"}
+{"sql":"CREATE VIEW v1err(x,y) AS SELECT a, b+c, c-b FROM t1"}
+{"sql":"SELECT * FROM v1err"}
+{"sql":"CREATE VIEW v1err(w,x,y,z) AS SELECT a, b+c, c-b FROM t1"}
+{"sql":"DROP VIEW t1"}
+{"sql":"SELECT 1 FROM t1 LIMIT 1"}
+{"sql":"DROP TABLE v1"}
+{"sql":"SELECT 1 FROM v1 LIMIT 1"}
+{"sql":"CREATE INDEX i1v1 ON v1(xyz)"}
+{"sql":"CREATE TABLE t2(y,a)"}
+{"sql":"INSERT INTO t2 VALUES(22,2)"}
+{"sql":"INSERT INTO t2 VALUES(33,3)"}
+{"sql":"INSERT INTO t2 VALUES(44,4)"}
+{"sql":"INSERT INTO t2 VALUES(55,5)"}
+{"sql":"CREATE VIEW v5 AS\n      SELECT t1.x AS v, t2.y AS w FROM t1 JOIN t2 USING(a)"}
+{"sql":"EXPLAIN SELECT * FROM v5"}
+{"sql":"SELECT * FROM v5 AS a, t2 AS b WHERE a.w=b.y"}
+{"sql":"EXPLAIN SELECT * FROM v5 AS a, t2 AS b WHERE a.w=b.y"}
+{"sql":"SELECT * FROM t2 AS b, v5 AS a WHERE a.w=b.y"}
+{"sql":"EXPLAIN SELECT * FROM t2 AS b, v5 AS a WHERE a.w=b.y"}
+{"sql":"SELECT * FROM t1 AS a, v5 AS b, t2 AS c WHERE a.x=b.v AND b.w=c.y"}
+{"sql":"EXPLAIN SELECT * FROM t1 AS a, v5 AS b, t2 AS c WHERE a.x=b.v AND b.w=c.y"}
+{"sql":"SELECT min(x), min(a), min(b), min(c), min(a+b+c) FROM v2"}
+{"sql":"SELECT max(x), max(a), max(b), max(c), max(a+b+c) FROM v2"}
+{"sql":"CREATE TABLE test1(id integer primary key, a)"}
+{"sql":"CREATE TABLE test2(id integer, b)"}
+{"sql":"INSERT INTO test2 VALUES(1,3)"}
+{"sql":"CREATE VIEW test AS\n      SELECT test1.id, a, b\n      FROM test1 JOIN test2 ON test2.id=test1.id"}
+{"sql":"DROP VIEW test"}
+{"sql":"CREATE VIEW test AS\n      SELECT test1.id, a, b\n      FROM test1 JOIN test2 USING(id)"}
+{"sql":"CREATE VIEW test AS\n      SELECT test1.id, a, b\n      FROM test1 NATURAL JOIN test2"}
+{"sql":"CREATE VIEW v6 AS SELECT pqr, xyz FROM v1"}
+{"sql":"SELECT * FROM v6 ORDER BY xyz"}
+{"sql":"CREATE VIEW v7(a) AS SELECT pqr+xyz FROM v6"}
+{"sql":"SELECT * FROM v7 ORDER BY a"}
+{"sql":"CREATE VIEW v8 AS SELECT max(cnt) AS mx FROM\n        (SELECT a%2 AS eo, count(*) AS cnt FROM t1 GROUP BY eo)"}
+{"sql":"SELECT * FROM v8"}
+{"sql":"SELECT mx+10, mx*2 FROM v8"}
+{"sql":"SELECT mx+10, pqr FROM v6, v8 WHERE xyz=2"}
+{"sql":"SELECT mx+10, pqr FROM v6, v8 WHERE xyz>2"}
+{"sql":"INSERT INTO t2 SELECT * FROM t2 WHERE a<5"}
+{"sql":"INSERT INTO t2 SELECT * FROM t2 WHERE a<4"}
+{"sql":"INSERT INTO t2 SELECT * FROM t2 WHERE a<3"}
+{"sql":"SELECT DISTINCT count(*) FROM t2 GROUP BY a ORDER BY 1"}
+{"sql":"SELECT DISTINCT count(*) FROM t2 GROUP BY a ORDER BY 1 LIMIT 3"}
+{"sql":"CREATE VIEW v9 AS \n       SELECT DISTINCT count(*) FROM t2 GROUP BY a ORDER BY 1 LIMIT 3"}
+{"sql":"SELECT * FROM v9"}
+{"sql":"SELECT * FROM v9 ORDER BY 1 DESC"}
+{"sql":"CREATE VIEW v10 AS \n       SELECT DISTINCT a, count(*) FROM t2 GROUP BY a ORDER BY 2 LIMIT 3"}
+{"sql":"SELECT * FROM v10"}
+{"sql":"SELECT * FROM v10 ORDER BY 1"}
+{"sql":"CREATE TABLE t3(\"9\" integer, [4] text)"}
+{"sql":"CREATE VIEW v_t3_a AS SELECT a.[9] FROM t3 AS a"}
+{"sql":"CREATE VIEW v_t3_b AS SELECT \"4\" FROM t3"}
+{"sql":"SELECT * FROM v_t3_a"}
+{"sql":"SELECT * FROM v_t3_b"}
+{"sql":"CREATE TABLE t4(a COLLATE NOCASE)"}
+{"sql":"INSERT INTO t4 VALUES('This')"}
+{"sql":"INSERT INTO t4 VALUES('this')"}
+{"sql":"INSERT INTO t4 VALUES('THIS')"}
+{"sql":"SELECT * FROM t4 WHERE a = 'THIS'"}
+{"sql":"SELECT * FROM (SELECT * FROM t4) WHERE a = 'THIS'"}
+{"sql":"CREATE VIEW v11 AS SELECT * FROM t4"}
+{"sql":"SELECT * FROM v11 WHERE a = 'THIS'"}
+{"sql":"CREATE VIEW v12 AS SELECT a FROM t1 WHERE b=?"}
+{"sql":"CREATE VIEW v12(x) AS SELECT a FROM t1 WHERE b=?"}
+{"sql":"CREATE TABLE two.t2(x,y)"}
+{"sql":"CREATE VIEW v13 AS SELECT y FROM two.t2"}
+{"sql":"CREATE TEMP VIEW t1 AS SELECT a,b FROM t1"}
+{"sql":"DROP VIEW IF EXISTS temp.t1"}
+{"sql":"CREATE TEMP VIEW t1(a,b) AS SELECT a,b FROM t1"}
+{"sql":"CREATE VIEW IF NOT EXISTS v1 AS SELECT * FROM t1"}
+{"sql":"DROP VIEW IF EXISTS nosuchview"}
+{"sql":"DROP VIEW nosuchview"}
+{"sql":"DROP VIEW main.nosuchview"}
+{"sql":"CREATE VIEW vv1 AS SELECT * FROM t1"}
+{"sql":"CREATE VIEW vv2 AS SELECT * FROM vv1"}
+{"sql":"CREATE VIEW vv3 AS SELECT * FROM vv2"}
+{"sql":"CREATE VIEW vv4 AS SELECT * FROM vv3"}
+{"sql":"CREATE VIEW vv5 AS SELECT * FROM vv4"}
+{"sql":"SELECT * FROM vv5"}
+{"sql":"CREATE VIEW v3308a AS SELECT rowid, * FROM t1"}
+{"sql":"CREATE VIEW v3308b AS SELECT t1.rowid, t1.a, t1.b+t1.c FROM t1"}
+{"sql":"CREATE VIEW v3308c AS SELECT t1.oid, A, t1.b+t1.c AS x FROM t1"}
+{"sql":"CREATE VIEW v1 AS SELECT c1 FROM (SELECT t1.c1 FROM t1)"}
+{"sql":"CREATE VIEW x1 AS SELECT 123 AS '', 234 AS '', 345 AS ''"}
+{"sql":"CREATE TABLE t16(a, b, c UNIQUE)"}
+{"sql":"INSERT INTO t16 VALUES(1, 1, 1)"}
+{"sql":"INSERT INTO t16 VALUES(2, 2, 2)"}
+{"sql":"INSERT INTO t16 VALUES(3, 3, 3)"}
+{"sql":"CREATE VIEW v16 AS SELECT max(a) AS mx, min(b) AS mn FROM t16 GROUP BY c"}
+{"sql":"SELECT * FROM v16 AS one, v16 AS two WHERE one.mx=1"}
+{"sql":"WITH v17(x,y) AS (SELECT max(a), min(b) FROM t16 GROUP BY c)\n  SELECT * FROM v17 AS one, v17 AS two WHERE one.x=1"}
+{"sql":"CREATE TABLE t0(c0 TEXT, c1)"}
+{"sql":"CREATE VIEW v0(c0, c1) AS SELECT t0.c0, AVG(t0.c1) FROM t0"}
+{"sql":"SELECT c0, typeof(c0), c1, typeof(c1) FROM v0"}
+{"sql":"SELECT c0<c1 FROM v0"}
+{"sql":"SELECT c1<c0 FROM v0"}
+{"sql":"SELECT 1 FROM v0 WHERE c1<c0"}
+{"sql":"SELECT 1 FROM v0 WHERE c0<c1"}
+{"sql":"SELECT c0<c1 FROM (SELECT t0.c0 AS c0, AVG(t0.c1) AS c1 FROM t0)"}
+{"sql":"SELECT c1<c0 FROM (SELECT t0.c0 AS c0, AVG(t0.c1) AS c1 FROM t0)"}
+{"sql":"SELECT 1 FROM (SELECT t0.c0 AS c0, AVG(t0.c1) AS c1 FROM t0) WHERE c1<c0"}
+{"sql":"SELECT 1 FROM (SELECT t0.c0 AS c0, AVG(t0.c1) AS c1 FROM t0) WHERE c0<c1"}
+{"sql":"CREATE VIEW v0(c0) AS SELECT t0.c0 FROM t0"}
+{"sql":"INSERT INTO t0(c0) VALUES ('0')"}
+{"sql":"SELECT 0 IN (c0) FROM t0"}
+{"sql":"SELECT 0 IN (c0) FROM (SELECT c0 FROM t0)"}
+{"sql":"CREATE VIEW IF NOT EXISTS IF AS SELECT null","reject":true}
+{"sql":"CREATE TABLE t2(c,d,e)"}
+{"sql":"SELECT name FROM sqlite_schema ORDER BY name"}
+{"sql":"CREATE TABLE t0(a INT, b TEXT)"}
+{"sql":"INSERT INTO t0 VALUES(1,'one')"}
+{"sql":"CREATE VIEW t1      AS SELECT a, b FROM t0 UNION ALL SELECT 2, 2"}
+{"sql":"CREATE VIEW t2(a,b) AS SELECT a, b FROM t0 UNION ALL SELECT 2, 2"}
+{"sql":"CREATE TABLE x2(b TEXT)"}
+{"sql":"INSERT INTO x1 VALUES('123')"}
+{"sql":"WITH c(x) AS ( SELECT b FROM x2 UNION SELECT 123 )\n    SELECT count(*) FROM x1 WHERE a IN c"}
+{"sql":"WITH c(x) AS ( SELECT 123 UNION SELECT b FROM x2 )\n    SELECT count(*) FROM x1 WHERE a IN c"}
+{"sql":"INSERT INTO t3 VALUES(123, 123)"}
+{"sql":"WITH s AS ( VALUES(123), (456) ) SELECT * FROM t3 WHERE b IN s"}

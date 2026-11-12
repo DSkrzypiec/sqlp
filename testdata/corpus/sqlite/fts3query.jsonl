@@ -1,0 +1,24 @@
+{"sql":"INSERT INTO t1 VALUES('The source code for SQLite is in the public')"}
+{"sql":"CREATE VIRTUAL TABLE zoink USING fts3"}
+{"sql":"INSERT INTO zoink VALUES('The apple falls far from the tree')"}
+{"sql":"SELECT docid FROM zoink WHERE zoink MATCH '(apple oranges) AND apple'"}
+{"sql":"SELECT docid FROM zoink WHERE zoink MATCH 'apple AND (oranges apple)'"}
+{"sql":"CREATE VIRTUAL TABLE foobar using FTS3(description, tokenize porter)"}
+{"sql":"INSERT INTO foobar (description) values ('\n      Filed under: Emerging Technologies, EV/Plug-in, Hybrid, Chevrolet, GM, \n      ZENN 2011 Chevy Volt - Click above for high-res image gallery There are \n      16 days left in the month of December. Besides being time for most \n      Americans to kick their Christmas shopping sessions into high gear and\n      start planning their resolutions for 2010, it also means that there''s\n      precious little time for EEStor to \"deliver functional technology\" to\n      Zenn Motors as promised. Still, the promises held out by the secretive\n      company are too great for us to forget about entirely. We''d love for\n      EEStor''s claims to be independently verified and proven accurate, as\n      would just about anyone else looking to break free of petroleum in fav\n    ')"}
+{"sql":"SELECT docid FROM foobar WHERE description MATCH '\"high sp d\"'"}
+{"sql":"SELECT mit(matchinfo(foobar)) FROM foobar WHERE foobar MATCH 'the'"}
+{"sql":"CREATE TABLE t1(number INTEGER PRIMARY KEY, date)"}
+{"sql":"CREATE INDEX i1 ON t1(date)"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3(title)"}
+{"sql":"CREATE TABLE bt(title)"}
+{"sql":"SELECT t1.number FROM t1, ft WHERE t1.number=ft.rowid ORDER BY t1.date"}
+{"sql":"SELECT t1.number FROM ft, t1 WHERE t1.number=ft.rowid ORDER BY t1.date"}
+{"sql":"SELECT t1.number FROM t1, bt WHERE t1.number=bt.rowid ORDER BY t1.date"}
+{"sql":"SELECT t1.number FROM bt, t1 WHERE t1.number=bt.rowid ORDER BY t1.date"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING FTS4"}
+{"sql":"INSERT INTO t2 VALUES('it was the first time in history')"}
+{"sql":"UPDATE t2_content SET c0content = X'1234'"}
+{"sql":"SELECT matchinfo(t2, 'abcd') FROM t2 WHERE t2 MATCH 'history'"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING FTS4(a, b)"}
+{"sql":"INSERT INTO t3 VALUES('no gestures', 'another intriguing discovery by observing the hand gestures (called beats) people make while speaking. Research has shown that such gestures do more than add visual emphasis to our words (many people gesture while they''re on the telephone, for example); it seems they actually help our brains find words')"}
+{"sql":"CREATE VIRTUAL TABLE ft4 USING fts4(x)"}

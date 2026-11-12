@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE \"t a\" (\"\"\"cb\"\"\")"}
+{"sql":"INSERT INTO \"t a\" (\"\"\"cb\"\"\") VALUES (1)"}
+{"sql":"SELECT \"\"\"cb\"\"\" FROM \"t a\""}
+{"sql":"SELECT * FROM \"t a\""}
+{"sql":"SELECT \"t a\".* FROM \"t a\""}
+{"sql":"SELECT * FROM \"t a\", t1"}

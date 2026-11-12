@@ -1,0 +1,4 @@
+{"sql":"PRAGMA page_size=1024"}
+{"sql":"PRAGMA auto_vacuum=FULL"}
+{"sql":"INSERT INTO t1(x) VALUES(zeroblob(10000))"}
+{"sql":"PRAGMA freelist_count"}

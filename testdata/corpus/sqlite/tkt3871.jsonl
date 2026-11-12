@@ -1,0 +1,4 @@
+{"sql":"CREATE VIRTUAL TABLE e USING echo(t1)"}
+{"sql":"SELECT count(*) FROM e"}
+{"sql":"SELECT * FROM e WHERE a = 1 OR a = 2"}
+{"sql":"SELECT * FROM e WHERE a = 1 OR a = 2 OR b = 9"}

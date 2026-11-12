@@ -1,0 +1,66 @@
+{"sql":"INSERT INTO t2 VALUES('e', 'f')"}
+{"sql":"SELECT count(*) FROM t1, t2 WHERE t2.rowid>1"}
+{"sql":"CREATE TABLE x1(i INTEGER PRIMARY KEY, j)"}
+{"sql":"INSERT INTO x1 VALUES(1, 'one')"}
+{"sql":"INSERT INTO x1 VALUES(2, 'two')"}
+{"sql":"INSERT INTO x1 VALUES(3, 'three')"}
+{"sql":"INSERT INTO x1 VALUES(4, 'four')"}
+{"sql":"CREATE INDEX x1j ON x1(j)"}
+{"sql":"SELECT * FROM x1 WHERE i=2"}
+{"sql":"SELECT * FROM x1 WHERE j='two'"}
+{"sql":"SELECT * FROM x1 WHERE j<'two'"}
+{"sql":"SELECT * FROM x1 WHERE j>='two'"}
+{"sql":"SELECT * FROM x1 WHERE j BETWEEN 'three' AND 'two'"}
+{"sql":"CREATE TABLE x2(i INTEGER, j, k)"}
+{"sql":"INSERT INTO x2 SELECT i, j, i || ' ' || j FROM x1"}
+{"sql":"CREATE INDEX x2j ON x2(j)"}
+{"sql":"CREATE INDEX x2ij ON x2(i, j)"}
+{"sql":"SELECT * FROM x2 WHERE j BETWEEN 'three' AND 'two'"}
+{"sql":"SELECT * FROM x2 WHERE i=1 AND j='two'"}
+{"sql":"SELECT * FROM x2 WHERE i=5 AND j='two'"}
+{"sql":"SELECT * FROM x2 WHERE i=3 AND j='three'"}
+{"sql":"CREATE TABLE a1(a, b, c, d)"}
+{"sql":"CREATE INDEX a1a ON a1(a)"}
+{"sql":"CREATE INDEX a1bc ON a1(b, c)"}
+{"sql":"WITH d(x) AS (SELECT 1 UNION ALL SELECT x+1 AS n FROM d WHERE n<=100)\n  INSERT INTO a1 SELECT x, x, x, x FROM d"}
+{"sql":"SELECT d FROM a1 WHERE (a=4 OR b=13)"}
+{"sql":"SELECT count(*) FROM a1 WHERE (a BETWEEN 4 AND 12) OR (b BETWEEN 40 AND 60)"}
+{"sql":"SELECT count(*) FROM a1 AS x, a1 AS y \n  WHERE (x.a BETWEEN 4 AND 12) AND (y.b BETWEEN 1 AND 10)"}
+{"sql":"SELECT count(*) FROM a1 WHERE a IN (1, 5, 10, 15)"}
+{"sql":"SELECT count(*) FROM a1 WHERE rowid IN (1, 5, 10, 15)"}
+{"sql":"CREATE TABLE t2(x PRIMARY KEY, y, z)"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN\n    SELECT * FROM t2 WHERE x BETWEEN 20 AND 40;\n  END"}
+{"sql":"WITH d(x) AS (SELECT 1 UNION ALL SELECT x+1 AS n FROM d WHERE n<=100)\n  INSERT INTO t2 SELECT x, x*2, x*3 FROM d"}
+{"sql":"INSERT INTO p1 VALUES(1), (2), (3), (4)"}
+{"sql":"CREATE TABLE c1(y REFERENCES p1)"}
+{"sql":"INSERT INTO c1 VALUES(1), (2), (3)"}
+{"sql":"PRAGMA foreign_keys=on"}
+{"sql":"DELETE FROM p1 WHERE x=4"}
+{"sql":"INSERT INTO t1 VALUES(0, 1, 'a')"}
+{"sql":"INSERT INTO t1 VALUES(1, 0, 'b')"}
+{"sql":"INSERT INTO t1 VALUES(2, 1, 'c')"}
+{"sql":"INSERT INTO t1 VALUES(3, 0, 'd')"}
+{"sql":"INSERT INTO t1 VALUES(4, 1, 'e')"}
+{"sql":"INSERT INTO t1 VALUES(5, 0, 'a')"}
+{"sql":"INSERT INTO t1 VALUES(6, 1, 'b')"}
+{"sql":"INSERT INTO t1 VALUES(7, 0, 'c')"}
+{"sql":"INSERT INTO t1 VALUES(8, 1, 'd')"}
+{"sql":"INSERT INTO t1 VALUES(9, 0, 'e')"}
+{"sql":"WITH data(i, x, y) AS (\n    SELECT 0, 0, tochar(0) \n    UNION ALL\n    SELECT i+1, (i+1)%2, tochar(i+1) FROM data WHERE i<500\n  ) INSERT INTO t2 SELECT x, y FROM data"}
+{"sql":"SELECT count(*) FROM t1 WHERE a IN (SELECT b FROM t1 AS ii)"}
+{"sql":"SELECT count(*) FROM t1 WHERE a IN (0, 1)"}
+{"sql":"SELECT count(*) FROM t2 WHERE y = 'j'"}
+{"sql":"SELECT count(*) FROM t1, t2 WHERE y = c"}
+{"sql":"SELECT count(*) FROM t1, t3 WHERE y = c"}
+{"sql":"CREATE VIRTUAL TABLE ft1 USING fts4"}
+{"sql":"INSERT INTO ft1 VALUES('a d c f g h e i f c')"}
+{"sql":"INSERT INTO ft1 VALUES('g c h b g b f f f g')"}
+{"sql":"INSERT INTO ft1 VALUES('h h c c h f a e d d')"}
+{"sql":"INSERT INTO ft1 VALUES('e j i j i e b c f g')"}
+{"sql":"INSERT INTO ft1 VALUES('g f b g j c h a d f')"}
+{"sql":"INSERT INTO ft1 VALUES('j i a e g f a i a c')"}
+{"sql":"INSERT INTO ft1 VALUES('f d g g j j c a h g')"}
+{"sql":"INSERT INTO ft1 VALUES('b d h a d j j j b i')"}
+{"sql":"INSERT INTO ft1 VALUES('j e a b j e c b c i')"}
+{"sql":"INSERT INTO ft1 VALUES('a d e f b j j c g d')"}
+{"sql":"SELECT count(*) FROM ft1 WHERE ft1 MATCH 'd'"}

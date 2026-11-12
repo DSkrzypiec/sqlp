@@ -1,0 +1,2 @@
+{"sql":"DROP INDEX I1"}
+{"sql":"PRAGMA main.page_size"}

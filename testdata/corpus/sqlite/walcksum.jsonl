@@ -1,0 +1,26 @@
+{"sql":"INSERT INTO t1 VALUES(1,  'one')"}
+{"sql":"INSERT INTO t1 VALUES(2,  'two')"}
+{"sql":"INSERT INTO t1 VALUES(3,  'three')"}
+{"sql":"INSERT INTO t1 VALUES(5,  'five')"}
+{"sql":"INSERT INTO t1 VALUES(8,  'eight')"}
+{"sql":"INSERT INTO t1 VALUES(13, 'thirteen')"}
+{"sql":"INSERT INTO t1 VALUES(21, 'twentyone')"}
+{"sql":"INSERT INTO t1 VALUES(34, 'thirtyfour')"}
+{"sql":"INSERT INTO t1 VALUES(55, 'fiftyfive')"}
+{"sql":"INSERT INTO t1 VALUES(89, 'eightynine')"}
+{"sql":"INSERT INTO t1 SELECT randomblob(800) FROM t1"}
+{"sql":"CREATE TABLE t1 (i INTEGER PRIMARY KEY, b BLOB, t TEXT)"}
+{"sql":"INSERT INTO t1 VALUES(1, randomblob(2048), 'one')"}
+{"sql":"INSERT INTO t1 VALUES(2, randomblob(2048), 'two')"}
+{"sql":"INSERT INTO t1 VALUES(3, randomblob(2048), 'three')"}
+{"sql":"INSERT INTO t1 VALUES(4, randomblob(2048), 'four')"}
+{"sql":"INSERT INTO t1 VALUES(5, randomblob(2048), 'five')"}
+{"sql":"INSERT INTO t1 VALUES(6, randomblob(2048), 'six')"}
+{"sql":"INSERT INTO t1 VALUES(7, randomblob(2048), 'seven')"}
+{"sql":"UPDATE t1 SET b=randomblob(2048) WHERE i=5"}
+{"sql":"UPDATE t1 SET b=randomblob(2048) WHERE i=6"}
+{"sql":"UPDATE t1 SET b=randomblob(2048) WHERE i=7"}
+{"sql":"INSERT INTO t1 VALUES(8, NULL, 'eight')"}
+{"sql":"SELECT i, t FROM t1"}
+{"sql":"INSERT INTO t1 VALUES(8, randomblob(2048), 'eight')"}
+{"sql":"INSERT INTO t1 VALUES(9, randomblob(2048), 'nine')"}

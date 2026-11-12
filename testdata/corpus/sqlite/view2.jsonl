@@ -1,0 +1,5 @@
+{"sql":"CREATE VIEW v1 AS SELECT * FROM (\n    WITH x1 AS (SELECT y, x FROM t1)\n    SELECT * FROM x1\n  )"}
+{"sql":"CREATE VIEW v3 AS SELECT * FROM main.t1"}
+{"sql":"WITH t1(a, b) AS ( SELECT 3, 4 ) SELECT * FROM v3"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM t1"}
+{"sql":"WITH t1(a, b) AS ( SELECT 3, 4 ) SELECT * FROM v2"}

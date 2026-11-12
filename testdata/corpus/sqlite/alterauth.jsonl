@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE t1(a, b, c)"}
+{"sql":"ALTER TABLE t1 RENAME TO t2"}
+{"sql":"ALTER TABLE t2 RENAME c TO ccc"}
+{"sql":"ALTER TABLE t2 ADD COLUMN d"}
+{"sql":"ALTER TABLE t2 RENAME d TO ddd"}
+{"sql":"ALTER TABLE t2 ADD COLUMN e"}

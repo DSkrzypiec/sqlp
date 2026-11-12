@@ -1,0 +1,46 @@
+{"sql":"CREATE TABLE t1(x, y, CHECK( date(x) BETWEEN '2017-07-01' AND '2017-07-31' ))"}
+{"sql":"INSERT INTO t1(x,y) VALUES('2017-07-20','one')"}
+{"sql":"INSERT INTO t1(x,y) VALUES('now','two')"}
+{"sql":"INSERT INTO t1(x,y) VALUES('2017-08-01','two')"}
+{"sql":"CREATE TABLE t1(x, y, z AS (date()))"}
+{"sql":"INSERT INTO t1(x,y) VALUES(1,2)"}
+{"sql":"INSERT INTO t2(x,y) VALUES(1, '2017-07-20'), (2, 'xyzzy')"}
+{"sql":"CREATE INDEX t2y ON t2(date(y))"}
+{"sql":"INSERT INTO t2(x,y) VALUES(3, 'now')"}
+{"sql":"SELECT x, y FROM t2 ORDER BY x"}
+{"sql":"CREATE TABLE t3(a INTEGER PRIMARY KEY,b)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<1000)\n    INSERT INTO t3(a,b) SELECT x, julianday('2017-07-01')+x FROM c"}
+{"sql":"UPDATE t3 SET b='now' WHERE a=500"}
+{"sql":"CREATE INDEX t3b1 ON t3(datetime(b))"}
+{"sql":"CREATE INDEX t3b1 ON t3(datetime(b)) WHERE typeof(b)='real'"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT a FROM t3\n   WHERE typeof(b)='real'\n     AND datetime(b) BETWEEN '2017-07-04' AND '2017-07-08'"}
+{"sql":"SELECT a FROM t3\n   WHERE typeof(b)='real'\n     AND datetime(b) BETWEEN '2017-07-04' AND '2017-07-08'\n  ORDER BY a"}
+{"sql":"CREATE TABLE t4(a INTEGER PRIMARY KEY,b)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<1000)\n    INSERT INTO t4(a,b) SELECT x, julianday('2017-07-01')+x FROM c"}
+{"sql":"UPDATE t4 SET b='now' WHERE a=500"}
+{"sql":"CREATE INDEX t4b1 ON t4(b)\n    WHERE date(b) BETWEEN '2017-06-01' AND '2017-08-31'"}
+{"sql":"DELETE FROM t4 WHERE a=500"}
+{"sql":"INSERT INTO t4(a,b) VALUES(9999,'now')"}
+{"sql":"CREATE TABLE mods(x)"}
+{"sql":"INSERT INTO mods(x) VALUES\n    ('+10 days'),\n    ('-10 days'),\n    ('+10 hours'),\n    ('-10 hours'),\n    ('+10 minutes'),\n    ('-10 minutes'),\n    ('+10 seconds'),\n    ('-10 seconds'),\n    ('+10 months'),\n    ('-10 months'),\n    ('+10 years'),\n    ('-10 years'),\n    ('start of month'),\n    ('start of year'),\n    ('start of day'),\n    ('weekday 1'),\n    ('unixepoch')"}
+{"sql":"CREATE TABLE t5(y,m)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<5)\n    INSERT INTO t5(y,m) SELECT julianday('2017-07-01')+c.x, mods.x FROM c, mods"}
+{"sql":"CREATE INDEX t5x1 on t5(y) WHERE datetime(y,m) IS NOT NULL"}
+{"sql":"INSERT INTO t5(y,m) VALUES('2017-07-20','localtime')"}
+{"sql":"INSERT INTO t5(y,m) VALUES('2017-07-20','utc')"}
+{"sql":"CREATE TABLE t600(a REAL CHECK( a<julianday('now') ))"}
+{"sql":"INSERT INTO t600(a) VALUES(1.0)"}
+{"sql":"CREATE TABLE t601(a REAL, b TEXT, CHECK( a<julianday(b) ))"}
+{"sql":"INSERT INTO t601(a,b) VALUES(1.0, '1970-01-01')"}
+{"sql":"INSERT INTO t601(a,b) VALUES(1e100, '1970-01-01')"}
+{"sql":"INSERT INTO t601(a,b) VALUES(10, 'now')"}
+{"sql":"INSERT INTO t600(a) VALUES(julianday('now')+10)"}
+{"sql":"CREATE TABLE t610(a,b)"}
+{"sql":"CREATE INDEX t610x1 ON t610(julianday('now')+b)"}
+{"sql":"INSERT INTO t610(a,b) VALUES(123,456)"}
+{"sql":"CREATE TABLE t611(a,b)"}
+{"sql":"CREATE INDEX t611x1 ON t611(julianday(a)+b)"}
+{"sql":"INSERT INTO t611(a,b) VALUES('1970-01-01',10.0)"}
+{"sql":"INSERT INTO t611(a,b) VALUES('now',10.0)"}
+{"sql":"CREATE TABLE t620(a, b AS (a+julianday('now')))"}
+{"sql":"INSERT INTO t620 VALUES(10)"}

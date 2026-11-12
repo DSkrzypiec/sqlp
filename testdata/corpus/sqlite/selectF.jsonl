@@ -1,0 +1,5 @@
+{"sql":"INSERT INTO \"t1\" VALUES(1,'one','I')"}
+{"sql":"INSERT INTO \"t2\" VALUES(5,'ten','XX')"}
+{"sql":"INSERT INTO \"t2\" VALUES(6,NULL,NULL)"}
+{"sql":"CREATE INDEX i1 ON t1(b, a)"}
+{"sql":"SELECT * FROM t2\n  UNION ALL \n  SELECT * FROM t1 WHERE a<5 \n  ORDER BY 2, 1"}

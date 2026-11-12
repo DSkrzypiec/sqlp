@@ -1,0 +1,13 @@
+{"sql":"PRAGMA auto_vacuum=incremental"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(30000))"}
+{"sql":"PRAGMA incremental_vacuum(1000)"}
+{"sql":"ATTACH DATABASE 'test2.db' AS aux"}
+{"sql":"PRAGMA aux.auto_vacuum=incremental"}
+{"sql":"INSERT INTO t2 VALUES(zeroblob(30000))"}
+{"sql":"PRAGMA aux.incremental_vacuum(1)"}
+{"sql":"PRAGMA aux.incremental_vacuum(5)"}
+{"sql":"PRAGMA main.incremental_vacuum(5)"}
+{"sql":"PRAGMA aux.incremental_vacuum"}
+{"sql":"INSERT INTO abc VALUES(randstr(1500,1500))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(400))"}
+{"sql":"DELETE FROM t1 WHERE oid>512"}

@@ -1,0 +1,20 @@
+{"sql":"CREATE TABLE t0(a INTEGER PRIMARY KEY, b TEXT)"}
+{"sql":"WITH s(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i<400) \n  INSERT INTO t0 SELECT i, hex(randomblob(50)) FROM s"}
+{"sql":"CREATE TABLE dir(f, t, imin, imax)"}
+{"sql":"CREATE VIRTUAL TABLE temp.s1 USING swarmvtab('SELECT * FROM dir')"}
+{"sql":"DROP TABLE s1"}
+{"sql":"SELECT count(*) FROM s1 WHERE rowid<50"}
+{"sql":"SELECT count(*) FROM s1 a, s1 b WHERE b.rowid<=200"}
+{"sql":"SELECT count(*) FROM s1 a, s1 b, s1 c \n  WHERE a.rowid=b.rowid AND b.rowid=c.rowid"}
+{"sql":"SELECT * FROM s1 WHERE rowid BETWEEN 1 AND 100"}
+{"sql":"SELECT * FROM s1 WHERE rowid BETWEEN 101 AND 200"}
+{"sql":"SELECT * FROM s1 WHERE rowid BETWEEN 201 AND 300"}
+{"sql":"CREATE VIRTUAL TABLE temp.x1 USING swarmvtab('SELECT * FROMdir')"}
+{"sql":"CREATE VIRTUAL TABLE temp.x1 USING swarmvtab('SELECT * FROMdir', 'fetchdb')"}
+{"sql":"CREATE VIRTUAL TABLE temp.xyz USING swarmvtab(\n    'VALUES\n        (''test.db1'', ''t1'', 1, 10),\n        (''test.db2'', ''t1'', 11, 20)\n    ', 'fetch_db_no_such_function'\n  )"}
+{"sql":"CREATE VIRTUAL TABLE temp.xyz USING swarmvtab(\n    'VALUES\n        (''test.db1'', ''t1'', 1, 10),\n        (''test.db2'', ''t1'', 11, 20)\n    ', 'fetch_db'\n  )"}
+{"sql":"ATTACH 'test.db1' AS aux"}
+{"sql":"INSERT INTO aux.t1 VALUES(1, NULL)"}
+{"sql":"INSERT INTO aux.t1 VALUES(2, NULL)"}
+{"sql":"INSERT INTO aux.t1 VALUES(9, NULL)"}
+{"sql":"SELECT * FROM xyz"}

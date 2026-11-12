@@ -1,0 +1,2 @@
+{"sql":"CREATE INDEX i1 ON t1(a,b)"}
+{"sql":"UPDATE sqlite_master SET name=NULL, sql=NULL WHERE name='i1'"}

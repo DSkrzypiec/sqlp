@@ -1,0 +1,13 @@
+{"sql":"CREATE TABLE a1(a, b)"}
+{"sql":"CREATE TABLE a2(a, b, c DEFAULT 'xyz')"}
+{"sql":"CREATE TABLE a3(x DEFAULT 1.0, y DEFAULT 'string', z)"}
+{"sql":"CREATE TABLE a4(c UNIQUE, d)"}
+{"sql":"INSERT INTO a1 VALUES('x', 'y')"}
+{"sql":"INSERT INTO a4 VALUES(1, 'a')"}
+{"sql":"INSERT INTO a4 VALUES(2, 'a')"}
+{"sql":"INSERT INTO a4 VALUES(3, 'a')"}
+{"sql":"SELECT * FROM a4"}
+{"sql":"CREATE TRIGGER AFTER UPDATE ON a1 BEGIN\n    INSERT INTO main.a4 VALUES(new.a, new.b);\n  END"}
+{"sql":"CREATE TEMP TABLE IF NOT EXISTS tmptable(a, b)"}
+{"sql":"CREATE TRIGGER AFTER DELETE ON a3 BEGIN\n    INSERT INTO temp.tmptable VALUES(1, 2);\n  END"}
+{"sql":"CREATE TRIGGER AFTER UPDATE ON a1 BEGIN\n    INSERT INTO a4 DEFAULT VALUES;\n  END"}

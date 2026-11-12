@@ -1,0 +1,5 @@
+{"sql":"SELECT COUNT(*) FROM t1"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'two'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'three'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'four'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'five'"}

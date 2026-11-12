@@ -1,0 +1,2 @@
+{"sql":"ATTACH 'test.db' AS err1"}
+{"sql":"ATTACH 'test2.db' AS err2"}

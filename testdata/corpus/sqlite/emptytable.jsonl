@@ -1,0 +1,5 @@
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n    INSERT INTO t1(a) SELECT x FROM c"}
+{"sql":"CREATE TABLE empty(x)"}
+{"sql":"SELECT count(*) FROM t1, t1, t1, t1, t1, t1, empty"}
+{"sql":"SELECT count(*) FROM t1, t1 LEFT JOIN empty"}
+{"sql":"SELECT count(*) FROM t1, t1 LEFT JOIN t1, empty"}

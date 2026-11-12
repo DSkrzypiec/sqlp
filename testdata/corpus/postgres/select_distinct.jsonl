@@ -1,0 +1,58 @@
+{"sql":"SELECT DISTINCT two FROM onek ORDER BY 1","shape":"SELECT DISTINCT two FROM onek ORDER BY 1;"}
+{"sql":"SELECT DISTINCT ten FROM onek ORDER BY 1","shape":"SELECT DISTINCT ten FROM onek ORDER BY 1;"}
+{"sql":"SELECT DISTINCT string4 FROM onek ORDER BY 1","shape":"SELECT DISTINCT string4 FROM onek ORDER BY 1;"}
+{"sql":"SELECT DISTINCT two, string4, ten\n   FROM onek\n   ORDER BY two using <, string4 using <, ten using <","shape":"SELECT DISTINCT two, string4, ten FROM onek ORDER BY two USING <, string4 USING <, ten USING <;"}
+{"sql":"SELECT DISTINCT p.age FROM person* p ORDER BY age using >","shape":"SELECT DISTINCT p.age FROM person AS p ORDER BY age USING >;"}
+{"sql":"EXPLAIN (VERBOSE, COSTS OFF)\nSELECT count(*) FROM\n  (SELECT DISTINCT two, four, two FROM tenk1) ss","shape":"EXPLAIN (VERBOSE, COSTS OFF) SELECT count(*) FROM (SELECT DISTINCT two, four, two FROM tenk1) AS ss;"}
+{"sql":"SELECT count(*) FROM\n  (SELECT DISTINCT two, four, two FROM tenk1) ss","shape":"SELECT count(*) FROM (SELECT DISTINCT two, four, two FROM tenk1) AS ss;"}
+{"sql":"SET work_mem='64kB'","shape":"SET work_mem TO '64kB';"}
+{"sql":"SET enable_hashagg=FALSE","shape":"SET enable_hashagg TO FALSE;"}
+{"sql":"SET jit_above_cost=0","shape":"SET jit_above_cost TO 0;"}
+{"sql":"EXPLAIN (costs off)\nSELECT DISTINCT g%1000 FROM generate_series(0,9999) g","shape":"EXPLAIN (COSTS off) SELECT DISTINCT g % 1000 FROM generate_series(0, 9999) AS g;"}
+{"sql":"CREATE TABLE distinct_group_1 AS\nSELECT DISTINCT g%1000 FROM generate_series(0,9999) g","shape":"CREATE TABLE distinct_group_1 AS SELECT DISTINCT g % 1000 FROM generate_series(0, 9999) AS g;"}
+{"sql":"SET jit_above_cost TO DEFAULT","shape":"SET jit_above_cost TO DEFAULT;"}
+{"sql":"CREATE TABLE distinct_group_2 AS\nSELECT DISTINCT (g%1000)::text FROM generate_series(0,9999) g","shape":"CREATE TABLE distinct_group_2 AS SELECT DISTINCT (g % 1000)::text FROM generate_series(0, 9999) AS g;"}
+{"sql":"EXPLAIN (costs off)\nSELECT DISTINCT hundred, two FROM tenk1","shape":"EXPLAIN (COSTS off) SELECT DISTINCT hundred, two FROM tenk1;"}
+{"sql":"SET enable_hashagg=TRUE","shape":"SET enable_hashagg TO TRUE;"}
+{"sql":"SET enable_sort=FALSE","shape":"SET enable_sort TO FALSE;"}
+{"sql":"CREATE TABLE distinct_hash_1 AS\nSELECT DISTINCT g%1000 FROM generate_series(0,9999) g","shape":"CREATE TABLE distinct_hash_1 AS SELECT DISTINCT g % 1000 FROM generate_series(0, 9999) AS g;"}
+{"sql":"CREATE TABLE distinct_hash_2 AS\nSELECT DISTINCT (g%1000)::text FROM generate_series(0,9999) g","shape":"CREATE TABLE distinct_hash_2 AS SELECT DISTINCT (g % 1000)::text FROM generate_series(0, 9999) AS g;"}
+{"sql":"SET enable_sort=TRUE","shape":"SET enable_sort TO TRUE;"}
+{"sql":"SET work_mem TO DEFAULT","shape":"SET work_mem TO DEFAULT;"}
+{"sql":"(SELECT * FROM distinct_hash_1 EXCEPT SELECT * FROM distinct_group_1)\n  UNION ALL\n(SELECT * FROM distinct_group_1 EXCEPT SELECT * FROM distinct_hash_1)","shape":"(SELECT * FROM distinct_hash_1 EXCEPT SELECT * FROM distinct_group_1) UNION ALL (SELECT * FROM distinct_group_1 EXCEPT SELECT * FROM distinct_hash_1);"}
+{"sql":"DROP TABLE distinct_hash_1","shape":"DROP TABLE distinct_hash_1;"}
+{"sql":"DROP TABLE distinct_hash_2","shape":"DROP TABLE distinct_hash_2;"}
+{"sql":"DROP TABLE distinct_group_1","shape":"DROP TABLE distinct_group_1;"}
+{"sql":"DROP TABLE distinct_group_2","shape":"DROP TABLE distinct_group_2;"}
+{"sql":"SET parallel_tuple_cost=0","shape":"SET parallel_tuple_cost TO 0;"}
+{"sql":"SET parallel_setup_cost=0","shape":"SET parallel_setup_cost TO 0;"}
+{"sql":"SET min_parallel_table_scan_size=0","shape":"SET min_parallel_table_scan_size TO 0;"}
+{"sql":"SET max_parallel_workers_per_gather=2","shape":"SET max_parallel_workers_per_gather TO 2;"}
+{"sql":"EXPLAIN (costs off)\nSELECT DISTINCT four FROM tenk1","shape":"EXPLAIN (COSTS off) SELECT DISTINCT four FROM tenk1;"}
+{"sql":"SELECT DISTINCT four FROM tenk1","shape":"SELECT DISTINCT four FROM tenk1;"}
+{"sql":"CREATE OR REPLACE FUNCTION distinct_func(a INT) RETURNS INT AS $$\n  BEGIN\n    RETURN a;\n  END;\n$$ LANGUAGE plpgsql PARALLEL UNSAFE","shape":"CREATE OR REPLACE FUNCTION distinct_func(a INT) RETURNS INT AS '\n  BEGIN\n    RETURN a;\n  END;\n' LANGUAGE plpgsql PARALLEL UNSAFE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT DISTINCT distinct_func(1) FROM tenk1","shape":"EXPLAIN (COSTS OFF) SELECT DISTINCT distinct_func(1) FROM tenk1;"}
+{"sql":"CREATE OR REPLACE FUNCTION distinct_func(a INT) RETURNS INT AS $$\n  BEGIN\n    RETURN a;\n  END;\n$$ LANGUAGE plpgsql PARALLEL SAFE","shape":"CREATE OR REPLACE FUNCTION distinct_func(a INT) RETURNS INT AS '\n  BEGIN\n    RETURN a;\n  END;\n' LANGUAGE plpgsql PARALLEL SAFE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT DISTINCT four FROM tenk1 WHERE four = 0","shape":"EXPLAIN (COSTS OFF) SELECT DISTINCT four FROM tenk1 WHERE four = 0;"}
+{"sql":"SELECT DISTINCT four FROM tenk1 WHERE four = 0","shape":"SELECT DISTINCT four FROM tenk1 WHERE four = 0;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT DISTINCT four FROM tenk1 WHERE four = 0 AND two <> 0","shape":"EXPLAIN (COSTS OFF) SELECT DISTINCT four FROM tenk1 WHERE (four = 0) AND (two <> 0);"}
+{"sql":"SELECT DISTINCT four FROM tenk1 WHERE four = 0 AND two <> 0","shape":"SELECT DISTINCT four FROM tenk1 WHERE (four = 0) AND (two <> 0);"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT DISTINCT four,1,2,3 FROM tenk1 WHERE four = 0","shape":"EXPLAIN (COSTS OFF) SELECT DISTINCT four, 1, 2, 3 FROM tenk1 WHERE four = 0;"}
+{"sql":"SELECT DISTINCT four,1,2,3 FROM tenk1 WHERE four = 0","shape":"SELECT DISTINCT four, 1, 2, 3 FROM tenk1 WHERE four = 0;"}
+{"sql":"CREATE TEMP TABLE disttable (f1 integer)","shape":"CREATE TEMPORARY TABLE disttable (f1 integer);"}
+{"sql":"INSERT INTO DISTTABLE VALUES(1)","shape":"INSERT INTO DISTTABLE VALUES (1);"}
+{"sql":"INSERT INTO DISTTABLE VALUES(2)","shape":"INSERT INTO DISTTABLE VALUES (2);"}
+{"sql":"INSERT INTO DISTTABLE VALUES(3)","shape":"INSERT INTO DISTTABLE VALUES (3);"}
+{"sql":"INSERT INTO DISTTABLE VALUES(NULL)","shape":"INSERT INTO DISTTABLE VALUES (NULL);"}
+{"sql":"SELECT f1, f1 IS DISTINCT FROM 2 as \"not 2\" FROM disttable","shape":"SELECT f1, f1 IS DISTINCT FROM 2 AS \"not 2\" FROM disttable;"}
+{"sql":"SELECT f1, f1 IS DISTINCT FROM NULL as \"not null\" FROM disttable","shape":"SELECT f1, f1 IS DISTINCT FROM NULL AS \"not null\" FROM disttable;"}
+{"sql":"SELECT f1, f1 IS DISTINCT FROM f1 as \"false\" FROM disttable","shape":"SELECT f1, f1 IS DISTINCT FROM f1 AS \"false\" FROM disttable;"}
+{"sql":"SELECT f1, f1 IS DISTINCT FROM f1+1 as \"not null\" FROM disttable","shape":"SELECT f1, f1 IS DISTINCT FROM (f1 + 1) AS \"not null\" FROM disttable;"}
+{"sql":"SELECT 1 IS DISTINCT FROM 2 as \"yes\"","shape":"SELECT 1 IS DISTINCT FROM 2 AS \"yes\";"}
+{"sql":"SELECT 2 IS DISTINCT FROM 2 as \"no\"","shape":"SELECT 2 IS DISTINCT FROM 2 AS \"no\";"}
+{"sql":"SELECT 2 IS DISTINCT FROM null as \"yes\"","shape":"SELECT 2 IS DISTINCT FROM NULL AS \"yes\";"}
+{"sql":"SELECT null IS DISTINCT FROM null as \"no\"","shape":"SELECT NULL IS DISTINCT FROM NULL AS \"no\";"}
+{"sql":"SELECT 1 IS NOT DISTINCT FROM 2 as \"no\"","shape":"SELECT 1 IS NOT DISTINCT FROM 2 AS \"no\";"}
+{"sql":"SELECT 2 IS NOT DISTINCT FROM 2 as \"yes\"","shape":"SELECT 2 IS NOT DISTINCT FROM 2 AS \"yes\";"}
+{"sql":"SELECT 2 IS NOT DISTINCT FROM null as \"no\"","shape":"SELECT 2 IS NOT DISTINCT FROM NULL AS \"no\";"}
+{"sql":"SELECT null IS NOT DISTINCT FROM null as \"yes\"","shape":"SELECT NULL IS NOT DISTINCT FROM NULL AS \"yes\";"}

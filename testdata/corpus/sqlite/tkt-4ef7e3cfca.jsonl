@@ -1,0 +1,15 @@
+{"sql":"CREATE TABLE x(a)"}
+{"sql":"CREATE TRIGGER t AFTER INSERT ON x BEGIN\n    SELECT * FROM x WHERE abc.a = 1;\n  END"}
+{"sql":"INSERT INTO x VALUES('assert')"}
+{"sql":"CREATE TABLE w(a)"}
+{"sql":"CREATE TABLE y(a)"}
+{"sql":"CREATE TABLE z(a)"}
+{"sql":"INSERT INTO x(a) VALUES(5)"}
+{"sql":"INSERT INTO y(a) VALUES(10)"}
+{"sql":"CREATE TRIGGER t AFTER INSERT ON w BEGIN\n    INSERT INTO z\n    SELECT (SELECT x.a + y.a FROM y) FROM x;\n  END"}
+{"sql":"INSERT INTO w VALUES('incorrect')"}
+{"sql":"SELECT * FROM z"}
+{"sql":"CREATE TABLE x(b)"}
+{"sql":"INSERT INTO x(b) VALUES(5)"}
+{"sql":"CREATE TRIGGER t AFTER INSERT ON w BEGIN\n    INSERT INTO z\n    SELECT (SELECT x.b + y.a FROM y) FROM x;\n  END"}
+{"sql":"INSERT INTO w VALUES('assert')"}

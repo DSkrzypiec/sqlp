@@ -1,0 +1,17 @@
+{"sql":"CREATE TABLE blobs(k INTEGER PRIMARY KEY, v BLOB)"}
+{"sql":"INSERT INTO blobs VALUES(1, zeroblob(100))"}
+{"sql":"INSERT INTO blobs VALUES(2, zeroblob(100))"}
+{"sql":"INSERT INTO blobs VALUES(3, 42)"}
+{"sql":"INSERT INTO blobs VALUES(4, 54.4)"}
+{"sql":"INSERT INTO blobs VALUES(5, NULL)"}
+{"sql":"UPDATE blobs SET v = '123456789012345678901234567890' WHERE k = 1"}
+{"sql":"INSERT INTO ft VALUES('rules to open a column to which')"}
+{"sql":"CREATE VIEW v1 AS SELECT * FROM blobs"}
+{"sql":"INSERT INTO t1 VALUES(zeroblob(100), zeroblob(100))"}
+{"sql":"CREATE TABLE c1(a, b REFERENCES p1)"}
+{"sql":"INSERT INTO p1 VALUES(zeroblob(100))"}
+{"sql":"INSERT INTO c1 VALUES(zeroblob(100), zeroblob(100))"}
+{"sql":"PRAGMA foreign_keys = 0"}
+{"sql":"CREATE TABLE aux.t1(a INTEGER PRIMARY KEY, b)"}
+{"sql":"INSERT INTO t1 VALUES(4, 'hello')"}
+{"sql":"INSERT INTO aux.t1 VALUES(4, 'world')"}

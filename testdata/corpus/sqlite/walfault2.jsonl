@@ -1,0 +1,5 @@
+{"sql":"WITH s(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM s LIMIT 30\n  )\n  INSERT INTO t1 SELECT randomblob(400), randomblob(400) FROM s"}
+{"sql":"PRAGMA journal_size_limit = 10000"}
+{"sql":"PRAGMA cache_size = 2"}
+{"sql":"UPDATE t1 SET a=randomblob(400)"}
+{"sql":"UPDATE t1 SET b=randomblob(400)"}

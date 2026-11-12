@@ -1,0 +1,38 @@
+{"sql":"DECLARE foo13 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 50","shape":"DECLARE foo13 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 50;"}
+{"sql":"DECLARE foo14 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 51","shape":"DECLARE foo14 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 51;"}
+{"sql":"DECLARE foo15 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 52","shape":"DECLARE foo15 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 52;"}
+{"sql":"DECLARE foo16 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 53","shape":"DECLARE foo16 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 53;"}
+{"sql":"DECLARE foo17 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 54","shape":"DECLARE foo17 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 54;"}
+{"sql":"DECLARE foo18 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 55","shape":"DECLARE foo18 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 55;"}
+{"sql":"DECLARE foo19 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 56","shape":"DECLARE foo19 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 56;"}
+{"sql":"DECLARE foo20 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 57","shape":"DECLARE foo20 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 57;"}
+{"sql":"DECLARE foo21 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 58","shape":"DECLARE foo21 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 58;"}
+{"sql":"DECLARE foo22 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 59","shape":"DECLARE foo22 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 59;"}
+{"sql":"DECLARE foo23 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 60","shape":"DECLARE foo23 CURSOR FOR\n   SELECT * FROM onek WHERE unique1 = 60;"}
+{"sql":"DECLARE foo24 CURSOR FOR\n   SELECT * FROM onek2 WHERE unique1 = 50","shape":"DECLARE foo24 CURSOR FOR\n   SELECT * FROM onek2 WHERE unique1 = 50;"}
+{"sql":"DECLARE foo25 CURSOR FOR\n   SELECT * FROM onek2 WHERE unique1 = 60","shape":"DECLARE foo25 CURSOR FOR\n   SELECT * FROM onek2 WHERE unique1 = 60;"}
+{"sql":"FETCH all in foo13","shape":"FETCH all in foo13;"}
+{"sql":"FETCH all in foo14","shape":"FETCH all in foo14;"}
+{"sql":"FETCH all in foo15","shape":"FETCH all in foo15;"}
+{"sql":"FETCH all in foo16","shape":"FETCH all in foo16;"}
+{"sql":"FETCH all in foo17","shape":"FETCH all in foo17;"}
+{"sql":"FETCH all in foo18","shape":"FETCH all in foo18;"}
+{"sql":"FETCH all in foo19","shape":"FETCH all in foo19;"}
+{"sql":"FETCH all in foo20","shape":"FETCH all in foo20;"}
+{"sql":"FETCH all in foo21","shape":"FETCH all in foo21;"}
+{"sql":"FETCH all in foo22","shape":"FETCH all in foo22;"}
+{"sql":"FETCH all in foo23","shape":"FETCH all in foo23;"}
+{"sql":"FETCH all in foo24","shape":"FETCH all in foo24;"}
+{"sql":"FETCH all in foo25","shape":"FETCH all in foo25;"}
+{"sql":"CLOSE foo13","shape":"CLOSE foo13;"}
+{"sql":"CLOSE foo14","shape":"CLOSE foo14;"}
+{"sql":"CLOSE foo15","shape":"CLOSE foo15;"}
+{"sql":"CLOSE foo16","shape":"CLOSE foo16;"}
+{"sql":"CLOSE foo17","shape":"CLOSE foo17;"}
+{"sql":"CLOSE foo18","shape":"CLOSE foo18;"}
+{"sql":"CLOSE foo19","shape":"CLOSE foo19;"}
+{"sql":"CLOSE foo20","shape":"CLOSE foo20;"}
+{"sql":"CLOSE foo21","shape":"CLOSE foo21;"}
+{"sql":"CLOSE foo22","shape":"CLOSE foo22;"}
+{"sql":"CLOSE foo23","shape":"CLOSE foo23;"}
+{"sql":"CLOSE foo24","shape":"CLOSE foo24;"}

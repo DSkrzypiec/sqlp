@@ -1,0 +1,8 @@
+{"sql":"PRAGMA auto_vacuum = off"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<100)\n   INSERT INTO t2(x, y) SELECT x, randomblob(1000) FROM c"}
+{"sql":"INSERT INTO t1 VALUES(5,randomblob(100000))"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<400)\n   INSERT INTO t3(x, y) SELECT x, randomblob(1000) FROM c"}
+{"sql":"INSERT INTO t4 VALUES('hello','world!')"}
+{"sql":"PRAGMA journal_mode=OFF"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING rtree(id, a, b, c, d)"}
+{"sql":"PRAGMA page_size = 8192"}

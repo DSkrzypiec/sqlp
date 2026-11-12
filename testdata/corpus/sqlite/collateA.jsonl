@@ -1,0 +1,34 @@
+{"sql":"CREATE TABLE t1(\n      a INTEGER PRIMARY KEY,\n      b TEXT COLLATE BINARY,\n      c TEXT COLLATE RTRIM\n    )"}
+{"sql":"INSERT INTO t1 VALUES(1, 'abcde','abcde')"}
+{"sql":"INSERT INTO t1 VALUES(2, 'xyzzy ','xyzzy ')"}
+{"sql":"INSERT INTO t1 VALUES(3, 'xyzzy  ','xyzzy  ')"}
+{"sql":"INSERT INTO t1 VALUES(4, 'xyzzy   ','xyzzy   ')"}
+{"sql":"INSERT INTO t1 VALUES(5, '   ', '   ')"}
+{"sql":"INSERT INTO t1 VALUES(6, '', '')"}
+{"sql":"SELECT a FROM t1 WHERE b='abcde     '"}
+{"sql":"SELECT a FROM t1 WHERE c='abcde     '"}
+{"sql":"SELECT a FROM t1 WHERE b='xyzzy'"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzy'"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzy '"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzy  '"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzy   '"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzy    '"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzy                                  '"}
+{"sql":"SELECT 'abc123'='abc123                         ' COLLATE RTRIM"}
+{"sql":"SELECT 'abc123                         '='abc123' COLLATE RTRIM"}
+{"sql":"SELECT '  '='' COLLATE RTRIM, '  '='' COLLATE BINARY, '  '=''"}
+{"sql":"SELECT ''='  ' COLLATE RTRIM, ''='  ' COLLATE BINARY, ''='  '"}
+{"sql":"SELECT '  '='      ' COLLATE RTRIM, '  '='        '"}
+{"sql":"SELECT ''<>'  ' COLLATE RTRIM, ''<>'  ' COLLATE BINARY, ''<>'  '"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzz'"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzzyy   '"}
+{"sql":"SELECT a FROM t1 WHERE c='xyzz   '"}
+{"sql":"SELECT a FROM t1 WHERE c='abcd   '"}
+{"sql":"SELECT a FROM t1 WHERE c='abcd'"}
+{"sql":"SELECT a FROM t1 WHERE c='abc'"}
+{"sql":"SELECT a FROM t1 WHERE c='abcdef    '"}
+{"sql":"SELECT a FROM t1 WHERE c=''"}
+{"sql":"SELECT a FROM t1 WHERE c=' '"}
+{"sql":"SELECT a FROM t1 WHERE c='                    '"}
+{"sql":"CREATE INDEX i1b ON t1(b)"}
+{"sql":"CREATE INDEX i1c ON t1(c)"}

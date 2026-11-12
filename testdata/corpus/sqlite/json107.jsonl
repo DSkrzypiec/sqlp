@@ -1,0 +1,10 @@
+{"sql":"SELECT json_valid( CAST('{\"a\":1}' AS BLOB) )"}
+{"sql":"SELECT json_valid( CAST('{\"a\":1}' AS BLOB), 1)"}
+{"sql":"SELECT json_valid( CAST('{\"a\":1}' AS BLOB), 2)"}
+{"sql":"SELECT json_valid( CAST('{\"a\":1}' AS BLOB), 4)"}
+{"sql":"SELECT json_valid( CAST('{\"a\":1}' AS BLOB), 8)"}
+{"sql":"SELECT CAST('{\"a\":123}' AS blob) -> 'a'"}
+{"sql":"SELECT CAST('{\"a\":123}' AS blob) ->> 'a'"}
+{"sql":"SELECT json_type(CAST('{\"a\":123,\"b\":456}' AS blob))"}
+{"sql":"SELECT json(CAST('{\"a\":123,\"b\":456}' AS blob))"}
+{"sql":"SELECT key, value FROM json_tree( CAST('{\"a\":123,\"b\":456}' AS blob) )\n      WHERE atom"}

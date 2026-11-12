@@ -1,0 +1,218 @@
+{"sql":"CREATE TABLE update_test (\n    a   INT DEFAULT 10,\n    b   INT,\n    c   TEXT\n)","shape":"CREATE TABLE update_test (a INT DEFAULT 10, b INT, c TEXT);"}
+{"sql":"CREATE TABLE upsert_test (\n    a   INT PRIMARY KEY,\n    b   TEXT\n)","shape":"CREATE TABLE upsert_test (a INT PRIMARY KEY, b TEXT);"}
+{"sql":"INSERT INTO update_test VALUES (5, 10, 'foo')","shape":"INSERT INTO update_test VALUES (5, 10, 'foo');"}
+{"sql":"INSERT INTO update_test(b, a) VALUES (15, 10)","shape":"INSERT INTO update_test (b, a) VALUES (15, 10);"}
+{"sql":"SELECT * FROM update_test","shape":"SELECT * FROM update_test;"}
+{"sql":"UPDATE update_test SET a = DEFAULT, b = DEFAULT","shape":"UPDATE update_test SET a = DEFAULT, b = DEFAULT;"}
+{"sql":"UPDATE update_test AS t SET b = 10 WHERE t.a = 10","shape":"UPDATE update_test AS t SET b = 10 WHERE t.a = 10;"}
+{"sql":"UPDATE update_test t SET b = t.b + 10 WHERE t.a = 10","shape":"UPDATE update_test AS t SET b = t.b + 10 WHERE t.a = 10;"}
+{"sql":"UPDATE update_test SET a=v.i FROM (VALUES(100, 20)) AS v(i, j)\n  WHERE update_test.b = v.j","shape":"UPDATE update_test SET a = v.i FROM (VALUES (100, 20)) AS v(i, j) WHERE update_test.b = v.j;"}
+{"sql":"UPDATE update_test SET a = v.* FROM (VALUES(100, 20)) AS v(i, j)\n  WHERE update_test.b = v.j","shape":"UPDATE update_test SET a = v.* FROM (VALUES (100, 20)) AS v(i, j) WHERE update_test.b = v.j;"}
+{"sql":"INSERT INTO update_test SELECT a,b+1,c FROM update_test","shape":"INSERT INTO update_test SELECT a, b + 1, c FROM update_test;"}
+{"sql":"UPDATE update_test SET (c,b,a) = ('bugle', b+11, DEFAULT) WHERE c = 'foo'","shape":"UPDATE update_test SET (c, b, a) = ('bugle', b + 11, DEFAULT) WHERE c = 'foo';"}
+{"sql":"UPDATE update_test SET (c,b) = ('car', a+b), a = a + 1 WHERE a = 10","shape":"UPDATE update_test SET (c, b) = ('car', a + b), a = a + 1 WHERE a = 10;"}
+{"sql":"UPDATE update_test SET (c,b) = ('car', a+b), b = a + 1 WHERE a = 10","shape":"UPDATE update_test SET (c, b) = ('car', a + b), b = a + 1 WHERE a = 10;"}
+{"sql":"UPDATE update_test\n  SET (b,a) = (select a,b from update_test where b = 41 and c = 'car')\n  WHERE a = 100 AND b = 20","shape":"UPDATE update_test SET (b, a) = (SELECT a, b FROM update_test WHERE (b = 41) AND (c = 'car')) WHERE (a = 100) AND (b = 20);"}
+{"sql":"UPDATE update_test o\n  SET (b,a) = (select a+1,b from update_test i\n               where i.a=o.a and i.b=o.b and i.c is not distinct from o.c)","shape":"UPDATE update_test AS o SET (b, a) = (SELECT a + 1, b FROM update_test AS i WHERE ((i.a = o.a) AND (i.b = o.b)) AND (i.c IS NOT DISTINCT FROM o.c));"}
+{"sql":"UPDATE update_test SET (b,a) = (select a+1,b from update_test)","shape":"UPDATE update_test SET (b, a) = (SELECT a + 1, b FROM update_test);"}
+{"sql":"UPDATE update_test SET (b,a) = (select a+1,b from update_test where a = 1000)\n  WHERE a = 11","shape":"UPDATE update_test SET (b, a) = (SELECT a + 1, b FROM update_test WHERE a = 1000) WHERE a = 11;"}
+{"sql":"UPDATE update_test SET (a,b) = ROW(v.*) FROM (VALUES(21, 100)) AS v(i, j)\n  WHERE update_test.a = v.i","shape":"UPDATE update_test SET (a, b) = ROW(v.*) FROM (VALUES (21, 100)) AS v(i, j) WHERE update_test.a = v.i;"}
+{"sql":"UPDATE update_test SET (a,b) = (v.*) FROM (VALUES(21, 101)) AS v(i, j)\n  WHERE update_test.a = v.i","shape":"UPDATE update_test SET (a, b) = (v.*) FROM (VALUES (21, 101)) AS v(i, j) WHERE update_test.a = v.i;"}
+{"sql":"UPDATE update_test AS t SET b = update_test.b + 10 WHERE t.a = 10","shape":"UPDATE update_test AS t SET b = update_test.b + 10 WHERE t.a = 10;"}
+{"sql":"UPDATE update_test SET c = repeat('x', 10000) WHERE c = 'car'","shape":"UPDATE update_test SET c = repeat('x', 10000) WHERE c = 'car';"}
+{"sql":"SELECT a, b, char_length(c) FROM update_test","shape":"SELECT a, b, char_length(c) FROM update_test;"}
+{"sql":"EXPLAIN (VERBOSE, COSTS OFF)\nUPDATE update_test t\n  SET (a, b) = (SELECT b, a FROM update_test s WHERE s.a = t.a)\n  WHERE CURRENT_USER = SESSION_USER","shape":"EXPLAIN (VERBOSE, COSTS OFF) UPDATE update_test AS t SET (a, b) = (SELECT b, a FROM update_test AS s WHERE s.a = t.a) WHERE CURRENT_USER = SESSION_USER;"}
+{"sql":"UPDATE update_test t\n  SET (a, b) = (SELECT b, a FROM update_test s WHERE s.a = t.a)\n  WHERE CURRENT_USER = SESSION_USER","shape":"UPDATE update_test AS t SET (a, b) = (SELECT b, a FROM update_test AS s WHERE s.a = t.a) WHERE CURRENT_USER = SESSION_USER;"}
+{"sql":"INSERT INTO upsert_test VALUES(1, 'Boo'), (3, 'Zoo')","shape":"INSERT INTO upsert_test VALUES (1, 'Boo'), (3, 'Zoo');"}
+{"sql":"WITH aaa AS (SELECT 1 AS a, 'Foo' AS b) INSERT INTO upsert_test\n  VALUES (1, 'Bar') ON CONFLICT(a)\n  DO UPDATE SET (b, a) = (SELECT b, a FROM aaa) RETURNING *","shape":"WITH aaa AS (SELECT 1 AS a, 'Foo' AS b) INSERT INTO upsert_test VALUES (1, 'Bar') ON CONFLICT (a) DO UPDATE SET (b, a) = (SELECT b, a FROM aaa) RETURNING *;"}
+{"sql":"INSERT INTO upsert_test VALUES (1, 'Baz'), (3, 'Zaz') ON CONFLICT(a)\n  DO UPDATE SET (b, a) = (SELECT b || ', Correlated', a from upsert_test i WHERE i.a = upsert_test.a)\n  RETURNING *","shape":"INSERT INTO upsert_test VALUES (1, 'Baz'), (3, 'Zaz') ON CONFLICT (a) DO UPDATE SET (b, a) = (SELECT b || ', Correlated', a FROM upsert_test AS i WHERE i.a = upsert_test.a) RETURNING *;"}
+{"sql":"INSERT INTO upsert_test VALUES (1, 'Bat'), (3, 'Zot') ON CONFLICT(a)\n  DO UPDATE SET (b, a) = (SELECT b || ', Excluded', a from upsert_test i WHERE i.a = excluded.a)\n  RETURNING *","shape":"INSERT INTO upsert_test VALUES (1, 'Bat'), (3, 'Zot') ON CONFLICT (a) DO UPDATE SET (b, a) = (SELECT b || ', Excluded', a FROM upsert_test AS i WHERE i.a = excluded.a) RETURNING *;"}
+{"sql":"INSERT INTO upsert_test VALUES (2, 'Beeble') ON CONFLICT(a)\n  DO UPDATE SET (b, a) = (SELECT b || ', Excluded', a from upsert_test i WHERE i.a = excluded.a)\n  RETURNING tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_correct, xmax = 0 AS xmax_correct","shape":"INSERT INTO upsert_test VALUES (2, 'Beeble') ON CONFLICT (a) DO UPDATE SET (b, a) = (SELECT b || ', Excluded', a FROM upsert_test AS i WHERE i.a = excluded.a) RETURNING tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_correct, xmax = 0 AS xmax_correct;"}
+{"sql":"INSERT INTO upsert_test VALUES (2, 'Brox') ON CONFLICT(a)\n  DO UPDATE SET (b, a) = (SELECT b || ', Excluded', a from upsert_test i WHERE i.a = excluded.a)\n  RETURNING tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_correct, xmax = pg_current_xact_id()::xid AS xmax_correct","shape":"INSERT INTO upsert_test VALUES (2, 'Brox') ON CONFLICT (a) DO UPDATE SET (b, a) = (SELECT b || ', Excluded', a FROM upsert_test AS i WHERE i.a = excluded.a) RETURNING tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_correct, xmax = pg_current_xact_id()::xid AS xmax_correct;"}
+{"sql":"DROP TABLE update_test","shape":"DROP TABLE update_test;"}
+{"sql":"DROP TABLE upsert_test","shape":"DROP TABLE upsert_test;"}
+{"sql":"CREATE TABLE upsert_test (\n    a   INT PRIMARY KEY,\n    b   TEXT\n) PARTITION BY LIST (a)","shape":"CREATE TABLE upsert_test (a INT PRIMARY KEY, b TEXT) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE upsert_test_1 PARTITION OF upsert_test FOR VALUES IN (1)","shape":"CREATE TABLE upsert_test_1 PARTITION OF upsert_test FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE upsert_test_2 (b TEXT, a INT PRIMARY KEY)","shape":"CREATE TABLE upsert_test_2 (b TEXT, a INT PRIMARY KEY);"}
+{"sql":"ALTER TABLE upsert_test ATTACH PARTITION upsert_test_2 FOR VALUES IN (2)"}
+{"sql":"INSERT INTO upsert_test VALUES(1, 'Boo'), (2, 'Zoo')","shape":"INSERT INTO upsert_test VALUES (1, 'Boo'), (2, 'Zoo');"}
+{"sql":"WITH aaa AS (SELECT 1 AS ctea, ' Foo' AS cteb) INSERT INTO upsert_test\n  VALUES (1, 'Bar'), (2, 'Baz') ON CONFLICT(a)\n  DO UPDATE SET (b, a) = (SELECT upsert_test.b||cteb, upsert_test.a FROM aaa) RETURNING *","shape":"WITH aaa AS (SELECT 1 AS ctea, ' Foo' AS cteb) INSERT INTO upsert_test VALUES (1, 'Bar'), (2, 'Baz') ON CONFLICT (a) DO UPDATE SET (b, a) = (SELECT upsert_test.b || cteb, upsert_test.a FROM aaa) RETURNING *;"}
+{"sql":"CREATE TABLE range_parted (\n\ta text,\n\tb bigint,\n\tc numeric,\n\td int,\n\te varchar\n) PARTITION BY RANGE (a, b)","shape":"CREATE TABLE range_parted (a text, b bigint, c numeric, d int, e varchar) PARTITION BY RANGE (a, b);"}
+{"sql":"CREATE TABLE part_b_20_b_30 (e varchar, c numeric, a text, b bigint, d int)","shape":"CREATE TABLE part_b_20_b_30 (e varchar, c numeric, a text, b bigint, d int);"}
+{"sql":"ALTER TABLE range_parted ATTACH PARTITION part_b_20_b_30 FOR VALUES FROM ('b', 20) TO ('b', 30)"}
+{"sql":"CREATE TABLE part_b_10_b_20 (e varchar, c numeric, a text, b bigint, d int) PARTITION BY RANGE (c)","shape":"CREATE TABLE part_b_10_b_20 (e varchar, c numeric, a text, b bigint, d int) PARTITION BY RANGE (c);"}
+{"sql":"CREATE TABLE part_b_1_b_10 PARTITION OF range_parted FOR VALUES FROM ('b', 1) TO ('b', 10)","shape":"CREATE TABLE part_b_1_b_10 PARTITION OF range_parted FOR VALUES FROM ('b', 1) TO ('b', 10);"}
+{"sql":"ALTER TABLE range_parted ATTACH PARTITION part_b_10_b_20 FOR VALUES FROM ('b', 10) TO ('b', 20)"}
+{"sql":"CREATE TABLE part_a_10_a_20 PARTITION OF range_parted FOR VALUES FROM ('a', 10) TO ('a', 20)","shape":"CREATE TABLE part_a_10_a_20 PARTITION OF range_parted FOR VALUES FROM ('a', 10) TO ('a', 20);"}
+{"sql":"CREATE TABLE part_a_1_a_10 PARTITION OF range_parted FOR VALUES FROM ('a', 1) TO ('a', 10)","shape":"CREATE TABLE part_a_1_a_10 PARTITION OF range_parted FOR VALUES FROM ('a', 1) TO ('a', 10);"}
+{"sql":"UPDATE part_b_10_b_20 set b = b - 6","shape":"UPDATE part_b_10_b_20 SET b = b - 6;"}
+{"sql":"CREATE TABLE part_c_100_200 (e varchar, c numeric, a text, b bigint, d int) PARTITION BY range (abs(d))","shape":"CREATE TABLE part_c_100_200 (e varchar, c numeric, a text, b bigint, d int) PARTITION BY RANGE (abs(d));"}
+{"sql":"ALTER TABLE part_c_100_200 DROP COLUMN e, DROP COLUMN c, DROP COLUMN a","shape":"ALTER TABLE part_c_100_200 DROP COLUMN e, DROP COLUMN c, DROP COLUMN a;"}
+{"sql":"ALTER TABLE part_c_100_200 ADD COLUMN c numeric, ADD COLUMN e varchar, ADD COLUMN a text","shape":"ALTER TABLE part_c_100_200 ADD COLUMN c numeric, ADD COLUMN e varchar, ADD COLUMN a text;"}
+{"sql":"ALTER TABLE part_c_100_200 DROP COLUMN b","shape":"ALTER TABLE part_c_100_200 DROP COLUMN b;"}
+{"sql":"ALTER TABLE part_c_100_200 ADD COLUMN b bigint","shape":"ALTER TABLE part_c_100_200 ADD COLUMN b bigint;"}
+{"sql":"CREATE TABLE part_d_1_15 PARTITION OF part_c_100_200 FOR VALUES FROM (1) TO (15)","shape":"CREATE TABLE part_d_1_15 PARTITION OF part_c_100_200 FOR VALUES FROM (1) TO (15);"}
+{"sql":"CREATE TABLE part_d_15_20 PARTITION OF part_c_100_200 FOR VALUES FROM (15) TO (20)","shape":"CREATE TABLE part_d_15_20 PARTITION OF part_c_100_200 FOR VALUES FROM (15) TO (20);"}
+{"sql":"ALTER TABLE part_b_10_b_20 ATTACH PARTITION part_c_100_200 FOR VALUES FROM (100) TO (200)"}
+{"sql":"CREATE TABLE part_c_1_100 (e varchar, d int, c numeric, b bigint, a text)","shape":"CREATE TABLE part_c_1_100 (e varchar, d int, c numeric, b bigint, a text);"}
+{"sql":"ALTER TABLE part_b_10_b_20 ATTACH PARTITION part_c_1_100 FOR VALUES FROM (1) TO (100)"}
+{"sql":"EXPLAIN (costs off) UPDATE range_parted set c = c - 50 WHERE c > 97","shape":"EXPLAIN (COSTS off) UPDATE range_parted SET c = c - 50 WHERE c > 97;"}
+{"sql":"UPDATE part_c_100_200 set c = c - 20, d = c WHERE c = 105","shape":"UPDATE part_c_100_200 SET c = c - 20, d = c WHERE c = 105;"}
+{"sql":"UPDATE part_b_10_b_20 set a = 'a'","shape":"UPDATE part_b_10_b_20 SET a = 'a';"}
+{"sql":"UPDATE range_parted set d = d - 10 WHERE d > 10","shape":"UPDATE range_parted SET d = d - 10 WHERE d > 10;"}
+{"sql":"UPDATE range_parted set e = d","shape":"UPDATE range_parted SET e = d;"}
+{"sql":"UPDATE part_c_1_100 set c = c + 20 WHERE c = 98","shape":"UPDATE part_c_1_100 SET c = c + 20 WHERE c = 98;"}
+{"sql":"UPDATE part_b_10_b_20 set c = c + 20 returning c, b, a","shape":"UPDATE part_b_10_b_20 SET c = c + 20 RETURNING c, b, a;"}
+{"sql":"UPDATE part_b_10_b_20 set b = b - 6 WHERE c > 116 returning *","shape":"UPDATE part_b_10_b_20 SET b = b - 6 WHERE c > 116 RETURNING *;"}
+{"sql":"UPDATE range_parted set b = b - 6 WHERE c > 116 returning a, b + c","shape":"UPDATE range_parted SET b = b - 6 WHERE c > 116 RETURNING a, b + c;"}
+{"sql":"CREATE TABLE mintab(c1 int)","shape":"CREATE TABLE mintab (c1 int);"}
+{"sql":"INSERT into mintab VALUES (120)","shape":"INSERT INTO mintab VALUES (120);"}
+{"sql":"CREATE VIEW upview AS SELECT * FROM range_parted WHERE (select c > c1 FROM mintab) WITH CHECK OPTION","shape":"CREATE VIEW upview AS SELECT * FROM range_parted WHERE (SELECT c > c1 FROM mintab) WITH CHECK OPTION;"}
+{"sql":"UPDATE upview set c = 199 WHERE b = 4","shape":"UPDATE upview SET c = 199 WHERE b = 4;"}
+{"sql":"UPDATE upview set c = 120 WHERE b = 4","shape":"UPDATE upview SET c = 120 WHERE b = 4;"}
+{"sql":"UPDATE upview set a = 'b', b = 15, c = 120 WHERE b = 4","shape":"UPDATE upview SET a = 'b', b = 15, c = 120 WHERE b = 4;"}
+{"sql":"UPDATE upview set a = 'b', b = 15 WHERE b = 4","shape":"UPDATE upview SET a = 'b', b = 15 WHERE b = 4;"}
+{"sql":"DROP VIEW upview","shape":"DROP VIEW upview;"}
+{"sql":"UPDATE range_parted set c = 95 WHERE a = 'b' and b > 10 and c > 100 returning (range_parted), *","shape":"UPDATE range_parted SET c = 95 WHERE ((a = 'b') AND (b > 10)) AND (c > 100) RETURNING (range_parted), *;"}
+{"sql":"CREATE FUNCTION trans_updatetrigfunc() RETURNS trigger LANGUAGE plpgsql AS\n$$\n  begin\n    raise notice 'trigger = %, old table = %, new table = %',\n                 TG_NAME,\n                 (select string_agg(old_table::text, ', ' ORDER BY a) FROM old_table),\n                 (select string_agg(new_table::text, ', ' ORDER BY a) FROM new_table);\n    return null;\n  end;\n$$","shape":"CREATE FUNCTION trans_updatetrigfunc() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = %, old table = %, new table = %'',\n                 TG_NAME,\n                 (select string_agg(old_table::text, '', '' ORDER BY a) FROM old_table),\n                 (select string_agg(new_table::text, '', '' ORDER BY a) FROM new_table);\n    return null;\n  end;\n';"}
+{"sql":"CREATE TRIGGER trans_updatetrig\n  AFTER UPDATE ON range_parted REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table\n  FOR EACH STATEMENT EXECUTE PROCEDURE trans_updatetrigfunc()","shape":"CREATE TRIGGER trans_updatetrig AFTER UPDATE ON range_parted REFERENCING OLD TABLE AS old_table NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION trans_updatetrigfunc();"}
+{"sql":"UPDATE range_parted set c = (case when c = 96 then 110 else c + 1 end ) WHERE a = 'b' and b > 10 and c >= 96","shape":"UPDATE range_parted SET c = (CASE WHEN c = 96 THEN 110 ELSE c + 1 END) WHERE ((a = 'b') AND (b > 10)) AND (c >= 96);"}
+{"sql":"CREATE TRIGGER trans_deletetrig\n  AFTER DELETE ON range_parted REFERENCING OLD TABLE AS old_table\n  FOR EACH STATEMENT EXECUTE PROCEDURE trans_updatetrigfunc()","shape":"CREATE TRIGGER trans_deletetrig AFTER DELETE ON range_parted REFERENCING OLD TABLE AS old_table FOR EACH STATEMENT EXECUTE FUNCTION trans_updatetrigfunc();"}
+{"sql":"CREATE TRIGGER trans_inserttrig\n  AFTER INSERT ON range_parted REFERENCING NEW TABLE AS new_table\n  FOR EACH STATEMENT EXECUTE PROCEDURE trans_updatetrigfunc()","shape":"CREATE TRIGGER trans_inserttrig AFTER INSERT ON range_parted REFERENCING NEW TABLE AS new_table FOR EACH STATEMENT EXECUTE FUNCTION trans_updatetrigfunc();"}
+{"sql":"UPDATE range_parted set c = c + 50 WHERE a = 'b' and b > 10 and c >= 96","shape":"UPDATE range_parted SET c = c + 50 WHERE ((a = 'b') AND (b > 10)) AND (c >= 96);"}
+{"sql":"DROP TRIGGER trans_deletetrig ON range_parted","shape":"DROP TRIGGER trans_deletetrig ON range_parted;"}
+{"sql":"DROP TRIGGER trans_inserttrig ON range_parted","shape":"DROP TRIGGER trans_inserttrig ON range_parted;"}
+{"sql":"CREATE FUNCTION func_parted_mod_b() RETURNS trigger AS $$\nBEGIN\n   NEW.b = NEW.b + 1;\n   return NEW;\nEND $$ language plpgsql","shape":"CREATE FUNCTION func_parted_mod_b() RETURNS trigger AS '\nBEGIN\n   NEW.b = NEW.b + 1;\n   return NEW;\nEND ' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER trig_c1_100 BEFORE UPDATE OR INSERT ON part_c_1_100\n   FOR EACH ROW EXECUTE PROCEDURE func_parted_mod_b()","shape":"CREATE TRIGGER trig_c1_100 BEFORE UPDATE OR INSERT ON part_c_1_100 FOR EACH ROW EXECUTE FUNCTION func_parted_mod_b();"}
+{"sql":"CREATE TRIGGER trig_d1_15 BEFORE UPDATE OR INSERT ON part_d_1_15\n   FOR EACH ROW EXECUTE PROCEDURE func_parted_mod_b()","shape":"CREATE TRIGGER trig_d1_15 BEFORE UPDATE OR INSERT ON part_d_1_15 FOR EACH ROW EXECUTE FUNCTION func_parted_mod_b();"}
+{"sql":"CREATE TRIGGER trig_d15_20 BEFORE UPDATE OR INSERT ON part_d_15_20\n   FOR EACH ROW EXECUTE PROCEDURE func_parted_mod_b()","shape":"CREATE TRIGGER trig_d15_20 BEFORE UPDATE OR INSERT ON part_d_15_20 FOR EACH ROW EXECUTE FUNCTION func_parted_mod_b();"}
+{"sql":"UPDATE range_parted set c = (case when c = 96 then 110 else c + 1 end) WHERE a = 'b' and b > 10 and c >= 96","shape":"UPDATE range_parted SET c = (CASE WHEN c = 96 THEN 110 ELSE c + 1 END) WHERE ((a = 'b') AND (b > 10)) AND (c >= 96);"}
+{"sql":"UPDATE range_parted set b = 15 WHERE b = 1","shape":"UPDATE range_parted SET b = 15 WHERE b = 1;"}
+{"sql":"DROP TRIGGER trans_updatetrig ON range_parted","shape":"DROP TRIGGER trans_updatetrig ON range_parted;"}
+{"sql":"DROP TRIGGER trig_c1_100 ON part_c_1_100","shape":"DROP TRIGGER trig_c1_100 ON part_c_1_100;"}
+{"sql":"DROP TRIGGER trig_d1_15 ON part_d_1_15","shape":"DROP TRIGGER trig_d1_15 ON part_d_1_15;"}
+{"sql":"DROP TRIGGER trig_d15_20 ON part_d_15_20","shape":"DROP TRIGGER trig_d15_20 ON part_d_15_20;"}
+{"sql":"DROP FUNCTION func_parted_mod_b()"}
+{"sql":"ALTER TABLE range_parted ENABLE ROW LEVEL SECURITY"}
+{"sql":"CREATE USER regress_range_parted_user"}
+{"sql":"GRANT ALL ON range_parted, mintab TO regress_range_parted_user","shape":"GRANT ALL PRIVILEGES ON range_parted, mintab TO regress_range_parted_user;"}
+{"sql":"CREATE POLICY seeall ON range_parted AS PERMISSIVE FOR SELECT USING (true)"}
+{"sql":"CREATE POLICY policy_range_parted ON range_parted for UPDATE USING (true) WITH CHECK (c % 2 = 0)"}
+{"sql":"SET SESSION AUTHORIZATION regress_range_parted_user"}
+{"sql":"UPDATE range_parted set a = 'b', c = 151 WHERE a = 'a' and c = 200","shape":"UPDATE range_parted SET a = 'b', c = 151 WHERE (a = 'a') AND (c = 200);"}
+{"sql":"CREATE FUNCTION func_d_1_15() RETURNS trigger AS $$\nBEGIN\n   NEW.c = NEW.c + 1; -- Make even numbers odd, or vice versa\n   return NEW;\nEND $$ LANGUAGE plpgsql","shape":"CREATE FUNCTION func_d_1_15() RETURNS trigger AS '\nBEGIN\n   NEW.c = NEW.c + 1; -- Make even numbers odd, or vice versa\n   return NEW;\nEND ' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER trig_d_1_15 BEFORE INSERT ON part_d_1_15\n   FOR EACH ROW EXECUTE PROCEDURE func_d_1_15()","shape":"CREATE TRIGGER trig_d_1_15 BEFORE INSERT ON part_d_1_15 FOR EACH ROW EXECUTE FUNCTION func_d_1_15();"}
+{"sql":"UPDATE range_parted set a = 'b', c = 150 WHERE a = 'a' and c = 200","shape":"UPDATE range_parted SET a = 'b', c = 150 WHERE (a = 'a') AND (c = 200);"}
+{"sql":"DROP TRIGGER trig_d_1_15 ON part_d_1_15","shape":"DROP TRIGGER trig_d_1_15 ON part_d_1_15;"}
+{"sql":"DROP FUNCTION func_d_1_15()"}
+{"sql":"CREATE POLICY policy_range_parted_subplan on range_parted\n    AS RESTRICTIVE for UPDATE USING (true)\n    WITH CHECK ((SELECT range_parted.c <= c1 FROM mintab))"}
+{"sql":"UPDATE range_parted set a = 'b', c = 122 WHERE a = 'a' and c = 200","shape":"UPDATE range_parted SET a = 'b', c = 122 WHERE (a = 'a') AND (c = 200);"}
+{"sql":"UPDATE range_parted set a = 'b', c = 120 WHERE a = 'a' and c = 200","shape":"UPDATE range_parted SET a = 'b', c = 120 WHERE (a = 'a') AND (c = 200);"}
+{"sql":"CREATE POLICY policy_range_parted_wholerow on range_parted AS RESTRICTIVE for UPDATE USING (true)\n   WITH CHECK (range_parted = row('b', 10, 112, 1, NULL)::range_parted)"}
+{"sql":"UPDATE range_parted set a = 'b', c = 112 WHERE a = 'a' and c = 200","shape":"UPDATE range_parted SET a = 'b', c = 112 WHERE (a = 'a') AND (c = 200);"}
+{"sql":"UPDATE range_parted set a = 'b', c = 116 WHERE a = 'a' and c = 200","shape":"UPDATE range_parted SET a = 'b', c = 116 WHERE (a = 'a') AND (c = 200);"}
+{"sql":"DROP POLICY policy_range_parted ON range_parted"}
+{"sql":"DROP POLICY policy_range_parted_subplan ON range_parted"}
+{"sql":"DROP POLICY policy_range_parted_wholerow ON range_parted"}
+{"sql":"REVOKE ALL ON range_parted, mintab FROM regress_range_parted_user","shape":"REVOKE ALL PRIVILEGES ON range_parted, mintab FROM regress_range_parted_user;"}
+{"sql":"DROP USER regress_range_parted_user","shape":"DROP USER regress_range_parted_user;"}
+{"sql":"DROP TABLE mintab","shape":"DROP TABLE mintab;"}
+{"sql":"CREATE FUNCTION trigfunc() returns trigger language plpgsql as\n$$\n  begin\n    raise notice 'trigger = % fired on table % during %',\n                 TG_NAME, TG_TABLE_NAME, TG_OP;\n    return null;\n  end;\n$$","shape":"CREATE FUNCTION trigfunc() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    raise notice ''trigger = % fired on table % during %'',\n                 TG_NAME, TG_TABLE_NAME, TG_OP;\n    return null;\n  end;\n';"}
+{"sql":"CREATE TRIGGER parent_delete_trig\n  AFTER DELETE ON range_parted for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER parent_delete_trig AFTER DELETE ON range_parted FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER parent_update_trig\n  AFTER UPDATE ON range_parted for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER parent_update_trig AFTER UPDATE ON range_parted FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER parent_insert_trig\n  AFTER INSERT ON range_parted for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER parent_insert_trig AFTER INSERT ON range_parted FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER c1_delete_trig\n  AFTER DELETE ON part_c_1_100 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER c1_delete_trig AFTER DELETE ON part_c_1_100 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER c1_update_trig\n  AFTER UPDATE ON part_c_1_100 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER c1_update_trig AFTER UPDATE ON part_c_1_100 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER c1_insert_trig\n  AFTER INSERT ON part_c_1_100 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER c1_insert_trig AFTER INSERT ON part_c_1_100 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER d1_delete_trig\n  AFTER DELETE ON part_d_1_15 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER d1_delete_trig AFTER DELETE ON part_d_1_15 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER d1_update_trig\n  AFTER UPDATE ON part_d_1_15 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER d1_update_trig AFTER UPDATE ON part_d_1_15 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER d1_insert_trig\n  AFTER INSERT ON part_d_1_15 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER d1_insert_trig AFTER INSERT ON part_d_1_15 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER d15_delete_trig\n  AFTER DELETE ON part_d_15_20 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER d15_delete_trig AFTER DELETE ON part_d_15_20 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER d15_update_trig\n  AFTER UPDATE ON part_d_15_20 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER d15_update_trig AFTER UPDATE ON part_d_15_20 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"CREATE TRIGGER d15_insert_trig\n  AFTER INSERT ON part_d_15_20 for each statement execute procedure trigfunc()","shape":"CREATE TRIGGER d15_insert_trig AFTER INSERT ON part_d_15_20 FOR EACH STATEMENT EXECUTE FUNCTION trigfunc();"}
+{"sql":"UPDATE range_parted set c = c - 50 WHERE c > 97","shape":"UPDATE range_parted SET c = c - 50 WHERE c > 97;"}
+{"sql":"DROP TRIGGER parent_delete_trig ON range_parted","shape":"DROP TRIGGER parent_delete_trig ON range_parted;"}
+{"sql":"DROP TRIGGER parent_update_trig ON range_parted","shape":"DROP TRIGGER parent_update_trig ON range_parted;"}
+{"sql":"DROP TRIGGER parent_insert_trig ON range_parted","shape":"DROP TRIGGER parent_insert_trig ON range_parted;"}
+{"sql":"DROP TRIGGER c1_delete_trig ON part_c_1_100","shape":"DROP TRIGGER c1_delete_trig ON part_c_1_100;"}
+{"sql":"DROP TRIGGER c1_update_trig ON part_c_1_100","shape":"DROP TRIGGER c1_update_trig ON part_c_1_100;"}
+{"sql":"DROP TRIGGER c1_insert_trig ON part_c_1_100","shape":"DROP TRIGGER c1_insert_trig ON part_c_1_100;"}
+{"sql":"DROP TRIGGER d1_delete_trig ON part_d_1_15","shape":"DROP TRIGGER d1_delete_trig ON part_d_1_15;"}
+{"sql":"DROP TRIGGER d1_update_trig ON part_d_1_15","shape":"DROP TRIGGER d1_update_trig ON part_d_1_15;"}
+{"sql":"DROP TRIGGER d1_insert_trig ON part_d_1_15","shape":"DROP TRIGGER d1_insert_trig ON part_d_1_15;"}
+{"sql":"DROP TRIGGER d15_delete_trig ON part_d_15_20","shape":"DROP TRIGGER d15_delete_trig ON part_d_15_20;"}
+{"sql":"DROP TRIGGER d15_update_trig ON part_d_15_20","shape":"DROP TRIGGER d15_update_trig ON part_d_15_20;"}
+{"sql":"DROP TRIGGER d15_insert_trig ON part_d_15_20","shape":"DROP TRIGGER d15_insert_trig ON part_d_15_20;"}
+{"sql":"insert into range_parted values ('c', 9)","shape":"INSERT INTO range_parted VALUES ('c', 9);"}
+{"sql":"update part_def set a = 'd' where a = 'c'","shape":"UPDATE part_def SET a = 'd' WHERE a = 'c';"}
+{"sql":"update part_def set a = 'a' where a = 'd'","shape":"UPDATE part_def SET a = 'a' WHERE a = 'd';"}
+{"sql":"UPDATE part_a_10_a_20 set a = 'ad' WHERE a = 'a'","shape":"UPDATE part_a_10_a_20 SET a = 'ad' WHERE a = 'a';"}
+{"sql":"UPDATE range_parted set a = 'ad' WHERE a = 'a'","shape":"UPDATE range_parted SET a = 'ad' WHERE a = 'a';"}
+{"sql":"UPDATE range_parted set a = 'bd' WHERE a = 'b'","shape":"UPDATE range_parted SET a = 'bd' WHERE a = 'b';"}
+{"sql":"UPDATE range_parted set a = 'a' WHERE a = 'ad'","shape":"UPDATE range_parted SET a = 'a' WHERE a = 'ad';"}
+{"sql":"UPDATE range_parted set a = 'b' WHERE a = 'bd'","shape":"UPDATE range_parted SET a = 'b' WHERE a = 'bd';"}
+{"sql":"DROP TABLE range_parted","shape":"DROP TABLE range_parted;"}
+{"sql":"CREATE TABLE list_parted (\n\ta text,\n\tb int\n) PARTITION BY list (a)","shape":"CREATE TABLE list_parted (a text, b int) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE list_part1  PARTITION OF list_parted for VALUES in ('a', 'b')","shape":"CREATE TABLE list_part1 PARTITION OF list_parted FOR VALUES IN ('a', 'b');"}
+{"sql":"CREATE TABLE list_default PARTITION OF list_parted default","shape":"CREATE TABLE list_default PARTITION OF list_parted DEFAULT;"}
+{"sql":"INSERT into list_part1 VALUES ('a', 1)","shape":"INSERT INTO list_part1 VALUES ('a', 1);"}
+{"sql":"INSERT into list_default VALUES ('d', 10)","shape":"INSERT INTO list_default VALUES ('d', 10);"}
+{"sql":"UPDATE list_default set a = 'a' WHERE a = 'd'","shape":"UPDATE list_default SET a = 'a' WHERE a = 'd';"}
+{"sql":"UPDATE list_default set a = 'x' WHERE a = 'd'","shape":"UPDATE list_default SET a = 'x' WHERE a = 'd';"}
+{"sql":"DROP TABLE list_parted","shape":"DROP TABLE list_parted;"}
+{"sql":"create table utrtest (a int, b text) partition by list (a)","shape":"CREATE TABLE utrtest (a int, b text) PARTITION BY LIST (a);"}
+{"sql":"create table utr1 (a int check (a in (1)), q text, b text)","shape":"CREATE TABLE utr1 (a int CHECK (a IN (1)), q text, b text);"}
+{"sql":"create table utr2 (a int check (a in (2)), b text)","shape":"CREATE TABLE utr2 (a int CHECK (a IN (2)), b text);"}
+{"sql":"alter table utr1 drop column q","shape":"ALTER TABLE utr1 DROP COLUMN q;"}
+{"sql":"alter table utrtest attach partition utr1 for values in (1)"}
+{"sql":"alter table utrtest attach partition utr2 for values in (2)"}
+{"sql":"insert into utrtest values (1, 'foo')\n  returning *, tableoid::regclass, xmin = pg_current_xact_id()::xid as xmin_ok","shape":"INSERT INTO utrtest VALUES (1, 'foo') RETURNING *, tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_ok;"}
+{"sql":"insert into utrtest values (2, 'bar')\n  returning *, tableoid::regclass, xmin = pg_current_xact_id()::xid as xmin_ok","shape":"INSERT INTO utrtest VALUES (2, 'bar') RETURNING *, tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_ok;"}
+{"sql":"insert into utrtest values (2, 'bar')\n  returning *, tableoid::regclass","shape":"INSERT INTO utrtest VALUES (2, 'bar') RETURNING *, tableoid::regclass;"}
+{"sql":"update utrtest set b = b || b from (values (1), (2)) s(x) where a = s.x\n  returning *, tableoid::regclass, xmin = pg_current_xact_id()::xid as xmin_ok","shape":"UPDATE utrtest SET b = b || b FROM (VALUES (1), (2)) AS s(x) WHERE a = s.x RETURNING *, tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_ok;"}
+{"sql":"update utrtest set a = 3 - a from (values (1), (2)) s(x) where a = s.x\n  returning *, tableoid::regclass, xmin = pg_current_xact_id()::xid as xmin_ok","shape":"UPDATE utrtest SET a = 3 - a FROM (VALUES (1), (2)) AS s(x) WHERE a = s.x RETURNING *, tableoid::regclass, xmin = pg_current_xact_id()::xid AS xmin_ok;"}
+{"sql":"update utrtest set a = 3 - a from (values (1), (2)) s(x) where a = s.x\n  returning *, tableoid::regclass","shape":"UPDATE utrtest SET a = 3 - a FROM (VALUES (1), (2)) AS s(x) WHERE a = s.x RETURNING *, tableoid::regclass;"}
+{"sql":"delete from utrtest\n  returning *, tableoid::regclass, xmax = pg_current_xact_id()::xid as xmax_ok","shape":"DELETE FROM utrtest RETURNING *, tableoid::regclass, xmax = pg_current_xact_id()::xid AS xmax_ok;"}
+{"sql":"drop table utrtest","shape":"DROP TABLE utrtest;"}
+{"sql":"CREATE TABLE list_parted (a numeric, b int, c int8) PARTITION BY list (a)","shape":"CREATE TABLE list_parted (a numeric, b int, c int8) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE sub_parted PARTITION OF list_parted for VALUES in (1) PARTITION BY list (b)","shape":"CREATE TABLE sub_parted PARTITION OF list_parted FOR VALUES IN (1) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE sub_part1(b int, c int8, a numeric)","shape":"CREATE TABLE sub_part1 (b int, c int8, a numeric);"}
+{"sql":"ALTER TABLE sub_parted ATTACH PARTITION sub_part1 for VALUES in (1)"}
+{"sql":"CREATE TABLE sub_part2(b int, c int8, a numeric)","shape":"CREATE TABLE sub_part2 (b int, c int8, a numeric);"}
+{"sql":"ALTER TABLE sub_parted ATTACH PARTITION sub_part2 for VALUES in (2)"}
+{"sql":"CREATE TABLE list_part1(a numeric, b int, c int8)","shape":"CREATE TABLE list_part1 (a numeric, b int, c int8);"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION list_part1 for VALUES in (2,3)"}
+{"sql":"INSERT into list_parted VALUES (2,5,50)","shape":"INSERT INTO list_parted VALUES (2, 5, 50);"}
+{"sql":"INSERT into list_parted VALUES (3,6,60)","shape":"INSERT INTO list_parted VALUES (3, 6, 60);"}
+{"sql":"INSERT into sub_parted VALUES (1,1,60)","shape":"INSERT INTO sub_parted VALUES (1, 1, 60);"}
+{"sql":"INSERT into sub_parted VALUES (1,2,10)","shape":"INSERT INTO sub_parted VALUES (1, 2, 10);"}
+{"sql":"UPDATE sub_parted set a = 2 WHERE c = 10","shape":"UPDATE sub_parted SET a = 2 WHERE c = 10;"}
+{"sql":"SELECT tableoid::regclass::text, * FROM list_parted WHERE a = 2 ORDER BY 1","shape":"SELECT tableoid::regclass::text, * FROM list_parted WHERE a = 2 ORDER BY 1;"}
+{"sql":"UPDATE list_parted set b = c + a WHERE a = 2","shape":"UPDATE list_parted SET b = c + a WHERE a = 2;"}
+{"sql":"CREATE FUNCTION func_parted_mod_b() returns trigger as $$\nBEGIN\n   NEW.b = 2; -- This is changing partition key column.\n   return NEW;\nEND $$ LANGUAGE plpgsql","shape":"CREATE FUNCTION func_parted_mod_b() RETURNS trigger AS '\nBEGIN\n   NEW.b = 2; -- This is changing partition key column.\n   return NEW;\nEND ' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER parted_mod_b before update on sub_part1\n   for each row execute procedure func_parted_mod_b()","shape":"CREATE TRIGGER parted_mod_b BEFORE UPDATE ON sub_part1 FOR EACH ROW EXECUTE FUNCTION func_parted_mod_b();"}
+{"sql":"SELECT tableoid::regclass::text, * FROM list_parted ORDER BY 1, 2, 3, 4","shape":"SELECT tableoid::regclass::text, * FROM list_parted ORDER BY 1, 2, 3, 4;"}
+{"sql":"UPDATE list_parted set c = 70 WHERE b  = 1","shape":"UPDATE list_parted SET c = 70 WHERE b = 1;"}
+{"sql":"DROP TRIGGER parted_mod_b ON sub_part1","shape":"DROP TRIGGER parted_mod_b ON sub_part1;"}
+{"sql":"CREATE OR REPLACE FUNCTION func_parted_mod_b() returns trigger as $$\nBEGIN\n   raise notice 'Trigger: Got OLD row %, but returning NULL', OLD;\n   return NULL;\nEND $$ LANGUAGE plpgsql","shape":"CREATE OR REPLACE FUNCTION func_parted_mod_b() RETURNS trigger AS '\nBEGIN\n   raise notice ''Trigger: Got OLD row %, but returning NULL'', OLD;\n   return NULL;\nEND ' LANGUAGE plpgsql;"}
+{"sql":"CREATE TRIGGER trig_skip_delete before delete on sub_part2\n   for each row execute procedure func_parted_mod_b()","shape":"CREATE TRIGGER trig_skip_delete BEFORE DELETE ON sub_part2 FOR EACH ROW EXECUTE FUNCTION func_parted_mod_b();"}
+{"sql":"UPDATE list_parted set b = 1 WHERE c = 70","shape":"UPDATE list_parted SET b = 1 WHERE c = 70;"}
+{"sql":"DROP TRIGGER trig_skip_delete ON sub_part2","shape":"DROP TRIGGER trig_skip_delete ON sub_part2;"}
+{"sql":"CREATE TABLE non_parted (id int)","shape":"CREATE TABLE non_parted (id int);"}
+{"sql":"INSERT into non_parted VALUES (1), (1), (1), (2), (2), (2), (3), (3), (3)","shape":"INSERT INTO non_parted VALUES (1), (1), (1), (2), (2), (2), (3), (3), (3);"}
+{"sql":"UPDATE list_parted t1 set a = 2 FROM non_parted t2 WHERE t1.a = t2.id and a = 1","shape":"UPDATE list_parted AS t1 SET a = 2 FROM non_parted AS t2 WHERE (t1.a = t2.id) AND (a = 1);"}
+{"sql":"DROP TABLE non_parted","shape":"DROP TABLE non_parted;"}
+{"sql":"create or replace function dummy_hashint4(a int4, seed int8) returns int8 as\n$$ begin return (a + seed); end; $$ language 'plpgsql' immutable","shape":"CREATE OR REPLACE FUNCTION dummy_hashint4(a int4, seed int8) RETURNS int8 AS ' begin return (a + seed); end; ' LANGUAGE 'plpgsql' IMMUTABLE;"}
+{"sql":"create operator class custom_opclass for type int4 using hash as\noperator 1 = , function 2 dummy_hashint4(int4, int8)"}
+{"sql":"create table hash_parted (\n\ta int,\n\tb int\n) partition by hash (a custom_opclass, b custom_opclass)","shape":"CREATE TABLE hash_parted (a int, b int) PARTITION BY HASH (a custom_opclass, b custom_opclass);"}
+{"sql":"create table hpart1 partition of hash_parted for values with (modulus 2, remainder 1)","shape":"CREATE TABLE hpart1 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"create table hpart3 partition of hash_parted for values with (modulus 8, remainder 0)","shape":"CREATE TABLE hpart3 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 8, REMAINDER 0);"}
+{"sql":"create table hpart4 partition of hash_parted for values with (modulus 8, remainder 4)","shape":"CREATE TABLE hpart4 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 8, REMAINDER 4);"}
+{"sql":"insert into hpart1 values (1, 1)","shape":"INSERT INTO hpart1 VALUES (1, 1);"}
+{"sql":"insert into hpart2 values (2, 5)","shape":"INSERT INTO hpart2 VALUES (2, 5);"}
+{"sql":"insert into hpart4 values (3, 4)","shape":"INSERT INTO hpart4 VALUES (3, 4);"}
+{"sql":"update hpart1 set a = 3, b=4 where a = 1","shape":"UPDATE hpart1 SET a = 3, b = 4 WHERE a = 1;"}
+{"sql":"update hash_parted set b = b - 1 where b = 1","shape":"UPDATE hash_parted SET b = b - 1 WHERE b = 1;"}
+{"sql":"update hash_parted set b = b + 8 where b = 1","shape":"UPDATE hash_parted SET b = b + 8 WHERE b = 1;"}
+{"sql":"drop operator class custom_opclass using hash"}
+{"sql":"drop function dummy_hashint4(a int4, seed int8)"}

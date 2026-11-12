@@ -1,0 +1,3 @@
+{"sql":"CREATE TABLE t1(id INTEGER PRIMARY KEY, a, b, c)"}
+{"sql":"CREATE INDEX i3 ON t1(c)"}
+{"sql":"SELECT id FROM t1 WHERE a = 'a' OR b = 'b' OR c = 'c'"}

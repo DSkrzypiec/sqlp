@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE b(c)"}
+{"sql":"INSERT INTO b VALUES('Tehran')"}
+{"sql":"INSERT INTO b VALUES('Qom')"}
+{"sql":"INSERT INTO b VALUES('Markazi')"}
+{"sql":"INSERT INTO b VALUES('Gilan')"}
+{"sql":"INSERT INTO b VALUES('Ardabil')"}

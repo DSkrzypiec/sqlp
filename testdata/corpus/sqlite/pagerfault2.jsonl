@@ -1,0 +1,6 @@
+{"sql":"INSERT INTO t1 VALUES(a_string(401), a_string(402))"}
+{"sql":"INSERT INTO t1 SELECT a_string(401), a_string(402) FROM t1"}
+{"sql":"UPDATE t1 SET a = a||'x' WHERE rowid<3700"}
+{"sql":"UPDATE t1 SET a = a||'x' WHERE rowid>=3700 AND rowid<=4200"}
+{"sql":"PRAGMA cache_size = 20"}
+{"sql":"INSERT INTO t1 VALUES (a_string(2000000), a_string(2500000))"}

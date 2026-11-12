@@ -1,0 +1,18 @@
+{"sql":"create table t1(num int)"}
+{"sql":"insert into t1 values (2)"}
+{"sql":"insert into t1 values (3)"}
+{"sql":"insert into t1 values (4)"}
+{"sql":"create table t2(num int)"}
+{"sql":"insert into t2 values (11)"}
+{"sql":"insert into t2 values (12)"}
+{"sql":"insert into t2 values (13)"}
+{"sql":"insert into t2 values (14)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC LIMIT 2)\n    UNION\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC LIMIT 2)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC LIMIT 2)\n    UNION ALL\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC LIMIT 2)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC)\n    UNION ALL\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC LIMIT 2)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC LIMIT 2)\n    UNION ALL\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC LIMIT 2)\n    UNION\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC LIMIT 2)\n    EXCEPT\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 LIMIT 2)\n    UNION\n    SELECT * FROM (SELECT * FROM t2 ORDER BY num DESC LIMIT 2)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 LIMIT 2)\n    UNION\n    SELECT * FROM (SELECT * FROM t2 LIMIT 2)"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 ORDER BY num DESC LIMIT 2)\n    UNION\n    SELECT * FROM (SELECT * FROM t2 LIMIT 2)"}

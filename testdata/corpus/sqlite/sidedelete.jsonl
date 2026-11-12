@@ -1,0 +1,7 @@
+{"sql":"CREATE TABLE sequence(a INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO sequence VALUES(1)"}
+{"sql":"INSERT INTO sequence VALUES(2)"}
+{"sql":"INSERT INTO sequence SELECT a+(SELECT max(a) FROM sequence) FROM sequence"}
+{"sql":"SELECT count(*) FROM sequence"}
+{"sql":"CREATE TABLE chng(a PRIMARY KEY, b)"}
+{"sql":"SELECT count(*) FROM chng"}

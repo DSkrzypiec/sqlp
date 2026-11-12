@@ -1,0 +1,94 @@
+{"sql":"CREATE TABLE t1(\n      x INTEGER CHECK( x<5 ),\n      y REAL CHECK( y>x )\n    )"}
+{"sql":"INSERT INTO t1 VALUES(6,7)"}
+{"sql":"INSERT INTO t1 VALUES(4,3)"}
+{"sql":"INSERT INTO t1 VALUES(2,NULL)"}
+{"sql":"DELETE FROM t1 WHERE x IS NULL OR x!=3"}
+{"sql":"UPDATE t1 SET x=2 WHERE x==3"}
+{"sql":"UPDATE t1 SET x=7 WHERE x==2"}
+{"sql":"UPDATE t1 SET x=5 WHERE x==2"}
+{"sql":"UPDATE t1 SET x=4, y=11 WHERE x==2"}
+{"sql":"CREATE TABLE t2(\n      x INTEGER CONSTRAINT one CHECK( typeof(coalesce(x,0))==\"integer\" ),\n      y REAL CONSTRAINT two CHECK( typeof(coalesce(y,0.1))=='real' ),\n      z TEXT CONSTRAINT three CHECK( typeof(coalesce(z,''))=='text' )\n    )"}
+{"sql":"CREATE TABLE t2n(\n      x INTEGER CONSTRAINT one CHECK( typeof(coalesce(x,0))==\"integer\" ),\n      y NUMERIC CONSTRAINT two CHECK( typeof(coalesce(y,0.1))=='real' ),\n      z TEXT CONSTRAINT three CHECK( typeof(coalesce(z,''))=='text' )\n    )"}
+{"sql":"INSERT INTO t2 VALUES(1,2.2,'three')"}
+{"sql":"INSERT INTO t2 VALUES(NULL, NULL, NULL)"}
+{"sql":"INSERT INTO t2 VALUES(1.1, NULL, NULL)"}
+{"sql":"INSERT INTO t2 VALUES(NULL, 5, NULL)"}
+{"sql":"INSERT INTO t2n VALUES(NULL, 5, NULL)"}
+{"sql":"INSERT INTO t2 VALUES(NULL, NULL, 3.14159)"}
+{"sql":"CREATE TABLE t2b(\n      x INTEGER CHECK( typeof(coalesce(x,0))=='integer' ) CONSTRAINT one,\n      y TEXT PRIMARY KEY constraint two,\n      z INTEGER,\n      UNIQUE(x,z) constraint three\n    )"}
+{"sql":"INSERT INTO t2b VALUES('xyzzy','hi',5)"}
+{"sql":"CREATE TABLE t2c(\n      x INTEGER CONSTRAINT x_one CONSTRAINT x_two\n          CHECK( typeof(coalesce(x,0))=='integer' )\n          CONSTRAINT x_two CONSTRAINT x_three,\n      y INTEGER, z INTEGER,\n      CONSTRAINT u_one UNIQUE(x,y,z) CONSTRAINT u_two\n    )"}
+{"sql":"INSERT INTO t2c VALUES('xyzzy',7,8)"}
+{"sql":"DROP TABLE IF EXISTS t2b"}
+{"sql":"DROP TABLE IF EXISTS t2c"}
+{"sql":"DROP TABLE IF EXISTS t2n"}
+{"sql":"CREATE TABLE t3(\n        x, y, z,\n        CHECK( x<(SELECT min(x) FROM t1) )\n      )"}
+{"sql":"SELECT name FROM sqlite_master ORDER BY name"}
+{"sql":"CREATE TABLE t3(\n      x, y, z,\n      CHECK( q<x )\n    )"}
+{"sql":"CREATE TABLE t3(\n      x, y, z,\n      CHECK( t2.x<x )\n    )"}
+{"sql":"CREATE TABLE t3(\n      x, y, z,\n      CHECK( t3.x<25 )\n    )"}
+{"sql":"INSERT INTO t3 VALUES(1,2,3)"}
+{"sql":"INSERT INTO t3 VALUES(111,222,333)"}
+{"sql":"CREATE TABLE t4(x, y,\n      CHECK (\n           x+y==11\n        OR x*y==12\n        OR x/y BETWEEN 5 AND 8\n        OR -x==y+10\n      )\n    )"}
+{"sql":"INSERT INTO t4 VALUES(1,10)"}
+{"sql":"UPDATE t4 SET x=4, y=3"}
+{"sql":"UPDATE t4 SET x=12, y=2"}
+{"sql":"UPDATE t4 SET x=12, y=-22"}
+{"sql":"UPDATE t4 SET x=0, y=1"}
+{"sql":"PRAGMA ignore_check_constraints=ON"}
+{"sql":"PRAGMA ignore_check_constraints=OFF"}
+{"sql":"UPDATE t4 SET x=0, y=2"}
+{"sql":"CREATE TABLE t5(x, y,\n      CHECK( x*y<:abc )\n    )"}
+{"sql":"CREATE TABLE t5(x, y,\n      CHECK( x*y<? )\n    )"}
+{"sql":"UPDATE OR IGNORE t1 SET x=5"}
+{"sql":"INSERT OR IGNORE INTO t1 VALUES(5,4.0)"}
+{"sql":"INSERT OR IGNORE INTO t1 VALUES(2,20.0)"}
+{"sql":"UPDATE OR FAIL t1 SET x=7-x, y=y+1"}
+{"sql":"INSERT INTO t1 VALUES(1,30.0)"}
+{"sql":"INSERT OR ROLLBACK INTO t1 VALUES(8,40.0)"}
+{"sql":"REPLACE INTO t1 VALUES(6,7)"}
+{"sql":"INSERT OR IGNORE INTO t1 VALUES(6,7)"}
+{"sql":"CREATE TABLE t6(a CHECK (myfunc(a)))"}
+{"sql":"INSERT INTO t6 VALUES(9)"}
+{"sql":"INSERT INTO t6 VALUES(11)"}
+{"sql":"SELECT * FROM t6"}
+{"sql":"INSERT INTO t6 VALUES(8)"}
+{"sql":"CREATE TABLE t7(a CHECK (myfunc(a)))"}
+{"sql":"INSERT INTO t6 VALUES(12)"}
+{"sql":"CREATE TABLE t810(a, CHECK( main.t810.a>0 ))"}
+{"sql":"CREATE TABLE t811(b, CHECK( xyzzy.t811.b BETWEEN 5 AND 10 ))"}
+{"sql":"CREATE TABLE t1(\n    a INTEGER PRIMARY KEY,\n    b INTEGER NOT NULL CONSTRAINT 'b-check' CHECK( b>a ),\n    c INTEGER NOT NULL CONSTRAINT 'c-check' CHECK( c>rowid*2 ),\n    d INTEGER NOT NULL CONSTRAINT 'd-check' CHECK( d BETWEEN b AND c )\n  )"}
+{"sql":"INSERT INTO t1(a,b,c,d) VALUES(1,2,4,3),(2,4,6,5),(3,10,30,20)"}
+{"sql":"UPDATE t1 SET b=0 WHERE a=1"}
+{"sql":"UPDATE t1 SET c=a*2 WHERE a=1"}
+{"sql":"CREATE VIEW v1(y) AS SELECT x FROM t1"}
+{"sql":"CREATE TABLE t1 (Col0 CHECK(1 COLLATE BINARY BETWEEN 1 AND 1) )"}
+{"sql":"INSERT INTO t1 VALUES (NULL)"}
+{"sql":"INSERT  INTO t1 VALUES (NULL)"}
+{"sql":"CREATE TABLE t2(b, a CHECK(\n      CASE 'abc' COLLATE nocase WHEN a THEN 1 ELSE 0 END)\n  )"}
+{"sql":"INSERT INTO t2(a) VALUES('abc')"}
+{"sql":"INSERT INTO t2(b, a) VALUES(1, 'abc'||'')"}
+{"sql":"INSERT INTO t2(b, a) VALUES(2, 'abc')"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(a=+a))"}
+{"sql":"INSERT INTO t1(a) VALUES(NULL),('xyz'),(5),(x'303132'),(4.75)"}
+{"sql":"SELECT quote(a) FROM t1 ORDER BY rowid"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(a<>+a))"}
+{"sql":"INSERT INTO t1(a) VALUES(NULL)"}
+{"sql":"INSERT INTO t1(a) VALUES('xyz')"}
+{"sql":"INSERT INTO t1(a) VALUES(123)"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(NOT(a=+a)))"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(NOT(a<>+a)))"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(a BETWEEN 0 AND +a))"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(a NOT BETWEEN 0 AND +a))"}
+{"sql":"INSERT INTO t1(a) VALUES(456)"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(a BETWEEN +a AND 999999))"}
+{"sql":"INSERT INTO t1(a) VALUES(NULL),(5)"}
+{"sql":"CREATE TABLE t1(a TEXT, CHECK(a NOT BETWEEN +a AND 999999))"}
+{"sql":"CREATE TABLE Table0 (Col0 , CHECK(Table0.Col0 NOT NULL ) )"}
+{"sql":"REPLACE INTO Table0 VALUES (hex(randomblob(100000)))"}
+{"sql":"UPDATE OR REPLACE Table0 SET Col0 = Table0.Col0"}
+{"sql":"SELECT length(col0) FROM table0"}
+{"sql":"CREATE TABLE t2 (x , CHECK((NOT (x ISNULL) )))"}
+{"sql":"REPLACE INTO t2 VALUES (hex(randomblob(100000)))"}
+{"sql":"SELECT length(x) FROM t2"}
+{"sql":"UPDATE OR REPLACE t2 SET x = x"}

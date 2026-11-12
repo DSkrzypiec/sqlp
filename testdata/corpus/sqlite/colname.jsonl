@@ -1,0 +1,14 @@
+{"sql":"DROP TABLE IF EXISTS t2"}
+{"sql":"CREATE TABLE t1(aaa INT)"}
+{"sql":"INSERT INTO t1(aaa) VALUES(123)"}
+{"sql":"CREATE TABLE t2 AS SELECT BBb FROM (SELECT aaa AS Bbb FROM t1)"}
+{"sql":"SELECT name FROM pragma_table_info('t2')"}
+{"sql":"INSERT INTO t1 VALUES(17),(2),(99),(-3),(7)"}
+{"sql":"SELECT (SELECT avg(a) UNION SELECT min(a) OVER()) FROM t1"}
+{"sql":"CREATE TABLE t4 AS SELECT #0","reject":true}
+{"sql":"CREATE TABLE t5 AS SELECT RAISE(abort,a)"}
+{"sql":"CREATE TABLE t1(\"with space\" TEXT)"}
+{"sql":"CREATE TABLE t2 AS SELECT \"with space\" FROM t1"}
+{"sql":"PRAGMA table_info(t2)"}
+{"sql":"CREATE TABLE t3 AS SELECT \"with space\" FROM t1 GROUP BY 1"}
+{"sql":"PRAGMA table_info(t3)"}

@@ -1,0 +1,64 @@
+{"sql":"CREATE TABLE t2(x, y, PRIMARY KEY(x, y)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1 VALUES(-1, -1)"}
+{"sql":"INSERT INTO t1 VALUES('a', 0), ('b', 0), ('c', 0), (0, 11)"}
+{"sql":"CREATE TABLE p1(one PRIMARY KEY, two)"}
+{"sql":"CREATE TRIGGER tr_ai AFTER INSERT ON p1 BEGIN\n    INSERT INTO log VALUES('insert');\n  END"}
+{"sql":"CREATE TRIGGER tr_bd BEFORE DELETE ON p1 BEGIN\n    INSERT INTO log VALUES('delete');\n  END"}
+{"sql":"CREATE TRIGGER tr_au AFTER UPDATE ON p1 BEGIN\n    INSERT INTO log VALUES('update');\n  END"}
+{"sql":"SELECT count(*) FROM log"}
+{"sql":"DELETE FROM p1"}
+{"sql":"INSERT INTO p1 VALUES('a', 'A'), ('b', 'B'), ('c', 'C')"}
+{"sql":"CREATE TABLE c1(a, b, FOREIGN KEY(a) REFERENCES p1 ON DELETE SET NULL)"}
+{"sql":"CREATE TABLE c2(a, b, FOREIGN KEY(a) REFERENCES p1 ON DELETE SET DEFAULT)"}
+{"sql":"CREATE TABLE c3(a, b, FOREIGN KEY(a) REFERENCES p1 ON DELETE CASCADE)"}
+{"sql":"INSERT INTO c1 VALUES('a', 'aaa')"}
+{"sql":"INSERT INTO c2 VALUES('b', 'bbb')"}
+{"sql":"INSERT INTO c3 VALUES('c', 'ccc')"}
+{"sql":"INSERT INTO p1 VALUES('d', 'D'), ('e', 'E'), ('f', 'F')"}
+{"sql":"CREATE TABLE c4(a, b, FOREIGN KEY(a) REFERENCES p1 ON UPDATE SET NULL)"}
+{"sql":"CREATE TABLE c5(a, b, FOREIGN KEY(a) REFERENCES p1 ON UPDATE SET DEFAULT)"}
+{"sql":"CREATE TABLE c6(a, b, FOREIGN KEY(a) REFERENCES p1 ON UPDATE CASCADE)"}
+{"sql":"INSERT INTO c4 VALUES('d', 'aaa')"}
+{"sql":"INSERT INTO c5 VALUES('e', 'bbb')"}
+{"sql":"INSERT INTO c6 VALUES('f', 'ccc')"}
+{"sql":"SELECT * FROM c1"}
+{"sql":"SELECT * FROM c2"}
+{"sql":"SELECT * FROM c3"}
+{"sql":"SELECT * FROM c4"}
+{"sql":"SELECT * FROM c5"}
+{"sql":"SELECT * FROM c6"}
+{"sql":"CREATE TABLE r1(a UNIQUE, b UNIQUE)"}
+{"sql":"INSERT INTO r1 VALUES('i', 'i')"}
+{"sql":"INSERT INTO r1 VALUES('ii', 'ii')"}
+{"sql":"INSERT INTO r1 VALUES('iii', 'iii')"}
+{"sql":"INSERT INTO r1 VALUES('iv', 'iv')"}
+{"sql":"INSERT INTO r1 VALUES('v', 'v')"}
+{"sql":"INSERT INTO r1 VALUES('vi', 'vi')"}
+{"sql":"INSERT INTO r1 VALUES('vii', 'vii')"}
+{"sql":"SELECT * FROM r1 ORDER BY a"}
+{"sql":"CREATE TABLE log(log)"}
+{"sql":"CREATE TRIGGER v1_i INSTEAD OF INSERT ON v1 BEGIN\n    INSERT INTO log VALUES('insert');\n  END"}
+{"sql":"CREATE TRIGGER v1_u INSTEAD OF UPDATE ON v1 BEGIN\n    INSERT INTO log VALUES('update'), ('update');\n  END"}
+{"sql":"CREATE TRIGGER v1_d INSTEAD OF DELETE ON v1 BEGIN\n    INSERT INTO log VALUES('delete'), ('delete'), ('delete');\n  END"}
+{"sql":"INSERT INTO t1 VALUES(1, NULL)"}
+{"sql":"INSERT INTO t1 VALUES(2, NULL)"}
+{"sql":"CREATE TRIGGER AFTER UPDATE ON t1 BEGIN\n    INSERT INTO t2 VALUES('a'), ('b'), ('c');\n    SELECT my_changes('trigger');\n  END"}
+{"sql":"INSERT INTO t2 VALUES('a'), ('b')"}
+{"sql":"UPDATE t1 SET b = my_changes('update')"}
+{"sql":"INSERT INTO t1 VALUES(2, 0)"}
+{"sql":"CREATE TRIGGER t1_a_u AFTER UPDATE ON t1 BEGIN\n    INSERT INTO log VALUES(old.b || ' -> ' || new.b || ' c = ' || changes() );\n  END"}
+{"sql":"INSERT INTO t2 VALUES(1), (2), (3)"}
+{"sql":"UPDATE t1 SET b = changes()"}
+{"sql":"CREATE TRIGGER t1_i BEFORE INSERT ON t1 BEGIN\n    INSERT INTO t2 VALUES(new.a, new.b), (new.a, new.b);\n    INSERT INTO log VALUES('t2->' || changes());\n  END"}
+{"sql":"CREATE TRIGGER t2_i AFTER INSERT ON t2 BEGIN\n    INSERT INTO t3 VALUES(new.a, new.b), (new.a, new.b), (new.a, new.b);\n    INSERT INTO log VALUES('t3->' || changes());\n  END"}
+{"sql":"CREATE TRIGGER t1_u AFTER UPDATE ON t1 BEGIN\n    UPDATE t2 SET b=new.b WHERE a=old.a;\n    INSERT INTO log VALUES('t2->' || changes());\n  END"}
+{"sql":"CREATE TRIGGER t2_u BEFORE UPDATE ON t2 BEGIN\n    UPDATE t3 SET b=new.b WHERE a=old.a;\n    INSERT INTO log VALUES('t3->' || changes());\n  END"}
+{"sql":"CREATE TRIGGER t1_d AFTER DELETE ON t1 BEGIN\n    DELETE FROM t2 WHERE a=old.a AND b=old.b;\n    INSERT INTO log VALUES('t2->' || changes());\n  END"}
+{"sql":"CREATE TRIGGER t2_d BEFORE DELETE ON t2 BEGIN\n    DELETE FROM t3 WHERE a=old.a AND b=old.b;\n    INSERT INTO log VALUES('t3->' || changes());\n  END"}
+{"sql":"CREATE TABLE q1(t)"}
+{"sql":"CREATE TABLE q2(u, v)"}
+{"sql":"CREATE TABLE q3(w)"}
+{"sql":"CREATE TRIGGER q2_insert BEFORE INSERT ON q2 BEGIN\n\n    /* changes() returns value from previous I/U/D in callers context */\n    INSERT INTO q1 VALUES('1:' || changes());\n\n    /* changes() returns value of previous I/U/D in this context */\n    INSERT INTO q3 VALUES(changes()), (2), (3);\n    INSERT INTO q1 VALUES('2:' || changes());\n    INSERT INTO q3 VALUES(changes() + 3), (changes()+4);\n    SELECT 'this does not affect things!';\n    INSERT INTO q1 VALUES('3:' || changes());\n    UPDATE q3 SET w = w+10 WHERE w%2;\n    INSERT INTO q1 VALUES('4:' || changes());\n    DELETE FROM q3;\n    INSERT INTO q1 VALUES('5:' || changes());\n  END"}
+{"sql":"INSERT INTO q2 VALUES('x', 'y')"}
+{"sql":"SELECT * FROM q1"}
+{"sql":"DELETE FROM q1"}

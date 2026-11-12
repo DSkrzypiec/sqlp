@@ -1,0 +1,10 @@
+{"sql":"SELECT count(*)\n      FROM t1, json_tree(j0) AS rt\n     WHERE rt.type NOT IN ('object','array')\n       AND rt.atom IS NOT (j0 ->> rt.fullkey)"}
+{"sql":"SELECT count(*)\n      FROM t1, json_tree(j5) AS rt\n     WHERE rt.type NOT IN ('object','array')\n       AND rt.atom IS NOT (j0 ->> rt.fullkey)"}
+{"sql":"DELETE FROM kv"}
+{"sql":"INSERT INTO kv\n      SELECT rt.rowid, rt.fullkey, rt.atom\n        FROM t1, json_tree(j0) AS rt\n       WHERE rt.type NOT IN ('object','array')"}
+{"sql":"SELECT count(*)\n      FROM t1, kv\n     WHERE key NOT LIKE '%]'\n       AND json_remove(j5,key)->>key IS NOT NULL"}
+{"sql":"SELECT count(*)\n      FROM t1, kv\n     WHERE key NOT LIKE '%]'\n       AND json_insert(json_remove(j5,key),key,val)->>key IS NOT val"}
+{"sql":"UPDATE t1 SET p=json_patch(j0,j5)"}
+{"sql":"SELECT count(*)\n      FROM t1, kv\n     WHERE p->>key IS NOT val"}
+{"sql":"SELECT j0 FROM t1 WHERE json(j0)!=json(json_pretty(j0))"}
+{"sql":"SELECT j5 FROM t1 WHERE json(j5)!=json(json_pretty(j5))"}

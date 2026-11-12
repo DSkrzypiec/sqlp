@@ -1,0 +1,313 @@
+{"sql":"CREATE TABLE TIMESTAMPTZ_TBL (d1 timestamp(2) with time zone)","shape":"CREATE TABLE TIMESTAMPTZ_TBL (d1 timestamp(2) WITH TIME ZONE);"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('today')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('today');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('yesterday')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('yesterday');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('tomorrow')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('tomorrow');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('tomorrow EST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('tomorrow EST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('tomorrow zulu')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('tomorrow zulu');"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp with time zone 'today'","shape":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp WITH TIME ZONE 'today';"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp with time zone 'tomorrow'","shape":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp WITH TIME ZONE 'tomorrow';"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp with time zone 'yesterday'","shape":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp WITH TIME ZONE 'yesterday';"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp with time zone 'tomorrow EST'","shape":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp WITH TIME ZONE 'tomorrow EST';"}
+{"sql":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp with time zone 'tomorrow zulu'","shape":"SELECT count(*) AS One FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp WITH TIME ZONE 'tomorrow zulu';"}
+{"sql":"DELETE FROM TIMESTAMPTZ_TBL","shape":"DELETE FROM TIMESTAMPTZ_TBL;"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('now')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('now');"}
+{"sql":"SELECT count(*) AS two FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp(2) with time zone 'now'","shape":"SELECT count(*) AS two FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp(2) WITH TIME ZONE 'now';"}
+{"sql":"SELECT count(d1) AS three, count(DISTINCT d1) AS two FROM TIMESTAMPTZ_TBL","shape":"SELECT count(d1) AS three, count(DISTINCT d1) AS two FROM TIMESTAMPTZ_TBL;"}
+{"sql":"TRUNCATE TIMESTAMPTZ_TBL","shape":"TRUNCATE TABLE TIMESTAMPTZ_TBL;"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('-infinity')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('-infinity');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('infinity')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('infinity');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('epoch')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('epoch');"}
+{"sql":"SELECT timestamptz 'infinity' = timestamptz '+infinity' AS t","shape":"SELECT timestamptz 'infinity' = timestamptz '+infinity' AS t;"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01 1997 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.000001 1997 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.000001 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.999999 1997 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.999999 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.4 1997 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.4 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.5 1997 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.5 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.6 1997 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mon Feb 10 17:32:01.6 1997 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-01-02')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-01-02');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-01-02 03:04:05')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-01-02 03:04:05');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01-08')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01-08');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01-0800')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01-0800');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01 -08:00')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01 -08:00');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970210 173201 -0800')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970210 173201 -0800');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-06-10 17:32:01 -07:00')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-06-10 17:32:01 -07:00');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2001-09-22T18:19:20')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2001-09-22T18:19:20');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 08:14:01 GMT+8')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 08:14:01 GMT+8');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 13:14:02 GMT-1')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 13:14:02 GMT-1');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 12:14:03 GMT-2')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 12:14:03 GMT-2');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 03:14:04 PST+8')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 03:14:04 PST+8');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 02:14:05 MST+7:00')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('2000-03-15 02:14:05 MST+7:00');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 10 17:32:01 1997 -0800')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 10 17:32:01 1997 -0800');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 10 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 10 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 10 5:32PM 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 10 5:32PM 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997/02/10 17:32:01-0800')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997/02/10 17:32:01-0800');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-02-10 17:32:01 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb-10-1997 17:32:01 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb-10-1997 17:32:01 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('02-10-1997 17:32:01 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('02-10-1997 17:32:01 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970210 173201 PST')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970210 173201 PST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('97FEB10 5:32:01PM UTC')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('97FEB10 5:32:01PM UTC');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('97/02/10 17:32:01 UTC')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('97/02/10 17:32:01 UTC');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997.041 17:32:01 UTC')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997.041 17:32:01 UTC');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970210 173201 America/New_York')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970210 173201 America/New_York');"}
+{"sql":"SELECT '19970210 173201' AT TIME ZONE 'America/New_York'","shape":"SELECT '19970210 173201' AT TIME ZONE 'America/New_York';"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970710 173201 America/New_York')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970710 173201 America/New_York');"}
+{"sql":"SELECT '19970710 173201' AT TIME ZONE 'America/New_York'","shape":"SELECT '19970710 173201' AT TIME ZONE 'America/New_York';"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970710 173201 America/Does_not_exist')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('19970710 173201 America/Does_not_exist');"}
+{"sql":"SELECT '19970710 173201' AT TIME ZONE 'America/Does_not_exist'","shape":"SELECT '19970710 173201' AT TIME ZONE 'America/Does_not_exist';"}
+{"sql":"SELECT '20500710 173201 Europe/Helsinki'::timestamptz","shape":"SELECT '20500710 173201 Europe/Helsinki'::timestamptz;"}
+{"sql":"SELECT '20500110 173201 Europe/Helsinki'::timestamptz","shape":"SELECT '20500110 173201 Europe/Helsinki'::timestamptz;"}
+{"sql":"SELECT '205000-07-10 17:32:01 Europe/Helsinki'::timestamptz","shape":"SELECT '205000-07-10 17:32:01 Europe/Helsinki'::timestamptz;"}
+{"sql":"SELECT '205000-01-10 17:32:01 Europe/Helsinki'::timestamptz","shape":"SELECT '205000-01-10 17:32:01 Europe/Helsinki'::timestamptz;"}
+{"sql":"SELECT pg_input_is_valid('now', 'timestamptz')","shape":"SELECT pg_input_is_valid('now', 'timestamptz');"}
+{"sql":"SELECT pg_input_is_valid('garbage', 'timestamptz')","shape":"SELECT pg_input_is_valid('garbage', 'timestamptz');"}
+{"sql":"SELECT pg_input_is_valid('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamptz')","shape":"SELECT pg_input_is_valid('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamptz');"}
+{"sql":"SELECT * FROM pg_input_error_info('garbage', 'timestamptz')","shape":"SELECT * FROM pg_input_error_info('garbage', 'timestamptz');"}
+{"sql":"SELECT * FROM pg_input_error_info('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamptz')","shape":"SELECT * FROM pg_input_error_info('2001-01-01 00:00 Nehwon/Lankhmar', 'timestamptz');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-06-10 18:32:01 PDT')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('1997-06-10 18:32:01 PDT');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 11 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 11 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 12 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 12 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 13 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 13 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 14 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 14 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 15 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 15 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 0097 BC')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 0097 BC');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 0097')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 0097');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 0597')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 0597');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1097')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1097');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1697')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1697');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1797')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1797');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1897')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 1897');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 2097')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 2097');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 28 17:32:01 1996')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 28 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 29 17:32:01 1996')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 29 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mar 01 17:32:01 1996')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mar 01 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 30 17:32:01 1996')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 30 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 1996')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 1996');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Jan 01 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Jan 01 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 28 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 28 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 29 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 29 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mar 01 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Mar 01 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 30 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 30 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 1997')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 1997');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 1999')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 1999');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Jan 01 17:32:01 2000')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Jan 01 17:32:01 2000');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 2000')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Dec 31 17:32:01 2000');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Jan 01 17:32:01 2001')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Jan 01 17:32:01 2001');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 -0097')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 -0097');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 5097 BC')","shape":"INSERT INTO TIMESTAMPTZ_TBL VALUES ('Feb 16 17:32:01 5097 BC');"}
+{"sql":"SELECT 'Wed Jul 11 10:51:14 America/New_York 2001'::timestamptz","shape":"SELECT 'Wed Jul 11 10:51:14 America/New_York 2001'::timestamptz;"}
+{"sql":"SELECT 'Wed Jul 11 10:51:14 GMT-4 2001'::timestamptz","shape":"SELECT 'Wed Jul 11 10:51:14 GMT-4 2001'::timestamptz;"}
+{"sql":"SELECT 'Wed Jul 11 10:51:14 GMT+4 2001'::timestamptz","shape":"SELECT 'Wed Jul 11 10:51:14 GMT+4 2001'::timestamptz;"}
+{"sql":"SELECT 'Wed Jul 11 10:51:14 PST-03:00 2001'::timestamptz","shape":"SELECT 'Wed Jul 11 10:51:14 PST-03:00 2001'::timestamptz;"}
+{"sql":"SELECT 'Wed Jul 11 10:51:14 PST+03:00 2001'::timestamptz","shape":"SELECT 'Wed Jul 11 10:51:14 PST+03:00 2001'::timestamptz;"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT '4714-11-24 00:00:00+00 BC'::timestamptz","shape":"SELECT '4714-11-24 00:00:00+00 BC'::timestamptz;"}
+{"sql":"SELECT '4714-11-23 16:00:00-08 BC'::timestamptz","shape":"SELECT '4714-11-23 16:00:00-08 BC'::timestamptz;"}
+{"sql":"SELECT 'Sun Nov 23 16:00:00 4714 PST BC'::timestamptz","shape":"SELECT 'Sun Nov 23 16:00:00 4714 PST BC'::timestamptz;"}
+{"sql":"SELECT '4714-11-23 23:59:59+00 BC'::timestamptz","shape":"SELECT '4714-11-23 23:59:59+00 BC'::timestamptz;"}
+{"sql":"SELECT '294276-12-31 23:59:59+00'::timestamptz","shape":"SELECT '294276-12-31 23:59:59+00'::timestamptz;"}
+{"sql":"SELECT '294276-12-31 15:59:59-08'::timestamptz","shape":"SELECT '294276-12-31 15:59:59-08'::timestamptz;"}
+{"sql":"SELECT '294277-01-01 00:00:00+00'::timestamptz","shape":"SELECT '294277-01-01 00:00:00+00'::timestamptz;"}
+{"sql":"SELECT '294277-12-31 16:00:00-08'::timestamptz","shape":"SELECT '294277-12-31 16:00:00-08'::timestamptz;"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL\n   WHERE d1 > timestamp with time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL WHERE d1 > timestamp WITH TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL\n   WHERE d1 < timestamp with time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL WHERE d1 < timestamp WITH TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL\n   WHERE d1 = timestamp with time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL WHERE d1 = timestamp WITH TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL\n   WHERE d1 != timestamp with time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL WHERE d1 != timestamp WITH TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL\n   WHERE d1 <= timestamp with time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL WHERE d1 <= timestamp WITH TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 FROM TIMESTAMPTZ_TBL\n   WHERE d1 >= timestamp with time zone '1997-01-02'","shape":"SELECT d1 FROM TIMESTAMPTZ_TBL WHERE d1 >= timestamp WITH TIME ZONE '1997-01-02';"}
+{"sql":"SELECT d1 - timestamp with time zone '1997-01-02' AS diff\n   FROM TIMESTAMPTZ_TBL WHERE d1 BETWEEN '1902-01-01' AND '2038-01-01'","shape":"SELECT d1 - timestamp WITH TIME ZONE '1997-01-02' AS diff FROM TIMESTAMPTZ_TBL WHERE d1 BETWEEN '1902-01-01' AND '2038-01-01';"}
+{"sql":"SELECT date_trunc( 'week', timestamp with time zone '2004-02-29 15:44:17.71393' ) AS week_trunc","shape":"SELECT date_trunc('week', timestamp WITH TIME ZONE '2004-02-29 15:44:17.71393') AS week_trunc;"}
+{"sql":"SELECT date_trunc('day', timestamp with time zone '2001-02-16 20:38:40+00', 'Australia/Sydney') as sydney_trunc","shape":"SELECT date_trunc('day', timestamp WITH TIME ZONE '2001-02-16 20:38:40+00', 'Australia/Sydney') AS sydney_trunc;"}
+{"sql":"SELECT date_trunc('day', timestamp with time zone '2001-02-16 20:38:40+00', 'GMT') as gmt_trunc","shape":"SELECT date_trunc('day', timestamp WITH TIME ZONE '2001-02-16 20:38:40+00', 'GMT') AS gmt_trunc;"}
+{"sql":"SELECT date_trunc('day', timestamp with time zone '2001-02-16 20:38:40+00', 'VET') as vet_trunc","shape":"SELECT date_trunc('day', timestamp WITH TIME ZONE '2001-02-16 20:38:40+00', 'VET') AS vet_trunc;"}
+{"sql":"SELECT\n  str,\n  interval,\n  date_trunc(str, ts, 'Australia/Sydney') = date_bin(interval::interval, ts, timestamp with time zone '2001-01-01+11') AS equal\nFROM (\n  VALUES\n  ('day', '1 d'),\n  ('hour', '1 h'),\n  ('minute', '1 m'),\n  ('second', '1 s'),\n  ('millisecond', '1 ms'),\n  ('microsecond', '1 us')\n) intervals (str, interval),\n(VALUES (timestamptz '2020-02-29 15:44:17.71393+00')) ts (ts)","shape":"SELECT str, interval, date_trunc(str, ts, 'Australia/Sydney') = date_bin(interval::interval, ts, timestamp WITH TIME ZONE '2001-01-01+11') AS equal FROM (VALUES ('day', '1 d'), ('hour', '1 h'), ('minute', '1 m'), ('second', '1 s'), ('millisecond', '1 ms'), ('microsecond', '1 us')) AS intervals(str, interval), (VALUES (timestamptz '2020-02-29 15:44:17.71393+00')) AS ts(ts);"}
+{"sql":"SELECT\n  interval,\n  ts,\n  origin,\n  date_bin(interval::interval, ts, origin)\nFROM (\n  VALUES\n  ('15 days'),\n  ('2 hours'),\n  ('1 hour 30 minutes'),\n  ('15 minutes'),\n  ('10 seconds'),\n  ('100 milliseconds'),\n  ('250 microseconds')\n) intervals (interval),\n(VALUES (timestamptz '2020-02-11 15:44:17.71393')) ts (ts),\n(VALUES (timestamptz '2001-01-01')) origin (origin)","shape":"SELECT interval, ts, origin, date_bin(interval::interval, ts, origin) FROM (VALUES ('15 days'), ('2 hours'), ('1 hour 30 minutes'), ('15 minutes'), ('10 seconds'), ('100 milliseconds'), ('250 microseconds')) AS intervals(interval), (VALUES (timestamptz '2020-02-11 15:44:17.71393')) AS ts(ts), (VALUES (timestamptz '2001-01-01')) AS origin(origin);"}
+{"sql":"SELECT date_bin('5 min'::interval, timestamptz '2020-02-01 01:01:01+00', timestamptz '2020-02-01 00:02:30+00')","shape":"SELECT date_bin('5 min'::interval, timestamptz '2020-02-01 01:01:01+00', timestamptz '2020-02-01 00:02:30+00');"}
+{"sql":"SELECT date_bin('30 minutes'::interval, timestamptz '2024-02-01 15:00:00', timestamptz '2024-02-01 17:00:00')","shape":"SELECT date_bin('30 minutes'::interval, timestamptz '2024-02-01 15:00:00', timestamptz '2024-02-01 17:00:00');"}
+{"sql":"SELECT date_bin('5 months'::interval, timestamp with time zone '2020-02-01 01:01:01+00', timestamp with time zone '2001-01-01+00')","shape":"SELECT date_bin('5 months'::interval, timestamp WITH TIME ZONE '2020-02-01 01:01:01+00', timestamp WITH TIME ZONE '2001-01-01+00');"}
+{"sql":"SELECT date_bin('5 years'::interval,  timestamp with time zone '2020-02-01 01:01:01+00', timestamp with time zone '2001-01-01+00')","shape":"SELECT date_bin('5 years'::interval, timestamp WITH TIME ZONE '2020-02-01 01:01:01+00', timestamp WITH TIME ZONE '2001-01-01+00');"}
+{"sql":"SELECT date_bin('0 days'::interval, timestamp with time zone '1970-01-01 01:00:00+00' , timestamp with time zone '1970-01-01 00:00:00+00')","shape":"SELECT date_bin('0 days'::interval, timestamp WITH TIME ZONE '1970-01-01 01:00:00+00', timestamp WITH TIME ZONE '1970-01-01 00:00:00+00');"}
+{"sql":"SELECT date_bin('-2 days'::interval, timestamp with time zone '1970-01-01 01:00:00+00' , timestamp with time zone '1970-01-01 00:00:00+00')","shape":"SELECT date_bin('-2 days'::interval, timestamp WITH TIME ZONE '1970-01-01 01:00:00+00', timestamp WITH TIME ZONE '1970-01-01 00:00:00+00');"}
+{"sql":"select date_bin('15 minutes'::interval, timestamptz '294276-12-30', timestamptz '4000-12-20 BC')","shape":"SELECT date_bin('15 minutes'::interval, timestamptz '294276-12-30', timestamptz '4000-12-20 BC');"}
+{"sql":"select date_bin('200000000 days'::interval, '2024-02-01'::timestamptz, '2024-01-01'::timestamptz)","shape":"SELECT date_bin('200000000 days'::interval, '2024-02-01'::timestamptz, '2024-01-01'::timestamptz);"}
+{"sql":"select date_bin('365000 days'::interval, '4400-01-01 BC'::timestamptz, '4000-01-01 BC'::timestamptz)","shape":"SELECT date_bin('365000 days'::interval, '4400-01-01 BC'::timestamptz, '4000-01-01 BC'::timestamptz);"}
+{"sql":"SELECT d1 - timestamp with time zone '1997-01-02' AS diff\n  FROM TIMESTAMPTZ_TBL\n  WHERE d1 BETWEEN timestamp with time zone '1902-01-01' AND timestamp with time zone '2038-01-01'","shape":"SELECT d1 - timestamp WITH TIME ZONE '1997-01-02' AS diff FROM TIMESTAMPTZ_TBL WHERE d1 BETWEEN timestamp WITH TIME ZONE '1902-01-01' AND timestamp WITH TIME ZONE '2038-01-01';"}
+{"sql":"SELECT d1 as timestamptz,\n   date_part( 'year', d1) AS year, date_part( 'month', d1) AS month,\n   date_part( 'day', d1) AS day, date_part( 'hour', d1) AS hour,\n   date_part( 'minute', d1) AS minute, date_part( 'second', d1) AS second\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 AS timestamptz, date_part('year', d1) AS year, date_part('month', d1) AS month, date_part('day', d1) AS day, date_part('hour', d1) AS hour, date_part('minute', d1) AS minute, date_part('second', d1) AS second FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT d1 as timestamptz,\n   date_part( 'quarter', d1) AS quarter, date_part( 'msec', d1) AS msec,\n   date_part( 'usec', d1) AS usec\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 AS timestamptz, date_part('quarter', d1) AS quarter, date_part('msec', d1) AS msec, date_part('usec', d1) AS usec FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT d1 as timestamptz,\n   date_part( 'isoyear', d1) AS isoyear, date_part( 'week', d1) AS week,\n   date_part( 'isodow', d1) AS isodow, date_part( 'dow', d1) AS dow,\n   date_part( 'doy', d1) AS doy\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 AS timestamptz, date_part('isoyear', d1) AS isoyear, date_part('week', d1) AS week, date_part('isodow', d1) AS isodow, date_part('dow', d1) AS dow, date_part('doy', d1) AS doy FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT d1 as timestamptz,\n   date_part( 'decade', d1) AS decade,\n   date_part( 'century', d1) AS century,\n   date_part( 'millennium', d1) AS millennium,\n   round(date_part( 'julian', d1)) AS julian,\n   date_part( 'epoch', d1) AS epoch\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 AS timestamptz, date_part('decade', d1) AS decade, date_part('century', d1) AS century, date_part('millennium', d1) AS millennium, round(date_part('julian', d1)) AS julian, date_part('epoch', d1) AS epoch FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT d1 as timestamptz,\n   date_part( 'timezone', d1) AS timezone,\n   date_part( 'timezone_hour', d1) AS timezone_hour,\n   date_part( 'timezone_minute', d1) AS timezone_minute\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 AS timestamptz, date_part('timezone', d1) AS timezone, date_part('timezone_hour', d1) AS timezone_hour, date_part('timezone_minute', d1) AS timezone_minute FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT d1 as \"timestamp\",\n   extract(microseconds from d1) AS microseconds,\n   extract(milliseconds from d1) AS milliseconds,\n   extract(seconds from d1) AS seconds,\n   round(extract(julian from d1)) AS julian,\n   extract(epoch from d1) AS epoch\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT d1 AS \"timestamp\", EXTRACT(MICROSECONDS FROM d1) AS microseconds, EXTRACT(MILLISECONDS FROM d1) AS milliseconds, EXTRACT(SECONDS FROM d1) AS seconds, round(EXTRACT(JULIAN FROM d1)) AS julian, EXTRACT(EPOCH FROM d1) AS epoch FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT date_part('epoch', '294270-01-01 00:00:00+00'::timestamptz)","shape":"SELECT date_part('epoch', '294270-01-01 00:00:00+00'::timestamptz);"}
+{"sql":"SELECT extract(epoch from '294270-01-01 00:00:00+00'::timestamptz)","shape":"SELECT EXTRACT(EPOCH FROM '294270-01-01 00:00:00+00'::timestamptz);"}
+{"sql":"SELECT extract(epoch from '5000-01-01 00:00:00+00'::timestamptz)","shape":"SELECT EXTRACT(EPOCH FROM '5000-01-01 00:00:00+00'::timestamptz);"}
+{"sql":"SELECT timestamptz '294276-12-31 23:59:59 UTC' - timestamptz '1999-12-23 19:59:04.224193 UTC' AS ok","shape":"SELECT timestamptz '294276-12-31 23:59:59 UTC' - timestamptz '1999-12-23 19:59:04.224193 UTC' AS ok;"}
+{"sql":"SELECT timestamptz '294276-12-31 23:59:59 UTC' - timestamptz '1999-12-23 19:59:04.224192 UTC' AS overflows","shape":"SELECT timestamptz '294276-12-31 23:59:59 UTC' - timestamptz '1999-12-23 19:59:04.224192 UTC' AS overflows;"}
+{"sql":"SELECT to_char(d1, 'DAY Day day DY Dy dy MONTH Month month RM MON Mon mon')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'DAY Day day DY Dy dy MONTH Month month RM MON Mon mon') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'FMDAY FMDay FMday FMMONTH FMMonth FMmonth FMRM')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'FMDAY FMDay FMday FMMONTH FMMonth FMmonth FMRM') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'Y,YYY YYYY YYY YY Y CC Q MM WW DDD DD D J')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'Y,YYY YYYY YYY YY Y CC Q MM WW DDD DD D J') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'FMY,YYY FMYYYY FMYYY FMYY FMY FMCC FMQ FMMM FMWW FMDDD FMDD FMD FMJ')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'FMY,YYY FMYYYY FMYYY FMYY FMY FMCC FMQ FMMM FMWW FMDDD FMDD FMD FMJ') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'HH HH12 HH24 MI SS SSSS')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'HH HH12 HH24 MI SS SSSS') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, E'\"HH:MI:SS is\" HH:MI:SS \"\\\\\"text between quote marks\\\\\"\"')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, E'\"HH:MI:SS is\" HH:MI:SS \"\\\\\"text between quote marks\\\\\"\"') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'HH24--text--MI--text--SS')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'HH24--text--MI--text--SS') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'YYYYTH YYYYth Jth')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'YYYYTH YYYYth Jth') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'YYYY A.D. YYYY a.d. YYYY bc HH:MI:SS P.M. HH:MI:SS p.m. HH:MI:SS pm')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'YYYY A.D. YYYY a.d. YYYY bc HH:MI:SS P.M. HH:MI:SS p.m. HH:MI:SS pm') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'IYYY IYY IY I IW IDDD ID')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'IYYY IYY IY I IW IDDD ID') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d1, 'FMIYYY FMIYY FMIY FMI FMIW FMIDDD FMID')\n   FROM TIMESTAMPTZ_TBL","shape":"SELECT to_char(d1, 'FMIYYY FMIYY FMIY FMI FMIW FMIDDD FMID') FROM TIMESTAMPTZ_TBL;"}
+{"sql":"SELECT to_char(d, 'FF1 FF2 FF3 FF4 FF5 FF6  ff1 ff2 ff3 ff4 ff5 ff6  MS US')\n   FROM (VALUES\n       ('2018-11-02 12:34:56'::timestamptz),\n       ('2018-11-02 12:34:56.78'),\n       ('2018-11-02 12:34:56.78901'),\n       ('2018-11-02 12:34:56.78901234')\n   ) d(d)","shape":"SELECT to_char(d, 'FF1 FF2 FF3 FF4 FF5 FF6  ff1 ff2 ff3 ff4 ff5 ff6  MS US') FROM (VALUES ('2018-11-02 12:34:56'::timestamptz), ('2018-11-02 12:34:56.78'), ('2018-11-02 12:34:56.78901'), ('2018-11-02 12:34:56.78901234')) AS d(d);"}
+{"sql":"SET timezone = '00:00'","shape":"SET timezone TO '00:00';"}
+{"sql":"SELECT to_char(now(), 'OF') as \"OF\", to_char(now(), 'TZH:TZM') as \"TZH:TZM\"","shape":"SELECT to_char(now(), 'OF') AS \"OF\", to_char(now(), 'TZH:TZM') AS \"TZH:TZM\";"}
+{"sql":"SET timezone = '+02:00'","shape":"SET timezone TO '+02:00';"}
+{"sql":"SET timezone = '-13:00'","shape":"SET timezone TO '-13:00';"}
+{"sql":"SET timezone = '-00:30'","shape":"SET timezone TO '-00:30';"}
+{"sql":"SET timezone = '00:30'","shape":"SET timezone TO '00:30';"}
+{"sql":"SET timezone = '-04:30'","shape":"SET timezone TO '-04:30';"}
+{"sql":"SET timezone = '04:30'","shape":"SET timezone TO '04:30';"}
+{"sql":"SET timezone = '-04:15'","shape":"SET timezone TO '-04:15';"}
+{"sql":"SET timezone = '04:15'","shape":"SET timezone TO '04:15';"}
+{"sql":"RESET timezone","shape":"RESET timezone;"}
+{"sql":"SELECT to_char(now(), 'of') as \"Of\", to_char(now(), 'tzh:tzm') as \"tzh:tzm\"","shape":"SELECT to_char(now(), 'of') AS \"Of\", to_char(now(), 'tzh:tzm') AS \"tzh:tzm\";"}
+{"sql":"SELECT to_char(now(), 'of') as \"of\", to_char(now(), 'tzh:tzm') as \"tzh:tzm\"","shape":"SELECT to_char(now(), 'of') AS \"of\", to_char(now(), 'tzh:tzm') AS \"tzh:tzm\";"}
+{"sql":"CREATE TABLE TIMESTAMPTZ_TST (a int , b timestamptz)","shape":"CREATE TABLE TIMESTAMPTZ_TST (a int, b timestamptz);"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TST VALUES(1, 'Sat Mar 12 23:58:48 1000 IST')","shape":"INSERT INTO TIMESTAMPTZ_TST VALUES (1, 'Sat Mar 12 23:58:48 1000 IST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TST VALUES(2, 'Sat Mar 12 23:58:48 10000 IST')","shape":"INSERT INTO TIMESTAMPTZ_TST VALUES (2, 'Sat Mar 12 23:58:48 10000 IST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TST VALUES(3, 'Sat Mar 12 23:58:48 100000 IST')","shape":"INSERT INTO TIMESTAMPTZ_TST VALUES (3, 'Sat Mar 12 23:58:48 100000 IST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TST VALUES(3, '10000 Mar 12 23:58:48 IST')","shape":"INSERT INTO TIMESTAMPTZ_TST VALUES (3, '10000 Mar 12 23:58:48 IST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TST VALUES(4, '100000312 23:58:48 IST')","shape":"INSERT INTO TIMESTAMPTZ_TST VALUES (4, '100000312 23:58:48 IST');"}
+{"sql":"INSERT INTO TIMESTAMPTZ_TST VALUES(4, '1000000312 23:58:48 IST')","shape":"INSERT INTO TIMESTAMPTZ_TST VALUES (4, '1000000312 23:58:48 IST');"}
+{"sql":"SELECT * FROM TIMESTAMPTZ_TST ORDER BY a","shape":"SELECT * FROM TIMESTAMPTZ_TST ORDER BY a;"}
+{"sql":"DROP TABLE TIMESTAMPTZ_TST","shape":"DROP TABLE TIMESTAMPTZ_TST;"}
+{"sql":"set TimeZone to 'America/New_York'","shape":"SET TimeZone TO 'America/New_York';"}
+{"sql":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33)","shape":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33);"}
+{"sql":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '+2')","shape":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '+2');"}
+{"sql":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '-2')","shape":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '-2');"}
+{"sql":"WITH tzs (tz) AS (VALUES\n    ('+1'), ('+1:'), ('+1:0'), ('+100'), ('+1:00'), ('+01:00'),\n    ('+10'), ('+1000'), ('+10:'), ('+10:0'), ('+10:00'), ('+10:00:'),\n    ('+10:00:1'), ('+10:00:01'),\n    ('+10:00:10'))\n     SELECT make_timestamptz(2010, 2, 27, 3, 45, 00, tz), tz FROM tzs","shape":"WITH tzs(tz) AS (VALUES ('+1'), ('+1:'), ('+1:0'), ('+100'), ('+1:00'), ('+01:00'), ('+10'), ('+1000'), ('+10:'), ('+10:0'), ('+10:00'), ('+10:00:'), ('+10:00:1'), ('+10:00:01'), ('+10:00:10')) SELECT make_timestamptz(2010, 2, 27, 3, 45, 00, tz), tz FROM tzs;"}
+{"sql":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '2')","shape":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '2');"}
+{"sql":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, '+16')","shape":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, '+16');"}
+{"sql":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, '-16')","shape":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, '-16');"}
+{"sql":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '+2') = '1973-07-15 08:15:55.33+02'::timestamptz","shape":"SELECT make_timestamptz(1973, 07, 15, 08, 15, 55.33, '+2') = '1973-07-15 08:15:55.33+02'::timestamptz;"}
+{"sql":"SELECT make_timestamptz(2014, 12, 10, 0, 0, 0, 'Europe/Prague') = timestamptz '2014-12-10 00:00:00 Europe/Prague'","shape":"SELECT make_timestamptz(2014, 12, 10, 0, 0, 0, 'Europe/Prague') = timestamptz '2014-12-10 00:00:00 Europe/Prague';"}
+{"sql":"SELECT make_timestamptz(2014, 12, 10, 0, 0, 0, 'Europe/Prague') AT TIME ZONE 'UTC'","shape":"SELECT make_timestamptz(2014, 12, 10, 0, 0, 0, 'Europe/Prague') AT TIME ZONE 'UTC';"}
+{"sql":"SELECT make_timestamptz(1881, 12, 10, 0, 0, 0, 'Asia/Singapore') AT TIME ZONE 'UTC'","shape":"SELECT make_timestamptz(1881, 12, 10, 0, 0, 0, 'Asia/Singapore') AT TIME ZONE 'UTC';"}
+{"sql":"SELECT make_timestamptz(1881, 12, 10, 0, 0, 0, 'Pacific/Honolulu') AT TIME ZONE 'UTC'","shape":"SELECT make_timestamptz(1881, 12, 10, 0, 0, 0, 'Pacific/Honolulu') AT TIME ZONE 'UTC';"}
+{"sql":"SELECT make_timestamptz(1881, 12, 10, 0, 0, 0, 'Europe/Paris') AT TIME ZONE 'UTC'","shape":"SELECT make_timestamptz(1881, 12, 10, 0, 0, 0, 'Europe/Paris') AT TIME ZONE 'UTC';"}
+{"sql":"SELECT make_timestamptz(1910, 12, 24, 0, 0, 0, 'Nehwon/Lankhmar')","shape":"SELECT make_timestamptz(1910, 12, 24, 0, 0, 0, 'Nehwon/Lankhmar');"}
+{"sql":"SELECT make_timestamptz(2008, 12, 10, 10, 10, 10, 'EST')","shape":"SELECT make_timestamptz(2008, 12, 10, 10, 10, 10, 'EST');"}
+{"sql":"SELECT make_timestamptz(2008, 12, 10, 10, 10, 10, 'EDT')","shape":"SELECT make_timestamptz(2008, 12, 10, 10, 10, 10, 'EDT');"}
+{"sql":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, 'FOO8BAR')","shape":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, 'FOO8BAR');"}
+{"sql":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, 'PST8PDT,M3.2.0,M11.1.0')","shape":"SELECT make_timestamptz(2014, 12, 10, 10, 10, 10, 'PST8PDT,M3.2.0,M11.1.0');"}
+{"sql":"select * from generate_series('2020-01-01 00:00'::timestamptz,\n                              '2020-01-02 03:00'::timestamptz,\n                              '1 hour'::interval)","shape":"SELECT * FROM generate_series('2020-01-01 00:00'::timestamptz, '2020-01-02 03:00'::timestamptz, '1 hour'::interval);"}
+{"sql":"select generate_series('2022-01-01 00:00'::timestamptz,\n                       'infinity'::timestamptz,\n                       '1 month'::interval) limit 10","shape":"SELECT generate_series('2022-01-01 00:00'::timestamptz, 'infinity'::timestamptz, '1 month'::interval) LIMIT 10;"}
+{"sql":"select * from generate_series('2020-01-01 00:00'::timestamptz,\n                              '2020-01-02 03:00'::timestamptz,\n                              '0 hour'::interval)","shape":"SELECT * FROM generate_series('2020-01-01 00:00'::timestamptz, '2020-01-02 03:00'::timestamptz, '0 hour'::interval);"}
+{"sql":"SET TimeZone to 'UTC'","shape":"SET TimeZone TO 'UTC';"}
+{"sql":"SELECT date_add('2022-10-30 00:00:00+01'::timestamptz,\n                '1 day'::interval)","shape":"SELECT date_add('2022-10-30 00:00:00+01'::timestamptz, '1 day'::interval);"}
+{"sql":"SELECT date_add('2021-10-31 00:00:00+02'::timestamptz,\n                '1 day'::interval,\n                'Europe/Warsaw')","shape":"SELECT date_add('2021-10-31 00:00:00+02'::timestamptz, '1 day'::interval, 'Europe/Warsaw');"}
+{"sql":"SELECT date_subtract('2022-10-30 00:00:00+01'::timestamptz,\n                     '1 day'::interval)","shape":"SELECT date_subtract('2022-10-30 00:00:00+01'::timestamptz, '1 day'::interval);"}
+{"sql":"SELECT date_subtract('2021-10-31 00:00:00+02'::timestamptz,\n                     '1 day'::interval,\n                     'Europe/Warsaw')","shape":"SELECT date_subtract('2021-10-31 00:00:00+02'::timestamptz, '1 day'::interval, 'Europe/Warsaw');"}
+{"sql":"SELECT * FROM generate_series('2021-12-31 23:00:00+00'::timestamptz,\n                              '2020-12-31 23:00:00+00'::timestamptz,\n                              '-1 month'::interval,\n                              'Europe/Warsaw')","shape":"SELECT * FROM generate_series('2021-12-31 23:00:00+00'::timestamptz, '2020-12-31 23:00:00+00'::timestamptz, '-1 month'::interval, 'Europe/Warsaw');"}
+{"sql":"SELECT '2011-03-27 00:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 00:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 01:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 01:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 01:59:59 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 01:59:59 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 02:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 02:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 02:00:01 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 02:00:01 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 02:59:59 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 02:59:59 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 03:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 03:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 03:00:01 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 03:00:01 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 04:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2011-03-27 04:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 00:00:00 MSK'::timestamptz","shape":"SELECT '2011-03-27 00:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 01:00:00 MSK'::timestamptz","shape":"SELECT '2011-03-27 01:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 01:59:59 MSK'::timestamptz","shape":"SELECT '2011-03-27 01:59:59 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 02:00:00 MSK'::timestamptz","shape":"SELECT '2011-03-27 02:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 02:00:01 MSK'::timestamptz","shape":"SELECT '2011-03-27 02:00:01 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 02:59:59 MSK'::timestamptz","shape":"SELECT '2011-03-27 02:59:59 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 03:00:00 MSK'::timestamptz","shape":"SELECT '2011-03-27 03:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 03:00:01 MSK'::timestamptz","shape":"SELECT '2011-03-27 03:00:01 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 04:00:00 MSK'::timestamptz","shape":"SELECT '2011-03-27 04:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 00:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2014-10-26 00:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 00:59:59 Europe/Moscow'::timestamptz","shape":"SELECT '2014-10-26 00:59:59 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 01:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2014-10-26 01:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 01:00:01 Europe/Moscow'::timestamptz","shape":"SELECT '2014-10-26 01:00:01 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 02:00:00 Europe/Moscow'::timestamptz","shape":"SELECT '2014-10-26 02:00:00 Europe/Moscow'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 00:00:00 MSK'::timestamptz","shape":"SELECT '2014-10-26 00:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 00:59:59 MSK'::timestamptz","shape":"SELECT '2014-10-26 00:59:59 MSK'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 01:00:00 MSK'::timestamptz","shape":"SELECT '2014-10-26 01:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 01:00:01 MSK'::timestamptz","shape":"SELECT '2014-10-26 01:00:01 MSK'::timestamptz;"}
+{"sql":"SELECT '2014-10-26 02:00:00 MSK'::timestamptz","shape":"SELECT '2014-10-26 02:00:00 MSK'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 00:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 00:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 01:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 01:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 01:59:59'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 01:59:59'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 02:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 02:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 02:00:01'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 02:00:01'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 02:59:59'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 02:59:59'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 03:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 03:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 03:00:01'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 03:00:01'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 04:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 04:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 00:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 00:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 01:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 01:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 01:59:59'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 01:59:59'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 02:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 02:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 02:00:01'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 02:00:01'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 02:59:59'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 02:59:59'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 03:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 03:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 03:00:01'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 03:00:01'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 04:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 04:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-26 00:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-26 00:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-26 00:59:59'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-26 00:59:59'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-26 01:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-26 01:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-26 01:00:01'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-26 01:00:01'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-26 02:00:00'::timestamp AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-26 02:00:00'::timestamp AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-26 00:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-26 00:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-26 00:59:59'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-26 00:59:59'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-26 01:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-26 01:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-26 01:00:01'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-26 01:00:01'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-26 02:00:00'::timestamp AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-26 02:00:00'::timestamp AT TIME ZONE 'MSK';"}
+{"sql":"SELECT make_timestamptz(2014, 10, 26, 0, 0, 0, 'MSK')","shape":"SELECT make_timestamptz(2014, 10, 26, 0, 0, 0, 'MSK');"}
+{"sql":"SELECT make_timestamptz(2014, 10, 26, 1, 0, 0, 'MSK')","shape":"SELECT make_timestamptz(2014, 10, 26, 1, 0, 0, 'MSK');"}
+{"sql":"SELECT to_timestamp(         0)","shape":"SELECT to_timestamp(0);"}
+{"sql":"SELECT to_timestamp( 946684800)","shape":"SELECT to_timestamp(946684800);"}
+{"sql":"SELECT to_timestamp(1262349296.7890123)","shape":"SELECT to_timestamp(1262349296.7890123);"}
+{"sql":"SELECT to_timestamp(-210866803200)","shape":"SELECT to_timestamp(-210866803200);"}
+{"sql":"SELECT to_timestamp(' Infinity'::float)","shape":"SELECT to_timestamp(' Infinity'::float);"}
+{"sql":"SELECT to_timestamp('-Infinity'::float)","shape":"SELECT to_timestamp('-Infinity'::float);"}
+{"sql":"SELECT to_timestamp('NaN'::float)","shape":"SELECT to_timestamp('NaN'::float);"}
+{"sql":"SET TimeZone to 'Europe/Moscow'","shape":"SET TimeZone TO 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 21:00:00 UTC'::timestamptz","shape":"SELECT '2011-03-26 21:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-26 22:00:00 UTC'::timestamptz","shape":"SELECT '2011-03-26 22:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-26 22:59:59 UTC'::timestamptz","shape":"SELECT '2011-03-26 22:59:59 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-26 23:00:00 UTC'::timestamptz","shape":"SELECT '2011-03-26 23:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-26 23:00:01 UTC'::timestamptz","shape":"SELECT '2011-03-26 23:00:01 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-26 23:59:59 UTC'::timestamptz","shape":"SELECT '2011-03-26 23:59:59 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-27 00:00:00 UTC'::timestamptz","shape":"SELECT '2011-03-27 00:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2014-10-25 21:00:00 UTC'::timestamptz","shape":"SELECT '2014-10-25 21:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2014-10-25 21:59:59 UTC'::timestamptz","shape":"SELECT '2014-10-25 21:59:59 UTC'::timestamptz;"}
+{"sql":"SELECT '2014-10-25 22:00:00 UTC'::timestamptz","shape":"SELECT '2014-10-25 22:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2014-10-25 22:00:01 UTC'::timestamptz","shape":"SELECT '2014-10-25 22:00:01 UTC'::timestamptz;"}
+{"sql":"SELECT '2014-10-25 23:00:00 UTC'::timestamptz","shape":"SELECT '2014-10-25 23:00:00 UTC'::timestamptz;"}
+{"sql":"SELECT '2011-03-26 21:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-26 21:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 22:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-26 22:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 22:59:59 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-26 22:59:59 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 23:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-26 23:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 23:00:01 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-26 23:00:01 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 23:59:59 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-26 23:59:59 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-27 00:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2011-03-27 00:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-25 21:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-25 21:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-25 21:59:59 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-25 21:59:59 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-25 22:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-25 22:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-25 22:00:01 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-25 22:00:01 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2014-10-25 23:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow'","shape":"SELECT '2014-10-25 23:00:00 UTC'::timestamptz AT TIME ZONE 'Europe/Moscow';"}
+{"sql":"SELECT '2011-03-26 21:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-26 21:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-26 22:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-26 22:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-26 22:59:59 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-26 22:59:59 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-26 23:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-26 23:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-26 23:00:01 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-26 23:00:01 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-26 23:59:59 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-26 23:59:59 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2011-03-27 00:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2011-03-27 00:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-25 21:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-25 21:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-25 21:59:59 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-25 21:59:59 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-25 22:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-25 22:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-25 22:00:01 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-25 22:00:01 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"SELECT '2014-10-25 23:00:00 UTC'::timestamptz AT TIME ZONE 'MSK'","shape":"SELECT '2014-10-25 23:00:00 UTC'::timestamptz AT TIME ZONE 'MSK';"}
+{"sql":"create temp table tmptz (f1 timestamptz primary key)","shape":"CREATE TEMPORARY TABLE tmptz (f1 timestamptz PRIMARY KEY);"}
+{"sql":"insert into tmptz values ('2017-01-18 00:00+00')","shape":"INSERT INTO tmptz VALUES ('2017-01-18 00:00+00');"}
+{"sql":"explain (costs off)\nselect * from tmptz where f1 at time zone 'utc' = '2017-01-18 00:00'","shape":"EXPLAIN (COSTS off) SELECT * FROM tmptz WHERE (f1 AT TIME ZONE 'utc') = '2017-01-18 00:00';"}
+{"sql":"select * from tmptz where f1 at time zone 'utc' = '2017-01-18 00:00'","shape":"SELECT * FROM tmptz WHERE (f1 AT TIME ZONE 'utc') = '2017-01-18 00:00';"}

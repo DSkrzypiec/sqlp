@@ -1,0 +1,112 @@
+{"sql":"UPDATE test1 SET f2=5 WHERE f1<1"}
+{"sql":"UPDATE sqlite_master SET name='xyz' WHERE name='123'"}
+{"sql":"CREATE TABLE test1(f1 int,f2 int)"}
+{"sql":"SELECT * FROM test1 ORDER BY f1"}
+{"sql":"UPDATE test1 SET f1=f3*2 WHERE f2==32"}
+{"sql":"UPDATE test1 SET f1=test2.f1*2 WHERE f2==32"}
+{"sql":"UPDATE test1 SET f3=f1*2 WHERE f2==32"}
+{"sql":"UPDATE test1 SET f2=f2*3"}
+{"sql":"UPDATE test1 SET f2=f2/3 WHERE f1<=5"}
+{"sql":"UPDATE test1 SET f2=f2/3 WHERE f1>5"}
+{"sql":"UPDATE test1 SET F2=f1, F1=f2"}
+{"sql":"SELECT * FROM test1 ORDER BY F1"}
+{"sql":"DELETE FROM test1 WHERE f1<=5"}
+{"sql":"INSERT INTO test1(f1,f2) VALUES(8,88)"}
+{"sql":"INSERT INTO test1(f1,f2) VALUES(8,888)"}
+{"sql":"INSERT INTO test1(f1,f2) VALUES(77,128)"}
+{"sql":"INSERT INTO test1(f1,f2) VALUES(777,128)"}
+{"sql":"SELECT * FROM test1 ORDER BY f1,f2"}
+{"sql":"UPDATE test1 SET f2=f2+1 WHERE f1==8"}
+{"sql":"UPDATE test1 SET f2=f2-1 WHERE f1==8 and f2>800"}
+{"sql":"UPDATE test1 SET f2=f2-1 WHERE f1==8 and f2<800"}
+{"sql":"UPDATE test1 SET f1=f1+1 WHERE f2==128"}
+{"sql":"UPDATE test1 SET f1=f1-1 WHERE f1>100 and f2==128"}
+{"sql":"UPDATE test1 SET f1=f1-1 WHERE f1<=100 and f2==128"}
+{"sql":"CREATE INDEX idx1 ON test1(f1)"}
+{"sql":"SELECT * FROM test1 WHERE f1==78 ORDER BY f1,f2"}
+{"sql":"SELECT * FROM test1 WHERE f1==778 ORDER BY f1,f2"}
+{"sql":"SELECT * FROM test1 WHERE f1==8 ORDER BY f1,f2"}
+{"sql":"SELECT * FROM test1 WHERE f1==777 ORDER BY f1,f2"}
+{"sql":"SELECT * FROM test1 WHERE f1==77 ORDER BY f1,f2"}
+{"sql":"CREATE INDEX idx1 ON test1(f2)"}
+{"sql":"SELECT * FROM test1 WHERE f2==89 ORDER BY f1,f2"}
+{"sql":"SELECT * FROM test1 WHERE f1==88 ORDER BY f1,f2"}
+{"sql":"SELECT * FROM test1 WHERE f2==88 ORDER BY f1,f2"}
+{"sql":"CREATE INDEX idx2 ON test1(f2)"}
+{"sql":"CREATE INDEX idx3 ON test1(f1,f2)"}
+{"sql":"UPDATE test1 SET x=11 WHERE f1=1025"}
+{"sql":"UPDATE test1 SET f1=x(11) WHERE f1=1025"}
+{"sql":"UPDATE test1 SET f1=11 WHERE x=1025"}
+{"sql":"UPDATE test1 SET f1=11 WHERE x(f1)=1025"}
+{"sql":"CREATE TABLE t1(\n       a integer primary key,\n       b UNIQUE, \n       c, d,\n       e, f,\n       UNIQUE(c,d)\n    )"}
+{"sql":"INSERT INTO t1 VALUES(2,3,4,4,6,7)"}
+{"sql":"UPDATE t1 SET a=1, e=9 WHERE f=6"}
+{"sql":"UPDATE t1 SET a=1, e=10 WHERE f=7"}
+{"sql":"UPDATE t1 SET b=2, e=11 WHERE f=6"}
+{"sql":"UPDATE t1 SET b=2, e=12 WHERE f=7"}
+{"sql":"UPDATE t1 SET c=3, d=4, e=13 WHERE f=6"}
+{"sql":"UPDATE t1 SET c=3, d=4, e=14 WHERE f=7"}
+{"sql":"UPDATE t1 SET e=e+1 WHERE b IN (SELECT b FROM t1)"}
+{"sql":"SELECT b,e FROM t1"}
+{"sql":"UPDATE t1 SET e=e+1 WHERE a IN (SELECT a FROM t1)"}
+{"sql":"SELECT a,e FROM t1"}
+{"sql":"UPDATE t1 AS xyz SET e=e+1 WHERE xyz.a IN (SELECT a FROM t1)"}
+{"sql":"UPDATE t1 AS xyz SET e=e+1 WHERE EXISTS(SELECT 1 FROM t1 WHERE t1.a<xyz.a)"}
+{"sql":"INSERT INTO t2 SELECT a+2 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+4 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+8 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+16 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+32 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+64 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+128 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+256 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+512 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+1024 FROM t2"}
+{"sql":"SELECT count(*) FROM t2 WHERE a=rowid"}
+{"sql":"UPDATE t2 SET rowid=rowid-1"}
+{"sql":"SELECT count(*) FROM t2 WHERE a=rowid+1"}
+{"sql":"UPDATE t2 SET rowid=rowid+10000"}
+{"sql":"UPDATE t2 SET rowid=rowid-9999"}
+{"sql":"INSERT INTO t2 SELECT a+2048 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+4096 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT a+8192 FROM t2"}
+{"sql":"CREATE TRIGGER t3r1 BEFORE UPDATE on t3 WHEN nosuchcol BEGIN\n      SELECT 'illegal WHEN clause';\n    END"}
+{"sql":"UPDATE t3 SET a=1"}
+{"sql":"CREATE TRIGGER t4r1 AFTER UPDATE on t4 WHEN nosuchcol BEGIN\n      SELECT 'illegal WHEN clause';\n    END"}
+{"sql":"UPDATE t4 SET a=1"}
+{"sql":"CREATE TABLE t15(a INTEGER PRIMARY KEY, b)"}
+{"sql":"INSERT INTO t15(a,b) VALUES(10,'abc'),(20,'def'),(30,'ghi')"}
+{"sql":"ALTER TABLE t15 ADD COLUMN c"}
+{"sql":"CREATE INDEX t15c ON t15(c)"}
+{"sql":"INSERT INTO t15(a,b)\n      VALUES(5,'zyx'),(15,'wvu'),(25,'tsr'),(35,'qpo')"}
+{"sql":"UPDATE t15 SET c=printf('y%d',a) WHERE c IS NULL"}
+{"sql":"SELECT a,b,c,'|' FROM t15 ORDER BY a"}
+{"sql":"CREATE TABLE t16(a INTEGER PRIMARY KEY ON CONFLICT REPLACE, b UNIQUE)"}
+{"sql":"INSERT INTO t16(a,b) VALUES(1,2),(3,4),(5,6)"}
+{"sql":"UPDATE t16 SET a=a"}
+{"sql":"SELECT * FROM t16 ORDER BY +a"}
+{"sql":"CREATE INDEX t1x1 ON t1(1) WHERE 3"}
+{"sql":"UPDATE t1 SET x=2, y=3 WHERE 3"}
+{"sql":"PRAGMA encoding = 'UTF16'"}
+{"sql":"CREATE TABLE t0(c0 REAL, c1)"}
+{"sql":"INSERT INTO t0(c0,c1) VALUES('xyz',11),('uvw',22)"}
+{"sql":"CREATE INDEX i0 ON t0(c1) WHERE c0 GLOB 3"}
+{"sql":"CREATE INDEX i1 ON t0(c0,c1) WHERE typeof(c0)='text' AND typeof(c1)='integer'"}
+{"sql":"UPDATE t0 SET c1=345"}
+{"sql":"CREATE TABLE t0(c0 TEXT)"}
+{"sql":"CREATE INDEX i0 ON t0(0 LIKE COALESCE(c0, 0))"}
+{"sql":"INSERT INTO t0(c0) VALUES (0), (0)"}
+{"sql":"CREATE TABLE t1(\n   a TEXT,\n   b INTEGER PRIMARY KEY UNIQUE\n  )"}
+{"sql":"UPDATE t1 SET a = quote(b) WHERE b>=2"}
+{"sql":"CREATE TABLE t1(a UNIQUE ON CONFLICT REPLACE, b)"}
+{"sql":"INSERT INTO t1(a,b) VALUES(4,12),(9,13)"}
+{"sql":"CREATE INDEX i0 ON t1(b)"}
+{"sql":"CREATE TRIGGER tr0 DELETE ON t1 BEGIN\n    UPDATE t1 SET b = a;\n  END"}
+{"sql":"CREATE TABLE t1 (vkey INTEGER, c5 INTEGER)"}
+{"sql":"INSERT INTO t1 VALUES(3,NULL),(6,-54)"}
+{"sql":"UPDATE t1 SET vkey = 100 WHERE c5 is null"}
+{"sql":"SELECT * FROM t1 ORDER BY vkey, c5"}
+{"sql":"UPDATE t1 SET vkey = 100 WHERE NOT (-10*(select min(vkey) from t1) >= c5)"}
+{"sql":"UPDATE t1 SET vkey = 100 WHERE c5 is null OR NOT (-10*(select min(vkey) from t1) >= c5)"}
+{"sql":"CREATE TABLE t2(d INT)"}
+{"sql":"WITH t3(x,y) AS (SELECT d, row_number()OVER() FROM t2)\n    UPDATE t1 SET b=(SELECT y FROM t3 WHERE t1.a=t3.x)"}

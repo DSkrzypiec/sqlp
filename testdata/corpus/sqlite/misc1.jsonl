@@ -1,0 +1,133 @@
+{"sql":"SELECT x0, x10, x25, x50, x75 FROM manycol"}
+{"sql":"SELECT x50 FROM manycol ORDER BY x80+0"}
+{"sql":"SELECT x50 FROM manycol ORDER BY x80"}
+{"sql":"SELECT x75 FROM manycol WHERE x50=350"}
+{"sql":"SELECT x50 FROM manycol WHERE x99=599"}
+{"sql":"CREATE INDEX manycol_idx1 ON manycol(x99)"}
+{"sql":"SELECT x50 FROM manycol WHERE x99=899"}
+{"sql":"SELECT count(*) FROM manycol"}
+{"sql":"DELETE FROM manycol WHERE x98=1234"}
+{"sql":"DELETE FROM manycol WHERE x98=998"}
+{"sql":"DELETE FROM manycol WHERE x99=500"}
+{"sql":"DELETE FROM manycol WHERE x99=599"}
+{"sql":"CREATE TABLE agger(one text, two text, three text, four text)"}
+{"sql":"INSERT INTO agger VALUES(1, 'one', 'hello', 'yes')"}
+{"sql":"INSERT INTO agger VALUES(2, 'two', 'howdy', 'no')"}
+{"sql":"INSERT INTO agger VALUES(3, 'thr', 'howareya', 'yes')"}
+{"sql":"INSERT INTO agger VALUES(4, 'two', 'lothere', 'yes')"}
+{"sql":"INSERT INTO agger VALUES(5, 'one', 'atcha', 'yes')"}
+{"sql":"INSERT INTO agger VALUES(6, 'two', 'hello', 'no')"}
+{"sql":"SELECT count(*) FROM agger"}
+{"sql":"SELECT sum(one), two, four FROM agger\n           GROUP BY two, four ORDER BY sum(one) desc"}
+{"sql":"SELECT sum((one)), (two), (four) FROM agger\n           GROUP BY (two), (four) ORDER BY sum(one) desc"}
+{"sql":"INSERT INTO t1 VALUES('hi')"}
+{"sql":"INSERT INTO t2 VALUES('This is a long string to use up a lot of disk -')"}
+{"sql":"UPDATE t2 SET a=a||a||a||a"}
+{"sql":"INSERT INTO t2 SELECT '1 - ' || a FROM t2"}
+{"sql":"INSERT INTO t2 SELECT '2 - ' || a FROM t2"}
+{"sql":"INSERT INTO t2 SELECT '3 - ' || a FROM t2"}
+{"sql":"INSERT INTO t2 SELECT '4 - ' || a FROM t2"}
+{"sql":"INSERT INTO t2 SELECT '5 - ' || a FROM t2"}
+{"sql":"INSERT INTO t2 SELECT '6 - ' || a FROM t2"}
+{"sql":"UPDATE t3 SET a=0 WHEREwww b=2","reject":true}
+{"sql":"CREATE TABLE t4(\n      abort, asc, begin, cluster, conflict, copy, delimiters, desc, end,\n      explain, fail, ignore, key, offset, pragma, replace, temp,\n      vacuum, view\n    )"}
+{"sql":"INSERT INTO t4\n       VALUES(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19)"}
+{"sql":"SELECT abort+asc,max(key,pragma,temp) FROM t4"}
+{"sql":"CREATE TABLE error1(\n      a TYPE PRIMARY KEY,\n      b TYPE PRIMARY KEY\n    )"}
+{"sql":"CREATE TABLE error1(\n      a INTEGER PRIMARY KEY,\n      b TYPE PRIMARY KEY\n    )"}
+{"sql":"CREATE TABLE t5(a,b,c,PRIMARY KEY(a,b))"}
+{"sql":"SELECT * FROM t5 ORDER BY a"}
+{"sql":"INSERT INTO t5 VALUES(1,2,4)"}
+{"sql":"INSERT INTO t5 VALUES(0,2,4)"}
+{"sql":"SELECT *"}
+{"sql":"SELECT t1.*"}
+{"sql":"CREATE TABLE t1(a unique not null, b unique not null)"}
+{"sql":"INSERT INTO t1 VALUES('a',1234567890123456789)"}
+{"sql":"INSERT INTO t1 VALUES('b',1234567891123456789)"}
+{"sql":"INSERT INTO t1 VALUES('c',1234567892123456789)"}
+{"sql":"SELECT x1 FROM manycol WHERE x0=100"}
+{"sql":"UPDATE t1 SET a=0 WHERE 0"}
+{"sql":"SELECT '0'=='0.0'"}
+{"sql":"SELECT '0'==0.0"}
+{"sql":"SELECT '12345678901234567890'=='12345678901234567891'"}
+{"sql":"CREATE TABLE t6(a INT UNIQUE, b TEXT UNIQUE)"}
+{"sql":"INSERT INTO t6 VALUES('0','0.0')"}
+{"sql":"INSERT OR IGNORE INTO t6 VALUES(0.0,'x')"}
+{"sql":"INSERT OR IGNORE INTO t6 VALUES('y',0)"}
+{"sql":"CREATE TABLE t7(x INTEGER, y TEXT, z)"}
+{"sql":"INSERT INTO t7 VALUES(0,0,1)"}
+{"sql":"INSERT INTO t7 VALUES(0.0,0,2)"}
+{"sql":"INSERT INTO t7 VALUES(0,0.0,3)"}
+{"sql":"INSERT INTO t7 VALUES(0.0,0.0,4)"}
+{"sql":"SELECT DISTINCT x, y FROM t7 ORDER BY z"}
+{"sql":"SELECT min(z), max(z), count(z) FROM t7 GROUP BY x ORDER BY 1"}
+{"sql":"SELECT min(z), max(z), count(z) FROM t7 GROUP BY y ORDER BY 1"}
+{"sql":"#    SELECT * FROM t6 ORDER BY a COLLATE unknown","reject":true}
+{"sql":"CREATE TABLE t8(x TEXT COLLATE numeric, y INTEGER COLLATE text, z)"}
+{"sql":"INSERT INTO t8 VALUES(0,0,1)"}
+{"sql":"INSERT INTO t8 VALUES(0.0,0,2)"}
+{"sql":"INSERT INTO t8 VALUES(0,0.0,3)"}
+{"sql":"INSERT INTO t8 VALUES(0.0,0.0,4)"}
+{"sql":"SELECT DISTINCT x, y FROM t8 ORDER BY z"}
+{"sql":"SELECT min(z), max(z), count(z) FROM t8 GROUP BY x ORDER BY 1"}
+{"sql":"SELECT min(z), max(z), count(z) FROM t8 GROUP BY y ORDER BY 1"}
+{"sql":"CREATE TABLE t9(x,y)"}
+{"sql":"INSERT INTO t9 VALUES('one',1)"}
+{"sql":"INSERT INTO t9 VALUES('two',2)"}
+{"sql":"INSERT INTO t9 VALUES('three',3)"}
+{"sql":"INSERT INTO t9 VALUES('four',4)"}
+{"sql":"INSERT INTO t9 VALUES('five',5)"}
+{"sql":"INSERT INTO t9 VALUES('six',6)"}
+{"sql":"INSERT INTO t9 VALUES('seven',7)"}
+{"sql":"INSERT INTO t9 VALUES('eight',8)"}
+{"sql":"INSERT INTO t9 VALUES('nine',9)"}
+{"sql":"INSERT INTO t9 VALUES('ten',10)"}
+{"sql":"INSERT INTO t9 VALUES('eleven',11)"}
+{"sql":"SELECT y FROM t9\n       WHERE x=(SELECT x FROM t9 WHERE y=1)\n          OR x=(SELECT x FROM t9 WHERE y=2)\n          OR x=(SELECT x FROM t9 WHERE y=3)\n          OR x=(SELECT x FROM t9 WHERE y=4)\n          OR x=(SELECT x FROM t9 WHERE y=5)\n          OR x=(SELECT x FROM t9 WHERE y=6)\n          OR x=(SELECT x FROM t9 WHERE y=7)\n          OR x=(SELECT x FROM t9 WHERE y=8)\n          OR x=(SELECT x FROM t9 WHERE y=9)\n          OR x=(SELECT x FROM t9 WHERE y=10)\n          OR x=(SELECT x FROM t9 WHERE y=11)\n          OR x=(SELECT x FROM t9 WHERE y=12)\n          OR x=(SELECT x FROM t9 WHERE y=13)\n          OR x=(SELECT x FROM t9 WHERE y=14)"}
+{"sql":"UPDATE t1 SET a=a||'x' WHERE 0"}
+{"sql":"UPDATE t1 SET a=a||'y' WHERE 1"}
+{"sql":"CREATE TABLE t10 AS SELECT c1"}
+{"sql":"CREATE TABLE t10 AS SELECT t9.c1"}
+{"sql":"CREATE TABLE t10 AS SELECT main.t9.c1"}
+{"sql":"CREATE TABLE t10 AS SELECT 1"}
+{"sql":"SELECT name FROM sqlite_master LIMIT 1"}
+{"sql":"CREATE TABLE test(a integer, primary key(a))"}
+{"sql":"CREATE TABLE test2(a text primary key, b text, primary key(a,b))"}
+{"sql":"INSERT INTO test VALUES(1)"}
+{"sql":"SELECT rowid, a FROM test"}
+{"sql":"INSERT INTO test VALUES(5)"}
+{"sql":"INSERT INTO test VALUES(NULL)"}
+{"sql":"CREATE TABLE RealTable(TestID INTEGER PRIMARY KEY, TestString TEXT)"}
+{"sql":"CREATE TEMP TABLE TempTable(TestID INTEGER PRIMARY KEY, TestString TEXT)"}
+{"sql":"CREATE TEMP TRIGGER trigTest_1 AFTER UPDATE ON TempTable BEGIN\n      INSERT INTO RealTable(TestString) \n         SELECT new.TestString FROM TempTable LIMIT 1;\n    END"}
+{"sql":"INSERT INTO TempTable(TestString) VALUES ('1')"}
+{"sql":"INSERT INTO TempTable(TestString) VALUES ('2')"}
+{"sql":"UPDATE TempTable SET TestString = TestString + 1 WHERE TestID=1 OR TestId=2"}
+{"sql":"SELECT TestString FROM RealTable ORDER BY 1"}
+{"sql":"CREATE TABLE t19 AS SELECT 1, 2 AS '', 3"}
+{"sql":"SELECT * FROM t19"}
+{"sql":"CREATE TABLE t19b AS SELECT 4 AS '', 5 AS '',  6 AS ''"}
+{"sql":"SELECT * FROM t19b"}
+{"sql":"CREATE TABLE t19c(x TEXT)"}
+{"sql":"CREATE TABLE t19d AS SELECT * FROM t19c UNION ALL SELECT 1234"}
+{"sql":"SELECT x, typeof(x) FROM t19d"}
+{"sql":"CREATE TABLE t0(x INTEGER DEFAULT(0==0) NOT NULL)"}
+{"sql":"REPLACE INTO t0(x) VALUES('')"}
+{"sql":"SELECT rowid, quote(x) FROM t0"}
+{"sql":"select''like''like''like#0","reject":true}
+{"sql":"SELECT ''+3 FROM (SELECT ''+5)"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE table t(d CHECK(T(#0)'"}
+{"sql":"CREATE TABLE t1(x UNIQUE)"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE TABLE IF not EXISTS t(c)'"}
+{"sql":"DROP TABLE F"}
+{"sql":"UPDATE sqlite_master SET sql='CREATE table y(a TEXT, a TEXT)'"}
+{"sql":"DROP TABLE IF EXISTS t"}
+{"sql":"DROP TABLE IF EXISTS abc"}
+{"sql":"SELECT randomblob(min(max(coalesce(EXISTS (SELECT 1 FROM ( SELECT (SELECT 2147483647) NOT IN (SELECT 2147483649 UNION ALL SELECT DISTINCT -1) IN (SELECT 2147483649), 'fault', (SELECT ALL -1 INTERSECT SELECT 'experiments') IN (SELECT ALL 56.1 ORDER BY 'experiments' DESC) FROM (SELECT DISTINCT 2147483648, 'hardware' UNION ALL SELECT -2147483648, 'experiments' ORDER BY 2147483648 LIMIT 1 OFFSET 123456789.1234567899) GROUP BY (SELECT ALL 0 INTERSECT SELECT 'in') IN (SELECT DISTINCT 'experiments' ORDER BY zeroblob(1000) LIMIT 56.1 OFFSET -456) HAVING EXISTS (SELECT 'fault' EXCEPT    SELECT DISTINCT 56.1) UNION SELECT 'The', 'The', 2147483649 UNION ALL SELECT DISTINCT 'hardware', 'first', 'experiments' ORDER BY 'hardware' LIMIT 123456789.1234567899 OFFSET -2147483647)) NOT IN (SELECT (SELECT DISTINCT (SELECT 'The') FROM abc ORDER BY EXISTS (SELECT -1 INTERSECT SELECT ALL NULL) ASC) IN (SELECT DISTINCT EXISTS (SELECT ALL 123456789.1234567899 ORDER BY 1 ASC, NULL DESC) FROM sqlite_master INTERSECT SELECT 456)), (SELECT ALL 'injection' UNION ALL SELECT ALL (SELECT DISTINCT 'first' UNION     SELECT DISTINCT 'The') FROM (SELECT 456, 'in', 2147483649))),1), 500)), 'first', EXISTS (SELECT DISTINCT 456 FROM abc ORDER BY 'experiments' DESC) FROM abc"}
+{"sql":"CREATE TABLE dup1(a,b,c)"}
+{"sql":"INSERT INTO dup1(a,b,c,a,b,c) VALUES(1,2,3,4,5,6)"}
+{"sql":"SELECT a,b,c FROM dup1"}
+{"sql":"UPDATE dup1 SET a=7, b=8, c=9, a=10, b=11, c=12"}
+{"sql":"CREATE UNIQUE INDEX t1x ON t1(x) WHERE x=1"}
+{"sql":"INSERT OR ABORT INTO t1 DEFAULT VALUES"}
+{"sql":"UPDATE OR REPLACE t1 SET x = 1"}

@@ -1,0 +1,166 @@
+{"sql":"SELECT x FROM t1 ORDER BY y"}
+{"sql":"SELECT rowid FROM t1 ORDER BY x"}
+{"sql":"SELECT x, oid FROM t1 order by x"}
+{"sql":"SELECT x, RowID FROM t1 order by x"}
+{"sql":"SELECT x, _rowid_ FROM t1 order by x"}
+{"sql":"INSERT INTO t1(rowid,x,y) VALUES(1234,5,6)"}
+{"sql":"UPDATE t1 SET rowid=12345 WHERE x==1"}
+{"sql":"INSERT INTO t1(y,x,oid) VALUES(8,7,1235)"}
+{"sql":"SELECT rowid, * FROM t1 WHERE rowid>1000"}
+{"sql":"UPDATE t1 SET oid=12346 WHERE x==1"}
+{"sql":"INSERT INTO t1(x,_rowid_,y) VALUES(9,1236,10)"}
+{"sql":"UPDATE t1 SET _rowid_=12347 WHERE x==1"}
+{"sql":"SELECT x FROM t1 ORDER BY x"}
+{"sql":"CREATE INDEX idxt1 ON t1(rowid)"}
+{"sql":"CREATE INDEX idxt1 ON t1(_rowid_)"}
+{"sql":"CREATE INDEX idxt1 ON t1(oid)"}
+{"sql":"CREATE INDEX idxt1 ON t1(x, rowid)"}
+{"sql":"CREATE TABLE t2(rowid int, x int, y int)"}
+{"sql":"INSERT INTO t2 VALUES(0,2,3)"}
+{"sql":"SELECT * FROM t2 ORDER BY x"}
+{"sql":"SELECT * FROM t2 ORDER BY rowid"}
+{"sql":"SELECT rowid, x, y FROM t2 ORDER BY rowid"}
+{"sql":"SELECT _rowid_, rowid FROM t2 ORDER BY rowid"}
+{"sql":"SELECT _rowid_, rowid FROM t2 ORDER BY x DESC"}
+{"sql":"INSERT INTO t2 SELECT _rowid_, x*y, y*y FROM t1"}
+{"sql":"SELECT t2.y FROM t1, t2 WHERE t1.x==4 AND t1.rowid==t2.rowid"}
+{"sql":"SELECT t2.y FROM t2, t1 WHERE t1.x==4 AND t1.rowid==t2.rowid"}
+{"sql":"SELECT t2.y FROM t2, t1 WHERE t1.x==4 AND t1.oid==t2.rowid"}
+{"sql":"SELECT t2.y FROM t2, t1 WHERE t1.x==4 AND t1._rowid_==t2.rowid"}
+{"sql":"SELECT t2.y FROM t2, t1 WHERE t1.x==4 AND t2.rowid==t1.rowid"}
+{"sql":"SELECT t2.y FROM t2, t1 WHERE t2.rowid==t1.oid AND t1.x==4"}
+{"sql":"SELECT t2.y FROM t1, t2 WHERE t1.x==4 AND t1._rowid_==t2.rowid"}
+{"sql":"SELECT t2.y FROM t1, t2 WHERE t1.x==4 AND t2.rowid==t1.rowid"}
+{"sql":"SELECT t2.y FROM t1, t2 WHERE t2.rowid==t1.oid AND t1.x==4"}
+{"sql":"CREATE INDEX idxt1 ON t1(x)"}
+{"sql":"SELECT t2.y FROM t1, t2 WHERE t2.rowid==t1.oid AND 4==t1.x"}
+{"sql":"SELECT t2.y FROM t2, t1 WHERE t2.rowid==t1.oid AND 4==t1.x"}
+{"sql":"CREATE INDEX idxt2 ON t2(y)"}
+{"sql":"SELECT t1.x FROM t2, t1 \n    WHERE t2.y==256 AND t1.rowid==t2.rowid"}
+{"sql":"SELECT t1.x FROM t2, t1 \n    WHERE t1.OID==t2.rowid AND t2.y==81"}
+{"sql":"SELECT t1.x FROM t1, t2\n    WHERE t2.y==256 AND t1.rowid==t2.rowid"}
+{"sql":"DELETE FROM t1 WHERE _rowid_ IN (SELECT oid FROM t1 WHERE x>8)"}
+{"sql":"SELECT oid FROM t1 WHERE x>8"}
+{"sql":"DROP INDEX idxt1"}
+{"sql":"INSERT INTO t1 VALUES(99,100)"}
+{"sql":"SELECT rowid,* FROM t1"}
+{"sql":"INSERT INTO t2(b) VALUES(55)"}
+{"sql":"INSERT INTO t2(b) VALUES(66)"}
+{"sql":"INSERT INTO t2(a,b) VALUES(1000000,77)"}
+{"sql":"INSERT INTO t2(b) VALUES(88)"}
+{"sql":"INSERT INTO t2(a,b) VALUES(2147483647,99)"}
+{"sql":"INSERT INTO t2(b) VALUES(11)"}
+{"sql":"SELECT b FROM t2 WHERE a NOT IN(1,2,1000000,1000001,2147483647)"}
+{"sql":"INSERT INTO t2(b) VALUES(22)"}
+{"sql":"INSERT INTO t2(b) VALUES(33)"}
+{"sql":"INSERT INTO t2(b) VALUES(44)"}
+{"sql":"SELECT b FROM t2 WHERE a NOT IN(1,2,1000000,1000001,2147483647) \n          ORDER BY b"}
+{"sql":"DELETE FROM t2 WHERE a!=2"}
+{"sql":"INSERT INTO t2(b) VALUES(111)"}
+{"sql":"CREATE TABLE t3(a integer primary key)"}
+{"sql":"CREATE TRIGGER r3 AFTER INSERT on t3 FOR EACH ROW BEGIN\n      INSERT INTO t4 VALUES(NEW.a+10);\n    END"}
+{"sql":"SELECT rowid, * FROM t4"}
+{"sql":"INSERT INTO t3 VALUES(124)"}
+{"sql":"SELECT * FROM t3 WHERE a<123.5"}
+{"sql":"SELECT * FROM t3 WHERE a<124.5"}
+{"sql":"SELECT * FROM t3 WHERE a>123.5"}
+{"sql":"SELECT * FROM t3 WHERE a>122.5"}
+{"sql":"SELECT * FROM t3 WHERE a==123.5"}
+{"sql":"SELECT * FROM t3 WHERE a==123.000"}
+{"sql":"SELECT * FROM t3 WHERE a>100.5 AND a<200.5"}
+{"sql":"SELECT * FROM t3 WHERE a>'xyz'"}
+{"sql":"SELECT * FROM t3 WHERE a<'xyz'"}
+{"sql":"SELECT * FROM t3 WHERE a>=122.9 AND a<=123.1"}
+{"sql":"INSERT INTO t5 SELECT a+2 FROM t5"}
+{"sql":"INSERT INTO t5 SELECT a+4 FROM t5"}
+{"sql":"SELECT rowid, * FROM t5"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>=5.5"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>=5.0"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>5.5"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>5.0"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5<=rowid"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5<rowid"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<=5.5"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<5.5"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5>=rowid"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5>rowid"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>=5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>=5.0 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>5.0 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5<=rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5<rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<=5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5>=rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE 5.5>rowid ORDER BY rowid DESC"}
+{"sql":"INSERT INTO t6(rowid,a) SELECT -a,a FROM t5"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>=-5.5"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>=-5.0"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>=-5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>=-5.0 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5<=rowid"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5<=rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>-5.5"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>-5.0"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>-5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid>-5.0 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5<rowid"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5<rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid<=-5.5"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid<=-5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5>=rowid"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5>=rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid<-5.5"}
+{"sql":"SELECT rowid, a FROM t6 WHERE rowid<-5.5 ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5>rowid"}
+{"sql":"SELECT rowid, a FROM t6 WHERE -5.5>rowid ORDER BY rowid DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>'abc'"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>='abc'"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<'abc'"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<='abc'"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>'abc' ORDER BY 1 ASC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>='abc' ORDER BY 1 ASC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<'abc' ORDER BY 1 ASC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<='abc' ORDER BY 1 ASC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>'abc' ORDER BY 1 DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid>='abc' ORDER BY 1 DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<'abc' ORDER BY 1 DESC"}
+{"sql":"SELECT rowid, a FROM t5 WHERE rowid<='abc' ORDER BY 1 DESC"}
+{"sql":"CREATE TABLE t7(x INTEGER PRIMARY KEY, y)"}
+{"sql":"CREATE TABLE t7temp(a INTEGER PRIMARY KEY)"}
+{"sql":"INSERT INTO t7 VALUES(9223372036854775807,'a')"}
+{"sql":"SELECT y FROM t7"}
+{"sql":"INSERT INTO t7 VALUES(NULL,'b')"}
+{"sql":"SELECT x, y FROM t7 ORDER BY x"}
+{"sql":"INSERT INTO t7 VALUES(2,'y')"}
+{"sql":"INSERT INTO t7 VALUES(NULL,'x')"}
+{"sql":"SELECT count(*) FROM t7 WHERE y=='x'"}
+{"sql":"CREATE TABLE t13(x)"}
+{"sql":"INSERT INTO t13(rowid,x) VALUES(1234,5)"}
+{"sql":"SELECT rowid, x, addrow(rowid+1000), '|' FROM t13 LIMIT 3"}
+{"sql":"INSERT INTO t14(x) VALUES (100)"}
+{"sql":"SELECT * FROM t14 WHERE x < 'a' ORDER BY rowid ASC"}
+{"sql":"SELECT * FROM t14 WHERE x < 'a' ORDER BY rowid DESC"}
+{"sql":"DELETE FROM t14"}
+{"sql":"PRAGMA reverse_unordered_selects=true"}
+{"sql":"CREATE TABLE t1 (c0, c1)"}
+{"sql":"CREATE TABLE t2 (c0 INT UNIQUE)"}
+{"sql":"INSERT INTO t1(c0, c1) VALUES (0, 0), (0, NULL)"}
+{"sql":"INSERT INTO t2(c0) VALUES (1)"}
+{"sql":"SELECT t2.c0, t1.c1 FROM t1, t2 \n  WHERE (t2.rowid <= 'a') OR (t1.c0 <= t2.c0) LIMIT 100"}
+{"sql":"SELECT 1, NULL INTERSECT SELECT * FROM (\n      SELECT t2.c0, t1.c1 FROM t1, t2\n      WHERE ((t2.rowid <= 'a')) OR (t1.c0 <= t2.c0) ORDER BY 'a' DESC LIMIT 100\n  )"}
+{"sql":"CREATE TABLE t2(y PRIMARY KEY) WITHOUT ROWID"}
+{"sql":"CREATE VIEW v1 AS SELECT x FROM t1"}
+{"sql":"INSERT INTO t1(rowid, x) VALUES(1, 1)"}
+{"sql":"INSERT INTO t2(y) VALUES(2)"}
+{"sql":"INSERT INTO t3(rowid, z) VALUES(3, 3)"}
+{"sql":"SELECT rowid FROM t1, t2"}
+{"sql":"SELECT rowid FROM t1, v1"}
+{"sql":"SELECT rowid FROM t3, v1"}
+{"sql":"SELECT rowid FROM t3, (SELECT 123)"}
+{"sql":"SELECT rowid FROM t2, t1"}
+{"sql":"SELECT rowid FROM v1, t1"}
+{"sql":"SELECT rowid FROM v1, t3"}
+{"sql":"SELECT rowid FROM (SELECT 123), t3"}
+{"sql":"SELECT rowid FROM t1, t3"}

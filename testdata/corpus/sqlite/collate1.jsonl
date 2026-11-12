@@ -1,0 +1,88 @@
+{"sql":"CREATE TABLE collate1t1(c1, c2)"}
+{"sql":"INSERT INTO collate1t1 VALUES(45, hex(45))"}
+{"sql":"INSERT INTO collate1t1 VALUES(NULL, NULL)"}
+{"sql":"INSERT INTO collate1t1 VALUES(281, hex(281))"}
+{"sql":"SELECT c2 FROM collate1t1 ORDER BY 1"}
+{"sql":"SELECT c2 FROM collate1t1 ORDER BY 1 COLLATE hex"}
+{"sql":"SELECT c2 FROM collate1t1 ORDER BY 1 COLLATE hex DESC"}
+{"sql":"SELECT c2 FROM collate1t1 ORDER BY 1 COLLATE hex ASC"}
+{"sql":"SELECT c2 COLLATE hex FROM collate1t1 ORDER BY 1"}
+{"sql":"SELECT c2 COLLATE hex FROM collate1t1 ORDER BY 1 ASC"}
+{"sql":"SELECT c2 COLLATE hex FROM collate1t1 ORDER BY 1 DESC"}
+{"sql":"DROP TABLE collate1t1"}
+{"sql":"INSERT INTO collate1t1 VALUES('5', '0x11')"}
+{"sql":"INSERT INTO collate1t1 VALUES('5', '0xA')"}
+{"sql":"INSERT INTO collate1t1 VALUES('7', '0xA')"}
+{"sql":"INSERT INTO collate1t1 VALUES('11', '0x11')"}
+{"sql":"INSERT INTO collate1t1 VALUES('11', '0x101')"}
+{"sql":"SELECT c1, c2 FROM collate1t1 ORDER BY 1 COLLATE numeric, 2 COLLATE hex"}
+{"sql":"SELECT c1, c2 FROM collate1t1 ORDER BY 1 COLLATE binary, 2 COLLATE hex"}
+{"sql":"SELECT c1, c2 FROM collate1t1 ORDER BY 1 COLLATE binary DESC, 2 COLLATE hex"}
+{"sql":"SELECT c1, c2 FROM collate1t1 \n        ORDER BY 1 COLLATE binary DESC, 2 COLLATE hex DESC"}
+{"sql":"SELECT c1, c2 FROM collate1t1 \n        ORDER BY 1 COLLATE binary ASC, 2 COLLATE hex ASC"}
+{"sql":"SELECT c1 COLLATE numeric, c2 FROM collate1t1 \n     ORDER BY 1, 2 COLLATE hex"}
+{"sql":"SELECT c1 COLLATE hex, c2 FROM collate1t1 \n     ORDER BY 1 COLLATE numeric, 2 COLLATE hex"}
+{"sql":"SELECT c1, c2 COLLATE hex FROM collate1t1 \n     ORDER BY 1 COLLATE numeric, 2"}
+{"sql":"SELECT c1 COLLATE numeric, c2 COLLATE hex\n      FROM collate1t1 \n     ORDER BY 1, 2"}
+{"sql":"SELECT c1 COLLATE binary, c2 COLLATE hex\n      FROM collate1t1\n     ORDER BY 1, 2"}
+{"sql":"SELECT c1, c2\n      FROM collate1t1 ORDER BY 1 COLLATE binary DESC, 2 COLLATE hex"}
+{"sql":"SELECT c1 COLLATE binary, c2 COLLATE hex\n      FROM collate1t1 \n     ORDER BY 1 DESC, 2 DESC"}
+{"sql":"SELECT c1 COLLATE hex, c2 COLLATE binary\n      FROM collate1t1 \n     ORDER BY 1 COLLATE binary ASC, 2 COLLATE hex ASC"}
+{"sql":"CREATE TABLE collate1t1(a COLLATE hex, b)"}
+{"sql":"INSERT INTO collate1t1 VALUES( '0x5', 5 )"}
+{"sql":"INSERT INTO collate1t1 VALUES( '1', 1 )"}
+{"sql":"INSERT INTO collate1t1 VALUES( '0x45', 69 )"}
+{"sql":"INSERT INTO collate1t1 VALUES( NULL, NULL )"}
+{"sql":"SELECT * FROM collate1t1 ORDER BY a"}
+{"sql":"SELECT * FROM collate1t1 ORDER BY 1"}
+{"sql":"SELECT * FROM collate1t1 ORDER BY collate1t1.a"}
+{"sql":"SELECT * FROM collate1t1 ORDER BY main.collate1t1.a"}
+{"sql":"SELECT a as c1, b as c2 FROM collate1t1 ORDER BY c1"}
+{"sql":"SELECT a as c1, b as c2 FROM collate1t1 ORDER BY c1 COLLATE binary"}
+{"sql":"SELECT a COLLATE binary as c1, b as c2\n      FROM collate1t1 ORDER BY c1"}
+{"sql":"CREATE TABLE collate1t1(c1 numeric, c2 text)"}
+{"sql":"INSERT INTO collate1t1 VALUES(1, 1)"}
+{"sql":"INSERT INTO collate1t1 VALUES(12, 12)"}
+{"sql":"INSERT INTO collate1t1 VALUES(101, 101)"}
+{"sql":"SELECT c1 FROM collate1t1 ORDER BY 1"}
+{"sql":"SELECT c2+0 FROM collate1t1 ORDER BY 1"}
+{"sql":"SELECT c1||'' FROM collate1t1 ORDER BY 1"}
+{"sql":"SELECT (c1||'') COLLATE numeric FROM collate1t1 ORDER BY 1"}
+{"sql":"CREATE TABLE c5(\n      id INTEGER PRIMARY KEY,\n      a TEXT COLLATE binary COLLATE nocase COLLATE rtrim,\n      b TEXT COLLATE nocase COLLATE binary,\n      c TEXT COLLATE rtrim COLLATE binary COLLATE rtrim COLLATE nocase\n    )"}
+{"sql":"INSERT INTO c5 VALUES(1, 'abc','abc','abc')"}
+{"sql":"INSERT INTO c5 VALUES(2, 'abc   ','ABC','ABC')"}
+{"sql":"SELECT id FROM c5 WHERE a='abc' ORDER BY id"}
+{"sql":"SELECT id FROM c5 WHERE b='abc' ORDER BY id"}
+{"sql":"SELECT id FROM c5 WHERE c='abc' ORDER BY id"}
+{"sql":"SELECT \"\"\"\"\"\"\"\""}
+{"sql":"CREATE TABLE x1(a)"}
+{"sql":"SELECT a FROM x1 ORDER BY a COLLATE \"\"\"\"\"\"\"\""}
+{"sql":"SELECT a FROM x1 ORDER BY 1 COLLATE \"\"\"\"\"\"\"\""}
+{"sql":"SELECT 0 UNION SELECT 0 ORDER BY 1 COLLATE \"\"\"\"\"\"\"\""}
+{"sql":"PRAGMA foreign_keys = ON"}
+{"sql":"CREATE TABLE p1(a PRIMARY KEY COLLATE '\"\"\"')"}
+{"sql":"CREATE TABLE c1(x, y REFERENCES p1)"}
+{"sql":"INSERT INTO p1 VALUES('abc')"}
+{"sql":"INSERT INTO c1 VALUES(1, 'ABC')"}
+{"sql":"DELETE FROM p1 WHERE rowid = 1"}
+{"sql":"INSERT INTO p1 VALUES('abb')"}
+{"sql":"INSERT INTO p1 VALUES('wxz')"}
+{"sql":"INSERT INTO p1 VALUES('wxy')"}
+{"sql":"INSERT INTO c1 VALUES(2, 'abb')"}
+{"sql":"INSERT INTO c1 VALUES(3, 'wxz')"}
+{"sql":"INSERT INTO c1 VALUES(4, 'WXY')"}
+{"sql":"SELECT x, y FROM c1 ORDER BY y COLLATE \"\"\"\"\"\"\"\""}
+{"sql":"SELECT 'abc' UNION ALL SELECT 'DEF'\n    ORDER BY 1 COLLATE nocase COLLATE nocase COLLATE nocase COLLATE nocase"}
+{"sql":"SELECT 'abc' UNION ALL SELECT 'DEF'\n    ORDER BY 1 COLLATE nocase COLLATE nocase COLLATE nocase COLLATE binary"}
+{"sql":"SELECT 'abc' UNION ALL SELECT 'DEF'\n    ORDER BY 1 COLLATE binary COLLATE binary COLLATE binary COLLATE nocase"}
+{"sql":"SELECT ' ' > char(20) COLLATE rtrim"}
+{"sql":"SELECT '' < char(20) COLLATE rtrim"}
+{"sql":"CREATE TABLE t0(c0 COLLATE RTRIM, c1 BLOB UNIQUE,\n                  PRIMARY KEY (c0, c1)) WITHOUT ROWID"}
+{"sql":"INSERT INTO t0 VALUES (123, 3), (' ', 1), ('\t', 2), ('', 4)"}
+{"sql":"SELECT * FROM t0 WHERE c1 = 1"}
+{"sql":"SELECT * FROM (\n        SELECT b COLLATE nocase IN (SELECT c FROM t2) FROM t1\n    )"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY,b)"}
+{"sql":"INSERT INTO t1 VALUES(0,NULL)"}
+{"sql":"CREATE TABLE t2(x UNIQUE)"}
+{"sql":"CREATE VIEW v1a(z,y) AS SELECT x COLLATE x FROM t2"}
+{"sql":"SELECT a,b,z,y,'' FROM t1 JOIN v1a ON b IS NOT FALSE"}

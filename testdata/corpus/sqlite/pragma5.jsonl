@@ -1,0 +1,7 @@
+{"sql":"PRAGMA table_info(pragma_function_list)"}
+{"sql":"SELECT DISTINCT name, builtin\n    FROM pragma_function_list WHERE name='upper' AND builtin"}
+{"sql":"SELECT DISTINCT name, builtin\n    FROM pragma_function_list WHERE name LIKE 'exter%'"}
+{"sql":"PRAGMA table_info(pragma_module_list)"}
+{"sql":"SELECT * FROM pragma_module_list WHERE name='fts5'"}
+{"sql":"PRAGMA table_info(pragma_pragma_list)"}
+{"sql":"SELECT * FROM pragma_pragma_list WHERE name='pragma_list'"}

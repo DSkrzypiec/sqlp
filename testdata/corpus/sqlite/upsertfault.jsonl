@@ -1,0 +1,3 @@
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, b, c, d, UNIQUE(b, c))"}
+{"sql":"INSERT INTO t1 VALUES(2, 2, 2, 2)"}
+{"sql":"INSERT INTO t1 VALUES(3, 2, 2, NULL) ON CONFLICT(b, c) DO\n       UPDATE SET d=d+1"}

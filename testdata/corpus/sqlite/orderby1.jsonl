@@ -1,0 +1,19 @@
+{"sql":"SELECT 5 ORDER BY 1"}
+{"sql":"EXPLAIN QUERY PLAN SELECT 5 UNION ALL SELECT 3 ORDER BY 1"}
+{"sql":"SELECT 5 UNION ALL SELECT 3 ORDER BY 1"}
+{"sql":"SELECT 986 AS x GROUP BY X ORDER BY X"}
+{"sql":"SELECT (\n    SELECT 'hardware' FROM ( \n      SELECT 'software' ORDER BY 'firmware' ASC, 'sportswear' DESC \n    ) GROUP BY 1 HAVING length(b)\n  )\n  FROM abc"}
+{"sql":"CREATE TABLE t7(a,b)"}
+{"sql":"CREATE INDEX t7a ON t7(a)"}
+{"sql":"CREATE INDEX t7ab ON t7(a,b)"}
+{"sql":"EXPLAIN QUERY PLAN\n  SELECT * FROM t7 WHERE a=?1 ORDER BY rowid"}
+{"sql":"SELECT * FROM t1 ORDER BY a, b"}
+{"sql":"WITH cnt(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM cnt WHERE i<10000\n  )\n  INSERT INTO t1 SELECT i%2, randomblob(500) FROM cnt"}
+{"sql":"INSERT INTO t1 VALUES(1),(2)"}
+{"sql":"INSERT INTO t2 VALUES(9),(8),(3),(4)"}
+{"sql":"SELECT (SELECT x||y FROM t2, t1 ORDER BY x, y)"}
+{"sql":"CREATE TABLE t10(a,b)"}
+{"sql":"INSERT INTO t10 VALUES(1,2),(8,9),(3,4),(5,4),(0,7)"}
+{"sql":"CREATE INDEX t10b ON t10(b)"}
+{"sql":"SELECT b, rowid, '^' FROM t10 ORDER BY b, a LIMIT 4"}
+{"sql":"VALUES(2) EXCEPT SELECT '' ORDER BY abc"}

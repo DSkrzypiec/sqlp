@@ -1,0 +1,33 @@
+{"sql":"INSERT INTO t1 VALUES( 2,  4,  6)"}
+{"sql":"INSERT INTO t1 VALUES( 8, 10, 12)"}
+{"sql":"INSERT INTO t1 VALUES(14, 16, 18)"}
+{"sql":"INSERT INTO t2 VALUES(3,   6,  9)"}
+{"sql":"INSERT INTO t2 VALUES(12, 15, 18)"}
+{"sql":"INSERT INTO t2 VALUES(21, 24, 27)"}
+{"sql":"CREATE INDEX i5 ON t2(e)"}
+{"sql":"CREATE INDEX i6 ON t2(f)"}
+{"sql":"SELECT DISTINCT * FROM \n        (SELECT c FROM t1 UNION ALL SELECT e FROM t2) \n      ORDER BY 1"}
+{"sql":"SELECT c, count(*) FROM \n        (SELECT c FROM t1 UNION ALL SELECT e FROM t2) \n      GROUP BY c ORDER BY 1"}
+{"sql":"SELECT c, count(*) FROM \n        (SELECT c FROM t1 UNION ALL SELECT e FROM t2) \n      GROUP BY c HAVING count(*)>1"}
+{"sql":"SELECT t4.c, t3.a FROM \n        (SELECT c FROM t1 UNION ALL SELECT e FROM t2) AS t4, t1 AS t3\n      WHERE t3.a=14\n      ORDER BY 1"}
+{"sql":"SELECT d FROM t2 \n      EXCEPT \n      SELECT a FROM (SELECT a FROM t1 UNION ALL SELECT d FROM t2)"}
+{"sql":"SELECT * FROM (SELECT a FROM t1 UNION ALL SELECT d FROM t2)\n      EXCEPT \n      SELECT * FROM (SELECT a FROM t1 UNION ALL SELECT d FROM t2)"}
+{"sql":"SELECT c FROM t1\n      EXCEPT \n      SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)"}
+{"sql":"SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      EXCEPT \n      SELECT c FROM t1"}
+{"sql":"SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      EXCEPT \n      SELECT c FROM t1\n      ORDER BY c DESC"}
+{"sql":"SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      UNION \n      SELECT c FROM t1\n      ORDER BY c DESC"}
+{"sql":"SELECT c FROM t1\n      UNION \n      SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      ORDER BY c"}
+{"sql":"SELECT c FROM t1 UNION SELECT e FROM t2 UNION ALL SELECT f FROM t2\n      ORDER BY c"}
+{"sql":"SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      UNION \n      SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      ORDER BY 1"}
+{"sql":"SELECT c FROM t1\n      INTERSECT \n      SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      ORDER BY 1"}
+{"sql":"SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      INTERSECT \n      SELECT c FROM t1\n      ORDER BY 1"}
+{"sql":"SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      INTERSECT \n      SELECT * FROM (SELECT e FROM t2 UNION ALL SELECT f FROM t2)\n      ORDER BY 1"}
+{"sql":"SELECT * FROM (\n        SELECT a FROM t1 UNION ALL SELECT d FROM t2 LIMIT 4\n      ) LIMIT 2"}
+{"sql":"SELECT * FROM (\n        SELECT a FROM t1 UNION ALL SELECT d FROM t2 LIMIT 4 OFFSET 2\n      ) LIMIT 2"}
+{"sql":"SELECT * FROM (\n        SELECT DISTINCT (a/10) FROM t1 UNION ALL SELECT DISTINCT(d%2) FROM t2\n      )"}
+{"sql":"SELECT DISTINCT * FROM (\n        SELECT DISTINCT (a/10) FROM t1 UNION ALL SELECT DISTINCT(d%2) FROM t2\n      )"}
+{"sql":"SELECT * FROM (SELECT * FROM t1 UNION ALL SELECT * FROM t2) ORDER BY a+b"}
+{"sql":"SELECT * FROM (SELECT 345 UNION ALL SELECT d FROM t2) ORDER BY 1"}
+{"sql":"SELECT x, y FROM (\n        SELECT a AS x, b AS y FROM t1\n        UNION ALL\n        SELECT a*10 + 0.1, f*10 + 0.1 FROM t1 JOIN t2 ON (c=d)\n        UNION ALL\n        SELECT a*100, b*100 FROM t1\n      ) ORDER BY 1"}
+{"sql":"SELECT x, y FROM (\n        SELECT a AS x, b AS y FROM t1\n        UNION ALL\n        SELECT a*10 + 0.1, f*10 + 0.1 FROM t1 LEFT JOIN t2 ON (c=d)\n        UNION ALL\n        SELECT a*100, b*100 FROM t1\n      ) ORDER BY 1"}
+{"sql":"SELECT x+y FROM (\n        SELECT a AS x, b AS y FROM t1\n        UNION ALL\n        SELECT a*10 + 0.1, f*10 + 0.1 FROM t1 LEFT JOIN t2 ON (c=d)\n        UNION ALL\n        SELECT a*100, b*100 FROM t1\n      ) WHERE y+x NOT NULL ORDER BY 1"}

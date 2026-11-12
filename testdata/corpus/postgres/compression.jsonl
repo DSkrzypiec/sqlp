@@ -1,0 +1,70 @@
+{"sql":"SET default_toast_compression = 'pglz'","shape":"SET default_toast_compression TO 'pglz';"}
+{"sql":"CREATE TABLE cmdata(f1 text COMPRESSION pglz)","shape":"CREATE TABLE cmdata (f1 text COMPRESSION pglz);"}
+{"sql":"CREATE INDEX idx ON cmdata(f1)","shape":"CREATE INDEX idx ON cmdata (f1);"}
+{"sql":"INSERT INTO cmdata VALUES(repeat('1234567890', 1000))","shape":"INSERT INTO cmdata VALUES (repeat('1234567890', 1000));"}
+{"sql":"CREATE TABLE cmdata1(f1 TEXT COMPRESSION lz4)","shape":"CREATE TABLE cmdata1 (f1 TEXT COMPRESSION lz4);"}
+{"sql":"INSERT INTO cmdata1 VALUES(repeat('1234567890', 1004))","shape":"INSERT INTO cmdata1 VALUES (repeat('1234567890', 1004));"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmdata","shape":"SELECT pg_column_compression(f1) FROM cmdata;"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmdata1","shape":"SELECT pg_column_compression(f1) FROM cmdata1;"}
+{"sql":"SELECT SUBSTR(f1, 200, 5) FROM cmdata","shape":"SELECT SUBSTR(f1, 200, 5) FROM cmdata;"}
+{"sql":"SELECT SUBSTR(f1, 2000, 50) FROM cmdata1","shape":"SELECT SUBSTR(f1, 2000, 50) FROM cmdata1;"}
+{"sql":"SELECT * INTO cmmove1 FROM cmdata","shape":"SELECT * INTO cmmove1 FROM cmdata;"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmmove1","shape":"SELECT pg_column_compression(f1) FROM cmmove1;"}
+{"sql":"CREATE TABLE cmmove3(f1 text COMPRESSION pglz)","shape":"CREATE TABLE cmmove3 (f1 text COMPRESSION pglz);"}
+{"sql":"INSERT INTO cmmove3 SELECT * FROM cmdata","shape":"INSERT INTO cmmove3 SELECT * FROM cmdata;"}
+{"sql":"INSERT INTO cmmove3 SELECT * FROM cmdata1","shape":"INSERT INTO cmmove3 SELECT * FROM cmdata1;"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmmove3","shape":"SELECT pg_column_compression(f1) FROM cmmove3;"}
+{"sql":"CREATE TABLE cmdata2 (LIKE cmdata1 INCLUDING COMPRESSION)","shape":"CREATE TABLE cmdata2 (LIKE cmdata1 INCLUDING COMPRESSION);"}
+{"sql":"DROP TABLE cmdata2","shape":"DROP TABLE cmdata2;"}
+{"sql":"CREATE TABLE cmdata2 (f1 int COMPRESSION pglz)","shape":"CREATE TABLE cmdata2 (f1 int COMPRESSION pglz);"}
+{"sql":"CREATE TABLE cmmove2(f1 text COMPRESSION pglz)","shape":"CREATE TABLE cmmove2 (f1 text COMPRESSION pglz);"}
+{"sql":"INSERT INTO cmmove2 VALUES (repeat('1234567890', 1004))","shape":"INSERT INTO cmmove2 VALUES (repeat('1234567890', 1004));"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmmove2","shape":"SELECT pg_column_compression(f1) FROM cmmove2;"}
+{"sql":"UPDATE cmmove2 SET f1 = cmdata1.f1 FROM cmdata1","shape":"UPDATE cmmove2 SET f1 = cmdata1.f1 FROM cmdata1;"}
+{"sql":"CREATE OR REPLACE FUNCTION large_val() RETURNS TEXT LANGUAGE SQL AS\n'select array_agg(fipshash(g::text))::text from generate_series(1, 256) g'","shape":"CREATE OR REPLACE FUNCTION large_val() RETURNS TEXT LANGUAGE SQL AS 'select array_agg(fipshash(g::text))::text from generate_series(1, 256) g';"}
+{"sql":"CREATE TABLE cmdata2 (f1 text COMPRESSION pglz)","shape":"CREATE TABLE cmdata2 (f1 text COMPRESSION pglz);"}
+{"sql":"INSERT INTO cmdata2 SELECT large_val() || repeat('a', 4000)","shape":"INSERT INTO cmdata2 SELECT large_val() || repeat('a', 4000);"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmdata2","shape":"SELECT pg_column_compression(f1) FROM cmdata2;"}
+{"sql":"INSERT INTO cmdata1 SELECT large_val() || repeat('a', 4000)","shape":"INSERT INTO cmdata1 SELECT large_val() || repeat('a', 4000);"}
+{"sql":"SELECT SUBSTR(f1, 200, 5) FROM cmdata1","shape":"SELECT SUBSTR(f1, 200, 5) FROM cmdata1;"}
+{"sql":"SELECT SUBSTR(f1, 200, 5) FROM cmdata2","shape":"SELECT SUBSTR(f1, 200, 5) FROM cmdata2;"}
+{"sql":"CREATE TABLE cmdata2 (f1 int)","shape":"CREATE TABLE cmdata2 (f1 int);"}
+{"sql":"ALTER TABLE cmdata2 ALTER COLUMN f1 TYPE varchar","shape":"ALTER TABLE cmdata2 ALTER COLUMN f1 SET DATA TYPE varchar;"}
+{"sql":"ALTER TABLE cmdata2 ALTER COLUMN f1 TYPE int USING f1::integer","shape":"ALTER TABLE cmdata2 ALTER COLUMN f1 SET DATA TYPE int USING f1::integer;"}
+{"sql":"ALTER TABLE cmdata2 ALTER COLUMN f1 SET COMPRESSION pglz"}
+{"sql":"ALTER TABLE cmdata2 ALTER COLUMN f1 SET STORAGE plain"}
+{"sql":"INSERT INTO cmdata2 VALUES (repeat('123456789', 800))","shape":"INSERT INTO cmdata2 VALUES (repeat('123456789', 800));"}
+{"sql":"CREATE MATERIALIZED VIEW compressmv(x) AS SELECT * FROM cmdata1","shape":"CREATE MATERIALIZED VIEW compressmv (x) AS SELECT * FROM cmdata1;"}
+{"sql":"SELECT pg_column_compression(x) FROM compressmv","shape":"SELECT pg_column_compression(x) FROM compressmv;"}
+{"sql":"CREATE TABLE cmpart(f1 text COMPRESSION lz4) PARTITION BY HASH(f1)","shape":"CREATE TABLE cmpart (f1 text COMPRESSION lz4) PARTITION BY HASH (f1);"}
+{"sql":"CREATE TABLE cmpart1 PARTITION OF cmpart FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE cmpart1 PARTITION OF cmpart FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE cmpart2(f1 text COMPRESSION pglz)","shape":"CREATE TABLE cmpart2 (f1 text COMPRESSION pglz);"}
+{"sql":"ALTER TABLE cmpart ATTACH PARTITION cmpart2 FOR VALUES WITH (MODULUS 2, REMAINDER 1)"}
+{"sql":"INSERT INTO cmpart VALUES (repeat('123456789', 1004))","shape":"INSERT INTO cmpart VALUES (repeat('123456789', 1004));"}
+{"sql":"INSERT INTO cmpart VALUES (repeat('123456789', 4004))","shape":"INSERT INTO cmpart VALUES (repeat('123456789', 4004));"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmpart1","shape":"SELECT pg_column_compression(f1) FROM cmpart1;"}
+{"sql":"SELECT pg_column_compression(f1) FROM cmpart2","shape":"SELECT pg_column_compression(f1) FROM cmpart2;"}
+{"sql":"CREATE TABLE cminh() INHERITS(cmdata, cmdata1)","shape":"CREATE TABLE cminh () INHERITS (cmdata, cmdata1);"}
+{"sql":"CREATE TABLE cminh(f1 TEXT COMPRESSION lz4) INHERITS(cmdata)","shape":"CREATE TABLE cminh (f1 TEXT COMPRESSION lz4) INHERITS (cmdata);"}
+{"sql":"SET default_toast_compression = ''","shape":"SET default_toast_compression TO '';"}
+{"sql":"SET default_toast_compression = 'I do not exist compression'","shape":"SET default_toast_compression TO 'I do not exist compression';"}
+{"sql":"SET default_toast_compression = 'lz4'","shape":"SET default_toast_compression TO 'lz4';"}
+{"sql":"ALTER TABLE cmdata ALTER COLUMN f1 SET COMPRESSION lz4"}
+{"sql":"INSERT INTO cmdata VALUES (repeat('123456789', 4004))","shape":"INSERT INTO cmdata VALUES (repeat('123456789', 4004));"}
+{"sql":"ALTER TABLE cmdata2 ALTER COLUMN f1 SET COMPRESSION default"}
+{"sql":"ALTER MATERIALIZED VIEW compressmv ALTER COLUMN x SET COMPRESSION lz4"}
+{"sql":"ALTER TABLE cmpart1 ALTER COLUMN f1 SET COMPRESSION pglz"}
+{"sql":"ALTER TABLE cmpart2 ALTER COLUMN f1 SET COMPRESSION lz4"}
+{"sql":"VACUUM FULL cmdata","shape":"VACUUM FULL cmdata;"}
+{"sql":"CREATE TABLE cmdata2 (f1 TEXT COMPRESSION pglz, f2 TEXT COMPRESSION lz4)","shape":"CREATE TABLE cmdata2 (f1 TEXT COMPRESSION pglz, f2 TEXT COMPRESSION lz4);"}
+{"sql":"CREATE UNIQUE INDEX idx1 ON cmdata2 ((f1 || f2))","shape":"CREATE UNIQUE INDEX idx1 ON cmdata2 ((f1 || f2));"}
+{"sql":"INSERT INTO cmdata2 VALUES((SELECT array_agg(fipshash(g::TEXT))::TEXT FROM\ngenerate_series(1, 50) g), VERSION())","shape":"INSERT INTO cmdata2 VALUES ((SELECT array_agg(fipshash(g::TEXT))::TEXT FROM generate_series(1, 50) AS g), VERSION());"}
+{"sql":"SELECT length(f1) FROM cmdata","shape":"SELECT length(f1) FROM cmdata;"}
+{"sql":"SELECT length(f1) FROM cmdata1","shape":"SELECT length(f1) FROM cmdata1;"}
+{"sql":"SELECT length(f1) FROM cmmove1","shape":"SELECT length(f1) FROM cmmove1;"}
+{"sql":"SELECT length(f1) FROM cmmove2","shape":"SELECT length(f1) FROM cmmove2;"}
+{"sql":"SELECT length(f1) FROM cmmove3","shape":"SELECT length(f1) FROM cmmove3;"}
+{"sql":"CREATE TABLE badcompresstbl (a text COMPRESSION I_Do_Not_Exist_Compression)","shape":"CREATE TABLE badcompresstbl (a text COMPRESSION I_Do_Not_Exist_Compression);"}
+{"sql":"CREATE TABLE badcompresstbl (a text)","shape":"CREATE TABLE badcompresstbl (a text);"}
+{"sql":"ALTER TABLE badcompresstbl ALTER a SET COMPRESSION I_Do_Not_Exist_Compression"}
+{"sql":"DROP TABLE badcompresstbl","shape":"DROP TABLE badcompresstbl;"}

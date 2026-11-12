@@ -1,0 +1,140 @@
+{"sql":"CREATE TABLE t1(a, b TEXT, c)"}
+{"sql":"INSERT INTO t1 VALUES(3,  'three', 'III')"}
+{"sql":"INSERT INTO t1 VALUES(6,  'six',   'VI')"}
+{"sql":"INSERT INTO t1 VALUES(9,  'nine',  'IX')"}
+{"sql":"SELECT b FROM e1"}
+{"sql":"SELECT c FROM e1 WHERE a=1 OR b='three'"}
+{"sql":"CREATE INDEX i3 ON t2(d)"}
+{"sql":"CREATE INDEX i4 ON t2(e)"}
+{"sql":"INSERT INTO t2 VALUES(1,  NULL,         'I')"}
+{"sql":"INSERT INTO t2 VALUES(2,  'four',       'IV')"}
+{"sql":"INSERT INTO t2 VALUES(3,  NULL,         'IX')"}
+{"sql":"INSERT INTO t2 VALUES(4,  'sixteen',    'XVI')"}
+{"sql":"INSERT INTO t2 VALUES(5,  NULL,         'XXV')"}
+{"sql":"INSERT INTO t2 VALUES(6,  'thirtysix',  'XXXVI')"}
+{"sql":"INSERT INTO t2 VALUES(7,  'fortynine',  'XLIX')"}
+{"sql":"INSERT INTO t2 VALUES(8,  'sixtyeight', 'LXIV')"}
+{"sql":"INSERT INTO t2 VALUES(9,  'eightyone',  'LXXXIX')"}
+{"sql":"INSERT INTO t2 VALUES(10, NULL,         'C')"}
+{"sql":"CREATE TABLE t3(a INTEGER, b REAL, c TEXT)"}
+{"sql":"CREATE TABLE t4(f INTEGER, g REAL, h TEXT)"}
+{"sql":"INSERT INTO t3 VALUES('hills', NULL, 1415926535)"}
+{"sql":"INSERT INTO t3 VALUES('and', 'of', NULL)"}
+{"sql":"INSERT INTO t3 VALUES('have', 'towering', 53594.08128)"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 45.64856692, 'Not')"}
+{"sql":"INSERT INTO t3 VALUES('same', 5028841971, NULL)"}
+{"sql":"INSERT INTO t3 VALUES('onlookers', 'in', 8214808651)"}
+{"sql":"INSERT INTO t3 VALUES(346.0348610, 2643383279, NULL)"}
+{"sql":"INSERT INTO t3 VALUES(1415926535, 'of', 'are')"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 0.4811174502, 'snapshots')"}
+{"sql":"INSERT INTO t3 VALUES('over', 'the', 8628034825)"}
+{"sql":"INSERT INTO t3 VALUES(8628034825, 66.59334461, 2847564.823)"}
+{"sql":"INSERT INTO t3 VALUES('onlookers', 'same', 'and')"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 'light', 6939937510)"}
+{"sql":"INSERT INTO t3 VALUES('from', 'their', 'viewed')"}
+{"sql":"INSERT INTO t3 VALUES('from', 'Alpine', 'snapshots')"}
+{"sql":"INSERT INTO t3 VALUES('from', 'sometimes', 'unalike')"}
+{"sql":"INSERT INTO t3 VALUES(1339.360726, 'light', 'have')"}
+{"sql":"INSERT INTO t3 VALUES(6939937510, 3282306647, 'other')"}
+{"sql":"INSERT INTO t3 VALUES('paintings', 8628034825, 'all')"}
+{"sql":"INSERT INTO t3 VALUES('paintings', NULL, 'same')"}
+{"sql":"INSERT INTO t3 VALUES('Alpine', 378678316.5, 'unalike')"}
+{"sql":"INSERT INTO t3 VALUES('Alpine', NULL, 'same')"}
+{"sql":"INSERT INTO t3 VALUES(1339.360726, 2847564.823, 'over')"}
+{"sql":"INSERT INTO t3 VALUES('villages', 'their', 'have')"}
+{"sql":"INSERT INTO t3 VALUES('unalike', 'remarkably', 'in')"}
+{"sql":"INSERT INTO t3 VALUES('and', 8979323846, 'and')"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 1415926535, 'an')"}
+{"sql":"INSERT INTO t3 VALUES(271.2019091, 8628034825, 0.4811174502)"}
+{"sql":"INSERT INTO t3 VALUES('all', 3421170679, 'the')"}
+{"sql":"INSERT INTO t3 VALUES('Not', 'and', 1415926535)"}
+{"sql":"INSERT INTO t3 VALUES('of', 'other', 'light')"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 'towering', 'Not')"}
+{"sql":"INSERT INTO t3 VALUES(346.0348610, NULL, 'other')"}
+{"sql":"INSERT INTO t3 VALUES('Not', 378678316.5, NULL)"}
+{"sql":"INSERT INTO t3 VALUES('snapshots', 8628034825, 'of')"}
+{"sql":"INSERT INTO t3 VALUES(3282306647, 271.2019091, 'and')"}
+{"sql":"INSERT INTO t3 VALUES(50.58223172, 378678316.5, 5028841971)"}
+{"sql":"INSERT INTO t3 VALUES(50.58223172, 2643383279, 'snapshots')"}
+{"sql":"INSERT INTO t3 VALUES('writings', 8979323846, 8979323846)"}
+{"sql":"INSERT INTO t3 VALUES('onlookers', 'his', 'in')"}
+{"sql":"INSERT INTO t3 VALUES('unalike', 8628034825, 1339.360726)"}
+{"sql":"INSERT INTO t3 VALUES('of', 'Alpine', 'and')"}
+{"sql":"INSERT INTO t3 VALUES('onlookers', NULL, 'from')"}
+{"sql":"INSERT INTO t3 VALUES('writings', 'it', 1339.360726)"}
+{"sql":"INSERT INTO t3 VALUES('it', 'and', 'villages')"}
+{"sql":"INSERT INTO t3 VALUES('an', 'the', 'villages')"}
+{"sql":"INSERT INTO t3 VALUES(8214808651, 8214808651, 'same')"}
+{"sql":"INSERT INTO t3 VALUES(346.0348610, 'light', 1415926535)"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 8979323846, 'and')"}
+{"sql":"INSERT INTO t3 VALUES(NULL, 'same', 1339.360726)"}
+{"sql":"INSERT INTO t4 VALUES('his', 'from', 'an')"}
+{"sql":"INSERT INTO t4 VALUES('snapshots', 'or', NULL)"}
+{"sql":"INSERT INTO t4 VALUES('Alpine', 'have', 'it')"}
+{"sql":"INSERT INTO t4 VALUES('have', 'peak', 'remarkably')"}
+{"sql":"INSERT INTO t4 VALUES('hills', NULL, 'Not')"}
+{"sql":"INSERT INTO t4 VALUES('same', 'from', 2643383279)"}
+{"sql":"INSERT INTO t4 VALUES('have', 'angle', 8628034825)"}
+{"sql":"INSERT INTO t4 VALUES('sometimes', 'it', 2847564.823)"}
+{"sql":"INSERT INTO t4 VALUES(0938446095, 'peak', 'of')"}
+{"sql":"INSERT INTO t4 VALUES(8628034825, 'and', 'same')"}
+{"sql":"INSERT INTO t4 VALUES('and', 271.2019091, 'their')"}
+{"sql":"INSERT INTO t4 VALUES('the', 'of', 'remarkably')"}
+{"sql":"INSERT INTO t4 VALUES('and', 3421170679, 1415926535)"}
+{"sql":"INSERT INTO t4 VALUES('and', 'in', 'all')"}
+{"sql":"INSERT INTO t4 VALUES(378678316.5, 0.4811174502, 'snapshots')"}
+{"sql":"INSERT INTO t4 VALUES('it', 'are', 'have')"}
+{"sql":"INSERT INTO t4 VALUES('angle', 'snapshots', 378678316.5)"}
+{"sql":"INSERT INTO t4 VALUES('from', 1415926535, 8628034825)"}
+{"sql":"INSERT INTO t4 VALUES('snapshots', 'angle', 'have')"}
+{"sql":"INSERT INTO t4 VALUES(3421170679, 0938446095, 'Not')"}
+{"sql":"INSERT INTO t4 VALUES('peak', NULL, 0.4811174502)"}
+{"sql":"INSERT INTO t4 VALUES('same', 'have', 'Alpine')"}
+{"sql":"INSERT INTO t4 VALUES(271.2019091, 66.59334461, 0938446095)"}
+{"sql":"INSERT INTO t4 VALUES(8979323846, 'his', 'an')"}
+{"sql":"INSERT INTO t4 VALUES(NULL, 'and', 3282306647)"}
+{"sql":"INSERT INTO t4 VALUES('remarkably', NULL, 'Not')"}
+{"sql":"INSERT INTO t4 VALUES('villages', 4543.266482, 'his')"}
+{"sql":"INSERT INTO t4 VALUES(2643383279, 'paintings', 'onlookers')"}
+{"sql":"INSERT INTO t4 VALUES(1339.360726, 'of', 'the')"}
+{"sql":"INSERT INTO t4 VALUES('peak', 'other', 'peak')"}
+{"sql":"INSERT INTO t4 VALUES('it', 'or', 8979323846)"}
+{"sql":"INSERT INTO t4 VALUES('onlookers', 'Not', 'towering')"}
+{"sql":"INSERT INTO t4 VALUES(NULL, 'peak', 'Not')"}
+{"sql":"INSERT INTO t4 VALUES('of', 'have', 6939937510)"}
+{"sql":"INSERT INTO t4 VALUES('light', 'hills', 0.4811174502)"}
+{"sql":"INSERT INTO t4 VALUES(5028841971, 'Not', 'it')"}
+{"sql":"INSERT INTO t4 VALUES('and', 'Not', NULL)"}
+{"sql":"INSERT INTO t4 VALUES(346.0348610, 'villages', NULL)"}
+{"sql":"INSERT INTO t4 VALUES(8979323846, NULL, 6939937510)"}
+{"sql":"INSERT INTO t4 VALUES('an', 'light', 'peak')"}
+{"sql":"INSERT INTO t4 VALUES(5028841971, 6939937510, 'light')"}
+{"sql":"INSERT INTO t4 VALUES('sometimes', 'peak', 'peak')"}
+{"sql":"INSERT INTO t4 VALUES(378678316.5, 5028841971, 'an')"}
+{"sql":"INSERT INTO t4 VALUES(378678316.5, 'his', 'Alpine')"}
+{"sql":"INSERT INTO t4 VALUES('from', 'of', 'all')"}
+{"sql":"INSERT INTO t4 VALUES(0938446095, 'same', NULL)"}
+{"sql":"INSERT INTO t4 VALUES(0938446095, 'Alpine', NULL)"}
+{"sql":"INSERT INTO t4 VALUES('his', 'of', 378678316.5)"}
+{"sql":"INSERT INTO t4 VALUES(271.2019091, 'viewed', 3282306647)"}
+{"sql":"INSERT INTO t4 VALUES('hills', 'all', 'peak')"}
+{"sql":"CREATE TABLE t5(s)"}
+{"sql":"INSERT INTO t5 VALUES('tab-t5')"}
+{"sql":"CREATE TABLE t6(t)"}
+{"sql":"INSERT INTO t6 VALUES(123456)"}
+{"sql":"DROP INDEX IF EXISTS i5"}
+{"sql":"DROP INDEX IF EXISTS i6"}
+{"sql":"DROP INDEX IF EXISTS i7"}
+{"sql":"DROP INDEX IF EXISTS i8"}
+{"sql":"CREATE TABLE tA(\n      a, b, c, d, e, f, g, h, \n      i, j, k, l, m, n, o, p\n    )"}
+{"sql":"SELECT * FROM tA WHERE\n      a=1 AND b=2 AND c=3 AND d=4 AND e=5 AND f=6 AND g=7 AND h=8 AND\n      i=1 AND j=2 AND k=3 AND l=4 AND m=5 AND n=6 AND o=7 AND\n      (p = 1 OR p = 2 OR p = 3)"}
+{"sql":"SELECT * FROM tA WHERE\n      a=1 AND b=2 AND c=3 AND d=4 AND e=5 AND f=6 AND g=7 AND h=8 AND\n      i=1 AND j=2 AND k=3 AND l=4 AND m=5 AND\n      (p = 1 OR p = 2 OR p = 3) AND n=6 AND o=7"}
+{"sql":"INSERT INTO tA VALUES(1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8)"}
+{"sql":"CREATE UNIQUE INDEX tAI ON tA(p)"}
+{"sql":"CREATE TABLE tB(x)"}
+{"sql":"INSERT INTO tB VALUES('x')"}
+{"sql":"SELECT a, x FROM tA LEFT JOIN tB ON (\n      a=1 AND b=2 AND c=3 AND d=4 AND e=5 AND f=6 AND g=7 AND h=8 AND\n      i=1 AND j=2 AND k=3 AND l=4 AND m=5 AND n=6 AND o=7 AND\n      (p = 1 OR p = 2 OR p = 3)\n    )"}
+{"sql":"CREATE TABLE t600(a PRIMARY KEY, b) WITHOUT rowid"}
+{"sql":"CREATE INDEX t600b ON t600(b)"}
+{"sql":"INSERT INTO t600 VALUES('state','screen'),('exact','dolphin'),('green','mercury')"}
+{"sql":"SELECT a, b, '|' FROM t600 WHERE a=='state' OR b='mercury' ORDER BY +a"}

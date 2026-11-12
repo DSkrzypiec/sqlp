@@ -1,0 +1,457 @@
+{"sql":"SELECT getdatabaseencoding() <> 'UTF8' OR\n       (SELECT count(*) FROM pg_collation WHERE collprovider = 'i' AND collname <> 'unicode') = 0\n       AS skip_test","shape":"SELECT (getdatabaseencoding() <> 'UTF8') OR ((SELECT count(*) FROM pg_collation WHERE (collprovider = 'i') AND (collname <> 'unicode')) = 0) AS skip_test;"}
+{"sql":"SET client_encoding TO UTF8","shape":"SET client_encoding TO UTF8;"}
+{"sql":"CREATE SCHEMA collate_tests","shape":"CREATE SCHEMA collate_tests;"}
+{"sql":"SET search_path = collate_tests","shape":"SET search_path TO collate_tests;"}
+{"sql":"CREATE TABLE collate_test1 (\n    a int,\n    b text COLLATE \"en-x-icu\" NOT NULL\n)","shape":"CREATE TABLE collate_test1 (a int, b text COLLATE \"en-x-icu\" NOT NULL);"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int,\n    b text COLLATE \"ja_JP.eucjp-x-icu\"\n)","shape":"CREATE TABLE collate_test_fail (a int, b text COLLATE \"ja_JP.eucjp-x-icu\");"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int,\n    b text COLLATE \"foo-x-icu\"\n)","shape":"CREATE TABLE collate_test_fail (a int, b text COLLATE \"foo-x-icu\");"}
+{"sql":"CREATE TABLE collate_test_fail (\n    a int COLLATE \"en-x-icu\",\n    b text\n)","shape":"CREATE TABLE collate_test_fail (a int COLLATE \"en-x-icu\", b text);"}
+{"sql":"CREATE TABLE collate_test_like (\n    LIKE collate_test1\n)","shape":"CREATE TABLE collate_test_like (LIKE collate_test1);"}
+{"sql":"CREATE TABLE collate_test2 (\n    a int,\n    b text COLLATE \"sv-x-icu\"\n)","shape":"CREATE TABLE collate_test2 (a int, b text COLLATE \"sv-x-icu\");"}
+{"sql":"CREATE TABLE collate_test3 (\n    a int,\n    b text COLLATE \"C\"\n)","shape":"CREATE TABLE collate_test3 (a int, b text COLLATE \"C\");"}
+{"sql":"INSERT INTO collate_test1 VALUES (1, 'abc'), (2, 'äbc'), (3, 'bbc'), (4, 'ABC')","shape":"INSERT INTO collate_test1 VALUES (1, 'abc'), (2, 'äbc'), (3, 'bbc'), (4, 'ABC');"}
+{"sql":"INSERT INTO collate_test2 SELECT * FROM collate_test1","shape":"INSERT INTO collate_test2 SELECT * FROM collate_test1;"}
+{"sql":"INSERT INTO collate_test3 SELECT * FROM collate_test1","shape":"INSERT INTO collate_test3 SELECT * FROM collate_test1;"}
+{"sql":"SELECT * FROM collate_test1 WHERE b >= 'bbc'","shape":"SELECT * FROM collate_test1 WHERE b >= 'bbc';"}
+{"sql":"SELECT * FROM collate_test2 WHERE b >= 'bbc'","shape":"SELECT * FROM collate_test2 WHERE b >= 'bbc';"}
+{"sql":"SELECT * FROM collate_test3 WHERE b >= 'bbc'","shape":"SELECT * FROM collate_test3 WHERE b >= 'bbc';"}
+{"sql":"SELECT * FROM collate_test3 WHERE b >= 'BBC'","shape":"SELECT * FROM collate_test3 WHERE b >= 'BBC';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'bbc'","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= 'bbc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b >= 'bbc' COLLATE \"C\"","shape":"SELECT * FROM collate_test1 WHERE b >= ('bbc' COLLATE \"C\");"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'bbc' COLLATE \"C\"","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= ('bbc' COLLATE \"C\");"}
+{"sql":"SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'bbc' COLLATE \"en-x-icu\"","shape":"SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= ('bbc' COLLATE \"en-x-icu\");"}
+{"sql":"CREATE DOMAIN testdomain_sv AS text COLLATE \"sv-x-icu\"","shape":"CREATE DOMAIN testdomain_sv AS text COLLATE \"sv-x-icu\";"}
+{"sql":"CREATE DOMAIN testdomain_i AS int COLLATE \"sv-x-icu\"","shape":"CREATE DOMAIN testdomain_i AS int COLLATE \"sv-x-icu\";"}
+{"sql":"CREATE TABLE collate_test4 (\n    a int,\n    b testdomain_sv\n)","shape":"CREATE TABLE collate_test4 (a int, b testdomain_sv);"}
+{"sql":"INSERT INTO collate_test4 SELECT * FROM collate_test1","shape":"INSERT INTO collate_test4 SELECT * FROM collate_test1;"}
+{"sql":"SELECT a, b FROM collate_test4 ORDER BY b","shape":"SELECT a, b FROM collate_test4 ORDER BY b;"}
+{"sql":"CREATE TABLE collate_test5 (\n    a int,\n    b testdomain_sv COLLATE \"en-x-icu\"\n)","shape":"CREATE TABLE collate_test5 (a int, b testdomain_sv COLLATE \"en-x-icu\");"}
+{"sql":"INSERT INTO collate_test5 SELECT * FROM collate_test1","shape":"INSERT INTO collate_test5 SELECT * FROM collate_test1;"}
+{"sql":"SELECT a, b FROM collate_test5 ORDER BY b","shape":"SELECT a, b FROM collate_test5 ORDER BY b;"}
+{"sql":"SELECT a, b FROM collate_test1 ORDER BY b","shape":"SELECT a, b FROM collate_test1 ORDER BY b;"}
+{"sql":"SELECT a, b FROM collate_test2 ORDER BY b","shape":"SELECT a, b FROM collate_test2 ORDER BY b;"}
+{"sql":"SELECT a, b FROM collate_test3 ORDER BY b","shape":"SELECT a, b FROM collate_test3 ORDER BY b;"}
+{"sql":"SELECT a, b FROM collate_test1 ORDER BY b COLLATE \"C\"","shape":"SELECT a, b FROM collate_test1 ORDER BY b COLLATE \"C\";"}
+{"sql":"SELECT * FROM collate_test1 ORDER BY b","shape":"SELECT * FROM collate_test1 ORDER BY b;"}
+{"sql":"SELECT * FROM collate_test2 ORDER BY b","shape":"SELECT * FROM collate_test2 ORDER BY b;"}
+{"sql":"SELECT * FROM collate_test3 ORDER BY b","shape":"SELECT * FROM collate_test3 ORDER BY b;"}
+{"sql":"SELECT 'bbc' COLLATE \"en-x-icu\" > 'äbc' COLLATE \"en-x-icu\" AS \"true\"","shape":"SELECT ('bbc' COLLATE \"en-x-icu\") > ('äbc' COLLATE \"en-x-icu\") AS \"true\";"}
+{"sql":"SELECT 'bbc' COLLATE \"sv-x-icu\" > 'äbc' COLLATE \"sv-x-icu\" AS \"false\"","shape":"SELECT ('bbc' COLLATE \"sv-x-icu\") > ('äbc' COLLATE \"sv-x-icu\") AS \"false\";"}
+{"sql":"CREATE TABLE collate_test10 (\n    a int,\n    x text COLLATE \"en-x-icu\",\n    y text COLLATE \"tr-x-icu\"\n)","shape":"CREATE TABLE collate_test10 (a int, x text COLLATE \"en-x-icu\", y text COLLATE \"tr-x-icu\");"}
+{"sql":"INSERT INTO collate_test10 VALUES (1, 'hij', 'hij'), (2, 'HIJ', 'HIJ')","shape":"INSERT INTO collate_test10 VALUES (1, 'hij', 'hij'), (2, 'HIJ', 'HIJ');"}
+{"sql":"SELECT a, lower(x), lower(y), upper(x), upper(y), initcap(x), initcap(y) FROM collate_test10","shape":"SELECT a, lower(x), lower(y), upper(x), upper(y), initcap(x), initcap(y) FROM collate_test10;"}
+{"sql":"SELECT a, lower(x COLLATE \"C\"), lower(y COLLATE \"C\") FROM collate_test10","shape":"SELECT a, lower(x COLLATE \"C\"), lower(y COLLATE \"C\") FROM collate_test10;"}
+{"sql":"SELECT a, x, y FROM collate_test10 ORDER BY lower(y), a","shape":"SELECT a, x, y FROM collate_test10 ORDER BY lower(y), a;"}
+{"sql":"SELECT * FROM collate_test1 WHERE b LIKE 'abc'","shape":"SELECT * FROM collate_test1 WHERE b LIKE 'abc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b LIKE 'abc%'","shape":"SELECT * FROM collate_test1 WHERE b LIKE 'abc%';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b LIKE '%bc%'","shape":"SELECT * FROM collate_test1 WHERE b LIKE '%bc%';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ILIKE 'abc'","shape":"SELECT * FROM collate_test1 WHERE b ILIKE 'abc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ILIKE 'abc%'","shape":"SELECT * FROM collate_test1 WHERE b ILIKE 'abc%';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ILIKE '%bc%'","shape":"SELECT * FROM collate_test1 WHERE b ILIKE '%bc%';"}
+{"sql":"SELECT 'Türkiye' COLLATE \"en-x-icu\" ILIKE '%KI%' AS \"true\"","shape":"SELECT ('Türkiye' COLLATE \"en-x-icu\") ILIKE '%KI%' AS \"true\";"}
+{"sql":"SELECT 'Türkiye' COLLATE \"tr-x-icu\" ILIKE '%KI%' AS \"false\"","shape":"SELECT ('Türkiye' COLLATE \"tr-x-icu\") ILIKE '%KI%' AS \"false\";"}
+{"sql":"SELECT 'bıt' ILIKE 'BIT' COLLATE \"en-x-icu\" AS \"false\"","shape":"SELECT 'bıt' ILIKE ('BIT' COLLATE \"en-x-icu\") AS \"false\";"}
+{"sql":"SELECT 'bıt' ILIKE 'BIT' COLLATE \"tr-x-icu\" AS \"true\"","shape":"SELECT 'bıt' ILIKE ('BIT' COLLATE \"tr-x-icu\") AS \"true\";"}
+{"sql":"SELECT relname FROM pg_class WHERE relname ILIKE 'abc%'","shape":"SELECT relname FROM pg_class WHERE relname ILIKE 'abc%';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ~ '^abc$'","shape":"SELECT * FROM collate_test1 WHERE b ~ '^abc$';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ~ '^abc'","shape":"SELECT * FROM collate_test1 WHERE b ~ '^abc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ~ 'bc'","shape":"SELECT * FROM collate_test1 WHERE b ~ 'bc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ~* '^abc$'","shape":"SELECT * FROM collate_test1 WHERE b ~* '^abc$';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ~* '^abc'","shape":"SELECT * FROM collate_test1 WHERE b ~* '^abc';"}
+{"sql":"SELECT * FROM collate_test1 WHERE b ~* 'bc'","shape":"SELECT * FROM collate_test1 WHERE b ~* 'bc';"}
+{"sql":"CREATE TABLE collate_test6 (\n    a int,\n    b text COLLATE \"en-x-icu\"\n)","shape":"CREATE TABLE collate_test6 (a int, b text COLLATE \"en-x-icu\");"}
+{"sql":"INSERT INTO collate_test6 VALUES (1, 'abc'), (2, 'ABC'), (3, '123'), (4, 'ab1'),\n                                 (5, 'a1!'), (6, 'a c'), (7, '!.;'), (8, '   '),\n                                 (9, 'äbç'), (10, 'ÄBÇ')","shape":"INSERT INTO collate_test6 VALUES (1, 'abc'), (2, 'ABC'), (3, '123'), (4, 'ab1'), (5, 'a1!'), (6, 'a c'), (7, '!.;'), (8, '   '), (9, 'äbç'), (10, 'ÄBÇ');"}
+{"sql":"SELECT b,\n       b ~ '^[[:alpha:]]+$' AS is_alpha,\n       b ~ '^[[:upper:]]+$' AS is_upper,\n       b ~ '^[[:lower:]]+$' AS is_lower,\n       b ~ '^[[:digit:]]+$' AS is_digit,\n       b ~ '^[[:alnum:]]+$' AS is_alnum,\n       b ~ '^[[:graph:]]+$' AS is_graph,\n       b ~ '^[[:print:]]+$' AS is_print,\n       b ~ '^[[:punct:]]+$' AS is_punct,\n       b ~ '^[[:space:]]+$' AS is_space\nFROM collate_test6","shape":"SELECT b, b ~ '^[[:alpha:]]+$' AS is_alpha, b ~ '^[[:upper:]]+$' AS is_upper, b ~ '^[[:lower:]]+$' AS is_lower, b ~ '^[[:digit:]]+$' AS is_digit, b ~ '^[[:alnum:]]+$' AS is_alnum, b ~ '^[[:graph:]]+$' AS is_graph, b ~ '^[[:print:]]+$' AS is_print, b ~ '^[[:punct:]]+$' AS is_punct, b ~ '^[[:space:]]+$' AS is_space FROM collate_test6;"}
+{"sql":"SELECT 'Türkiye' COLLATE \"en-x-icu\" ~* 'KI' AS \"true\"","shape":"SELECT ('Türkiye' COLLATE \"en-x-icu\") ~* 'KI' AS \"true\";"}
+{"sql":"SELECT 'Türkiye' COLLATE \"tr-x-icu\" ~* 'KI' AS \"true\"","shape":"SELECT ('Türkiye' COLLATE \"tr-x-icu\") ~* 'KI' AS \"true\";"}
+{"sql":"SELECT 'bıt' ~* 'BIT' COLLATE \"en-x-icu\" AS \"false\"","shape":"SELECT 'bıt' ~* ('BIT' COLLATE \"en-x-icu\") AS \"false\";"}
+{"sql":"SELECT 'bıt' ~* 'BIT' COLLATE \"tr-x-icu\" AS \"false\"","shape":"SELECT 'bıt' ~* ('BIT' COLLATE \"tr-x-icu\") AS \"false\";"}
+{"sql":"SELECT relname FROM pg_class WHERE relname ~* '^abc'","shape":"SELECT relname FROM pg_class WHERE relname ~* '^abc';"}
+{"sql":"CREATE VIEW collview1 AS SELECT * FROM collate_test1 WHERE b COLLATE \"C\" >= 'bbc'","shape":"CREATE VIEW collview1 AS SELECT * FROM collate_test1 WHERE (b COLLATE \"C\") >= 'bbc';"}
+{"sql":"CREATE VIEW collview2 AS SELECT a, b FROM collate_test1 ORDER BY b COLLATE \"C\"","shape":"CREATE VIEW collview2 AS SELECT a, b FROM collate_test1 ORDER BY b COLLATE \"C\";"}
+{"sql":"CREATE VIEW collview3 AS SELECT a, lower((x || x) COLLATE \"C\") FROM collate_test10","shape":"CREATE VIEW collview3 AS SELECT a, lower((x || x) COLLATE \"C\") FROM collate_test10;"}
+{"sql":"SELECT table_name, view_definition FROM information_schema.views\n  WHERE table_name LIKE 'collview%' ORDER BY 1","shape":"SELECT table_name, view_definition FROM information_schema.views WHERE table_name LIKE 'collview%' ORDER BY 1;"}
+{"sql":"SELECT a, coalesce(b, 'foo') FROM collate_test1 ORDER BY 2","shape":"SELECT a, coalesce(b, 'foo') FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, coalesce(b, 'foo') FROM collate_test2 ORDER BY 2","shape":"SELECT a, coalesce(b, 'foo') FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, coalesce(b, 'foo') FROM collate_test3 ORDER BY 2","shape":"SELECT a, coalesce(b, 'foo') FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, lower(coalesce(x, 'foo')), lower(coalesce(y, 'foo')) FROM collate_test10","shape":"SELECT a, lower(coalesce(x, 'foo')), lower(coalesce(y, 'foo')) FROM collate_test10;"}
+{"sql":"SELECT a, b, greatest(b, 'CCC') FROM collate_test1 ORDER BY 3","shape":"SELECT a, b, greatest(b, 'CCC') FROM collate_test1 ORDER BY 3;"}
+{"sql":"SELECT a, b, greatest(b, 'CCC') FROM collate_test2 ORDER BY 3","shape":"SELECT a, b, greatest(b, 'CCC') FROM collate_test2 ORDER BY 3;"}
+{"sql":"SELECT a, b, greatest(b, 'CCC') FROM collate_test3 ORDER BY 3","shape":"SELECT a, b, greatest(b, 'CCC') FROM collate_test3 ORDER BY 3;"}
+{"sql":"SELECT a, x, y, lower(greatest(x, 'foo')), lower(greatest(y, 'foo')) FROM collate_test10","shape":"SELECT a, x, y, lower(greatest(x, 'foo')), lower(greatest(y, 'foo')) FROM collate_test10;"}
+{"sql":"SELECT a, nullif(b, 'abc') FROM collate_test1 ORDER BY 2","shape":"SELECT a, nullif(b, 'abc') FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, nullif(b, 'abc') FROM collate_test2 ORDER BY 2","shape":"SELECT a, nullif(b, 'abc') FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, nullif(b, 'abc') FROM collate_test3 ORDER BY 2","shape":"SELECT a, nullif(b, 'abc') FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, lower(nullif(x, 'foo')), lower(nullif(y, 'foo')) FROM collate_test10","shape":"SELECT a, lower(nullif(x, 'foo')), lower(nullif(y, 'foo')) FROM collate_test10;"}
+{"sql":"SELECT a, CASE b WHEN 'abc' THEN 'abcd' ELSE b END FROM collate_test1 ORDER BY 2","shape":"SELECT a, CASE b WHEN 'abc' THEN 'abcd' ELSE b END FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, CASE b WHEN 'abc' THEN 'abcd' ELSE b END FROM collate_test2 ORDER BY 2","shape":"SELECT a, CASE b WHEN 'abc' THEN 'abcd' ELSE b END FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, CASE b WHEN 'abc' THEN 'abcd' ELSE b END FROM collate_test3 ORDER BY 2","shape":"SELECT a, CASE b WHEN 'abc' THEN 'abcd' ELSE b END FROM collate_test3 ORDER BY 2;"}
+{"sql":"CREATE DOMAIN testdomain AS text","shape":"CREATE DOMAIN testdomain AS text;"}
+{"sql":"SELECT a, b::testdomain FROM collate_test1 ORDER BY 2","shape":"SELECT a, b::testdomain FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, b::testdomain FROM collate_test2 ORDER BY 2","shape":"SELECT a, b::testdomain FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, b::testdomain FROM collate_test3 ORDER BY 2","shape":"SELECT a, b::testdomain FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, b::testdomain_sv FROM collate_test3 ORDER BY 2","shape":"SELECT a, b::testdomain_sv FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, lower(x::testdomain), lower(y::testdomain) FROM collate_test10","shape":"SELECT a, lower(x::testdomain), lower(y::testdomain) FROM collate_test10;"}
+{"sql":"SELECT min(b), max(b) FROM collate_test1","shape":"SELECT min(b), max(b) FROM collate_test1;"}
+{"sql":"SELECT min(b), max(b) FROM collate_test2","shape":"SELECT min(b), max(b) FROM collate_test2;"}
+{"sql":"SELECT min(b), max(b) FROM collate_test3","shape":"SELECT min(b), max(b) FROM collate_test3;"}
+{"sql":"SELECT array_agg(b ORDER BY b) FROM collate_test1","shape":"SELECT array_agg(b ORDER BY b) FROM collate_test1;"}
+{"sql":"SELECT array_agg(b ORDER BY b) FROM collate_test2","shape":"SELECT array_agg(b ORDER BY b) FROM collate_test2;"}
+{"sql":"SELECT array_agg(b ORDER BY b) FROM collate_test3","shape":"SELECT array_agg(b ORDER BY b) FROM collate_test3;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test1 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test2 UNION SELECT a, b FROM collate_test2 ORDER BY 2","shape":"SELECT a, b FROM collate_test2 UNION SELECT a, b FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test3 WHERE a < 4 INTERSECT SELECT a, b FROM collate_test3 WHERE a > 1 ORDER BY 2","shape":"SELECT a, b FROM collate_test3 WHERE a < 4 INTERSECT SELECT a, b FROM collate_test3 WHERE a > 1 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test3 EXCEPT SELECT a, b FROM collate_test3 WHERE a < 2 ORDER BY 2","shape":"SELECT a, b FROM collate_test3 EXCEPT SELECT a, b FROM collate_test3 WHERE a < 2 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test3 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test3","shape":"SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test3;"}
+{"sql":"SELECT a, b FROM collate_test1 UNION SELECT a, b FROM collate_test3 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 UNION SELECT a, b FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, b COLLATE \"C\" FROM collate_test1 UNION SELECT a, b FROM collate_test3 ORDER BY 2","shape":"SELECT a, b COLLATE \"C\" FROM collate_test1 UNION SELECT a, b FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 INTERSECT SELECT a, b FROM collate_test3 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 INTERSECT SELECT a, b FROM collate_test3 ORDER BY 2;"}
+{"sql":"SELECT a, b FROM collate_test1 EXCEPT SELECT a, b FROM collate_test3 ORDER BY 2","shape":"SELECT a, b FROM collate_test1 EXCEPT SELECT a, b FROM collate_test3 ORDER BY 2;"}
+{"sql":"CREATE TABLE test_u AS SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test3","shape":"CREATE TABLE test_u AS SELECT a, b FROM collate_test1 UNION ALL SELECT a, b FROM collate_test3;"}
+{"sql":"select x < y from collate_test10","shape":"SELECT x < y FROM collate_test10;"}
+{"sql":"select x || y from collate_test10","shape":"SELECT x || y FROM collate_test10;"}
+{"sql":"select x, y from collate_test10 order by x || y","shape":"SELECT x, y FROM collate_test10 ORDER BY x || y;"}
+{"sql":"WITH RECURSIVE foo(x) AS\n   (SELECT x FROM (VALUES('a' COLLATE \"en-x-icu\"),('b')) t(x)\n   UNION ALL\n   SELECT (x || 'c') COLLATE \"de-x-icu\" FROM foo WHERE length(x) < 10)\nSELECT * FROM foo","shape":"WITH RECURSIVE foo(x) AS (SELECT x FROM (VALUES ('a' COLLATE \"en-x-icu\"), ('b')) AS t(x) UNION ALL SELECT (x || 'c') COLLATE \"de-x-icu\" FROM foo WHERE length(x) < 10) SELECT * FROM foo;"}
+{"sql":"SELECT CAST('42' AS text COLLATE \"C\")","reject":true}
+{"sql":"SELECT a, CAST(b AS varchar) FROM collate_test1 ORDER BY 2","shape":"SELECT a, CAST(b AS varchar) FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, CAST(b AS varchar) FROM collate_test2 ORDER BY 2","shape":"SELECT a, CAST(b AS varchar) FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, CAST(b AS varchar) FROM collate_test3 ORDER BY 2","shape":"SELECT a, CAST(b AS varchar) FROM collate_test3 ORDER BY 2;"}
+{"sql":"CREATE FUNCTION mylt (text, text) RETURNS boolean LANGUAGE sql\n    AS $$ select $1 < $2 $$","shape":"CREATE FUNCTION mylt(text, text) RETURNS boolean LANGUAGE sql AS ' select $1 < $2 ';"}
+{"sql":"CREATE FUNCTION mylt_noninline (text, text) RETURNS boolean LANGUAGE sql\n    AS $$ select $1 < $2 limit 1 $$","shape":"CREATE FUNCTION mylt_noninline(text, text) RETURNS boolean LANGUAGE sql AS ' select $1 < $2 limit 1 ';"}
+{"sql":"CREATE FUNCTION mylt_plpgsql (text, text) RETURNS boolean LANGUAGE plpgsql\n    AS $$ begin return $1 < $2; end $$","shape":"CREATE FUNCTION mylt_plpgsql(text, text) RETURNS boolean LANGUAGE plpgsql AS ' begin return $1 < $2; end ';"}
+{"sql":"SELECT a.b AS a, b.b AS b, a.b < b.b AS lt,\n       mylt(a.b, b.b), mylt_noninline(a.b, b.b), mylt_plpgsql(a.b, b.b)\nFROM collate_test1 a, collate_test1 b\nORDER BY a.b, b.b","shape":"SELECT a.b AS a, b.b AS b, a.b < b.b AS lt, mylt(a.b, b.b), mylt_noninline(a.b, b.b), mylt_plpgsql(a.b, b.b) FROM collate_test1 AS a, collate_test1 AS b ORDER BY a.b, b.b;"}
+{"sql":"SELECT a.b AS a, b.b AS b, a.b < b.b COLLATE \"C\" AS lt,\n       mylt(a.b, b.b COLLATE \"C\"), mylt_noninline(a.b, b.b COLLATE \"C\"),\n       mylt_plpgsql(a.b, b.b COLLATE \"C\")\nFROM collate_test1 a, collate_test1 b\nORDER BY a.b, b.b","shape":"SELECT a.b AS a, b.b AS b, a.b < (b.b COLLATE \"C\") AS lt, mylt(a.b, b.b COLLATE \"C\"), mylt_noninline(a.b, b.b COLLATE \"C\"), mylt_plpgsql(a.b, b.b COLLATE \"C\") FROM collate_test1 AS a, collate_test1 AS b ORDER BY a.b, b.b;"}
+{"sql":"CREATE FUNCTION mylt2 (x text, y text) RETURNS boolean LANGUAGE plpgsql AS $$\ndeclare\n  xx text := x;\n  yy text := y;\nbegin\n  return xx < yy;\nend\n$$","shape":"CREATE FUNCTION mylt2(x text, y text) RETURNS boolean LANGUAGE plpgsql AS '\ndeclare\n  xx text := x;\n  yy text := y;\nbegin\n  return xx < yy;\nend\n';"}
+{"sql":"SELECT mylt2('a', 'B' collate \"en-x-icu\") as t, mylt2('a', 'B' collate \"C\") as f","shape":"SELECT mylt2('a', 'B' COLLATE \"en-x-icu\") AS t, mylt2('a', 'B' COLLATE \"C\") AS f;"}
+{"sql":"CREATE OR REPLACE FUNCTION\n  mylt2 (x text, y text) RETURNS boolean LANGUAGE plpgsql AS $$\ndeclare\n  xx text COLLATE \"POSIX\" := x;\n  yy text := y;\nbegin\n  return xx < yy;\nend\n$$","shape":"CREATE OR REPLACE FUNCTION mylt2(x text, y text) RETURNS boolean LANGUAGE plpgsql AS '\ndeclare\n  xx text COLLATE \"POSIX\" := x;\n  yy text := y;\nbegin\n  return xx < yy;\nend\n';"}
+{"sql":"SELECT mylt2('a', 'B') as f","shape":"SELECT mylt2('a', 'B') AS f;"}
+{"sql":"SELECT mylt2('a', 'B' collate \"C\") as fail","shape":"SELECT mylt2('a', 'B' COLLATE \"C\") AS fail;"}
+{"sql":"SELECT mylt2('a', 'B' collate \"POSIX\") as f","shape":"SELECT mylt2('a', 'B' COLLATE \"POSIX\") AS f;"}
+{"sql":"SELECT * FROM unnest((SELECT array_agg(b ORDER BY b) FROM collate_test1)) ORDER BY 1","shape":"SELECT * FROM unnest((SELECT array_agg(b ORDER BY b) FROM collate_test1)) ORDER BY 1;"}
+{"sql":"SELECT * FROM unnest((SELECT array_agg(b ORDER BY b) FROM collate_test2)) ORDER BY 1","shape":"SELECT * FROM unnest((SELECT array_agg(b ORDER BY b) FROM collate_test2)) ORDER BY 1;"}
+{"sql":"SELECT * FROM unnest((SELECT array_agg(b ORDER BY b) FROM collate_test3)) ORDER BY 1","shape":"SELECT * FROM unnest((SELECT array_agg(b ORDER BY b) FROM collate_test3)) ORDER BY 1;"}
+{"sql":"CREATE FUNCTION dup (anyelement) RETURNS anyelement\n    AS 'select $1' LANGUAGE sql","shape":"CREATE FUNCTION dup(anyelement) RETURNS anyelement AS 'select $1' LANGUAGE sql;"}
+{"sql":"SELECT a, dup(b) FROM collate_test1 ORDER BY 2","shape":"SELECT a, dup(b) FROM collate_test1 ORDER BY 2;"}
+{"sql":"SELECT a, dup(b) FROM collate_test2 ORDER BY 2","shape":"SELECT a, dup(b) FROM collate_test2 ORDER BY 2;"}
+{"sql":"SELECT a, dup(b) FROM collate_test3 ORDER BY 2","shape":"SELECT a, dup(b) FROM collate_test3 ORDER BY 2;"}
+{"sql":"CREATE INDEX collate_test1_idx1 ON collate_test1 (b)","shape":"CREATE INDEX collate_test1_idx1 ON collate_test1 (b);"}
+{"sql":"CREATE INDEX collate_test1_idx2 ON collate_test1 (b COLLATE \"C\")","shape":"CREATE INDEX collate_test1_idx2 ON collate_test1 (b COLLATE \"C\");"}
+{"sql":"CREATE INDEX collate_test1_idx3 ON collate_test1 ((b COLLATE \"C\"))","shape":"CREATE INDEX collate_test1_idx3 ON collate_test1 ((b COLLATE \"C\"));"}
+{"sql":"CREATE INDEX collate_test1_idx4 ON collate_test1 (((b||'foo') COLLATE \"POSIX\"))","shape":"CREATE INDEX collate_test1_idx4 ON collate_test1 (((b || 'foo') COLLATE \"POSIX\"));"}
+{"sql":"CREATE INDEX collate_test1_idx5 ON collate_test1 (a COLLATE \"C\")","shape":"CREATE INDEX collate_test1_idx5 ON collate_test1 (a COLLATE \"C\");"}
+{"sql":"CREATE INDEX collate_test1_idx6 ON collate_test1 ((a COLLATE \"C\"))","shape":"CREATE INDEX collate_test1_idx6 ON collate_test1 ((a COLLATE \"C\"));"}
+{"sql":"SELECT relname, pg_get_indexdef(oid) FROM pg_class WHERE relname LIKE 'collate_test%_idx%' ORDER BY 1","shape":"SELECT relname, pg_get_indexdef(oid) FROM pg_class WHERE relname LIKE 'collate_test%_idx%' ORDER BY 1;"}
+{"sql":"set enable_seqscan = off","shape":"SET enable_seqscan TO off;"}
+{"sql":"explain (costs off)\nselect * from collate_test1 where b ilike 'abc'","shape":"EXPLAIN (COSTS off) SELECT * FROM collate_test1 WHERE b ILIKE 'abc';"}
+{"sql":"select * from collate_test1 where b ilike 'abc'","shape":"SELECT * FROM collate_test1 WHERE b ILIKE 'abc';"}
+{"sql":"explain (costs off)\nselect * from collate_test1 where b ilike 'ABC'","shape":"EXPLAIN (COSTS off) SELECT * FROM collate_test1 WHERE b ILIKE 'ABC';"}
+{"sql":"select * from collate_test1 where b ilike 'ABC'","shape":"SELECT * FROM collate_test1 WHERE b ILIKE 'ABC';"}
+{"sql":"CREATE ROLE regress_test_role"}
+{"sql":"CREATE SCHEMA test_schema","shape":"CREATE SCHEMA test_schema;"}
+{"sql":"SET client_min_messages TO WARNING","shape":"SET client_min_messages TO WARNING;"}
+{"sql":"SET icu_validation_level = disabled","shape":"SET icu_validation_level TO disabled;"}
+{"sql":"do $$\nBEGIN\n  EXECUTE 'CREATE COLLATION test0 (provider = icu, locale = ' ||\n          quote_literal((SELECT CASE WHEN datlocprovider='i' THEN daticulocale ELSE datcollate END FROM pg_database WHERE datname = current_database())) || ');';\nEND\n$$","shape":"DO '\nBEGIN\n  EXECUTE ''CREATE COLLATION test0 (provider = icu, locale = '' ||\n          quote_literal((SELECT CASE WHEN datlocprovider=''i'' THEN daticulocale ELSE datcollate END FROM pg_database WHERE datname = current_database())) || '');'';\nEND\n';"}
+{"sql":"CREATE COLLATION test0 FROM \"C\""}
+{"sql":"do $$\nBEGIN\n  EXECUTE 'CREATE COLLATION test1 (provider = icu, locale = ' ||\n          quote_literal((SELECT CASE WHEN datlocprovider='i' THEN daticulocale ELSE datcollate END FROM pg_database WHERE datname = current_database())) || ');';\nEND\n$$","shape":"DO '\nBEGIN\n  EXECUTE ''CREATE COLLATION test1 (provider = icu, locale = '' ||\n          quote_literal((SELECT CASE WHEN datlocprovider=''i'' THEN daticulocale ELSE datcollate END FROM pg_database WHERE datname = current_database())) || '');'';\nEND\n';"}
+{"sql":"RESET icu_validation_level","shape":"RESET icu_validation_level;"}
+{"sql":"CREATE COLLATION test3 (provider = icu, lc_collate = 'en_US.utf8')"}
+{"sql":"SET icu_validation_level = ERROR","shape":"SET icu_validation_level TO ERROR;"}
+{"sql":"CREATE COLLATION testx (provider = icu, locale = 'nonsense-nowhere')"}
+{"sql":"CREATE COLLATION testx (provider = icu, locale = '@colStrength=primary;nonsense=yes')"}
+{"sql":"DROP COLLATION testx"}
+{"sql":"CREATE COLLATION test4 FROM nonsense"}
+{"sql":"CREATE COLLATION test5 FROM test0"}
+{"sql":"SELECT collname FROM pg_collation WHERE collname LIKE 'test%' ORDER BY 1","shape":"SELECT collname FROM pg_collation WHERE collname LIKE 'test%' ORDER BY 1;"}
+{"sql":"ALTER COLLATION test1 RENAME TO test11"}
+{"sql":"ALTER COLLATION test0 RENAME TO test11"}
+{"sql":"ALTER COLLATION test1 RENAME TO test22"}
+{"sql":"ALTER COLLATION test11 OWNER TO regress_test_role"}
+{"sql":"ALTER COLLATION test11 OWNER TO nonsense"}
+{"sql":"ALTER COLLATION test11 SET SCHEMA test_schema"}
+{"sql":"COMMENT ON COLLATION test0 IS 'US English'"}
+{"sql":"SELECT collname, nspname, obj_description(pg_collation.oid, 'pg_collation')\n    FROM pg_collation JOIN pg_namespace ON (collnamespace = pg_namespace.oid)\n    WHERE collname LIKE 'test%'\n    ORDER BY 1","shape":"SELECT collname, nspname, obj_description(pg_collation.oid, 'pg_collation') FROM pg_collation JOIN pg_namespace ON (collnamespace = pg_namespace.oid) WHERE collname LIKE 'test%' ORDER BY 1;"}
+{"sql":"DROP COLLATION test0, test_schema.test11, test5"}
+{"sql":"DROP COLLATION test0"}
+{"sql":"DROP COLLATION IF EXISTS test0"}
+{"sql":"SELECT collname FROM pg_collation WHERE collname LIKE 'test%'","shape":"SELECT collname FROM pg_collation WHERE collname LIKE 'test%';"}
+{"sql":"DROP SCHEMA test_schema","shape":"DROP SCHEMA test_schema;"}
+{"sql":"DROP ROLE regress_test_role","shape":"DROP ROLE regress_test_role;"}
+{"sql":"ALTER COLLATION \"en-x-icu\" REFRESH VERSION"}
+{"sql":"SELECT current_database() AS datname","shape":"SELECT current_database() AS datname;"}
+{"sql":"CREATE TABLE collate_dep_test1 (a int, b text COLLATE test0)","shape":"CREATE TABLE collate_dep_test1 (a int, b text COLLATE test0);"}
+{"sql":"CREATE DOMAIN collate_dep_dom1 AS text COLLATE test0","shape":"CREATE DOMAIN collate_dep_dom1 AS text COLLATE test0;"}
+{"sql":"CREATE TYPE collate_dep_test2 AS (x int, y text COLLATE test0)","shape":"CREATE TYPE collate_dep_test2 AS (x int, y text COLLATE test0);"}
+{"sql":"CREATE VIEW collate_dep_test3 AS SELECT text 'foo' COLLATE test0 AS foo","shape":"CREATE VIEW collate_dep_test3 AS SELECT text 'foo' COLLATE test0 AS foo;"}
+{"sql":"CREATE TABLE collate_dep_test4t (a int, b text)","shape":"CREATE TABLE collate_dep_test4t (a int, b text);"}
+{"sql":"CREATE INDEX collate_dep_test4i ON collate_dep_test4t (b COLLATE test0)","shape":"CREATE INDEX collate_dep_test4i ON collate_dep_test4t (b COLLATE test0);"}
+{"sql":"DROP COLLATION test0 RESTRICT"}
+{"sql":"DROP COLLATION test0 CASCADE"}
+{"sql":"DROP TABLE collate_dep_test1, collate_dep_test4t","shape":"DROP TABLE collate_dep_test1, collate_dep_test4t;"}
+{"sql":"DROP TYPE collate_dep_test2","shape":"DROP TYPE collate_dep_test2;"}
+{"sql":"create type textrange_c as range(subtype=text, collation=\"C\")"}
+{"sql":"create type textrange_en_us as range(subtype=text, collation=\"en-x-icu\")"}
+{"sql":"select textrange_c('A','Z') @> 'b'::text","shape":"SELECT textrange_c('A', 'Z') @> 'b'::text;"}
+{"sql":"select textrange_en_us('A','Z') @> 'b'::text","shape":"SELECT textrange_en_us('A', 'Z') @> 'b'::text;"}
+{"sql":"drop type textrange_c","shape":"DROP TYPE textrange_c;"}
+{"sql":"drop type textrange_en_us","shape":"DROP TYPE textrange_en_us;"}
+{"sql":"SELECT * FROM collate_test2 ORDER BY b COLLATE UCS_BASIC","shape":"SELECT * FROM collate_test2 ORDER BY b COLLATE UCS_BASIC;"}
+{"sql":"SELECT * FROM collate_test2 ORDER BY b COLLATE UNICODE","shape":"SELECT * FROM collate_test2 ORDER BY b COLLATE UNICODE;"}
+{"sql":"SET client_min_messages=WARNING","shape":"SET client_min_messages TO WARNING;"}
+{"sql":"CREATE COLLATION testcoll_ignore_accents (provider = icu, locale = '@colStrength=primary;colCaseLevel=yes')"}
+{"sql":"SELECT 'aaá' > 'AAA' COLLATE \"und-x-icu\", 'aaá' < 'AAA' COLLATE testcoll_ignore_accents","shape":"SELECT 'aaá' > ('AAA' COLLATE \"und-x-icu\"), 'aaá' < ('AAA' COLLATE testcoll_ignore_accents);"}
+{"sql":"CREATE COLLATION testcoll_backwards (provider = icu, locale = '@colBackwards=yes')"}
+{"sql":"SELECT 'coté' < 'côte' COLLATE \"und-x-icu\", 'coté' > 'côte' COLLATE testcoll_backwards","shape":"SELECT 'coté' < ('côte' COLLATE \"und-x-icu\"), 'coté' > ('côte' COLLATE testcoll_backwards);"}
+{"sql":"CREATE COLLATION testcoll_lower_first (provider = icu, locale = '@colCaseFirst=lower')"}
+{"sql":"CREATE COLLATION testcoll_upper_first (provider = icu, locale = '@colCaseFirst=upper')"}
+{"sql":"SELECT 'aaa' < 'AAA' COLLATE testcoll_lower_first, 'aaa' > 'AAA' COLLATE testcoll_upper_first","shape":"SELECT 'aaa' < ('AAA' COLLATE testcoll_lower_first), 'aaa' > ('AAA' COLLATE testcoll_upper_first);"}
+{"sql":"CREATE COLLATION testcoll_shifted (provider = icu, locale = '@colAlternate=shifted')"}
+{"sql":"SELECT 'de-luge' < 'deanza' COLLATE \"und-x-icu\", 'de-luge' > 'deanza' COLLATE testcoll_shifted","shape":"SELECT 'de-luge' < ('deanza' COLLATE \"und-x-icu\"), 'de-luge' > ('deanza' COLLATE testcoll_shifted);"}
+{"sql":"CREATE COLLATION testcoll_numeric (provider = icu, locale = '@colNumeric=yes')"}
+{"sql":"SELECT 'A-21' > 'A-123' COLLATE \"und-x-icu\", 'A-21' < 'A-123' COLLATE testcoll_numeric","shape":"SELECT 'A-21' > ('A-123' COLLATE \"und-x-icu\"), 'A-21' < ('A-123' COLLATE testcoll_numeric);"}
+{"sql":"CREATE COLLATION testcoll_error1 (provider = icu, locale = '@colNumeric=lower')"}
+{"sql":"CREATE COLLATION testcoll_de_phonebook (provider = icu, locale = 'de@collation=phonebook')"}
+{"sql":"SELECT 'Goldmann' < 'Götz' COLLATE \"de-x-icu\", 'Goldmann' > 'Götz' COLLATE testcoll_de_phonebook","shape":"SELECT 'Goldmann' < ('Götz' COLLATE \"de-x-icu\"), 'Goldmann' > ('Götz' COLLATE testcoll_de_phonebook);"}
+{"sql":"CREATE COLLATION testcoll_rules1 (provider = icu, locale = '', rules = '&a < g')"}
+{"sql":"CREATE TABLE test7 (a text)","shape":"CREATE TABLE test7 (a text);"}
+{"sql":"INSERT INTO test7 VALUES ('Abernathy'), ('apple'), ('bird'), ('Boston'), ('Graham'), ('green')","shape":"INSERT INTO test7 VALUES ('Abernathy'), ('apple'), ('bird'), ('Boston'), ('Graham'), ('green');"}
+{"sql":"SELECT * FROM test7 ORDER BY a COLLATE \"en-x-icu\"","shape":"SELECT * FROM test7 ORDER BY a COLLATE \"en-x-icu\";"}
+{"sql":"SELECT * FROM test7 ORDER BY a COLLATE testcoll_rules1","shape":"SELECT * FROM test7 ORDER BY a COLLATE testcoll_rules1;"}
+{"sql":"DROP TABLE test7","shape":"DROP TABLE test7;"}
+{"sql":"CREATE COLLATION testcoll_rulesx (provider = icu, locale = '', rules = '!!wrong!!')"}
+{"sql":"CREATE COLLATION ctest_det (provider = icu, locale = '', deterministic = true)"}
+{"sql":"CREATE COLLATION ctest_nondet (provider = icu, locale = '', deterministic = false)"}
+{"sql":"CREATE TABLE test6 (a int, b text)","shape":"CREATE TABLE test6 (a int, b text);"}
+{"sql":"INSERT INTO test6 VALUES (1, U&'\\00E4bc')","shape":"INSERT INTO test6 VALUES (1, U&'\\00E4bc');"}
+{"sql":"INSERT INTO test6 VALUES (2, U&'\\0061\\0308bc')","shape":"INSERT INTO test6 VALUES (2, U&'\\0061\\0308bc');"}
+{"sql":"SELECT * FROM test6","shape":"SELECT * FROM test6;"}
+{"sql":"SELECT * FROM test6 WHERE b = 'äbc' COLLATE ctest_det","shape":"SELECT * FROM test6 WHERE b = ('äbc' COLLATE ctest_det);"}
+{"sql":"SELECT * FROM test6 WHERE b = 'äbc' COLLATE ctest_nondet","shape":"SELECT * FROM test6 WHERE b = ('äbc' COLLATE ctest_nondet);"}
+{"sql":"CREATE TABLE test6a (a int, b text[])","shape":"CREATE TABLE test6a (a int, b text[]);"}
+{"sql":"INSERT INTO test6a VALUES (1, ARRAY[U&'\\00E4bc'])","shape":"INSERT INTO test6a VALUES (1, ARRAY[U&'\\00E4bc']);"}
+{"sql":"INSERT INTO test6a VALUES (2, ARRAY[U&'\\0061\\0308bc'])","shape":"INSERT INTO test6a VALUES (2, ARRAY[U&'\\0061\\0308bc']);"}
+{"sql":"SELECT * FROM test6a","shape":"SELECT * FROM test6a;"}
+{"sql":"SELECT * FROM test6a WHERE b = ARRAY['äbc'] COLLATE ctest_det","shape":"SELECT * FROM test6a WHERE b = (ARRAY['äbc'] COLLATE ctest_det);"}
+{"sql":"SELECT * FROM test6a WHERE b = ARRAY['äbc'] COLLATE ctest_nondet","shape":"SELECT * FROM test6a WHERE b = (ARRAY['äbc'] COLLATE ctest_nondet);"}
+{"sql":"CREATE COLLATION case_sensitive (provider = icu, locale = '')"}
+{"sql":"CREATE COLLATION case_insensitive (provider = icu, locale = '@colStrength=secondary', deterministic = false)"}
+{"sql":"SELECT 'abc' <= 'ABC' COLLATE case_sensitive, 'abc' >= 'ABC' COLLATE case_sensitive","shape":"SELECT 'abc' <= ('ABC' COLLATE case_sensitive), 'abc' >= ('ABC' COLLATE case_sensitive);"}
+{"sql":"SELECT 'abc' <= 'ABC' COLLATE case_insensitive, 'abc' >= 'ABC' COLLATE case_insensitive","shape":"SELECT 'abc' <= ('ABC' COLLATE case_insensitive), 'abc' >= ('ABC' COLLATE case_insensitive);"}
+{"sql":"CREATE COLLATION lt_insensitive (provider = icu, locale = 'en-u-ks-level1', deterministic = false)"}
+{"sql":"SELECT 'aBcD' COLLATE lt_insensitive = 'AbCd' COLLATE lt_insensitive","shape":"SELECT ('aBcD' COLLATE lt_insensitive) = ('AbCd' COLLATE lt_insensitive);"}
+{"sql":"CREATE COLLATION lt_upperfirst (provider = icu, locale = 'und-u-kf-upper')"}
+{"sql":"SELECT 'Z' COLLATE lt_upperfirst < 'z' COLLATE lt_upperfirst","shape":"SELECT ('Z' COLLATE lt_upperfirst) < ('z' COLLATE lt_upperfirst);"}
+{"sql":"CREATE TABLE test1cs (x text COLLATE case_sensitive)","shape":"CREATE TABLE test1cs (x text COLLATE case_sensitive);"}
+{"sql":"CREATE TABLE test2cs (x text COLLATE case_sensitive)","shape":"CREATE TABLE test2cs (x text COLLATE case_sensitive);"}
+{"sql":"CREATE TABLE test3cs (x text COLLATE case_sensitive)","shape":"CREATE TABLE test3cs (x text COLLATE case_sensitive);"}
+{"sql":"INSERT INTO test1cs VALUES ('abc'), ('def'), ('ghi')","shape":"INSERT INTO test1cs VALUES ('abc'), ('def'), ('ghi');"}
+{"sql":"INSERT INTO test2cs VALUES ('ABC'), ('ghi')","shape":"INSERT INTO test2cs VALUES ('ABC'), ('ghi');"}
+{"sql":"INSERT INTO test3cs VALUES ('abc'), ('ABC'), ('def'), ('ghi')","shape":"INSERT INTO test3cs VALUES ('abc'), ('ABC'), ('def'), ('ghi');"}
+{"sql":"SELECT x FROM test3cs WHERE x = 'abc'","shape":"SELECT x FROM test3cs WHERE x = 'abc';"}
+{"sql":"SELECT x FROM test3cs WHERE x <> 'abc'","shape":"SELECT x FROM test3cs WHERE x <> 'abc';"}
+{"sql":"SELECT x FROM test3cs WHERE x LIKE 'a%'","shape":"SELECT x FROM test3cs WHERE x LIKE 'a%';"}
+{"sql":"SELECT x FROM test3cs WHERE x ILIKE 'a%'","shape":"SELECT x FROM test3cs WHERE x ILIKE 'a%';"}
+{"sql":"SELECT x FROM test3cs WHERE x SIMILAR TO 'a%'","shape":"SELECT x FROM test3cs WHERE x SIMILAR TO 'a%';"}
+{"sql":"SELECT x FROM test3cs WHERE x ~ 'a'","shape":"SELECT x FROM test3cs WHERE x ~ 'a';"}
+{"sql":"SELECT x FROM test1cs UNION SELECT x FROM test2cs ORDER BY x","shape":"SELECT x FROM test1cs UNION SELECT x FROM test2cs ORDER BY x;"}
+{"sql":"SELECT x FROM test2cs UNION SELECT x FROM test1cs ORDER BY x","shape":"SELECT x FROM test2cs UNION SELECT x FROM test1cs ORDER BY x;"}
+{"sql":"SELECT x FROM test1cs INTERSECT SELECT x FROM test2cs","shape":"SELECT x FROM test1cs INTERSECT SELECT x FROM test2cs;"}
+{"sql":"SELECT x FROM test2cs INTERSECT SELECT x FROM test1cs","shape":"SELECT x FROM test2cs INTERSECT SELECT x FROM test1cs;"}
+{"sql":"SELECT x FROM test1cs EXCEPT SELECT x FROM test2cs","shape":"SELECT x FROM test1cs EXCEPT SELECT x FROM test2cs;"}
+{"sql":"SELECT x FROM test2cs EXCEPT SELECT x FROM test1cs","shape":"SELECT x FROM test2cs EXCEPT SELECT x FROM test1cs;"}
+{"sql":"SELECT DISTINCT x FROM test3cs ORDER BY x","shape":"SELECT DISTINCT x FROM test3cs ORDER BY x;"}
+{"sql":"SELECT count(DISTINCT x) FROM test3cs","shape":"SELECT count(DISTINCT x) FROM test3cs;"}
+{"sql":"SELECT x, count(*) FROM test3cs GROUP BY x ORDER BY x","shape":"SELECT x, count(*) FROM test3cs GROUP BY x ORDER BY x;"}
+{"sql":"SELECT x, row_number() OVER (ORDER BY x), rank() OVER (ORDER BY x) FROM test3cs ORDER BY x","shape":"SELECT x, row_number() OVER (ORDER BY x), rank() OVER (ORDER BY x) FROM test3cs ORDER BY x;"}
+{"sql":"CREATE UNIQUE INDEX ON test1cs (x)","shape":"CREATE UNIQUE INDEX ON test1cs (x);"}
+{"sql":"INSERT INTO test1cs VALUES ('ABC')","shape":"INSERT INTO test1cs VALUES ('ABC');"}
+{"sql":"CREATE UNIQUE INDEX ON test3cs (x)","shape":"CREATE UNIQUE INDEX ON test3cs (x);"}
+{"sql":"SELECT string_to_array('ABC,DEF,GHI' COLLATE case_sensitive, ',', 'abc')","shape":"SELECT string_to_array('ABC,DEF,GHI' COLLATE case_sensitive, ',', 'abc');"}
+{"sql":"SELECT string_to_array('ABCDEFGHI' COLLATE case_sensitive, NULL, 'b')","shape":"SELECT string_to_array('ABCDEFGHI' COLLATE case_sensitive, NULL, 'b');"}
+{"sql":"CREATE TABLE test1ci (x text COLLATE case_insensitive)","shape":"CREATE TABLE test1ci (x text COLLATE case_insensitive);"}
+{"sql":"CREATE TABLE test2ci (x text COLLATE case_insensitive)","shape":"CREATE TABLE test2ci (x text COLLATE case_insensitive);"}
+{"sql":"CREATE TABLE test3ci (x text COLLATE case_insensitive)","shape":"CREATE TABLE test3ci (x text COLLATE case_insensitive);"}
+{"sql":"CREATE INDEX ON test3ci (x text_pattern_ops)","shape":"CREATE INDEX ON test3ci (x text_pattern_ops);"}
+{"sql":"INSERT INTO test1ci VALUES ('abc'), ('def'), ('ghi')","shape":"INSERT INTO test1ci VALUES ('abc'), ('def'), ('ghi');"}
+{"sql":"INSERT INTO test2ci VALUES ('ABC'), ('ghi')","shape":"INSERT INTO test2ci VALUES ('ABC'), ('ghi');"}
+{"sql":"INSERT INTO test3ci VALUES ('abc'), ('ABC'), ('def'), ('ghi')","shape":"INSERT INTO test3ci VALUES ('abc'), ('ABC'), ('def'), ('ghi');"}
+{"sql":"SELECT x FROM test3ci WHERE x = 'abc'","shape":"SELECT x FROM test3ci WHERE x = 'abc';"}
+{"sql":"SELECT x FROM test3ci WHERE x <> 'abc'","shape":"SELECT x FROM test3ci WHERE x <> 'abc';"}
+{"sql":"SELECT x FROM test3ci WHERE x LIKE 'a%'","shape":"SELECT x FROM test3ci WHERE x LIKE 'a%';"}
+{"sql":"SELECT x FROM test3ci WHERE x ILIKE 'a%'","shape":"SELECT x FROM test3ci WHERE x ILIKE 'a%';"}
+{"sql":"SELECT x FROM test3ci WHERE x SIMILAR TO 'a%'","shape":"SELECT x FROM test3ci WHERE x SIMILAR TO 'a%';"}
+{"sql":"SELECT x FROM test3ci WHERE x ~ 'a'","shape":"SELECT x FROM test3ci WHERE x ~ 'a';"}
+{"sql":"SELECT x FROM test1ci UNION SELECT x FROM test2ci ORDER BY x","shape":"SELECT x FROM test1ci UNION SELECT x FROM test2ci ORDER BY x;"}
+{"sql":"SELECT x FROM test2ci UNION SELECT x FROM test1ci ORDER BY x","shape":"SELECT x FROM test2ci UNION SELECT x FROM test1ci ORDER BY x;"}
+{"sql":"SELECT x FROM test1ci INTERSECT SELECT x FROM test2ci ORDER BY x","shape":"SELECT x FROM test1ci INTERSECT SELECT x FROM test2ci ORDER BY x;"}
+{"sql":"SELECT x FROM test2ci INTERSECT SELECT x FROM test1ci ORDER BY x","shape":"SELECT x FROM test2ci INTERSECT SELECT x FROM test1ci ORDER BY x;"}
+{"sql":"SELECT x FROM test1ci EXCEPT SELECT x FROM test2ci","shape":"SELECT x FROM test1ci EXCEPT SELECT x FROM test2ci;"}
+{"sql":"SELECT x FROM test2ci EXCEPT SELECT x FROM test1ci","shape":"SELECT x FROM test2ci EXCEPT SELECT x FROM test1ci;"}
+{"sql":"SELECT DISTINCT x FROM test3ci ORDER BY x","shape":"SELECT DISTINCT x FROM test3ci ORDER BY x;"}
+{"sql":"SELECT count(DISTINCT x) FROM test3ci","shape":"SELECT count(DISTINCT x) FROM test3ci;"}
+{"sql":"SELECT x, count(*) FROM test3ci GROUP BY x ORDER BY x","shape":"SELECT x, count(*) FROM test3ci GROUP BY x ORDER BY x;"}
+{"sql":"SELECT x, row_number() OVER (ORDER BY x), rank() OVER (ORDER BY x) FROM test3ci ORDER BY x","shape":"SELECT x, row_number() OVER (ORDER BY x), rank() OVER (ORDER BY x) FROM test3ci ORDER BY x;"}
+{"sql":"CREATE UNIQUE INDEX ON test1ci (x)","shape":"CREATE UNIQUE INDEX ON test1ci (x);"}
+{"sql":"INSERT INTO test1ci VALUES ('ABC')","shape":"INSERT INTO test1ci VALUES ('ABC');"}
+{"sql":"CREATE UNIQUE INDEX ON test3ci (x)","shape":"CREATE UNIQUE INDEX ON test3ci (x);"}
+{"sql":"SELECT string_to_array('ABC,DEF,GHI' COLLATE case_insensitive, ',', 'abc')","shape":"SELECT string_to_array('ABC,DEF,GHI' COLLATE case_insensitive, ',', 'abc');"}
+{"sql":"SELECT string_to_array('ABCDEFGHI' COLLATE case_insensitive, NULL, 'b')","shape":"SELECT string_to_array('ABCDEFGHI' COLLATE case_insensitive, NULL, 'b');"}
+{"sql":"CREATE TABLE test1bpci (x char(3) COLLATE case_insensitive)","shape":"CREATE TABLE test1bpci (x char(3) COLLATE case_insensitive);"}
+{"sql":"CREATE TABLE test2bpci (x char(3) COLLATE case_insensitive)","shape":"CREATE TABLE test2bpci (x char(3) COLLATE case_insensitive);"}
+{"sql":"CREATE TABLE test3bpci (x char(3) COLLATE case_insensitive)","shape":"CREATE TABLE test3bpci (x char(3) COLLATE case_insensitive);"}
+{"sql":"CREATE INDEX ON test3bpci (x bpchar_pattern_ops)","shape":"CREATE INDEX ON test3bpci (x bpchar_pattern_ops);"}
+{"sql":"INSERT INTO test1bpci VALUES ('abc'), ('def'), ('ghi')","shape":"INSERT INTO test1bpci VALUES ('abc'), ('def'), ('ghi');"}
+{"sql":"INSERT INTO test2bpci VALUES ('ABC'), ('ghi')","shape":"INSERT INTO test2bpci VALUES ('ABC'), ('ghi');"}
+{"sql":"INSERT INTO test3bpci VALUES ('abc'), ('ABC'), ('def'), ('ghi')","shape":"INSERT INTO test3bpci VALUES ('abc'), ('ABC'), ('def'), ('ghi');"}
+{"sql":"SELECT x FROM test3bpci WHERE x = 'abc'","shape":"SELECT x FROM test3bpci WHERE x = 'abc';"}
+{"sql":"SELECT x FROM test3bpci WHERE x <> 'abc'","shape":"SELECT x FROM test3bpci WHERE x <> 'abc';"}
+{"sql":"SELECT x FROM test3bpci WHERE x LIKE 'a%'","shape":"SELECT x FROM test3bpci WHERE x LIKE 'a%';"}
+{"sql":"SELECT x FROM test3bpci WHERE x ILIKE 'a%'","shape":"SELECT x FROM test3bpci WHERE x ILIKE 'a%';"}
+{"sql":"SELECT x FROM test3bpci WHERE x SIMILAR TO 'a%'","shape":"SELECT x FROM test3bpci WHERE x SIMILAR TO 'a%';"}
+{"sql":"SELECT x FROM test3bpci WHERE x ~ 'a'","shape":"SELECT x FROM test3bpci WHERE x ~ 'a';"}
+{"sql":"SELECT x FROM test1bpci UNION SELECT x FROM test2bpci ORDER BY x","shape":"SELECT x FROM test1bpci UNION SELECT x FROM test2bpci ORDER BY x;"}
+{"sql":"SELECT x FROM test2bpci UNION SELECT x FROM test1bpci ORDER BY x","shape":"SELECT x FROM test2bpci UNION SELECT x FROM test1bpci ORDER BY x;"}
+{"sql":"SELECT x FROM test1bpci INTERSECT SELECT x FROM test2bpci ORDER BY x","shape":"SELECT x FROM test1bpci INTERSECT SELECT x FROM test2bpci ORDER BY x;"}
+{"sql":"SELECT x FROM test2bpci INTERSECT SELECT x FROM test1bpci ORDER BY x","shape":"SELECT x FROM test2bpci INTERSECT SELECT x FROM test1bpci ORDER BY x;"}
+{"sql":"SELECT x FROM test1bpci EXCEPT SELECT x FROM test2bpci","shape":"SELECT x FROM test1bpci EXCEPT SELECT x FROM test2bpci;"}
+{"sql":"SELECT x FROM test2bpci EXCEPT SELECT x FROM test1bpci","shape":"SELECT x FROM test2bpci EXCEPT SELECT x FROM test1bpci;"}
+{"sql":"SELECT DISTINCT x FROM test3bpci ORDER BY x","shape":"SELECT DISTINCT x FROM test3bpci ORDER BY x;"}
+{"sql":"SELECT count(DISTINCT x) FROM test3bpci","shape":"SELECT count(DISTINCT x) FROM test3bpci;"}
+{"sql":"SELECT x, count(*) FROM test3bpci GROUP BY x ORDER BY x","shape":"SELECT x, count(*) FROM test3bpci GROUP BY x ORDER BY x;"}
+{"sql":"SELECT x, row_number() OVER (ORDER BY x), rank() OVER (ORDER BY x) FROM test3bpci ORDER BY x","shape":"SELECT x, row_number() OVER (ORDER BY x), rank() OVER (ORDER BY x) FROM test3bpci ORDER BY x;"}
+{"sql":"CREATE UNIQUE INDEX ON test1bpci (x)","shape":"CREATE UNIQUE INDEX ON test1bpci (x);"}
+{"sql":"INSERT INTO test1bpci VALUES ('ABC')","shape":"INSERT INTO test1bpci VALUES ('ABC');"}
+{"sql":"CREATE UNIQUE INDEX ON test3bpci (x)","shape":"CREATE UNIQUE INDEX ON test3bpci (x);"}
+{"sql":"SELECT string_to_array('ABC,DEF,GHI'::char(11) COLLATE case_insensitive, ',', 'abc')","shape":"SELECT string_to_array('ABC,DEF,GHI'::char(11) COLLATE case_insensitive, ',', 'abc');"}
+{"sql":"SELECT string_to_array('ABCDEFGHI'::char(9) COLLATE case_insensitive, NULL, 'b')","shape":"SELECT string_to_array('ABCDEFGHI'::char(9) COLLATE case_insensitive, NULL, 'b');"}
+{"sql":"CREATE TABLE test4c (x text COLLATE \"C\")","shape":"CREATE TABLE test4c (x text COLLATE \"C\");"}
+{"sql":"INSERT INTO test4c VALUES ('abc')","shape":"INSERT INTO test4c VALUES ('abc');"}
+{"sql":"CREATE INDEX ON test4c (x)","shape":"CREATE INDEX ON test4c (x);"}
+{"sql":"SELECT x FROM test4c WHERE x LIKE 'ABC' COLLATE case_sensitive","shape":"SELECT x FROM test4c WHERE x LIKE ('ABC' COLLATE case_sensitive);"}
+{"sql":"SELECT x FROM test4c WHERE x LIKE 'ABC%' COLLATE case_sensitive","shape":"SELECT x FROM test4c WHERE x LIKE ('ABC%' COLLATE case_sensitive);"}
+{"sql":"SELECT x FROM test4c WHERE x LIKE 'ABC' COLLATE case_insensitive","shape":"SELECT x FROM test4c WHERE x LIKE ('ABC' COLLATE case_insensitive);"}
+{"sql":"SELECT x FROM test4c WHERE x LIKE 'ABC%' COLLATE case_insensitive","shape":"SELECT x FROM test4c WHERE x LIKE ('ABC%' COLLATE case_insensitive);"}
+{"sql":"SELECT 'ὀδυσσεύς' = 'ὈΔΥΣΣΕΎΣ' COLLATE case_sensitive","shape":"SELECT 'ὀδυσσεύς' = ('ὈΔΥΣΣΕΎΣ' COLLATE case_sensitive);"}
+{"sql":"SELECT 'ὀδυσσεύς' = 'ὈΔΥΣΣΕΎΣ' COLLATE case_insensitive","shape":"SELECT 'ὀδυσσεύς' = ('ὈΔΥΣΣΕΎΣ' COLLATE case_insensitive);"}
+{"sql":"SELECT relname FROM pg_class WHERE relname = 'PG_CLASS'::text COLLATE case_insensitive","shape":"SELECT relname FROM pg_class WHERE relname = ('PG_CLASS'::text COLLATE case_insensitive);"}
+{"sql":"SELECT relname FROM pg_class WHERE 'PG_CLASS'::text = relname COLLATE case_insensitive","shape":"SELECT relname FROM pg_class WHERE 'PG_CLASS'::text = (relname COLLATE case_insensitive);"}
+{"sql":"SELECT typname FROM pg_type WHERE typname LIKE 'int_' AND typname <> 'INT2'::text\n  COLLATE case_insensitive ORDER BY typname","shape":"SELECT typname FROM pg_type WHERE (typname LIKE 'int_') AND (typname <> ('INT2'::text COLLATE case_insensitive)) ORDER BY typname;"}
+{"sql":"SELECT typname FROM pg_type WHERE typname LIKE 'int_' AND 'INT2'::text <> typname\n  COLLATE case_insensitive ORDER BY typname","shape":"SELECT typname FROM pg_type WHERE (typname LIKE 'int_') AND ('INT2'::text <> (typname COLLATE case_insensitive)) ORDER BY typname;"}
+{"sql":"CREATE TEMP TABLE outer_text (f1 text COLLATE case_insensitive, f2 text)","shape":"CREATE TEMPORARY TABLE outer_text (f1 text COLLATE case_insensitive, f2 text);"}
+{"sql":"INSERT INTO outer_text VALUES ('a', 'a')","shape":"INSERT INTO outer_text VALUES ('a', 'a');"}
+{"sql":"INSERT INTO outer_text VALUES ('b', 'a')","shape":"INSERT INTO outer_text VALUES ('b', 'a');"}
+{"sql":"INSERT INTO outer_text VALUES ('A', NULL)","shape":"INSERT INTO outer_text VALUES ('A', NULL);"}
+{"sql":"INSERT INTO outer_text VALUES ('B', NULL)","shape":"INSERT INTO outer_text VALUES ('B', NULL);"}
+{"sql":"CREATE TEMP TABLE inner_text (c1 text COLLATE case_insensitive, c2 text)","shape":"CREATE TEMPORARY TABLE inner_text (c1 text COLLATE case_insensitive, c2 text);"}
+{"sql":"INSERT INTO inner_text VALUES ('a', NULL)","shape":"INSERT INTO inner_text VALUES ('a', NULL);"}
+{"sql":"SELECT * FROM outer_text WHERE (f1, f2) NOT IN (SELECT * FROM inner_text)","shape":"SELECT * FROM outer_text WHERE (f1, f2) NOT IN (SELECT * FROM inner_text);"}
+{"sql":"CREATE COLLATION ignore_accents (provider = icu, locale = '@colStrength=primary;colCaseLevel=yes', deterministic = false)"}
+{"sql":"CREATE TABLE test4 (a int, b text)","shape":"CREATE TABLE test4 (a int, b text);"}
+{"sql":"INSERT INTO test4 VALUES (1, 'cote'), (2, 'côte'), (3, 'coté'), (4, 'côté')","shape":"INSERT INTO test4 VALUES (1, 'cote'), (2, 'côte'), (3, 'coté'), (4, 'côté');"}
+{"sql":"SELECT * FROM test4 WHERE b = 'cote'","shape":"SELECT * FROM test4 WHERE b = 'cote';"}
+{"sql":"SELECT * FROM test4 WHERE b = 'cote' COLLATE ignore_accents","shape":"SELECT * FROM test4 WHERE b = ('cote' COLLATE ignore_accents);"}
+{"sql":"SELECT * FROM test4 WHERE b = 'Cote' COLLATE ignore_accents","shape":"SELECT * FROM test4 WHERE b = ('Cote' COLLATE ignore_accents);"}
+{"sql":"SELECT * FROM test4 WHERE b = 'Cote' COLLATE case_insensitive","shape":"SELECT * FROM test4 WHERE b = ('Cote' COLLATE case_insensitive);"}
+{"sql":"CREATE TABLE test10pk (x text COLLATE case_sensitive PRIMARY KEY)","shape":"CREATE TABLE test10pk (x text COLLATE case_sensitive PRIMARY KEY);"}
+{"sql":"INSERT INTO test10pk VALUES ('abc'), ('def'), ('ghi')","shape":"INSERT INTO test10pk VALUES ('abc'), ('def'), ('ghi');"}
+{"sql":"CREATE TABLE test10fk (x text COLLATE case_insensitive REFERENCES test10pk (x) ON UPDATE CASCADE ON DELETE CASCADE)","shape":"CREATE TABLE test10fk (x text COLLATE case_insensitive REFERENCES test10pk (x) ON DELETE CASCADE ON UPDATE CASCADE);"}
+{"sql":"INSERT INTO test10fk VALUES ('abc')","shape":"INSERT INTO test10fk VALUES ('abc');"}
+{"sql":"INSERT INTO test10fk VALUES ('ABC')","shape":"INSERT INTO test10fk VALUES ('ABC');"}
+{"sql":"INSERT INTO test10fk VALUES ('xyz')","shape":"INSERT INTO test10fk VALUES ('xyz');"}
+{"sql":"SELECT * FROM test10pk","shape":"SELECT * FROM test10pk;"}
+{"sql":"SELECT * FROM test10fk","shape":"SELECT * FROM test10fk;"}
+{"sql":"UPDATE test10fk SET x = 'ABC' WHERE x = 'abc'","shape":"UPDATE test10fk SET x = 'ABC' WHERE x = 'abc';"}
+{"sql":"DELETE FROM test10pk WHERE x = 'abc'","shape":"DELETE FROM test10pk WHERE x = 'abc';"}
+{"sql":"CREATE TABLE test11pk (x text COLLATE case_insensitive PRIMARY KEY)","shape":"CREATE TABLE test11pk (x text COLLATE case_insensitive PRIMARY KEY);"}
+{"sql":"INSERT INTO test11pk VALUES ('abc'), ('def'), ('ghi')","shape":"INSERT INTO test11pk VALUES ('abc'), ('def'), ('ghi');"}
+{"sql":"CREATE TABLE test11fk (x text COLLATE case_sensitive REFERENCES test11pk (x) ON UPDATE CASCADE ON DELETE CASCADE)","shape":"CREATE TABLE test11fk (x text COLLATE case_sensitive REFERENCES test11pk (x) ON DELETE CASCADE ON UPDATE CASCADE);"}
+{"sql":"INSERT INTO test11fk VALUES ('abc')","shape":"INSERT INTO test11fk VALUES ('abc');"}
+{"sql":"INSERT INTO test11fk VALUES ('ABC')","shape":"INSERT INTO test11fk VALUES ('ABC');"}
+{"sql":"INSERT INTO test11fk VALUES ('xyz')","shape":"INSERT INTO test11fk VALUES ('xyz');"}
+{"sql":"SELECT * FROM test11pk","shape":"SELECT * FROM test11pk;"}
+{"sql":"SELECT * FROM test11fk","shape":"SELECT * FROM test11fk;"}
+{"sql":"UPDATE test11pk SET x = 'ABC' WHERE x = 'abc'","shape":"UPDATE test11pk SET x = 'ABC' WHERE x = 'abc';"}
+{"sql":"DELETE FROM test11pk WHERE x = 'abc'","shape":"DELETE FROM test11pk WHERE x = 'abc';"}
+{"sql":"CREATE TABLE test20 (a int, b text COLLATE case_insensitive) PARTITION BY LIST (b)","shape":"CREATE TABLE test20 (a int, b text COLLATE case_insensitive) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE test20_1 PARTITION OF test20 FOR VALUES IN ('abc')","shape":"CREATE TABLE test20_1 PARTITION OF test20 FOR VALUES IN ('abc');"}
+{"sql":"INSERT INTO test20 VALUES (1, 'abc')","shape":"INSERT INTO test20 VALUES (1, 'abc');"}
+{"sql":"INSERT INTO test20 VALUES (2, 'ABC')","shape":"INSERT INTO test20 VALUES (2, 'ABC');"}
+{"sql":"SELECT * FROM test20_1","shape":"SELECT * FROM test20_1;"}
+{"sql":"CREATE TABLE test21 (a int, b text COLLATE case_insensitive) PARTITION BY RANGE (b)","shape":"CREATE TABLE test21 (a int, b text COLLATE case_insensitive) PARTITION BY RANGE (b);"}
+{"sql":"CREATE TABLE test21_1 PARTITION OF test21 FOR VALUES FROM ('ABC') TO ('DEF')","shape":"CREATE TABLE test21_1 PARTITION OF test21 FOR VALUES FROM ('ABC') TO ('DEF');"}
+{"sql":"INSERT INTO test21 VALUES (1, 'abc')","shape":"INSERT INTO test21 VALUES (1, 'abc');"}
+{"sql":"INSERT INTO test21 VALUES (2, 'ABC')","shape":"INSERT INTO test21 VALUES (2, 'ABC');"}
+{"sql":"SELECT * FROM test21_1","shape":"SELECT * FROM test21_1;"}
+{"sql":"CREATE TABLE test22 (a int, b text COLLATE case_sensitive) PARTITION BY HASH (b)","shape":"CREATE TABLE test22 (a int, b text COLLATE case_sensitive) PARTITION BY HASH (b);"}
+{"sql":"CREATE TABLE test22_0 PARTITION OF test22 FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE test22_0 PARTITION OF test22 FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE test22_1 PARTITION OF test22 FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE test22_1 PARTITION OF test22 FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO test22 VALUES (1, 'def')","shape":"INSERT INTO test22 VALUES (1, 'def');"}
+{"sql":"INSERT INTO test22 VALUES (2, 'DEF')","shape":"INSERT INTO test22 VALUES (2, 'DEF');"}
+{"sql":"SELECT (SELECT count(*) FROM test22_0) = (SELECT count(*) FROM test22_1)","shape":"SELECT (SELECT count(*) FROM test22_0) = (SELECT count(*) FROM test22_1);"}
+{"sql":"CREATE TABLE test22a (a int, b text[] COLLATE case_sensitive) PARTITION BY HASH (b)","shape":"CREATE TABLE test22a (a int, b text[] COLLATE case_sensitive) PARTITION BY HASH (b);"}
+{"sql":"CREATE TABLE test22a_0 PARTITION OF test22a FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE test22a_0 PARTITION OF test22a FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE test22a_1 PARTITION OF test22a FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE test22a_1 PARTITION OF test22a FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO test22a VALUES (1, ARRAY['def'])","shape":"INSERT INTO test22a VALUES (1, ARRAY['def']);"}
+{"sql":"INSERT INTO test22a VALUES (2, ARRAY['DEF'])","shape":"INSERT INTO test22a VALUES (2, ARRAY['DEF']);"}
+{"sql":"SELECT (SELECT count(*) FROM test22a_0) = (SELECT count(*) FROM test22a_1)","shape":"SELECT (SELECT count(*) FROM test22a_0) = (SELECT count(*) FROM test22a_1);"}
+{"sql":"CREATE TABLE test23 (a int, b text COLLATE case_insensitive) PARTITION BY HASH (b)","shape":"CREATE TABLE test23 (a int, b text COLLATE case_insensitive) PARTITION BY HASH (b);"}
+{"sql":"CREATE TABLE test23_0 PARTITION OF test23 FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE test23_0 PARTITION OF test23 FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE test23_1 PARTITION OF test23 FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE test23_1 PARTITION OF test23 FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO test23 VALUES (1, 'def')","shape":"INSERT INTO test23 VALUES (1, 'def');"}
+{"sql":"INSERT INTO test23 VALUES (2, 'DEF')","shape":"INSERT INTO test23 VALUES (2, 'DEF');"}
+{"sql":"SELECT (SELECT count(*) FROM test23_0) <> (SELECT count(*) FROM test23_1)","shape":"SELECT (SELECT count(*) FROM test23_0) <> (SELECT count(*) FROM test23_1);"}
+{"sql":"CREATE TABLE test23a (a int, b text[] COLLATE case_insensitive) PARTITION BY HASH (b)","shape":"CREATE TABLE test23a (a int, b text[] COLLATE case_insensitive) PARTITION BY HASH (b);"}
+{"sql":"CREATE TABLE test23a_0 PARTITION OF test23a FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE test23a_0 PARTITION OF test23a FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE test23a_1 PARTITION OF test23a FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE test23a_1 PARTITION OF test23a FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO test23a VALUES (1, ARRAY['def'])","shape":"INSERT INTO test23a VALUES (1, ARRAY['def']);"}
+{"sql":"INSERT INTO test23a VALUES (2, ARRAY['DEF'])","shape":"INSERT INTO test23a VALUES (2, ARRAY['DEF']);"}
+{"sql":"SELECT (SELECT count(*) FROM test23a_0) <> (SELECT count(*) FROM test23a_1)","shape":"SELECT (SELECT count(*) FROM test23a_0) <> (SELECT count(*) FROM test23a_1);"}
+{"sql":"CREATE TABLE test30 (a int, b char(3) COLLATE case_insensitive) PARTITION BY LIST (b)","shape":"CREATE TABLE test30 (a int, b char(3) COLLATE case_insensitive) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE test30_1 PARTITION OF test30 FOR VALUES IN ('abc')","shape":"CREATE TABLE test30_1 PARTITION OF test30 FOR VALUES IN ('abc');"}
+{"sql":"INSERT INTO test30 VALUES (1, 'abc')","shape":"INSERT INTO test30 VALUES (1, 'abc');"}
+{"sql":"INSERT INTO test30 VALUES (2, 'ABC')","shape":"INSERT INTO test30 VALUES (2, 'ABC');"}
+{"sql":"SELECT * FROM test30_1","shape":"SELECT * FROM test30_1;"}
+{"sql":"CREATE TABLE test31 (a int, b char(3) COLLATE case_insensitive) PARTITION BY RANGE (b)","shape":"CREATE TABLE test31 (a int, b char(3) COLLATE case_insensitive) PARTITION BY RANGE (b);"}
+{"sql":"CREATE TABLE test31_1 PARTITION OF test31 FOR VALUES FROM ('ABC') TO ('DEF')","shape":"CREATE TABLE test31_1 PARTITION OF test31 FOR VALUES FROM ('ABC') TO ('DEF');"}
+{"sql":"INSERT INTO test31 VALUES (1, 'abc')","shape":"INSERT INTO test31 VALUES (1, 'abc');"}
+{"sql":"INSERT INTO test31 VALUES (2, 'ABC')","shape":"INSERT INTO test31 VALUES (2, 'ABC');"}
+{"sql":"SELECT * FROM test31_1","shape":"SELECT * FROM test31_1;"}
+{"sql":"CREATE TABLE test32 (a int, b char(3) COLLATE case_sensitive) PARTITION BY HASH (b)","shape":"CREATE TABLE test32 (a int, b char(3) COLLATE case_sensitive) PARTITION BY HASH (b);"}
+{"sql":"CREATE TABLE test32_0 PARTITION OF test32 FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE test32_0 PARTITION OF test32 FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE test32_1 PARTITION OF test32 FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE test32_1 PARTITION OF test32 FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO test32 VALUES (1, 'def')","shape":"INSERT INTO test32 VALUES (1, 'def');"}
+{"sql":"INSERT INTO test32 VALUES (2, 'DEF')","shape":"INSERT INTO test32 VALUES (2, 'DEF');"}
+{"sql":"SELECT (SELECT count(*) FROM test32_0) = (SELECT count(*) FROM test32_1)","shape":"SELECT (SELECT count(*) FROM test32_0) = (SELECT count(*) FROM test32_1);"}
+{"sql":"CREATE TABLE test33 (a int, b char(3) COLLATE case_insensitive) PARTITION BY HASH (b)","shape":"CREATE TABLE test33 (a int, b char(3) COLLATE case_insensitive) PARTITION BY HASH (b);"}
+{"sql":"CREATE TABLE test33_0 PARTITION OF test33 FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE test33_0 PARTITION OF test33 FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"CREATE TABLE test33_1 PARTITION OF test33 FOR VALUES WITH (MODULUS 2, REMAINDER 1)","shape":"CREATE TABLE test33_1 PARTITION OF test33 FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"INSERT INTO test33 VALUES (1, 'def')","shape":"INSERT INTO test33 VALUES (1, 'def');"}
+{"sql":"INSERT INTO test33 VALUES (2, 'DEF')","shape":"INSERT INTO test33 VALUES (2, 'DEF');"}
+{"sql":"SELECT (SELECT count(*) FROM test33_0) <> (SELECT count(*) FROM test33_1)","shape":"SELECT (SELECT count(*) FROM test33_0) <> (SELECT count(*) FROM test33_1);"}
+{"sql":"SET max_parallel_workers_per_gather TO 0","shape":"SET max_parallel_workers_per_gather TO 0;"}
+{"sql":"SET enable_incremental_sort TO off","shape":"SET enable_incremental_sort TO off;"}
+{"sql":"CREATE TABLE pagg_tab3 (a text, c text collate case_insensitive) PARTITION BY LIST(c collate \"C\")","shape":"CREATE TABLE pagg_tab3 (a text, c text COLLATE case_insensitive) PARTITION BY LIST (c COLLATE \"C\");"}
+{"sql":"CREATE TABLE pagg_tab3_p1 PARTITION OF pagg_tab3 FOR VALUES IN ('a', 'b')","shape":"CREATE TABLE pagg_tab3_p1 PARTITION OF pagg_tab3 FOR VALUES IN ('a', 'b');"}
+{"sql":"CREATE TABLE pagg_tab3_p2 PARTITION OF pagg_tab3 FOR VALUES IN ('B', 'A')","shape":"CREATE TABLE pagg_tab3_p2 PARTITION OF pagg_tab3 FOR VALUES IN ('B', 'A');"}
+{"sql":"INSERT INTO pagg_tab3 SELECT i % 4 + 1, substr('abAB', (i % 4) + 1 , 1) FROM generate_series(0, 19) i","shape":"INSERT INTO pagg_tab3 SELECT (i % 4) + 1, substr('abAB', (i % 4) + 1, 1) FROM generate_series(0, 19) AS i;"}
+{"sql":"ANALYZE pagg_tab3","shape":"ANALYZE pagg_tab3;"}
+{"sql":"SET enable_partitionwise_aggregate TO false","shape":"SET enable_partitionwise_aggregate TO FALSE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT upper(c collate case_insensitive), count(c) FROM pagg_tab3 GROUP BY c collate case_insensitive ORDER BY 1","shape":"EXPLAIN (COSTS OFF) SELECT upper(c COLLATE case_insensitive), count(c) FROM pagg_tab3 GROUP BY c COLLATE case_insensitive ORDER BY 1;"}
+{"sql":"SELECT upper(c collate case_insensitive), count(c) FROM pagg_tab3 GROUP BY c collate case_insensitive ORDER BY 1","shape":"SELECT upper(c COLLATE case_insensitive), count(c) FROM pagg_tab3 GROUP BY c COLLATE case_insensitive ORDER BY 1;"}
+{"sql":"SET enable_partitionwise_aggregate TO true","shape":"SET enable_partitionwise_aggregate TO TRUE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT c collate \"C\", count(c) FROM pagg_tab3 GROUP BY c collate \"C\" ORDER BY 1","shape":"EXPLAIN (COSTS OFF) SELECT c COLLATE \"C\", count(c) FROM pagg_tab3 GROUP BY c COLLATE \"C\" ORDER BY 1;"}
+{"sql":"SELECT c collate \"C\", count(c) FROM pagg_tab3 GROUP BY c collate \"C\" ORDER BY 1","shape":"SELECT c COLLATE \"C\", count(c) FROM pagg_tab3 GROUP BY c COLLATE \"C\" ORDER BY 1;"}
+{"sql":"SET enable_partitionwise_join TO false","shape":"SET enable_partitionwise_join TO FALSE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT t1.c, count(t2.c) FROM pagg_tab3 t1 JOIN pagg_tab3 t2 ON t1.c = t2.c GROUP BY 1 ORDER BY t1.c COLLATE \"C\"","shape":"EXPLAIN (COSTS OFF) SELECT t1.c, count(t2.c) FROM pagg_tab3 AS t1 JOIN pagg_tab3 AS t2 ON t1.c = t2.c GROUP BY 1 ORDER BY t1.c COLLATE \"C\";"}
+{"sql":"SELECT t1.c, count(t2.c) FROM pagg_tab3 t1 JOIN pagg_tab3 t2 ON t1.c = t2.c GROUP BY 1 ORDER BY t1.c COLLATE \"C\"","shape":"SELECT t1.c, count(t2.c) FROM pagg_tab3 AS t1 JOIN pagg_tab3 AS t2 ON t1.c = t2.c GROUP BY 1 ORDER BY t1.c COLLATE \"C\";"}
+{"sql":"SET enable_partitionwise_join TO true","shape":"SET enable_partitionwise_join TO TRUE;"}
+{"sql":"EXPLAIN (COSTS OFF)\nSELECT t1.c COLLATE \"C\", count(t2.c) FROM pagg_tab3 t1 JOIN pagg_tab3 t2 ON t1.c = t2.c COLLATE \"C\" GROUP BY t1.c COLLATE \"C\" ORDER BY t1.c COLLATE \"C\"","shape":"EXPLAIN (COSTS OFF) SELECT t1.c COLLATE \"C\", count(t2.c) FROM pagg_tab3 AS t1 JOIN pagg_tab3 AS t2 ON t1.c = (t2.c COLLATE \"C\") GROUP BY t1.c COLLATE \"C\" ORDER BY t1.c COLLATE \"C\";"}
+{"sql":"SELECT t1.c COLLATE \"C\", count(t2.c) FROM pagg_tab3 t1 JOIN pagg_tab3 t2 ON t1.c = t2.c COLLATE \"C\" GROUP BY t1.c COLLATE \"C\" ORDER BY t1.c COLLATE \"C\"","shape":"SELECT t1.c COLLATE \"C\", count(t2.c) FROM pagg_tab3 AS t1 JOIN pagg_tab3 AS t2 ON t1.c = (t2.c COLLATE \"C\") GROUP BY t1.c COLLATE \"C\" ORDER BY t1.c COLLATE \"C\";"}
+{"sql":"DROP TABLE pagg_tab3","shape":"DROP TABLE pagg_tab3;"}
+{"sql":"RESET enable_partitionwise_aggregate","shape":"RESET enable_partitionwise_aggregate;"}
+{"sql":"RESET max_parallel_workers_per_gather","shape":"RESET max_parallel_workers_per_gather;"}
+{"sql":"RESET enable_incremental_sort","shape":"RESET enable_incremental_sort;"}
+{"sql":"RESET search_path","shape":"RESET search_path;"}
+{"sql":"SET client_min_messages TO warning","shape":"SET client_min_messages TO warning;"}
+{"sql":"DROP SCHEMA collate_tests CASCADE","shape":"DROP SCHEMA collate_tests CASCADE;"}
+{"sql":"CREATE COLLATION coll_icu_upgrade FROM \"und-x-icu\""}

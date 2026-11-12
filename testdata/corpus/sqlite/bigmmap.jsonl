@@ -1,0 +1,3 @@
+{"sql":"CREATE TABLE t0(a INTEGER PRIMARY KEY, b, c, UNIQUE(b, c))"}
+{"sql":"WITH  s(i) AS ( SELECT 1 UNION ALL SELECT i+1 FROM s LIMIT 100 )\n  INSERT INTO t0 SELECT i, 't0', randomblob(800) FROM s"}
+{"sql":"PRAGMA main.mmap_size"}

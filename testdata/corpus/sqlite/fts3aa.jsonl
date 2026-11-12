@@ -1,0 +1,59 @@
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one two'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'two one'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one two three'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one three two'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'two three one'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'two one three'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'three one two'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'three two one'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one two THREE'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '  ONE    Two   three  '"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one two\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"two one\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one two three\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one three two\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one two three four\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one three two four\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one three five\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one three\" five'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'five \"one three\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'five \"one three\" four'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'five four \"one three\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one three\" four five'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one -two'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '-two one'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one OR two'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH '\"one two\" OR three'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'three OR \"one two\"'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one two OR three'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'three OR two one'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'one two OR three OR four'"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH 'two OR three OR four one'"}
+{"sql":"INSERT INTO t1(content) VALUES(NULL)"}
+{"sql":"SELECT rowid FROM t1 WHERE content MATCH NULL"}
+{"sql":"INSERT INTO t1(rowid, content) VALUES(0, 'four five')"}
+{"sql":"SELECT content FROM t1 WHERE rowid = 0"}
+{"sql":"INSERT INTO t1(rowid, content) VALUES(-1, 'three four')"}
+{"sql":"SELECT content FROM t1 WHERE rowid = -1"}
+{"sql":"SELECT rowid FROM t1 WHERE t1 MATCH 'four'"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts3(xyz=abc)"}
+{"sql":"SELECT xyz FROM t2"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(xyz=abc)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts4(xyz = abc)"}
+{"sql":"CREATE VIRTUAL TABLE t3 USING fts3(tokenize=simple, tokenize=simple)"}
+{"sql":"SELECT tokenize FROM t3"}
+{"sql":"CREATE VIRTUAL TABLE t4 USING fts4(tokenize=simple, tokenize=simple)"}
+{"sql":"CREATE VIRTUAL TABLE t0 USING fts4(order=desc)"}
+{"sql":"INSERT INTO t0(rowid, content) VALUES(1, 'abc')"}
+{"sql":"UPDATE t0 SET docid=5 WHERE docid=1"}
+{"sql":"INSERT INTO t0(rowid, content) VALUES(6, 'abc')"}
+{"sql":"SELECT docid FROM t0 WHERE t0 MATCH 'abc'"}
+{"sql":"SELECT docid FROM t0 WHERE t0 MATCH '\"abc abc\"'"}
+{"sql":"CREATE VIRTUAL TABLE t9 USING fts4(a, \"\", '---')"}
+{"sql":"CREATE VIRTUAL TABLE t10 USING fts3(<, b, c)"}
+{"sql":"CREATE VIRTUAL TABLE z1 USING fts3"}
+{"sql":"INSERT INTO z1 VALUES('one two three'),('four one five'),('six two five')"}
+{"sql":"CREATE TRIGGER z1r1 AFTER DELETE ON z1_content BEGIN\n    DELETE FROM z1;\n  END"}
+{"sql":"DELETE FROM z1"}

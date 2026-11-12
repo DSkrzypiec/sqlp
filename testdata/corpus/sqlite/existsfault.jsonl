@@ -1,0 +1,2 @@
+{"sql":"CREATE UNIQUE INDEX x1a ON x1(a)"}
+{"sql":"SELECT count(*) FROM x2 WHERE EXISTS (SELECT 1 FROM x1 WHERE a=x) AND y!=11"}

@@ -1,0 +1,424 @@
+{"sql":"select jsonb '{\"a\": 12}' @? '$'","shape":"SELECT jsonb '{\"a\": 12}' @? '$';"}
+{"sql":"select jsonb '{\"a\": 12}' @? '1'","shape":"SELECT jsonb '{\"a\": 12}' @? '1';"}
+{"sql":"select jsonb '{\"a\": 12}' @? '$.a.b'","shape":"SELECT jsonb '{\"a\": 12}' @? '$.a.b';"}
+{"sql":"select jsonb '{\"a\": 12}' @? '$.b'","shape":"SELECT jsonb '{\"a\": 12}' @? '$.b';"}
+{"sql":"select jsonb '{\"a\": 12}' @? '$.a + 2'","shape":"SELECT jsonb '{\"a\": 12}' @? '$.a + 2';"}
+{"sql":"select jsonb '{\"a\": 12}' @? '$.b + 2'","shape":"SELECT jsonb '{\"a\": 12}' @? '$.b + 2';"}
+{"sql":"select jsonb '{\"a\": {\"a\": 12}}' @? '$.a.a'","shape":"SELECT jsonb '{\"a\": {\"a\": 12}}' @? '$.a.a';"}
+{"sql":"select jsonb '{\"a\": {\"a\": 12}}' @? '$.*.a'","shape":"SELECT jsonb '{\"a\": {\"a\": 12}}' @? '$.*.a';"}
+{"sql":"select jsonb '{\"b\": {\"a\": 12}}' @? '$.*.a'","shape":"SELECT jsonb '{\"b\": {\"a\": 12}}' @? '$.*.a';"}
+{"sql":"select jsonb '{\"b\": {\"a\": 12}}' @? '$.*.b'","shape":"SELECT jsonb '{\"b\": {\"a\": 12}}' @? '$.*.b';"}
+{"sql":"select jsonb '{\"b\": {\"a\": 12}}' @? 'strict $.*.b'","shape":"SELECT jsonb '{\"b\": {\"a\": 12}}' @? 'strict $.*.b';"}
+{"sql":"select jsonb '{}' @? '$.*'","shape":"SELECT jsonb '{}' @? '$.*';"}
+{"sql":"select jsonb '{\"a\": 1}' @? '$.*'","shape":"SELECT jsonb '{\"a\": 1}' @? '$.*';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? 'lax $.**{1}'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? 'lax $.**{1}';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? 'lax $.**{2}'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? 'lax $.**{2}';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? 'lax $.**{3}'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? 'lax $.**{3}';"}
+{"sql":"select jsonb '[]' @? '$[*]'","shape":"SELECT jsonb '[]' @? '$[*]';"}
+{"sql":"select jsonb '[1]' @? '$[*]'","shape":"SELECT jsonb '[1]' @? '$[*]';"}
+{"sql":"select jsonb '[1]' @? '$[1]'","shape":"SELECT jsonb '[1]' @? '$[1]';"}
+{"sql":"select jsonb '[1]' @? 'strict $[1]'","shape":"SELECT jsonb '[1]' @? 'strict $[1]';"}
+{"sql":"select jsonb_path_query('[1]', 'strict $[1]')","shape":"SELECT jsonb_path_query('[1]', 'strict $[1]');"}
+{"sql":"select jsonb_path_query('[1]', 'strict $[1]', silent => true)","shape":"SELECT jsonb_path_query('[1]', 'strict $[1]', silent => TRUE);"}
+{"sql":"select jsonb '[1]' @? 'lax $[10000000000000000]'","shape":"SELECT jsonb '[1]' @? 'lax $[10000000000000000]';"}
+{"sql":"select jsonb '[1]' @? 'strict $[10000000000000000]'","shape":"SELECT jsonb '[1]' @? 'strict $[10000000000000000]';"}
+{"sql":"select jsonb_path_query('[1]', 'lax $[10000000000000000]')","shape":"SELECT jsonb_path_query('[1]', 'lax $[10000000000000000]');"}
+{"sql":"select jsonb_path_query('[1]', 'strict $[10000000000000000]')","shape":"SELECT jsonb_path_query('[1]', 'strict $[10000000000000000]');"}
+{"sql":"select jsonb '[1]' @? '$[0]'","shape":"SELECT jsonb '[1]' @? '$[0]';"}
+{"sql":"select jsonb '[1]' @? '$[0.3]'","shape":"SELECT jsonb '[1]' @? '$[0.3]';"}
+{"sql":"select jsonb '[1]' @? '$[0.5]'","shape":"SELECT jsonb '[1]' @? '$[0.5]';"}
+{"sql":"select jsonb '[1]' @? '$[0.9]'","shape":"SELECT jsonb '[1]' @? '$[0.9]';"}
+{"sql":"select jsonb '[1]' @? '$[1.2]'","shape":"SELECT jsonb '[1]' @? '$[1.2]';"}
+{"sql":"select jsonb '[1]' @? 'strict $[1.2]'","shape":"SELECT jsonb '[1]' @? 'strict $[1.2]';"}
+{"sql":"select jsonb '{\"a\": [1,2,3], \"b\": [3,4,5]}' @? '$ ? (@.a[*] >  @.b[*])'","shape":"SELECT jsonb '{\"a\": [1,2,3], \"b\": [3,4,5]}' @? '$ ? (@.a[*] >  @.b[*])';"}
+{"sql":"select jsonb '{\"a\": [1,2,3], \"b\": [3,4,5]}' @? '$ ? (@.a[*] >= @.b[*])'","shape":"SELECT jsonb '{\"a\": [1,2,3], \"b\": [3,4,5]}' @? '$ ? (@.a[*] >= @.b[*])';"}
+{"sql":"select jsonb '{\"a\": [1,2,3], \"b\": [3,4,\"5\"]}' @? '$ ? (@.a[*] >= @.b[*])'","shape":"SELECT jsonb '{\"a\": [1,2,3], \"b\": [3,4,\"5\"]}' @? '$ ? (@.a[*] >= @.b[*])';"}
+{"sql":"select jsonb '{\"a\": [1,2,3], \"b\": [3,4,\"5\"]}' @? 'strict $ ? (@.a[*] >= @.b[*])'","shape":"SELECT jsonb '{\"a\": [1,2,3], \"b\": [3,4,\"5\"]}' @? 'strict $ ? (@.a[*] >= @.b[*])';"}
+{"sql":"select jsonb '{\"a\": [1,2,3], \"b\": [3,4,null]}' @? '$ ? (@.a[*] >= @.b[*])'","shape":"SELECT jsonb '{\"a\": [1,2,3], \"b\": [3,4,null]}' @? '$ ? (@.a[*] >= @.b[*])';"}
+{"sql":"select jsonb '1' @? '$ ? ((@ == \"1\") is unknown)'","shape":"SELECT jsonb '1' @? '$ ? ((@ == \"1\") is unknown)';"}
+{"sql":"select jsonb '1' @? '$ ? ((@ == 1) is unknown)'","shape":"SELECT jsonb '1' @? '$ ? ((@ == 1) is unknown)';"}
+{"sql":"select jsonb '[{\"a\": 1}, {\"a\": 2}]' @? '$[0 to 1] ? (@.a > 1)'","shape":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @? '$[0 to 1] ? (@.a > 1)';"}
+{"sql":"select jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax $[*].a', silent => false)","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax $[*].a', silent => FALSE);"}
+{"sql":"select jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax $[*].a', silent => true)","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax $[*].a', silent => TRUE);"}
+{"sql":"select jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict $[*].a', silent => false)","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict $[*].a', silent => FALSE);"}
+{"sql":"select jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict $[*].a', silent => true)","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict $[*].a', silent => TRUE);"}
+{"sql":"select jsonb_path_query('1', 'lax $.a')","shape":"SELECT jsonb_path_query('1', 'lax $.a');"}
+{"sql":"select jsonb_path_query('1', 'strict $.a')","shape":"SELECT jsonb_path_query('1', 'strict $.a');"}
+{"sql":"select jsonb_path_query('1', 'strict $.*')","shape":"SELECT jsonb_path_query('1', 'strict $.*');"}
+{"sql":"select jsonb_path_query('1', 'strict $.a', silent => true)","shape":"SELECT jsonb_path_query('1', 'strict $.a', silent => TRUE);"}
+{"sql":"select jsonb_path_query('1', 'strict $.*', silent => true)","shape":"SELECT jsonb_path_query('1', 'strict $.*', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[]', 'lax $.a')","shape":"SELECT jsonb_path_query('[]', 'lax $.a');"}
+{"sql":"select jsonb_path_query('[]', 'strict $.a')","shape":"SELECT jsonb_path_query('[]', 'strict $.a');"}
+{"sql":"select jsonb_path_query('[]', 'strict $.a', silent => true)","shape":"SELECT jsonb_path_query('[]', 'strict $.a', silent => TRUE);"}
+{"sql":"select jsonb_path_query('{}', 'lax $.a')","shape":"SELECT jsonb_path_query('{}', 'lax $.a');"}
+{"sql":"select jsonb_path_query('{}', 'strict $.a')","shape":"SELECT jsonb_path_query('{}', 'strict $.a');"}
+{"sql":"select jsonb_path_query('{}', 'strict $.a', silent => true)","shape":"SELECT jsonb_path_query('{}', 'strict $.a', silent => TRUE);"}
+{"sql":"select jsonb_path_query('1', 'strict $[1]')","shape":"SELECT jsonb_path_query('1', 'strict $[1]');"}
+{"sql":"select jsonb_path_query('1', 'strict $[*]')","shape":"SELECT jsonb_path_query('1', 'strict $[*]');"}
+{"sql":"select jsonb_path_query('[]', 'strict $[1]')","shape":"SELECT jsonb_path_query('[]', 'strict $[1]');"}
+{"sql":"select jsonb_path_query('[]', 'strict $[\"a\"]')","shape":"SELECT jsonb_path_query('[]', 'strict $[\"a\"]');"}
+{"sql":"select jsonb_path_query('1', 'strict $[1]', silent => true)","shape":"SELECT jsonb_path_query('1', 'strict $[1]', silent => TRUE);"}
+{"sql":"select jsonb_path_query('1', 'strict $[*]', silent => true)","shape":"SELECT jsonb_path_query('1', 'strict $[*]', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[]', 'strict $[1]', silent => true)","shape":"SELECT jsonb_path_query('[]', 'strict $[1]', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[]', 'strict $[\"a\"]', silent => true)","shape":"SELECT jsonb_path_query('[]', 'strict $[\"a\"]', silent => TRUE);"}
+{"sql":"select jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', '$.a')","shape":"SELECT jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', '$.a');"}
+{"sql":"select jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', '$.b')","shape":"SELECT jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', '$.b');"}
+{"sql":"select jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', '$.*')","shape":"SELECT jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', '$.*');"}
+{"sql":"select jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', 'lax $.*.a')","shape":"SELECT jsonb_path_query('{\"a\": 12, \"b\": {\"a\": 13}}', 'lax $.*.a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[*].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[*].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[*].*')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[*].*');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[1].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[1].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[2].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[2].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0,1].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0,1].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0 to 10].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0 to 10].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0 to 10 / 0].a')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}]', 'lax $[0 to 10 / 0].a');"}
+{"sql":"select jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}, \"ccc\", true]', '$[2.5 - 1 to $.size() - 2]')","shape":"SELECT jsonb_path_query('[12, {\"a\": 13}, {\"b\": 14}, \"ccc\", true]', '$[2.5 - 1 to $.size() - 2]');"}
+{"sql":"select jsonb_path_query('1', 'lax $[0]')","shape":"SELECT jsonb_path_query('1', 'lax $[0]');"}
+{"sql":"select jsonb_path_query('1', 'lax $[*]')","shape":"SELECT jsonb_path_query('1', 'lax $[*]');"}
+{"sql":"select jsonb_path_query('[1]', 'lax $[0]')","shape":"SELECT jsonb_path_query('[1]', 'lax $[0]');"}
+{"sql":"select jsonb_path_query('[1]', 'lax $[*]')","shape":"SELECT jsonb_path_query('[1]', 'lax $[*]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', 'lax $[*]')","shape":"SELECT jsonb_path_query('[1,2,3]', 'lax $[*]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', 'strict $[*].a')","shape":"SELECT jsonb_path_query('[1,2,3]', 'strict $[*].a');"}
+{"sql":"select jsonb_path_query('[1,2,3]', 'strict $[*].a', silent => true)","shape":"SELECT jsonb_path_query('[1,2,3]', 'strict $[*].a', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[]', '$[last]')","shape":"SELECT jsonb_path_query('[]', '$[last]');"}
+{"sql":"select jsonb_path_query('[]', '$[last ? (exists(last))]')","shape":"SELECT jsonb_path_query('[]', '$[last ? (exists(last))]');"}
+{"sql":"select jsonb_path_query('[]', 'strict $[last]')","shape":"SELECT jsonb_path_query('[]', 'strict $[last]');"}
+{"sql":"select jsonb_path_query('[]', 'strict $[last]', silent => true)","shape":"SELECT jsonb_path_query('[]', 'strict $[last]', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[1]', '$[last]')","shape":"SELECT jsonb_path_query('[1]', '$[last]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', '$[last]')","shape":"SELECT jsonb_path_query('[1,2,3]', '$[last]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', '$[last - 1]')","shape":"SELECT jsonb_path_query('[1,2,3]', '$[last - 1]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', '$[last ? (@.type() == \"number\")]')","shape":"SELECT jsonb_path_query('[1,2,3]', '$[last ? (@.type() == \"number\")]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', '$[last ? (@.type() == \"string\")]')","shape":"SELECT jsonb_path_query('[1,2,3]', '$[last ? (@.type() == \"string\")]');"}
+{"sql":"select jsonb_path_query('[1,2,3]', '$[last ? (@.type() == \"string\")]', silent => true)","shape":"SELECT jsonb_path_query('[1,2,3]', '$[last ? (@.type() == \"string\")]', silent => TRUE);"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$');"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)');"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '1')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '1');"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '[{\"value\" : 13}]')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '[{\"value\" : 13}]');"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '{\"value\" : 13}')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '{\"value\" : 13}');"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '{\"value\" : 8}')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$ ? (@.a < $value)', '{\"value\" : 8}');"}
+{"sql":"select * from jsonb_path_query('{\"a\": 10}', '$.a ? (@ < $value)', '{\"value\" : 13}')","shape":"SELECT * FROM jsonb_path_query('{\"a\": 10}', '$.a ? (@ < $value)', '{\"value\" : 13}');"}
+{"sql":"select * from jsonb_path_query('[10,11,12,13,14,15]', '$[*] ? (@ < $value)', '{\"value\" : 13}')","shape":"SELECT * FROM jsonb_path_query('[10,11,12,13,14,15]', '$[*] ? (@ < $value)', '{\"value\" : 13}');"}
+{"sql":"select * from jsonb_path_query('[10,11,12,13,14,15]', '$[0,1] ? (@ < $x.value)', '{\"x\": {\"value\" : 13}}')","shape":"SELECT * FROM jsonb_path_query('[10,11,12,13,14,15]', '$[0,1] ? (@ < $x.value)', '{\"x\": {\"value\" : 13}}');"}
+{"sql":"select * from jsonb_path_query('[10,11,12,13,14,15]', '$[0 to 2] ? (@ < $value)', '{\"value\" : 15}')","shape":"SELECT * FROM jsonb_path_query('[10,11,12,13,14,15]', '$[0 to 2] ? (@ < $value)', '{\"value\" : 15}');"}
+{"sql":"select * from jsonb_path_query('[1,\"1\",2,\"2\",null]', '$[*] ? (@ == \"1\")')","shape":"SELECT * FROM jsonb_path_query('[1,\"1\",2,\"2\",null]', '$[*] ? (@ == \"1\")');"}
+{"sql":"select * from jsonb_path_query('[1,\"1\",2,\"2\",null]', '$[*] ? (@ == $value)', '{\"value\" : \"1\"}')","shape":"SELECT * FROM jsonb_path_query('[1,\"1\",2,\"2\",null]', '$[*] ? (@ == $value)', '{\"value\" : \"1\"}');"}
+{"sql":"select * from jsonb_path_query('[1,\"1\",2,\"2\",null]', '$[*] ? (@ == $value)', '{\"value\" : null}')","shape":"SELECT * FROM jsonb_path_query('[1,\"1\",2,\"2\",null]', '$[*] ? (@ == $value)', '{\"value\" : null}');"}
+{"sql":"select * from jsonb_path_query('[1, \"2\", null]', '$[*] ? (@ != null)')","shape":"SELECT * FROM jsonb_path_query('[1, \"2\", null]', '$[*] ? (@ != null)');"}
+{"sql":"select * from jsonb_path_query('[1, \"2\", null]', '$[*] ? (@ == null)')","shape":"SELECT * FROM jsonb_path_query('[1, \"2\", null]', '$[*] ? (@ == null)');"}
+{"sql":"select * from jsonb_path_query('{}', '$ ? (@ == @)')","shape":"SELECT * FROM jsonb_path_query('{}', '$ ? (@ == @)');"}
+{"sql":"select * from jsonb_path_query('[]', 'strict $ ? (@ == @)')","shape":"SELECT * FROM jsonb_path_query('[]', 'strict $ ? (@ == @)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0 to last}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0 to last}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1 to last}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1 to last}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{2}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{2}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{2 to last}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{2 to last}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{3 to last}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{3 to last}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{last}')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{last}');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0 to last}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{0 to last}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1 to last}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1 to last}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1 to 2}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"b\": 1}}', 'lax $.**{1 to 2}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{0}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{0}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{1}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{1}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{0 to last}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{0 to last}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{1 to last}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{1 to last}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{1 to 2}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{1 to 2}.b ? (@ > 0)');"}
+{"sql":"select jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{2 to 3}.b ? (@ > 0)')","shape":"SELECT jsonb_path_query('{\"a\": {\"c\": {\"b\": 1}}}', 'lax $.**{2 to 3}.b ? (@ > 0)');"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? '$.**.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? '$.**.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? '$.**{0}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? '$.**{0}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? '$.**{1}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? '$.**{1}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? '$.**{0 to last}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? '$.**{0 to last}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? '$.**{1 to last}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? '$.**{1 to last}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"b\": 1}}' @? '$.**{1 to 2}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"b\": 1}}' @? '$.**{1 to 2}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{0}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{0}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{1}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{1}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{0 to last}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{0 to last}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{1 to last}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{1 to last}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{1 to 2}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{1 to 2}.b ? ( @ > 0)';"}
+{"sql":"select jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{2 to 3}.b ? ( @ > 0)'","shape":"SELECT jsonb '{\"a\": {\"c\": {\"b\": 1}}}' @? '$.**{2 to 3}.b ? ( @ > 0)';"}
+{"sql":"select jsonb_path_query('{\"g\": {\"x\": 2}}', '$.g ? (exists (@.x))')","shape":"SELECT jsonb_path_query('{\"g\": {\"x\": 2}}', '$.g ? (exists (@.x))');"}
+{"sql":"select jsonb_path_query('{\"g\": {\"x\": 2}}', '$.g ? (exists (@.y))')","shape":"SELECT jsonb_path_query('{\"g\": {\"x\": 2}}', '$.g ? (exists (@.y))');"}
+{"sql":"select jsonb_path_query('{\"g\": {\"x\": 2}}', '$.g ? (exists (@.x ? (@ >= 2) ))')","shape":"SELECT jsonb_path_query('{\"g\": {\"x\": 2}}', '$.g ? (exists (@.x ? (@ >= 2) ))');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'lax $.g ? (exists (@.x))')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'lax $.g ? (exists (@.x))');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'lax $.g ? (exists (@.x + \"3\"))')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'lax $.g ? (exists (@.x + \"3\"))');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'lax $.g ? ((exists (@.x + \"3\")) is unknown)')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'lax $.g ? ((exists (@.x + \"3\")) is unknown)');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g[*] ? (exists (@.x))')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g[*] ? (exists (@.x))');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g[*] ? ((exists (@.x)) is unknown)')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g[*] ? ((exists (@.x)) is unknown)');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g ? (exists (@[*].x))')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g ? (exists (@[*].x))');"}
+{"sql":"select jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g ? ((exists (@[*].x)) is unknown)')","shape":"SELECT jsonb_path_query('{\"g\": [{\"x\": 2}, {\"y\": 3}]}', 'strict $.g ? ((exists (@[*].x)) is unknown)');"}
+{"sql":"select\n\tx, y,\n\tjsonb_path_query(\n\t\t'[true, false, null]',\n\t\t'$[*] ? (@ == true  &&  ($x == true && $y == true) ||\n\t\t\t\t @ == false && !($x == true && $y == true) ||\n\t\t\t\t @ == null  &&  ($x == true && $y == true) is unknown)',\n\t\tjsonb_build_object('x', x, 'y', y)\n\t) as \"x && y\"\nfrom\n\t(values (jsonb 'true'), ('false'), ('\"null\"')) x(x),\n\t(values (jsonb 'true'), ('false'), ('\"null\"')) y(y)","shape":"SELECT x, y, jsonb_path_query('[true, false, null]', '$[*] ? (@ == true  &&  ($x == true && $y == true) ||\n\t\t\t\t @ == false && !($x == true && $y == true) ||\n\t\t\t\t @ == null  &&  ($x == true && $y == true) is unknown)', jsonb_build_object('x', x, 'y', y)) AS \"x && y\" FROM (VALUES (jsonb 'true'), ('false'), ('\"null\"')) AS x(x), (VALUES (jsonb 'true'), ('false'), ('\"null\"')) AS y(y);"}
+{"sql":"select\n\tx, y,\n\tjsonb_path_query(\n\t\t'[true, false, null]',\n\t\t'$[*] ? (@ == true  &&  ($x == true || $y == true) ||\n\t\t\t\t @ == false && !($x == true || $y == true) ||\n\t\t\t\t @ == null  &&  ($x == true || $y == true) is unknown)',\n\t\tjsonb_build_object('x', x, 'y', y)\n\t) as \"x || y\"\nfrom\n\t(values (jsonb 'true'), ('false'), ('\"null\"')) x(x),\n\t(values (jsonb 'true'), ('false'), ('\"null\"')) y(y)","shape":"SELECT x, y, jsonb_path_query('[true, false, null]', '$[*] ? (@ == true  &&  ($x == true || $y == true) ||\n\t\t\t\t @ == false && !($x == true || $y == true) ||\n\t\t\t\t @ == null  &&  ($x == true || $y == true) is unknown)', jsonb_build_object('x', x, 'y', y)) AS \"x || y\" FROM (VALUES (jsonb 'true'), ('false'), ('\"null\"')) AS x(x), (VALUES (jsonb 'true'), ('false'), ('\"null\"')) AS y(y);"}
+{"sql":"select jsonb '{\"a\": 1, \"b\":1}' @? '$ ? (@.a == @.b)'","shape":"SELECT jsonb '{\"a\": 1, \"b\":1}' @? '$ ? (@.a == @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$ ? (@.a == @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$ ? (@.a == @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.c ? (@.a == @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.c ? (@.a == @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.c ? ($.c.a == @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.c ? ($.c.a == @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.* ? (@.a == @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.* ? (@.a == @.b)';"}
+{"sql":"select jsonb '{\"a\": 1, \"b\":1}' @? '$.** ? (@.a == @.b)'","shape":"SELECT jsonb '{\"a\": 1, \"b\":1}' @? '$.** ? (@.a == @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.** ? (@.a == @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 1, \"b\":1}}' @? '$.** ? (@.a == @.b)';"}
+{"sql":"select jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == 1 + 1)')","shape":"SELECT jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == 1 + 1)');"}
+{"sql":"select jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == (1 + 1))')","shape":"SELECT jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == (1 + 1))');"}
+{"sql":"select jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == @.b + 1)')","shape":"SELECT jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == @.b + 1)');"}
+{"sql":"select jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == (@.b + 1))')","shape":"SELECT jsonb_path_query('{\"c\": {\"a\": 2, \"b\":1}}', '$.** ? (@.a == (@.b + 1))');"}
+{"sql":"select jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == - 1)'","shape":"SELECT jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == - 1)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == -1)'","shape":"SELECT jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == -1)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == -@.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == -@.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == - @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": -1, \"b\":1}}' @? '$.** ? (@.a == - @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 0, \"b\":1}}' @? '$.** ? (@.a == 1 - @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 0, \"b\":1}}' @? '$.** ? (@.a == 1 - @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 2, \"b\":1}}' @? '$.** ? (@.a == 1 - - @.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 2, \"b\":1}}' @? '$.** ? (@.a == 1 - - @.b)';"}
+{"sql":"select jsonb '{\"c\": {\"a\": 0, \"b\":1}}' @? '$.** ? (@.a == 1 - +@.b)'","shape":"SELECT jsonb '{\"c\": {\"a\": 0, \"b\":1}}' @? '$.** ? (@.a == 1 - +@.b)';"}
+{"sql":"select jsonb '[1,2,3]' @? '$ ? (+@[*] > +2)'","shape":"SELECT jsonb '[1,2,3]' @? '$ ? (+@[*] > +2)';"}
+{"sql":"select jsonb '[1,2,3]' @? '$ ? (+@[*] > +3)'","shape":"SELECT jsonb '[1,2,3]' @? '$ ? (+@[*] > +3)';"}
+{"sql":"select jsonb '[1,2,3]' @? '$ ? (-@[*] < -2)'","shape":"SELECT jsonb '[1,2,3]' @? '$ ? (-@[*] < -2)';"}
+{"sql":"select jsonb '[1,2,3]' @? '$ ? (-@[*] < -3)'","shape":"SELECT jsonb '[1,2,3]' @? '$ ? (-@[*] < -3)';"}
+{"sql":"select jsonb '1' @? '$ ? ($ > 0)'","shape":"SELECT jsonb '1' @? '$ ? ($ > 0)';"}
+{"sql":"select jsonb_path_query('[1,2,0,3]', '$[*] ? (2 / @ > 0)')","shape":"SELECT jsonb_path_query('[1,2,0,3]', '$[*] ? (2 / @ > 0)');"}
+{"sql":"select jsonb_path_query('[1,2,0,3]', '$[*] ? ((2 / @ > 0) is unknown)')","shape":"SELECT jsonb_path_query('[1,2,0,3]', '$[*] ? ((2 / @ > 0) is unknown)');"}
+{"sql":"select jsonb_path_query('0', '1 / $')","shape":"SELECT jsonb_path_query('0', '1 / $');"}
+{"sql":"select jsonb_path_query('0', '1 / $ + 2')","shape":"SELECT jsonb_path_query('0', '1 / $ + 2');"}
+{"sql":"select jsonb_path_query('0', '-(3 + 1 % $)')","shape":"SELECT jsonb_path_query('0', '-(3 + 1 % $)');"}
+{"sql":"select jsonb_path_query('1', '$ + \"2\"')","shape":"SELECT jsonb_path_query('1', '$ + \"2\"');"}
+{"sql":"select jsonb_path_query('[1, 2]', '3 * $')","shape":"SELECT jsonb_path_query('[1, 2]', '3 * $');"}
+{"sql":"select jsonb_path_query('\"a\"', '-$')","shape":"SELECT jsonb_path_query('\"a\"', '-$');"}
+{"sql":"select jsonb_path_query('[1,\"2\",3]', '+$')","shape":"SELECT jsonb_path_query('[1,\"2\",3]', '+$');"}
+{"sql":"select jsonb_path_query('1', '$ + \"2\"', silent => true)","shape":"SELECT jsonb_path_query('1', '$ + \"2\"', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[1, 2]', '3 * $', silent => true)","shape":"SELECT jsonb_path_query('[1, 2]', '3 * $', silent => TRUE);"}
+{"sql":"select jsonb_path_query('\"a\"', '-$', silent => true)","shape":"SELECT jsonb_path_query('\"a\"', '-$', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[1,\"2\",3]', '+$', silent => true)","shape":"SELECT jsonb_path_query('[1,\"2\",3]', '+$', silent => TRUE);"}
+{"sql":"select jsonb '[\"1\",2,0,3]' @? '-$[*]'","shape":"SELECT jsonb '[\"1\",2,0,3]' @? '-$[*]';"}
+{"sql":"select jsonb '[1,\"2\",0,3]' @? '-$[*]'","shape":"SELECT jsonb '[1,\"2\",0,3]' @? '-$[*]';"}
+{"sql":"select jsonb '[\"1\",2,0,3]' @? 'strict -$[*]'","shape":"SELECT jsonb '[\"1\",2,0,3]' @? 'strict -$[*]';"}
+{"sql":"select jsonb '[1,\"2\",0,3]' @? 'strict -$[*]'","shape":"SELECT jsonb '[1,\"2\",0,3]' @? 'strict -$[*]';"}
+{"sql":"select jsonb_path_query('{\"a\": [2]}', 'lax $.a * 3')","shape":"SELECT jsonb_path_query('{\"a\": [2]}', 'lax $.a * 3');"}
+{"sql":"select jsonb_path_query('{\"a\": [2]}', 'lax $.a + 3')","shape":"SELECT jsonb_path_query('{\"a\": [2]}', 'lax $.a + 3');"}
+{"sql":"select jsonb_path_query('{\"a\": [2, 3, 4]}', 'lax -$.a')","shape":"SELECT jsonb_path_query('{\"a\": [2, 3, 4]}', 'lax -$.a');"}
+{"sql":"select jsonb_path_query('{\"a\": [1, 2]}', 'lax $.a * 3')","shape":"SELECT jsonb_path_query('{\"a\": [1, 2]}', 'lax $.a * 3');"}
+{"sql":"select jsonb_path_query('{\"a\": [1, 2]}', 'lax $.a * 3', silent => true)","shape":"SELECT jsonb_path_query('{\"a\": [1, 2]}', 'lax $.a * 3', silent => TRUE);"}
+{"sql":"select jsonb_path_query('2', '$ > 1')","shape":"SELECT jsonb_path_query('2', '$ > 1');"}
+{"sql":"select jsonb_path_query('2', '$ <= 1')","shape":"SELECT jsonb_path_query('2', '$ <= 1');"}
+{"sql":"select jsonb_path_query('2', '$ == \"2\"')","shape":"SELECT jsonb_path_query('2', '$ == \"2\"');"}
+{"sql":"select jsonb '2' @? '$ == \"2\"'","shape":"SELECT jsonb '2' @? '$ == \"2\"';"}
+{"sql":"select jsonb '2' @@ '$ > 1'","shape":"SELECT jsonb '2' @@ '$ > 1';"}
+{"sql":"select jsonb '2' @@ '$ <= 1'","shape":"SELECT jsonb '2' @@ '$ <= 1';"}
+{"sql":"select jsonb '2' @@ '$ == \"2\"'","shape":"SELECT jsonb '2' @@ '$ == \"2\"';"}
+{"sql":"select jsonb '2' @@ '1'","shape":"SELECT jsonb '2' @@ '1';"}
+{"sql":"select jsonb '{}' @@ '$'","shape":"SELECT jsonb '{}' @@ '$';"}
+{"sql":"select jsonb '[]' @@ '$'","shape":"SELECT jsonb '[]' @@ '$';"}
+{"sql":"select jsonb '[1,2,3]' @@ '$[*]'","shape":"SELECT jsonb '[1,2,3]' @@ '$[*]';"}
+{"sql":"select jsonb '[]' @@ '$[*]'","shape":"SELECT jsonb '[]' @@ '$[*]';"}
+{"sql":"select jsonb_path_match('[[1, true], [2, false]]', 'strict $[*] ? (@[0] > $x) [1]', '{\"x\": 1}')","shape":"SELECT jsonb_path_match('[[1, true], [2, false]]', 'strict $[*] ? (@[0] > $x) [1]', '{\"x\": 1}');"}
+{"sql":"select jsonb_path_match('[[1, true], [2, false]]', 'strict $[*] ? (@[0] < $x) [1]', '{\"x\": 2}')","shape":"SELECT jsonb_path_match('[[1, true], [2, false]]', 'strict $[*] ? (@[0] < $x) [1]', '{\"x\": 2}');"}
+{"sql":"select jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax exists($[*].a)', silent => false)","shape":"SELECT jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax exists($[*].a)', silent => FALSE);"}
+{"sql":"select jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax exists($[*].a)', silent => true)","shape":"SELECT jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'lax exists($[*].a)', silent => TRUE);"}
+{"sql":"select jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict exists($[*].a)', silent => false)","shape":"SELECT jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict exists($[*].a)', silent => FALSE);"}
+{"sql":"select jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict exists($[*].a)', silent => true)","shape":"SELECT jsonb_path_match('[{\"a\": 1}, {\"a\": 2}, 3]', 'strict exists($[*].a)', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[null,1,true,\"a\",[],{}]', '$.type()')","shape":"SELECT jsonb_path_query('[null,1,true,\"a\",[],{}]', '$.type()');"}
+{"sql":"select jsonb_path_query('[null,1,true,\"a\",[],{}]', 'lax $.type()')","shape":"SELECT jsonb_path_query('[null,1,true,\"a\",[],{}]', 'lax $.type()');"}
+{"sql":"select jsonb_path_query('[null,1,true,\"a\",[],{}]', '$[*].type()')","shape":"SELECT jsonb_path_query('[null,1,true,\"a\",[],{}]', '$[*].type()');"}
+{"sql":"select jsonb_path_query('null', 'null.type()')","shape":"SELECT jsonb_path_query('null', 'null.type()');"}
+{"sql":"select jsonb_path_query('null', 'true.type()')","shape":"SELECT jsonb_path_query('null', 'true.type()');"}
+{"sql":"select jsonb_path_query('null', '(123).type()')","shape":"SELECT jsonb_path_query('null', '(123).type()');"}
+{"sql":"select jsonb_path_query('null', '\"123\".type()')","shape":"SELECT jsonb_path_query('null', '\"123\".type()');"}
+{"sql":"select jsonb_path_query('{\"a\": 2}', '($.a - 5).abs() + 10')","shape":"SELECT jsonb_path_query('{\"a\": 2}', '($.a - 5).abs() + 10');"}
+{"sql":"select jsonb_path_query('{\"a\": 2.5}', '-($.a * $.a).floor() % 4.3')","shape":"SELECT jsonb_path_query('{\"a\": 2.5}', '-($.a * $.a).floor() % 4.3');"}
+{"sql":"select jsonb_path_query('[1, 2, 3]', '($[*] > 2) ? (@ == true)')","shape":"SELECT jsonb_path_query('[1, 2, 3]', '($[*] > 2) ? (@ == true)');"}
+{"sql":"select jsonb_path_query('[1, 2, 3]', '($[*] > 3).type()')","shape":"SELECT jsonb_path_query('[1, 2, 3]', '($[*] > 3).type()');"}
+{"sql":"select jsonb_path_query('[1, 2, 3]', '($[*].a > 3).type()')","shape":"SELECT jsonb_path_query('[1, 2, 3]', '($[*].a > 3).type()');"}
+{"sql":"select jsonb_path_query('[1, 2, 3]', 'strict ($[*].a > 3).type()')","shape":"SELECT jsonb_path_query('[1, 2, 3]', 'strict ($[*].a > 3).type()');"}
+{"sql":"select jsonb_path_query('[1,null,true,\"11\",[],[1],[1,2,3],{},{\"a\":1,\"b\":2}]', 'strict $[*].size()')","shape":"SELECT jsonb_path_query('[1,null,true,\"11\",[],[1],[1,2,3],{},{\"a\":1,\"b\":2}]', 'strict $[*].size()');"}
+{"sql":"select jsonb_path_query('[1,null,true,\"11\",[],[1],[1,2,3],{},{\"a\":1,\"b\":2}]', 'strict $[*].size()', silent => true)","shape":"SELECT jsonb_path_query('[1,null,true,\"11\",[],[1],[1,2,3],{},{\"a\":1,\"b\":2}]', 'strict $[*].size()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[1,null,true,\"11\",[],[1],[1,2,3],{},{\"a\":1,\"b\":2}]', 'lax $[*].size()')","shape":"SELECT jsonb_path_query('[1,null,true,\"11\",[],[1],[1,2,3],{},{\"a\":1,\"b\":2}]', 'lax $[*].size()');"}
+{"sql":"select jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].abs()')","shape":"SELECT jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].abs()');"}
+{"sql":"select jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].floor()')","shape":"SELECT jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].floor()');"}
+{"sql":"select jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].ceiling()')","shape":"SELECT jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].ceiling()');"}
+{"sql":"select jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].ceiling().abs()')","shape":"SELECT jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].ceiling().abs()');"}
+{"sql":"select jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].ceiling().abs().type()')","shape":"SELECT jsonb_path_query('[0, 1, -2, -3.4, 5.6]', '$[*].ceiling().abs().type()');"}
+{"sql":"select jsonb_path_query('[{},1]', '$[*].keyvalue()')","shape":"SELECT jsonb_path_query('[{},1]', '$[*].keyvalue()');"}
+{"sql":"select jsonb_path_query('[{},1]', '$[*].keyvalue()', silent => true)","shape":"SELECT jsonb_path_query('[{},1]', '$[*].keyvalue()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('{}', '$.keyvalue()')","shape":"SELECT jsonb_path_query('{}', '$.keyvalue()');"}
+{"sql":"select jsonb_path_query('{\"a\": 1, \"b\": [1, 2], \"c\": {\"a\": \"bbb\"}}', '$.keyvalue()')","shape":"SELECT jsonb_path_query('{\"a\": 1, \"b\": [1, 2], \"c\": {\"a\": \"bbb\"}}', '$.keyvalue()');"}
+{"sql":"select jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', '$[*].keyvalue()')","shape":"SELECT jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', '$[*].keyvalue()');"}
+{"sql":"select jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', 'strict $.keyvalue()')","shape":"SELECT jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', 'strict $.keyvalue()');"}
+{"sql":"select jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', 'lax $.keyvalue()')","shape":"SELECT jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', 'lax $.keyvalue()');"}
+{"sql":"select jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', 'strict $.keyvalue().a')","shape":"SELECT jsonb_path_query('[{\"a\": 1, \"b\": [1, 2]}, {\"c\": {\"a\": \"bbb\"}}]', 'strict $.keyvalue().a');"}
+{"sql":"select jsonb '{\"a\": 1, \"b\": [1, 2]}' @? 'lax $.keyvalue()'","shape":"SELECT jsonb '{\"a\": 1, \"b\": [1, 2]}' @? 'lax $.keyvalue()';"}
+{"sql":"select jsonb '{\"a\": 1, \"b\": [1, 2]}' @? 'lax $.keyvalue().key'","shape":"SELECT jsonb '{\"a\": 1, \"b\": [1, 2]}' @? 'lax $.keyvalue().key';"}
+{"sql":"select jsonb_path_query('null', '$.double()')","shape":"SELECT jsonb_path_query('null', '$.double()');"}
+{"sql":"select jsonb_path_query('true', '$.double()')","shape":"SELECT jsonb_path_query('true', '$.double()');"}
+{"sql":"select jsonb_path_query('null', '$.double()', silent => true)","shape":"SELECT jsonb_path_query('null', '$.double()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('true', '$.double()', silent => true)","shape":"SELECT jsonb_path_query('true', '$.double()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[]', '$.double()')","shape":"SELECT jsonb_path_query('[]', '$.double()');"}
+{"sql":"select jsonb_path_query('[]', 'strict $.double()')","shape":"SELECT jsonb_path_query('[]', 'strict $.double()');"}
+{"sql":"select jsonb_path_query('{}', '$.double()')","shape":"SELECT jsonb_path_query('{}', '$.double()');"}
+{"sql":"select jsonb_path_query('[]', 'strict $.double()', silent => true)","shape":"SELECT jsonb_path_query('[]', 'strict $.double()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('{}', '$.double()', silent => true)","shape":"SELECT jsonb_path_query('{}', '$.double()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('1.23', '$.double()')","shape":"SELECT jsonb_path_query('1.23', '$.double()');"}
+{"sql":"select jsonb_path_query('\"1.23\"', '$.double()')","shape":"SELECT jsonb_path_query('\"1.23\"', '$.double()');"}
+{"sql":"select jsonb_path_query('\"1.23aaa\"', '$.double()')","shape":"SELECT jsonb_path_query('\"1.23aaa\"', '$.double()');"}
+{"sql":"select jsonb_path_query('1e1000', '$.double()')","shape":"SELECT jsonb_path_query('1e1000', '$.double()');"}
+{"sql":"select jsonb_path_query('\"nan\"', '$.double()')","shape":"SELECT jsonb_path_query('\"nan\"', '$.double()');"}
+{"sql":"select jsonb_path_query('\"NaN\"', '$.double()')","shape":"SELECT jsonb_path_query('\"NaN\"', '$.double()');"}
+{"sql":"select jsonb_path_query('\"inf\"', '$.double()')","shape":"SELECT jsonb_path_query('\"inf\"', '$.double()');"}
+{"sql":"select jsonb_path_query('\"-inf\"', '$.double()')","shape":"SELECT jsonb_path_query('\"-inf\"', '$.double()');"}
+{"sql":"select jsonb_path_query('\"inf\"', '$.double()', silent => true)","shape":"SELECT jsonb_path_query('\"inf\"', '$.double()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('\"-inf\"', '$.double()', silent => true)","shape":"SELECT jsonb_path_query('\"-inf\"', '$.double()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('{}', '$.abs()')","shape":"SELECT jsonb_path_query('{}', '$.abs()');"}
+{"sql":"select jsonb_path_query('true', '$.floor()')","shape":"SELECT jsonb_path_query('true', '$.floor()');"}
+{"sql":"select jsonb_path_query('\"1.2\"', '$.ceiling()')","shape":"SELECT jsonb_path_query('\"1.2\"', '$.ceiling()');"}
+{"sql":"select jsonb_path_query('{}', '$.abs()', silent => true)","shape":"SELECT jsonb_path_query('{}', '$.abs()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('true', '$.floor()', silent => true)","shape":"SELECT jsonb_path_query('true', '$.floor()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('\"1.2\"', '$.ceiling()', silent => true)","shape":"SELECT jsonb_path_query('\"1.2\"', '$.ceiling()', silent => TRUE);"}
+{"sql":"select jsonb_path_query('[\"\", \"a\", \"abc\", \"abcabc\"]', '$[*] ? (@ starts with \"abc\")')","shape":"SELECT jsonb_path_query('[\"\", \"a\", \"abc\", \"abcabc\"]', '$[*] ? (@ starts with \"abc\")');"}
+{"sql":"select jsonb_path_query('[\"\", \"a\", \"abc\", \"abcabc\"]', 'strict $ ? (@[*] starts with \"abc\")')","shape":"SELECT jsonb_path_query('[\"\", \"a\", \"abc\", \"abcabc\"]', 'strict $ ? (@[*] starts with \"abc\")');"}
+{"sql":"select jsonb_path_query('[\"\", \"a\", \"abd\", \"abdabc\"]', 'strict $ ? (@[*] starts with \"abc\")')","shape":"SELECT jsonb_path_query('[\"\", \"a\", \"abd\", \"abdabc\"]', 'strict $ ? (@[*] starts with \"abc\")');"}
+{"sql":"select jsonb_path_query('[\"abc\", \"abcabc\", null, 1]', 'strict $ ? (@[*] starts with \"abc\")')","shape":"SELECT jsonb_path_query('[\"abc\", \"abcabc\", null, 1]', 'strict $ ? (@[*] starts with \"abc\")');"}
+{"sql":"select jsonb_path_query('[\"abc\", \"abcabc\", null, 1]', 'strict $ ? ((@[*] starts with \"abc\") is unknown)')","shape":"SELECT jsonb_path_query('[\"abc\", \"abcabc\", null, 1]', 'strict $ ? ((@[*] starts with \"abc\") is unknown)');"}
+{"sql":"select jsonb_path_query('[[null, 1, \"abc\", \"abcabc\"]]', 'lax $ ? (@[*] starts with \"abc\")')","shape":"SELECT jsonb_path_query('[[null, 1, \"abc\", \"abcabc\"]]', 'lax $ ? (@[*] starts with \"abc\")');"}
+{"sql":"select jsonb_path_query('[[null, 1, \"abd\", \"abdabc\"]]', 'lax $ ? ((@[*] starts with \"abc\") is unknown)')","shape":"SELECT jsonb_path_query('[[null, 1, \"abd\", \"abdabc\"]]', 'lax $ ? ((@[*] starts with \"abc\") is unknown)');"}
+{"sql":"select jsonb_path_query('[null, 1, \"abd\", \"abdabc\"]', 'lax $[*] ? ((@ starts with \"abc\") is unknown)')","shape":"SELECT jsonb_path_query('[null, 1, \"abd\", \"abdabc\"]', 'lax $[*] ? ((@ starts with \"abc\") is unknown)');"}
+{"sql":"select jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\")')","shape":"SELECT jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\" flag \"i\")')","shape":"SELECT jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\" flag \"i\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\" flag \"m\")')","shape":"SELECT jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\" flag \"m\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\" flag \"s\")')","shape":"SELECT jsonb_path_query('[null, 1, \"abc\", \"abd\", \"aBdC\", \"abdacb\", \"babc\", \"adc\\nabc\", \"ab\\nadc\"]', 'lax $[*] ? (@ like_regex \"^ab.*c\" flag \"s\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"a\\\\b\" flag \"q\")')","shape":"SELECT jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"a\\\\b\" flag \"q\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"a\\\\b\" flag \"\")')","shape":"SELECT jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"a\\\\b\" flag \"\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\b$\" flag \"q\")')","shape":"SELECT jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\b$\" flag \"q\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\B$\" flag \"q\")')","shape":"SELECT jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\B$\" flag \"q\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\B$\" flag \"iq\")')","shape":"SELECT jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\B$\" flag \"iq\")');"}
+{"sql":"select jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\b$\" flag \"\")')","shape":"SELECT jsonb_path_query('[null, 1, \"a\\b\", \"a\\\\b\", \"^a\\\\b$\"]', 'lax $[*] ? (@ like_regex \"^a\\\\b$\" flag \"\")');"}
+{"sql":"select jsonb_path_query('null', '$.datetime()')","shape":"SELECT jsonb_path_query('null', '$.datetime()');"}
+{"sql":"select jsonb_path_query('true', '$.datetime()')","shape":"SELECT jsonb_path_query('true', '$.datetime()');"}
+{"sql":"select jsonb_path_query('1', '$.datetime()')","shape":"SELECT jsonb_path_query('1', '$.datetime()');"}
+{"sql":"select jsonb_path_query('[]', '$.datetime()')","shape":"SELECT jsonb_path_query('[]', '$.datetime()');"}
+{"sql":"select jsonb_path_query('[]', 'strict $.datetime()')","shape":"SELECT jsonb_path_query('[]', 'strict $.datetime()');"}
+{"sql":"select jsonb_path_query('{}', '$.datetime()')","shape":"SELECT jsonb_path_query('{}', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"bogus\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"bogus\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"12:34\"', '$.datetime(\"aaa\")')","shape":"SELECT jsonb_path_query('\"12:34\"', '$.datetime(\"aaa\")');"}
+{"sql":"select jsonb_path_query('\"aaaa\"', '$.datetime(\"HH24\")')","shape":"SELECT jsonb_path_query('\"aaaa\"', '$.datetime(\"HH24\")');"}
+{"sql":"select jsonb '\"10-03-2017\"' @? '$.datetime(\"dd-mm-yyyy\")'","shape":"SELECT jsonb '\"10-03-2017\"' @? '$.datetime(\"dd-mm-yyyy\")';"}
+{"sql":"select jsonb_path_query('\"10-03-2017\"', '$.datetime(\"dd-mm-yyyy\")')","shape":"SELECT jsonb_path_query('\"10-03-2017\"', '$.datetime(\"dd-mm-yyyy\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017\"', '$.datetime(\"dd-mm-yyyy\").type()')","shape":"SELECT jsonb_path_query('\"10-03-2017\"', '$.datetime(\"dd-mm-yyyy\").type()');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy\").type()')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy\").type()');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34\"', '       $.datetime(\"dd-mm-yyyy HH24:MI\").type()')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34\"', '       $.datetime(\"dd-mm-yyyy HH24:MI\").type()');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34 +05:20\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH:TZM\").type()')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34 +05:20\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH:TZM\").type()');"}
+{"sql":"select jsonb_path_query('\"12:34:56\"', '$.datetime(\"HH24:MI:SS\").type()')","shape":"SELECT jsonb_path_query('\"12:34:56\"', '$.datetime(\"HH24:MI:SS\").type()');"}
+{"sql":"select jsonb_path_query('\"12:34:56 +05:20\"', '$.datetime(\"HH24:MI:SS TZH:TZM\").type()')","shape":"SELECT jsonb_path_query('\"12:34:56 +05:20\"', '$.datetime(\"HH24:MI:SS TZH:TZM\").type()');"}
+{"sql":"select jsonb_path_query('\"10-03-2017T12:34:56\"', '$.datetime(\"dd-mm-yyyy\\\"T\\\"HH24:MI:SS\")')","shape":"SELECT jsonb_path_query('\"10-03-2017T12:34:56\"', '$.datetime(\"dd-mm-yyyy\\\"T\\\"HH24:MI:SS\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017t12:34:56\"', '$.datetime(\"dd-mm-yyyy\\\"T\\\"HH24:MI:SS\")')","shape":"SELECT jsonb_path_query('\"10-03-2017t12:34:56\"', '$.datetime(\"dd-mm-yyyy\\\"T\\\"HH24:MI:SS\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34:56\"', '$.datetime(\"dd-mm-yyyy\\\"T\\\"HH24:MI:SS\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34:56\"', '$.datetime(\"dd-mm-yyyy\\\"T\\\"HH24:MI:SS\")');"}
+{"sql":"set time zone '+00'","shape":"SET TIME ZONE '+00';"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy HH24:MI\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy HH24:MI\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34 +05\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34 +05\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34 -05\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34 -05\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34 +05:20\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH:TZM\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34 +05:20\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH:TZM\")');"}
+{"sql":"select jsonb_path_query('\"10-03-2017 12:34 -05:20\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH:TZM\")')","shape":"SELECT jsonb_path_query('\"10-03-2017 12:34 -05:20\"', '$.datetime(\"dd-mm-yyyy HH24:MI TZH:TZM\")');"}
+{"sql":"select jsonb_path_query('\"12:34\"', '$.datetime(\"HH24:MI\")')","shape":"SELECT jsonb_path_query('\"12:34\"', '$.datetime(\"HH24:MI\")');"}
+{"sql":"select jsonb_path_query('\"12:34\"', '$.datetime(\"HH24:MI TZH\")')","shape":"SELECT jsonb_path_query('\"12:34\"', '$.datetime(\"HH24:MI TZH\")');"}
+{"sql":"select jsonb_path_query('\"12:34 +05\"', '$.datetime(\"HH24:MI TZH\")')","shape":"SELECT jsonb_path_query('\"12:34 +05\"', '$.datetime(\"HH24:MI TZH\")');"}
+{"sql":"select jsonb_path_query('\"12:34 -05\"', '$.datetime(\"HH24:MI TZH\")')","shape":"SELECT jsonb_path_query('\"12:34 -05\"', '$.datetime(\"HH24:MI TZH\")');"}
+{"sql":"select jsonb_path_query('\"12:34 +05:20\"', '$.datetime(\"HH24:MI TZH:TZM\")')","shape":"SELECT jsonb_path_query('\"12:34 +05:20\"', '$.datetime(\"HH24:MI TZH:TZM\")');"}
+{"sql":"select jsonb_path_query('\"12:34 -05:20\"', '$.datetime(\"HH24:MI TZH:TZM\")')","shape":"SELECT jsonb_path_query('\"12:34 -05:20\"', '$.datetime(\"HH24:MI TZH:TZM\")');"}
+{"sql":"set time zone '+10'","shape":"SET TIME ZONE '+10';"}
+{"sql":"set time zone default","shape":"SET TIME ZONE DEFAULT;"}
+{"sql":"select jsonb_path_query('\"2017-03-10\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"2017-03-10\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56+3\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56+3\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56+3\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56+3\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56+3:10\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56+3:10\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10T12:34:56+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10T12:34:56+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10t12:34:56+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10t12:34:56+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10 12:34:56.789+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10 12:34:56.789+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10T12:34:56.789+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10T12:34:56.789+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"2017-03-10t12:34:56.789+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"2017-03-10t12:34:56.789+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"12:34:56\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"12:34:56\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"12:34:56\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"12:34:56\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"12:34:56+3\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"12:34:56+3\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"12:34:56+3\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"12:34:56+3\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query('\"12:34:56+3:10\"', '$.datetime().type()')","shape":"SELECT jsonb_path_query('\"12:34:56+3:10\"', '$.datetime().type()');"}
+{"sql":"select jsonb_path_query('\"12:34:56+3:10\"', '$.datetime()')","shape":"SELECT jsonb_path_query('\"12:34:56+3:10\"', '$.datetime()');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]',\n\t'$[*].datetime() ? (@ == \"10.03.2017\".datetime(\"dd.mm.yyyy\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]', '$[*].datetime() ? (@ == \"10.03.2017\".datetime(\"dd.mm.yyyy\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]',\n\t'$[*].datetime() ? (@ >= \"10.03.2017\".datetime(\"dd.mm.yyyy\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]', '$[*].datetime() ? (@ >= \"10.03.2017\".datetime(\"dd.mm.yyyy\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]',\n\t'$[*].datetime() ? (@ <  \"10.03.2017\".datetime(\"dd.mm.yyyy\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]', '$[*].datetime() ? (@ <  \"10.03.2017\".datetime(\"dd.mm.yyyy\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]',\n\t'$[*].datetime() ? (@ == \"10.03.2017\".datetime(\"dd.mm.yyyy\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]', '$[*].datetime() ? (@ == \"10.03.2017\".datetime(\"dd.mm.yyyy\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]',\n\t'$[*].datetime() ? (@ >= \"10.03.2017\".datetime(\"dd.mm.yyyy\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]', '$[*].datetime() ? (@ >= \"10.03.2017\".datetime(\"dd.mm.yyyy\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]',\n\t'$[*].datetime() ? (@ <  \"10.03.2017\".datetime(\"dd.mm.yyyy\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10\", \"2017-03-11\", \"2017-03-09\", \"12:34:56\", \"01:02:03+04\", \"2017-03-10 00:00:00\", \"2017-03-10 12:34:56\", \"2017-03-10 01:02:03+04\", \"2017-03-10 03:00:00+03\"]', '$[*].datetime() ? (@ <  \"10.03.2017\".datetime(\"dd.mm.yyyy\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]',\n\t'$[*].datetime() ? (@ == \"12:35\".datetime(\"HH24:MI\"))')","shape":"SELECT jsonb_path_query('[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]', '$[*].datetime() ? (@ == \"12:35\".datetime(\"HH24:MI\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]',\n\t'$[*].datetime() ? (@ >= \"12:35\".datetime(\"HH24:MI\"))')","shape":"SELECT jsonb_path_query('[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]', '$[*].datetime() ? (@ >= \"12:35\".datetime(\"HH24:MI\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]',\n\t'$[*].datetime() ? (@ <  \"12:35\".datetime(\"HH24:MI\"))')","shape":"SELECT jsonb_path_query('[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]', '$[*].datetime() ? (@ <  \"12:35\".datetime(\"HH24:MI\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]',\n\t'$[*].datetime() ? (@ == \"12:35\".datetime(\"HH24:MI\"))')","shape":"SELECT jsonb_path_query_tz('[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]', '$[*].datetime() ? (@ == \"12:35\".datetime(\"HH24:MI\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]',\n\t'$[*].datetime() ? (@ >= \"12:35\".datetime(\"HH24:MI\"))')","shape":"SELECT jsonb_path_query_tz('[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]', '$[*].datetime() ? (@ >= \"12:35\".datetime(\"HH24:MI\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]',\n\t'$[*].datetime() ? (@ <  \"12:35\".datetime(\"HH24:MI\"))')","shape":"SELECT jsonb_path_query_tz('[\"12:34:00\", \"12:35:00\", \"12:36:00\", \"12:35:00+00\", \"12:35:00+01\", \"13:35:00+01\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00+01\"]', '$[*].datetime() ? (@ <  \"12:35\".datetime(\"HH24:MI\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]',\n\t'$[*].datetime() ? (@ == \"12:35 +1\".datetime(\"HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query('[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]', '$[*].datetime() ? (@ == \"12:35 +1\".datetime(\"HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]',\n\t'$[*].datetime() ? (@ >= \"12:35 +1\".datetime(\"HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query('[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]', '$[*].datetime() ? (@ >= \"12:35 +1\".datetime(\"HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]',\n\t'$[*].datetime() ? (@ <  \"12:35 +1\".datetime(\"HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query('[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]', '$[*].datetime() ? (@ <  \"12:35 +1\".datetime(\"HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]',\n\t'$[*].datetime() ? (@ == \"12:35 +1\".datetime(\"HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query_tz('[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]', '$[*].datetime() ? (@ == \"12:35 +1\".datetime(\"HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]',\n\t'$[*].datetime() ? (@ >= \"12:35 +1\".datetime(\"HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query_tz('[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]', '$[*].datetime() ? (@ >= \"12:35 +1\".datetime(\"HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]',\n\t'$[*].datetime() ? (@ <  \"12:35 +1\".datetime(\"HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query_tz('[\"12:34:00+01\", \"12:35:00+01\", \"12:36:00+01\", \"12:35:00+02\", \"12:35:00-02\", \"10:35:00\", \"11:35:00\", \"12:35:00\", \"2017-03-10\", \"2017-03-10 12:35:00\", \"2017-03-10 12:35:00 +1\"]', '$[*].datetime() ? (@ <  \"12:35 +1\".datetime(\"HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ == \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ == \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ >= \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ >= \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ < \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ < \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ == \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ == \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ >= \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ >= \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ < \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10 12:34:00\", \"2017-03-10 12:35:00\", \"2017-03-10 12:36:00\", \"2017-03-10 12:35:00+01\", \"2017-03-10 13:35:00+01\", \"2017-03-10 12:35:00-01\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ < \"10.03.2017 12:35\".datetime(\"dd.mm.yyyy HH24:MI\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ == \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ == \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ >= \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ >= \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query(\n\t'[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ < \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query('[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ < \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ == \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ == \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ >= \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ >= \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query_tz(\n\t'[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]',\n\t'$[*].datetime() ? (@ < \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))')","shape":"SELECT jsonb_path_query_tz('[\"2017-03-10 12:34:00+01\", \"2017-03-10 12:35:00+01\", \"2017-03-10 12:36:00+01\", \"2017-03-10 12:35:00+02\", \"2017-03-10 12:35:00-02\", \"2017-03-10 10:35:00\", \"2017-03-10 11:35:00\", \"2017-03-10 12:35:00\", \"2017-03-10\", \"2017-03-11\", \"12:34:56\", \"12:34:56+01\"]', '$[*].datetime() ? (@ < \"10.03.2017 12:35 +1\".datetime(\"dd.mm.yyyy HH24:MI TZH\"))');"}
+{"sql":"select jsonb_path_query('\"1000000-01-01\"', '$.datetime() > \"2020-01-01 12:00:00\".datetime()'::jsonpath)","shape":"SELECT jsonb_path_query('\"1000000-01-01\"', '$.datetime() > \"2020-01-01 12:00:00\".datetime()'::jsonpath);"}
+{"sql":"SELECT jsonb_path_query('[{\"a\": 1}, {\"a\": 2}]', '$[*]')","shape":"SELECT jsonb_path_query('[{\"a\": 1}, {\"a\": 2}]', '$[*]');"}
+{"sql":"SELECT jsonb_path_query('[{\"a\": 1}, {\"a\": 2}]', '$[*] ? (@.a > 10)')","shape":"SELECT jsonb_path_query('[{\"a\": 1}, {\"a\": 2}]', '$[*] ? (@.a > 10)');"}
+{"sql":"SELECT jsonb_path_query('[{\"a\": 1}]', '$undefined_var')","shape":"SELECT jsonb_path_query('[{\"a\": 1}]', '$undefined_var');"}
+{"sql":"SELECT jsonb_path_query('[{\"a\": 1}]', 'false')","shape":"SELECT jsonb_path_query('[{\"a\": 1}]', 'false');"}
+{"sql":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}, {}]', 'strict $[*].a')","shape":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}, {}]', 'strict $[*].a');"}
+{"sql":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}]', '$[*].a')","shape":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}]', '$[*].a');"}
+{"sql":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ == 1)')","shape":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ == 1)');"}
+{"sql":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ > 10)')","shape":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ > 10)');"}
+{"sql":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 1, \"max\": 4}')","shape":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 1, \"max\": 4}');"}
+{"sql":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 3, \"max\": 4}')","shape":"SELECT jsonb_path_query_array('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 3, \"max\": 4}');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {}]', 'strict $[*].a')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {}]', 'strict $[*].a');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {}]', 'strict $[*].a', silent => true)","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {}]', 'strict $[*].a', silent => TRUE);"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}]', '$[*].a')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}]', '$[*].a');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ == 1)')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ == 1)');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ > 10)')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ > 10)');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 1, \"max\": 4}')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 1, \"max\": 4}');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 3, \"max\": 4}')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*].a ? (@ > $min && @ < $max)', vars => '{\"min\": 3, \"max\": 4}');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}]', '$undefined_var')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}]', '$undefined_var');"}
+{"sql":"SELECT jsonb_path_query_first('[{\"a\": 1}]', 'false')","shape":"SELECT jsonb_path_query_first('[{\"a\": 1}]', 'false');"}
+{"sql":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @? '$[*].a ? (@ > 1)'","shape":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @? '$[*].a ? (@ > 1)';"}
+{"sql":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @? '$[*] ? (@.a > 2)'","shape":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @? '$[*] ? (@.a > 2)';"}
+{"sql":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ > 1)')","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}]', '$[*].a ? (@ > 1)');"}
+{"sql":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*] ? (@.a > $min && @.a < $max)', vars => '{\"min\": 1, \"max\": 4}')","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*] ? (@.a > $min && @.a < $max)', vars => '{\"min\": 1, \"max\": 4}');"}
+{"sql":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*] ? (@.a > $min && @.a < $max)', vars => '{\"min\": 3, \"max\": 4}')","shape":"SELECT jsonb_path_exists('[{\"a\": 1}, {\"a\": 2}, {\"a\": 3}, {\"a\": 5}]', '$[*] ? (@.a > $min && @.a < $max)', vars => '{\"min\": 3, \"max\": 4}');"}
+{"sql":"SELECT jsonb_path_exists('[{\"a\": 1}]', '$undefined_var')","shape":"SELECT jsonb_path_exists('[{\"a\": 1}]', '$undefined_var');"}
+{"sql":"SELECT jsonb_path_exists('[{\"a\": 1}]', 'false')","shape":"SELECT jsonb_path_exists('[{\"a\": 1}]', 'false');"}
+{"sql":"SELECT jsonb_path_match('true', '$', silent => false)","shape":"SELECT jsonb_path_match('true', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('false', '$', silent => false)","shape":"SELECT jsonb_path_match('false', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('null', '$', silent => false)","shape":"SELECT jsonb_path_match('null', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('1', '$', silent => true)","shape":"SELECT jsonb_path_match('1', '$', silent => TRUE);"}
+{"sql":"SELECT jsonb_path_match('1', '$', silent => false)","shape":"SELECT jsonb_path_match('1', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('\"a\"', '$', silent => false)","shape":"SELECT jsonb_path_match('\"a\"', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('{}', '$', silent => false)","shape":"SELECT jsonb_path_match('{}', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('[true]', '$', silent => false)","shape":"SELECT jsonb_path_match('[true]', '$', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('{}', 'lax $.a', silent => false)","shape":"SELECT jsonb_path_match('{}', 'lax $.a', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('{}', 'strict $.a', silent => false)","shape":"SELECT jsonb_path_match('{}', 'strict $.a', silent => FALSE);"}
+{"sql":"SELECT jsonb_path_match('{}', 'strict $.a', silent => true)","shape":"SELECT jsonb_path_match('{}', 'strict $.a', silent => TRUE);"}
+{"sql":"SELECT jsonb_path_match('[true, true]', '$[*]', silent => false)","shape":"SELECT jsonb_path_match('[true, true]', '$[*]', silent => FALSE);"}
+{"sql":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @@ '$[*].a > 1'","shape":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @@ '$[*].a > 1';"}
+{"sql":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @@ '$[*].a > 2'","shape":"SELECT jsonb '[{\"a\": 1}, {\"a\": 2}]' @@ '$[*].a > 2';"}
+{"sql":"SELECT jsonb_path_match('[{\"a\": 1}, {\"a\": 2}]', '$[*].a > 1')","shape":"SELECT jsonb_path_match('[{\"a\": 1}, {\"a\": 2}]', '$[*].a > 1');"}
+{"sql":"SELECT jsonb_path_match('[{\"a\": 1}]', '$undefined_var')","shape":"SELECT jsonb_path_match('[{\"a\": 1}]', '$undefined_var');"}
+{"sql":"SELECT jsonb_path_match('[{\"a\": 1}]', 'false')","shape":"SELECT jsonb_path_match('[{\"a\": 1}]', 'false');"}
+{"sql":"WITH str(j, num) AS\n(\n\tSELECT jsonb_build_object('s', s), num\n\tFROM unnest('{\"\", \"a\", \"ab\", \"abc\", \"abcd\", \"b\", \"A\", \"AB\", \"ABC\", \"ABc\", \"ABcD\", \"B\"}'::text[]) WITH ORDINALITY AS a(s, num)\n)\nSELECT\n\ts1.j, s2.j,\n\tjsonb_path_query_first(s1.j, '$.s < $s', vars => s2.j) lt,\n\tjsonb_path_query_first(s1.j, '$.s <= $s', vars => s2.j) le,\n\tjsonb_path_query_first(s1.j, '$.s == $s', vars => s2.j) eq,\n\tjsonb_path_query_first(s1.j, '$.s >= $s', vars => s2.j) ge,\n\tjsonb_path_query_first(s1.j, '$.s > $s', vars => s2.j) gt\nFROM str s1, str s2\nORDER BY s1.num, s2.num","shape":"WITH str(j, num) AS (SELECT jsonb_build_object('s', s), num FROM unnest('{\"\", \"a\", \"ab\", \"abc\", \"abcd\", \"b\", \"A\", \"AB\", \"ABC\", \"ABc\", \"ABcD\", \"B\"}'::text[]) WITH ORDINALITY AS a(s, num)) SELECT s1.j, s2.j, jsonb_path_query_first(s1.j, '$.s < $s', vars => s2.j) AS lt, jsonb_path_query_first(s1.j, '$.s <= $s', vars => s2.j) AS le, jsonb_path_query_first(s1.j, '$.s == $s', vars => s2.j) AS eq, jsonb_path_query_first(s1.j, '$.s >= $s', vars => s2.j) AS ge, jsonb_path_query_first(s1.j, '$.s > $s', vars => s2.j) AS gt FROM str AS s1, str AS s2 ORDER BY s1.num, s2.num;"}

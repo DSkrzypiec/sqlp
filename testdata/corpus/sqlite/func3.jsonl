@@ -1,0 +1,25 @@
+{"sql":"SELECT likelihood(9223372036854775807, 0.5)"}
+{"sql":"SELECT likelihood(-9223372036854775808, 0.5)"}
+{"sql":"SELECT likelihood(14.125, 0.5)"}
+{"sql":"SELECT likelihood(NULL, 0.5)"}
+{"sql":"SELECT likelihood('test-string', 0.5)"}
+{"sql":"SELECT quote(likelihood(x'010203000405', 0.5))"}
+{"sql":"SELECT likelihood(123, 1.0), likelihood(456, 0.0)"}
+{"sql":"SELECT likelihood(123, 1.000001)"}
+{"sql":"SELECT likelihood(123, -0.000001)"}
+{"sql":"SELECT likelihood(123, 0.5+0.3)"}
+{"sql":"SELECT unlikely(9223372036854775807)"}
+{"sql":"SELECT unlikely(-9223372036854775808)"}
+{"sql":"SELECT unlikely(14.125)"}
+{"sql":"SELECT unlikely(NULL)"}
+{"sql":"SELECT unlikely('test-string')"}
+{"sql":"SELECT quote(unlikely(x'010203000405'))"}
+{"sql":"SELECT likely(CAST(1 AS INT))=='1'"}
+{"sql":"SELECT unlikely(CAST(1 AS INT))=='1'"}
+{"sql":"SELECT likelihood(CAST(1 AS INT),0.5)=='1'"}
+{"sql":"SELECT likely(9223372036854775807)"}
+{"sql":"SELECT likely(-9223372036854775808)"}
+{"sql":"SELECT likely(14.125)"}
+{"sql":"SELECT likely(NULL)"}
+{"sql":"SELECT likely('test-string')"}
+{"sql":"SELECT quote(likely(x'010203000405'))"}

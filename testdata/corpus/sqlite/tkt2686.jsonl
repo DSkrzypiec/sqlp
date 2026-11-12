@@ -1,0 +1,1 @@
+{"sql":"DELETE FROM filler \n       WHERE rowid <= (SELECT MAX(rowid) FROM filler LIMIT 20)"}

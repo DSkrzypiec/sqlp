@@ -1,0 +1,4 @@
+{"sql":"INSERT INTO t3 VALUES(randomblob(500 + 1024*248))"}
+{"sql":"INSERT INTO t1 VALUES(randomblob(1500))"}
+{"sql":"INSERT INTO t2 VALUES(randomblob(500 + 1024*248))"}
+{"sql":"PRAGMA incremental_vacuum(248)"}

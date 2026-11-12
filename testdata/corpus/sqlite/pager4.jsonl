@@ -1,0 +1,6 @@
+{"sql":"INSERT INTO t1 VALUES(673,'stone','philips')"}
+{"sql":"UPDATE t1 SET a=537"}
+{"sql":"UPDATE t1 SET a=948"}
+{"sql":"UPDATE t1 SET a=107"}
+{"sql":"UPDATE t1 SET b='magpie'"}
+{"sql":"UPDATE t1 SET c='jaguar'"}

@@ -1,0 +1,5 @@
+{"sql":"ATTACH 'x.db' AS next"}
+{"sql":"ATTACH DATABASE '' AS aux"}
+{"sql":"CREATE TABLE IF NOT EXISTS aux.t1(a, b)"}
+{"sql":"CREATE TEMPORARY TRIGGER tr1 DELETE ON t1 BEGIN \n    DELETE FROM t1; \n  END"}
+{"sql":"DETACH DATABASE aux"}

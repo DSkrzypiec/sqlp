@@ -1,0 +1,7 @@
+{"sql":"CREATE TABLE main.t1(a INTEGER, b TEXT, c INTEGER)"}
+{"sql":"CREATE TABLE aux.t1(a INTEGER, b TEXT, c INTEGER)"}
+{"sql":"SELECT name FROM aux.sqlite_master ORDER BY 1"}
+{"sql":"SELECT count(*) FROM main.t1"}
+{"sql":"SELECT count(*) FROM aux.t1"}
+{"sql":"PRAGMA main.auto_vacuum"}
+{"sql":"PRAGMA aux.auto_vacuum"}

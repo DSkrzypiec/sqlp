@@ -1,0 +1,31 @@
+{"sql":"CREATE TABLE link(aa INT, bb INT)"}
+{"sql":"CREATE INDEX link_f ON link(aa,bb)"}
+{"sql":"CREATE INDEX link_t ON link(bb,aa)"}
+{"sql":"INSERT INTO link(aa,bb) VALUES\n    (1,3),\n    (5,3),\n    (7,1),\n    (7,9),\n    (9,9),\n    (5,11),\n    (11,7),\n    (2,4),\n    (4,6),\n    (8,6)"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1)\n     UNION\n     SELECT aa FROM closure, link WHERE link.bb=closure.x\n     UNION\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1)\n     UNION\n     SELECT aa FROM link, closure WHERE link.bb=closure.x\n     UNION\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1)\n     UNION\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n     UNION\n     SELECT aa FROM link, closure WHERE link.bb=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1),(200),(300),(400)\n     INTERSECT\n     VALUES(1)\n     UNION\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n     UNION\n     SELECT aa FROM link, closure WHERE link.bb=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1),(200),(300),(400)\n     UNION ALL\n     VALUES(2)\n     UNION\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n     UNION\n     SELECT aa FROM link, closure WHERE link.bb=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1),(200),(300),(400)\n     UNION ALL\n     VALUES(2)\n     UNION ALL\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n     UNION\n     SELECT aa FROM link, closure WHERE link.bb=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n     VALUES(1),(200),(300),(400)\n     UNION ALL\n     VALUES(2)\n     UNION\n     SELECT bb FROM closure, link WHERE link.aa=closure.x\n     UNION ALL\n     SELECT aa FROM link, closure WHERE link.bb=closure.x\n  )\n  SELECT x FROM closure ORDER BY x"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n    SELECT 1 AS x\n    UNION\n    SELECT aa FROM link JOIN closure ON bb=x\n    UNION\n    SELECT bb FROM link JOIN closure on aa=x\n    ORDER BY x LIMIT 4\n  )\n  SELECT * FROM closure"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n    SELECT 1 AS x\n    UNION ALL\n    SELECT 2\n    UNION\n    SELECT aa FROM link JOIN closure ON bb=x\n    UNION\n    SELECT bb FROM link JOIN closure on aa=x\n    ORDER BY x LIMIT 4\n  )\n  SELECT * FROM closure"}
+{"sql":"CREATE TABLE linkA(aa1,aa2)"}
+{"sql":"INSERT INTO linkA(aa1,aa2) VALUES(1,3),(5,7),(9,11)"}
+{"sql":"CREATE TABLE linkB(bb1,bb2)"}
+{"sql":"INSERT INTO linkB(bb1,bb2) VALUES(7,9),(11,13),(3,5)"}
+{"sql":"CREATE TABLE linkC(cc1,cc2)"}
+{"sql":"INSERT INTO linkC(cc1,cc2) VALUES(1,2),(2,4),(6,8)"}
+{"sql":"CREATE TABLE linkD(dd1,dd2)"}
+{"sql":"INSERT INTO linkD(dd1,dd2) VALUES(4,6),(100,110)"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n    VALUES(1)\n    UNION ALL\n    SELECT aa2 FROM linkA JOIN closure ON x=aa1\n    UNION ALL\n    SELECT bb2 FROM linkB JOIN closure ON x=bb1\n    UNION ALL\n    SELECT cc2 FROM linkC JOIN closure ON x=cc1\n    UNION ALL\n    SELECT dd2 FROM linkD JOIN closure ON x=dd1\n  )\n  SELECT x FROM closure ORDER BY +x"}
+{"sql":"CREATE TABLE linkA_ipk(aa1 INTEGER PRIMARY KEY,aa2)"}
+{"sql":"INSERT INTO linkA_ipk(aa1,aa2) SELECT aa1, aa2 FROM linkA"}
+{"sql":"CREATE TABLE linkB_ipk(bb1 INTEGER PRIMARY KEY,bb2)"}
+{"sql":"INSERT INTO linkB_ipk(bb1,bb2) SELECT bb1, bb2 FROM linkB"}
+{"sql":"CREATE TABLE linkC_ipk(cc1 INTEGER PRIMARY KEY,cc2)"}
+{"sql":"INSERT INTO linkC_ipk(cc1,cc2) SELECT cc1, cc2 FROM linkC"}
+{"sql":"CREATE TABLE linkD_ipk(dd1 INTEGER PRIMARY KEY,dd2)"}
+{"sql":"INSERT INTO linkD_ipk(dd1,dd2) SELECT dd1, dd2 FROM linkD"}
+{"sql":"WITH RECURSIVE closure(x) AS (\n    VALUES(1)\n    UNION ALL\n    SELECT aa2 FROM linkA_ipk JOIN closure ON x=aa1\n    UNION ALL\n    SELECT bb2 FROM linkB_ipk JOIN closure ON x=bb1\n    UNION ALL\n    SELECT cc2 FROM linkC_ipk JOIN closure ON x=cc1\n    UNION ALL\n    SELECT dd2 FROM linkD_ipk JOIN closure ON x=dd1\n  )\n  SELECT x FROM closure ORDER BY +x"}

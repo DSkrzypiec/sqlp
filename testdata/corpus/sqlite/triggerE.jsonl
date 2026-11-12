@@ -1,0 +1,9 @@
+{"sql":"#   ATTACH 'test.db2' AS aux","reject":true}
+{"sql":"#   CREATE TABLE aux.t4(x)","reject":true}
+{"sql":"#   INSERT INTO aux.t4 VALUES(5)","reject":true}
+{"sql":"# \n#   CREATE TRIGGER tr1 AFTER INSERT ON t1 WHEN new.a IN (SELECT x FROM aux.t4)\n#   BEGIN\n#     SELECT 1;\n#   END","reject":true}
+{"sql":"INSERT INTO t1 VALUES(5,5)"}
+{"sql":"drop trigger tr1"}
+{"sql":"INSERT INTO sqlite_master VALUES('trigger', 'tr1', 't1', 0,\n    'CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN \n        INSERT INTO t2 VALUES(?1, ?2); \n     END'\n  )"}
+{"sql":"INSERT INTO sqlite_master VALUES('trigger', 'tr2', 't3', 0,\n    'CREATE TRIGGER tr2 AFTER INSERT ON t3 WHEN ?1 IS NULL BEGIN\n        UPDATE t2 SET c=d WHERE c IS ?2;\n     END'\n  )"}
+{"sql":"INSERT INTO t2 VALUES(NULL, 'z')"}

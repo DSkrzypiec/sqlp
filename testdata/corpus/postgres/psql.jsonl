@@ -1,0 +1,1 @@
+{"sql":"SELECT 1 as one, 2 as two","shape":"SELECT 1 AS one, 2 AS two;"}

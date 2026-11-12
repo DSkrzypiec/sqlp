@@ -1,0 +1,6 @@
+{"sql":"SELECT n()AND+#0","reject":true}
+{"sql":"SELECT strftime()"}
+{"sql":"DETACH(SELECT group_concat(q))"}
+{"sql":"INSERT INTO t0 SELECT strftime()"}
+{"sql":"select e.*,0 from(s,(L))e"}
+{"sql":"SELECT c.* FROM (a,b) AS c"}

@@ -1,0 +1,51 @@
+{"sql":"CREATE TABLE t1(x INTEGER, y)"}
+{"sql":"CREATE INDEX i1 ON t1(x)"}
+{"sql":"SELECT count(*)>0 FROM sqlite_stat4"}
+{"sql":"SELECT count(*) FROM t1 WHERE x>200 AND x<300"}
+{"sql":"SELECT count(*) FROM t1 WHERE x>0 AND x<1100"}
+{"sql":"SELECT sum(y) FROM t1 WHERE x>200 AND x<300"}
+{"sql":"SELECT sum(y) FROM t1 WHERE x>0 AND x<1100"}
+{"sql":"CREATE TABLE t2(x TEXT, y)"}
+{"sql":"INSERT INTO t2 SELECT * FROM t1"}
+{"sql":"CREATE INDEX i2 ON t2(x)"}
+{"sql":"SELECT count(*) FROM t2 WHERE x>1 AND x<2"}
+{"sql":"SELECT count(*) FROM t2 WHERE x>0 AND x<99"}
+{"sql":"SELECT sum(y) FROM t2 WHERE x>1 AND x<2"}
+{"sql":"SELECT sum(y) FROM t2 WHERE x>0 AND x<99"}
+{"sql":"CREATE TABLE t3(y TEXT, x INTEGER)"}
+{"sql":"INSERT INTO t3 SELECT y, x FROM t1"}
+{"sql":"CREATE INDEX i3 ON t3(x)"}
+{"sql":"SELECT count(*) FROM t3 WHERE x>200 AND x<300"}
+{"sql":"SELECT count(*) FROM t3 WHERE x>0 AND x<1100"}
+{"sql":"SELECT sum(y) FROM t3 WHERE x>200 AND x<300"}
+{"sql":"SELECT sum(y) FROM t3 WHERE x>0 AND x<1100"}
+{"sql":"PRAGMA case_sensitive_like=off"}
+{"sql":"CREATE TABLE t1(a, b TEXT COLLATE nocase)"}
+{"sql":"SELECT count(a) FROM t1 WHERE b LIKE 'a%'"}
+{"sql":"SELECT count(a) FROM t1 WHERE b LIKE '%a'"}
+{"sql":"CREATE TABLE t4(x, y TEXT COLLATE NOCASE)"}
+{"sql":"CREATE INDEX i4 ON t4(y)"}
+{"sql":"CREATE TABLE t2(d, e, f)"}
+{"sql":"CREATE TABLE t1(x TEXT COLLATE NOCASE)"}
+{"sql":"INSERT INTO t1 VALUES('aaa')"}
+{"sql":"INSERT INTO t1 VALUES('abb')"}
+{"sql":"INSERT INTO t1 VALUES('acc')"}
+{"sql":"INSERT INTO t1 VALUES('baa')"}
+{"sql":"INSERT INTO t1 VALUES('bbb')"}
+{"sql":"INSERT INTO t1 VALUES('bcc')"}
+{"sql":"CREATE INDEX i1 ON t1(a, b)"}
+{"sql":"CREATE INDEX i2 ON t1(c)"}
+{"sql":"SELECT * FROM t1 WHERE a = 5 AND c = 13"}
+{"sql":"SELECT * FROM t1 WHERE a = 5 AND b > 'w' AND c = 13"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"INSERT INTO t1 VALUES(1,1,'0000')"}
+{"sql":"CREATE INDEX t0b ON t1(b)"}
+{"sql":"SELECT c FROM t1 WHERE b=3 AND a BETWEEN 30 AND hex(1)"}
+{"sql":"INSERT INTO sqlite_stat1(tbl,idx,stat) VALUES('t1','t1a','12000')"}
+{"sql":"ANALYZE sqlite_master"}
+{"sql":"CREATE TABLE t1(a PRIMARY KEY, v) WITHOUT ROWID"}
+{"sql":"INSERT INTO sqlite_stat1 VALUES('t1','t1','1 1')"}
+{"sql":"INSERT INTO sqlite_stat4 VALUES('t1','t1','1','0','0',X'021b76657273696f6e')"}
+{"sql":"INSERT INTO sqlite_stat4 VALUES('T1','T1','1','0','0',X'021b76657273696f6e')"}
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b INT) WITHOUT ROWID"}
+{"sql":"INSERT INTO sqlite_stat4 VALUES\n     ('t1','t1','1','2','2',X'03000103'),\n     ('t1','sqlite_autoindex_t1_1','1','2','2',X'03000103')"}

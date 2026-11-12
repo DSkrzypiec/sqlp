@@ -1,0 +1,8 @@
+{"sql":"INSERT INTO t1 VALUES('one two three', 'two four six')"}
+{"sql":"SELECT c0a, c1b FROM t1_content"}
+{"sql":"INSERT INTO t1 VALUES('three six nine', 'four eight twelve')"}
+{"sql":"SELECT a, b FROM t1 WHERE docid = 2"}
+{"sql":"SELECT a, b FROM t1 WHERE t1 MATCH 'two'"}
+{"sql":"DELETE FROM t1 WHERE docid = 1"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(x, compress=zip)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(x, uncompress=unzip)"}

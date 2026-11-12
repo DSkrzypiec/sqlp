@@ -1,0 +1,12 @@
+{"sql":"CREATE TABLE t1(a, b VARCHAR, c INTEGER)"}
+{"sql":"CREATE VIRTUAL TABLE t1echo USING echo(t1)"}
+{"sql":"SELECT * FROM t1echo"}
+{"sql":"ALTER TABLE t1echo RENAME TO new"}
+{"sql":"SELECT * FROM new"}
+{"sql":"DROP TABLE new"}
+{"sql":"CREATE TABLE t1_base(a, b, c)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING echo('*_base')"}
+{"sql":"INSERT INTO t1_base VALUES(1, 2, 3)"}
+{"sql":"SELECT * FROM x_base"}
+{"sql":"CREATE TABLE y_base(a, b, c)"}
+{"sql":"ALTER TABLE x RENAME TO y"}

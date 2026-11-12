@@ -1,0 +1,41 @@
+{"sql":"SELECT base64(x'')||base85(x'')"}
+{"sql":"SELECT hex(x'01'||base64('')||base85('')||x'02')"}
+{"sql":"SELECT base64(x'000102030405')"}
+{"sql":"SELECT base64(x'0001020304')"}
+{"sql":"SELECT base64(x'00010203')"}
+{"sql":"WITH RECURSIVE c(n) AS (VALUES(1) UNION ALL SELECT n+1 FROM c wHERE n<5000)\n  SELECT sum(length(base64(randomblob(n)))) FROM c"}
+{"sql":"SELECT hex(base64('AAECAwQF'))"}
+{"sql":"SELECT hex(base64('AAECAwQ='))"}
+{"sql":"SELECT hex(base64('AAECAw=='))"}
+{"sql":"SELECT hex(base64(' AAECAwQF '))"}
+{"sql":"SELECT hex(base64(' AAECAwQ'))"}
+{"sql":"SELECT hex(base64('AAECAw '))"}
+{"sql":"SELECT base85(x'000102030405')"}
+{"sql":"SELECT base85(x'0001020304')"}
+{"sql":"SELECT base85(x'00010203')"}
+{"sql":"SELECT hex(base85('##/2,#2/'))"}
+{"sql":"SELECT hex(base85('##/2,#*'))"}
+{"sql":"SELECT hex(base85('##/2,'))"}
+{"sql":"SELECT hex(base85(' ##/2,#2/ '))"}
+{"sql":"SELECT hex(base85(' ##/2,#*'))"}
+{"sql":"SELECT hex(base85('##/2, '))"}
+{"sql":"CREATE TEMP TABLE rb( len int, b blob ) STRICT"}
+{"sql":"INSERT INTO rb(len) VALUES (1),(2),(3),(4),(5),(150),(151),(152),(153),(1054)"}
+{"sql":"UPDATE rb SET b = randomblob(len)"}
+{"sql":"SELECT len, base64(base64(b))=b, base85(base85(b))=b\n  FROM rb ORDER BY len"}
+{"sql":"CREATE TEMP TABLE junk(j text, rank int)"}
+{"sql":"INSERT INTO junk VALUES ('',0),(' ',1),('~',2)"}
+{"sql":"SELECT len, base64(j.j||base64(b)||j.j)=b, base85(j.j||base85(b)||j.j)=b\n  FROM rb r, junk j WHERE j.rank=(r.len+r.len/25)%3 ORDER BY len"}
+{"sql":"SELECT len, base64(b) FROM rb WHERE len>200"}
+{"sql":"SELECT len, base85(b) FROM rb WHERE len>200"}
+{"sql":"SELECT length(base85(b))=1335 FROM rb WHERE len=1054"}
+{"sql":"SELECT is_base85(NULL) IS NULL"}
+{"sql":"SELECT is_base85(1)"}
+{"sql":"SELECT is_base85(1.1)"}
+{"sql":"SELECT is_base85(x'00')"}
+{"sql":"CREATE TABLE bs(b blob, num)"}
+{"sql":"INSERT INTO bs SELECT randomblob(4000 + n%3), n \n   FROM ( \n     WITH RECURSIVE seq(n) AS (\n      VALUES(1) UNION ALL SELECT n+1\n      FROM seq WHERE n<100\n     ) SELECT n FROM seq)"}
+{"sql":"SELECT num FROM bs WHERE base64(base64(b))!=b"}
+{"sql":"SELECT num FROM bs WHERE base85(base85(b))!=b"}
+{"sql":"SELECT base64(zeroblob(2000_000_000))"}
+{"sql":"SELECT base85(zeroblob(2000_000_000))"}

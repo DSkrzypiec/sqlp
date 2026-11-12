@@ -1,0 +1,1272 @@
+{"sql":"DROP ROLE IF EXISTS regress_alter_table_user1","shape":"DROP ROLE IF EXISTS regress_alter_table_user1;"}
+{"sql":"CREATE USER regress_alter_table_user1"}
+{"sql":"CREATE TABLE attmp (initial int4)","shape":"CREATE TABLE attmp (initial int4);"}
+{"sql":"COMMENT ON TABLE attmp_wrong IS 'table comment'","shape":"COMMENT ON TABLE attmp_wrong IS 'table comment';"}
+{"sql":"COMMENT ON TABLE attmp IS 'table comment'","shape":"COMMENT ON TABLE attmp IS 'table comment';"}
+{"sql":"COMMENT ON TABLE attmp IS NULL","shape":"COMMENT ON TABLE attmp IS NULL;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN xmin integer","shape":"ALTER TABLE attmp ADD COLUMN xmin integer;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN a int4 default 3","shape":"ALTER TABLE attmp ADD COLUMN a int4 DEFAULT 3;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN b name","shape":"ALTER TABLE attmp ADD COLUMN b name;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN c text","shape":"ALTER TABLE attmp ADD COLUMN c text;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN d float8","shape":"ALTER TABLE attmp ADD COLUMN d float8;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN e float4","shape":"ALTER TABLE attmp ADD COLUMN e float4;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN f int2","shape":"ALTER TABLE attmp ADD COLUMN f int2;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN g polygon","shape":"ALTER TABLE attmp ADD COLUMN g polygon;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN i char","shape":"ALTER TABLE attmp ADD COLUMN i char;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN k int4","shape":"ALTER TABLE attmp ADD COLUMN k int4;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN l tid","shape":"ALTER TABLE attmp ADD COLUMN l tid;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN m xid","shape":"ALTER TABLE attmp ADD COLUMN m xid;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN n oidvector","shape":"ALTER TABLE attmp ADD COLUMN n oidvector;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN p boolean","shape":"ALTER TABLE attmp ADD COLUMN p boolean;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN q point","shape":"ALTER TABLE attmp ADD COLUMN q point;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN r lseg","shape":"ALTER TABLE attmp ADD COLUMN r lseg;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN s path","shape":"ALTER TABLE attmp ADD COLUMN s path;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN t box","shape":"ALTER TABLE attmp ADD COLUMN t box;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN v timestamp","shape":"ALTER TABLE attmp ADD COLUMN v timestamp;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN w interval","shape":"ALTER TABLE attmp ADD COLUMN w interval;"}
+{"sql":"ALTER TABLE attmp ADD COLUMN x float8[]","shape":"ALTER TABLE attmp ADD COLUMN x float8[];"}
+{"sql":"ALTER TABLE attmp ADD COLUMN y float4[]","shape":"ALTER TABLE attmp ADD COLUMN y float4[];"}
+{"sql":"ALTER TABLE attmp ADD COLUMN z int2[]","shape":"ALTER TABLE attmp ADD COLUMN z int2[];"}
+{"sql":"INSERT INTO attmp (a, b, c, d, e, f, g,    i,    k, l, m, n, p, q, r, s, t,\n\tv, w, x, y, z)\n   VALUES (4, 'name', 'text', 4.1, 4.1, 2, '(4.1,4.1,3.1,3.1)',\n\t'c',\n\t314159, '(1,1)', '512',\n\t'1 2 3 4 5 6 7 8', true, '(1.1,1.1)', '(4.1,4.1,3.1,3.1)',\n\t'(0,2,4.1,4.1,3.1,3.1)', '(4.1,4.1,3.1,3.1)',\n\t'epoch', '01:00:10', '{1.0,2.0,3.0,4.0}', '{1.0,2.0,3.0,4.0}', '{1,2,3,4}')","shape":"INSERT INTO attmp (a, b, c, d, e, f, g, i, k, l, m, n, p, q, r, s, t, v, w, x, y, z) VALUES (4, 'name', 'text', 4.1, 4.1, 2, '(4.1,4.1,3.1,3.1)', 'c', 314159, '(1,1)', '512', '1 2 3 4 5 6 7 8', TRUE, '(1.1,1.1)', '(4.1,4.1,3.1,3.1)', '(0,2,4.1,4.1,3.1,3.1)', '(4.1,4.1,3.1,3.1)', 'epoch', '01:00:10', '{1.0,2.0,3.0,4.0}', '{1.0,2.0,3.0,4.0}', '{1,2,3,4}');"}
+{"sql":"SELECT * FROM attmp","shape":"SELECT * FROM attmp;"}
+{"sql":"DROP TABLE attmp","shape":"DROP TABLE attmp;"}
+{"sql":"CREATE TABLE attmp (\n\tinitial \tint4\n)","shape":"CREATE TABLE attmp (initial int4);"}
+{"sql":"ALTER TABLE attmp ADD COLUMN a int4","shape":"ALTER TABLE attmp ADD COLUMN a int4;"}
+{"sql":"INSERT INTO attmp (a, b, c, d, e, f, g,    i,   k, l, m, n, p, q, r, s, t,\n\tv, w, x, y, z)\n   VALUES (4, 'name', 'text', 4.1, 4.1, 2, '(4.1,4.1,3.1,3.1)',\n        'c',\n\t314159, '(1,1)', '512',\n\t'1 2 3 4 5 6 7 8', true, '(1.1,1.1)', '(4.1,4.1,3.1,3.1)',\n\t'(0,2,4.1,4.1,3.1,3.1)', '(4.1,4.1,3.1,3.1)',\n\t'epoch', '01:00:10', '{1.0,2.0,3.0,4.0}', '{1.0,2.0,3.0,4.0}', '{1,2,3,4}')","shape":"INSERT INTO attmp (a, b, c, d, e, f, g, i, k, l, m, n, p, q, r, s, t, v, w, x, y, z) VALUES (4, 'name', 'text', 4.1, 4.1, 2, '(4.1,4.1,3.1,3.1)', 'c', 314159, '(1,1)', '512', '1 2 3 4 5 6 7 8', TRUE, '(1.1,1.1)', '(4.1,4.1,3.1,3.1)', '(0,2,4.1,4.1,3.1,3.1)', '(4.1,4.1,3.1,3.1)', 'epoch', '01:00:10', '{1.0,2.0,3.0,4.0}', '{1.0,2.0,3.0,4.0}', '{1,2,3,4}');"}
+{"sql":"CREATE INDEX attmp_idx ON attmp (a, (d + e), b)","shape":"CREATE INDEX attmp_idx ON attmp (a, (d + e), b);"}
+{"sql":"ALTER INDEX attmp_idx ALTER COLUMN 0 SET STATISTICS 1000","reject":true}
+{"sql":"ALTER INDEX attmp_idx ALTER COLUMN 1 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX attmp_idx ALTER COLUMN 2 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX attmp_idx ALTER COLUMN 3 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX attmp_idx ALTER COLUMN 4 SET STATISTICS 1000"}
+{"sql":"ALTER INDEX attmp_idx ALTER COLUMN 2 SET STATISTICS -1"}
+{"sql":"CREATE TABLE attmp (regtable int)","shape":"CREATE TABLE attmp (regtable int);"}
+{"sql":"CREATE TEMP TABLE attmp (attmptable int)","shape":"CREATE TEMPORARY TABLE attmp (attmptable int);"}
+{"sql":"ALTER TABLE attmp RENAME TO attmp_new","shape":"ALTER TABLE attmp RENAME TO attmp_new;"}
+{"sql":"SELECT * FROM attmp_new","shape":"SELECT * FROM attmp_new;"}
+{"sql":"ALTER TABLE attmp RENAME TO attmp_new2","shape":"ALTER TABLE attmp RENAME TO attmp_new2;"}
+{"sql":"SELECT * FROM attmp_new2","shape":"SELECT * FROM attmp_new2;"}
+{"sql":"DROP TABLE attmp_new","shape":"DROP TABLE attmp_new;"}
+{"sql":"DROP TABLE attmp_new2","shape":"DROP TABLE attmp_new2;"}
+{"sql":"CREATE TABLE part_attmp (a int primary key) partition by range (a)","shape":"CREATE TABLE part_attmp (a int PRIMARY KEY) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE part_attmp1 PARTITION OF part_attmp FOR VALUES FROM (0) TO (100)","shape":"CREATE TABLE part_attmp1 PARTITION OF part_attmp FOR VALUES FROM (0) TO (100);"}
+{"sql":"ALTER INDEX part_attmp_pkey RENAME TO part_attmp_index"}
+{"sql":"ALTER INDEX part_attmp1_pkey RENAME TO part_attmp1_index"}
+{"sql":"ALTER TABLE part_attmp RENAME TO part_at2tmp","shape":"ALTER TABLE part_attmp RENAME TO part_at2tmp;"}
+{"sql":"ALTER TABLE part_attmp1 RENAME TO part_at2tmp1","shape":"ALTER TABLE part_attmp1 RENAME TO part_at2tmp1;"}
+{"sql":"SET ROLE regress_alter_table_user1"}
+{"sql":"ALTER INDEX part_attmp_index RENAME TO fail"}
+{"sql":"ALTER INDEX part_attmp1_index RENAME TO fail"}
+{"sql":"ALTER TABLE part_at2tmp RENAME TO fail","shape":"ALTER TABLE part_at2tmp RENAME TO fail;"}
+{"sql":"ALTER TABLE part_at2tmp1 RENAME TO fail","shape":"ALTER TABLE part_at2tmp1 RENAME TO fail;"}
+{"sql":"DROP TABLE part_at2tmp","shape":"DROP TABLE part_at2tmp;"}
+{"sql":"CREATE TABLE attmp_array (id int)","shape":"CREATE TABLE attmp_array (id int);"}
+{"sql":"CREATE TABLE attmp_array2 (id int)","shape":"CREATE TABLE attmp_array2 (id int);"}
+{"sql":"SELECT typname FROM pg_type WHERE oid = 'attmp_array[]'::regtype","shape":"SELECT typname FROM pg_type WHERE oid = 'attmp_array[]'::regtype;"}
+{"sql":"SELECT typname FROM pg_type WHERE oid = 'attmp_array2[]'::regtype","shape":"SELECT typname FROM pg_type WHERE oid = 'attmp_array2[]'::regtype;"}
+{"sql":"ALTER TABLE attmp_array2 RENAME TO _attmp_array","shape":"ALTER TABLE attmp_array2 RENAME TO _attmp_array;"}
+{"sql":"SELECT typname FROM pg_type WHERE oid = '_attmp_array[]'::regtype","shape":"SELECT typname FROM pg_type WHERE oid = '_attmp_array[]'::regtype;"}
+{"sql":"DROP TABLE _attmp_array","shape":"DROP TABLE _attmp_array;"}
+{"sql":"DROP TABLE attmp_array","shape":"DROP TABLE attmp_array;"}
+{"sql":"ALTER TABLE attmp_array RENAME TO _attmp_array","shape":"ALTER TABLE attmp_array RENAME TO _attmp_array;"}
+{"sql":"ALTER INDEX IF EXISTS __onek_unique1 RENAME TO attmp_onek_unique1"}
+{"sql":"ALTER INDEX IF EXISTS __attmp_onek_unique1 RENAME TO onek_unique1"}
+{"sql":"ALTER INDEX onek_unique1 RENAME TO attmp_onek_unique1"}
+{"sql":"ALTER INDEX attmp_onek_unique1 RENAME TO onek_unique1"}
+{"sql":"ALTER INDEX onek_unique1 RENAME TO fail"}
+{"sql":"CREATE TABLE alter_idx_rename_test (a INT)","shape":"CREATE TABLE alter_idx_rename_test (a INT);"}
+{"sql":"CREATE INDEX alter_idx_rename_test_idx ON alter_idx_rename_test (a)","shape":"CREATE INDEX alter_idx_rename_test_idx ON alter_idx_rename_test (a);"}
+{"sql":"CREATE TABLE alter_idx_rename_test_parted (a INT) PARTITION BY LIST (a)","shape":"CREATE TABLE alter_idx_rename_test_parted (a INT) PARTITION BY LIST (a);"}
+{"sql":"CREATE INDEX alter_idx_rename_test_parted_idx ON alter_idx_rename_test_parted (a)","shape":"CREATE INDEX alter_idx_rename_test_parted_idx ON alter_idx_rename_test_parted (a);"}
+{"sql":"ALTER INDEX alter_idx_rename_test RENAME TO alter_idx_rename_test_2"}
+{"sql":"ALTER INDEX alter_idx_rename_test_parted RENAME TO alter_idx_rename_test_parted_2"}
+{"sql":"SELECT relation::regclass, mode FROM pg_locks\nWHERE pid = pg_backend_pid() AND locktype = 'relation'\n  AND relation::regclass::text LIKE 'alter\\_idx%'\nORDER BY relation::regclass::text COLLATE \"C\"","shape":"SELECT relation::regclass, mode FROM pg_locks WHERE ((pid = pg_backend_pid()) AND (locktype = 'relation')) AND (relation::regclass::text LIKE 'alter\\_idx%') ORDER BY relation::regclass::text COLLATE \"C\";"}
+{"sql":"ALTER INDEX alter_idx_rename_test_idx RENAME TO alter_idx_rename_test_idx_2"}
+{"sql":"ALTER INDEX alter_idx_rename_test_parted_idx RENAME TO alter_idx_rename_test_parted_idx_2"}
+{"sql":"ALTER TABLE alter_idx_rename_test_idx_2 RENAME TO alter_idx_rename_test_idx_3","shape":"ALTER TABLE alter_idx_rename_test_idx_2 RENAME TO alter_idx_rename_test_idx_3;"}
+{"sql":"ALTER TABLE alter_idx_rename_test_parted_idx_2 RENAME TO alter_idx_rename_test_parted_idx_3","shape":"ALTER TABLE alter_idx_rename_test_parted_idx_2 RENAME TO alter_idx_rename_test_parted_idx_3;"}
+{"sql":"DROP TABLE alter_idx_rename_test_2","shape":"DROP TABLE alter_idx_rename_test_2;"}
+{"sql":"CREATE VIEW attmp_view (unique1) AS SELECT unique1 FROM tenk1","shape":"CREATE VIEW attmp_view (unique1) AS SELECT unique1 FROM tenk1;"}
+{"sql":"ALTER TABLE attmp_view RENAME TO attmp_view_new","shape":"ALTER TABLE attmp_view RENAME TO attmp_view_new;"}
+{"sql":"ALTER VIEW attmp_view_new RENAME TO fail"}
+{"sql":"set enable_seqscan to off","shape":"SET enable_seqscan TO off;"}
+{"sql":"set enable_bitmapscan to off","shape":"SET enable_bitmapscan TO off;"}
+{"sql":"SELECT unique1 FROM tenk1 WHERE unique1 < 5","shape":"SELECT unique1 FROM tenk1 WHERE unique1 < 5;"}
+{"sql":"reset enable_seqscan","shape":"RESET enable_seqscan;"}
+{"sql":"reset enable_bitmapscan","shape":"RESET enable_bitmapscan;"}
+{"sql":"DROP VIEW attmp_view_new","shape":"DROP VIEW attmp_view_new;"}
+{"sql":"alter table stud_emp rename to pg_toast_stud_emp","shape":"ALTER TABLE stud_emp RENAME TO pg_toast_stud_emp;"}
+{"sql":"alter table pg_toast_stud_emp rename to stud_emp","shape":"ALTER TABLE pg_toast_stud_emp RENAME TO stud_emp;"}
+{"sql":"ALTER TABLE onek ADD CONSTRAINT onek_unique1_constraint UNIQUE (unique1)","shape":"ALTER TABLE onek ADD CONSTRAINT onek_unique1_constraint UNIQUE (unique1);"}
+{"sql":"ALTER INDEX onek_unique1_constraint RENAME TO onek_unique1_constraint_foo"}
+{"sql":"ALTER TABLE onek DROP CONSTRAINT onek_unique1_constraint_foo","shape":"ALTER TABLE onek DROP CONSTRAINT onek_unique1_constraint_foo;"}
+{"sql":"ALTER TABLE onek ADD CONSTRAINT onek_check_constraint CHECK (unique1 >= 0)","shape":"ALTER TABLE onek ADD CONSTRAINT onek_check_constraint CHECK (unique1 >= 0);"}
+{"sql":"ALTER TABLE onek RENAME CONSTRAINT onek_check_constraint TO onek_check_constraint_foo","shape":"ALTER TABLE onek RENAME CONSTRAINT onek_check_constraint TO onek_check_constraint_foo;"}
+{"sql":"ALTER TABLE onek DROP CONSTRAINT onek_check_constraint_foo","shape":"ALTER TABLE onek DROP CONSTRAINT onek_check_constraint_foo;"}
+{"sql":"DROP INDEX onek_unique1_constraint","shape":"DROP INDEX onek_unique1_constraint;"}
+{"sql":"ALTER TABLE onek RENAME CONSTRAINT onek_unique1_constraint TO onek_unique1_constraint_foo","shape":"ALTER TABLE onek RENAME CONSTRAINT onek_unique1_constraint TO onek_unique1_constraint_foo;"}
+{"sql":"DROP INDEX onek_unique1_constraint_foo","shape":"DROP INDEX onek_unique1_constraint_foo;"}
+{"sql":"CREATE TABLE constraint_rename_test (a int CONSTRAINT con1 CHECK (a > 0), b int, c int)","shape":"CREATE TABLE constraint_rename_test (a int CONSTRAINT con1 CHECK (a > 0), b int, c int);"}
+{"sql":"CREATE TABLE constraint_rename_test2 (a int CONSTRAINT con1 CHECK (a > 0), d int) INHERITS (constraint_rename_test)","shape":"CREATE TABLE constraint_rename_test2 (a int CONSTRAINT con1 CHECK (a > 0), d int) INHERITS (constraint_rename_test);"}
+{"sql":"ALTER TABLE constraint_rename_test2 RENAME CONSTRAINT con1 TO con1foo","shape":"ALTER TABLE constraint_rename_test2 RENAME CONSTRAINT con1 TO con1foo;"}
+{"sql":"ALTER TABLE ONLY constraint_rename_test RENAME CONSTRAINT con1 TO con1foo","shape":"ALTER TABLE ONLY constraint_rename_test RENAME CONSTRAINT con1 TO con1foo;"}
+{"sql":"ALTER TABLE constraint_rename_test RENAME CONSTRAINT con1 TO con1foo","shape":"ALTER TABLE constraint_rename_test RENAME CONSTRAINT con1 TO con1foo;"}
+{"sql":"ALTER TABLE constraint_rename_test ADD CONSTRAINT con2 CHECK (b > 0) NO INHERIT","shape":"ALTER TABLE constraint_rename_test ADD CONSTRAINT con2 CHECK (b > 0) NO INHERIT;"}
+{"sql":"ALTER TABLE ONLY constraint_rename_test RENAME CONSTRAINT con2 TO con2foo","shape":"ALTER TABLE ONLY constraint_rename_test RENAME CONSTRAINT con2 TO con2foo;"}
+{"sql":"ALTER TABLE constraint_rename_test RENAME CONSTRAINT con2foo TO con2bar","shape":"ALTER TABLE constraint_rename_test RENAME CONSTRAINT con2foo TO con2bar;"}
+{"sql":"ALTER TABLE constraint_rename_test ADD CONSTRAINT con3 PRIMARY KEY (a)","shape":"ALTER TABLE constraint_rename_test ADD CONSTRAINT con3 PRIMARY KEY (a);"}
+{"sql":"ALTER TABLE constraint_rename_test RENAME CONSTRAINT con3 TO con3foo","shape":"ALTER TABLE constraint_rename_test RENAME CONSTRAINT con3 TO con3foo;"}
+{"sql":"DROP TABLE constraint_rename_test2","shape":"DROP TABLE constraint_rename_test2;"}
+{"sql":"DROP TABLE constraint_rename_test","shape":"DROP TABLE constraint_rename_test;"}
+{"sql":"ALTER TABLE IF EXISTS constraint_not_exist RENAME CONSTRAINT con3 TO con3foo","shape":"ALTER TABLE IF EXISTS constraint_not_exist RENAME CONSTRAINT con3 TO con3foo;"}
+{"sql":"ALTER TABLE IF EXISTS constraint_rename_test ADD CONSTRAINT con4 UNIQUE (a)","shape":"ALTER TABLE IF EXISTS constraint_rename_test ADD CONSTRAINT con4 UNIQUE (a);"}
+{"sql":"CREATE TABLE constraint_rename_cache (a int,\n  CONSTRAINT chk_a CHECK (a > 0),\n  PRIMARY KEY (a))","shape":"CREATE TABLE constraint_rename_cache (a int, CONSTRAINT chk_a CHECK (a > 0), PRIMARY KEY (a));"}
+{"sql":"ALTER TABLE constraint_rename_cache\n  RENAME CONSTRAINT chk_a TO chk_a_new","shape":"ALTER TABLE constraint_rename_cache RENAME CONSTRAINT chk_a TO chk_a_new;"}
+{"sql":"ALTER TABLE constraint_rename_cache\n  RENAME CONSTRAINT constraint_rename_cache_pkey TO constraint_rename_pkey_new","shape":"ALTER TABLE constraint_rename_cache RENAME CONSTRAINT constraint_rename_cache_pkey TO constraint_rename_pkey_new;"}
+{"sql":"CREATE TABLE like_constraint_rename_cache\n  (LIKE constraint_rename_cache INCLUDING ALL)","shape":"CREATE TABLE like_constraint_rename_cache (LIKE constraint_rename_cache INCLUDING ALL);"}
+{"sql":"DROP TABLE constraint_rename_cache","shape":"DROP TABLE constraint_rename_cache;"}
+{"sql":"DROP TABLE like_constraint_rename_cache","shape":"DROP TABLE like_constraint_rename_cache;"}
+{"sql":"CREATE TABLE attmp2 (a int primary key)","shape":"CREATE TABLE attmp2 (a int PRIMARY KEY);"}
+{"sql":"CREATE TABLE attmp3 (a int, b int)","shape":"CREATE TABLE attmp3 (a int, b int);"}
+{"sql":"CREATE TABLE attmp4 (a int, b int, unique(a,b))","shape":"CREATE TABLE attmp4 (a int, b int, UNIQUE (a, b));"}
+{"sql":"CREATE TABLE attmp5 (a int, b int)","shape":"CREATE TABLE attmp5 (a int, b int);"}
+{"sql":"INSERT INTO attmp2 values (1)","shape":"INSERT INTO attmp2 VALUES (1);"}
+{"sql":"INSERT INTO attmp2 values (2)","shape":"INSERT INTO attmp2 VALUES (2);"}
+{"sql":"INSERT INTO attmp2 values (3)","shape":"INSERT INTO attmp2 VALUES (3);"}
+{"sql":"INSERT INTO attmp2 values (4)","shape":"INSERT INTO attmp2 VALUES (4);"}
+{"sql":"INSERT INTO attmp3 values (1,10)","shape":"INSERT INTO attmp3 VALUES (1, 10);"}
+{"sql":"INSERT INTO attmp3 values (1,20)","shape":"INSERT INTO attmp3 VALUES (1, 20);"}
+{"sql":"INSERT INTO attmp3 values (5,50)","shape":"INSERT INTO attmp3 VALUES (5, 50);"}
+{"sql":"ALTER TABLE attmp3 add constraint attmpconstr foreign key(c) references attmp2 match full","shape":"ALTER TABLE attmp3 ADD CONSTRAINT attmpconstr FOREIGN KEY (c) REFERENCES attmp2 MATCH FULL;"}
+{"sql":"ALTER TABLE attmp3 add constraint attmpconstr foreign key(a) references attmp2(b) match full","shape":"ALTER TABLE attmp3 ADD CONSTRAINT attmpconstr FOREIGN KEY (a) REFERENCES attmp2 (b) MATCH FULL;"}
+{"sql":"ALTER TABLE attmp3 add constraint attmpconstr foreign key (a) references attmp2 match full","shape":"ALTER TABLE attmp3 ADD CONSTRAINT attmpconstr FOREIGN KEY (a) REFERENCES attmp2 MATCH FULL;"}
+{"sql":"DELETE FROM attmp3 where a=5","shape":"DELETE FROM attmp3 WHERE a = 5;"}
+{"sql":"ALTER TABLE attmp3 drop constraint attmpconstr","shape":"ALTER TABLE attmp3 DROP CONSTRAINT attmpconstr;"}
+{"sql":"ALTER TABLE attmp3 add constraint attmpconstr foreign key (a) references attmp2 match full NOT VALID","shape":"ALTER TABLE attmp3 ADD CONSTRAINT attmpconstr FOREIGN KEY (a) REFERENCES attmp2 MATCH FULL NOT VALID;"}
+{"sql":"ALTER TABLE attmp3 validate constraint attmpconstr"}
+{"sql":"ALTER TABLE attmp3 ADD CONSTRAINT b_greater_than_ten CHECK (b > 10)","shape":"ALTER TABLE attmp3 ADD CONSTRAINT b_greater_than_ten CHECK (b > 10);"}
+{"sql":"ALTER TABLE attmp3 ADD CONSTRAINT b_greater_than_ten CHECK (b > 10) NOT VALID","shape":"ALTER TABLE attmp3 ADD CONSTRAINT b_greater_than_ten CHECK (b > 10) NOT VALID;"}
+{"sql":"ALTER TABLE attmp3 VALIDATE CONSTRAINT b_greater_than_ten"}
+{"sql":"DELETE FROM attmp3 WHERE NOT b > 10","shape":"DELETE FROM attmp3 WHERE NOT (b > 10);"}
+{"sql":"select * from attmp3","shape":"SELECT * FROM attmp3;"}
+{"sql":"CREATE TABLE attmp6 () INHERITS (attmp3)","shape":"CREATE TABLE attmp6 () INHERITS (attmp3);"}
+{"sql":"CREATE TABLE attmp7 () INHERITS (attmp3)","shape":"CREATE TABLE attmp7 () INHERITS (attmp3);"}
+{"sql":"INSERT INTO attmp6 VALUES (6, 30), (7, 16)","shape":"INSERT INTO attmp6 VALUES (6, 30), (7, 16);"}
+{"sql":"ALTER TABLE attmp3 ADD CONSTRAINT b_le_20 CHECK (b <= 20) NOT VALID","shape":"ALTER TABLE attmp3 ADD CONSTRAINT b_le_20 CHECK (b <= 20) NOT VALID;"}
+{"sql":"ALTER TABLE attmp3 VALIDATE CONSTRAINT b_le_20"}
+{"sql":"DELETE FROM attmp6 WHERE b > 20","shape":"DELETE FROM attmp6 WHERE b > 20;"}
+{"sql":"CREATE FUNCTION boo(int) RETURNS int IMMUTABLE STRICT LANGUAGE plpgsql AS $$ BEGIN RAISE NOTICE 'boo: %', $1; RETURN $1; END; $$","shape":"CREATE FUNCTION boo(int) RETURNS int IMMUTABLE STRICT LANGUAGE plpgsql AS ' BEGIN RAISE NOTICE ''boo: %'', $1; RETURN $1; END; ';"}
+{"sql":"INSERT INTO attmp7 VALUES (8, 18)","shape":"INSERT INTO attmp7 VALUES (8, 18);"}
+{"sql":"ALTER TABLE attmp7 ADD CONSTRAINT identity CHECK (b = boo(b))","shape":"ALTER TABLE attmp7 ADD CONSTRAINT identity CHECK (b = boo(b));"}
+{"sql":"ALTER TABLE attmp3 ADD CONSTRAINT IDENTITY check (b = boo(b)) NOT VALID","shape":"ALTER TABLE attmp3 ADD CONSTRAINT IDENTITY CHECK (b = boo(b)) NOT VALID;"}
+{"sql":"ALTER TABLE attmp3 VALIDATE CONSTRAINT identity"}
+{"sql":"create table parent_noinh_convalid (a int)","shape":"CREATE TABLE parent_noinh_convalid (a int);"}
+{"sql":"create table child_noinh_convalid () inherits (parent_noinh_convalid)","shape":"CREATE TABLE child_noinh_convalid () INHERITS (parent_noinh_convalid);"}
+{"sql":"insert into parent_noinh_convalid values (1)","shape":"INSERT INTO parent_noinh_convalid VALUES (1);"}
+{"sql":"insert into child_noinh_convalid values (1)","shape":"INSERT INTO child_noinh_convalid VALUES (1);"}
+{"sql":"alter table parent_noinh_convalid add constraint check_a_is_2 check (a = 2) no inherit not valid","shape":"ALTER TABLE parent_noinh_convalid ADD CONSTRAINT check_a_is_2 CHECK (a = 2) NO INHERIT NOT VALID;"}
+{"sql":"alter table parent_noinh_convalid validate constraint check_a_is_2"}
+{"sql":"delete from only parent_noinh_convalid","shape":"DELETE FROM ONLY parent_noinh_convalid;"}
+{"sql":"select convalidated from pg_constraint where conrelid = 'parent_noinh_convalid'::regclass and conname = 'check_a_is_2'","shape":"SELECT convalidated FROM pg_constraint WHERE (conrelid = 'parent_noinh_convalid'::regclass) AND (conname = 'check_a_is_2');"}
+{"sql":"drop table parent_noinh_convalid, child_noinh_convalid","shape":"DROP TABLE parent_noinh_convalid, child_noinh_convalid;"}
+{"sql":"ALTER TABLE attmp5 add constraint attmpconstr foreign key(a) references attmp4(a) match full","shape":"ALTER TABLE attmp5 ADD CONSTRAINT attmpconstr FOREIGN KEY (a) REFERENCES attmp4 (a) MATCH FULL;"}
+{"sql":"DROP TABLE attmp7","shape":"DROP TABLE attmp7;"}
+{"sql":"DROP TABLE attmp6","shape":"DROP TABLE attmp6;"}
+{"sql":"DROP TABLE attmp5","shape":"DROP TABLE attmp5;"}
+{"sql":"DROP TABLE attmp4","shape":"DROP TABLE attmp4;"}
+{"sql":"DROP TABLE attmp3","shape":"DROP TABLE attmp3;"}
+{"sql":"DROP TABLE attmp2","shape":"DROP TABLE attmp2;"}
+{"sql":"set constraint_exclusion TO 'partition'","shape":"SET constraint_exclusion TO 'partition';"}
+{"sql":"create table nv_parent (d date, check (false) no inherit not valid)","shape":"CREATE TABLE nv_parent (d date, CHECK (FALSE) NO INHERIT NOT VALID);"}
+{"sql":"create table nv_child_2010 () inherits (nv_parent)","shape":"CREATE TABLE nv_child_2010 () INHERITS (nv_parent);"}
+{"sql":"create table nv_child_2011 () inherits (nv_parent)","shape":"CREATE TABLE nv_child_2011 () INHERITS (nv_parent);"}
+{"sql":"alter table nv_child_2010 add check (d between '2010-01-01'::date and '2010-12-31'::date) not valid","shape":"ALTER TABLE nv_child_2010 ADD CHECK (d BETWEEN '2010-01-01'::date AND '2010-12-31'::date) NOT VALID;"}
+{"sql":"alter table nv_child_2011 add check (d between '2011-01-01'::date and '2011-12-31'::date) not valid","shape":"ALTER TABLE nv_child_2011 ADD CHECK (d BETWEEN '2011-01-01'::date AND '2011-12-31'::date) NOT VALID;"}
+{"sql":"explain (costs off) select * from nv_parent where d between '2011-08-01' and '2011-08-31'","shape":"EXPLAIN (COSTS off) SELECT * FROM nv_parent WHERE d BETWEEN '2011-08-01' AND '2011-08-31';"}
+{"sql":"create table nv_child_2009 (check (d between '2009-01-01'::date and '2009-12-31'::date)) inherits (nv_parent)","shape":"CREATE TABLE nv_child_2009 (CHECK (d BETWEEN '2009-01-01'::date AND '2009-12-31'::date)) INHERITS (nv_parent);"}
+{"sql":"explain (costs off) select * from nv_parent where d between '2011-08-01'::date and '2011-08-31'::date","shape":"EXPLAIN (COSTS off) SELECT * FROM nv_parent WHERE d BETWEEN '2011-08-01'::date AND '2011-08-31'::date;"}
+{"sql":"explain (costs off) select * from nv_parent where d between '2009-08-01'::date and '2009-08-31'::date","shape":"EXPLAIN (COSTS off) SELECT * FROM nv_parent WHERE d BETWEEN '2009-08-01'::date AND '2009-08-31'::date;"}
+{"sql":"alter table nv_child_2011 VALIDATE CONSTRAINT nv_child_2011_d_check"}
+{"sql":"alter table nv_parent add check (d between '2001-01-01'::date and '2099-12-31'::date) not valid","shape":"ALTER TABLE nv_parent ADD CHECK (d BETWEEN '2001-01-01'::date AND '2099-12-31'::date) NOT VALID;"}
+{"sql":"CREATE TEMP TABLE PKTABLE (ptest1 int PRIMARY KEY)","shape":"CREATE TEMPORARY TABLE PKTABLE (ptest1 int PRIMARY KEY);"}
+{"sql":"INSERT INTO PKTABLE VALUES(42)","shape":"INSERT INTO PKTABLE VALUES (42);"}
+{"sql":"CREATE TEMP TABLE FKTABLE (ftest1 inet)","shape":"CREATE TEMPORARY TABLE FKTABLE (ftest1 inet);"}
+{"sql":"ALTER TABLE FKTABLE ADD FOREIGN KEY(ftest1) references pktable","shape":"ALTER TABLE FKTABLE ADD FOREIGN KEY (ftest1) REFERENCES pktable;"}
+{"sql":"ALTER TABLE FKTABLE ADD FOREIGN KEY(ftest1) references pktable(ptest1)","shape":"ALTER TABLE FKTABLE ADD FOREIGN KEY (ftest1) REFERENCES pktable (ptest1);"}
+{"sql":"DROP TABLE FKTABLE","shape":"DROP TABLE FKTABLE;"}
+{"sql":"CREATE TEMP TABLE FKTABLE (ftest1 int8)","shape":"CREATE TEMPORARY TABLE FKTABLE (ftest1 int8);"}
+{"sql":"INSERT INTO FKTABLE VALUES(42)","shape":"INSERT INTO FKTABLE VALUES (42);"}
+{"sql":"INSERT INTO FKTABLE VALUES(43)","shape":"INSERT INTO FKTABLE VALUES (43);"}
+{"sql":"CREATE TEMP TABLE FKTABLE (ftest1 numeric)","shape":"CREATE TEMPORARY TABLE FKTABLE (ftest1 numeric);"}
+{"sql":"DROP TABLE PKTABLE","shape":"DROP TABLE PKTABLE;"}
+{"sql":"CREATE TEMP TABLE PKTABLE (ptest1 numeric PRIMARY KEY)","shape":"CREATE TEMPORARY TABLE PKTABLE (ptest1 numeric PRIMARY KEY);"}
+{"sql":"CREATE TEMP TABLE FKTABLE (ftest1 int)","shape":"CREATE TEMPORARY TABLE FKTABLE (ftest1 int);"}
+{"sql":"CREATE TEMP TABLE PKTABLE (ptest1 int, ptest2 inet,\n                           PRIMARY KEY(ptest1, ptest2))","shape":"CREATE TEMPORARY TABLE PKTABLE (ptest1 int, ptest2 inet, PRIMARY KEY (ptest1, ptest2));"}
+{"sql":"CREATE TEMP TABLE FKTABLE (ftest1 cidr, ftest2 timestamp)","shape":"CREATE TEMPORARY TABLE FKTABLE (ftest1 cidr, ftest2 timestamp);"}
+{"sql":"ALTER TABLE FKTABLE ADD FOREIGN KEY(ftest1, ftest2) references pktable","shape":"ALTER TABLE FKTABLE ADD FOREIGN KEY (ftest1, ftest2) REFERENCES pktable;"}
+{"sql":"ALTER TABLE FKTABLE ADD FOREIGN KEY(ftest1, ftest2)\n     references pktable(ptest1, ptest2)","shape":"ALTER TABLE FKTABLE ADD FOREIGN KEY (ftest1, ftest2) REFERENCES pktable (ptest1, ptest2);"}
+{"sql":"CREATE TEMP TABLE FKTABLE (ftest1 int, ftest2 inet)","shape":"CREATE TEMPORARY TABLE FKTABLE (ftest1 int, ftest2 inet);"}
+{"sql":"ALTER TABLE FKTABLE ADD FOREIGN KEY(ftest1, ftest2)\n     references pktable(ptest2, ptest1)","shape":"ALTER TABLE FKTABLE ADD FOREIGN KEY (ftest1, ftest2) REFERENCES pktable (ptest2, ptest1);"}
+{"sql":"ALTER TABLE FKTABLE ADD FOREIGN KEY(ftest2, ftest1)\n     references pktable(ptest1, ptest2)","shape":"ALTER TABLE FKTABLE ADD FOREIGN KEY (ftest2, ftest1) REFERENCES pktable (ptest1, ptest2);"}
+{"sql":"CREATE TEMP TABLE PKTABLE (ptest1 int primary key)","shape":"CREATE TEMPORARY TABLE PKTABLE (ptest1 int PRIMARY KEY);"}
+{"sql":"ALTER TABLE FKTABLE ADD CONSTRAINT fknd FOREIGN KEY(ftest1) REFERENCES pktable\n  ON DELETE CASCADE ON UPDATE NO ACTION NOT DEFERRABLE","shape":"ALTER TABLE FKTABLE ADD CONSTRAINT fknd FOREIGN KEY (ftest1) REFERENCES pktable ON DELETE CASCADE ON UPDATE NO ACTION NOT DEFERRABLE;"}
+{"sql":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdd FOREIGN KEY(ftest1) REFERENCES pktable\n  ON DELETE CASCADE ON UPDATE NO ACTION DEFERRABLE INITIALLY DEFERRED","shape":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdd FOREIGN KEY (ftest1) REFERENCES pktable ON DELETE CASCADE ON UPDATE NO ACTION DEFERRABLE INITIALLY DEFERRED;"}
+{"sql":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdi FOREIGN KEY(ftest1) REFERENCES pktable\n  ON DELETE CASCADE ON UPDATE NO ACTION DEFERRABLE INITIALLY IMMEDIATE","shape":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdi FOREIGN KEY (ftest1) REFERENCES pktable ON DELETE CASCADE ON UPDATE NO ACTION DEFERRABLE INITIALLY IMMEDIATE;"}
+{"sql":"ALTER TABLE FKTABLE ADD CONSTRAINT fknd2 FOREIGN KEY(ftest1) REFERENCES pktable\n  ON DELETE CASCADE ON UPDATE NO ACTION DEFERRABLE INITIALLY DEFERRED","shape":"ALTER TABLE FKTABLE ADD CONSTRAINT fknd2 FOREIGN KEY (ftest1) REFERENCES pktable ON DELETE CASCADE ON UPDATE NO ACTION DEFERRABLE INITIALLY DEFERRED;"}
+{"sql":"ALTER TABLE FKTABLE ALTER CONSTRAINT fknd2 NOT DEFERRABLE"}
+{"sql":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdd2 FOREIGN KEY(ftest1) REFERENCES pktable\n  ON DELETE CASCADE ON UPDATE NO ACTION NOT DEFERRABLE","shape":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdd2 FOREIGN KEY (ftest1) REFERENCES pktable ON DELETE CASCADE ON UPDATE NO ACTION NOT DEFERRABLE;"}
+{"sql":"ALTER TABLE FKTABLE ALTER CONSTRAINT fkdd2 DEFERRABLE INITIALLY DEFERRED"}
+{"sql":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdi2 FOREIGN KEY(ftest1) REFERENCES pktable\n  ON DELETE CASCADE ON UPDATE NO ACTION NOT DEFERRABLE","shape":"ALTER TABLE FKTABLE ADD CONSTRAINT fkdi2 FOREIGN KEY (ftest1) REFERENCES pktable ON DELETE CASCADE ON UPDATE NO ACTION NOT DEFERRABLE;"}
+{"sql":"ALTER TABLE FKTABLE ALTER CONSTRAINT fkdi2 DEFERRABLE INITIALLY IMMEDIATE"}
+{"sql":"SELECT conname, tgfoid::regproc, tgtype, tgdeferrable, tginitdeferred\nFROM pg_trigger JOIN pg_constraint con ON con.oid = tgconstraint\nWHERE tgrelid = 'pktable'::regclass\nORDER BY 1,2,3","shape":"SELECT conname, tgfoid::regproc, tgtype, tgdeferrable, tginitdeferred FROM pg_trigger JOIN pg_constraint AS con ON con.oid = tgconstraint WHERE tgrelid = 'pktable'::regclass ORDER BY 1, 2, 3;"}
+{"sql":"SELECT conname, tgfoid::regproc, tgtype, tgdeferrable, tginitdeferred\nFROM pg_trigger JOIN pg_constraint con ON con.oid = tgconstraint\nWHERE tgrelid = 'fktable'::regclass\nORDER BY 1,2,3","shape":"SELECT conname, tgfoid::regproc, tgtype, tgdeferrable, tginitdeferred FROM pg_trigger JOIN pg_constraint AS con ON con.oid = tgconstraint WHERE tgrelid = 'fktable'::regclass ORDER BY 1, 2, 3;"}
+{"sql":"create table atacc1 ( test int )","shape":"CREATE TABLE atacc1 (test int);"}
+{"sql":"alter table atacc1 add constraint atacc_test1 check (test>3)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 CHECK (test > 3);"}
+{"sql":"insert into atacc1 (test) values (2)","shape":"INSERT INTO atacc1 (test) VALUES (2);"}
+{"sql":"insert into atacc1 (test) values (4)","shape":"INSERT INTO atacc1 (test) VALUES (4);"}
+{"sql":"drop table atacc1","shape":"DROP TABLE atacc1;"}
+{"sql":"alter table atacc1 add constraint atacc_test1 check (test1>3)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 CHECK (test1 > 3);"}
+{"sql":"create table atacc1 ( test int, test2 int, test3 int)","shape":"CREATE TABLE atacc1 (test int, test2 int, test3 int);"}
+{"sql":"alter table atacc1 add constraint atacc_test1 check (test+test2<test3*4)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 CHECK ((test + test2) < (test3 * 4));"}
+{"sql":"insert into atacc1 (test,test2,test3) values (4,4,2)","shape":"INSERT INTO atacc1 (test, test2, test3) VALUES (4, 4, 2);"}
+{"sql":"insert into atacc1 (test,test2,test3) values (4,4,5)","shape":"INSERT INTO atacc1 (test, test2, test3) VALUES (4, 4, 5);"}
+{"sql":"create table atacc1 (test int check (test>3), test2 int)","shape":"CREATE TABLE atacc1 (test int CHECK (test > 3), test2 int);"}
+{"sql":"alter table atacc1 add check (test2>test)","shape":"ALTER TABLE atacc1 ADD CHECK (test2 > test);"}
+{"sql":"insert into atacc1 (test2, test) values (3, 4)","shape":"INSERT INTO atacc1 (test2, test) VALUES (3, 4);"}
+{"sql":"create table atacc1 (test int)","shape":"CREATE TABLE atacc1 (test int);"}
+{"sql":"create table atacc2 (test2 int)","shape":"CREATE TABLE atacc2 (test2 int);"}
+{"sql":"create table atacc3 (test3 int) inherits (atacc1, atacc2)","shape":"CREATE TABLE atacc3 (test3 int) INHERITS (atacc1, atacc2);"}
+{"sql":"alter table atacc2 add constraint foo check (test2>0)","shape":"ALTER TABLE atacc2 ADD CONSTRAINT foo CHECK (test2 > 0);"}
+{"sql":"insert into atacc2 (test2) values (-3)","shape":"INSERT INTO atacc2 (test2) VALUES (-3);"}
+{"sql":"insert into atacc2 (test2) values (3)","shape":"INSERT INTO atacc2 (test2) VALUES (3);"}
+{"sql":"insert into atacc3 (test2) values (-3)","shape":"INSERT INTO atacc3 (test2) VALUES (-3);"}
+{"sql":"insert into atacc3 (test2) values (3)","shape":"INSERT INTO atacc3 (test2) VALUES (3);"}
+{"sql":"drop table atacc3","shape":"DROP TABLE atacc3;"}
+{"sql":"drop table atacc2","shape":"DROP TABLE atacc2;"}
+{"sql":"alter table atacc3 no inherit atacc2"}
+{"sql":"select test2 from atacc2","shape":"SELECT test2 FROM atacc2;"}
+{"sql":"alter table atacc3 inherit atacc2"}
+{"sql":"alter table atacc3 rename test2 to testx","shape":"ALTER TABLE atacc3 RENAME COLUMN test2 TO testx;"}
+{"sql":"alter table atacc3 add test2 bool","shape":"ALTER TABLE atacc3 ADD COLUMN test2 bool;"}
+{"sql":"alter table atacc3 drop test2","shape":"ALTER TABLE atacc3 DROP COLUMN test2;"}
+{"sql":"alter table atacc3 add test2 int","shape":"ALTER TABLE atacc3 ADD COLUMN test2 int;"}
+{"sql":"update atacc3 set test2 = 4 where test2 is null","shape":"UPDATE atacc3 SET test2 = 4 WHERE test2 IS NULL;"}
+{"sql":"alter table atacc3 add constraint foo check (test2>0)","shape":"ALTER TABLE atacc3 ADD CONSTRAINT foo CHECK (test2 > 0);"}
+{"sql":"alter table atacc2 inherit atacc3"}
+{"sql":"alter table atacc2 inherit atacc2"}
+{"sql":"drop table atacc2 cascade","shape":"DROP TABLE atacc2 CASCADE;"}
+{"sql":"create table atacc2 (test2 int) inherits (atacc1)","shape":"CREATE TABLE atacc2 (test2 int) INHERITS (atacc1);"}
+{"sql":"alter table atacc1 add constraint foo check (test>0) no inherit","shape":"ALTER TABLE atacc1 ADD CONSTRAINT foo CHECK (test > 0) NO INHERIT;"}
+{"sql":"insert into atacc2 (test) values (-3)","shape":"INSERT INTO atacc2 (test) VALUES (-3);"}
+{"sql":"insert into atacc1 (test) values (-3)","shape":"INSERT INTO atacc1 (test) VALUES (-3);"}
+{"sql":"insert into atacc1 (test) values (3)","shape":"INSERT INTO atacc1 (test) VALUES (3);"}
+{"sql":"alter table atacc2 add constraint foo check (test>0) no inherit","shape":"ALTER TABLE atacc2 ADD CONSTRAINT foo CHECK (test > 0) NO INHERIT;"}
+{"sql":"alter table atacc1 add constraint atacc_test1 unique (test)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 UNIQUE (test);"}
+{"sql":"alter table atacc1 alter column test type integer using 0","shape":"ALTER TABLE atacc1 ALTER COLUMN test SET DATA TYPE integer USING 0;"}
+{"sql":"alter table atacc1 add constraint atacc_test1 unique (test1)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 UNIQUE (test1);"}
+{"sql":"create table atacc1 ( test int, test2 int)","shape":"CREATE TABLE atacc1 (test int, test2 int);"}
+{"sql":"alter table atacc1 add constraint atacc_test1 unique (test, test2)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 UNIQUE (test, test2);"}
+{"sql":"insert into atacc1 (test,test2) values (4,4)","shape":"INSERT INTO atacc1 (test, test2) VALUES (4, 4);"}
+{"sql":"insert into atacc1 (test,test2) values (4,5)","shape":"INSERT INTO atacc1 (test, test2) VALUES (4, 5);"}
+{"sql":"insert into atacc1 (test,test2) values (5,4)","shape":"INSERT INTO atacc1 (test, test2) VALUES (5, 4);"}
+{"sql":"insert into atacc1 (test,test2) values (5,5)","shape":"INSERT INTO atacc1 (test, test2) VALUES (5, 5);"}
+{"sql":"create table atacc1 (test int, test2 int, unique(test))","shape":"CREATE TABLE atacc1 (test int, test2 int, UNIQUE (test));"}
+{"sql":"alter table atacc1 add unique (test2)","shape":"ALTER TABLE atacc1 ADD UNIQUE (test2);"}
+{"sql":"insert into atacc1 (test2, test) values (3, 3)","shape":"INSERT INTO atacc1 (test2, test) VALUES (3, 3);"}
+{"sql":"insert into atacc1 (test2, test) values (2, 3)","shape":"INSERT INTO atacc1 (test2, test) VALUES (2, 3);"}
+{"sql":"create table atacc1 ( id serial, test int)","shape":"CREATE TABLE atacc1 (id serial, test int);"}
+{"sql":"alter table atacc1 add constraint atacc_test1 primary key (test)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 PRIMARY KEY (test);"}
+{"sql":"insert into atacc1 (test) values(NULL)","shape":"INSERT INTO atacc1 (test) VALUES (NULL);"}
+{"sql":"alter table atacc1 add constraint atacc_oid1 primary key(id)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_oid1 PRIMARY KEY (id);"}
+{"sql":"alter table atacc1 drop constraint atacc_test1 restrict","shape":"ALTER TABLE atacc1 DROP CONSTRAINT atacc_test1 RESTRICT;"}
+{"sql":"insert into atacc1 (test) values (NULL)","shape":"INSERT INTO atacc1 (test) VALUES (NULL);"}
+{"sql":"alter table atacc1 add constraint atacc_test1 primary key (test1)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 PRIMARY KEY (test1);"}
+{"sql":"insert into atacc1 (test) values (0)","shape":"INSERT INTO atacc1 (test) VALUES (0);"}
+{"sql":"alter table atacc1 add column test2 int primary key","shape":"ALTER TABLE atacc1 ADD COLUMN test2 int PRIMARY KEY;"}
+{"sql":"alter table atacc1 add column test2 int default 0 primary key","shape":"ALTER TABLE atacc1 ADD COLUMN test2 int DEFAULT 0 PRIMARY KEY;"}
+{"sql":"create table atacc1 (a int)","shape":"CREATE TABLE atacc1 (a int);"}
+{"sql":"insert into atacc1 values(1)","shape":"INSERT INTO atacc1 VALUES (1);"}
+{"sql":"alter table atacc1\n  add column b float8 not null default random(),\n  add primary key(a)","shape":"ALTER TABLE atacc1 ADD COLUMN b float8 NOT NULL DEFAULT random(), ADD PRIMARY KEY (a);"}
+{"sql":"create table atacc1 (a int primary key)","shape":"CREATE TABLE atacc1 (a int PRIMARY KEY);"}
+{"sql":"alter table atacc1 add constraint atacc1_fkey foreign key (a) references atacc1 (a) not valid","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc1_fkey FOREIGN KEY (a) REFERENCES atacc1 (a) NOT VALID;"}
+{"sql":"alter table atacc1 validate constraint atacc1_fkey, alter a type bigint"}
+{"sql":"create table atacc1 (a bigint, b int)","shape":"CREATE TABLE atacc1 (a bigint, b int);"}
+{"sql":"insert into atacc1 values(1,1)","shape":"INSERT INTO atacc1 VALUES (1, 1);"}
+{"sql":"alter table atacc1 add constraint atacc1_chk check(b = 1) not valid","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc1_chk CHECK (b = 1) NOT VALID;"}
+{"sql":"alter table atacc1 validate constraint atacc1_chk, alter a type int"}
+{"sql":"insert into atacc1 values(1,2)","shape":"INSERT INTO atacc1 VALUES (1, 2);"}
+{"sql":"alter table atacc1 add constraint atacc_test1 primary key (test, test2)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test1 PRIMARY KEY (test, test2);"}
+{"sql":"alter table atacc1 add constraint atacc_test2 primary key (test)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc_test2 PRIMARY KEY (test);"}
+{"sql":"insert into atacc1 (test,test2) values (NULL,3)","shape":"INSERT INTO atacc1 (test, test2) VALUES (NULL, 3);"}
+{"sql":"insert into atacc1 (test,test2) values (3, NULL)","shape":"INSERT INTO atacc1 (test, test2) VALUES (3, NULL);"}
+{"sql":"insert into atacc1 (test,test2) values (NULL,NULL)","shape":"INSERT INTO atacc1 (test, test2) VALUES (NULL, NULL);"}
+{"sql":"create table atacc1 (test int, test2 int, primary key(test))","shape":"CREATE TABLE atacc1 (test int, test2 int, PRIMARY KEY (test));"}
+{"sql":"insert into atacc1 (test2, test) values (1, NULL)","shape":"INSERT INTO atacc1 (test2, test) VALUES (1, NULL);"}
+{"sql":"alter table pg_class alter column relname drop not null","shape":"ALTER TABLE pg_class ALTER COLUMN relname DROP NOT NULL;"}
+{"sql":"alter table pg_class alter relname set not null","shape":"ALTER TABLE pg_class ALTER COLUMN relname SET NOT NULL;"}
+{"sql":"alter table non_existent alter column bar set not null","shape":"ALTER TABLE non_existent ALTER COLUMN bar SET NOT NULL;"}
+{"sql":"alter table non_existent alter column bar drop not null","shape":"ALTER TABLE non_existent ALTER COLUMN bar DROP NOT NULL;"}
+{"sql":"create table atacc1 (test int not null)","shape":"CREATE TABLE atacc1 (test int NOT NULL);"}
+{"sql":"alter table atacc1 add constraint \"atacc1_pkey\" primary key (test)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT \"atacc1_pkey\" PRIMARY KEY (test);"}
+{"sql":"alter table atacc1 alter column test drop not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test DROP NOT NULL;"}
+{"sql":"alter table atacc1 drop constraint \"atacc1_pkey\"","shape":"ALTER TABLE atacc1 DROP CONSTRAINT \"atacc1_pkey\";"}
+{"sql":"insert into atacc1 values (null)","shape":"INSERT INTO atacc1 VALUES (NULL);"}
+{"sql":"alter table atacc1 alter test set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test SET NOT NULL;"}
+{"sql":"delete from atacc1","shape":"DELETE FROM atacc1;"}
+{"sql":"alter table atacc1 alter bar set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN bar SET NOT NULL;"}
+{"sql":"alter table atacc1 alter bar drop not null","shape":"ALTER TABLE atacc1 ALTER COLUMN bar DROP NOT NULL;"}
+{"sql":"create view myview as select * from atacc1","shape":"CREATE VIEW myview AS SELECT * FROM atacc1;"}
+{"sql":"alter table myview alter column test drop not null","shape":"ALTER TABLE myview ALTER COLUMN test DROP NOT NULL;"}
+{"sql":"alter table myview alter column test set not null","shape":"ALTER TABLE myview ALTER COLUMN test SET NOT NULL;"}
+{"sql":"drop view myview","shape":"DROP VIEW myview;"}
+{"sql":"create table atacc1 (test_a int, test_b int)","shape":"CREATE TABLE atacc1 (test_a int, test_b int);"}
+{"sql":"insert into atacc1 values (null, 1)","shape":"INSERT INTO atacc1 VALUES (NULL, 1);"}
+{"sql":"alter table atacc1 add constraint atacc1_constr_or check(test_a is not null or test_b < 10)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc1_constr_or CHECK ((test_a IS NOT NULL) OR (test_b < 10));"}
+{"sql":"alter table atacc1 alter test_a set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test_a SET NOT NULL;"}
+{"sql":"alter table atacc1 drop constraint atacc1_constr_or","shape":"ALTER TABLE atacc1 DROP CONSTRAINT atacc1_constr_or;"}
+{"sql":"alter table atacc1 add constraint atacc1_constr_invalid check(test_a is not null) not valid","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc1_constr_invalid CHECK (test_a IS NOT NULL) NOT VALID;"}
+{"sql":"alter table atacc1 drop constraint atacc1_constr_invalid","shape":"ALTER TABLE atacc1 DROP CONSTRAINT atacc1_constr_invalid;"}
+{"sql":"update atacc1 set test_a = 1","shape":"UPDATE atacc1 SET test_a = 1;"}
+{"sql":"alter table atacc1 add constraint atacc1_constr_a_valid check(test_a is not null)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc1_constr_a_valid CHECK (test_a IS NOT NULL);"}
+{"sql":"insert into atacc1 values (2, null)","shape":"INSERT INTO atacc1 VALUES (2, NULL);"}
+{"sql":"alter table atacc1 alter test_a drop not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test_a DROP NOT NULL;"}
+{"sql":"alter table atacc1 alter test_a set not null, alter test_b set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test_a SET NOT NULL, ALTER COLUMN test_b SET NOT NULL;"}
+{"sql":"alter table atacc1 alter test_b set not null, alter test_a set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test_b SET NOT NULL, ALTER COLUMN test_a SET NOT NULL;"}
+{"sql":"update atacc1 set test_b = 1","shape":"UPDATE atacc1 SET test_b = 1;"}
+{"sql":"alter table atacc1 alter test_a drop not null, alter test_b drop not null","shape":"ALTER TABLE atacc1 ALTER COLUMN test_a DROP NOT NULL, ALTER COLUMN test_b DROP NOT NULL;"}
+{"sql":"alter table atacc1 add constraint atacc1_constr_b_valid check(test_b is not null)","shape":"ALTER TABLE atacc1 ADD CONSTRAINT atacc1_constr_b_valid CHECK (test_b IS NOT NULL);"}
+{"sql":"create table parent (a int)","shape":"CREATE TABLE parent (a int);"}
+{"sql":"create table child (b varchar(255)) inherits (parent)","shape":"CREATE TABLE child (b varchar(255)) INHERITS (parent);"}
+{"sql":"alter table parent alter a set not null","shape":"ALTER TABLE parent ALTER COLUMN a SET NOT NULL;"}
+{"sql":"insert into parent values (NULL)","shape":"INSERT INTO parent VALUES (NULL);"}
+{"sql":"insert into child (a, b) values (NULL, 'foo')","shape":"INSERT INTO child (a, b) VALUES (NULL, 'foo');"}
+{"sql":"alter table parent alter a drop not null","shape":"ALTER TABLE parent ALTER COLUMN a DROP NOT NULL;"}
+{"sql":"alter table only parent alter a set not null","shape":"ALTER TABLE ONLY parent ALTER COLUMN a SET NOT NULL;"}
+{"sql":"alter table child alter a set not null","shape":"ALTER TABLE child ALTER COLUMN a SET NOT NULL;"}
+{"sql":"delete from parent","shape":"DELETE FROM parent;"}
+{"sql":"delete from child","shape":"DELETE FROM child;"}
+{"sql":"drop table child","shape":"DROP TABLE child;"}
+{"sql":"drop table parent","shape":"DROP TABLE parent;"}
+{"sql":"create table def_test (\n\tc1\tint4 default 5,\n\tc2\ttext default 'initial_default'\n)","shape":"CREATE TABLE def_test (c1 int4 DEFAULT 5, c2 text DEFAULT 'initial_default');"}
+{"sql":"insert into def_test default values","shape":"INSERT INTO def_test DEFAULT VALUES;"}
+{"sql":"alter table def_test alter column c1 drop default","shape":"ALTER TABLE def_test ALTER COLUMN c1 DROP DEFAULT;"}
+{"sql":"alter table def_test alter column c2 drop default","shape":"ALTER TABLE def_test ALTER COLUMN c2 DROP DEFAULT;"}
+{"sql":"alter table def_test alter column c1 set default 10","shape":"ALTER TABLE def_test ALTER COLUMN c1 SET DEFAULT 10;"}
+{"sql":"alter table def_test alter column c2 set default 'new_default'","shape":"ALTER TABLE def_test ALTER COLUMN c2 SET DEFAULT 'new_default';"}
+{"sql":"select * from def_test","shape":"SELECT * FROM def_test;"}
+{"sql":"alter table def_test alter column c1 set default 'wrong_datatype'","shape":"ALTER TABLE def_test ALTER COLUMN c1 SET DEFAULT 'wrong_datatype';"}
+{"sql":"alter table def_test alter column c2 set default 20","shape":"ALTER TABLE def_test ALTER COLUMN c2 SET DEFAULT 20;"}
+{"sql":"alter table def_test alter column c3 set default 30","shape":"ALTER TABLE def_test ALTER COLUMN c3 SET DEFAULT 30;"}
+{"sql":"create view def_view_test as select * from def_test","shape":"CREATE VIEW def_view_test AS SELECT * FROM def_test;"}
+{"sql":"create rule def_view_test_ins as\n\ton insert to def_view_test\n\tdo instead insert into def_test select new.*"}
+{"sql":"insert into def_view_test default values","shape":"INSERT INTO def_view_test DEFAULT VALUES;"}
+{"sql":"alter table def_view_test alter column c1 set default 45","shape":"ALTER TABLE def_view_test ALTER COLUMN c1 SET DEFAULT 45;"}
+{"sql":"alter table def_view_test alter column c2 set default 'view_default'","shape":"ALTER TABLE def_view_test ALTER COLUMN c2 SET DEFAULT 'view_default';"}
+{"sql":"select * from def_view_test","shape":"SELECT * FROM def_view_test;"}
+{"sql":"drop rule def_view_test_ins on def_view_test"}
+{"sql":"drop view def_view_test","shape":"DROP VIEW def_view_test;"}
+{"sql":"drop table def_test","shape":"DROP TABLE def_test;"}
+{"sql":"alter table pg_class drop column relname","shape":"ALTER TABLE pg_class DROP COLUMN relname;"}
+{"sql":"alter table nosuchtable drop column bar","shape":"ALTER TABLE nosuchtable DROP COLUMN bar;"}
+{"sql":"create table atacc1 (a int4 not null, b int4, c int4 not null, d int4)","shape":"CREATE TABLE atacc1 (a int4 NOT NULL, b int4, c int4 NOT NULL, d int4);"}
+{"sql":"insert into atacc1 values (1, 2, 3, 4)","shape":"INSERT INTO atacc1 VALUES (1, 2, 3, 4);"}
+{"sql":"alter table atacc1 drop a","shape":"ALTER TABLE atacc1 DROP COLUMN a;"}
+{"sql":"select * from atacc1","shape":"SELECT * FROM atacc1;"}
+{"sql":"select * from atacc1 order by a","shape":"SELECT * FROM atacc1 ORDER BY a;"}
+{"sql":"select * from atacc1 order by \"........pg.dropped.1........\"","shape":"SELECT * FROM atacc1 ORDER BY \"........pg.dropped.1........\";"}
+{"sql":"select * from atacc1 group by a","shape":"SELECT * FROM atacc1 GROUP BY a;"}
+{"sql":"select * from atacc1 group by \"........pg.dropped.1........\"","shape":"SELECT * FROM atacc1 GROUP BY \"........pg.dropped.1........\";"}
+{"sql":"select atacc1.* from atacc1","shape":"SELECT atacc1.* FROM atacc1;"}
+{"sql":"select a from atacc1","shape":"SELECT a FROM atacc1;"}
+{"sql":"select atacc1.a from atacc1","shape":"SELECT atacc1.a FROM atacc1;"}
+{"sql":"select b,c,d from atacc1","shape":"SELECT b, c, d FROM atacc1;"}
+{"sql":"select a,b,c,d from atacc1","shape":"SELECT a, b, c, d FROM atacc1;"}
+{"sql":"select * from atacc1 where a = 1","shape":"SELECT * FROM atacc1 WHERE a = 1;"}
+{"sql":"select \"........pg.dropped.1........\" from atacc1","shape":"SELECT \"........pg.dropped.1........\" FROM atacc1;"}
+{"sql":"select atacc1.\"........pg.dropped.1........\" from atacc1","shape":"SELECT atacc1.\"........pg.dropped.1........\" FROM atacc1;"}
+{"sql":"select \"........pg.dropped.1........\",b,c,d from atacc1","shape":"SELECT \"........pg.dropped.1........\", b, c, d FROM atacc1;"}
+{"sql":"select * from atacc1 where \"........pg.dropped.1........\" = 1","shape":"SELECT * FROM atacc1 WHERE \"........pg.dropped.1........\" = 1;"}
+{"sql":"update atacc1 set a = 3","shape":"UPDATE atacc1 SET a = 3;"}
+{"sql":"update atacc1 set b = 2 where a = 3","shape":"UPDATE atacc1 SET b = 2 WHERE a = 3;"}
+{"sql":"update atacc1 set \"........pg.dropped.1........\" = 3","shape":"UPDATE atacc1 SET \"........pg.dropped.1........\" = 3;"}
+{"sql":"update atacc1 set b = 2 where \"........pg.dropped.1........\" = 3","shape":"UPDATE atacc1 SET b = 2 WHERE \"........pg.dropped.1........\" = 3;"}
+{"sql":"insert into atacc1 values (10, 11, 12, 13)","shape":"INSERT INTO atacc1 VALUES (10, 11, 12, 13);"}
+{"sql":"insert into atacc1 values (default, 11, 12, 13)","shape":"INSERT INTO atacc1 VALUES (DEFAULT, 11, 12, 13);"}
+{"sql":"insert into atacc1 values (11, 12, 13)","shape":"INSERT INTO atacc1 VALUES (11, 12, 13);"}
+{"sql":"insert into atacc1 (a) values (10)","shape":"INSERT INTO atacc1 (a) VALUES (10);"}
+{"sql":"insert into atacc1 (a) values (default)","shape":"INSERT INTO atacc1 (a) VALUES (DEFAULT);"}
+{"sql":"insert into atacc1 (a,b,c,d) values (10,11,12,13)","shape":"INSERT INTO atacc1 (a, b, c, d) VALUES (10, 11, 12, 13);"}
+{"sql":"insert into atacc1 (a,b,c,d) values (default,11,12,13)","shape":"INSERT INTO atacc1 (a, b, c, d) VALUES (DEFAULT, 11, 12, 13);"}
+{"sql":"insert into atacc1 (b,c,d) values (11,12,13)","shape":"INSERT INTO atacc1 (b, c, d) VALUES (11, 12, 13);"}
+{"sql":"insert into atacc1 (\"........pg.dropped.1........\") values (10)","shape":"INSERT INTO atacc1 (\"........pg.dropped.1........\") VALUES (10);"}
+{"sql":"insert into atacc1 (\"........pg.dropped.1........\") values (default)","shape":"INSERT INTO atacc1 (\"........pg.dropped.1........\") VALUES (DEFAULT);"}
+{"sql":"insert into atacc1 (\"........pg.dropped.1........\",b,c,d) values (10,11,12,13)","shape":"INSERT INTO atacc1 (\"........pg.dropped.1........\", b, c, d) VALUES (10, 11, 12, 13);"}
+{"sql":"insert into atacc1 (\"........pg.dropped.1........\",b,c,d) values (default,11,12,13)","shape":"INSERT INTO atacc1 (\"........pg.dropped.1........\", b, c, d) VALUES (DEFAULT, 11, 12, 13);"}
+{"sql":"delete from atacc1 where a = 3","shape":"DELETE FROM atacc1 WHERE a = 3;"}
+{"sql":"delete from atacc1 where \"........pg.dropped.1........\" = 3","shape":"DELETE FROM atacc1 WHERE \"........pg.dropped.1........\" = 3;"}
+{"sql":"alter table atacc1 drop bar","shape":"ALTER TABLE atacc1 DROP COLUMN bar;"}
+{"sql":"alter table atacc1 SET WITHOUT OIDS"}
+{"sql":"alter table atacc1 SET WITH OIDS","reject":true}
+{"sql":"alter table atacc1 drop xmin","shape":"ALTER TABLE atacc1 DROP COLUMN xmin;"}
+{"sql":"select * from myview","shape":"SELECT * FROM myview;"}
+{"sql":"alter table myview drop d","shape":"ALTER TABLE myview DROP COLUMN d;"}
+{"sql":"analyze atacc1(a)","shape":"ANALYZE atacc1 (a);"}
+{"sql":"analyze atacc1(\"........pg.dropped.1........\")","shape":"ANALYZE atacc1 (\"........pg.dropped.1........\");"}
+{"sql":"vacuum analyze atacc1(a)","shape":"VACUUM ANALYZE atacc1 (a);"}
+{"sql":"vacuum analyze atacc1(\"........pg.dropped.1........\")","shape":"VACUUM ANALYZE atacc1 (\"........pg.dropped.1........\");"}
+{"sql":"comment on column atacc1.a is 'testing'","shape":"COMMENT ON COLUMN atacc1.a IS 'testing';"}
+{"sql":"comment on column atacc1.\"........pg.dropped.1........\" is 'testing'","shape":"COMMENT ON COLUMN atacc1.\"........pg.dropped.1........\" IS 'testing';"}
+{"sql":"alter table atacc1 alter a set storage plain"}
+{"sql":"alter table atacc1 alter \"........pg.dropped.1........\" set storage plain"}
+{"sql":"alter table atacc1 alter a set statistics 0"}
+{"sql":"alter table atacc1 alter \"........pg.dropped.1........\" set statistics 0"}
+{"sql":"alter table atacc1 alter a set default 3","shape":"ALTER TABLE atacc1 ALTER COLUMN a SET DEFAULT 3;"}
+{"sql":"alter table atacc1 alter \"........pg.dropped.1........\" set default 3","shape":"ALTER TABLE atacc1 ALTER COLUMN \"........pg.dropped.1........\" SET DEFAULT 3;"}
+{"sql":"alter table atacc1 alter a drop default","shape":"ALTER TABLE atacc1 ALTER COLUMN a DROP DEFAULT;"}
+{"sql":"alter table atacc1 alter \"........pg.dropped.1........\" drop default","shape":"ALTER TABLE atacc1 ALTER COLUMN \"........pg.dropped.1........\" DROP DEFAULT;"}
+{"sql":"alter table atacc1 alter a set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN a SET NOT NULL;"}
+{"sql":"alter table atacc1 alter \"........pg.dropped.1........\" set not null","shape":"ALTER TABLE atacc1 ALTER COLUMN \"........pg.dropped.1........\" SET NOT NULL;"}
+{"sql":"alter table atacc1 alter a drop not null","shape":"ALTER TABLE atacc1 ALTER COLUMN a DROP NOT NULL;"}
+{"sql":"alter table atacc1 alter \"........pg.dropped.1........\" drop not null","shape":"ALTER TABLE atacc1 ALTER COLUMN \"........pg.dropped.1........\" DROP NOT NULL;"}
+{"sql":"alter table atacc1 rename a to x","shape":"ALTER TABLE atacc1 RENAME COLUMN a TO x;"}
+{"sql":"alter table atacc1 rename \"........pg.dropped.1........\" to x","shape":"ALTER TABLE atacc1 RENAME COLUMN \"........pg.dropped.1........\" TO x;"}
+{"sql":"alter table atacc1 add primary key(a)","shape":"ALTER TABLE atacc1 ADD PRIMARY KEY (a);"}
+{"sql":"alter table atacc1 add primary key(\"........pg.dropped.1........\")","shape":"ALTER TABLE atacc1 ADD PRIMARY KEY (\"........pg.dropped.1........\");"}
+{"sql":"alter table atacc1 add unique(a)","shape":"ALTER TABLE atacc1 ADD UNIQUE (a);"}
+{"sql":"alter table atacc1 add unique(\"........pg.dropped.1........\")","shape":"ALTER TABLE atacc1 ADD UNIQUE (\"........pg.dropped.1........\");"}
+{"sql":"alter table atacc1 add check (a > 3)","shape":"ALTER TABLE atacc1 ADD CHECK (a > 3);"}
+{"sql":"alter table atacc1 add check (\"........pg.dropped.1........\" > 3)","shape":"ALTER TABLE atacc1 ADD CHECK (\"........pg.dropped.1........\" > 3);"}
+{"sql":"create table atacc2 (id int4 unique)","shape":"CREATE TABLE atacc2 (id int4 UNIQUE);"}
+{"sql":"alter table atacc1 add foreign key (a) references atacc2(id)","shape":"ALTER TABLE atacc1 ADD FOREIGN KEY (a) REFERENCES atacc2 (id);"}
+{"sql":"alter table atacc1 add foreign key (\"........pg.dropped.1........\") references atacc2(id)","shape":"ALTER TABLE atacc1 ADD FOREIGN KEY (\"........pg.dropped.1........\") REFERENCES atacc2 (id);"}
+{"sql":"alter table atacc2 add foreign key (id) references atacc1(a)","shape":"ALTER TABLE atacc2 ADD FOREIGN KEY (id) REFERENCES atacc1 (a);"}
+{"sql":"alter table atacc2 add foreign key (id) references atacc1(\"........pg.dropped.1........\")","shape":"ALTER TABLE atacc2 ADD FOREIGN KEY (id) REFERENCES atacc1 (\"........pg.dropped.1........\");"}
+{"sql":"create index \"testing_idx\" on atacc1(a)","shape":"CREATE INDEX \"testing_idx\" ON atacc1 (a);"}
+{"sql":"create index \"testing_idx\" on atacc1(\"........pg.dropped.1........\")","shape":"CREATE INDEX \"testing_idx\" ON atacc1 (\"........pg.dropped.1........\");"}
+{"sql":"insert into atacc1 values (21, 22, 23)","shape":"INSERT INTO atacc1 VALUES (21, 22, 23);"}
+{"sql":"create table attest1 as select * from atacc1","shape":"CREATE TABLE attest1 AS SELECT * FROM atacc1;"}
+{"sql":"select * from attest1","shape":"SELECT * FROM attest1;"}
+{"sql":"drop table attest1","shape":"DROP TABLE attest1;"}
+{"sql":"select * into attest2 from atacc1","shape":"SELECT * INTO attest2 FROM atacc1;"}
+{"sql":"select * from attest2","shape":"SELECT * FROM attest2;"}
+{"sql":"drop table attest2","shape":"DROP TABLE attest2;"}
+{"sql":"alter table atacc1 drop c","shape":"ALTER TABLE atacc1 DROP COLUMN c;"}
+{"sql":"alter table atacc1 drop d","shape":"ALTER TABLE atacc1 DROP COLUMN d;"}
+{"sql":"alter table atacc1 drop b","shape":"ALTER TABLE atacc1 DROP COLUMN b;"}
+{"sql":"create table atacc1 (id serial primary key, value int check (value < 10))","shape":"CREATE TABLE atacc1 (id serial PRIMARY KEY, value int CHECK (value < 10));"}
+{"sql":"insert into atacc1(value) values (100)","shape":"INSERT INTO atacc1 (value) VALUES (100);"}
+{"sql":"alter table atacc1 drop column value","shape":"ALTER TABLE atacc1 DROP COLUMN value;"}
+{"sql":"alter table atacc1 add column value int check (value < 10)","shape":"ALTER TABLE atacc1 ADD COLUMN value int CHECK (value < 10);"}
+{"sql":"insert into atacc1(id, value) values (null, 0)","shape":"INSERT INTO atacc1 (id, value) VALUES (NULL, 0);"}
+{"sql":"create table parent (a int, b int, c int)","shape":"CREATE TABLE parent (a int, b int, c int);"}
+{"sql":"insert into parent values (1, 2, 3)","shape":"INSERT INTO parent VALUES (1, 2, 3);"}
+{"sql":"alter table parent drop a","shape":"ALTER TABLE parent DROP COLUMN a;"}
+{"sql":"create table child (d varchar(255)) inherits (parent)","shape":"CREATE TABLE child (d varchar(255)) INHERITS (parent);"}
+{"sql":"insert into child values (12, 13, 'testing')","shape":"INSERT INTO child VALUES (12, 13, 'testing');"}
+{"sql":"select * from parent","shape":"SELECT * FROM parent;"}
+{"sql":"select * from child","shape":"SELECT * FROM child;"}
+{"sql":"alter table parent drop c","shape":"ALTER TABLE parent DROP COLUMN c;"}
+{"sql":"create table parent (a float8, b numeric(10,4), c text collate \"C\")","shape":"CREATE TABLE parent (a float8, b numeric(10, 4), c text COLLATE \"C\");"}
+{"sql":"create table child (a float4) inherits (parent)","shape":"CREATE TABLE child (a float4) INHERITS (parent);"}
+{"sql":"create table child (b decimal(10,7)) inherits (parent)","shape":"CREATE TABLE child (b decimal(10, 7)) INHERITS (parent);"}
+{"sql":"create table child (c text collate \"POSIX\") inherits (parent)","shape":"CREATE TABLE child (c text COLLATE \"POSIX\") INHERITS (parent);"}
+{"sql":"create table child (a double precision, b decimal(10,4)) inherits (parent)","shape":"CREATE TABLE child (a double precision, b decimal(10, 4)) INHERITS (parent);"}
+{"sql":"create table attest (a int4, b int4, c int4)","shape":"CREATE TABLE attest (a int4, b int4, c int4);"}
+{"sql":"insert into attest values (1,2,3)","shape":"INSERT INTO attest VALUES (1, 2, 3);"}
+{"sql":"alter table attest drop a","shape":"ALTER TABLE attest DROP COLUMN a;"}
+{"sql":"copy attest to stdout","shape":"COPY attest TO STDOUT;"}
+{"sql":"copy attest(a) to stdout","shape":"COPY attest (a) TO STDOUT;"}
+{"sql":"copy attest(\"........pg.dropped.1........\") to stdout","shape":"COPY attest (\"........pg.dropped.1........\") TO STDOUT;"}
+{"sql":"copy attest from stdin","shape":"COPY attest FROM STDIN;"}
+{"sql":"select * from attest","shape":"SELECT * FROM attest;"}
+{"sql":"copy attest(a) from stdin","shape":"COPY attest (a) FROM STDIN;"}
+{"sql":"drop table attest","shape":"DROP TABLE attest;"}
+{"sql":"create table dropColumn (a int, b int, e int)","shape":"CREATE TABLE dropColumn (a int, b int, e int);"}
+{"sql":"create table dropColumnChild (c int) inherits (dropColumn)","shape":"CREATE TABLE dropColumnChild (c int) INHERITS (dropColumn);"}
+{"sql":"create table dropColumnAnother (d int) inherits (dropColumnChild)","shape":"CREATE TABLE dropColumnAnother (d int) INHERITS (dropColumnChild);"}
+{"sql":"alter table dropColumnchild drop column a","shape":"ALTER TABLE dropColumnchild DROP COLUMN a;"}
+{"sql":"alter table only dropColumnChild drop column b","shape":"ALTER TABLE ONLY dropColumnChild DROP COLUMN b;"}
+{"sql":"alter table only dropColumn drop column e","shape":"ALTER TABLE ONLY dropColumn DROP COLUMN e;"}
+{"sql":"alter table dropColumnChild drop column c","shape":"ALTER TABLE dropColumnChild DROP COLUMN c;"}
+{"sql":"alter table dropColumn drop column a","shape":"ALTER TABLE dropColumn DROP COLUMN a;"}
+{"sql":"create table renameColumn (a int)","shape":"CREATE TABLE renameColumn (a int);"}
+{"sql":"create table renameColumnChild (b int) inherits (renameColumn)","shape":"CREATE TABLE renameColumnChild (b int) INHERITS (renameColumn);"}
+{"sql":"create table renameColumnAnother (c int) inherits (renameColumnChild)","shape":"CREATE TABLE renameColumnAnother (c int) INHERITS (renameColumnChild);"}
+{"sql":"alter table renameColumnChild rename column a to d","shape":"ALTER TABLE renameColumnChild RENAME COLUMN a TO d;"}
+{"sql":"alter table only renameColumnChild rename column a to d","shape":"ALTER TABLE ONLY renameColumnChild RENAME COLUMN a TO d;"}
+{"sql":"alter table only renameColumn rename column a to d","shape":"ALTER TABLE ONLY renameColumn RENAME COLUMN a TO d;"}
+{"sql":"alter table renameColumn rename column a to d","shape":"ALTER TABLE renameColumn RENAME COLUMN a TO d;"}
+{"sql":"alter table renameColumnChild rename column b to a","shape":"ALTER TABLE renameColumnChild RENAME COLUMN b TO a;"}
+{"sql":"alter table if exists doesnt_exist_tab rename column a to d","shape":"ALTER TABLE IF EXISTS doesnt_exist_tab RENAME COLUMN a TO d;"}
+{"sql":"alter table if exists doesnt_exist_tab rename column b to a","shape":"ALTER TABLE IF EXISTS doesnt_exist_tab RENAME COLUMN b TO a;"}
+{"sql":"alter table renameColumn add column w int","shape":"ALTER TABLE renameColumn ADD COLUMN w int;"}
+{"sql":"alter table only renameColumn add column x int","shape":"ALTER TABLE ONLY renameColumn ADD COLUMN x int;"}
+{"sql":"create table p1 (f1 int, f2 int)","shape":"CREATE TABLE p1 (f1 int, f2 int);"}
+{"sql":"create table c1 (f1 int not null) inherits(p1)","shape":"CREATE TABLE c1 (f1 int NOT NULL) INHERITS (p1);"}
+{"sql":"alter table c1 drop column f1","shape":"ALTER TABLE c1 DROP COLUMN f1;"}
+{"sql":"alter table p1 drop column f1","shape":"ALTER TABLE p1 DROP COLUMN f1;"}
+{"sql":"select f1 from c1","shape":"SELECT f1 FROM c1;"}
+{"sql":"drop table p1 cascade","shape":"DROP TABLE p1 CASCADE;"}
+{"sql":"create table c1 () inherits(p1)","shape":"CREATE TABLE c1 () INHERITS (p1);"}
+{"sql":"alter table only p1 drop column f1","shape":"ALTER TABLE ONLY p1 DROP COLUMN f1;"}
+{"sql":"create table p1(id int, name text)","shape":"CREATE TABLE p1 (id int, name text);"}
+{"sql":"create table p2(id2 int, name text, height int)","shape":"CREATE TABLE p2 (id2 int, name text, height int);"}
+{"sql":"create table c1(age int) inherits(p1,p2)","shape":"CREATE TABLE c1 (age int) INHERITS (p1, p2);"}
+{"sql":"create table gc1() inherits (c1)","shape":"CREATE TABLE gc1 () INHERITS (c1);"}
+{"sql":"select relname, attname, attinhcount, attislocal\nfrom pg_class join pg_attribute on (pg_class.oid = pg_attribute.attrelid)\nwhere relname in ('p1','p2','c1','gc1') and attnum > 0 and not attisdropped\norder by relname, attnum","shape":"SELECT relname, attname, attinhcount, attislocal FROM pg_class JOIN pg_attribute ON (pg_class.oid = pg_attribute.attrelid) WHERE ((relname IN ('p1', 'p2', 'c1', 'gc1')) AND (attnum > 0)) AND (NOT attisdropped) ORDER BY relname, attnum;"}
+{"sql":"alter table only p1 drop column name","shape":"ALTER TABLE ONLY p1 DROP COLUMN name;"}
+{"sql":"alter table p2 drop column name","shape":"ALTER TABLE p2 DROP COLUMN name;"}
+{"sql":"alter table gc1 drop column name","shape":"ALTER TABLE gc1 DROP COLUMN name;"}
+{"sql":"alter table c1 drop column name","shape":"ALTER TABLE c1 DROP COLUMN name;"}
+{"sql":"alter table p2 drop column height","shape":"ALTER TABLE p2 DROP COLUMN height;"}
+{"sql":"create table dropColumnExists ()","shape":"CREATE TABLE dropColumnExists ();"}
+{"sql":"alter table dropColumnExists drop column non_existing","shape":"ALTER TABLE dropColumnExists DROP COLUMN non_existing;"}
+{"sql":"alter table dropColumnExists drop column if exists non_existing","shape":"ALTER TABLE dropColumnExists DROP COLUMN IF EXISTS non_existing;"}
+{"sql":"drop table p1, p2 cascade","shape":"DROP TABLE p1, p2 CASCADE;"}
+{"sql":"create table depth0()","shape":"CREATE TABLE depth0 ();"}
+{"sql":"create table depth1(c text) inherits (depth0)","shape":"CREATE TABLE depth1 (c text) INHERITS (depth0);"}
+{"sql":"create table depth2() inherits (depth1)","shape":"CREATE TABLE depth2 () INHERITS (depth1);"}
+{"sql":"alter table depth0 add c text","shape":"ALTER TABLE depth0 ADD COLUMN c text;"}
+{"sql":"select attrelid::regclass, attname, attinhcount, attislocal\nfrom pg_attribute\nwhere attnum > 0 and attrelid::regclass in ('depth0', 'depth1', 'depth2')\norder by attrelid::regclass::text, attnum","shape":"SELECT attrelid::regclass, attname, attinhcount, attislocal FROM pg_attribute WHERE (attnum > 0) AND (attrelid::regclass IN ('depth0', 'depth1', 'depth2')) ORDER BY attrelid::regclass::text, attnum;"}
+{"sql":"create table p1 (f1 int)","shape":"CREATE TABLE p1 (f1 int);"}
+{"sql":"create table c1 (f2 text, f3 int) inherits (p1)","shape":"CREATE TABLE c1 (f2 text, f3 int) INHERITS (p1);"}
+{"sql":"alter table p1 add column a1 int check (a1 > 0)","shape":"ALTER TABLE p1 ADD COLUMN a1 int CHECK (a1 > 0);"}
+{"sql":"alter table p1 add column f2 text","shape":"ALTER TABLE p1 ADD COLUMN f2 text;"}
+{"sql":"insert into p1 values (1,2,'abc')","shape":"INSERT INTO p1 VALUES (1, 2, 'abc');"}
+{"sql":"insert into c1 values(11,'xyz',33,0)","shape":"INSERT INTO c1 VALUES (11, 'xyz', 33, 0);"}
+{"sql":"insert into c1 values(11,'xyz',33,22)","shape":"INSERT INTO c1 VALUES (11, 'xyz', 33, 22);"}
+{"sql":"select * from p1","shape":"SELECT * FROM p1;"}
+{"sql":"update p1 set a1 = a1 + 1, f2 = upper(f2)","shape":"UPDATE p1 SET a1 = a1 + 1, f2 = upper(f2);"}
+{"sql":"create domain mytype as text","shape":"CREATE DOMAIN mytype AS text;"}
+{"sql":"create temp table foo (f1 text, f2 mytype, f3 text)","shape":"CREATE TEMPORARY TABLE foo (f1 text, f2 mytype, f3 text);"}
+{"sql":"insert into foo values('bb','cc','dd')","shape":"INSERT INTO foo VALUES ('bb', 'cc', 'dd');"}
+{"sql":"select * from foo","shape":"SELECT * FROM foo;"}
+{"sql":"drop domain mytype cascade","shape":"DROP DOMAIN mytype CASCADE;"}
+{"sql":"insert into foo values('qq','rr')","shape":"INSERT INTO foo VALUES ('qq', 'rr');"}
+{"sql":"update foo set f3 = 'zz'","shape":"UPDATE foo SET f3 = 'zz';"}
+{"sql":"select f3,max(f1) from foo group by f3","shape":"SELECT f3, max(f1) FROM foo GROUP BY f3;"}
+{"sql":"alter table foo alter f1 TYPE integer","shape":"ALTER TABLE foo ALTER COLUMN f1 SET DATA TYPE integer;"}
+{"sql":"alter table foo alter f1 TYPE varchar(10)","shape":"ALTER TABLE foo ALTER COLUMN f1 SET DATA TYPE varchar(10);"}
+{"sql":"create table anothertab (atcol1 serial8, atcol2 boolean,\n\tconstraint anothertab_chk check (atcol1 <= 3))","shape":"CREATE TABLE anothertab (atcol1 serial8, atcol2 boolean, CONSTRAINT anothertab_chk CHECK (atcol1 <= 3));"}
+{"sql":"insert into anothertab (atcol1, atcol2) values (default, true)","shape":"INSERT INTO anothertab (atcol1, atcol2) VALUES (DEFAULT, TRUE);"}
+{"sql":"insert into anothertab (atcol1, atcol2) values (default, false)","shape":"INSERT INTO anothertab (atcol1, atcol2) VALUES (DEFAULT, FALSE);"}
+{"sql":"select * from anothertab","shape":"SELECT * FROM anothertab;"}
+{"sql":"alter table anothertab alter column atcol1 type boolean","shape":"ALTER TABLE anothertab ALTER COLUMN atcol1 SET DATA TYPE boolean;"}
+{"sql":"alter table anothertab alter column atcol1 type boolean using atcol1::int","shape":"ALTER TABLE anothertab ALTER COLUMN atcol1 SET DATA TYPE boolean USING atcol1::int;"}
+{"sql":"alter table anothertab alter column atcol1 type integer","shape":"ALTER TABLE anothertab ALTER COLUMN atcol1 SET DATA TYPE integer;"}
+{"sql":"insert into anothertab (atcol1, atcol2) values (45, null)","shape":"INSERT INTO anothertab (atcol1, atcol2) VALUES (45, NULL);"}
+{"sql":"insert into anothertab (atcol1, atcol2) values (default, null)","shape":"INSERT INTO anothertab (atcol1, atcol2) VALUES (DEFAULT, NULL);"}
+{"sql":"alter table anothertab alter column atcol2 type text\n      using case when atcol2 is true then 'IT WAS TRUE'\n                 when atcol2 is false then 'IT WAS FALSE'\n                 else 'IT WAS NULL!' end","shape":"ALTER TABLE anothertab ALTER COLUMN atcol2 SET DATA TYPE text USING CASE WHEN atcol2 IS TRUE THEN 'IT WAS TRUE' WHEN atcol2 IS FALSE THEN 'IT WAS FALSE' ELSE 'IT WAS NULL!' END;"}
+{"sql":"alter table anothertab alter column atcol1 type boolean\n        using case when atcol1 % 2 = 0 then true else false end","shape":"ALTER TABLE anothertab ALTER COLUMN atcol1 SET DATA TYPE boolean USING CASE WHEN (atcol1 % 2) = 0 THEN TRUE ELSE FALSE END;"}
+{"sql":"alter table anothertab alter column atcol1 drop default","shape":"ALTER TABLE anothertab ALTER COLUMN atcol1 DROP DEFAULT;"}
+{"sql":"alter table anothertab drop constraint anothertab_chk","shape":"ALTER TABLE anothertab DROP CONSTRAINT anothertab_chk;"}
+{"sql":"alter table anothertab drop constraint IF EXISTS anothertab_chk","shape":"ALTER TABLE anothertab DROP CONSTRAINT IF EXISTS anothertab_chk;"}
+{"sql":"drop table anothertab","shape":"DROP TABLE anothertab;"}
+{"sql":"create table anothertab(f1 int primary key, f2 int unique,\n                        f3 int, f4 int, f5 int)","shape":"CREATE TABLE anothertab (f1 int PRIMARY KEY, f2 int UNIQUE, f3 int, f4 int, f5 int);"}
+{"sql":"alter table anothertab\n  add exclude using btree (f3 with =)","shape":"ALTER TABLE anothertab ADD EXCLUDE USING btree (f3 WITH =);"}
+{"sql":"alter table anothertab\n  add exclude using btree (f4 with =) where (f4 is not null)","shape":"ALTER TABLE anothertab ADD EXCLUDE USING btree (f4 WITH =) WHERE (f4 IS NOT NULL);"}
+{"sql":"alter table anothertab\n  add exclude using btree (f4 with =) where (f5 > 0)","shape":"ALTER TABLE anothertab ADD EXCLUDE USING btree (f4 WITH =) WHERE (f5 > 0);"}
+{"sql":"alter table anothertab\n  add unique(f1,f4)","shape":"ALTER TABLE anothertab ADD UNIQUE (f1, f4);"}
+{"sql":"create index on anothertab(f2,f3)","shape":"CREATE INDEX ON anothertab (f2, f3);"}
+{"sql":"create unique index on anothertab(f4)","shape":"CREATE UNIQUE INDEX ON anothertab (f4);"}
+{"sql":"alter table anothertab alter column f1 type bigint","shape":"ALTER TABLE anothertab ALTER COLUMN f1 SET DATA TYPE bigint;"}
+{"sql":"alter table anothertab\n  alter column f2 type bigint,\n  alter column f3 type bigint,\n  alter column f4 type bigint","shape":"ALTER TABLE anothertab ALTER COLUMN f2 SET DATA TYPE bigint, ALTER COLUMN f3 SET DATA TYPE bigint, ALTER COLUMN f4 SET DATA TYPE bigint;"}
+{"sql":"alter table anothertab alter column f5 type bigint","shape":"ALTER TABLE anothertab ALTER COLUMN f5 SET DATA TYPE bigint;"}
+{"sql":"create table another (f1 int, f2 text, f3 text)","shape":"CREATE TABLE another (f1 int, f2 text, f3 text);"}
+{"sql":"insert into another values(1, 'one', 'uno')","shape":"INSERT INTO another VALUES (1, 'one', 'uno');"}
+{"sql":"insert into another values(2, 'two', 'due')","shape":"INSERT INTO another VALUES (2, 'two', 'due');"}
+{"sql":"insert into another values(3, 'three', 'tre')","shape":"INSERT INTO another VALUES (3, 'three', 'tre');"}
+{"sql":"select * from another","shape":"SELECT * FROM another;"}
+{"sql":"alter table another\n  alter f1 type text using f2 || ' and ' || f3 || ' more',\n  alter f2 type bigint using f1 * 10,\n  drop column f3","shape":"ALTER TABLE another ALTER COLUMN f1 SET DATA TYPE text USING ((f2 || ' and ') || f3) || ' more', ALTER COLUMN f2 SET DATA TYPE bigint USING f1 * 10, DROP COLUMN f3;"}
+{"sql":"drop table another","shape":"DROP TABLE another;"}
+{"sql":"create table skip_wal_skip_rewrite_index (c varchar(10) primary key)","shape":"CREATE TABLE skip_wal_skip_rewrite_index (c varchar(10) PRIMARY KEY);"}
+{"sql":"alter table skip_wal_skip_rewrite_index alter c type varchar(20)","shape":"ALTER TABLE skip_wal_skip_rewrite_index ALTER COLUMN c SET DATA TYPE varchar(20);"}
+{"sql":"commit","shape":"COMMIT;"}
+{"sql":"create table at_tab1 (a int, b text)","shape":"CREATE TABLE at_tab1 (a int, b text);"}
+{"sql":"create table at_tab2 (x int, y at_tab1)","shape":"CREATE TABLE at_tab2 (x int, y at_tab1);"}
+{"sql":"alter table at_tab1 alter column b type varchar","shape":"ALTER TABLE at_tab1 ALTER COLUMN b SET DATA TYPE varchar;"}
+{"sql":"drop table at_tab2","shape":"DROP TABLE at_tab2;"}
+{"sql":"create table at_tab2 (x int, y text, check((x,y)::at_tab1 = (1,'42')::at_tab1))","shape":"CREATE TABLE at_tab2 (x int, y text, CHECK ((x, y)::at_tab1 = (1, '42')::at_tab1));"}
+{"sql":"insert into at_tab2 values(1,'42')","shape":"INSERT INTO at_tab2 VALUES (1, '42');"}
+{"sql":"drop table at_tab1, at_tab2","shape":"DROP TABLE at_tab1, at_tab2;"}
+{"sql":"create table at_tab1 (a int, b text) partition by list(a)","shape":"CREATE TABLE at_tab1 (a int, b text) PARTITION BY LIST (a);"}
+{"sql":"create table at_partitioned (a int, b text) partition by range (a)","shape":"CREATE TABLE at_partitioned (a int, b text) PARTITION BY RANGE (a);"}
+{"sql":"create table at_part_1 partition of at_partitioned for values from (0) to (1000)","shape":"CREATE TABLE at_part_1 PARTITION OF at_partitioned FOR VALUES FROM (0) TO (1000);"}
+{"sql":"insert into at_partitioned values (512, '0.123')","shape":"INSERT INTO at_partitioned VALUES (512, '0.123');"}
+{"sql":"create table at_part_2 (b text, a int)","shape":"CREATE TABLE at_part_2 (b text, a int);"}
+{"sql":"insert into at_part_2 values ('1.234', 1024)","shape":"INSERT INTO at_part_2 VALUES ('1.234', 1024);"}
+{"sql":"create index on at_partitioned (b)","shape":"CREATE INDEX ON at_partitioned (b);"}
+{"sql":"create index on at_partitioned (a)","shape":"CREATE INDEX ON at_partitioned (a);"}
+{"sql":"alter table at_partitioned attach partition at_part_2 for values from (1000) to (2000)"}
+{"sql":"alter table at_partitioned alter column b type numeric using b::numeric","shape":"ALTER TABLE at_partitioned ALTER COLUMN b SET DATA TYPE numeric USING b::numeric;"}
+{"sql":"drop table at_partitioned","shape":"DROP TABLE at_partitioned;"}
+{"sql":"create table at_partitioned(id int, name varchar(64), unique (id, name))\n  partition by hash(id)","shape":"CREATE TABLE at_partitioned (id int, name varchar(64), UNIQUE (id, name)) PARTITION BY HASH (id);"}
+{"sql":"comment on constraint at_partitioned_id_name_key on at_partitioned is 'parent constraint'","shape":"COMMENT ON CONSTRAINT at_partitioned_id_name_key ON at_partitioned IS 'parent constraint';"}
+{"sql":"comment on index at_partitioned_id_name_key is 'parent index'","shape":"COMMENT ON INDEX at_partitioned_id_name_key IS 'parent index';"}
+{"sql":"create table at_partitioned_0 partition of at_partitioned\n  for values with (modulus 2, remainder 0)","shape":"CREATE TABLE at_partitioned_0 PARTITION OF at_partitioned FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"comment on constraint at_partitioned_0_id_name_key on at_partitioned_0 is 'child 0 constraint'","shape":"COMMENT ON CONSTRAINT at_partitioned_0_id_name_key ON at_partitioned_0 IS 'child 0 constraint';"}
+{"sql":"comment on index at_partitioned_0_id_name_key is 'child 0 index'","shape":"COMMENT ON INDEX at_partitioned_0_id_name_key IS 'child 0 index';"}
+{"sql":"create table at_partitioned_1 partition of at_partitioned\n  for values with (modulus 2, remainder 1)","shape":"CREATE TABLE at_partitioned_1 PARTITION OF at_partitioned FOR VALUES WITH (MODULUS 2, REMAINDER 1);"}
+{"sql":"comment on constraint at_partitioned_1_id_name_key on at_partitioned_1 is 'child 1 constraint'","shape":"COMMENT ON CONSTRAINT at_partitioned_1_id_name_key ON at_partitioned_1 IS 'child 1 constraint';"}
+{"sql":"comment on index at_partitioned_1_id_name_key is 'child 1 index'","shape":"COMMENT ON INDEX at_partitioned_1_id_name_key IS 'child 1 index';"}
+{"sql":"insert into at_partitioned values(1, 'foo')","shape":"INSERT INTO at_partitioned VALUES (1, 'foo');"}
+{"sql":"insert into at_partitioned values(3, 'bar')","shape":"INSERT INTO at_partitioned VALUES (3, 'bar');"}
+{"sql":"create temp table old_oids as\n  select relname, oid as oldoid, relfilenode as oldfilenode\n  from pg_class where relname like 'at_partitioned%'","shape":"CREATE TEMPORARY TABLE old_oids AS SELECT relname, oid AS oldoid, relfilenode AS oldfilenode FROM pg_class WHERE relname LIKE 'at_partitioned%';"}
+{"sql":"select relname,\n  c.oid = oldoid as orig_oid,\n  case relfilenode\n    when 0 then 'none'\n    when c.oid then 'own'\n    when oldfilenode then 'orig'\n    else 'OTHER'\n    end as storage,\n  obj_description(c.oid, 'pg_class') as desc\n  from pg_class c left join old_oids using (relname)\n  where relname like 'at_partitioned%'\n  order by relname","shape":"SELECT relname, c.oid = oldoid AS orig_oid, CASE relfilenode WHEN 0 THEN 'none' WHEN c.oid THEN 'own' WHEN oldfilenode THEN 'orig' ELSE 'OTHER' END AS storage, obj_description(c.oid, 'pg_class') AS desc FROM pg_class AS c LEFT JOIN old_oids USING (relname) WHERE relname LIKE 'at_partitioned%' ORDER BY relname;"}
+{"sql":"select conname, obj_description(oid, 'pg_constraint') as desc\n  from pg_constraint where conname like 'at_partitioned%'\n  order by conname","shape":"SELECT conname, obj_description(oid, 'pg_constraint') AS desc FROM pg_constraint WHERE conname LIKE 'at_partitioned%' ORDER BY conname;"}
+{"sql":"alter table at_partitioned alter column name type varchar(127)","shape":"ALTER TABLE at_partitioned ALTER COLUMN name SET DATA TYPE varchar(127);"}
+{"sql":"create temp table recur1 (f1 int)","shape":"CREATE TEMPORARY TABLE recur1 (f1 int);"}
+{"sql":"alter table recur1 add column f2 recur1","shape":"ALTER TABLE recur1 ADD COLUMN f2 recur1;"}
+{"sql":"alter table recur1 add column f2 recur1[]","shape":"ALTER TABLE recur1 ADD COLUMN f2 recur1[];"}
+{"sql":"create domain array_of_recur1 as recur1[]","shape":"CREATE DOMAIN array_of_recur1 AS recur1[];"}
+{"sql":"alter table recur1 add column f2 array_of_recur1","shape":"ALTER TABLE recur1 ADD COLUMN f2 array_of_recur1;"}
+{"sql":"create temp table recur2 (f1 int, f2 recur1)","shape":"CREATE TEMPORARY TABLE recur2 (f1 int, f2 recur1);"}
+{"sql":"alter table recur1 add column f2 recur2","shape":"ALTER TABLE recur1 ADD COLUMN f2 recur2;"}
+{"sql":"alter table recur1 add column f2 int","shape":"ALTER TABLE recur1 ADD COLUMN f2 int;"}
+{"sql":"alter table recur1 alter column f2 type recur2","shape":"ALTER TABLE recur1 ALTER COLUMN f2 SET DATA TYPE recur2;"}
+{"sql":"create table test_storage (a text, c text storage plain)","shape":"CREATE TABLE test_storage (a text, c text STORAGE plain);"}
+{"sql":"select reltoastrelid <> 0 as has_toast_table\n  from pg_class where oid = 'test_storage'::regclass","shape":"SELECT reltoastrelid <> 0 AS has_toast_table FROM pg_class WHERE oid = 'test_storage'::regclass;"}
+{"sql":"alter table test_storage alter a set storage plain"}
+{"sql":"alter table test_storage add b int default random()::int","shape":"ALTER TABLE test_storage ADD COLUMN b int DEFAULT random()::int;"}
+{"sql":"alter table test_storage alter a set storage default"}
+{"sql":"create table test_storage_failed (a text, b int storage extended)","shape":"CREATE TABLE test_storage_failed (a text, b int STORAGE extended);"}
+{"sql":"create index test_storage_idx on test_storage (b, a)","shape":"CREATE INDEX test_storage_idx ON test_storage (b, a);"}
+{"sql":"alter table test_storage alter column a set storage external"}
+{"sql":"CREATE TABLE test_inh_check (a float check (a > 10.2), b float)","shape":"CREATE TABLE test_inh_check (a float CHECK (a > 10.2), b float);"}
+{"sql":"CREATE TABLE test_inh_check_child() INHERITS(test_inh_check)","shape":"CREATE TABLE test_inh_check_child () INHERITS (test_inh_check);"}
+{"sql":"select relname, conname, coninhcount, conislocal, connoinherit\n  from pg_constraint c, pg_class r\n  where relname like 'test_inh_check%' and c.conrelid = r.oid\n  order by 1, 2","shape":"SELECT relname, conname, coninhcount, conislocal, connoinherit FROM pg_constraint AS c, pg_class AS r WHERE (relname LIKE 'test_inh_check%') AND (c.conrelid = r.oid) ORDER BY 1, 2;"}
+{"sql":"ALTER TABLE test_inh_check ALTER COLUMN a TYPE numeric","shape":"ALTER TABLE test_inh_check ALTER COLUMN a SET DATA TYPE numeric;"}
+{"sql":"ALTER TABLE test_inh_check ADD CONSTRAINT bnoinherit CHECK (b > 100) NO INHERIT","shape":"ALTER TABLE test_inh_check ADD CONSTRAINT bnoinherit CHECK (b > 100) NO INHERIT;"}
+{"sql":"ALTER TABLE test_inh_check_child ADD CONSTRAINT blocal CHECK (b < 1000)","shape":"ALTER TABLE test_inh_check_child ADD CONSTRAINT blocal CHECK (b < 1000);"}
+{"sql":"ALTER TABLE test_inh_check_child ADD CONSTRAINT bmerged CHECK (b > 1)","shape":"ALTER TABLE test_inh_check_child ADD CONSTRAINT bmerged CHECK (b > 1);"}
+{"sql":"ALTER TABLE test_inh_check ADD CONSTRAINT bmerged CHECK (b > 1)","shape":"ALTER TABLE test_inh_check ADD CONSTRAINT bmerged CHECK (b > 1);"}
+{"sql":"ALTER TABLE test_inh_check ALTER COLUMN b TYPE numeric","shape":"ALTER TABLE test_inh_check ALTER COLUMN b SET DATA TYPE numeric;"}
+{"sql":"CREATE TABLE test_type_diff (f1 int)","shape":"CREATE TABLE test_type_diff (f1 int);"}
+{"sql":"CREATE TABLE test_type_diff_c (extra smallint) INHERITS (test_type_diff)","shape":"CREATE TABLE test_type_diff_c (extra smallint) INHERITS (test_type_diff);"}
+{"sql":"ALTER TABLE test_type_diff ADD COLUMN f2 int","shape":"ALTER TABLE test_type_diff ADD COLUMN f2 int;"}
+{"sql":"INSERT INTO test_type_diff_c VALUES (1, 2, 3)","shape":"INSERT INTO test_type_diff_c VALUES (1, 2, 3);"}
+{"sql":"ALTER TABLE test_type_diff ALTER COLUMN f2 TYPE bigint USING f2::bigint","shape":"ALTER TABLE test_type_diff ALTER COLUMN f2 SET DATA TYPE bigint USING f2::bigint;"}
+{"sql":"CREATE TABLE test_type_diff2 (int_two int2, int_four int4, int_eight int8)","shape":"CREATE TABLE test_type_diff2 (int_two int2, int_four int4, int_eight int8);"}
+{"sql":"CREATE TABLE test_type_diff2_c1 (int_four int4, int_eight int8, int_two int2)","shape":"CREATE TABLE test_type_diff2_c1 (int_four int4, int_eight int8, int_two int2);"}
+{"sql":"CREATE TABLE test_type_diff2_c2 (int_eight int8, int_two int2, int_four int4)","shape":"CREATE TABLE test_type_diff2_c2 (int_eight int8, int_two int2, int_four int4);"}
+{"sql":"CREATE TABLE test_type_diff2_c3 (int_two int2, int_four int4, int_eight int8)","shape":"CREATE TABLE test_type_diff2_c3 (int_two int2, int_four int4, int_eight int8);"}
+{"sql":"ALTER TABLE test_type_diff2_c1 INHERIT test_type_diff2"}
+{"sql":"ALTER TABLE test_type_diff2_c2 INHERIT test_type_diff2"}
+{"sql":"ALTER TABLE test_type_diff2_c3 INHERIT test_type_diff2"}
+{"sql":"INSERT INTO test_type_diff2_c1 VALUES (1, 2, 3)","shape":"INSERT INTO test_type_diff2_c1 VALUES (1, 2, 3);"}
+{"sql":"INSERT INTO test_type_diff2_c2 VALUES (4, 5, 6)","shape":"INSERT INTO test_type_diff2_c2 VALUES (4, 5, 6);"}
+{"sql":"INSERT INTO test_type_diff2_c3 VALUES (7, 8, 9)","shape":"INSERT INTO test_type_diff2_c3 VALUES (7, 8, 9);"}
+{"sql":"ALTER TABLE test_type_diff2 ALTER COLUMN int_four TYPE int8 USING int_four::int8","shape":"ALTER TABLE test_type_diff2 ALTER COLUMN int_four SET DATA TYPE int8 USING int_four::int8;"}
+{"sql":"ALTER TABLE test_type_diff2 ALTER COLUMN int_four TYPE int4 USING (pg_column_size(test_type_diff2))","shape":"ALTER TABLE test_type_diff2 ALTER COLUMN int_four SET DATA TYPE int4 USING (pg_column_size(test_type_diff2));"}
+{"sql":"CREATE TABLE check_fk_presence_1 (id int PRIMARY KEY, t text)","shape":"CREATE TABLE check_fk_presence_1 (id int PRIMARY KEY, t text);"}
+{"sql":"CREATE TABLE check_fk_presence_2 (id int REFERENCES check_fk_presence_1, t text)","shape":"CREATE TABLE check_fk_presence_2 (id int REFERENCES check_fk_presence_1, t text);"}
+{"sql":"ALTER TABLE check_fk_presence_2 DROP CONSTRAINT check_fk_presence_2_id_fkey","shape":"ALTER TABLE check_fk_presence_2 DROP CONSTRAINT check_fk_presence_2_id_fkey;"}
+{"sql":"ANALYZE check_fk_presence_2","shape":"ANALYZE check_fk_presence_2;"}
+{"sql":"DROP TABLE check_fk_presence_1, check_fk_presence_2","shape":"DROP TABLE check_fk_presence_1, check_fk_presence_2;"}
+{"sql":"create table at_base_table(id int, stuff text)","shape":"CREATE TABLE at_base_table (id int, stuff text);"}
+{"sql":"insert into at_base_table values (23, 'skidoo')","shape":"INSERT INTO at_base_table VALUES (23, 'skidoo');"}
+{"sql":"create view at_view_1 as select * from at_base_table bt","shape":"CREATE VIEW at_view_1 AS SELECT * FROM at_base_table AS bt;"}
+{"sql":"create view at_view_2 as select *, to_json(v1) as j from at_view_1 v1","shape":"CREATE VIEW at_view_2 AS SELECT *, to_json(v1) AS j FROM at_view_1 AS v1;"}
+{"sql":"explain (verbose, costs off) select * from at_view_2","shape":"EXPLAIN (VERBOSE, COSTS off) SELECT * FROM at_view_2;"}
+{"sql":"select * from at_view_2","shape":"SELECT * FROM at_view_2;"}
+{"sql":"create or replace view at_view_1 as select *, 2+2 as more from at_base_table bt","shape":"CREATE OR REPLACE VIEW at_view_1 AS SELECT *, 2 + 2 AS more FROM at_base_table AS bt;"}
+{"sql":"drop view at_view_2","shape":"DROP VIEW at_view_2;"}
+{"sql":"drop view at_view_1","shape":"DROP VIEW at_view_1;"}
+{"sql":"drop table at_base_table","shape":"DROP TABLE at_base_table;"}
+{"sql":"create temp table t1 as select * from int8_tbl","shape":"CREATE TEMPORARY TABLE t1 AS SELECT * FROM int8_tbl;"}
+{"sql":"create temp view v1 as select 1::int8 as q1","shape":"CREATE TEMPORARY VIEW v1 AS SELECT 1::int8 AS q1;"}
+{"sql":"create temp view v2 as select * from v1","shape":"CREATE TEMPORARY VIEW v2 AS SELECT * FROM v1;"}
+{"sql":"create or replace temp view v1 with (security_barrier = true)\n  as select * from t1","shape":"CREATE OR REPLACE TEMPORARY VIEW v1 WITH (security_barrier = TRUE) AS SELECT * FROM t1;"}
+{"sql":"create temp table log (q1 int8, q2 int8)","shape":"CREATE TEMPORARY TABLE log (q1 int8, q2 int8);"}
+{"sql":"create rule v1_upd_rule as on update to v1\n  do also insert into log values (new.*)"}
+{"sql":"update v2 set q1 = q1 + 1 where q1 = 123","shape":"UPDATE v2 SET q1 = q1 + 1 WHERE q1 = 123;"}
+{"sql":"select * from t1","shape":"SELECT * FROM t1;"}
+{"sql":"select * from log","shape":"SELECT * FROM log;"}
+{"sql":"CREATE FUNCTION check_ddl_rewrite(p_tablename regclass, p_ddl text)\nRETURNS boolean\nLANGUAGE plpgsql AS $$\nDECLARE\n    v_relfilenode oid;\nBEGIN\n    v_relfilenode := relfilenode FROM pg_class WHERE oid = p_tablename;\n\n    EXECUTE p_ddl;\n\n    RETURN v_relfilenode <> (SELECT relfilenode FROM pg_class WHERE oid = p_tablename);\nEND;\n$$","shape":"CREATE FUNCTION check_ddl_rewrite(p_tablename regclass, p_ddl text) RETURNS boolean LANGUAGE plpgsql AS '\nDECLARE\n    v_relfilenode oid;\nBEGIN\n    v_relfilenode := relfilenode FROM pg_class WHERE oid = p_tablename;\n\n    EXECUTE p_ddl;\n\n    RETURN v_relfilenode <> (SELECT relfilenode FROM pg_class WHERE oid = p_tablename);\nEND;\n';"}
+{"sql":"CREATE TABLE rewrite_test(col text)","shape":"CREATE TABLE rewrite_test (col text);"}
+{"sql":"INSERT INTO rewrite_test VALUES ('something')","shape":"INSERT INTO rewrite_test VALUES ('something');"}
+{"sql":"INSERT INTO rewrite_test VALUES (NULL)","shape":"INSERT INTO rewrite_test VALUES (NULL);"}
+{"sql":"SELECT check_ddl_rewrite('rewrite_test', $$\n  ALTER TABLE rewrite_test\n      ADD COLUMN empty1 text,\n      ADD COLUMN notempty1_rewrite serial;\n$$)","shape":"SELECT check_ddl_rewrite('rewrite_test', '\n  ALTER TABLE rewrite_test\n      ADD COLUMN empty1 text,\n      ADD COLUMN notempty1_rewrite serial;\n');"}
+{"sql":"SELECT check_ddl_rewrite('rewrite_test', $$\n    ALTER TABLE rewrite_test\n        ADD COLUMN notempty2_rewrite serial,\n        ADD COLUMN empty2 text;\n$$)","shape":"SELECT check_ddl_rewrite('rewrite_test', '\n    ALTER TABLE rewrite_test\n        ADD COLUMN notempty2_rewrite serial,\n        ADD COLUMN empty2 text;\n');"}
+{"sql":"SELECT check_ddl_rewrite('rewrite_test', $$\n    ALTER TABLE rewrite_test\n        ADD COLUMN empty3 text,\n        ADD COLUMN notempty3_norewrite int default 42;\n$$)","shape":"SELECT check_ddl_rewrite('rewrite_test', '\n    ALTER TABLE rewrite_test\n        ADD COLUMN empty3 text,\n        ADD COLUMN notempty3_norewrite int default 42;\n');"}
+{"sql":"SELECT check_ddl_rewrite('rewrite_test', $$\n    ALTER TABLE rewrite_test\n        ADD COLUMN notempty4_norewrite int default 42,\n        ADD COLUMN empty4 text;\n$$)","shape":"SELECT check_ddl_rewrite('rewrite_test', '\n    ALTER TABLE rewrite_test\n        ADD COLUMN notempty4_norewrite int default 42,\n        ADD COLUMN empty4 text;\n');"}
+{"sql":"SELECT check_ddl_rewrite('rewrite_test', $$\n    ALTER TABLE rewrite_test\n        ADD COLUMN empty5 text,\n        ADD COLUMN notempty5_norewrite int default 42,\n        ADD COLUMN notempty5_rewrite serial;\n$$)","shape":"SELECT check_ddl_rewrite('rewrite_test', '\n    ALTER TABLE rewrite_test\n        ADD COLUMN empty5 text,\n        ADD COLUMN notempty5_norewrite int default 42,\n        ADD COLUMN notempty5_rewrite serial;\n');"}
+{"sql":"SELECT check_ddl_rewrite('rewrite_test', $$\n    ALTER TABLE rewrite_test\n        ADD COLUMN notempty6_rewrite serial,\n        ADD COLUMN empty6 text,\n        ADD COLUMN notempty6_norewrite int default 42;\n$$)","shape":"SELECT check_ddl_rewrite('rewrite_test', '\n    ALTER TABLE rewrite_test\n        ADD COLUMN notempty6_rewrite serial,\n        ADD COLUMN empty6 text,\n        ADD COLUMN notempty6_norewrite int default 42;\n');"}
+{"sql":"DROP FUNCTION check_ddl_rewrite(regclass, text)"}
+{"sql":"DROP TABLE rewrite_test","shape":"DROP TABLE rewrite_test;"}
+{"sql":"drop type lockmodes","shape":"DROP TYPE lockmodes;"}
+{"sql":"create type lockmodes as enum (\n 'SIReadLock'\n,'AccessShareLock'\n,'RowShareLock'\n,'RowExclusiveLock'\n,'ShareUpdateExclusiveLock'\n,'ShareLock'\n,'ShareRowExclusiveLock'\n,'ExclusiveLock'\n,'AccessExclusiveLock'\n)","shape":"CREATE TYPE lockmodes AS ENUM ('SIReadLock', 'AccessShareLock', 'RowShareLock', 'RowExclusiveLock', 'ShareUpdateExclusiveLock', 'ShareLock', 'ShareRowExclusiveLock', 'ExclusiveLock', 'AccessExclusiveLock');"}
+{"sql":"drop view my_locks","shape":"DROP VIEW my_locks;"}
+{"sql":"create or replace view my_locks as\nselect case when c.relname like 'pg_toast%' then 'pg_toast' else c.relname end, max(mode::lockmodes) as max_lockmode\nfrom pg_locks l join pg_class c on l.relation = c.oid\nwhere virtualtransaction = (\n        select virtualtransaction\n        from pg_locks\n        where transactionid = pg_current_xact_id()::xid)\nand locktype = 'relation'\nand relnamespace != (select oid from pg_namespace where nspname = 'pg_catalog')\nand c.relname != 'my_locks'\ngroup by c.relname","shape":"CREATE OR REPLACE VIEW my_locks AS SELECT CASE WHEN c.relname LIKE 'pg_toast%' THEN 'pg_toast' ELSE c.relname END, max(mode::lockmodes) AS max_lockmode FROM pg_locks AS l JOIN pg_class AS c ON l.relation = c.oid WHERE (((virtualtransaction = (SELECT virtualtransaction FROM pg_locks WHERE transactionid = pg_current_xact_id()::xid)) AND (locktype = 'relation')) AND (relnamespace != (SELECT oid FROM pg_namespace WHERE nspname = 'pg_catalog'))) AND (c.relname != 'my_locks') GROUP BY c.relname;"}
+{"sql":"create table alterlock (f1 int primary key, f2 text)","shape":"CREATE TABLE alterlock (f1 int PRIMARY KEY, f2 text);"}
+{"sql":"insert into alterlock values (1, 'foo')","shape":"INSERT INTO alterlock VALUES (1, 'foo');"}
+{"sql":"create table alterlock2 (f3 int primary key, f1 int)","shape":"CREATE TABLE alterlock2 (f3 int PRIMARY KEY, f1 int);"}
+{"sql":"insert into alterlock2 values (1, 1)","shape":"INSERT INTO alterlock2 VALUES (1, 1);"}
+{"sql":"alter table alterlock alter column f2 set statistics 150"}
+{"sql":"select * from my_locks order by 1","shape":"SELECT * FROM my_locks ORDER BY 1;"}
+{"sql":"alter table alterlock cluster on alterlock_pkey"}
+{"sql":"alter table alterlock set without cluster"}
+{"sql":"alter table alterlock set (fillfactor = 100)"}
+{"sql":"alter table alterlock reset (fillfactor)"}
+{"sql":"alter table alterlock set (toast.autovacuum_enabled = off)"}
+{"sql":"alter table alterlock set (autovacuum_enabled = off)"}
+{"sql":"alter table alterlock alter column f2 set (n_distinct = 1)"}
+{"sql":"alter table alterlock set (autovacuum_enabled = off, fillfactor = 80)"}
+{"sql":"alter table alterlock alter column f2 set storage extended"}
+{"sql":"alter table alterlock alter column f2 set default 'x'","shape":"ALTER TABLE alterlock ALTER COLUMN f2 SET DEFAULT 'x';"}
+{"sql":"create trigger ttdummy\n\tbefore delete or update on alterlock\n\tfor each row\n\texecute procedure\n\tttdummy (1, 1)","shape":"CREATE TRIGGER ttdummy BEFORE DELETE OR UPDATE ON alterlock FOR EACH ROW EXECUTE FUNCTION ttdummy(1, 1);"}
+{"sql":"alter table alterlock2 add foreign key (f1) references alterlock (f1)","shape":"ALTER TABLE alterlock2 ADD FOREIGN KEY (f1) REFERENCES alterlock (f1);"}
+{"sql":"alter table alterlock2\nadd constraint alterlock2nv foreign key (f1) references alterlock (f1) NOT VALID","shape":"ALTER TABLE alterlock2 ADD CONSTRAINT alterlock2nv FOREIGN KEY (f1) REFERENCES alterlock (f1) NOT VALID;"}
+{"sql":"alter table alterlock2 validate constraint alterlock2nv"}
+{"sql":"create or replace view my_locks as\nselect case when c.relname like 'pg_toast%' then 'pg_toast' else c.relname end, max(mode::lockmodes) as max_lockmode\nfrom pg_locks l join pg_class c on l.relation = c.oid\nwhere virtualtransaction = (\n        select virtualtransaction\n        from pg_locks\n        where transactionid = pg_current_xact_id()::xid)\nand locktype = 'relation'\nand relnamespace != (select oid from pg_namespace where nspname = 'pg_catalog')\nand c.relname = 'my_locks'\ngroup by c.relname","shape":"CREATE OR REPLACE VIEW my_locks AS SELECT CASE WHEN c.relname LIKE 'pg_toast%' THEN 'pg_toast' ELSE c.relname END, max(mode::lockmodes) AS max_lockmode FROM pg_locks AS l JOIN pg_class AS c ON l.relation = c.oid WHERE (((virtualtransaction = (SELECT virtualtransaction FROM pg_locks WHERE transactionid = pg_current_xact_id()::xid)) AND (locktype = 'relation')) AND (relnamespace != (SELECT oid FROM pg_namespace WHERE nspname = 'pg_catalog'))) AND (c.relname = 'my_locks') GROUP BY c.relname;"}
+{"sql":"alter table my_locks set (autovacuum_enabled = false)"}
+{"sql":"alter view my_locks set (autovacuum_enabled = false)"}
+{"sql":"alter table my_locks reset (autovacuum_enabled)"}
+{"sql":"alter view my_locks reset (autovacuum_enabled)"}
+{"sql":"alter view my_locks set (security_barrier=off)"}
+{"sql":"alter view my_locks reset (security_barrier)"}
+{"sql":"alter table my_locks set (security_barrier=off)"}
+{"sql":"alter table my_locks reset (security_barrier)"}
+{"sql":"drop table alterlock2","shape":"DROP TABLE alterlock2;"}
+{"sql":"drop table alterlock","shape":"DROP TABLE alterlock;"}
+{"sql":"create function test_strict(text) returns text as\n    'select coalesce($1, ''got passed a null'');'\n    language sql returns null on null input","shape":"CREATE FUNCTION test_strict(text) RETURNS text AS 'select coalesce($1, ''got passed a null'');' LANGUAGE sql RETURNS NULL ON NULL INPUT;"}
+{"sql":"select test_strict(NULL)","shape":"SELECT test_strict(NULL);"}
+{"sql":"alter function test_strict(text) called on null input"}
+{"sql":"create function non_strict(text) returns text as\n    'select coalesce($1, ''got passed a null'');'\n    language sql called on null input","shape":"CREATE FUNCTION non_strict(text) RETURNS text AS 'select coalesce($1, ''got passed a null'');' LANGUAGE sql CALLED ON NULL INPUT;"}
+{"sql":"select non_strict(NULL)","shape":"SELECT non_strict(NULL);"}
+{"sql":"alter function non_strict(text) returns null on null input"}
+{"sql":"create schema alter1","shape":"CREATE SCHEMA alter1;"}
+{"sql":"create schema alter2","shape":"CREATE SCHEMA alter2;"}
+{"sql":"create table alter1.t1(f1 serial primary key, f2 int check (f2 > 0))","shape":"CREATE TABLE alter1.t1 (f1 serial PRIMARY KEY, f2 int CHECK (f2 > 0));"}
+{"sql":"create view alter1.v1 as select * from alter1.t1","shape":"CREATE VIEW alter1.v1 AS SELECT * FROM alter1.t1;"}
+{"sql":"create function alter1.plus1(int) returns int as 'select $1+1' language sql","shape":"CREATE FUNCTION alter1.plus1(int) RETURNS int AS 'select $1+1' LANGUAGE sql;"}
+{"sql":"create domain alter1.posint integer check (value > 0)","shape":"CREATE DOMAIN alter1.posint AS integer CHECK (value > 0);"}
+{"sql":"create type alter1.ctype as (f1 int, f2 text)","shape":"CREATE TYPE alter1.ctype AS (f1 int, f2 text);"}
+{"sql":"create function alter1.same(alter1.ctype, alter1.ctype) returns boolean language sql\nas 'select $1.f1 is not distinct from $2.f1 and $1.f2 is not distinct from $2.f2'","shape":"CREATE FUNCTION alter1.same(alter1.ctype, alter1.ctype) RETURNS boolean LANGUAGE sql AS 'select $1.f1 is not distinct from $2.f1 and $1.f2 is not distinct from $2.f2';"}
+{"sql":"create operator alter1.=(procedure = alter1.same, leftarg  = alter1.ctype, rightarg = alter1.ctype)"}
+{"sql":"create operator class alter1.ctype_hash_ops default for type alter1.ctype using hash as\n  operator 1 alter1.=(alter1.ctype, alter1.ctype)"}
+{"sql":"create conversion alter1.latin1_to_utf8 for 'latin1' to 'utf8' from iso8859_1_to_utf8"}
+{"sql":"create text search parser alter1.prs(start = prsd_start, gettoken = prsd_nexttoken, end = prsd_end, lextypes = prsd_lextype)"}
+{"sql":"create text search configuration alter1.cfg(parser = alter1.prs)"}
+{"sql":"create text search template alter1.tmpl(init = dsimple_init, lexize = dsimple_lexize)"}
+{"sql":"create text search dictionary alter1.dict(template = alter1.tmpl)"}
+{"sql":"insert into alter1.t1(f2) values(11)","shape":"INSERT INTO alter1.t1 (f2) VALUES (11);"}
+{"sql":"insert into alter1.t1(f2) values(12)","shape":"INSERT INTO alter1.t1 (f2) VALUES (12);"}
+{"sql":"alter table alter1.t1 set schema alter1","shape":"ALTER TABLE alter1.t1 SET SCHEMA alter1;"}
+{"sql":"alter table alter1.t1 set schema alter2","shape":"ALTER TABLE alter1.t1 SET SCHEMA alter2;"}
+{"sql":"alter table alter1.v1 set schema alter2","shape":"ALTER TABLE alter1.v1 SET SCHEMA alter2;"}
+{"sql":"alter function alter1.plus1(int) set schema alter2"}
+{"sql":"alter domain alter1.posint set schema alter2"}
+{"sql":"alter operator class alter1.ctype_hash_ops using hash set schema alter2"}
+{"sql":"alter operator family alter1.ctype_hash_ops using hash set schema alter2"}
+{"sql":"alter operator alter1.=(alter1.ctype, alter1.ctype) set schema alter2"}
+{"sql":"alter function alter1.same(alter1.ctype, alter1.ctype) set schema alter2"}
+{"sql":"alter type alter1.ctype set schema alter1"}
+{"sql":"alter type alter1.ctype set schema alter2"}
+{"sql":"alter conversion alter1.latin1_to_utf8 set schema alter2"}
+{"sql":"alter text search parser alter1.prs set schema alter2"}
+{"sql":"alter text search configuration alter1.cfg set schema alter2"}
+{"sql":"alter text search template alter1.tmpl set schema alter2"}
+{"sql":"alter text search dictionary alter1.dict set schema alter2"}
+{"sql":"drop schema alter1","shape":"DROP SCHEMA alter1;"}
+{"sql":"insert into alter2.t1(f2) values(13)","shape":"INSERT INTO alter2.t1 (f2) VALUES (13);"}
+{"sql":"insert into alter2.t1(f2) values(14)","shape":"INSERT INTO alter2.t1 (f2) VALUES (14);"}
+{"sql":"select * from alter2.t1","shape":"SELECT * FROM alter2.t1;"}
+{"sql":"select * from alter2.v1","shape":"SELECT * FROM alter2.v1;"}
+{"sql":"select alter2.plus1(41)","shape":"SELECT alter2.plus1(41);"}
+{"sql":"drop schema alter2 cascade","shape":"DROP SCHEMA alter2 CASCADE;"}
+{"sql":"CREATE TYPE test_type AS (a int)","shape":"CREATE TYPE test_type AS (a int);"}
+{"sql":"ALTER TYPE nosuchtype ADD ATTRIBUTE b text"}
+{"sql":"ALTER TYPE test_type ADD ATTRIBUTE b text"}
+{"sql":"ALTER TYPE test_type ALTER ATTRIBUTE b SET DATA TYPE varchar"}
+{"sql":"ALTER TYPE test_type ALTER ATTRIBUTE b SET DATA TYPE integer"}
+{"sql":"ALTER TYPE test_type DROP ATTRIBUTE b"}
+{"sql":"ALTER TYPE test_type DROP ATTRIBUTE c"}
+{"sql":"ALTER TYPE test_type DROP ATTRIBUTE IF EXISTS c"}
+{"sql":"ALTER TYPE test_type DROP ATTRIBUTE a, ADD ATTRIBUTE d boolean"}
+{"sql":"ALTER TYPE test_type RENAME ATTRIBUTE a TO aa"}
+{"sql":"ALTER TYPE test_type RENAME ATTRIBUTE d TO dd"}
+{"sql":"DROP TYPE test_type","shape":"DROP TYPE test_type;"}
+{"sql":"CREATE TYPE test_type1 AS (a int, b text)","shape":"CREATE TYPE test_type1 AS (a int, b text);"}
+{"sql":"CREATE TABLE test_tbl1 (x int, y test_type1)","shape":"CREATE TABLE test_tbl1 (x int, y test_type1);"}
+{"sql":"ALTER TYPE test_type1 ALTER ATTRIBUTE b TYPE varchar"}
+{"sql":"DROP TABLE test_tbl1","shape":"DROP TABLE test_tbl1;"}
+{"sql":"CREATE TABLE test_tbl1 (x int, y text)","shape":"CREATE TABLE test_tbl1 (x int, y text);"}
+{"sql":"CREATE INDEX test_tbl1_idx ON test_tbl1((row(x,y)::test_type1))","shape":"CREATE INDEX test_tbl1_idx ON test_tbl1 ((ROW(x, y)::test_type1));"}
+{"sql":"DROP TYPE test_type1","shape":"DROP TYPE test_type1;"}
+{"sql":"CREATE TYPE test_type2 AS (a int, b text)","shape":"CREATE TYPE test_type2 AS (a int, b text);"}
+{"sql":"CREATE TABLE test_tbl2 OF test_type2","shape":"CREATE TABLE test_tbl2 OF test_type2;"}
+{"sql":"CREATE TABLE test_tbl2_subclass () INHERITS (test_tbl2)","shape":"CREATE TABLE test_tbl2_subclass () INHERITS (test_tbl2);"}
+{"sql":"ALTER TYPE test_type2 ADD ATTRIBUTE c text"}
+{"sql":"ALTER TYPE test_type2 ADD ATTRIBUTE c text CASCADE"}
+{"sql":"ALTER TYPE test_type2 ALTER ATTRIBUTE b TYPE varchar"}
+{"sql":"ALTER TYPE test_type2 ALTER ATTRIBUTE b TYPE varchar CASCADE"}
+{"sql":"ALTER TYPE test_type2 DROP ATTRIBUTE b"}
+{"sql":"ALTER TYPE test_type2 DROP ATTRIBUTE b CASCADE"}
+{"sql":"ALTER TYPE test_type2 RENAME ATTRIBUTE a TO aa"}
+{"sql":"ALTER TYPE test_type2 RENAME ATTRIBUTE a TO aa CASCADE"}
+{"sql":"DROP TABLE test_tbl2_subclass, test_tbl2","shape":"DROP TABLE test_tbl2_subclass, test_tbl2;"}
+{"sql":"DROP TYPE test_type2","shape":"DROP TYPE test_type2;"}
+{"sql":"CREATE TYPE test_typex AS (a int, b text)","shape":"CREATE TYPE test_typex AS (a int, b text);"}
+{"sql":"CREATE TABLE test_tblx (x int, y test_typex check ((y).a > 0))","shape":"CREATE TABLE test_tblx (x int, y test_typex CHECK ((y).a > 0));"}
+{"sql":"ALTER TYPE test_typex DROP ATTRIBUTE a"}
+{"sql":"ALTER TYPE test_typex DROP ATTRIBUTE a CASCADE"}
+{"sql":"DROP TABLE test_tblx","shape":"DROP TABLE test_tblx;"}
+{"sql":"DROP TYPE test_typex","shape":"DROP TYPE test_typex;"}
+{"sql":"CREATE TYPE test_type3 AS (a int)","shape":"CREATE TYPE test_type3 AS (a int);"}
+{"sql":"CREATE TABLE test_tbl3 (c) AS SELECT '(1)'::test_type3","shape":"CREATE TABLE test_tbl3 (c) AS SELECT '(1)'::test_type3;"}
+{"sql":"ALTER TYPE test_type3 DROP ATTRIBUTE a, ADD ATTRIBUTE b int"}
+{"sql":"CREATE TYPE test_type_empty AS ()","shape":"CREATE TYPE test_type_empty AS ();"}
+{"sql":"DROP TYPE test_type_empty","shape":"DROP TYPE test_type_empty;"}
+{"sql":"CREATE TYPE tt_t0 AS (z inet, x int, y numeric(8,2))","shape":"CREATE TYPE tt_t0 AS (z inet, x int, y numeric(8, 2));"}
+{"sql":"ALTER TYPE tt_t0 DROP ATTRIBUTE z"}
+{"sql":"CREATE TABLE tt0 (x int NOT NULL, y numeric(8,2))","shape":"CREATE TABLE tt0 (x int NOT NULL, y numeric(8, 2));"}
+{"sql":"CREATE TABLE tt1 (x int, y bigint)","shape":"CREATE TABLE tt1 (x int, y bigint);"}
+{"sql":"CREATE TABLE tt2 (x int, y numeric(9,2))","shape":"CREATE TABLE tt2 (x int, y numeric(9, 2));"}
+{"sql":"CREATE TABLE tt3 (y numeric(8,2), x int)","shape":"CREATE TABLE tt3 (y numeric(8, 2), x int);"}
+{"sql":"CREATE TABLE tt4 (x int)","shape":"CREATE TABLE tt4 (x int);"}
+{"sql":"CREATE TABLE tt5 (x int, y numeric(8,2), z int)","shape":"CREATE TABLE tt5 (x int, y numeric(8, 2), z int);"}
+{"sql":"CREATE TABLE tt6 () INHERITS (tt0)","shape":"CREATE TABLE tt6 () INHERITS (tt0);"}
+{"sql":"CREATE TABLE tt7 (x int, q text, y numeric(8,2))","shape":"CREATE TABLE tt7 (x int, q text, y numeric(8, 2));"}
+{"sql":"ALTER TABLE tt7 DROP q","shape":"ALTER TABLE tt7 DROP COLUMN q;"}
+{"sql":"ALTER TABLE tt0 OF tt_t0"}
+{"sql":"ALTER TABLE tt1 OF tt_t0"}
+{"sql":"ALTER TABLE tt2 OF tt_t0"}
+{"sql":"ALTER TABLE tt3 OF tt_t0"}
+{"sql":"ALTER TABLE tt4 OF tt_t0"}
+{"sql":"ALTER TABLE tt5 OF tt_t0"}
+{"sql":"ALTER TABLE tt6 OF tt_t0"}
+{"sql":"ALTER TABLE tt7 OF tt_t0"}
+{"sql":"CREATE TYPE tt_t1 AS (x int, y numeric(8,2))","shape":"CREATE TYPE tt_t1 AS (x int, y numeric(8, 2));"}
+{"sql":"ALTER TABLE tt7 OF tt_t1"}
+{"sql":"ALTER TABLE tt7 NOT OF"}
+{"sql":"CREATE TABLE test_drop_constr_parent (c text CHECK (c IS NOT NULL))","shape":"CREATE TABLE test_drop_constr_parent (c text CHECK (c IS NOT NULL));"}
+{"sql":"CREATE TABLE test_drop_constr_child () INHERITS (test_drop_constr_parent)","shape":"CREATE TABLE test_drop_constr_child () INHERITS (test_drop_constr_parent);"}
+{"sql":"ALTER TABLE ONLY test_drop_constr_parent DROP CONSTRAINT \"test_drop_constr_parent_c_check\"","shape":"ALTER TABLE ONLY test_drop_constr_parent DROP CONSTRAINT \"test_drop_constr_parent_c_check\";"}
+{"sql":"INSERT INTO test_drop_constr_child (c) VALUES (NULL)","shape":"INSERT INTO test_drop_constr_child (c) VALUES (NULL);"}
+{"sql":"DROP TABLE test_drop_constr_parent CASCADE","shape":"DROP TABLE test_drop_constr_parent CASCADE;"}
+{"sql":"ALTER TABLE IF EXISTS tt8 ADD COLUMN f int","shape":"ALTER TABLE IF EXISTS tt8 ADD COLUMN f int;"}
+{"sql":"ALTER TABLE IF EXISTS tt8 ADD CONSTRAINT xxx PRIMARY KEY(f)","shape":"ALTER TABLE IF EXISTS tt8 ADD CONSTRAINT xxx PRIMARY KEY (f);"}
+{"sql":"ALTER TABLE IF EXISTS tt8 ADD CHECK (f BETWEEN 0 AND 10)","shape":"ALTER TABLE IF EXISTS tt8 ADD CHECK (f BETWEEN 0 AND 10);"}
+{"sql":"ALTER TABLE IF EXISTS tt8 ALTER COLUMN f SET DEFAULT 0","shape":"ALTER TABLE IF EXISTS tt8 ALTER COLUMN f SET DEFAULT 0;"}
+{"sql":"ALTER TABLE IF EXISTS tt8 RENAME COLUMN f TO f1","shape":"ALTER TABLE IF EXISTS tt8 RENAME COLUMN f TO f1;"}
+{"sql":"ALTER TABLE IF EXISTS tt8 SET SCHEMA alter2","shape":"ALTER TABLE IF EXISTS tt8 SET SCHEMA alter2;"}
+{"sql":"CREATE TABLE tt8(a int)","shape":"CREATE TABLE tt8 (a int);"}
+{"sql":"CREATE SCHEMA alter2","shape":"CREATE SCHEMA alter2;"}
+{"sql":"DROP TABLE alter2.tt8","shape":"DROP TABLE alter2.tt8;"}
+{"sql":"DROP SCHEMA alter2","shape":"DROP SCHEMA alter2;"}
+{"sql":"CREATE TABLE tt9(c integer)","shape":"CREATE TABLE tt9 (c integer);"}
+{"sql":"ALTER TABLE tt9 ADD CHECK(c > 1)","shape":"ALTER TABLE tt9 ADD CHECK (c > 1);"}
+{"sql":"ALTER TABLE tt9 ADD CHECK(c > 2)","shape":"ALTER TABLE tt9 ADD CHECK (c > 2);"}
+{"sql":"ALTER TABLE tt9 ADD CONSTRAINT foo CHECK(c > 3)","shape":"ALTER TABLE tt9 ADD CONSTRAINT foo CHECK (c > 3);"}
+{"sql":"ALTER TABLE tt9 ADD CONSTRAINT foo CHECK(c > 4)","shape":"ALTER TABLE tt9 ADD CONSTRAINT foo CHECK (c > 4);"}
+{"sql":"ALTER TABLE tt9 ADD UNIQUE(c)","shape":"ALTER TABLE tt9 ADD UNIQUE (c);"}
+{"sql":"ALTER TABLE tt9 ADD CONSTRAINT tt9_c_key UNIQUE(c)","shape":"ALTER TABLE tt9 ADD CONSTRAINT tt9_c_key UNIQUE (c);"}
+{"sql":"ALTER TABLE tt9 ADD CONSTRAINT foo UNIQUE(c)","shape":"ALTER TABLE tt9 ADD CONSTRAINT foo UNIQUE (c);"}
+{"sql":"ALTER TABLE tt9 ADD CONSTRAINT tt9_c_key CHECK(c > 5)","shape":"ALTER TABLE tt9 ADD CONSTRAINT tt9_c_key CHECK (c > 5);"}
+{"sql":"ALTER TABLE tt9 ADD CONSTRAINT tt9_c_key2 CHECK(c > 6)","shape":"ALTER TABLE tt9 ADD CONSTRAINT tt9_c_key2 CHECK (c > 6);"}
+{"sql":"DROP TABLE tt9","shape":"DROP TABLE tt9;"}
+{"sql":"CREATE TABLE comment_test (\n  id int,\n  positive_col int CHECK (positive_col > 0),\n  indexed_col int,\n  CONSTRAINT comment_test_pk PRIMARY KEY (id))","shape":"CREATE TABLE comment_test (id int, positive_col int CHECK (positive_col > 0), indexed_col int, CONSTRAINT comment_test_pk PRIMARY KEY (id));"}
+{"sql":"CREATE INDEX comment_test_index ON comment_test(indexed_col)","shape":"CREATE INDEX comment_test_index ON comment_test (indexed_col);"}
+{"sql":"COMMENT ON COLUMN comment_test.id IS 'Column ''id'' on comment_test'","shape":"COMMENT ON COLUMN comment_test.id IS 'Column ''id'' on comment_test';"}
+{"sql":"COMMENT ON INDEX comment_test_index IS 'Simple index on comment_test'","shape":"COMMENT ON INDEX comment_test_index IS 'Simple index on comment_test';"}
+{"sql":"COMMENT ON CONSTRAINT comment_test_positive_col_check ON comment_test IS 'CHECK constraint on comment_test.positive_col'","shape":"COMMENT ON CONSTRAINT comment_test_positive_col_check ON comment_test IS 'CHECK constraint on comment_test.positive_col';"}
+{"sql":"COMMENT ON CONSTRAINT comment_test_pk ON comment_test IS 'PRIMARY KEY constraint of comment_test'","shape":"COMMENT ON CONSTRAINT comment_test_pk ON comment_test IS 'PRIMARY KEY constraint of comment_test';"}
+{"sql":"COMMENT ON INDEX comment_test_pk IS 'Index backing the PRIMARY KEY of comment_test'","shape":"COMMENT ON INDEX comment_test_pk IS 'Index backing the PRIMARY KEY of comment_test';"}
+{"sql":"SELECT col_description('comment_test'::regclass, 1) as comment","shape":"SELECT col_description('comment_test'::regclass, 1) AS comment;"}
+{"sql":"SELECT indexrelid::regclass::text as index, obj_description(indexrelid, 'pg_class') as comment FROM pg_index where indrelid = 'comment_test'::regclass ORDER BY 1, 2","shape":"SELECT indexrelid::regclass::text AS index, obj_description(indexrelid, 'pg_class') AS comment FROM pg_index WHERE indrelid = 'comment_test'::regclass ORDER BY 1, 2;"}
+{"sql":"SELECT conname as constraint, obj_description(oid, 'pg_constraint') as comment FROM pg_constraint where conrelid = 'comment_test'::regclass ORDER BY 1, 2","shape":"SELECT conname AS constraint, obj_description(oid, 'pg_constraint') AS comment FROM pg_constraint WHERE conrelid = 'comment_test'::regclass ORDER BY 1, 2;"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN indexed_col SET DATA TYPE int","shape":"ALTER TABLE comment_test ALTER COLUMN indexed_col SET DATA TYPE int;"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN indexed_col SET DATA TYPE text","shape":"ALTER TABLE comment_test ALTER COLUMN indexed_col SET DATA TYPE text;"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN id SET DATA TYPE int","shape":"ALTER TABLE comment_test ALTER COLUMN id SET DATA TYPE int;"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN id SET DATA TYPE text","shape":"ALTER TABLE comment_test ALTER COLUMN id SET DATA TYPE text;"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN positive_col SET DATA TYPE int","shape":"ALTER TABLE comment_test ALTER COLUMN positive_col SET DATA TYPE int;"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN positive_col SET DATA TYPE bigint","shape":"ALTER TABLE comment_test ALTER COLUMN positive_col SET DATA TYPE bigint;"}
+{"sql":"CREATE TABLE comment_test_child (\n  id text CONSTRAINT comment_test_child_fk REFERENCES comment_test)","shape":"CREATE TABLE comment_test_child (id text CONSTRAINT comment_test_child_fk REFERENCES comment_test);"}
+{"sql":"CREATE INDEX comment_test_child_fk ON comment_test_child(id)","shape":"CREATE INDEX comment_test_child_fk ON comment_test_child (id);"}
+{"sql":"COMMENT ON COLUMN comment_test_child.id IS 'Column ''id'' on comment_test_child'","shape":"COMMENT ON COLUMN comment_test_child.id IS 'Column ''id'' on comment_test_child';"}
+{"sql":"COMMENT ON INDEX comment_test_child_fk IS 'Index backing the FOREIGN KEY of comment_test_child'","shape":"COMMENT ON INDEX comment_test_child_fk IS 'Index backing the FOREIGN KEY of comment_test_child';"}
+{"sql":"COMMENT ON CONSTRAINT comment_test_child_fk ON comment_test_child IS 'FOREIGN KEY constraint of comment_test_child'","shape":"COMMENT ON CONSTRAINT comment_test_child_fk ON comment_test_child IS 'FOREIGN KEY constraint of comment_test_child';"}
+{"sql":"ALTER TABLE comment_test ALTER COLUMN id SET DATA TYPE int USING id::integer","shape":"ALTER TABLE comment_test ALTER COLUMN id SET DATA TYPE int USING id::integer;"}
+{"sql":"SELECT col_description('comment_test_child'::regclass, 1) as comment","shape":"SELECT col_description('comment_test_child'::regclass, 1) AS comment;"}
+{"sql":"SELECT indexrelid::regclass::text as index, obj_description(indexrelid, 'pg_class') as comment FROM pg_index where indrelid = 'comment_test_child'::regclass ORDER BY 1, 2","shape":"SELECT indexrelid::regclass::text AS index, obj_description(indexrelid, 'pg_class') AS comment FROM pg_index WHERE indrelid = 'comment_test_child'::regclass ORDER BY 1, 2;"}
+{"sql":"SELECT conname as constraint, obj_description(oid, 'pg_constraint') as comment FROM pg_constraint where conrelid = 'comment_test_child'::regclass ORDER BY 1, 2","shape":"SELECT conname AS constraint, obj_description(oid, 'pg_constraint') AS comment FROM pg_constraint WHERE conrelid = 'comment_test_child'::regclass ORDER BY 1, 2;"}
+{"sql":"CREATE TEMP TABLE filenode_mapping AS\nSELECT\n    oid, mapped_oid, reltablespace, relfilenode, relname\nFROM pg_class,\n    pg_filenode_relation(reltablespace, pg_relation_filenode(oid)) AS mapped_oid\nWHERE relkind IN ('r', 'i', 'S', 't', 'm')\n  AND relpersistence != 't'\n  AND mapped_oid IS DISTINCT FROM oid","shape":"CREATE TEMPORARY TABLE filenode_mapping AS SELECT oid, mapped_oid, reltablespace, relfilenode, relname FROM pg_class, pg_filenode_relation(reltablespace, pg_relation_filenode(oid)) AS mapped_oid WHERE ((relkind IN ('r', 'i', 'S', 't', 'm')) AND (relpersistence != 't')) AND (mapped_oid IS DISTINCT FROM oid);"}
+{"sql":"SELECT m.* FROM filenode_mapping m LEFT JOIN pg_class c ON c.oid = m.oid\nWHERE c.oid IS NOT NULL OR m.mapped_oid IS NOT NULL","shape":"SELECT m.* FROM filenode_mapping AS m LEFT JOIN pg_class AS c ON c.oid = m.oid WHERE (c.oid IS NOT NULL) OR (m.mapped_oid IS NOT NULL);"}
+{"sql":"SHOW allow_system_table_mods","shape":"SHOW allow_system_table_mods;"}
+{"sql":"CREATE TABLE pg_catalog.new_system_table()","shape":"CREATE TABLE pg_catalog.new_system_table ();"}
+{"sql":"CREATE TABLE new_system_table(id serial primary key, othercol text)","shape":"CREATE TABLE new_system_table (id serial PRIMARY KEY, othercol text);"}
+{"sql":"ALTER TABLE new_system_table SET SCHEMA pg_catalog","shape":"ALTER TABLE new_system_table SET SCHEMA pg_catalog;"}
+{"sql":"ALTER TABLE new_system_table SET SCHEMA public","shape":"ALTER TABLE new_system_table SET SCHEMA public;"}
+{"sql":"ALTER TABLE new_system_table RENAME TO old_system_table","shape":"ALTER TABLE new_system_table RENAME TO old_system_table;"}
+{"sql":"CREATE INDEX old_system_table__othercol ON old_system_table (othercol)","shape":"CREATE INDEX old_system_table__othercol ON old_system_table (othercol);"}
+{"sql":"INSERT INTO old_system_table(othercol) VALUES ('somedata'), ('otherdata')","shape":"INSERT INTO old_system_table (othercol) VALUES ('somedata'), ('otherdata');"}
+{"sql":"UPDATE old_system_table SET id = -id","shape":"UPDATE old_system_table SET id = -id;"}
+{"sql":"DELETE FROM old_system_table WHERE othercol = 'somedata'","shape":"DELETE FROM old_system_table WHERE othercol = 'somedata';"}
+{"sql":"TRUNCATE old_system_table","shape":"TRUNCATE TABLE old_system_table;"}
+{"sql":"ALTER TABLE old_system_table DROP CONSTRAINT new_system_table_pkey","shape":"ALTER TABLE old_system_table DROP CONSTRAINT new_system_table_pkey;"}
+{"sql":"ALTER TABLE old_system_table DROP COLUMN othercol","shape":"ALTER TABLE old_system_table DROP COLUMN othercol;"}
+{"sql":"DROP TABLE old_system_table","shape":"DROP TABLE old_system_table;"}
+{"sql":"CREATE UNLOGGED TABLE unlogged1(f1 SERIAL PRIMARY KEY, f2 TEXT)","shape":"CREATE UNLOGGED TABLE unlogged1 (f1 SERIAL PRIMARY KEY, f2 TEXT);"}
+{"sql":"SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^unlogged1'\nUNION ALL\nSELECT r.relname || ' toast table', t.relkind, t.relpersistence FROM pg_class r JOIN pg_class t ON t.oid = r.reltoastrelid WHERE r.relname ~ '^unlogged1'\nUNION ALL\nSELECT r.relname || ' toast index', ri.relkind, ri.relpersistence FROM pg_class r join pg_class t ON t.oid = r.reltoastrelid JOIN pg_index i ON i.indrelid = t.oid JOIN pg_class ri ON ri.oid = i.indexrelid WHERE r.relname ~ '^unlogged1'\nORDER BY relname","shape":"(SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^unlogged1' UNION ALL SELECT r.relname || ' toast table', t.relkind, t.relpersistence FROM pg_class AS r JOIN pg_class AS t ON t.oid = r.reltoastrelid WHERE r.relname ~ '^unlogged1') UNION ALL SELECT r.relname || ' toast index', ri.relkind, ri.relpersistence FROM ((pg_class AS r JOIN pg_class AS t ON t.oid = r.reltoastrelid) JOIN pg_index AS i ON i.indrelid = t.oid) JOIN pg_class AS ri ON ri.oid = i.indexrelid WHERE r.relname ~ '^unlogged1' ORDER BY relname;"}
+{"sql":"CREATE UNLOGGED TABLE unlogged2(f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES unlogged1)","shape":"CREATE UNLOGGED TABLE unlogged2 (f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES unlogged1);"}
+{"sql":"CREATE UNLOGGED TABLE unlogged3(f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES unlogged3)","shape":"CREATE UNLOGGED TABLE unlogged3 (f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES unlogged3);"}
+{"sql":"ALTER TABLE unlogged3 SET LOGGED"}
+{"sql":"ALTER TABLE unlogged2 SET LOGGED"}
+{"sql":"ALTER TABLE unlogged1 SET LOGGED"}
+{"sql":"DROP TABLE unlogged3","shape":"DROP TABLE unlogged3;"}
+{"sql":"DROP TABLE unlogged2","shape":"DROP TABLE unlogged2;"}
+{"sql":"DROP TABLE unlogged1","shape":"DROP TABLE unlogged1;"}
+{"sql":"CREATE TABLE logged1(f1 SERIAL PRIMARY KEY, f2 TEXT)","shape":"CREATE TABLE logged1 (f1 SERIAL PRIMARY KEY, f2 TEXT);"}
+{"sql":"SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^logged1'\nUNION ALL\nSELECT r.relname || ' toast table', t.relkind, t.relpersistence FROM pg_class r JOIN pg_class t ON t.oid = r.reltoastrelid WHERE r.relname ~ '^logged1'\nUNION ALL\nSELECT r.relname ||' toast index', ri.relkind, ri.relpersistence FROM pg_class r join pg_class t ON t.oid = r.reltoastrelid JOIN pg_index i ON i.indrelid = t.oid JOIN pg_class ri ON ri.oid = i.indexrelid WHERE r.relname ~ '^logged1'\nORDER BY relname","shape":"(SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^logged1' UNION ALL SELECT r.relname || ' toast table', t.relkind, t.relpersistence FROM pg_class AS r JOIN pg_class AS t ON t.oid = r.reltoastrelid WHERE r.relname ~ '^logged1') UNION ALL SELECT r.relname || ' toast index', ri.relkind, ri.relpersistence FROM ((pg_class AS r JOIN pg_class AS t ON t.oid = r.reltoastrelid) JOIN pg_index AS i ON i.indrelid = t.oid) JOIN pg_class AS ri ON ri.oid = i.indexrelid WHERE r.relname ~ '^logged1' ORDER BY relname;"}
+{"sql":"CREATE TABLE logged2(f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES logged1)","shape":"CREATE TABLE logged2 (f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES logged1);"}
+{"sql":"CREATE TABLE logged3(f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES logged3)","shape":"CREATE TABLE logged3 (f1 SERIAL PRIMARY KEY, f2 INTEGER REFERENCES logged3);"}
+{"sql":"ALTER TABLE logged1 SET UNLOGGED"}
+{"sql":"ALTER TABLE logged3 SET UNLOGGED"}
+{"sql":"ALTER TABLE logged2 SET UNLOGGED"}
+{"sql":"SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^logged1'\nUNION ALL\nSELECT r.relname || ' toast table', t.relkind, t.relpersistence FROM pg_class r JOIN pg_class t ON t.oid = r.reltoastrelid WHERE r.relname ~ '^logged1'\nUNION ALL\nSELECT r.relname || ' toast index', ri.relkind, ri.relpersistence FROM pg_class r join pg_class t ON t.oid = r.reltoastrelid JOIN pg_index i ON i.indrelid = t.oid JOIN pg_class ri ON ri.oid = i.indexrelid WHERE r.relname ~ '^logged1'\nORDER BY relname","shape":"(SELECT relname, relkind, relpersistence FROM pg_class WHERE relname ~ '^logged1' UNION ALL SELECT r.relname || ' toast table', t.relkind, t.relpersistence FROM pg_class AS r JOIN pg_class AS t ON t.oid = r.reltoastrelid WHERE r.relname ~ '^logged1') UNION ALL SELECT r.relname || ' toast index', ri.relkind, ri.relpersistence FROM ((pg_class AS r JOIN pg_class AS t ON t.oid = r.reltoastrelid) JOIN pg_index AS i ON i.indrelid = t.oid) JOIN pg_class AS ri ON ri.oid = i.indexrelid WHERE r.relname ~ '^logged1' ORDER BY relname;"}
+{"sql":"DROP TABLE logged3","shape":"DROP TABLE logged3;"}
+{"sql":"DROP TABLE logged2","shape":"DROP TABLE logged2;"}
+{"sql":"DROP TABLE logged1","shape":"DROP TABLE logged1;"}
+{"sql":"CREATE TABLE test_add_column(c1 integer)","shape":"CREATE TABLE test_add_column (c1 integer);"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN c2 integer","shape":"ALTER TABLE test_add_column ADD COLUMN c2 integer;"}
+{"sql":"ALTER TABLE ONLY test_add_column\n\tADD COLUMN c2 integer","shape":"ALTER TABLE ONLY test_add_column ADD COLUMN c2 integer;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c2 integer","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c2 integer;"}
+{"sql":"ALTER TABLE ONLY test_add_column\n\tADD COLUMN IF NOT EXISTS c2 integer","shape":"ALTER TABLE ONLY test_add_column ADD COLUMN IF NOT EXISTS c2 integer;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN c2 integer, -- fail because c2 already exists\n\tADD COLUMN c3 integer primary key","shape":"ALTER TABLE test_add_column ADD COLUMN c2 integer, ADD COLUMN c3 integer PRIMARY KEY;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c2 integer, -- skipping because c2 already exists\n\tADD COLUMN c3 integer primary key","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c2 integer, ADD COLUMN c3 integer PRIMARY KEY;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c2 integer, -- skipping because c2 already exists\n\tADD COLUMN IF NOT EXISTS c3 integer primary key","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c2 integer, ADD COLUMN IF NOT EXISTS c3 integer PRIMARY KEY;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c2 integer, -- skipping because c2 already exists\n\tADD COLUMN IF NOT EXISTS c3 integer, -- skipping because c3 already exists\n\tADD COLUMN c4 integer REFERENCES test_add_column","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c2 integer, ADD COLUMN IF NOT EXISTS c3 integer, ADD COLUMN c4 integer REFERENCES test_add_column;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c4 integer REFERENCES test_add_column","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c4 integer REFERENCES test_add_column;"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c5 SERIAL CHECK (c5 > 8)","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c5 SERIAL CHECK (c5 > 8);"}
+{"sql":"ALTER TABLE test_add_column\n\tADD COLUMN IF NOT EXISTS c5 SERIAL CHECK (c5 > 10)","shape":"ALTER TABLE test_add_column ADD COLUMN IF NOT EXISTS c5 SERIAL CHECK (c5 > 10);"}
+{"sql":"DROP TABLE test_add_column","shape":"DROP TABLE test_add_column;"}
+{"sql":"CREATE TABLE ataddindex(f1 INT)","shape":"CREATE TABLE ataddindex (f1 INT);"}
+{"sql":"INSERT INTO ataddindex VALUES (42), (43)","shape":"INSERT INTO ataddindex VALUES (42), (43);"}
+{"sql":"CREATE UNIQUE INDEX ataddindexi0 ON ataddindex(f1)","shape":"CREATE UNIQUE INDEX ataddindexi0 ON ataddindex (f1);"}
+{"sql":"ALTER TABLE ataddindex\n  ADD PRIMARY KEY USING INDEX ataddindexi0,\n  ALTER f1 TYPE BIGINT","shape":"ALTER TABLE ataddindex ADD PRIMARY KEY USING INDEX ataddindexi0, ALTER COLUMN f1 SET DATA TYPE BIGINT;"}
+{"sql":"DROP TABLE ataddindex","shape":"DROP TABLE ataddindex;"}
+{"sql":"CREATE TABLE ataddindex(f1 VARCHAR(10))","shape":"CREATE TABLE ataddindex (f1 VARCHAR(10));"}
+{"sql":"INSERT INTO ataddindex(f1) VALUES ('foo'), ('a')","shape":"INSERT INTO ataddindex (f1) VALUES ('foo'), ('a');"}
+{"sql":"ALTER TABLE ataddindex\n  ALTER f1 SET DATA TYPE TEXT,\n  ADD EXCLUDE ((f1 LIKE 'a') WITH =)","shape":"ALTER TABLE ataddindex ALTER COLUMN f1 SET DATA TYPE TEXT, ADD EXCLUDE ((f1 LIKE 'a') WITH =);"}
+{"sql":"CREATE TABLE ataddindex(id int, ref_id int)","shape":"CREATE TABLE ataddindex (id int, ref_id int);"}
+{"sql":"ALTER TABLE ataddindex\n  ADD PRIMARY KEY (id),\n  ADD FOREIGN KEY (ref_id) REFERENCES ataddindex","shape":"ALTER TABLE ataddindex ADD PRIMARY KEY (id), ADD FOREIGN KEY (ref_id) REFERENCES ataddindex;"}
+{"sql":"ALTER TABLE ataddindex\n  ADD UNIQUE (id),\n  ADD FOREIGN KEY (ref_id) REFERENCES ataddindex (id)","shape":"ALTER TABLE ataddindex ADD UNIQUE (id), ADD FOREIGN KEY (ref_id) REFERENCES ataddindex (id);"}
+{"sql":"CREATE TABLE partitioned (\n\ta int,\n\tb int\n) PARTITION BY RANGE (a, (a+b+1))","shape":"CREATE TABLE partitioned (a int, b int) PARTITION BY RANGE (a, ((a + b) + 1));"}
+{"sql":"ALTER TABLE partitioned ADD EXCLUDE USING gist (a WITH &&)","shape":"ALTER TABLE partitioned ADD EXCLUDE USING gist (a WITH &&);"}
+{"sql":"ALTER TABLE partitioned DROP COLUMN a","shape":"ALTER TABLE partitioned DROP COLUMN a;"}
+{"sql":"ALTER TABLE partitioned ALTER COLUMN a TYPE char(5)","shape":"ALTER TABLE partitioned ALTER COLUMN a SET DATA TYPE char(5);"}
+{"sql":"ALTER TABLE partitioned DROP COLUMN b","shape":"ALTER TABLE partitioned DROP COLUMN b;"}
+{"sql":"ALTER TABLE partitioned ALTER COLUMN b TYPE char(5)","shape":"ALTER TABLE partitioned ALTER COLUMN b SET DATA TYPE char(5);"}
+{"sql":"ALTER TABLE partitioned SET (fillfactor=100)"}
+{"sql":"CREATE TABLE nonpartitioned (\n\ta int,\n\tb int\n)","shape":"CREATE TABLE nonpartitioned (a int, b int);"}
+{"sql":"ALTER TABLE partitioned INHERIT nonpartitioned"}
+{"sql":"ALTER TABLE nonpartitioned INHERIT partitioned"}
+{"sql":"ALTER TABLE partitioned ADD CONSTRAINT chk_a CHECK (a > 0) NO INHERIT","shape":"ALTER TABLE partitioned ADD CONSTRAINT chk_a CHECK (a > 0) NO INHERIT;"}
+{"sql":"DROP TABLE partitioned, nonpartitioned","shape":"DROP TABLE partitioned, nonpartitioned;"}
+{"sql":"CREATE TABLE unparted (\n\ta int\n)","shape":"CREATE TABLE unparted (a int);"}
+{"sql":"CREATE TABLE fail_part (like unparted)","shape":"CREATE TABLE fail_part (LIKE unparted);"}
+{"sql":"ALTER TABLE unparted ATTACH PARTITION fail_part FOR VALUES IN ('a')"}
+{"sql":"DROP TABLE unparted, fail_part","shape":"DROP TABLE unparted, fail_part;"}
+{"sql":"CREATE TABLE list_parted (\n\ta int NOT NULL,\n\tb char(2) COLLATE \"C\",\n\tCONSTRAINT check_a CHECK (a > 0)\n) PARTITION BY LIST (a)","shape":"CREATE TABLE list_parted (a int NOT NULL, b char(2) COLLATE \"C\", CONSTRAINT check_a CHECK (a > 0)) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE fail_part (LIKE list_parted)","shape":"CREATE TABLE fail_part (LIKE list_parted);"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION fail_part FOR VALUES FROM (1) TO (10)"}
+{"sql":"DROP TABLE fail_part","shape":"DROP TABLE fail_part;"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION nonexistent FOR VALUES IN (1)"}
+{"sql":"CREATE ROLE regress_test_me"}
+{"sql":"CREATE ROLE regress_test_not_me"}
+{"sql":"CREATE TABLE not_owned_by_me (LIKE list_parted)","shape":"CREATE TABLE not_owned_by_me (LIKE list_parted);"}
+{"sql":"ALTER TABLE not_owned_by_me OWNER TO regress_test_not_me"}
+{"sql":"SET SESSION AUTHORIZATION regress_test_me"}
+{"sql":"CREATE TABLE owned_by_me (\n\ta int\n) PARTITION BY LIST (a)","shape":"CREATE TABLE owned_by_me (a int) PARTITION BY LIST (a);"}
+{"sql":"ALTER TABLE owned_by_me ATTACH PARTITION not_owned_by_me FOR VALUES IN (1)"}
+{"sql":"DROP TABLE owned_by_me, not_owned_by_me","shape":"DROP TABLE owned_by_me, not_owned_by_me;"}
+{"sql":"DROP ROLE regress_test_not_me","shape":"DROP ROLE regress_test_not_me;"}
+{"sql":"DROP ROLE regress_test_me","shape":"DROP ROLE regress_test_me;"}
+{"sql":"CREATE TABLE parent (LIKE list_parted)","shape":"CREATE TABLE parent (LIKE list_parted);"}
+{"sql":"CREATE TABLE child () INHERITS (parent)","shape":"CREATE TABLE child () INHERITS (parent);"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION child FOR VALUES IN (1)"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION parent FOR VALUES IN (1)"}
+{"sql":"DROP TABLE child","shape":"DROP TABLE child;"}
+{"sql":"ALTER TABLE parent ADD CONSTRAINT check_a CHECK (a > 0)","shape":"ALTER TABLE parent ADD CONSTRAINT check_a CHECK (a > 0);"}
+{"sql":"INSERT INTO parent VALUES (1)","shape":"INSERT INTO parent VALUES (1);"}
+{"sql":"UPDATE parent SET a = 2 WHERE a = 1","shape":"UPDATE parent SET a = 2 WHERE a = 1;"}
+{"sql":"DROP TABLE parent CASCADE","shape":"DROP TABLE parent CASCADE;"}
+{"sql":"CREATE TEMP TABLE temp_parted (a int) PARTITION BY LIST (a)","shape":"CREATE TEMPORARY TABLE temp_parted (a int) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE perm_part (a int)","shape":"CREATE TABLE perm_part (a int);"}
+{"sql":"ALTER TABLE temp_parted ATTACH PARTITION perm_part FOR VALUES IN (1)"}
+{"sql":"DROP TABLE temp_parted, perm_part","shape":"DROP TABLE temp_parted, perm_part;"}
+{"sql":"CREATE TYPE mytype AS (a int)","shape":"CREATE TYPE mytype AS (a int);"}
+{"sql":"CREATE TABLE fail_part OF mytype","shape":"CREATE TABLE fail_part OF mytype;"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION fail_part FOR VALUES IN (1)"}
+{"sql":"DROP TYPE mytype CASCADE","shape":"DROP TYPE mytype CASCADE;"}
+{"sql":"CREATE TABLE fail_part (like list_parted, c int)","shape":"CREATE TABLE fail_part (LIKE list_parted, c int);"}
+{"sql":"CREATE TABLE fail_part (a int NOT NULL)","shape":"CREATE TABLE fail_part (a int NOT NULL);"}
+{"sql":"CREATE TABLE fail_part (\n\tb char(3),\n\ta int NOT NULL\n)","shape":"CREATE TABLE fail_part (b char(3), a int NOT NULL);"}
+{"sql":"ALTER TABLE fail_part ALTER b TYPE char (2) COLLATE \"POSIX\"","shape":"ALTER TABLE fail_part ALTER COLUMN b SET DATA TYPE char(2) COLLATE \"POSIX\";"}
+{"sql":"CREATE TABLE fail_part (\n\tb char(2) COLLATE \"C\",\n\ta int NOT NULL\n)","shape":"CREATE TABLE fail_part (b char(2) COLLATE \"C\", a int NOT NULL);"}
+{"sql":"ALTER TABLE fail_part ADD CONSTRAINT check_a CHECK (a >= 0)","shape":"ALTER TABLE fail_part ADD CONSTRAINT check_a CHECK (a >= 0);"}
+{"sql":"CREATE TABLE part_1 (\n\ta int NOT NULL,\n\tb char(2) COLLATE \"C\",\n\tCONSTRAINT check_a CHECK (a > 0)\n)","shape":"CREATE TABLE part_1 (a int NOT NULL, b char(2) COLLATE \"C\", CONSTRAINT check_a CHECK (a > 0));"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION part_1 FOR VALUES IN (1)"}
+{"sql":"SELECT attislocal, attinhcount FROM pg_attribute WHERE attrelid = 'part_1'::regclass AND attnum > 0","shape":"SELECT attislocal, attinhcount FROM pg_attribute WHERE (attrelid = 'part_1'::regclass) AND (attnum > 0);"}
+{"sql":"SELECT conislocal, coninhcount FROM pg_constraint WHERE conrelid = 'part_1'::regclass AND conname = 'check_a'","shape":"SELECT conislocal, coninhcount FROM pg_constraint WHERE (conrelid = 'part_1'::regclass) AND (conname = 'check_a');"}
+{"sql":"CREATE TABLE fail_part (LIKE part_1 INCLUDING CONSTRAINTS)","shape":"CREATE TABLE fail_part (LIKE part_1 INCLUDING CONSTRAINTS);"}
+{"sql":"CREATE TABLE def_part (LIKE list_parted INCLUDING CONSTRAINTS)","shape":"CREATE TABLE def_part (LIKE list_parted INCLUDING CONSTRAINTS);"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION def_part DEFAULT"}
+{"sql":"CREATE TABLE fail_def_part (LIKE part_1 INCLUDING CONSTRAINTS)","shape":"CREATE TABLE fail_def_part (LIKE part_1 INCLUDING CONSTRAINTS);"}
+{"sql":"ALTER TABLE list_parted ATTACH PARTITION fail_def_part DEFAULT"}
+{"sql":"CREATE TABLE list_parted2 (\n\ta int,\n\tb char\n) PARTITION BY LIST (a)","shape":"CREATE TABLE list_parted2 (a int, b char) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE part_2 (LIKE list_parted2)","shape":"CREATE TABLE part_2 (LIKE list_parted2);"}
+{"sql":"INSERT INTO part_2 VALUES (3, 'a')","shape":"INSERT INTO part_2 VALUES (3, 'a');"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION part_2 FOR VALUES IN (2)"}
+{"sql":"DELETE FROM part_2","shape":"DELETE FROM part_2;"}
+{"sql":"CREATE TABLE list_parted2_def PARTITION OF list_parted2 DEFAULT","shape":"CREATE TABLE list_parted2_def PARTITION OF list_parted2 DEFAULT;"}
+{"sql":"INSERT INTO list_parted2_def VALUES (11, 'z')","shape":"INSERT INTO list_parted2_def VALUES (11, 'z');"}
+{"sql":"CREATE TABLE part_3 (LIKE list_parted2)","shape":"CREATE TABLE part_3 (LIKE list_parted2);"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION part_3 FOR VALUES IN (11)"}
+{"sql":"DELETE FROM list_parted2_def WHERE a = 11","shape":"DELETE FROM list_parted2_def WHERE a = 11;"}
+{"sql":"CREATE TABLE part_3_4 (\n\tLIKE list_parted2,\n\tCONSTRAINT check_a CHECK (a IN (3))\n)","shape":"CREATE TABLE part_3_4 (LIKE list_parted2, CONSTRAINT check_a CHECK (a IN (3)));"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION part_3_4 FOR VALUES IN (3, 4)"}
+{"sql":"ALTER TABLE list_parted2 DETACH PARTITION part_3_4"}
+{"sql":"ALTER TABLE part_3_4 ALTER a SET NOT NULL","shape":"ALTER TABLE part_3_4 ALTER COLUMN a SET NOT NULL;"}
+{"sql":"ALTER TABLE list_parted2_def ADD CONSTRAINT check_a CHECK (a IN (5, 6))","shape":"ALTER TABLE list_parted2_def ADD CONSTRAINT check_a CHECK (a IN (5, 6));"}
+{"sql":"CREATE TABLE part_55_66 PARTITION OF list_parted2 FOR VALUES IN (55, 66)","shape":"CREATE TABLE part_55_66 PARTITION OF list_parted2 FOR VALUES IN (55, 66);"}
+{"sql":"CREATE TABLE range_parted (\n\ta int,\n\tb int\n) PARTITION BY RANGE (a, b)","shape":"CREATE TABLE range_parted (a int, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"CREATE TABLE part1 (\n\ta int NOT NULL CHECK (a = 1),\n\tb int NOT NULL CHECK (b >= 1 AND b <= 10)\n)","shape":"CREATE TABLE part1 (a int NOT NULL CHECK (a = 1), b int NOT NULL CHECK ((b >= 1) AND (b <= 10)));"}
+{"sql":"INSERT INTO part1 VALUES (1, 10)","shape":"INSERT INTO part1 VALUES (1, 10);"}
+{"sql":"ALTER TABLE range_parted ATTACH PARTITION part1 FOR VALUES FROM (1, 1) TO (1, 10)"}
+{"sql":"DELETE FROM part1","shape":"DELETE FROM part1;"}
+{"sql":"CREATE TABLE part2 (\n\ta int NOT NULL CHECK (a = 1),\n\tb int NOT NULL CHECK (b >= 10 AND b < 18)\n)","shape":"CREATE TABLE part2 (a int NOT NULL CHECK (a = 1), b int NOT NULL CHECK ((b >= 10) AND (b < 18)));"}
+{"sql":"ALTER TABLE range_parted ATTACH PARTITION part2 FOR VALUES FROM (1, 10) TO (1, 20)"}
+{"sql":"CREATE TABLE partr_def1 PARTITION OF range_parted DEFAULT","shape":"CREATE TABLE partr_def1 PARTITION OF range_parted DEFAULT;"}
+{"sql":"CREATE TABLE partr_def2 (LIKE part1 INCLUDING CONSTRAINTS)","shape":"CREATE TABLE partr_def2 (LIKE part1 INCLUDING CONSTRAINTS);"}
+{"sql":"ALTER TABLE range_parted ATTACH PARTITION partr_def2 DEFAULT"}
+{"sql":"INSERT INTO partr_def1 VALUES (2, 10)","shape":"INSERT INTO partr_def1 VALUES (2, 10);"}
+{"sql":"CREATE TABLE part3 (LIKE range_parted)","shape":"CREATE TABLE part3 (LIKE range_parted);"}
+{"sql":"ALTER TABLE range_parted ATTACH partition part3 FOR VALUES FROM (2, 10) TO (2, 20)"}
+{"sql":"ALTER TABLE range_parted ATTACH partition part3 FOR VALUES FROM (3, 10) TO (3, 20)"}
+{"sql":"CREATE TABLE part_5 (\n\tLIKE list_parted2\n) PARTITION BY LIST (b)","shape":"CREATE TABLE part_5 (LIKE list_parted2) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE part_5_a PARTITION OF part_5 FOR VALUES IN ('a')","shape":"CREATE TABLE part_5_a PARTITION OF part_5 FOR VALUES IN ('a');"}
+{"sql":"INSERT INTO part_5_a (a, b) VALUES (6, 'a')","shape":"INSERT INTO part_5_a (a, b) VALUES (6, 'a');"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION part_5 FOR VALUES IN (5)"}
+{"sql":"DELETE FROM part_5_a WHERE a NOT IN (3)","shape":"DELETE FROM part_5_a WHERE a NOT IN (3);"}
+{"sql":"ALTER TABLE part_5 ADD CONSTRAINT check_a CHECK (a IS NOT NULL AND a = 5)","shape":"ALTER TABLE part_5 ADD CONSTRAINT check_a CHECK ((a IS NOT NULL) AND (a = 5));"}
+{"sql":"ALTER TABLE list_parted2 DETACH PARTITION part_5"}
+{"sql":"ALTER TABLE part_5 DROP CONSTRAINT check_a","shape":"ALTER TABLE part_5 DROP CONSTRAINT check_a;"}
+{"sql":"ALTER TABLE part_5 ADD CONSTRAINT check_a CHECK (a IN (5)), ALTER a SET NOT NULL","shape":"ALTER TABLE part_5 ADD CONSTRAINT check_a CHECK (a IN (5)), ALTER COLUMN a SET NOT NULL;"}
+{"sql":"CREATE TABLE part_6 (\n\tc int,\n\tLIKE list_parted2,\n\tCONSTRAINT check_a CHECK (a IS NOT NULL AND a = 6)\n)","shape":"CREATE TABLE part_6 (c int, LIKE list_parted2, CONSTRAINT check_a CHECK ((a IS NOT NULL) AND (a = 6)));"}
+{"sql":"ALTER TABLE part_6 DROP c","shape":"ALTER TABLE part_6 DROP COLUMN c;"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION part_6 FOR VALUES IN (6)"}
+{"sql":"CREATE TABLE part_7 (\n\tLIKE list_parted2,\n\tCONSTRAINT check_a CHECK (a IS NOT NULL AND a = 7)\n) PARTITION BY LIST (b)","shape":"CREATE TABLE part_7 (LIKE list_parted2, CONSTRAINT check_a CHECK ((a IS NOT NULL) AND (a = 7))) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE part_7_a_null (\n\tc int,\n\td int,\n\te int,\n\tLIKE list_parted2,  -- 'a' will have attnum = 4\n\tCONSTRAINT check_b CHECK (b IS NULL OR b = 'a'),\n\tCONSTRAINT check_a CHECK (a IS NOT NULL AND a = 7)\n)","shape":"CREATE TABLE part_7_a_null (c int, d int, e int, LIKE list_parted2, CONSTRAINT check_b CHECK ((b IS NULL) OR (b = 'a')), CONSTRAINT check_a CHECK ((a IS NOT NULL) AND (a = 7)));"}
+{"sql":"ALTER TABLE part_7_a_null DROP c, DROP d, DROP e","shape":"ALTER TABLE part_7_a_null DROP COLUMN c, DROP COLUMN d, DROP COLUMN e;"}
+{"sql":"ALTER TABLE part_7 ATTACH PARTITION part_7_a_null FOR VALUES IN ('a', null)"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION part_7 FOR VALUES IN (7)"}
+{"sql":"ALTER TABLE list_parted2 DETACH PARTITION part_7"}
+{"sql":"ALTER TABLE part_7 DROP CONSTRAINT check_a","shape":"ALTER TABLE part_7 DROP CONSTRAINT check_a;"}
+{"sql":"INSERT INTO part_7 (a, b) VALUES (8, null), (9, 'a')","shape":"INSERT INTO part_7 (a, b) VALUES (8, NULL), (9, 'a');"}
+{"sql":"SELECT tableoid::regclass, a, b FROM part_7 order by a","shape":"SELECT tableoid::regclass, a, b FROM part_7 ORDER BY a;"}
+{"sql":"CREATE TABLE part5_def PARTITION OF part_5 DEFAULT PARTITION BY LIST(a)","shape":"CREATE TABLE part5_def PARTITION OF part_5 DEFAULT PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE part5_def_p1 PARTITION OF part5_def FOR VALUES IN (5)","shape":"CREATE TABLE part5_def_p1 PARTITION OF part5_def FOR VALUES IN (5);"}
+{"sql":"INSERT INTO part5_def_p1 VALUES (5, 'y')","shape":"INSERT INTO part5_def_p1 VALUES (5, 'y');"}
+{"sql":"CREATE TABLE part5_p1 (LIKE part_5)","shape":"CREATE TABLE part5_p1 (LIKE part_5);"}
+{"sql":"ALTER TABLE part_5 ATTACH PARTITION part5_p1 FOR VALUES IN ('y')"}
+{"sql":"DELETE FROM part5_def_p1 WHERE b = 'y'","shape":"DELETE FROM part5_def_p1 WHERE b = 'y';"}
+{"sql":"ALTER TABLE part_5 ATTACH PARTITION list_parted2 FOR VALUES IN ('b')"}
+{"sql":"ALTER TABLE list_parted2 ATTACH PARTITION list_parted2 FOR VALUES IN (0)"}
+{"sql":"CREATE TABLE quuux (a int, b text) PARTITION BY LIST (a)","shape":"CREATE TABLE quuux (a int, b text) PARTITION BY LIST (a);"}
+{"sql":"CREATE TABLE quuux_default PARTITION OF quuux DEFAULT PARTITION BY LIST (b)","shape":"CREATE TABLE quuux_default PARTITION OF quuux DEFAULT PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE quuux_default1 PARTITION OF quuux_default (\n\tCONSTRAINT check_1 CHECK (a IS NOT NULL AND a = 1)\n) FOR VALUES IN ('b')","shape":"CREATE TABLE quuux_default1 PARTITION OF quuux_default (CONSTRAINT check_1 CHECK ((a IS NOT NULL) AND (a = 1))) FOR VALUES IN ('b');"}
+{"sql":"CREATE TABLE quuux1 (a int, b text)","shape":"CREATE TABLE quuux1 (a int, b text);"}
+{"sql":"ALTER TABLE quuux ATTACH PARTITION quuux1 FOR VALUES IN (1)"}
+{"sql":"CREATE TABLE quuux2 (a int, b text)","shape":"CREATE TABLE quuux2 (a int, b text);"}
+{"sql":"ALTER TABLE quuux ATTACH PARTITION quuux2 FOR VALUES IN (2)"}
+{"sql":"DROP TABLE quuux1, quuux2","shape":"DROP TABLE quuux1, quuux2;"}
+{"sql":"CREATE TABLE quuux1 PARTITION OF quuux FOR VALUES IN (1)","shape":"CREATE TABLE quuux1 PARTITION OF quuux FOR VALUES IN (1);"}
+{"sql":"CREATE TABLE quuux2 PARTITION OF quuux FOR VALUES IN (2)","shape":"CREATE TABLE quuux2 PARTITION OF quuux FOR VALUES IN (2);"}
+{"sql":"DROP TABLE quuux","shape":"DROP TABLE quuux;"}
+{"sql":"CREATE TABLE hash_parted (\n\ta int,\n\tb int\n) PARTITION BY HASH (a part_test_int4_ops)","shape":"CREATE TABLE hash_parted (a int, b int) PARTITION BY HASH (a part_test_int4_ops);"}
+{"sql":"CREATE TABLE hpart_1 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 4, REMAINDER 0)","shape":"CREATE TABLE hpart_1 PARTITION OF hash_parted FOR VALUES WITH (MODULUS 4, REMAINDER 0);"}
+{"sql":"CREATE TABLE fail_part (LIKE hpart_1)","shape":"CREATE TABLE fail_part (LIKE hpart_1);"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION fail_part FOR VALUES WITH (MODULUS 8, REMAINDER 4)"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION fail_part FOR VALUES WITH (MODULUS 8, REMAINDER 0)"}
+{"sql":"CREATE TABLE hpart_2 (LIKE hash_parted)","shape":"CREATE TABLE hpart_2 (LIKE hash_parted);"}
+{"sql":"INSERT INTO hpart_2 VALUES (3, 0)","shape":"INSERT INTO hpart_2 VALUES (3, 0);"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION hpart_2 FOR VALUES WITH (MODULUS 4, REMAINDER 1)"}
+{"sql":"DELETE FROM hpart_2","shape":"DELETE FROM hpart_2;"}
+{"sql":"CREATE TABLE hpart_5 (\n\tLIKE hash_parted\n) PARTITION BY LIST (b)","shape":"CREATE TABLE hpart_5 (LIKE hash_parted) PARTITION BY LIST (b);"}
+{"sql":"CREATE TABLE hpart_5_a PARTITION OF hpart_5 FOR VALUES IN ('1', '2', '3')","shape":"CREATE TABLE hpart_5_a PARTITION OF hpart_5 FOR VALUES IN ('1', '2', '3');"}
+{"sql":"INSERT INTO hpart_5_a (a, b) VALUES (7, 1)","shape":"INSERT INTO hpart_5_a (a, b) VALUES (7, 1);"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION hpart_5 FOR VALUES WITH (MODULUS 4, REMAINDER 2)"}
+{"sql":"DELETE FROM hpart_5_a","shape":"DELETE FROM hpart_5_a;"}
+{"sql":"CREATE TABLE fail_part(LIKE hash_parted)","shape":"CREATE TABLE fail_part (LIKE hash_parted);"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION fail_part FOR VALUES WITH (MODULUS 0, REMAINDER 1)"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION fail_part FOR VALUES WITH (MODULUS 8, REMAINDER 8)"}
+{"sql":"ALTER TABLE hash_parted ATTACH PARTITION fail_part FOR VALUES WITH (MODULUS 3, REMAINDER 2)"}
+{"sql":"CREATE TABLE regular_table (a int)","shape":"CREATE TABLE regular_table (a int);"}
+{"sql":"ALTER TABLE regular_table DETACH PARTITION any_name"}
+{"sql":"DROP TABLE regular_table","shape":"DROP TABLE regular_table;"}
+{"sql":"ALTER TABLE list_parted2 DETACH PARTITION part_4"}
+{"sql":"ALTER TABLE hash_parted DETACH PARTITION hpart_4"}
+{"sql":"CREATE TABLE not_a_part (a int)","shape":"CREATE TABLE not_a_part (a int);"}
+{"sql":"ALTER TABLE list_parted2 DETACH PARTITION not_a_part"}
+{"sql":"ALTER TABLE list_parted2 DETACH PARTITION part_1"}
+{"sql":"ALTER TABLE hash_parted DETACH PARTITION not_a_part"}
+{"sql":"DROP TABLE not_a_part","shape":"DROP TABLE not_a_part;"}
+{"sql":"SELECT attinhcount, attislocal FROM pg_attribute WHERE attrelid = 'part_3_4'::regclass AND attnum > 0","shape":"SELECT attinhcount, attislocal FROM pg_attribute WHERE (attrelid = 'part_3_4'::regclass) AND (attnum > 0);"}
+{"sql":"SELECT coninhcount, conislocal FROM pg_constraint WHERE conrelid = 'part_3_4'::regclass AND conname = 'check_a'","shape":"SELECT coninhcount, conislocal FROM pg_constraint WHERE (conrelid = 'part_3_4'::regclass) AND (conname = 'check_a');"}
+{"sql":"DROP TABLE part_3_4","shape":"DROP TABLE part_3_4;"}
+{"sql":"CREATE TABLE range_parted2 (\n    a int\n) PARTITION BY RANGE(a)","shape":"CREATE TABLE range_parted2 (a int) PARTITION BY RANGE (a);"}
+{"sql":"CREATE TABLE part_rp PARTITION OF range_parted2 FOR VALUES FROM (0) to (100)","shape":"CREATE TABLE part_rp PARTITION OF range_parted2 FOR VALUES FROM (0) TO (100);"}
+{"sql":"ALTER TABLE range_parted2 DETACH PARTITION part_rp"}
+{"sql":"DROP TABLE range_parted2","shape":"DROP TABLE range_parted2;"}
+{"sql":"SELECT * from part_rp","shape":"SELECT * FROM part_rp;"}
+{"sql":"DROP TABLE part_rp","shape":"DROP TABLE part_rp;"}
+{"sql":"CREATE TABLE range_parted2 (\n\ta int\n) PARTITION BY RANGE(a)","shape":"CREATE TABLE range_parted2 (a int) PARTITION BY RANGE (a);"}
+{"sql":"ALTER TABLE range_parted2 DETACH PARTITION part_rp CONCURRENTLY"}
+{"sql":"CREATE TABLE part_rpd PARTITION OF range_parted2 DEFAULT","shape":"CREATE TABLE part_rpd PARTITION OF range_parted2 DEFAULT;"}
+{"sql":"ALTER TABLE range_parted2 DETACH PARTITION part_rpd CONCURRENTLY"}
+{"sql":"DROP TABLE part_rpd","shape":"DROP TABLE part_rpd;"}
+{"sql":"CREATE TABLE part_rp100 PARTITION OF range_parted2 (CHECK (a>=123 AND a<133 AND a IS NOT NULL)) FOR VALUES FROM (100) to (200)","shape":"CREATE TABLE part_rp100 PARTITION OF range_parted2 (CHECK (((a >= 123) AND (a < 133)) AND (a IS NOT NULL))) FOR VALUES FROM (100) TO (200);"}
+{"sql":"ALTER TABLE range_parted2 DETACH PARTITION part_rp100 CONCURRENTLY"}
+{"sql":"CREATE TABLE hash_parted2 (a int) PARTITION BY HASH(a)","shape":"CREATE TABLE hash_parted2 (a int) PARTITION BY HASH (a);"}
+{"sql":"CREATE TABLE part_hp PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 2, REMAINDER 0)","shape":"CREATE TABLE part_hp PARTITION OF hash_parted2 FOR VALUES WITH (MODULUS 2, REMAINDER 0);"}
+{"sql":"ALTER TABLE hash_parted2 DETACH PARTITION part_hp CONCURRENTLY"}
+{"sql":"DROP TABLE hash_parted2","shape":"DROP TABLE hash_parted2;"}
+{"sql":"INSERT INTO part_hp VALUES (1)","shape":"INSERT INTO part_hp VALUES (1);"}
+{"sql":"DROP TABLE part_hp","shape":"DROP TABLE part_hp;"}
+{"sql":"ALTER TABLE ONLY list_parted2 ADD COLUMN c int","shape":"ALTER TABLE ONLY list_parted2 ADD COLUMN c int;"}
+{"sql":"ALTER TABLE ONLY list_parted2 DROP COLUMN b","shape":"ALTER TABLE ONLY list_parted2 DROP COLUMN b;"}
+{"sql":"ALTER TABLE part_2 ADD COLUMN c text","shape":"ALTER TABLE part_2 ADD COLUMN c text;"}
+{"sql":"ALTER TABLE part_2 DROP COLUMN b","shape":"ALTER TABLE part_2 DROP COLUMN b;"}
+{"sql":"ALTER TABLE part_2 RENAME COLUMN b to c","shape":"ALTER TABLE part_2 RENAME COLUMN b TO c;"}
+{"sql":"ALTER TABLE part_2 ALTER COLUMN b TYPE text","shape":"ALTER TABLE part_2 ALTER COLUMN b SET DATA TYPE text;"}
+{"sql":"ALTER TABLE ONLY list_parted2 ALTER b SET NOT NULL","shape":"ALTER TABLE ONLY list_parted2 ALTER COLUMN b SET NOT NULL;"}
+{"sql":"ALTER TABLE ONLY list_parted2 ADD CONSTRAINT check_b CHECK (b <> 'zz')","shape":"ALTER TABLE ONLY list_parted2 ADD CONSTRAINT check_b CHECK (b <> 'zz');"}
+{"sql":"ALTER TABLE list_parted2 ALTER b SET NOT NULL","shape":"ALTER TABLE list_parted2 ALTER COLUMN b SET NOT NULL;"}
+{"sql":"ALTER TABLE ONLY list_parted2 ALTER b DROP NOT NULL","shape":"ALTER TABLE ONLY list_parted2 ALTER COLUMN b DROP NOT NULL;"}
+{"sql":"ALTER TABLE list_parted2 ADD CONSTRAINT check_b CHECK (b <> 'zz')","shape":"ALTER TABLE list_parted2 ADD CONSTRAINT check_b CHECK (b <> 'zz');"}
+{"sql":"ALTER TABLE ONLY list_parted2 DROP CONSTRAINT check_b","shape":"ALTER TABLE ONLY list_parted2 DROP CONSTRAINT check_b;"}
+{"sql":"CREATE TABLE parted_no_parts (a int) PARTITION BY LIST (a)","shape":"CREATE TABLE parted_no_parts (a int) PARTITION BY LIST (a);"}
+{"sql":"ALTER TABLE ONLY parted_no_parts ALTER a SET NOT NULL","shape":"ALTER TABLE ONLY parted_no_parts ALTER COLUMN a SET NOT NULL;"}
+{"sql":"ALTER TABLE ONLY parted_no_parts ADD CONSTRAINT check_a CHECK (a > 0)","shape":"ALTER TABLE ONLY parted_no_parts ADD CONSTRAINT check_a CHECK (a > 0);"}
+{"sql":"ALTER TABLE ONLY parted_no_parts ALTER a DROP NOT NULL","shape":"ALTER TABLE ONLY parted_no_parts ALTER COLUMN a DROP NOT NULL;"}
+{"sql":"ALTER TABLE ONLY parted_no_parts DROP CONSTRAINT check_a","shape":"ALTER TABLE ONLY parted_no_parts DROP CONSTRAINT check_a;"}
+{"sql":"DROP TABLE parted_no_parts","shape":"DROP TABLE parted_no_parts;"}
+{"sql":"ALTER TABLE list_parted2 ALTER b SET NOT NULL, ADD CONSTRAINT check_a2 CHECK (a > 0)","shape":"ALTER TABLE list_parted2 ALTER COLUMN b SET NOT NULL, ADD CONSTRAINT check_a2 CHECK (a > 0);"}
+{"sql":"ALTER TABLE part_2 ALTER b DROP NOT NULL","shape":"ALTER TABLE part_2 ALTER COLUMN b DROP NOT NULL;"}
+{"sql":"ALTER TABLE part_2 DROP CONSTRAINT check_a2","shape":"ALTER TABLE part_2 DROP CONSTRAINT check_a2;"}
+{"sql":"ALTER TABLE list_parted2 add constraint check_b2 check (b <> 'zz') NO INHERIT","shape":"ALTER TABLE list_parted2 ADD CONSTRAINT check_b2 CHECK (b <> 'zz') NO INHERIT;"}
+{"sql":"CREATE TABLE inh_test () INHERITS (part_2)","shape":"CREATE TABLE inh_test () INHERITS (part_2);"}
+{"sql":"CREATE TABLE inh_test (LIKE part_2)","shape":"CREATE TABLE inh_test (LIKE part_2);"}
+{"sql":"ALTER TABLE inh_test INHERIT part_2"}
+{"sql":"ALTER TABLE part_2 INHERIT inh_test"}
+{"sql":"ALTER TABLE list_parted2 DROP COLUMN b","shape":"ALTER TABLE list_parted2 DROP COLUMN b;"}
+{"sql":"ALTER TABLE list_parted2 ALTER COLUMN b TYPE text","shape":"ALTER TABLE list_parted2 ALTER COLUMN b SET DATA TYPE text;"}
+{"sql":"ALTER TABLE list_parted DROP COLUMN b","shape":"ALTER TABLE list_parted DROP COLUMN b;"}
+{"sql":"SELECT * FROM list_parted","shape":"SELECT * FROM list_parted;"}
+{"sql":"DROP TABLE list_parted, list_parted2, range_parted","shape":"DROP TABLE list_parted, list_parted2, range_parted;"}
+{"sql":"DROP TABLE fail_def_part","shape":"DROP TABLE fail_def_part;"}
+{"sql":"DROP TABLE hash_parted","shape":"DROP TABLE hash_parted;"}
+{"sql":"create table p (a int, b int) partition by range (a, b)","shape":"CREATE TABLE p (a int, b int) PARTITION BY RANGE (a, b);"}
+{"sql":"create table p1 (b int, a int not null) partition by range (b)","shape":"CREATE TABLE p1 (b int, a int NOT NULL) PARTITION BY RANGE (b);"}
+{"sql":"create table p11 (like p1)","shape":"CREATE TABLE p11 (LIKE p1);"}
+{"sql":"alter table p11 drop a","shape":"ALTER TABLE p11 DROP COLUMN a;"}
+{"sql":"alter table p11 add a int","shape":"ALTER TABLE p11 ADD COLUMN a int;"}
+{"sql":"alter table p11 add a int not null","shape":"ALTER TABLE p11 ADD COLUMN a int NOT NULL;"}
+{"sql":"select attrelid::regclass, attname, attnum\nfrom pg_attribute\nwhere attname = 'a'\n and (attrelid = 'p'::regclass\n   or attrelid = 'p1'::regclass\n   or attrelid = 'p11'::regclass)\norder by attrelid::regclass::text","shape":"SELECT attrelid::regclass, attname, attnum FROM pg_attribute WHERE (attname = 'a') AND (((attrelid = 'p'::regclass) OR (attrelid = 'p1'::regclass)) OR (attrelid = 'p11'::regclass)) ORDER BY attrelid::regclass::text;"}
+{"sql":"alter table p1 attach partition p11 for values from (2) to (5)"}
+{"sql":"insert into p1 (a, b) values (2, 3)","shape":"INSERT INTO p1 (a, b) VALUES (2, 3);"}
+{"sql":"alter table p attach partition p1 for values from (1, 2) to (1, 10)"}
+{"sql":"drop table p","shape":"DROP TABLE p;"}
+{"sql":"drop table p1","shape":"DROP TABLE p1;"}
+{"sql":"create table parted_validate_test (a int) partition by list (a)","shape":"CREATE TABLE parted_validate_test (a int) PARTITION BY LIST (a);"}
+{"sql":"create table parted_validate_test_1 partition of parted_validate_test for values in (0, 1)","shape":"CREATE TABLE parted_validate_test_1 PARTITION OF parted_validate_test FOR VALUES IN (0, 1);"}
+{"sql":"alter table parted_validate_test add constraint parted_validate_test_chka check (a > 0) not valid","shape":"ALTER TABLE parted_validate_test ADD CONSTRAINT parted_validate_test_chka CHECK (a > 0) NOT VALID;"}
+{"sql":"alter table parted_validate_test validate constraint parted_validate_test_chka"}
+{"sql":"drop table parted_validate_test","shape":"DROP TABLE parted_validate_test;"}
+{"sql":"CREATE TABLE attmp(i integer)","shape":"CREATE TABLE attmp (i integer);"}
+{"sql":"INSERT INTO attmp VALUES (1)","shape":"INSERT INTO attmp VALUES (1);"}
+{"sql":"ALTER TABLE attmp ALTER COLUMN i SET (n_distinct = 1, n_distinct_inherited = 2)"}
+{"sql":"ALTER TABLE attmp ALTER COLUMN i RESET (n_distinct_inherited)"}
+{"sql":"ANALYZE attmp","shape":"ANALYZE attmp;"}
+{"sql":"DROP USER regress_alter_table_user1","shape":"DROP USER regress_alter_table_user1;"}
+{"sql":"create table defpart_attach_test (a int) partition by list (a)","shape":"CREATE TABLE defpart_attach_test (a int) PARTITION BY LIST (a);"}
+{"sql":"create table defpart_attach_test1 partition of defpart_attach_test for values in (1)","shape":"CREATE TABLE defpart_attach_test1 PARTITION OF defpart_attach_test FOR VALUES IN (1);"}
+{"sql":"create table defpart_attach_test_d (b int, a int)","shape":"CREATE TABLE defpart_attach_test_d (b int, a int);"}
+{"sql":"alter table defpart_attach_test_d drop b","shape":"ALTER TABLE defpart_attach_test_d DROP COLUMN b;"}
+{"sql":"insert into defpart_attach_test_d values (1), (2)","shape":"INSERT INTO defpart_attach_test_d VALUES (1), (2);"}
+{"sql":"alter table defpart_attach_test attach partition defpart_attach_test_d default"}
+{"sql":"delete from defpart_attach_test_d where a = 1","shape":"DELETE FROM defpart_attach_test_d WHERE a = 1;"}
+{"sql":"alter table defpart_attach_test_d add check (a > 1)","shape":"ALTER TABLE defpart_attach_test_d ADD CHECK (a > 1);"}
+{"sql":"create table defpart_attach_test_2 (like defpart_attach_test_d)","shape":"CREATE TABLE defpart_attach_test_2 (LIKE defpart_attach_test_d);"}
+{"sql":"alter table defpart_attach_test attach partition defpart_attach_test_2 for values in (2)"}
+{"sql":"drop table defpart_attach_test","shape":"DROP TABLE defpart_attach_test;"}
+{"sql":"create table perm_part_parent (a int) partition by list (a)","shape":"CREATE TABLE perm_part_parent (a int) PARTITION BY LIST (a);"}
+{"sql":"create temp table temp_part_parent (a int) partition by list (a)","shape":"CREATE TEMPORARY TABLE temp_part_parent (a int) PARTITION BY LIST (a);"}
+{"sql":"create table perm_part_child (a int)","shape":"CREATE TABLE perm_part_child (a int);"}
+{"sql":"create temp table temp_part_child (a int)","shape":"CREATE TEMPORARY TABLE temp_part_child (a int);"}
+{"sql":"alter table temp_part_parent attach partition perm_part_child default"}
+{"sql":"alter table perm_part_parent attach partition temp_part_child default"}
+{"sql":"alter table temp_part_parent attach partition temp_part_child default"}
+{"sql":"drop table perm_part_parent cascade","shape":"DROP TABLE perm_part_parent CASCADE;"}
+{"sql":"drop table temp_part_parent cascade","shape":"DROP TABLE temp_part_parent CASCADE;"}
+{"sql":"create table tab_part_attach (a int) partition by list (a)","shape":"CREATE TABLE tab_part_attach (a int) PARTITION BY LIST (a);"}
+{"sql":"create or replace function func_part_attach() returns trigger\n  language plpgsql as $$\n  begin\n    execute 'create table tab_part_attach_1 (a int)';\n    execute 'alter table tab_part_attach attach partition tab_part_attach_1 for values in (1)';\n    return null;\n  end $$","shape":"CREATE OR REPLACE FUNCTION func_part_attach() RETURNS trigger LANGUAGE plpgsql AS '\n  begin\n    execute ''create table tab_part_attach_1 (a int)'';\n    execute ''alter table tab_part_attach attach partition tab_part_attach_1 for values in (1)'';\n    return null;\n  end ';"}
+{"sql":"create trigger trig_part_attach before insert on tab_part_attach\n  for each statement execute procedure func_part_attach()","shape":"CREATE TRIGGER trig_part_attach BEFORE INSERT ON tab_part_attach FOR EACH STATEMENT EXECUTE FUNCTION func_part_attach();"}
+{"sql":"insert into tab_part_attach values (1)","shape":"INSERT INTO tab_part_attach VALUES (1);"}
+{"sql":"drop table tab_part_attach","shape":"DROP TABLE tab_part_attach;"}
+{"sql":"drop function func_part_attach()"}
+{"sql":"create function at_test_sql_partop (int4, int4) returns int language sql\nas $$ select case when $1 = $2 then 0 when $1 > $2 then 1 else -1 end; $$","shape":"CREATE FUNCTION at_test_sql_partop(int4, int4) RETURNS int LANGUAGE sql AS ' select case when $1 = $2 then 0 when $1 > $2 then 1 else -1 end; ';"}
+{"sql":"create operator class at_test_sql_partop for type int4 using btree as\n    operator 1 < (int4, int4), operator 2 <= (int4, int4),\n    operator 3 = (int4, int4), operator 4 >= (int4, int4),\n    operator 5 > (int4, int4), function 1 at_test_sql_partop(int4, int4)"}
+{"sql":"create table at_test_sql_partop (a int) partition by range (a at_test_sql_partop)","shape":"CREATE TABLE at_test_sql_partop (a int) PARTITION BY RANGE (a at_test_sql_partop);"}
+{"sql":"create table at_test_sql_partop_1 (a int)","shape":"CREATE TABLE at_test_sql_partop_1 (a int);"}
+{"sql":"alter table at_test_sql_partop attach partition at_test_sql_partop_1 for values from (0) to (10)"}
+{"sql":"drop table at_test_sql_partop","shape":"DROP TABLE at_test_sql_partop;"}
+{"sql":"drop operator class at_test_sql_partop using btree"}
+{"sql":"drop function at_test_sql_partop"}
+{"sql":"create table bar1 (a integer, b integer not null default 1)\n  partition by range (a)","shape":"CREATE TABLE bar1 (a integer, b integer NOT NULL DEFAULT 1) PARTITION BY RANGE (a);"}
+{"sql":"create table bar2 (a integer)","shape":"CREATE TABLE bar2 (a integer);"}
+{"sql":"insert into bar2 values (1)","shape":"INSERT INTO bar2 VALUES (1);"}
+{"sql":"alter table bar2 add column b integer not null default 1","shape":"ALTER TABLE bar2 ADD COLUMN b integer NOT NULL DEFAULT 1;"}
+{"sql":"alter table bar1 attach partition bar2 default"}
+{"sql":"select * from bar1","shape":"SELECT * FROM bar1;"}
+{"sql":"create function xtrig()\n  returns trigger language plpgsql\nas $$\n  declare\n    r record;\n  begin\n    for r in select * from old loop\n      raise info 'a=%, b=%', r.a, r.b;\n    end loop;\n    return NULL;\n  end;\n$$","shape":"CREATE FUNCTION xtrig() RETURNS trigger LANGUAGE plpgsql AS '\n  declare\n    r record;\n  begin\n    for r in select * from old loop\n      raise info ''a=%, b=%'', r.a, r.b;\n    end loop;\n    return NULL;\n  end;\n';"}
+{"sql":"create trigger xtrig\n  after update on bar1\n  referencing old table as old\n  for each statement execute procedure xtrig()","shape":"CREATE TRIGGER xtrig AFTER UPDATE ON bar1 REFERENCING OLD TABLE AS old FOR EACH STATEMENT EXECUTE FUNCTION xtrig();"}
+{"sql":"update bar1 set a = a + 1","shape":"UPDATE bar1 SET a = a + 1;"}
+{"sql":"create table attbl (p1 int constraint pk_attbl primary key)","shape":"CREATE TABLE attbl (p1 int CONSTRAINT pk_attbl PRIMARY KEY);"}
+{"sql":"create table atref (c1 int references attbl(p1))","shape":"CREATE TABLE atref (c1 int REFERENCES attbl (p1));"}
+{"sql":"cluster attbl using pk_attbl"}
+{"sql":"alter table attbl alter column p1 set data type bigint","shape":"ALTER TABLE attbl ALTER COLUMN p1 SET DATA TYPE bigint;"}
+{"sql":"alter table atref alter column c1 set data type bigint","shape":"ALTER TABLE atref ALTER COLUMN c1 SET DATA TYPE bigint;"}
+{"sql":"drop table attbl, atref","shape":"DROP TABLE attbl, atref;"}
+{"sql":"alter table attbl replica identity using index pk_attbl"}
+{"sql":"create table attbl(a int)","shape":"CREATE TABLE attbl (a int);"}
+{"sql":"create table atref(b attbl check ((b).a is not null))","shape":"CREATE TABLE atref (b attbl CHECK ((b).a IS NOT NULL));"}
+{"sql":"alter table attbl alter column a type numeric","shape":"ALTER TABLE attbl ALTER COLUMN a SET DATA TYPE numeric;"}
+{"sql":"alter table atref drop constraint atref_b_check","shape":"ALTER TABLE atref DROP CONSTRAINT atref_b_check;"}
+{"sql":"create statistics atref_stat on ((b).a is not null) from atref"}
+{"sql":"drop statistics atref_stat"}
+{"sql":"create index atref_idx on atref (((b).a))","shape":"CREATE INDEX atref_idx ON atref (((b).a));"}
+{"sql":"create table alttype_cluster (a int)","shape":"CREATE TABLE alttype_cluster (a int);"}
+{"sql":"alter table alttype_cluster add primary key (a)","shape":"ALTER TABLE alttype_cluster ADD PRIMARY KEY (a);"}
+{"sql":"create index alttype_cluster_ind on alttype_cluster (a)","shape":"CREATE INDEX alttype_cluster_ind ON alttype_cluster (a);"}
+{"sql":"alter table alttype_cluster cluster on alttype_cluster_ind"}
+{"sql":"select indexrelid::regclass, indisclustered from pg_index\n  where indrelid = 'alttype_cluster'::regclass\n  order by indexrelid::regclass::text","shape":"SELECT indexrelid::regclass, indisclustered FROM pg_index WHERE indrelid = 'alttype_cluster'::regclass ORDER BY indexrelid::regclass::text;"}
+{"sql":"alter table alttype_cluster alter a type bigint","shape":"ALTER TABLE alttype_cluster ALTER COLUMN a SET DATA TYPE bigint;"}
+{"sql":"alter table alttype_cluster cluster on alttype_cluster_pkey"}
+{"sql":"alter table alttype_cluster alter a type int","shape":"ALTER TABLE alttype_cluster ALTER COLUMN a SET DATA TYPE int;"}
+{"sql":"drop table alttype_cluster","shape":"DROP TABLE alttype_cluster;"}
+{"sql":"create table target_parted (a int, b int) partition by list (a)","shape":"CREATE TABLE target_parted (a int, b int) PARTITION BY LIST (a);"}
+{"sql":"create table attach_parted (a int, b int) partition by list (b)","shape":"CREATE TABLE attach_parted (a int, b int) PARTITION BY LIST (b);"}
+{"sql":"create table attach_parted_part1 partition of attach_parted for values in (1)","shape":"CREATE TABLE attach_parted_part1 PARTITION OF attach_parted FOR VALUES IN (1);"}
+{"sql":"insert into attach_parted_part1 values (1, 1)","shape":"INSERT INTO attach_parted_part1 VALUES (1, 1);"}
+{"sql":"alter table target_parted attach partition attach_parted for values in (1)"}
+{"sql":"insert into attach_parted_part1 values (2, 1)","shape":"INSERT INTO attach_parted_part1 VALUES (2, 1);"}
+{"sql":"alter table target_parted detach partition attach_parted"}
+{"sql":"create table alter1.t1 (a int)","shape":"CREATE TABLE alter1.t1 (a int);"}
+{"sql":"set client_min_messages = 'ERROR'","shape":"SET client_min_messages TO 'ERROR';"}
+{"sql":"create publication pub1 for table alter1.t1, tables in schema alter2"}
+{"sql":"reset client_min_messages","shape":"RESET client_min_messages;"}
+{"sql":"drop publication pub1"}
+{"sql":"drop schema alter1 cascade","shape":"DROP SCHEMA alter1 CASCADE;"}

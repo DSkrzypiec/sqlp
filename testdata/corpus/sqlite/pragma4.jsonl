@@ -1,0 +1,38 @@
+{"sql":"CREATE TABLE aux.t2(d, e, f)"}
+{"sql":"PRAGMA table_info = t1"}
+{"sql":"PRAGMA table_info = t2"}
+{"sql":"PRAGMA table_info(t1)"}
+{"sql":"SELECT * FROM pragma_table_info('t1')"}
+{"sql":"SELECT * FROM pragma_table_info('t2')"}
+{"sql":"CREATE INDEX aux.i2 ON t2(e)"}
+{"sql":"SELECT * FROM pragma_index_info('i1')"}
+{"sql":"SELECT * FROM pragma_index_info('i2')"}
+{"sql":"SELECT * FROM main.sqlite_master, aux.sqlite_master"}
+{"sql":"CREATE INDEX main.i1 ON t1(b, c)"}
+{"sql":"CREATE INDEX aux.i2 ON t2(e, f)"}
+{"sql":"SELECT * FROM pragma_index_list('t1')"}
+{"sql":"SELECT * FROM pragma_index_list('t2')"}
+{"sql":"SELECT * FROM sqlite_master, aux.sqlite_master"}
+{"sql":"CREATE UNIQUE INDEX main.i1 ON t1(a)"}
+{"sql":"CREATE UNIQUE INDEX aux.i2 ON t2(d)"}
+{"sql":"CREATE TABLE main.c1 (a, b, c REFERENCES t1(a))"}
+{"sql":"CREATE TABLE aux.c2 (d, e, r REFERENCES t2(d))"}
+{"sql":"SELECT * FROM pragma_foreign_key_list('c1')"}
+{"sql":"SELECT * FROM pragma_foreign_key_list('c2')"}
+{"sql":"INSERT INTO main.c1 VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO aux.c2 VALUES(4, 5, 6)"}
+{"sql":"pragma foreign_key_check('c1')"}
+{"sql":"pragma foreign_key_check('c2')"}
+{"sql":"CREATE TABLE t4(a DEFAULT 'abc' /* comment */, b DEFAULT -1 -- comment\n     , c DEFAULT +4.0 /* another comment */\n  )"}
+{"sql":"PRAGMA table_info = t4"}
+{"sql":"CREATE TABLE t1(a INT PRIMARY KEY, b INT)"}
+{"sql":"CREATE TABLE t2(c INT PRIMARY KEY, d INT REFERENCES t1)"}
+{"sql":"SELECT t.name, f.\"table\", f.\"from\", i.name, i.pk\n      FROM pragma_table_list() AS t\n           JOIN pragma_foreign_key_list(t.name, t.schema) AS f\n           JOIN pragma_table_info(f.\"table\", t.schema) AS i\n     WHERE i.pk"}
+{"sql":"CREATE VIEW v1 AS SELECT abs(a) FROM t1"}
+{"sql":"UPDATE sqlite_schema\n       SET sql=replace(sql,'abs(a)','nosuchfunc(a)')\n     WHERE name='v1'"}
+{"sql":"PRAGMA table_list"}
+{"sql":"CREATE TABLE t3 (\"a\" TEXT, \"b\" TEXT)"}
+{"sql":"CREATE TABLE pragma_t3 AS SELECT * FROM pragma_table_info('t3')"}
+{"sql":"CREATE TABLE pragma_t4 AS SELECT * FROM pragma_table_info('t4')"}
+{"sql":"SELECT pragma_t4.name, pragma_t3.name \n      FROM pragma_t4 RIGHT JOIN pragma_t3 ON (pragma_t4.name=pragma_t3.name)"}
+{"sql":"SELECT t4.name, t3.name \n    FROM pragma_table_info('t4') t4 \n    RIGHT JOIN pragma_table_info('t3') t3 ON (t4.name=t3.name)"}

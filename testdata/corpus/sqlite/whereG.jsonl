@@ -1,0 +1,99 @@
+{"sql":"INSERT INTO composer VALUES(1, 'W. A. Mozart')"}
+{"sql":"INSERT INTO composer VALUES(2, 'Beethoven')"}
+{"sql":"INSERT INTO composer VALUES(3, 'Thomas Tallis')"}
+{"sql":"INSERT INTO composer VALUES(4, 'Joseph Hayden')"}
+{"sql":"INSERT INTO composer VALUES(5, 'Thomas Weelkes')"}
+{"sql":"INSERT INTO composer VALUES(6, 'J. S. Bach')"}
+{"sql":"INSERT INTO composer VALUES(7, 'Orlando Gibbons')"}
+{"sql":"INSERT INTO composer VALUES(8, 'Josquin des Prés')"}
+{"sql":"INSERT INTO composer VALUES(9, 'Byrd')"}
+{"sql":"INSERT INTO composer VALUES(10, 'Francis Poulenc')"}
+{"sql":"INSERT INTO composer VALUES(11, 'Mendelsshon')"}
+{"sql":"INSERT INTO composer VALUES(12, 'Zoltán Kodály')"}
+{"sql":"INSERT INTO composer VALUES(13, 'Handel')"}
+{"sql":"INSERT INTO album VALUES(100, 'Kodály: Missa Brevis')"}
+{"sql":"INSERT INTO album VALUES(101, 'Messiah')"}
+{"sql":"INSERT INTO album VALUES(102, 'Missa Brevis in D-, K.65')"}
+{"sql":"INSERT INTO album VALUES(103, 'The complete English anthems')"}
+{"sql":"INSERT INTO album VALUES(104, 'Mass in B Minor, BWV 232')"}
+{"sql":"INSERT INTO track VALUES(10005, 12, 100, 'Sanctus')"}
+{"sql":"INSERT INTO track VALUES(10007, 12, 100, 'Agnus Dei')"}
+{"sql":"INSERT INTO track VALUES(10115, 13, 101, 'Surely He Hath Borne Our Griefs')"}
+{"sql":"INSERT INTO track VALUES(10129, 13, 101, 'Since By Man Came Death')"}
+{"sql":"INSERT INTO track VALUES(10206, 1, 102, 'Agnus Dei')"}
+{"sql":"INSERT INTO track VALUES(10301, 3, 103, 'If Ye Love Me')"}
+{"sql":"INSERT INTO track VALUES(10402, 6, 104, 'Domine Deus')"}
+{"sql":"INSERT INTO track VALUES(10403, 6, 104, 'Qui tollis')"}
+{"sql":"SELECT DISTINCT aname\n    FROM album, composer, track\n   WHERE unlikely(cname LIKE '%bach%')\n     AND composer.cid=track.cid\n     AND album.aid=track.aid"}
+{"sql":"SELECT DISTINCT aname\n    FROM album, composer, track\n   WHERE likelihood(cname LIKE '%bach%', 0.5)\n     AND composer.cid=track.cid\n     AND album.aid=track.aid"}
+{"sql":"SELECT DISTINCT aname\n    FROM album, composer, track\n   WHERE cname LIKE '%bach%'\n     AND composer.cid=track.cid\n     AND album.aid=track.aid"}
+{"sql":"SELECT DISTINCT aname\n      FROM album, composer, track\n     WHERE likelihood(cname LIKE '%bach%', -0.01)\n       AND composer.cid=track.cid\n       AND album.aid=track.aid"}
+{"sql":"SELECT DISTINCT aname\n      FROM album, composer, track\n     WHERE likelihood(cname LIKE '%bach%', 1.01)\n       AND composer.cid=track.cid\n       AND album.aid=track.aid"}
+{"sql":"SELECT DISTINCT aname\n      FROM album, composer, track\n     WHERE likelihood(cname LIKE '%bach%', track.cid)\n       AND composer.cid=track.cid\n       AND album.aid=track.aid"}
+{"sql":"CREATE TABLE a(a1 PRIMARY KEY, a2)"}
+{"sql":"CREATE TABLE b(b1 PRIMARY KEY, b2)"}
+{"sql":"SELECT * FROM a, b WHERE b1=a1 AND a2=5"}
+{"sql":"SELECT * FROM a, b WHERE a1=b1 AND a2=5"}
+{"sql":"SELECT * FROM a, b WHERE a2=5 AND b1=a1"}
+{"sql":"SELECT * FROM a, b WHERE a2=5 AND a1=b1"}
+{"sql":"INSERT INTO t4 VALUES('right'),('wrong')"}
+{"sql":"SELECT DISTINCT x\n   FROM (SELECT x FROM t4 GROUP BY x)\n   WHERE x='right'\n   ORDER BY x"}
+{"sql":"SELECT * FROM t1 WHERE a>?"}
+{"sql":"SELECT * FROM t1 WHERE likelihood(a>?, 0.9)"}
+{"sql":"SELECT * FROM t1 WHERE likely(a>?)"}
+{"sql":"INSERT INTO t1 SELECT 'def', b, c FROM t1"}
+{"sql":"SELECT * FROM t1 WHERE likelihood(b>?, 0.01)"}
+{"sql":"SELECT * FROM t1 WHERE likelihood(b>?, 0.9)"}
+{"sql":"SELECT * FROM t1 WHERE likely(b>?)"}
+{"sql":"SELECT * FROM t1 WHERE a=?"}
+{"sql":"SELECT * FROM t1 WHERE likelihood(a=?, 0.9)"}
+{"sql":"SELECT * FROM t1 WHERE likely(a=?)"}
+{"sql":"CREATE TABLE t1(i int, x, y, z)"}
+{"sql":"INSERT INTO t1 VALUES (1,1,1,1), (2,2,2,2), (3,3,3,3), (4,4,4,4)"}
+{"sql":"CREATE TABLE t2(i int, bool char)"}
+{"sql":"INSERT INTO t2 VALUES(1,'T'), (2,'F')"}
+{"sql":"SELECT count(*) FROM t1 LEFT JOIN t2 ON t1.i=t2.i AND bool='T'"}
+{"sql":"SELECT count(*) FROM t1 LEFT JOIN t2 ON likely(t1.i=t2.i) AND bool='T'"}
+{"sql":"INSERT INTO t1 VALUES(9,1),(1,2)"}
+{"sql":"SELECT likely(a), x FROM t1, t2 ORDER BY 1, 2"}
+{"sql":"SELECT unlikely(a), x FROM t1, t2 ORDER BY 1, 2"}
+{"sql":"SELECT likelihood(a,0.5), x FROM t1, t2 ORDER BY 1, 2"}
+{"sql":"SELECT coalesce(a,a), x FROM t1, t2 ORDER BY 1, 2"}
+{"sql":"SELECT LIKELY(t0.rowid) <= '0' FROM t0"}
+{"sql":"SELECT * FROM t0 WHERE LIKELY(t0.rowid) <= '0'"}
+{"sql":"SELECT (t0.rowid) <= '0' FROM t0"}
+{"sql":"SELECT * FROM t0 WHERE (t0.rowid) <= '0'"}
+{"sql":"SELECT unlikely(t0.rowid) <= '0', likelihood(t0.rowid,0.5) <= '0' FROM t0"}
+{"sql":"SELECT * FROM t0 WHERE unlikely(t0.rowid) <= '0'"}
+{"sql":"SELECT * FROM t0 WHERE likelihood(t0.rowid, 0.5) <= '0'"}
+{"sql":"SELECT unlikely(t0.rowid <= '0'),\n         likely(t0.rowid <= '0'),\n         likelihood(t0.rowid <= '0',0.5)\n    FROM t0"}
+{"sql":"SELECT * FROM t0 WHERE unlikely(t0.rowid <= '0')"}
+{"sql":"SELECT * FROM t0 WHERE likelihood(t0.rowid <= '0', 0.5)"}
+{"sql":"CREATE INDEX i46 ON t1(CAST( (c0 IS TRUE) AS TEXT))"}
+{"sql":"CREATE VIEW v0(c2) AS SELECT CAST( (c0 IS TRUE) AS TEXT ) FROM t1"}
+{"sql":"SELECT quote(c0), quote(c2) FROM t1, v0 WHERE  (0 < LIKELY(v0.c2))"}
+{"sql":"SELECT quote(c0), quote(c2) FROM t1, v0 WHERE  (0 < LIKELY(v0.c2)) IS TRUE"}
+{"sql":"CREATE TABLE t1(a, b FLOAT)"}
+{"sql":"INSERT INTO t1(a) VALUES(''),(NULL),('X'),(NULL)"}
+{"sql":"SELECT coalesce(max(quote(a)),10) FROM t1 GROUP BY a"}
+{"sql":"CREATE TABLE a(b TEXT)"}
+{"sql":"INSERT INTO a VALUES(0),(4),(9)"}
+{"sql":"CREATE TABLE c(d NUM)"}
+{"sql":"CREATE VIEW f(g, h) AS SELECT b, 0 FROM a UNION SELECT d, d FROM c"}
+{"sql":"SELECT g = g FROM f GROUP BY h"}
+{"sql":"INSERT INTO t1 VALUES('AAA', 'BBB')"}
+{"sql":"INSERT INTO t2 VALUES('t2')"}
+{"sql":"CREATE TABLE t3(x PRIMARY KEY, y)"}
+{"sql":"INSERT INTO t3 VALUES('AAA', 'AAA')"}
+{"sql":"SELECT * FROM t1 JOIN t2 ON unlikely(x=y) AND y='AAA'"}
+{"sql":"SELECT * FROM t1 JOIN t2 ON likely(x=y) AND y='AAA'"}
+{"sql":"SELECT * FROM t1 JOIN t2 ON x=y AND y='AAA'"}
+{"sql":"SELECT * FROM t3 JOIN t2 ON unlikely(x=y) AND y='AAA'"}
+{"sql":"SELECT * FROM t3 JOIN t2 ON likely(x=y) AND y='AAA'"}
+{"sql":"SELECT * FROM t3 JOIN t2 ON x=y AND y='AAA'"}
+{"sql":"CREATE INDEX t1x1 ON t1(likely(a))"}
+{"sql":"SELECT typeof(likely(a)) FROM t1 NOT INDEXED"}
+{"sql":"SELECT typeof(likely(a)) FROM t1 INDEXED BY t1x1"}
+{"sql":"CREATE INDEX t1x2 ON t1(abs(a))"}
+{"sql":"SELECT typeof(abs(a)) FROM t1 NOT INDEXED"}
+{"sql":"SELECT typeof(abs(a)) FROM t1 INDEXED BY t1x2"}

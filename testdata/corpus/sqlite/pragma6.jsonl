@@ -1,0 +1,2 @@
+{"sql":"CREATE TEMP TABLE t2(\n        a t1 PRIMARY KEY default 27,\n        b default(current_timestamp),\n        d TEXT UNIQUE DEFAULT 'ch`arlie',\n        c TEXT UNIQUE DEFAULT 084,\n        UNIQUE(c,b,b,a,b)\n    ) WITHOUT ROWID"}
+{"sql":"INSERT INTO t1(a) VALUES(zeroblob(40000))"}

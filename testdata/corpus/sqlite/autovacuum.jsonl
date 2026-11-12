@@ -1,0 +1,68 @@
+{"sql":"PRAGMA auto_vacuum = 1"}
+{"sql":"CREATE TABLE av1(a)"}
+{"sql":"CREATE INDEX av1_idx ON av1(a)"}
+{"sql":"pragma integrity_check"}
+{"sql":"select a from av1 order by rowid"}
+{"sql":"DROP TABLE av1"}
+{"sql":"CREATE TABLE av1(x)"}
+{"sql":"SELECT rootpage FROM sqlite_master ORDER BY rootpage"}
+{"sql":"CREATE TABLE av2(x)"}
+{"sql":"CREATE TABLE av3(x)"}
+{"sql":"CREATE TABLE av4(x)"}
+{"sql":"select * from av1"}
+{"sql":"INSERT INTO av2 SELECT 'av1' || x FROM av1"}
+{"sql":"INSERT INTO av3 SELECT 'av2' || x FROM av1"}
+{"sql":"INSERT INTO av4 SELECT 'av3' || x FROM av1"}
+{"sql":"select x from av2"}
+{"sql":"select x from av3"}
+{"sql":"select x from av4"}
+{"sql":"DROP TABLE av2"}
+{"sql":"SELECT x FROM av3"}
+{"sql":"SELECT x FROM av4"}
+{"sql":"DROP TABLE av3"}
+{"sql":"DROP TABLE av4"}
+{"sql":"SELECT rootpage FROM sqlite_master ORDER by rootpage"}
+{"sql":"CREATE TABLE av1(a PRIMARY KEY, b, c)"}
+{"sql":"INSERT INTO av1 VALUES('av1 a', 'av1 b', 'av1 c')"}
+{"sql":"CREATE TABLE av2(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE INDEX av2_i1 ON av2(b)"}
+{"sql":"CREATE INDEX av2_i2 ON av2(c)"}
+{"sql":"INSERT INTO av2 VALUES('av2 a', 'av2 b', 'av2 c')"}
+{"sql":"CREATE TABLE av3(a PRIMARY KEY, b, c)"}
+{"sql":"CREATE INDEX av3_i1 ON av3(b)"}
+{"sql":"INSERT INTO av3 VALUES('av3 a', 'av3 b', 'av3 c')"}
+{"sql":"CREATE TABLE av4(a, b, c)"}
+{"sql":"CREATE INDEX av4_i1 ON av4(a)"}
+{"sql":"CREATE INDEX av4_i2 ON av4(b)"}
+{"sql":"CREATE INDEX av4_i3 ON av4(c)"}
+{"sql":"CREATE INDEX av4_i4 ON av4(a, b, c)"}
+{"sql":"INSERT INTO av4 VALUES('av4 a', 'av4 b', 'av4 c')"}
+{"sql":"SELECT name, rootpage FROM sqlite_master"}
+{"sql":"SELECT * FROM av1 WHERE a = 'av1 a'"}
+{"sql":"SELECT * FROM av2 WHERE a = 'av2 a' AND b = 'av2 b' AND c = 'av2 c'"}
+{"sql":"SELECT * FROM av3 WHERE a = 'av3 a' AND b = 'av3 b'"}
+{"sql":"SELECT * FROM av4 WHERE a = 'av4 a' AND b = 'av4 b' AND c = 'av4 c'"}
+{"sql":"PRAGMA auto_vacuum"}
+{"sql":"PRAGMA auto_vacuum = 0"}
+{"sql":"CREATE TABLE av1(a, b)"}
+{"sql":"SELECT sum(a) FROM av1"}
+{"sql":"CREATE UNIQUE INDEX av1_i ON av1(a)"}
+{"sql":"PRAGMA auto_vacuum=1"}
+{"sql":"CREATE TABLE t1(a, b, PRIMARY KEY(a, b))"}
+{"sql":"INSERT INTO t1 VALUES(randstr(400,400),randstr(400,400))"}
+{"sql":"INSERT INTO t1 SELECT randstr(400,400), randstr(400,400) FROM t1"}
+{"sql":"CREATE TABLE t2(a, b, PRIMARY KEY(a, b))"}
+{"sql":"INSERT INTO t2 SELECT randstr(400,400), randstr(400,400) FROM t1"}
+{"sql":"CREATE TABLE t3(a, b, PRIMARY KEY(a, b))"}
+{"sql":"INSERT INTO t3 SELECT randstr(400,400), randstr(400,400) FROM t1"}
+{"sql":"CREATE TABLE t4(a, b, PRIMARY KEY(a, b))"}
+{"sql":"INSERT INTO t4 SELECT randstr(400,400), randstr(400,400) FROM t1"}
+{"sql":"CREATE TABLE t5(a, b, PRIMARY KEY(a, b))"}
+{"sql":"INSERT INTO t5 SELECT randstr(400,400), randstr(400,400) FROM t1"}
+{"sql":"DROP TABLE t4"}
+{"sql":"PRAGMA page_count"}
+{"sql":"INSERT INTO t1 VALUES(NULL, randstr(50,50))"}
+{"sql":"INSERT INTO t1 SELECT NULL, randstr(50,50) FROM t1"}
+{"sql":"DELETE FROM t1 WHERE rowid > (SELECT max(a)/2 FROM t1)"}
+{"sql":"INSERT INTO t1 VALUES(25, randomblob(104))"}
+{"sql":"REPLACE INTO t1 VALUES(25, randomblob(1117))"}

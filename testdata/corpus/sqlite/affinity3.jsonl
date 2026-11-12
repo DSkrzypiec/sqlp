@@ -1,0 +1,29 @@
+{"sql":"CREATE TABLE customer (id INT PRIMARY KEY)"}
+{"sql":"CREATE TABLE apr (id INT PRIMARY KEY, apr REAL)"}
+{"sql":"CREATE VIEW v1 AS\n  SELECT c.id, i.apr\n  FROM customer c\n  LEFT JOIN apr i ON i.id=c.id"}
+{"sql":"CREATE VIEW v1rj AS\n  SELECT c.id, i.apr\n  FROM apr i\n  RIGHT JOIN customer c ON i.id=c.id"}
+{"sql":"CREATE VIEW v2 AS\n  SELECT c.id, v1.apr\n  FROM customer c\n  LEFT JOIN v1 ON v1.id=c.id"}
+{"sql":"CREATE VIEW v2rj AS\n  SELECT c.id, v1.apr\n  FROM v1 RIGHT JOIN customer c ON v1.id=c.id"}
+{"sql":"CREATE VIEW v2rjrj AS\n  SELECT c.id, v1rj.apr\n  FROM v1rj RIGHT JOIN customer c ON v1rj.id=c.id"}
+{"sql":"INSERT INTO customer (id) VALUES (1)"}
+{"sql":"INSERT INTO apr (id, apr) VALUES (1, 12)"}
+{"sql":"INSERT INTO customer (id) VALUES (2)"}
+{"sql":"INSERT INTO apr (id, apr) VALUES (2, 12.01)"}
+{"sql":"PRAGMA automatic_index=ON"}
+{"sql":"SELECT id, (apr / 100), typeof(apr) apr_type  FROM v1"}
+{"sql":"SELECT id, (apr / 100), typeof(apr) apr_type  FROM v1rj"}
+{"sql":"SELECT id, (apr / 100), typeof(apr) apr_type  FROM v2"}
+{"sql":"SELECT id, (apr / 100), typeof(apr) apr_type  FROM v2rj"}
+{"sql":"SELECT id, (apr / 100), typeof(apr) apr_type  FROM v2rjrj"}
+{"sql":"PRAGMA automatic_index=OFF"}
+{"sql":"CREATE TABLE map_integer (id INT, name)"}
+{"sql":"INSERT INTO map_integer VALUES(1,'a')"}
+{"sql":"CREATE TABLE map_text (id TEXT, name)"}
+{"sql":"INSERT INTO map_text VALUES('4','e')"}
+{"sql":"CREATE TABLE data (id TEXT, name)"}
+{"sql":"INSERT INTO data VALUES(1,'abc')"}
+{"sql":"INSERT INTO data VALUES('4','xyz')"}
+{"sql":"CREATE VIEW idmap as\n      SELECT * FROM map_integer\n      UNION SELECT * FROM map_text"}
+{"sql":"CREATE TABLE mzed AS SELECT * FROM idmap"}
+{"sql":"SELECT * FROM data JOIN idmap USING(id)"}
+{"sql":"SELECT * FROM data JOIN mzed USING(id)"}

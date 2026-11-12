@@ -1,0 +1,41 @@
+{"sql":"CREATE VIRTUAL TABLE x1 USING tcl(vtab_command \"a b c d e f\")"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING tcl(vtab_command \"A B C D E F a b\")"}
+{"sql":"CREATE TEMP TABLE t_unionall AS \n    SELECT * FROM x1 UNION ALL SELECT * FROM x2"}
+{"sql":"CREATE TEMP TABLE t_intersect AS \n    SELECT * FROM x1 INTERSECT SELECT * FROM x2"}
+{"sql":"CREATE TEMP TABLE t_union AS \n    SELECT * FROM x1 UNION SELECT * FROM x2"}
+{"sql":"CREATE TEMP TABLE t_except AS \n    SELECT * FROM x1 EXCEPT SELECT * FROM x2"}
+{"sql":"CREATE VIRTUAL TABLE x2 USING tcl(vtab_command \"a b e f\")"}
+{"sql":"SELECT * FROM x1 \n    EXCEPT\n  SELECT * FROM x2\n  LIMIT 3"}
+{"sql":"CREATE VIRTUAL TABLE y1 USING tcl(vtab_command \"1 2 3 4 5 6 7 8 9 10\")"}
+{"sql":"SELECT * FROM y1 WHERE a = COALESCE('8', a) LIMIT 3"}
+{"sql":"SELECT * FROM y1 WHERE a = '2' LIMIT 3"}
+{"sql":"SELECT * FROM generate_series(1, 5) WHERE value = (value & 14) LIMIT 3"}
+{"sql":"SELECT value FROM generate_series(1,10) WHERE value>2 LIMIT 4 OFFSET 1"}
+{"sql":"SELECT * FROM y1 LIMIT 5 OFFSET 3"}
+{"sql":"CREATE VIRTUAL TABLE y1 USING tcl(vtab_command 1)"}
+{"sql":"CREATE VIRTUAL TABLE y1 USING tcl(vtab_command \"PRAGMA page_size=1024\")"}
+{"sql":"CREATE VIRTUAL TABLE y1 USING tcl(vtab_command \"CREATE TABLE x1(\")"}
+{"sql":"CREATE VIRTUAL TABLE y1 USING tcl(vtab_command \"CREATE TABLE x1(insert)\")"}
+{"sql":"CREATE VIRTUAL TABLE x1 USING tcl(vtab_command t1)"}
+{"sql":"SELECT * FROM x1 WHERE (a, b, c) = (?, ?, ?)"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(1, 'x', 'y', 'z', 'one')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(2, 'X', 'Y', 'Z', 'two')"}
+{"sql":"SELECT * FROM x1 WHERE (a, b, c) = ('X', 'Y', 'Z')"}
+{"sql":"SELECT * FROM x1 WHERE a='x' AND b='y' AND c='z'"}
+{"sql":"SELECT * FROM x1 \n  WHERE a='x' COLLATE nocase AND b='y' COLLATE nocase AND c='z'COLLATE nocase"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(0, 'x', 'y', 'z', 'zero')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(1, 'x', 'y', 'Z', 'one')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(2, 'x', 'Y', 'z', 'two')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(3, 'x', 'Y', 'Z', 'three')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(4, 'X', 'y', 'z', 'four')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(5, 'X', 'y', 'Z', 'five')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(6, 'X', 'Y', 'z', 'six')"}
+{"sql":"INSERT INTO t1(rowid, a, b, c, d) VALUES(7, 'X', 'Y', 'z', 'seven')"}
+{"sql":"SELECT d FROM x1 \n  WHERE a='x' AND ((b='y' AND c='z') OR (b='Y' AND c='z' COLLATE nocase))"}
+{"sql":"SELECT d FROM x1 \n  WHERE a='x' COLLATE nocase \n  AND ((b='y' AND c='z') OR (b='Y' AND c='z' COLLATE nocase))"}
+{"sql":"SELECT * FROM x1 LIMIT 50"}
+{"sql":"SELECT * FROM x1 WHERE b=c LIMIT 5"}
+{"sql":"SELECT (SELECT a FROM x1 WHERE t1.x=t1.y LIMIT 10) FROM t1"}
+{"sql":"SELECT (SELECT a FROM x1 WHERE x1.a=1) FROM t1"}
+{"sql":"SELECT (SELECT a FROM x1 WHERE x1.a=1 LIMIT 1) FROM t1"}
+{"sql":"SELECT (SELECT a FROM x1 WHERE x1.a=555 LIMIT 2) FROM t1"}

@@ -1,0 +1,8 @@
+{"sql":"pragma page_size=512"}
+{"sql":"pragma auto_vacuum=2"}
+{"sql":"pragma cache_size=16"}
+{"sql":"CREATE TABLE A(Id INTEGER, Name TEXT)"}
+{"sql":"pragma locking_mode=exclusive"}
+{"sql":"INSERT INTO a VALUES(1, 'ABCDEFGHIJKLMNOP')"}
+{"sql":"SELECT count(*) FROM a"}
+{"sql":"CREATE INDEX i1 ON a(id, name)"}

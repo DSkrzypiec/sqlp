@@ -1,0 +1,3 @@
+{"sql":"CREATE VIRTUAL TABLE temp.t1 USING fts3(a)"}
+{"sql":"ALTER TABLE t1_content RENAME c0a TO docid"}
+{"sql":"UPDATE t1 SET Col0 = 1"}

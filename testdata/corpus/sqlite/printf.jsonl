@@ -1,0 +1,16 @@
+{"sql":"SELECT printf('%.*g',2147483647,0.01)"}
+{"sql":"SELECT format('%!.20g', 13.0)"}
+{"sql":"SELECT format('%.3e', 199990000.0)"}
+{"sql":"SELECT format('%.3f', 199990000.0)"}
+{"sql":"SELECT format('%.3g', 199990000.0)"}
+{"sql":"SELECT format('%.4e', 199990000.0)"}
+{"sql":"SELECT format('%.4f', 199990000.0)"}
+{"sql":"SELECT format('%.4g', 199990000.0)"}
+{"sql":"SELECT format('%.5e', 199990000.0)"}
+{"sql":"SELECT format('%.5f', 199990000.0)"}
+{"sql":"SELECT format('%.5g', 199990000.0)"}
+{"sql":"SELECT format('%.30f',1.0000000000000000076e-50)"}
+{"sql":"SELECT length( format('%,.249f', -5.0e-300) )"}
+{"sql":"SELECT format('%0.0f %0.0g %0.0g', 0.9, 0.09, 1.9)"}
+{"sql":"SELECT format('%0.0f %#0.0f',0.0, 0.0)"}
+{"sql":"SELECT format('%,.0f %,.0f',12345e+10, 12345e+11)"}

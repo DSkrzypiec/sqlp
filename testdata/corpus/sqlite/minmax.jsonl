@@ -1,0 +1,122 @@
+{"sql":"INSERT INTO t1 VALUES(3,2)"}
+{"sql":"INSERT INTO t1 VALUES(5,3)"}
+{"sql":"INSERT INTO t1 VALUES(6,3)"}
+{"sql":"INSERT INTO t1 VALUES(7,3)"}
+{"sql":"INSERT INTO t1 VALUES(8,4)"}
+{"sql":"INSERT INTO t1 VALUES(9,4)"}
+{"sql":"INSERT INTO t1 VALUES(10,4)"}
+{"sql":"INSERT INTO t1 VALUES(11,4)"}
+{"sql":"INSERT INTO t1 VALUES(12,4)"}
+{"sql":"INSERT INTO t1 VALUES(13,4)"}
+{"sql":"INSERT INTO t1 VALUES(14,4)"}
+{"sql":"INSERT INTO t1 VALUES(15,4)"}
+{"sql":"INSERT INTO t1 VALUES(16,5)"}
+{"sql":"INSERT INTO t1 VALUES(17,5)"}
+{"sql":"INSERT INTO t1 VALUES(18,5)"}
+{"sql":"INSERT INTO t1 VALUES(19,5)"}
+{"sql":"INSERT INTO t1 VALUES(20,5)"}
+{"sql":"SELECT DISTINCT y FROM t1 ORDER BY y"}
+{"sql":"SELECT min(x) FROM t1"}
+{"sql":"SELECT max(x) FROM t1"}
+{"sql":"SELECT max(y) FROM t1"}
+{"sql":"SELECT min(x) FROM t1 WHERE x=5"}
+{"sql":"SELECT min(x) FROM t1 WHERE x>=5"}
+{"sql":"SELECT min(x) FROM t1 WHERE x>=4.5"}
+{"sql":"SELECT min(x) FROM t1 WHERE x<4.5"}
+{"sql":"SELECT min(a) FROM t2"}
+{"sql":"SELECT max(a) FROM t2"}
+{"sql":"INSERT INTO t2 VALUES((SELECT max(a) FROM t2)+1,999)"}
+{"sql":"INSERT INTO t2 VALUES(max_a_t2()+1,999)"}
+{"sql":"SELECT b FROM t2 WHERE a=(SELECT max(a) FROM t2)"}
+{"sql":"SELECT b FROM t2 WHERE a=max_a_t2()"}
+{"sql":"SELECT coalesce(min(x+0),-1), coalesce(max(x+0),-1) FROM\n        (SELECT * FROM t1 UNION SELECT NULL as 'x', NULL as 'y')"}
+{"sql":"SELECT y, coalesce(sum(x),0) FROM\n        (SELECT null AS x, y+1 AS y FROM t1 UNION SELECT * FROM t1)\n      GROUP BY y ORDER BY y"}
+{"sql":"SELECT y, count(x), count(*) FROM\n        (SELECT null AS x, y+1 AS y FROM t1 UNION SELECT * FROM t1)\n      GROUP BY y ORDER BY y"}
+{"sql":"CREATE TABLE t3(x INTEGER UNIQUE NOT NULL)"}
+{"sql":"SELECT coalesce(min(x),999) FROM t3"}
+{"sql":"SELECT coalesce(min(rowid),999) FROM t3"}
+{"sql":"SELECT coalesce(max(x),999) FROM t3"}
+{"sql":"SELECT coalesce(max(rowid),999) FROM t3"}
+{"sql":"SELECT coalesce(max(rowid),999) FROM t3 WHERE rowid<25"}
+{"sql":"SELECT min(a) FROM t2 LIMIT 1"}
+{"sql":"SELECT max(a) FROM t2 LIMIT 3"}
+{"sql":"SELECT min(a) FROM t2 LIMIT 0,100"}
+{"sql":"SELECT max(a) FROM t2 LIMIT 1,100"}
+{"sql":"SELECT min(x) FROM t3 LIMIT 1"}
+{"sql":"SELECT max(x) FROM t3 LIMIT 0"}
+{"sql":"SELECT max(a) FROM t2 LIMIT 0"}
+{"sql":"SELECT * FROM (SELECT max(x) FROM t1)"}
+{"sql":"SELECT * FROM (SELECT min(x) FROM t1)"}
+{"sql":"CREATE TABLE t4(a TEXT)"}
+{"sql":"INSERT INTO t4 VALUES('1234')"}
+{"sql":"INSERT INTO t4 VALUES('234')"}
+{"sql":"INSERT INTO t4 VALUES('34')"}
+{"sql":"SELECT min(a), max(a) FROM t4"}
+{"sql":"CREATE TABLE t5(a INTEGER)"}
+{"sql":"INSERT INTO t5 VALUES('1234')"}
+{"sql":"INSERT INTO t5 VALUES('234')"}
+{"sql":"INSERT INTO t5 VALUES('34')"}
+{"sql":"SELECT min(a), max(a) FROM t5"}
+{"sql":"SELECT max(rowid) AS yy FROM t4 UNION SELECT max(rowid) FROM t5"}
+{"sql":"SELECT max(yy) FROM (\n        SELECT max(rowid) AS yy FROM t4 UNION SELECT max(rowid) FROM t5\n      )"}
+{"sql":"SELECT max(yy) FROM (\n        SELECT max(rowid) AS yy FROM t4 EXCEPT SELECT max(rowid) FROM t5\n      )"}
+{"sql":"SELECT coalesce(min(x),-1) FROM t6"}
+{"sql":"SELECT max(x) FROM t6"}
+{"sql":"CREATE INDEX i6 ON t6(x)"}
+{"sql":"DELETE FROM t6 WHERE x NOT NULL"}
+{"sql":"SELECT count(x) FROM t6"}
+{"sql":"SELECT (SELECT min(x) FROM t6), (SELECT max(x) FROM t6)"}
+{"sql":"SELECT min(x), max(x) FROM t6"}
+{"sql":"CREATE INDEX t1i2 ON t1(y,x)"}
+{"sql":"SELECT min(x) FROM t1 WHERE y=5"}
+{"sql":"SELECT max(x) FROM t1 WHERE y=5"}
+{"sql":"SELECT min(x) FROM t1 WHERE y=6"}
+{"sql":"SELECT max(x) FROM t1 WHERE y=6"}
+{"sql":"SELECT min(x) FROM t1 WHERE y=1"}
+{"sql":"SELECT max(x) FROM t1 WHERE y=1"}
+{"sql":"SELECT min(x) FROM t1 WHERE y=0"}
+{"sql":"SELECT max(x) FROM t1 WHERE y=0"}
+{"sql":"SELECT min(x) FROM t1 WHERE y=5 AND x>=17.5"}
+{"sql":"SELECT max(x) FROM t1 WHERE y=5 AND x>=17.5"}
+{"sql":"INSERT INTO t7 SELECT y, x, x*y FROM t1"}
+{"sql":"INSERT INTO t7 SELECT y, x, x*y+1000 FROM t1"}
+{"sql":"CREATE INDEX t7i1 ON t7(a,b,c)"}
+{"sql":"SELECT min(a) FROM t7"}
+{"sql":"SELECT max(a) FROM t7"}
+{"sql":"SELECT max(a) FROM t7 WHERE a=5"}
+{"sql":"SELECT min(b) FROM t7 WHERE a=5"}
+{"sql":"SELECT max(b) FROM t7 WHERE a=5"}
+{"sql":"SELECT min(b) FROM t7 WHERE a=4"}
+{"sql":"SELECT max(b) FROM t7 WHERE a=4"}
+{"sql":"SELECT min(c) FROM t7 WHERE a=4 AND b=10"}
+{"sql":"SELECT max(c) FROM t7 WHERE a=4 AND b=10"}
+{"sql":"SELECT min(rowid) FROM t7"}
+{"sql":"SELECT max(rowid) FROM t7"}
+{"sql":"SELECT min(rowid) FROM t7 WHERE a=3"}
+{"sql":"SELECT max(rowid) FROM t7 WHERE a=3"}
+{"sql":"SELECT min(rowid) FROM t7 WHERE a=3 AND b=5"}
+{"sql":"SELECT max(rowid) FROM t7 WHERE a=3 AND b=5"}
+{"sql":"SELECT min(rowid) FROM t7 WHERE a=3 AND b=5 AND c=1015"}
+{"sql":"SELECT max(rowid) FROM t7 WHERE a=3 AND b=5 AND c=15"}
+{"sql":"INSERT INTO t1 VALUES('a', 1, 1)"}
+{"sql":"INSERT INTO t1 VALUES('b', 6, 6)"}
+{"sql":"INSERT INTO t1 VALUES('c', 5, 5)"}
+{"sql":"INSERT INTO t1 VALUES('a', 4, 4)"}
+{"sql":"INSERT INTO t1 VALUES('a', 5, 5)"}
+{"sql":"INSERT INTO t1 VALUES('c', 6, 6)"}
+{"sql":"INSERT INTO t1 VALUES('b', 4, 4)"}
+{"sql":"INSERT INTO t1 VALUES('c', 7, 7)"}
+{"sql":"INSERT INTO t1 VALUES('b', 2, 2)"}
+{"sql":"INSERT INTO t1 VALUES('b', 3, 3)"}
+{"sql":"INSERT INTO t1 VALUES('a', 3, 3)"}
+{"sql":"INSERT INTO t1 VALUES('b', 5, 5)"}
+{"sql":"INSERT INTO t1 VALUES('c', 4, 4)"}
+{"sql":"INSERT INTO t1 VALUES('c', 3, 3)"}
+{"sql":"INSERT INTO t1 VALUES('a', 2, 2)"}
+{"sql":"CREATE TABLE t14(a INTEGER, b INTEGER)"}
+{"sql":"INSERT INTO t14(a,b) VALUES(100,2),(200,2),(300,2),(400,1),(500,2)"}
+{"sql":"SELECT min(a) FROM t14 WHERE b='2' AND a>'50'"}
+{"sql":"CREATE INDEX t14ba ON t14(b,a)"}
+{"sql":"CREATE TABLE t3(c)"}
+{"sql":"INSERT INTO t2 VALUES(5)"}
+{"sql":"SELECT MIN((SELECT b FROM t2 UNION SELECT x FROM (SELECT x FROM (SELECT 1 AS x WHERE t1.a=1) UNION ALL SELECT c FROM t3))) FROM t1"}

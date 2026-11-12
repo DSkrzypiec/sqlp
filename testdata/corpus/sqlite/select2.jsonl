@@ -1,0 +1,23 @@
+{"sql":"CREATE TABLE tbl1(f1 int, f2 int)"}
+{"sql":"CREATE TABLE tbl2(f1 int, f2 int, f3 int)"}
+{"sql":"SELECT count(*) FROM tbl2"}
+{"sql":"SELECT count(*) FROM tbl2 WHERE f2>1000"}
+{"sql":"SELECT f1 FROM tbl2 WHERE 1000=f2"}
+{"sql":"CREATE INDEX idx1 ON tbl2(f2)"}
+{"sql":"SELECT f1 FROM tbl2 WHERE f2=1000"}
+{"sql":"SELECT * FROM tbl2 WHERE 1000=f2"}
+{"sql":"SELECT * FROM tbl2 WHERE f2=1000"}
+{"sql":"DROP INDEX idx1"}
+{"sql":"SELECT f1 FROM tbl2 WHERE f2==2000"}
+{"sql":"INSERT INTO aa VALUES(1)"}
+{"sql":"INSERT INTO aa VALUES(3)"}
+{"sql":"INSERT INTO bb VALUES(2)"}
+{"sql":"INSERT INTO bb VALUES(4)"}
+{"sql":"SELECT * FROM aa, bb WHERE max(a,b)>2"}
+{"sql":"INSERT INTO bb VALUES(0)"}
+{"sql":"SELECT * FROM aa CROSS JOIN bb WHERE b"}
+{"sql":"SELECT * FROM aa CROSS JOIN bb WHERE NOT b"}
+{"sql":"SELECT * FROM aa, bb WHERE min(a,b)"}
+{"sql":"SELECT * FROM aa, bb WHERE NOT min(a,b)"}
+{"sql":"SELECT * FROM aa, bb WHERE CASE WHEN a=b-1 THEN 1 END"}
+{"sql":"SELECT * FROM aa, bb WHERE CASE WHEN a=b-1 THEN 0 ELSE 1 END"}

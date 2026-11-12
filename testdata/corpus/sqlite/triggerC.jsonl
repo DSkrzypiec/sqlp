@@ -1,0 +1,115 @@
+{"sql":"CREATE TABLE log(t, a1, b1, c1, a2, b2, c2)"}
+{"sql":"CREATE TRIGGER trig1 BEFORE INSERT ON t1 BEGIN\n      INSERT INTO log VALUES('before', NULL, NULL, NULL, new.a, new.b, new.c);\n    END"}
+{"sql":"CREATE TRIGGER trig2 AFTER INSERT ON t1 BEGIN\n      INSERT INTO log VALUES('after', NULL, NULL, NULL, new.a, new.b, new.c);\n    END"}
+{"sql":"CREATE TRIGGER trig3 BEFORE UPDATE ON t1 BEGIN\n      INSERT INTO log VALUES('before', old.a,old.b,old.c, new.a,new.b,new.c);\n    END"}
+{"sql":"CREATE TRIGGER trig4 AFTER UPDATE ON t1 BEGIN\n      INSERT INTO log VALUES('after', old.a,old.b,old.c, new.a,new.b,new.c);\n    END"}
+{"sql":"CREATE TRIGGER trig5 BEFORE DELETE ON t1 BEGIN\n      INSERT INTO log VALUES('before', old.a,old.b,old.c, NULL,NULL,NULL);\n    END"}
+{"sql":"CREATE TRIGGER trig6 AFTER DELETE ON t1 BEGIN\n      INSERT INTO log VALUES('after', old.a,old.b,old.c, NULL,NULL,NULL);\n    END"}
+{"sql":"UPDATE t1 SET a = 'a'"}
+{"sql":"CREATE TRIGGER t4t AFTER DELETE ON t4 BEGIN\n      SELECT RAISE(ABORT, 'delete is not supported');\n    END"}
+{"sql":"CREATE TABLE t5 (a primary key, b, c)"}
+{"sql":"INSERT INTO t5 values (1, 2, 3)"}
+{"sql":"CREATE TRIGGER au_tbl AFTER UPDATE ON t5 BEGIN\n      UPDATE OR IGNORE t5 SET a = new.a, c = 10;\n    END"}
+{"sql":"UPDATE OR REPLACE t5 SET a = 4 WHERE a = 1"}
+{"sql":"CREATE TABLE t6(a INTEGER PRIMARY KEY, b)"}
+{"sql":"create trigger r1 after update on t6 for each row begin\n      SELECT 1;\n    end"}
+{"sql":"UPDATE t6 SET a=a"}
+{"sql":"CREATE TABLE cnt(n)"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b UNIQUE, c, d, e)"}
+{"sql":"CREATE TRIGGER t1r1 AFTER UPDATE ON t1 BEGIN UPDATE cnt SET n=n+1; END"}
+{"sql":"INSERT INTO t1 VALUES(6,7,8,9,10)"}
+{"sql":"INSERT INTO t1 VALUES(11,12,13,14,15)"}
+{"sql":"UPDATE OR ROLLBACK t1 SET a=100"}
+{"sql":"CREATE TABLE t2(a PRIMARY KEY)"}
+{"sql":"DROP TRIGGER t2_trig"}
+{"sql":"INSERT INTO t2 VALUES(10)"}
+{"sql":"CREATE TRIGGER t3i AFTER INSERT ON t3 BEGIN\n      DELETE FROM t3 WHERE rowid = new.rowid;\n    END"}
+{"sql":"CREATE TRIGGER t3d AFTER DELETE ON t3 BEGIN\n      INSERT INTO t3 VALUES(old.a, old.b);\n    END"}
+{"sql":"INSERT INTO t3 VALUES(0,0)"}
+{"sql":"INSERT INTO t3b VALUES(1)"}
+{"sql":"CREATE TABLE t4(a TEXT,b INTEGER,c REAL)"}
+{"sql":"CREATE TRIGGER t4bi BEFORE INSERT ON t4 BEGIN\n      INSERT INTO log VALUES(new.rowid || ' ' || typeof(new.rowid) || ' ' ||\n                             new.a     || ' ' || typeof(new.a)     || ' ' ||\n                             new.b     || ' ' || typeof(new.b)     || ' ' ||\n                             new.c     || ' ' || typeof(new.c)\n      );\n    END"}
+{"sql":"CREATE TRIGGER t4ai AFTER INSERT ON t4 BEGIN\n      INSERT INTO log VALUES(new.rowid || ' ' || typeof(new.rowid) || ' ' ||\n                             new.a     || ' ' || typeof(new.a)     || ' ' ||\n                             new.b     || ' ' || typeof(new.b)     || ' ' ||\n                             new.c     || ' ' || typeof(new.c)\n      );\n    END"}
+{"sql":"CREATE TRIGGER t4bd BEFORE DELETE ON t4 BEGIN\n      INSERT INTO log VALUES(old.rowid || ' ' || typeof(old.rowid) || ' ' ||\n                             old.a     || ' ' || typeof(old.a)     || ' ' ||\n                             old.b     || ' ' || typeof(old.b)     || ' ' ||\n                             old.c     || ' ' || typeof(old.c)\n      );\n    END"}
+{"sql":"CREATE TRIGGER t4ad AFTER DELETE ON t4 BEGIN\n      INSERT INTO log VALUES(old.rowid || ' ' || typeof(old.rowid) || ' ' ||\n                             old.a     || ' ' || typeof(old.a)     || ' ' ||\n                             old.b     || ' ' || typeof(old.b)     || ' ' ||\n                             old.c     || ' ' || typeof(old.c)\n      );\n    END"}
+{"sql":"CREATE TRIGGER t4bu BEFORE UPDATE ON t4 BEGIN\n      INSERT INTO log VALUES(old.rowid || ' ' || typeof(old.rowid) || ' ' ||\n                             old.a     || ' ' || typeof(old.a)     || ' ' ||\n                             old.b     || ' ' || typeof(old.b)     || ' ' ||\n                             old.c     || ' ' || typeof(old.c)\n      );\n      INSERT INTO log VALUES(new.rowid || ' ' || typeof(new.rowid) || ' ' ||\n                             new.a     || ' ' || typeof(new.a)     || ' ' ||\n                             new.b     || ' ' || typeof(new.b)     || ' ' ||\n                             new.c     || ' ' || typeof(new.c)\n      );\n    END"}
+{"sql":"CREATE TRIGGER t4au AFTER UPDATE ON t4 BEGIN\n      INSERT INTO log VALUES(old.rowid || ' ' || typeof(old.rowid) || ' ' ||\n                             old.a     || ' ' || typeof(old.a)     || ' ' ||\n                             old.b     || ' ' || typeof(old.b)     || ' ' ||\n                             old.c     || ' ' || typeof(old.c)\n      );\n      INSERT INTO log VALUES(new.rowid || ' ' || typeof(new.rowid) || ' ' ||\n                             new.a     || ' ' || typeof(new.a)     || ' ' ||\n                             new.b     || ' ' || typeof(new.b)     || ' ' ||\n                             new.c     || ' ' || typeof(new.c)\n      );\n    END"}
+{"sql":"CREATE TABLE t5(a INTEGER PRIMARY KEY, b)"}
+{"sql":"CREATE UNIQUE INDEX t5i ON t5(b)"}
+{"sql":"INSERT INTO t5 VALUES(1, 'a')"}
+{"sql":"INSERT INTO t5 VALUES(2, 'b')"}
+{"sql":"INSERT INTO t5 VALUES(3, 'c')"}
+{"sql":"CREATE TABLE t5g(a, b, c)"}
+{"sql":"CREATE TRIGGER t5t BEFORE DELETE ON t5 BEGIN\n      INSERT INTO t5g VALUES(old.a, old.b, (SELECT count(*) FROM t5));\n    END"}
+{"sql":"DROP TRIGGER t5t"}
+{"sql":"CREATE TRIGGER t5t AFTER DELETE ON t5 BEGIN\n      INSERT INTO t5g VALUES(old.a, old.b, (SELECT count(*) FROM t5));\n    END"}
+{"sql":"PRAGMA recursive_triggers"}
+{"sql":"INSERT INTO t7 VALUES(1, 2)"}
+{"sql":"INSERT INTO t7 VALUES(3, 4)"}
+{"sql":"CREATE TRIGGER t7t BEFORE UPDATE ON t7 BEGIN\n      DELETE FROM t7 WHERE a = 1;\n    END"}
+{"sql":"CREATE TRIGGER t7ta AFTER UPDATE ON t7 BEGIN\n      INSERT INTO t8 VALUES('after fired ' || old.rowid || '->' || new.rowid);\n    END"}
+{"sql":"UPDATE t7 SET b=7 WHERE a = 5"}
+{"sql":"UPDATE t7 SET b=7 WHERE a = 1"}
+{"sql":"DROP TRIGGER t7t"}
+{"sql":"CREATE TRIGGER t7t BEFORE UPDATE ON t7 WHEN (old.rowid!=1 OR new.rowid!=8)\n    BEGIN\n      UPDATE t7 set rowid = 8 WHERE rowid=1;\n    END"}
+{"sql":"SELECT rowid, * FROM t7"}
+{"sql":"DROP TRIGGER t7ta"}
+{"sql":"CREATE TRIGGER t7t BEFORE DELETE ON t7 BEGIN\n      UPDATE t7 set rowid = 8 WHERE rowid=1;\n    END"}
+{"sql":"CREATE TRIGGER t7ta AFTER DELETE ON t7 BEGIN\n      INSERT INTO t8 VALUES('after fired ' || old.rowid);\n    END"}
+{"sql":"DELETE FROM t7 WHERE a = 3"}
+{"sql":"DELETE FROM t7 WHERE a = 1"}
+{"sql":"CREATE TABLE t9(a,b)"}
+{"sql":"CREATE INDEX t9b ON t9(b)"}
+{"sql":"INSERT INTO t9 VALUES(1,0)"}
+{"sql":"INSERT INTO t9 VALUES(2,1)"}
+{"sql":"INSERT INTO t9 VALUES(3,2)"}
+{"sql":"INSERT INTO t9 SELECT a+3, a+2 FROM t9"}
+{"sql":"INSERT INTO t9 SELECT a+6, a+5 FROM t9"}
+{"sql":"SELECT a FROM t9 ORDER BY a"}
+{"sql":"CREATE TRIGGER t9r1 AFTER DELETE ON t9 BEGIN\n      DELETE FROM t9 WHERE b=old.a;\n    END"}
+{"sql":"DELETE FROM t9 WHERE b=4"}
+{"sql":"CREATE TABLE t10(a, updatecnt DEFAULT 0)"}
+{"sql":"CREATE TRIGGER t10_bu BEFORE UPDATE OF a ON t10 BEGIN\n      UPDATE t10 SET updatecnt = updatecnt+1 WHERE rowid = old.rowid;\n    END"}
+{"sql":"INSERT INTO t10(a) VALUES('hello')"}
+{"sql":"UPDATE t10 SET a = 'world'"}
+{"sql":"UPDATE t10 SET a = 'tcl', updatecnt = 5"}
+{"sql":"CREATE TABLE t11(\n      c1,   c2,  c3,  c4,  c5,  c6,  c7,  c8,  c9, c10,\n      c11, c12, c13, c14, c15, c16, c17, c18, c19, c20,\n      c21, c22, c23, c24, c25, c26, c27, c28, c29, c30,\n      c31, c32, c33, c34, c35, c36, c37, c38, c39, c40\n    )"}
+{"sql":"CREATE TRIGGER t11_bu BEFORE UPDATE OF c1 ON t11 BEGIN\n      UPDATE t11 SET c31 = c31+1, c32=c32+1 WHERE rowid = old.rowid;\n    END"}
+{"sql":"INSERT INTO t11 VALUES(\n      1,   2,  3,  4,  5,  6,  7,  8,  9, 10,\n      11, 12, 13, 14, 15, 16, 17, 18, 19, 20,\n      21, 22, 23, 24, 25, 26, 27, 28, 29, 30,\n      31, 32, 33, 34, 35, 36, 37, 38, 39, 40\n    )"}
+{"sql":"UPDATE t11 SET c4=35, c33=22, c1=5"}
+{"sql":"CREATE TABLE log(a, b)"}
+{"sql":"CREATE TRIGGER tt1 BEFORE INSERT ON t1 BEGIN \n        INSERT INTO log VALUES(new.a, new.b);\n      END"}
+{"sql":"CREATE TRIGGER tt2 AFTER INSERT ON t1 BEGIN \n        INSERT INTO log VALUES(new.a, new.b);\n      END"}
+{"sql":"DROP TRIGGER tt1"}
+{"sql":"CREATE VIEW v2 AS SELECT * FROM t2"}
+{"sql":"CREATE TRIGGER tv2 INSTEAD OF INSERT ON v2 BEGIN\n      INSERT INTO log VALUES(new.a, new.b);\n    END"}
+{"sql":"INSERT INTO v2 DEFAULT VALUES"}
+{"sql":"SELECT a, b, a IS NULL, b IS NULL FROM log"}
+{"sql":"CREATE TRIGGER tr1 AFTER INSERT ON t1 BEGIN SELECT 1 ; END"}
+{"sql":"PRAGMA recursive_triggers = ON"}
+{"sql":"CREATE TABLE t12(a, b)"}
+{"sql":"INSERT INTO t12 VALUES(1, 2)"}
+{"sql":"CREATE TRIGGER tr12 AFTER UPDATE ON t12 BEGIN\n    UPDATE t12 SET a=new.a+1, b=new.b+1;\n  END"}
+{"sql":"UPDATE t12 SET a=a+1, b=b+1"}
+{"sql":"1 2 3","reject":true}
+{"sql":"CREATE TABLE node(\n      id int not null primary key, \n      pid int not null default 0 references node,\n      key varchar not null, \n      path varchar default '',\n      unique(pid, key)\n      )"}
+{"sql":"CREATE TRIGGER node_delete_referencing AFTER DELETE ON \"node\"\n    BEGIN\n    DELETE FROM \"node\" WHERE pid = old.\"id\";\n  END"}
+{"sql":"INSERT INTO node(id, pid, key) VALUES(9, 0, 'test')"}
+{"sql":"INSERT INTO node(id, pid, key) VALUES(90, 9, 'test1')"}
+{"sql":"INSERT INTO node(id, pid, key) VALUES(900, 90, 'test2')"}
+{"sql":"DELETE FROM node WHERE id=9"}
+{"sql":"SELECT * FROM node"}
+{"sql":"CREATE TABLE   x1  (x)"}
+{"sql":"CREATE TABLE   x2  (a, b)"}
+{"sql":"CREATE TABLE '\"x2\"'(a, b)"}
+{"sql":"INSERT INTO x2 VALUES(1, 2)"}
+{"sql":"INSERT INTO x2 VALUES(3, 4)"}
+{"sql":"INSERT INTO '\"x2\"' SELECT * FROM x2"}
+{"sql":"CREATE TRIGGER x1ai AFTER INSERT ON x1 BEGIN\n    INSERT INTO \"\"\"x2\"\"\" VALUES('x', 'y');\n    DELETE FROM \"\"\"x2\"\"\" WHERE a=1;\n    UPDATE \"\"\"x2\"\"\" SET b = 11 WHERE a = 3;\n  END"}
+{"sql":"INSERT INTO x1 VALUES('go!')"}
+{"sql":"SELECT * FROM \"\"\"x2\"\"\""}
+{"sql":"SELECT raise(ABORT, 'msg') FROM sqlite_master \n  UNION SELECT 1 \n  ORDER BY raise(IGNORE)"}
+{"sql":"SELECT count(*) FROM sqlite_master \n  GROUP BY raise(IGNORE) \n  HAVING raise(ABORT, 'msg')"}
+{"sql":"CREATE TABLE xyz(x INTEGER PRIMARY KEY, y, z)"}
+{"sql":"CREATE TRIGGER xyz_tr BEFORE INSERT ON xyz BEGIN\n    SELECT new.x;\n  END"}
+{"sql":"INSERT INTO xyz VALUES('hello', 2, 3)"}

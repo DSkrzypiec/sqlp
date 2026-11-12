@@ -1,0 +1,17 @@
+{"sql":"CREATE TABLE t1(x INTEGER, y INTEGER)"}
+{"sql":"WITH data(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM data\n  )\n  INSERT INTO t1 SELECT isqrt(i), isqrt(i) FROM data LIMIT 400"}
+{"sql":"CREATE INDEX t1x ON t1(x)"}
+{"sql":"CREATE INDEX t1y ON t1(y)"}
+{"sql":"SELECT * FROM t1 WHERE x = substr('145', 2, 1) AND y = func(1, 2, 3)"}
+{"sql":"UPDATE t1 SET y=y+1 WHERE x = substr('145', 2, 1) AND y = func(1, 2, 3)"}
+{"sql":"SELECT * FROM t1 WHERE x = error('error one') AND y = 4"}
+{"sql":"SELECT * FROM t1 WHERE x = zeroblob(2200000000) AND y = 4"}
+{"sql":"SELECT * FROM t1 WHERE x = dstr() AND y = 11"}
+{"sql":"SELECT * FROM t1 WHERE x = test_zeroblob(1100000) AND y = 4"}
+{"sql":"CREATE TABLE t1(a INTEGER PRIMARY KEY, b TEXT, c INT)"}
+{"sql":"WITH RECURSIVE c(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM c WHERE x<10000)\n    INSERT INTO t1(a, c) SELECT x, x FROM c"}
+{"sql":"UPDATE t1 SET b=printf('x%02x',a/500) WHERE a>4000"}
+{"sql":"UPDATE t1 SET b='xyz' where a>=9998"}
+{"sql":"SELECT count(*), b FROM t1 GROUP BY 2 ORDER BY 2"}
+{"sql":"explain query plan\n  SELECT * FROM t1 WHERE b='xyz' AND b IS NOT NULL ORDER BY +a"}
+{"sql":"SELECT * FROM t1 WHERE b='xyz' AND b IS NOT NULL ORDER BY +a"}

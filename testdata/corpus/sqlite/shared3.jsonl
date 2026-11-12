@@ -1,0 +1,5 @@
+{"sql":"PRAGMA main.cache_size"}
+{"sql":"select count(*) from sqlite_master"}
+{"sql":"INSERT INTO t1 VALUES(10, randomblob(5000))"}
+{"sql":"INSERT INTO t1 VALUES(10, randomblob(10000))"}
+{"sql":"INSERT INTO t1 SELECT randomblob(500), randomblob(500) FROM t1"}

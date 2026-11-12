@@ -1,0 +1,3 @@
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(x)"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(x)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts3(x)"}

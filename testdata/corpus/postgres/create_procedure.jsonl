@@ -1,0 +1,93 @@
+{"sql":"CALL nonexistent()","shape":"CALL nonexistent();"}
+{"sql":"CALL random()","shape":"CALL random();"}
+{"sql":"CREATE FUNCTION cp_testfunc1(a int) RETURNS int LANGUAGE SQL AS $$ SELECT a $$","shape":"CREATE FUNCTION cp_testfunc1(a int) RETURNS int LANGUAGE SQL AS ' SELECT a ';"}
+{"sql":"CREATE TABLE cp_test (a int, b text)","shape":"CREATE TABLE cp_test (a int, b text);"}
+{"sql":"CREATE PROCEDURE ptest1(x text)\nLANGUAGE SQL\nAS $$\nINSERT INTO cp_test VALUES (1, x);\n$$","shape":"CREATE PROCEDURE ptest1(x text) LANGUAGE SQL AS '\nINSERT INTO cp_test VALUES (1, x);\n';"}
+{"sql":"SELECT pg_get_functiondef('ptest1'::regproc)","shape":"SELECT pg_get_functiondef('ptest1'::regproc);"}
+{"sql":"SELECT ptest1('x')","shape":"SELECT ptest1('x');"}
+{"sql":"CALL ptest1('a')","shape":"CALL ptest1('a');"}
+{"sql":"CALL ptest1('xy' || 'zzy')","shape":"CALL ptest1('xy' || 'zzy');"}
+{"sql":"CALL ptest1(substring(random()::numeric(20,15)::text, 1, 1))","shape":"CALL ptest1(substring(random()::numeric(20, 15)::text, 1, 1));"}
+{"sql":"SELECT * FROM cp_test ORDER BY b COLLATE \"C\"","shape":"SELECT * FROM cp_test ORDER BY b COLLATE \"C\";"}
+{"sql":"CREATE PROCEDURE ptest1s(x text)\nLANGUAGE SQL\nBEGIN ATOMIC\n  INSERT INTO cp_test VALUES (1, x);\nEND","shape":"CREATE PROCEDURE ptest1s(x text) LANGUAGE SQL BEGIN ATOMIC INSERT INTO cp_test VALUES (1, x); END;"}
+{"sql":"SELECT pg_get_functiondef('ptest1s'::regproc)","shape":"SELECT pg_get_functiondef('ptest1s'::regproc);"}
+{"sql":"CALL ptest1s('b')","shape":"CALL ptest1s('b');"}
+{"sql":"CREATE PROCEDURE ptestx()\nLANGUAGE SQL\nBEGIN ATOMIC\n  CREATE TABLE x (a int);\nEND","shape":"CREATE PROCEDURE ptestx() LANGUAGE SQL BEGIN ATOMIC CREATE TABLE x (a int); END;"}
+{"sql":"CREATE PROCEDURE ptest2()\nLANGUAGE SQL\nAS $$\nSELECT 5;\n$$","shape":"CREATE PROCEDURE ptest2() LANGUAGE SQL AS '\nSELECT 5;\n';"}
+{"sql":"CALL ptest2()","shape":"CALL ptest2();"}
+{"sql":"TRUNCATE cp_test","shape":"TRUNCATE TABLE cp_test;"}
+{"sql":"CREATE PROCEDURE ptest3(y text)\nLANGUAGE SQL\nAS $$\nCALL ptest1(y);\nCALL ptest1($1);\n$$","shape":"CREATE PROCEDURE ptest3(y text) LANGUAGE SQL AS '\nCALL ptest1(y);\nCALL ptest1($1);\n';"}
+{"sql":"CALL ptest3('b')","shape":"CALL ptest3('b');"}
+{"sql":"SELECT * FROM cp_test","shape":"SELECT * FROM cp_test;"}
+{"sql":"CREATE PROCEDURE ptest4a(INOUT a int, INOUT b int)\nLANGUAGE SQL\nAS $$\nSELECT 1, 2;\n$$","shape":"CREATE PROCEDURE ptest4a(INOUT a int, INOUT b int) LANGUAGE SQL AS '\nSELECT 1, 2;\n';"}
+{"sql":"CALL ptest4a(NULL, NULL)","shape":"CALL ptest4a(NULL, NULL);"}
+{"sql":"CREATE PROCEDURE ptest4b(INOUT b int, INOUT a int)\nLANGUAGE SQL\nAS $$\nCALL ptest4a(a, b);  -- error, not supported\n$$","shape":"CREATE PROCEDURE ptest4b(INOUT b int, INOUT a int) LANGUAGE SQL AS '\nCALL ptest4a(a, b);  -- error, not supported\n';"}
+{"sql":"CREATE PROCEDURE ptest4c(INOUT comp int8_tbl)\nLANGUAGE SQL\nAS $$\nSELECT ROW(1, 2);\n$$","shape":"CREATE PROCEDURE ptest4c(INOUT comp int8_tbl) LANGUAGE SQL AS '\nSELECT ROW(1, 2);\n';"}
+{"sql":"CALL ptest4c(NULL)","shape":"CALL ptest4c(NULL);"}
+{"sql":"DROP PROCEDURE ptest4a, ptest4c"}
+{"sql":"CREATE OR REPLACE PROCEDURE ptest5(a int, b text, c int default 100)\nLANGUAGE SQL\nAS $$\nINSERT INTO cp_test VALUES(a, b);\nINSERT INTO cp_test VALUES(c, b);\n$$","shape":"CREATE OR REPLACE PROCEDURE ptest5(a int, b text, c int DEFAULT 100) LANGUAGE SQL AS '\nINSERT INTO cp_test VALUES(a, b);\nINSERT INTO cp_test VALUES(c, b);\n';"}
+{"sql":"CALL ptest5(10, 'Hello', 20)","shape":"CALL ptest5(10, 'Hello', 20);"}
+{"sql":"CALL ptest5(10, 'Hello')","shape":"CALL ptest5(10, 'Hello');"}
+{"sql":"CALL ptest5(10, b => 'Hello')","shape":"CALL ptest5(10, b => 'Hello');"}
+{"sql":"CALL ptest5(b => 'Hello', a => 10)","shape":"CALL ptest5(b => 'Hello', a => 10);"}
+{"sql":"CREATE PROCEDURE ptest6(a int, b anyelement)\nLANGUAGE SQL\nAS $$\nSELECT NULL::int;\n$$","shape":"CREATE PROCEDURE ptest6(a int, b anyelement) LANGUAGE SQL AS '\nSELECT NULL::int;\n';"}
+{"sql":"CALL ptest6(1, 2)","shape":"CALL ptest6(1, 2);"}
+{"sql":"CREATE PROCEDURE ptest6a(inout a anyelement, out b anyelement)\nLANGUAGE SQL\nAS $$\nSELECT $1, $1;\n$$","shape":"CREATE PROCEDURE ptest6a(INOUT a anyelement, OUT b anyelement) LANGUAGE SQL AS '\nSELECT $1, $1;\n';"}
+{"sql":"CALL ptest6a(1, null)","shape":"CALL ptest6a(1, NULL);"}
+{"sql":"CALL ptest6a(1.1, null)","shape":"CALL ptest6a(1.1, NULL);"}
+{"sql":"CREATE PROCEDURE ptest6b(a anyelement, out b anyelement, out c anyarray)\nLANGUAGE SQL\nAS $$\nSELECT $1, array[$1];\n$$","shape":"CREATE PROCEDURE ptest6b(a anyelement, OUT b anyelement, OUT c anyarray) LANGUAGE SQL AS '\nSELECT $1, array[$1];\n';"}
+{"sql":"CALL ptest6b(1, null, null)","shape":"CALL ptest6b(1, NULL, NULL);"}
+{"sql":"CALL ptest6b(1.1, null, null)","shape":"CALL ptest6b(1.1, NULL, NULL);"}
+{"sql":"CREATE PROCEDURE ptest6c(inout a anyelement, inout b anyelement)\nLANGUAGE SQL\nAS $$\nSELECT $1, 1;\n$$","shape":"CREATE PROCEDURE ptest6c(INOUT a anyelement, INOUT b anyelement) LANGUAGE SQL AS '\nSELECT $1, 1;\n';"}
+{"sql":"CALL ptest6c(1, null)","shape":"CALL ptest6c(1, NULL);"}
+{"sql":"CALL ptest6c(1.1, null)","shape":"CALL ptest6c(1.1, NULL);"}
+{"sql":"CREATE PROCEDURE ptest7(a text, b text)\nLANGUAGE SQL\nAS $$\nSELECT a = b;\n$$","shape":"CREATE PROCEDURE ptest7(a text, b text) LANGUAGE SQL AS '\nSELECT a = b;\n';"}
+{"sql":"CALL ptest7(least('a', 'b'), 'a')","shape":"CALL ptest7(least('a', 'b'), 'a');"}
+{"sql":"CREATE PROCEDURE ptest8(x text)\nBEGIN ATOMIC\nEND","shape":"CREATE PROCEDURE ptest8(x text) BEGIN ATOMIC END;"}
+{"sql":"SELECT pg_get_functiondef('ptest8'::regproc)","shape":"SELECT pg_get_functiondef('ptest8'::regproc);"}
+{"sql":"CALL ptest8('')","shape":"CALL ptest8('');"}
+{"sql":"CREATE PROCEDURE ptest9(OUT a int)\nLANGUAGE SQL\nAS $$\nINSERT INTO cp_test VALUES (1, 'a');\nSELECT 1;\n$$","shape":"CREATE PROCEDURE ptest9(OUT a int) LANGUAGE SQL AS '\nINSERT INTO cp_test VALUES (1, ''a'');\nSELECT 1;\n';"}
+{"sql":"CALL ptest9(NULL)","shape":"CALL ptest9(NULL);"}
+{"sql":"CALL ptest9(1/0)","shape":"CALL ptest9(1 / 0);"}
+{"sql":"CALL ptest9(1./0.)","shape":"CALL ptest9(1. / 0.);"}
+{"sql":"CREATE PROCEDURE ptest10(OUT a int, IN b int, IN c int)\nLANGUAGE SQL AS $$ SELECT b - c $$","shape":"CREATE PROCEDURE ptest10(OUT a int, IN b int, IN c int) LANGUAGE SQL AS ' SELECT b - c ';"}
+{"sql":"CALL ptest10(null, 7, 4)","shape":"CALL ptest10(NULL, 7, 4);"}
+{"sql":"CALL ptest10(a => null, b => 8, c => 2)","shape":"CALL ptest10(a => NULL, b => 8, c => 2);"}
+{"sql":"CALL ptest10(null, 7, c => 2)","shape":"CALL ptest10(NULL, 7, c => 2);"}
+{"sql":"CALL ptest10(null, c => 4, b => 11)","shape":"CALL ptest10(NULL, c => 4, b => 11);"}
+{"sql":"CALL ptest10(b => 8, c => 2, a => 0)","shape":"CALL ptest10(b => 8, c => 2, a => 0);"}
+{"sql":"CREATE PROCEDURE ptest11(a OUT int, VARIADIC b int[]) LANGUAGE SQL\n  AS $$ SELECT b[1] + b[2] $$","shape":"CREATE PROCEDURE ptest11(OUT a int, VARIADIC b int[]) LANGUAGE SQL AS ' SELECT b[1] + b[2] ';"}
+{"sql":"CALL ptest11(null, 11, 12, 13)","shape":"CALL ptest11(NULL, 11, 12, 13);"}
+{"sql":"CREATE PROCEDURE ptest10(IN a int, IN b int, IN c int)\nLANGUAGE SQL AS $$ SELECT a + b - c $$","shape":"CREATE PROCEDURE ptest10(IN a int, IN b int, IN c int) LANGUAGE SQL AS ' SELECT a + b - c ';"}
+{"sql":"drop procedure ptest10"}
+{"sql":"drop procedure ptest10(int, int, int)"}
+{"sql":"drop procedure ptest10(out int, int, int)"}
+{"sql":"drop procedure ptest10(in int, int, int)"}
+{"sql":"CALL version()","shape":"CALL version();"}
+{"sql":"CALL sum(1)","shape":"CALL sum(1);"}
+{"sql":"CREATE PROCEDURE ptestx() LANGUAGE SQL WINDOW AS $$ INSERT INTO cp_test VALUES (1, 'a') $$","shape":"CREATE PROCEDURE ptestx() LANGUAGE SQL WINDOW AS ' INSERT INTO cp_test VALUES (1, ''a'') ';"}
+{"sql":"CREATE PROCEDURE ptestx() LANGUAGE SQL STRICT AS $$ INSERT INTO cp_test VALUES (1, 'a') $$","shape":"CREATE PROCEDURE ptestx() LANGUAGE SQL STRICT AS ' INSERT INTO cp_test VALUES (1, ''a'') ';"}
+{"sql":"CREATE PROCEDURE ptestx(a VARIADIC int[], b OUT int) LANGUAGE SQL\n  AS $$ SELECT a[1] $$","shape":"CREATE PROCEDURE ptestx(VARIADIC a int[], OUT b int) LANGUAGE SQL AS ' SELECT a[1] ';"}
+{"sql":"CREATE PROCEDURE ptestx(a int DEFAULT 42, b OUT int) LANGUAGE SQL\n  AS $$ SELECT a $$","shape":"CREATE PROCEDURE ptestx(a int DEFAULT 42, OUT b int) LANGUAGE SQL AS ' SELECT a ';"}
+{"sql":"ALTER PROCEDURE ptest1(text) STRICT"}
+{"sql":"ALTER FUNCTION ptest1(text) VOLATILE"}
+{"sql":"ALTER PROCEDURE cp_testfunc1(int) VOLATILE"}
+{"sql":"ALTER PROCEDURE nonexistent() VOLATILE"}
+{"sql":"DROP FUNCTION ptest1(text)"}
+{"sql":"DROP PROCEDURE cp_testfunc1(int)"}
+{"sql":"DROP PROCEDURE nonexistent()"}
+{"sql":"CREATE USER regress_cp_user1"}
+{"sql":"GRANT INSERT ON cp_test TO regress_cp_user1","shape":"GRANT INSERT ON cp_test TO regress_cp_user1;"}
+{"sql":"REVOKE EXECUTE ON PROCEDURE ptest1(text) FROM PUBLIC"}
+{"sql":"SET ROLE regress_cp_user1"}
+{"sql":"GRANT EXECUTE ON PROCEDURE ptest1(text) TO regress_cp_user1"}
+{"sql":"ALTER ROUTINE cp_testfunc1(int) RENAME TO cp_testfunc1a"}
+{"sql":"ALTER ROUTINE cp_testfunc1a RENAME TO cp_testfunc1"}
+{"sql":"ALTER ROUTINE ptest1(text) RENAME TO ptest1a"}
+{"sql":"ALTER ROUTINE ptest1a RENAME TO ptest1"}
+{"sql":"DROP ROUTINE cp_testfunc1(int)"}
+{"sql":"DROP PROCEDURE ptest1"}
+{"sql":"DROP PROCEDURE ptest1s"}
+{"sql":"DROP PROCEDURE ptest2"}
+{"sql":"DROP TABLE cp_test","shape":"DROP TABLE cp_test;"}
+{"sql":"DROP USER regress_cp_user1","shape":"DROP USER regress_cp_user1;"}

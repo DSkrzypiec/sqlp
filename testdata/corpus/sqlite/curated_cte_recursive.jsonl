@@ -1,0 +1,252 @@
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x;"}
+{"sql":"WITH RECURSIVE x AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x","shape":"WITH RECURSIVE x AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x;"}
+{"sql":"WITH RECURSIVE x (n, m) AS (SELECT 1, 2 UNION ALL SELECT n + 1, m * 2 FROM x WHERE n < 5) SELECT * FROM x","shape":"WITH RECURSIVE x(n, m) AS (SELECT 1, 2 UNION ALL SELECT n + 1, m * 2 FROM x WHERE n < 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (VALUES (1) UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","shape":"WITH RECURSIVE x(n) AS (VALUES (1) UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT SUM(n) FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT SUM(n) FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x ORDER BY n DESC LIMIT 2","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x ORDER BY n DESC LIMIT 2;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x, x AS y","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x, x AS y;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5), y (m) AS (SELECT n FROM x) SELECT * FROM y","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5), y(m) AS (SELECT n FROM x) SELECT * FROM y;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5), y (m) AS (SELECT 1 UNION ALL SELECT m + 1 FROM y WHERE m < 3) SELECT * FROM x, y","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5), y(m) AS (SELECT 1 UNION ALL SELECT m + 1 FROM y WHERE m < 3) SELECT * FROM x, y;"}
+{"sql":"WITH RECURSIVE y (m) AS (SELECT 1), x (n) AS (SELECT m FROM y UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","shape":"WITH RECURSIVE y(m) AS (SELECT 1), x(n) AS (SELECT m FROM y UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (id, p) AS (SELECT id, a FROM t UNION ALL SELECT t.id, t.a FROM t JOIN x ON t.a = x.id) SELECT * FROM x","shape":"WITH RECURSIVE x(id, p) AS (SELECT id, a FROM t UNION ALL SELECT t.id, t.a FROM t JOIN x ON t.a = x.id) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (id) AS (SELECT id FROM t WHERE a IS NULL UNION ALL SELECT t.id FROM t, x WHERE t.a = x.id) SELECT * FROM x","shape":"WITH RECURSIVE x(id) AS (SELECT id FROM t WHERE a IS NULL UNION ALL SELECT t.id FROM t, x WHERE t.a = x.id) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ORDER BY 1 LIMIT 3) SELECT * FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ORDER BY 1 LIMIT 3) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x LIMIT 5) SELECT * FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x LIMIT 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS ((SELECT 1) UNION ALL (SELECT n + 1 FROM x WHERE n < 5)) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3 UNION ALL SELECT n + 2 FROM x WHERE n < 3) SELECT * FROM x"}
+{"sql":"SELECT * FROM (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x) AS y","shape":"SELECT * FROM (WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x) AS y;"}
+{"sql":"SELECT (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT MAX(n) FROM x)","shape":"SELECT (WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT MAX(n) FROM x);"}
+{"sql":"SELECT a FROM t WHERE a IN (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x)","shape":"SELECT a FROM t WHERE a IN (WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x);"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) INSERT INTO t (a) SELECT n FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) INSERT INTO t (a) SELECT n FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) UPDATE t SET a = 1 WHERE a IN (SELECT n FROM x)","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) UPDATE t SET a = 1 WHERE a IN (SELECT n FROM x);"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) DELETE FROM t WHERE a IN (SELECT n FROM x)","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) DELETE FROM t WHERE a IN (SELECT n FROM x);"}
+{"sql":"WITH RECURSIVE x (n) AS MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","shape":"WITH RECURSIVE x(n) AS MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS NOT MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","shape":"WITH RECURSIVE x(n) AS NOT MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x;"}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH DEPTH FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH BREADTH FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n, m) AS (SELECT 1, 2 UNION ALL SELECT n + 1, m FROM x) SEARCH DEPTH FIRST BY n, m SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) CYCLE n SET c TO 1 DEFAULT 0 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n, m) AS (SELECT 1, 2 UNION ALL SELECT n + 1, m FROM x) CYCLE n, m SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH DEPTH FIRST BY n SET o CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE","reject":true}
+{"sql":"WITH RECURSIVE x","reject":true}
+{"sql":"WITH RECURSIVE x AS","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS SELECT 1 UNION ALL SELECT n + 1 FROM x SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE (n) AS (SELECT 1) SELECT 1","reject":true}
+{"sql":"WITH RECURSIVE RECURSIVE x AS (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"RECURSIVE WITH x AS (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH x RECURSIVE AS (SELECT 1) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH DEPTH BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH DEPTH FIRST n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH DEPTH FIRST BY n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) SEARCH WIDE FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) CYCLE","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) CYCLE n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) CYCLE n SET c TO 1 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x) CYCLE n SET c SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n n 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM","reject":true}
+{"sql":"WITH RECURSIVE ( x n ) AS ( SELECT 1 UNION SELECT n + 1 FROM x WHERE n < 5 ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION SELECT n + 1 FROM x n WHERE < 5 ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT UNION SELECT n + 1 FROM x WHERE n < 5 ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION SELECT n + 1 FROM x WHERE n < 5 ) x n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x AS ( SELECT 1 n AS UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x AS ( SELECT 1 AS n UNION ALL SELECT n + 1 FROM x WHERE n 5 < ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x AS ( SELECT 1 AS n UNION ALL SELECT n + 1 FROM x WHERE n < ) 5 SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x AS ( SELECT 1 AS n UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT 3 FROM x","shape":"WITH RECURSIVE x AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT 3 FROM x;"}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , UNION 2 ALL SELECT n + 1 , m * 2 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m * 2 FROM x WHERE n < 5 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x SELECT n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m * 2 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m * 2 x WHERE n < 5 ) SELECT * FROM x"}
+{"sql":"WITH RECURSIVE x ( n ) AS ( VALUES ( 1 ) UNION ALL SELECT n + 1 FROM x WHERE n < UNION ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( VALUES ( 1 1 ) UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE ( x n ) AS ( VALUES ( 1 ) UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( VALUES ( 1 ) UNION ALL SELECT n n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT SUM ( n FROM ) x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT SUM ( n ) FROM x","shape":"WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT SUM(n) FROM x;"}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT SUM ( n ) ) FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT ( UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT SUM ( n ) FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x ORDER BY n DESC LIMIT 2","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < x ) SELECT * FROM x ORDER BY n DESC LIMIT 2"}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM ORDER x BY n DESC LIMIT 2","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x BY n DESC LIMIT 2","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM WHERE n < 5 ) SELECT * FROM x , x AS y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 ALL UNION SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x , x AS y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( 1 SELECT UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x , x AS y","reject":true}
+{"sql":"WITH RECURSIVE ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x , x AS y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) , y ( m ) AS SELECT ( n FROM x ) SELECT * FROM y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) , y ( m ) AS ( SELECT n FROM ) x SELECT * FROM y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) , y AS m ) AS ( SELECT n FROM x ) SELECT * FROM y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) , y ( m ) AS ( SELECT n FROM x ) < * FROM y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) , y ( m ) AS ( SELECT 1 UNION ALL SELECT m + 1 FROM y WHERE m < 3 3 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION 1 SELECT n + 1 FROM x WHERE n < 5 ) , y ( m ) AS ( SELECT 1 UNION ALL SELECT m + 1 FROM y WHERE m < 3 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n 1 5 ) , y ( m ) AS ( SELECT 1 UNION ALL SELECT m + 1 FROM y WHERE m < 3 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) , y ( m ) AS ( SELECT 1 ALL SELECT m + 1 FROM y WHERE m < 3 ) SELECT * FROM x , y","reject":true}
+{"sql":"WITH RECURSIVE y ( m ) AS ( SELECT 1 ) , x ( n ) AS ( SELECT m FROM y UNION ALL SELECT n + ALL FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE y ( m ) AS ( SELECT 1 ) , x ( n ) AS ( SELECT m FROM y UNION ALL SELECT n + 1 FROM x WHERE < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE y ( m ) AS AS ( SELECT 1 ) , x ( n ) AS ( SELECT m FROM y UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE y ( m ) ) AS ( SELECT 1 ) , x ( n ) AS ( SELECT m FROM y UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( id , p ) AS ( SELECT id , a FROM t UNION ALL SELECT t . id , t . a FROM t JOIN x ON t . a = x . id ) SELECT * 5 x","reject":true}
+{"sql":"WITH RECURSIVE x ( id , p ) AS ( SELECT id , a FROM t UNION ALL SELECT t . id , t . a FROM t JOIN x ON t . a = . x id ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( id , p ) AS ( SELECT id , a FROM t UNION ALL SELECT t . id , t . a FROM t JOIN x ON ON t . a = x . id ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( id , p AS ( SELECT id , a FROM t UNION ALL SELECT t . id , t . a FROM t JOIN x ON t . a = x . id ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( id ) AS ( SELECT id FROM t WHERE a IS NULL UNION ALL SELECT t . id FROM t , x WHERE t . a = x . id ) SELECT * * FROM x","reject":true}
+{"sql":"WITH x RECURSIVE ( id ) AS ( SELECT id FROM t WHERE a IS NULL UNION ALL SELECT t . id FROM t , x WHERE t . a = x . id ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( id ) AS ( SELECT id FROM t WHERE WHERE a IS NULL UNION ALL SELECT t . id FROM t , x WHERE t . a = x . id ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( id ) AS ( SELECT id FROM t WHERE a IS NULL UNION ALL SELECT t . id FROM t , x WHERE t . a a = x . id ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ORDER 1 BY LIMIT 3 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ORDER BY 1 LIMIT 3 ) SELECT * x FROM","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT RECURSIVE + 1 FROM x WHERE n < 5 ORDER BY 1 LIMIT 3 ) SELECT * FROM x"}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ORDER ORDER BY 1 LIMIT 3 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION AS SELECT n + 1 FROM x LIMIT 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE 1 ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x LIMIT 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 AS ALL SELECT n + 1 FROM x LIMIT 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x n ( ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x LIMIT 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( ( SELECT 1 ) UNION ALL ( SELECT n + 1 FROM x WHERE WHERE < 5 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( ( SELECT 1 ) UNION ALL ( SELECT n + 1 FROM x WHERE n 5 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 ) UNION ALL ( SELECT n + 1 FROM x WHERE n < 5 ) ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( ( SELECT 1 ) UNION ALL ( SELECT n + 1 FROM x WHERE n < 5 ) ) * FROM x","reject":true}
+{"sql":"FROM RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM (","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT 2 UNION ALL ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION UNION ALL SELECT 2 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x n WHERE < 3 UNION ALL SELECT n + 2 FROM x WHERE n < 3 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE ) ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3 UNION ALL SELECT n + 2 FROM x WHERE n < 3 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3 UNION ALL SELECT n + 2 FROM x WHERE < n 3 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3 UNION ALL a n + 2 FROM x WHERE n < 3 ) SELECT * FROM x","reject":true}
+{"sql":"SELECT * FROM ( WITH RECURSIVE x ( n ) WITH ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x ) AS y","reject":true}
+{"sql":"SELECT * FROM ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM ) x AS y","reject":true}
+{"sql":"SELECT * FROM ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM WHERE n < 5 ) SELECT * FROM x ) AS y","reject":true}
+{"sql":"SELECT * FROM ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n 1 + FROM x WHERE n < 5 ) SELECT * FROM x ) AS y","reject":true}
+{"sql":"SELECT ( WITH RECURSIVE x ( n ) AS ( ALL 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT MAX ( n ) FROM x )","reject":true}
+{"sql":"SELECT ( RECURSIVE WITH x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT MAX ( n ) FROM x )","reject":true}
+{"sql":"SELECT ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT MAX ( n ) x )"}
+{"sql":"SELECT ( WITH RECURSIVE x ( ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT MAX ( n ) FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE < n 5 ) SELECT n FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE a IN ( WITH RECURSIVE x ( 1 ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT n FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE IN a ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT n FROM x )","reject":true}
+{"sql":"SELECT a FROM t WHERE IN ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) INSERT INTO t ( ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM WHERE x n < 5 ) INSERT INTO t ( a ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) INSERT INTO t ( a ) SELECT n FROM","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < ) INSERT INTO t ( a ) SELECT n FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) UPDATE t SET a = 1 WHERE a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) UPDATE t SET a = 1 WHERE a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH x RECURSIVE ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) UPDATE t SET a = 1 WHERE a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) UPDATE t SET a = 1 WHERE a ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) n FROM t WHERE a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x n WHERE < 5 ) DELETE FROM t WHERE a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) DELETE FROM t ( a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) DELETE FROM t WHERE a IN ( SELECT n FROM x )","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS MATERIALIZED MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n WITH 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n AS ) MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS MATERIALIZED ( SELECT 1 UNION ALL SELECT n + FROM 1 x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS NOT MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * x","reject":true}
+{"sql":"RECURSIVE WITH x ( n ) AS NOT MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n n ) AS NOT MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE ( n ) AS NOT MATERIALIZED ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST BY n o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM ) SEARCH DEPTH FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH x FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n n + 1 FROM x ) SEARCH BREADTH FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH BREADTH FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH BREADTH FIRST BY n SET o SELECT * FROM 1","reject":true}
+{"sql":"WITH RECURSIVE x ( , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM x ) SEARCH DEPTH FIRST BY n , m SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM x ) SEARCH DEPTH FIRST BY n , m SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM x ) SEARCH DEPTH FIRST BY n , m SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM x ) SEARCH DEPTH WITH BY n , m SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM ) x CYCLE n SET c TO 1 DEFAULT 0 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c TO 1 DEFAULT 0 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c TO 1 DEFAULT 0 USING p * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c TO 1 DEFAULT 0 USING p SELECT * FROM","reject":true}
+{"sql":"WITH RECURSIVE x ( n BY AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x CYCLE ) n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c USING p SELECT * FROM","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM ) x CYCLE n , m SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM x ) CYCLE CYCLE n , m SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION UNION ALL SELECT n + 1 , m FROM x ) CYCLE n , m SET c USING p SELECT * FROM x","reject":true}
+{"sql":") RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m FROM x ) CYCLE n , m SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST BY n SET FROM CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + RECURSIVE FROM x ) SEARCH DEPTH FIRST BY n SET o CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM ) x SEARCH DEPTH FIRST BY n SET o CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + AS FROM x ) SEARCH DEPTH FIRST BY n SET o CYCLE n SET c USING p SELECT * FROM x","reject":true}
+{"sql":"RECURSIVE","reject":true}
+{"sql":") RECURSIVE","reject":true}
+{"sql":"WITH WITH RECURSIVE","reject":true}
+{"sql":"WITH RECURSIVE SELECT","reject":true}
+{"sql":"WHERE RECURSIVE x","reject":true}
+{"sql":"RECURSIVE x","reject":true}
+{"sql":"WITH RECURSIVE x x","reject":true}
+{"sql":"WITH RECURSIVE y AS","reject":true}
+{"sql":"WITH RECURSIVE ( AS","reject":true}
+{"sql":"RECURSIVE WITH x AS","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL n n + 1 FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 t x","reject":true}
+{"sql":"WITH x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS SELECT 1 UNION ALL ALL SELECT n + 1 FROM x SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS SELECT 1 UNION ALL SELECT n + 1 FROM SELECT x * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS SELECT 1 UNION ALL SELECT n + 1 FROM x SELECT CYCLE FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS SELECT UNION ALL SELECT n + 1 FROM x SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE ( n ) AS ( SELECT 1 ) ) SELECT 1","reject":true}
+{"sql":"WITH RECURSIVE ( n ) AS ( SELECT 1 1 ) SELECT 1","reject":true}
+{"sql":"WITH RECURSIVE ( n ) AS SELECT 1 ) SELECT 1","reject":true}
+{"sql":"WITH RECURSIVE ( ) AS ( SELECT 1 ) SELECT 1","reject":true}
+{"sql":"WITH WITH RECURSIVE RECURSIVE x AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE RECURSIVE x AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE RECURSIVE x x AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE RECURSIVE x AS SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"RECURSIVE WITH x AS AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"RECURSIVE WITH x AS ( SELECT ) SELECT * FROM x","reject":true}
+{"sql":"RECURSIVE WITH x AS ( SELECT 1 ) SELECT * FROM x","reject":true}
+{"sql":"RECURSIVE WITH x AS ( SELECT 1 ) SELECT FROM x","reject":true}
+{"sql":"WITH RECURSIVE x AS ( SELECT 1 ) SELECT * FROM x","shape":"WITH RECURSIVE x AS (SELECT 1) SELECT * FROM x;"}
+{"sql":"WITH x RECURSIVE AS ( SELECT 1 ) SELECT * FROM","reject":true}
+{"sql":"WITH x RECURSIVE AS ( SELECT 1 ) SELECT SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION SELECT n + 1 FROM x ) SEARCH","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM ) x SEARCH","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n x 1 FROM x ) SEARCH","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH WITH BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH BY n SET o o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT + n 1 FROM x ) SEARCH DEPTH BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH DEPTH BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH FIRST DEPTH n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION SELECT n + 1 FROM x ) SEARCH DEPTH FIRST n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION p SELECT n + 1 FROM x ) SEARCH DEPTH FIRST BY n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x x ) SEARCH DEPTH FIRST BY n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH DEPTH FIRST BY n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT + n 1 FROM x ) SEARCH DEPTH FIRST BY n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + FROM FROM x ) SEARCH WIDE FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH 1 x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH WIDE FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT ( UNION ALL SELECT n + 1 FROM x ) SEARCH WIDE FIRST BY n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) SEARCH WIDE FIRST n SET o SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 1 FROM x ) CYCLE","reject":true}
+{"sql":"WITH RECURSIVE x x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM DEPTH ) CYCLE","reject":true}
+{"sql":"WITH WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) ( AS SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) ALL n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SELECT * * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE UNION SET c TO 1 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n 1 + FROM x ) CYCLE n SET c TO 1 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c TO 1 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE IN ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c TO 1 USING p SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) n CYCLE SET c SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 x FROM ) CYCLE n SET c SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n SELECT AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x ) CYCLE n SET c SELECT * FROM x","reject":true}
+{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 1 FROM x ) CYCLE n SET c SELECT * FROM x","reject":true}

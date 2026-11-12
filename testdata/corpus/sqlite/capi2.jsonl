@@ -1,0 +1,18 @@
+{"sql":"CREATE UNIQUE INDEX i1 ON t1(a)"}
+{"sql":"CREATE TABLE a1(message_id, name , UNIQUE(message_id, name) )"}
+{"sql":"INSERT INTO a1 VALUES(1, 1)"}
+{"sql":"SELECT * FROM t2 ORDER BY a"}
+{"sql":"CREATE TABLE t3(x counter)"}
+{"sql":"INSERT INTO t3 VALUES(1)"}
+{"sql":"INSERT INTO t3 VALUES(2)"}
+{"sql":"INSERT INTO t3 SELECT x+2 FROM t3"}
+{"sql":"INSERT INTO t3 SELECT x+4 FROM t3"}
+{"sql":"INSERT INTO t3 SELECT x+8 FROM t3"}
+{"sql":"INSERT INTO t3 VALUES(10)"}
+{"sql":"UPDATE t3 SET x=x+1"}
+{"sql":"UPDATE t1 SET b=b+1"}
+{"sql":"INSERT INTO t1 VALUES(2,3,4)"}
+{"sql":"INSERT INTO t1 VALUES(2,4,5)"}
+{"sql":"CREATE TABLE tab1(col1, col2)"}
+{"sql":"CREATE VIEW view1 AS SELECT * FROM  tab1"}
+{"sql":"CREATE VIEW view2 AS SELECT * FROM tab1 limit 10 offset 10"}

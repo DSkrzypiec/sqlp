@@ -1,0 +1,5 @@
+{"sql":"WITH ii(i) AS ( VALUES(1) UNION ALL SELECT i+1 FROM ii WHERE i<1000 )\n  INSERT INTO t1 SELECT i, i FROM ii"}
+{"sql":"CREATE TEMP TABLE z1(a, b)"}
+{"sql":"INSERT INTO z1 SELECT * FROM t1"}
+{"sql":"SELECT count(*) FROM t1\n  UNION ALL\n  SELECT count(*) FROM z1"}
+{"sql":"PRAGMA wal_autocheckpoint = 10"}

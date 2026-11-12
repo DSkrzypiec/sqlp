@@ -1,0 +1,11 @@
+{"sql":"DROP TABLE IF EXISTS aaa"}
+{"sql":"CREATE VIRTUAL TABLE aaa USING zipfile('test.zip')"}
+{"sql":"CREATE VIRTUAL TABLE setup USING zipfile('test.zip')"}
+{"sql":"INSERT INTO setup(name, data) VALUES('a.txt', '1234567890')"}
+{"sql":"SELECT name,data FROM zipfile('test.zip')"}
+{"sql":"INSERT INTO setup(name, data) VALUES('a.txt', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa')"}
+{"sql":"WITH c(n, d) AS (\n      SELECT 1, 'aaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbb'\n    )\n    SELECT name, data FROM zipfile(\n      (SELECT zipfile(n, d) FROM c)\n    )"}
+{"sql":"INSERT INTO setup(name, data) \n    VALUES('a.txt', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaa')"}
+{"sql":"INSERT INTO setup(name, data) VALUES('dir', NULL)"}
+{"sql":"DROP TABLE IF EXISTS setup"}
+{"sql":"WITH c(n, d) AS (\n      VALUES('a.txt', '1234567890') UNION ALL\n      VALUES('dir', NULL)\n    )\n    SELECT zipfile(n, d) IS NULL FROM c"}

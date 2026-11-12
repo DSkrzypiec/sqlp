@@ -1,0 +1,6 @@
+{"sql":"SELECT sum(a)==max(b) FROM t1"}
+{"sql":"#       ATTACH 'test2.db' AS aux","reject":true}
+{"sql":"#       SELECT * FROM t1 EXCEPT SELECT * FROM t2","reject":true}
+{"sql":"SELECT count(*)==33 OR count(*)==34 FROM t1 WHERE x != 1"}
+{"sql":"SELECT count(*) BETWEEN 34 AND 36 FROM t1 WHERE x != 1"}
+{"sql":"SELECT b FROM t1 WHERE a = 1"}

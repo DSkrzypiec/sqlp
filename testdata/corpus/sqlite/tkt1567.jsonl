@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE t1(a TEXT PRIMARY KEY)"}
+{"sql":"UPDATE t1 SET a = a||'x' WHERE rowid%2==0"}
+{"sql":"UPDATE t1 SET a = CASE WHEN rowid<90 THEN substr(a,1,10) ELSE '9999' END"}
+{"sql":"CREATE TABLE t2(a TEXT PRIMARY KEY, rowid INT) WITHOUT rowid"}
+{"sql":"UPDATE t2 SET a = a||'x' WHERE rowid%2==0"}
+{"sql":"UPDATE t2 SET a = CASE WHEN rowid<90 THEN substr(a,1,10) ELSE '9999' END"}

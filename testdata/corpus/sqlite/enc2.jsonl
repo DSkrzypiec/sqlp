@@ -1,0 +1,24 @@
+{"sql":"INSERT INTO t1 VALUES('two', 'II', 2)"}
+{"sql":"INSERT INTO t1 VALUES('three','III',3)"}
+{"sql":"INSERT INTO t1 VALUES('four','IV',4)"}
+{"sql":"INSERT INTO t1 VALUES('five','V',5)"}
+{"sql":"SELECT * FROM t1 WHERE a = 'one'"}
+{"sql":"SELECT * FROM t1 WHERE a = 'four'"}
+{"sql":"SELECT * FROM t1 WHERE a IN ('one', 'two')"}
+{"sql":"CREATE TABLE t5(a)"}
+{"sql":"INSERT INTO t5 VALUES('one')"}
+{"sql":"INSERT INTO t5 VALUES('two')"}
+{"sql":"INSERT INTO t5 VALUES('five')"}
+{"sql":"INSERT INTO t5 VALUES('three')"}
+{"sql":"INSERT INTO t5 VALUES('four')"}
+{"sql":"SELECT * FROM t5 ORDER BY 1 COLLATE test_collate"}
+{"sql":"pragma encoding = 'UTF-16LE'"}
+{"sql":"pragma encoding = 'UTF-16BE'"}
+{"sql":"CREATE TABLE t1(a varchar collate test_collate)"}
+{"sql":"pragma encoding = 'UTF-8'"}
+{"sql":"SELECT test_function('sqlite')"}
+{"sql":"INSERT INTO t5 VALUES('sqlite')"}
+{"sql":"PRAGMA encoding=UTF8"}
+{"sql":"CREATE TEMP TABLE t1(x)"}
+{"sql":"INSERT INTO t1 VALUES('this is a test')"}
+{"sql":"PRAGMA encoding=UTF16"}

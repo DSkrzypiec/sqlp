@@ -1,0 +1,37 @@
+{"sql":"pragma auto_vacuum = 'full'"}
+{"sql":"pragma auto_vacuum = 'incremental'"}
+{"sql":"pragma auto_vacuum = 'invalid'"}
+{"sql":"pragma auto_vacuum = 1"}
+{"sql":"pragma auto_vacuum = '2'"}
+{"sql":"pragma auto_vacuum = 5"}
+{"sql":"pragma auto_vacuum = 'none'"}
+{"sql":"INSERT INTO tbl2 VALUES('hello world')"}
+{"sql":"DROP TABLE tbl1"}
+{"sql":"CREATE TABLE tbl2(b)"}
+{"sql":"INSERT INTO tbl2 VALUES('a nice string')"}
+{"sql":"PRAGMA auto_vacuum = 'none'"}
+{"sql":"PRAGMA auto_vacuum = 'incremental'"}
+{"sql":"DROP TABLE IF EXISTS tbl1"}
+{"sql":"DROP TABLE IF EXISTS tbl2"}
+{"sql":"INSERT INTO tbl2 SELECT * FROM tbl1"}
+{"sql":"PRAGMA incremental_vacuum(50)"}
+{"sql":"INSERT INTO t2 VALUES(randstr(500,500),randstr(500,500),randstr(500,500))"}
+{"sql":"INSERT INTO t1 SELECT a||a, b||b, c||c FROM t1"}
+{"sql":"PRAGMA synchronous = 'OFF'"}
+{"sql":"UPDATE t1 SET a = a, b = b, c = c"}
+{"sql":"PRAGMA incremental_vacuum(10)"}
+{"sql":"PRAGMA incremental_vacuum(1)"}
+{"sql":"PRAGMA incremental_vacuum(5)"}
+{"sql":"PRAGMA incremental_vacuum('1')"}
+{"sql":"PRAGMA incremental_vacuum(\"+3\")"}
+{"sql":"PRAGMA incremental_vacuum = 1"}
+{"sql":"PRAGMA incremental_vacuum(2147483649)"}
+{"sql":"INSERT INTO t1 VALUES(hex(randomblob(1000)))"}
+{"sql":"PRAGMA incremental_vacuum=-1"}
+{"sql":"PRAGMA auto_vacuum = 'full'"}
+{"sql":"PRAGMA auto_vacuum = none"}
+{"sql":"PRAGMA default_cache_size = 1024"}
+{"sql":"INSERT INTO t3 VALUES(1), (2), (3), (4)"}
+{"sql":"INSERT INTO t2 VALUES( randomblob(1000) )"}
+{"sql":"PRAGMA mmap_size = 1000000"}
+{"sql":"PRAGMA incremental_vacuum = 1000"}

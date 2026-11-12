@@ -1,0 +1,3 @@
+{"sql":"PRAGMA cache_size = -2000"}
+{"sql":"WITH r(i) AS (\n    SELECT 1 UNION ALL SELECT i+1 FROM r WHERE i<100000\n  )\n  INSERT INTO t1 SELECT randomblob(100),randomblob(100),randomblob(100) FROM r"}
+{"sql":"SELECT count(*) FROM t1 WHERE +a IS NOT NULL"}

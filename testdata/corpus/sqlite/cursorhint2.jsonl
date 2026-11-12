@@ -1,0 +1,6 @@
+{"sql":"CREATE TABLE x1(x, y)"}
+{"sql":"CREATE TABLE x2(a, b)"}
+{"sql":"CREATE TABLE t1 (i1 TEXT)"}
+{"sql":"CREATE TABLE t2 (i2 TEXT UNIQUE)"}
+{"sql":"INSERT INTO t1 VALUES('0')"}
+{"sql":"INSERT INTO t2 VALUES('0')"}

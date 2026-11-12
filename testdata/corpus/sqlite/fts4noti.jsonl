@@ -1,0 +1,49 @@
+{"sql":"CREATE TABLE cc(a, b, c)"}
+{"sql":"INSERT INTO t1(docid,a,b,c) VALUES(1, 'one two', 'three four', 'five six')"}
+{"sql":"INSERT INTO t1(docid,a,b,c) VALUES(2, 'three four', 'five six', 'one two')"}
+{"sql":"SELECT docid FROM t1 WHERE t1 MATCH 'one'"}
+{"sql":"SELECT docid FROM t1 WHERE t1 MATCH 'three'"}
+{"sql":"SELECT docid FROM t1 WHERE t1 MATCH 'five'"}
+{"sql":"INSERT INTO t1(t1) VALUES('rebuild')"}
+{"sql":"SELECT a,b,c FROM t1 WHERE docid=1"}
+{"sql":"SELECT a,b,c FROM t1 WHERE docid=2"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(x, y, notindexed=x)"}
+{"sql":"SELECT x FROM t2 WHERE t2 MATCH '2'"}
+{"sql":"SELECT x FROM t2 WHERE t2 MATCH '1'"}
+{"sql":"SELECT x FROM t2 WHERE t2 MATCH 'x'"}
+{"sql":"SELECT x FROM t2 WHERE t2 MATCH 'x 1'"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(poi, addr, notindexed=poi)"}
+{"sql":"INSERT INTO t2 VALUES(114, 'x x x')"}
+{"sql":"INSERT INTO t2 VALUES(X'1234', 'y y y')"}
+{"sql":"INSERT INTO t2 VALUES(NULL, 'z z z')"}
+{"sql":"INSERT INTO t2 VALUES(113.2, 'w w w')"}
+{"sql":"INSERT INTO t2 VALUES('poi', 'v v v')"}
+{"sql":"SELECT typeof(poi) FROM t2 WHERE t2 MATCH 'x'"}
+{"sql":"SELECT typeof(poi) FROM t2 WHERE t2 MATCH 'y'"}
+{"sql":"SELECT typeof(poi) FROM t2 WHERE t2 MATCH 'z'"}
+{"sql":"SELECT typeof(poi) FROM t2 WHERE t2 MATCH 'w'"}
+{"sql":"SELECT typeof(poi) FROM t2 WHERE t2 MATCH 'v'"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(\n      notindexed=\"three\", one, two, three, notindexed=\"one\",\n  )"}
+{"sql":"INSERT INTO t2 VALUES('a', 'b', 'c')"}
+{"sql":"INSERT INTO t2 VALUES('c', 'a', 'b')"}
+{"sql":"INSERT INTO t2 VALUES('b', 'c', 'a')"}
+{"sql":"SELECT docid FROM t2 WHERE t2 MATCH 'a'"}
+{"sql":"SELECT docid FROM t2 WHERE t2 MATCH 'b'"}
+{"sql":"SELECT docid FROM t2 WHERE t2 MATCH 'c'"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(\n    poiCategory, poiCategoryId, notindexed=poiCategoryId\n  )"}
+{"sql":"INSERT INTO t1(poiCategory, poiCategoryId) values ('Restaurant', 6021)"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 'restaurant'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH 're*'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH '6021'"}
+{"sql":"SELECT * FROM t1 WHERE t1 MATCH '60*'"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(\n    poiCategory, poiCategoryId, notindexed=poiCategory\n  )"}
+{"sql":"CREATE VIRTUAL TABLE t1 USING fts4(abc, ab, a, notindexed=abc)"}
+{"sql":"CREATE VIRTUAL TABLE t2 USING fts4(a, ab, abc, notindexed=abc)"}
+{"sql":"INSERT INTO t1 VALUES('no', 'yes', 'yep')"}
+{"sql":"INSERT INTO t2 VALUES('yep', 'yes', 'no')"}
+{"sql":"SELECT count(*) FROM t1 WHERE t1 MATCH 'no'"}
+{"sql":"SELECT count(*) FROM t1 WHERE t1 MATCH 'yes'"}
+{"sql":"SELECT count(*) FROM t1 WHERE t1 MATCH 'yep'"}
+{"sql":"SELECT count(*) FROM t2 WHERE t2 MATCH 'no'"}
+{"sql":"SELECT count(*) FROM t2 WHERE t2 MATCH 'yes'"}
+{"sql":"SELECT count(*) FROM t2 WHERE t2 MATCH 'yep'"}

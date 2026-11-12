@@ -1,0 +1,11 @@
+{"sql":"REINDEX TABLE pg_class","shape":"REINDEX TABLE pg_class;"}
+{"sql":"REINDEX TABLE pg_index","shape":"REINDEX TABLE pg_index;"}
+{"sql":"REINDEX TABLE pg_operator","shape":"REINDEX TABLE pg_operator;"}
+{"sql":"REINDEX TABLE pg_database","shape":"REINDEX TABLE pg_database;"}
+{"sql":"REINDEX TABLE pg_shdescription","shape":"REINDEX TABLE pg_shdescription;"}
+{"sql":"REINDEX INDEX pg_class_oid_index","shape":"REINDEX INDEX pg_class_oid_index;"}
+{"sql":"REINDEX INDEX pg_class_relname_nsp_index","shape":"REINDEX INDEX pg_class_relname_nsp_index;"}
+{"sql":"REINDEX INDEX pg_index_indexrelid_index","shape":"REINDEX INDEX pg_index_indexrelid_index;"}
+{"sql":"REINDEX INDEX pg_index_indrelid_index","shape":"REINDEX INDEX pg_index_indrelid_index;"}
+{"sql":"REINDEX INDEX pg_database_oid_index","shape":"REINDEX INDEX pg_database_oid_index;"}
+{"sql":"REINDEX INDEX pg_shdescription_o_c_index","shape":"REINDEX INDEX pg_shdescription_o_c_index;"}

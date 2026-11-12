@@ -1,0 +1,2 @@
+{"sql":"CREATE INDEX i1 ON t1(b, c)"}
+{"sql":"WITH s(i) AS (\n    VALUES(1) UNION ALL SELECT i+1 FROM s WHERE i<1000\n  )\n  INSERT INTO t1 SELECT NULL, i, hex(randomblob(500)) FROM s"}

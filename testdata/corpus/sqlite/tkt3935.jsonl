@@ -1,0 +1,9 @@
+{"sql":"SELECT j1.b FROM ( SELECT * FROM t1 INNER JOIN t2 ON a=c ) AS j1"}
+{"sql":"SELECT j1.b FROM (t1 INNER JOIN t2 ON a=c) AS j1"}
+{"sql":"SELECT a FROM (t1) AS t ON b USING(a)","reject":true}
+{"sql":"SELECT a FROM (t1) AS t ON b","reject":true}
+{"sql":"SELECT a FROM (SELECT * FROM t1) AS t ON b USING(a)","reject":true}
+{"sql":"SELECT a FROM (SELECT * FROM t1) AS t ON b","reject":true}
+{"sql":"SELECT a FROM t1 AS t ON b","reject":true}
+{"sql":"SELECT a FROM t1 AS t ON b USING(a)","reject":true}
+{"sql":"SELECT a FROM t1 AS t USING(a)","reject":true}

@@ -1,0 +1,119 @@
+{"sql":"CREATE TRIGGER trig UPDATE ON no_such_table BEGIN\n       SELECT * from sqlite_master;\n     END"}
+{"sql":"CREATE TEMP TRIGGER trig UPDATE ON no_such_table BEGIN\n         SELECT * from sqlite_master;\n       END"}
+{"sql":"CREATE TRIGGER trig UPDATE ON t1 FOR EACH STATEMENT BEGIN\n        SELECT * FROM sqlite_master;\n     END","reject":true}
+{"sql":"CREATE TRIGGER tr1 INSERT ON t1 BEGIN\n          INSERT INTO t1 values(1);\n         END"}
+{"sql":"CREATE TRIGGER IF NOT EXISTS tr1 DELETE ON t1 BEGIN\n            SELECT * FROM sqlite_master;\n         END"}
+{"sql":"CREATE TRIGGER tr1 DELETE ON t1 BEGIN\n            SELECT * FROM sqlite_master;\n         END"}
+{"sql":"CREATE TRIGGER \"tr1\" DELETE ON t1 BEGIN\n            SELECT * FROM sqlite_master;\n         END"}
+{"sql":"CREATE TRIGGER [tr1] DELETE ON t1 BEGIN\n            SELECT * FROM sqlite_master;\n         END"}
+{"sql":"CREATE TRIGGER tr2 INSERT ON t1 BEGIN\n            SELECT * from sqlite_master; END"}
+{"sql":"DROP TRIGGER IF EXISTS tr1"}
+{"sql":"CREATE TRIGGER tr1 DELETE ON t1 BEGIN\n            SELECT * FROM sqlite_master;\n        END"}
+{"sql":"DROP TRIGGER IF EXISTS biggles"}
+{"sql":"DROP TRIGGER biggles"}
+{"sql":"CREATE TEMP TABLE temp_table(a)"}
+{"sql":"CREATE TRIGGER temp_trig UPDATE ON temp_table BEGIN\n              SELECT * from sqlite_master;\n          END"}
+{"sql":"SELECT count(*) FROM sqlite_master WHERE name = 'temp_trig'"}
+{"sql":"CREATE TRIGGER tr1 AFTER UPDATE ON sqlite_master BEGIN\n       SELECT * FROM sqlite_master;\n    END"}
+{"sql":"create table t1(a,b)"}
+{"sql":"insert into t1 values(1,'a')"}
+{"sql":"insert into t1 values(2,'b')"}
+{"sql":"insert into t1 values(3,'c')"}
+{"sql":"insert into t1 values(4,'d')"}
+{"sql":"create trigger r1 after delete on t1 for each row begin\n      delete from t1 WHERE a=old.a+2;\n    end"}
+{"sql":"delete from t1 where a=1 OR a=3"}
+{"sql":"create trigger r1 after update on t1 for each row begin\n      delete from t1 WHERE a=old.a+2;\n    end"}
+{"sql":"update t1 set b='x-' || b where a=1 OR a=3"}
+{"sql":"create trigger t1t instead of update on t1 for each row begin\n      delete from t1 WHERE a=old.a+2;\n    end"}
+{"sql":"create view v1 as select * from t1"}
+{"sql":"create trigger v1t before update on v1 for each row begin\n      delete from t1 WHERE a=old.a+2;\n    end"}
+{"sql":"drop view v1"}
+{"sql":"create trigger v1t AFTER update on v1 for each row begin\n      delete from t1 WHERE a=old.a+2;\n    end"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n      SELECT * FROM;  -- Syntax error\n    END","reject":true}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n      SELECT * FROM t1;\n      SELECT * FROM;  -- Syntax error\n    END","reject":true}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n        INSERT INTO t2 VALUES(NEW.a,NEW.b);\n      END"}
+{"sql":"CREATE TEMP TRIGGER r1 AFTER INSERT ON t1 BEGIN\n        INSERT INTO t2 VALUES(NEW.a,NEW.b), (NEW.b*100, NEW.a*100);\n      END"}
+{"sql":"CREATE TEMP TRIGGER r1 AFTER INSERT ON t1 BEGIN\n        INSERT INTO t2 VALUES(NEW.a,NEW.b);\n      END"}
+{"sql":"CREATE TEMP TRIGGER r1 BEFORE INSERT ON t1 BEGIN\n        INSERT INTO t2 VALUES(NEW.a,NEW.b);\n      END"}
+{"sql":"INSERT INTO t1 VALUES(9,10)"}
+{"sql":"SELECT type, name FROM sqlite_master"}
+{"sql":"CREATE TRIGGER t2 BEFORE DELETE ON t2 BEGIN\n      SELECT RAISE(ABORT,'deletes are not permitted');\n    END"}
+{"sql":"DROP TRIGGER t2"}
+{"sql":"CREATE TRIGGER 'trigger' AFTER INSERT ON t2 BEGIN SELECT 1; END"}
+{"sql":"DROP TRIGGER 'trigger'"}
+{"sql":"CREATE TRIGGER \"trigger\" AFTER INSERT ON t2 BEGIN SELECT 1; END"}
+{"sql":"DROP TRIGGER \"trigger\""}
+{"sql":"CREATE TRIGGER [trigger] AFTER INSERT ON t2 BEGIN SELECT 1; END"}
+{"sql":"DROP TRIGGER [trigger]"}
+{"sql":"CREATE TABLE t4(x UNIQUE, b)"}
+{"sql":"CREATE TRIGGER r34 AFTER INSERT ON t3 BEGIN\n          REPLACE INTO t4 VALUES(new.a,new.b);\n        END"}
+{"sql":"SELECT * FROM t3 UNION ALL SELECT 99, 99 UNION ALL SELECT * FROM t4"}
+{"sql":"SELECT 99, 99"}
+{"sql":"CREATE TABLE temp.t4(a, b, c)"}
+{"sql":"CREATE TABLE insert_log(db, a, b, c)"}
+{"sql":"CREATE TEMP TRIGGER trig1 AFTER INSERT ON main.t4 BEGIN \n        INSERT INTO insert_log VALUES('main', new.a, new.b, new.c);\n      END"}
+{"sql":"CREATE TEMP TRIGGER trig2 AFTER INSERT ON temp.t4 BEGIN \n        INSERT INTO insert_log VALUES('temp', new.a, new.b, new.c);\n      END"}
+{"sql":"CREATE TEMP TRIGGER trig3 AFTER INSERT ON aux.t4 BEGIN \n        INSERT INTO insert_log VALUES('aux', new.a, new.b, new.c);\n      END"}
+{"sql":"INSERT INTO main.t4 VALUES(1, 2, 3)"}
+{"sql":"INSERT INTO temp.t4 VALUES(4, 5, 6)"}
+{"sql":"INSERT INTO aux.t4  VALUES(7, 8, 9)"}
+{"sql":"SELECT * FROM insert_log"}
+{"sql":"DELETE FROM insert_log"}
+{"sql":"INSERT INTO main.t4 VALUES(11, 12, 13)"}
+{"sql":"INSERT INTO temp.t4 VALUES(14, 15, 16)"}
+{"sql":"INSERT INTO aux.t4  VALUES(17, 18, 19)"}
+{"sql":"DROP TABLE insert_log"}
+{"sql":"CREATE TABLE aux.insert_log(db, d, e, f)"}
+{"sql":"INSERT INTO main.t4 VALUES(21, 22, 23)"}
+{"sql":"INSERT INTO temp.t4 VALUES(24, 25, 26)"}
+{"sql":"INSERT INTO aux.t4  VALUES(27, 28, 29)"}
+{"sql":"SELECT raise(abort,'message')"}
+{"sql":"CREATE TABLE tA(a INTEGER PRIMARY KEY, b, c)"}
+{"sql":"CREATE TRIGGER tA_trigger BEFORE UPDATE ON \"tA\" BEGIN SELECT 1; END"}
+{"sql":"INSERT INTO tA VALUES(1, 2, 3)"}
+{"sql":"UPDATE tA SET a = 'abc'"}
+{"sql":"INSERT INTO tA VALUES('abc', 2, 3)"}
+{"sql":"CREATE TRIGGER main.t16err1 AFTER INSERT ON tA BEGIN\n      INSERT INTO main.t16 VALUES(1,2,3);\n    END"}
+{"sql":"CREATE TRIGGER main.t16err2 AFTER INSERT ON tA BEGIN\n      UPDATE main.t16 SET rowid=rowid+1;\n    END"}
+{"sql":"CREATE TRIGGER main.t16err3 AFTER INSERT ON tA BEGIN\n      DELETE FROM main.t16;\n    END"}
+{"sql":"CREATE TRIGGER main.t16err4 AFTER INSERT ON tA BEGIN\n      UPDATE t16 NOT INDEXED SET rowid=rowid+1;\n    END"}
+{"sql":"CREATE TRIGGER main.t16err5 AFTER INSERT ON tA BEGIN\n      UPDATE t16 INDEXED BY t16a SET rowid=rowid+1 WHERE a=1;\n    END"}
+{"sql":"CREATE TRIGGER main.t16err6 AFTER INSERT ON tA BEGIN\n      DELETE FROM t16 NOT INDEXED WHERE a=123;\n    END"}
+{"sql":"CREATE TRIGGER main.t16err7 AFTER INSERT ON tA BEGIN\n      DELETE FROM t16 INDEXED BY t16a WHERE a=123;\n    END"}
+{"sql":"CREATE TABLE t17a(ii INT)"}
+{"sql":"CREATE TABLE t17b(tt TEXT PRIMARY KEY, ss)"}
+{"sql":"CREATE TRIGGER t17a_ai AFTER INSERT ON t17a BEGIN\n    INSERT INTO t17b(tt) VALUES(new.ii);\n  END"}
+{"sql":"CREATE TRIGGER t17b_ai AFTER INSERT ON t17b BEGIN\n    UPDATE t17b SET ss = 4;\n  END"}
+{"sql":"INSERT INTO t17a(ii) VALUES('1')"}
+{"sql":"CREATE TABLE t18(a PRIMARY KEY,b,c)"}
+{"sql":"INSERT INTO t18(a,b,c) VALUES(1,2,3)"}
+{"sql":"CREATE TRIGGER t18r1 BEFORE UPDATE ON t18 BEGIN\n    UPDATE t18 SET b=1000 WHERE a=old.a;\n  END"}
+{"sql":"UPDATE t18 SET c=b WHERE a=1"}
+{"sql":"SELECT * FROM t18"}
+{"sql":"DELETE FROM t18"}
+{"sql":"UPDATE t18 SET c=b, b=b+1 WHERE a=1"}
+{"sql":"CREATE TABLE t19(a INT PRIMARY KEY, b, c)WITHOUT ROWID"}
+{"sql":"INSERT INTO t19(a,b,c) VALUES(1,2,3)"}
+{"sql":"CREATE TRIGGER t19r3 BEFORE UPDATE ON t19 BEGIN SELECT new.b; END"}
+{"sql":"UPDATE t19 SET c=b WHERE a=1"}
+{"sql":"DELETE FROM t19"}
+{"sql":"UPDATE t19 SET c=CASE WHEN b=2 THEN b ELSE b+99 END WHERE a=1"}
+{"sql":"CREATE TABLE t20_1(x)"}
+{"sql":"CREATE TABLE aux.t20_2(y)"}
+{"sql":"CREATE TABLE aux.t20_3(z)"}
+{"sql":"CREATE TEMP TRIGGER r20_3 AFTER INSERT ON t20_2 BEGIN UPDATE t20_3 SET z=z+1; END"}
+{"sql":"DROP TRIGGER r20_3"}
+{"sql":"CREATE TABLE t0(a, b, c UNIQUE)"}
+{"sql":"CREATE UNIQUE INDEX i0 ON t0(b) WHERE a"}
+{"sql":"CREATE TRIGGER tr0 AFTER DELETE ON t0 BEGIN\n    DELETE FROM t0;\n  END"}
+{"sql":"INSERT INTO t0(a,b,c) VALUES(0,0,9),(1,1,1)"}
+{"sql":"REPLACE INTO t0(a,b,c) VALUES(2,0,9)"}
+{"sql":"CREATE TABLE t1(\n    a INTEGER PRIMARY KEY,\n    b DOUBLE\n  )"}
+{"sql":"CREATE TRIGGER x AFTER UPDATE ON t1 BEGIN\n   SELECT sum(b)OVER(ORDER BY (SELECT b FROM t1 AS x \n                               WHERE b IN (t1.a,127,t1.b)\n                               GROUP BY b))\n     FROM t1\n     GROUP BY a;\n  END"}
+{"sql":"CREATE TEMP TRIGGER x BEFORE INSERT ON t1 BEGIN\n    UPDATE t1\n       SET b=randomblob(10)\n     WHERE b >= 'E'\n       AND a < (SELECT a FROM t1 WHERE a<22 GROUP BY b);\n  END"}
+{"sql":"INSERT INTO t1(b) VALUES('Y'),('X'),('Z')"}
+{"sql":"SELECT a, CASE WHEN typeof(b)='text' THEN quote(b) ELSE '<blob>' END, '|' FROM t1"}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    INSERT INTO t1 SELECT e_master LIMIT 1,#1;\n  END","reject":true}
+{"sql":"CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN\n    SELECT raise(abort,format('attempt to insert %d where is not a power of 2',new.a))\n     WHERE (new.a & (new.a-1))!=0;\n  END"}
+{"sql":"INSERT INTO t1 VALUES(0),(1),(2),(4),(8),(65536)"}
+{"sql":"INSERT INTO t1 VALUES(9876)"}

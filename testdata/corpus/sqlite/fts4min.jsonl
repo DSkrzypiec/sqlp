@@ -1,0 +1,7 @@
+{"sql":"CREATE TABLE t1(a NOT NULL, b)"}
+{"sql":"CREATE VIRTUAL TABLE ft USING fts3(c)"}
+{"sql":"INSERT INTO ft(docid, c) VALUES(22, 'hello world')"}
+{"sql":"INSERT INTO ft(docid, c) VALUES(44, 'hello world')"}
+{"sql":"INSERT INTO ft(docid, c) VALUES(11, 'hello world')"}
+{"sql":"SELECT max(rowid) FROM ft"}
+{"sql":"SELECT min(rowid) FROM ft"}

@@ -1,0 +1,14 @@
+{"sql":"INSERT INTO t1 VALUES(1,10), (2,20), (3,30), (2,22), (3, 33)"}
+{"sql":"ALTER TABLE t1 ADD COLUMN c"}
+{"sql":"UPDATE t1 SET c=a*rowid+10000"}
+{"sql":"INSERT INTO t2 VALUES(4,44),(5,55),(6,66),(7,77)"}
+{"sql":"INSERT INTO t2 SELECT x+4, (x+4)*11 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT x+8, (x+8)*11 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT x+16, (x+16)*11 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT x+32, (x+32)*11 FROM t2"}
+{"sql":"INSERT INTO t2 SELECT x+64, (x+32)*11 FROM t2"}
+{"sql":"ALTER TABLE t2 ADD COLUMN z"}
+{"sql":"UPDATE t2 SET z=2"}
+{"sql":"CREATE UNIQUE INDEX t2zx ON t2(z,x)"}
+{"sql":"EXPLAIN QUERY PLAN SELECT x FROM t1, t2 WHERE a=z AND c=x"}
+{"sql":"EXPLAIN QUERY PLAN SELECT x FROM t2, t1 WHERE a=z AND c=x"}

@@ -1,0 +1,11 @@
+{"sql":"CREATE TABLE tbl(a PRIMARY KEY, b, c) WITHOUT rowid"}
+{"sql":"CREATE TABLE tbl (a, b, c, d, PRIMARY KEY(a,b,c,d)) WITHOUT rowid"}
+{"sql":"CREATE TABLE tblA(a, b, PRIMARY KEY(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE tblB(a, b, PRIMARY KEY(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE tblC(a, b, PRIMARY KEY(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE tbl(a, b, c, PRIMARY KEY(c,a,b)) WITHOUT rowid"}
+{"sql":"CREATE TRIGGER tbl_trig BEFORE INSERT ON tbl \n    BEGIN\n      INSERT INTO tbl VALUES (new.a, new.b, new.c+1);\n    END"}
+{"sql":"CREATE TABLE tbl (a PRIMARY KEY, b, c) WITHOUT rowid"}
+{"sql":"CREATE TABLE ab(a, b, PRIMARY KEY(a,b)) WITHOUT rowid"}
+{"sql":"CREATE TABLE cd(c, d, PRIMARY KEY(c,d)) WITHOUT rowid"}
+{"sql":"CREATE TABLE t1(a,b,c, PRIMARY KEY(a,b,c)) WITHOUT rowid"}
