@@ -110,6 +110,8 @@ type ExprFeatures struct {
 	LikeQuantified       bool // LIKE ANY|SOME|ALL (pattern, ...) (BigQuery)
 	AggregateModifiers   bool // f(x IGNORE NULLS WHERE c HAVING MAX y ORDER BY z LIMIT n) (BigQuery)
 	TableArgs            bool // TABLE t and MODEL m as function arguments (BigQuery)
+	MethodCalls          bool // (expr).F(args), chained calls for F(expr, args) (BigQuery)
+	WithExprs            bool // WITH(a AS 1, b AS a + 1, a * b) (BigQuery)
 	Int64Literals        bool // integer literals must fit INT64, -9223372036854775808 included (BigQuery)
 }
 
@@ -156,7 +158,10 @@ type QueryFeatures struct {
 	SamplePercent         bool // TABLESAMPLE SYSTEM (n PERCENT) (BigQuery)
 	SystemTime            bool // FROM t [AS x] FOR SYSTEM_TIME AS OF expr (BigQuery)
 	Pipes                 bool // FROM t |> WHERE ... and |> after any query (BigQuery)
-	SetByName             bool // [FULL|LEFT|INNER] UNION ALL BY NAME [ON (...)], CORRESPONDING [BY (...)] (BigQuery)
+	SetByName             bool // [FULL|LEFT|INNER] UNION ALL BY NAME [ON (...)], [STRICT] CORRESPONDING [BY (...)] (BigQuery)
+	SelectWith            bool // SELECT WITH DIFFERENTIAL_PRIVACY | AGGREGATION_THRESHOLD [OPTIONS (...)] (BigQuery)
+	NestedQueryClauses    bool // (q ORDER BY a) ORDER BY b: each level keeps its own clauses (BigQuery)
+	Pivot                 bool // FROM t PIVOT (...), UNPIVOT (...), also as pipe steps (BigQuery)
 	OrderByUsing          bool // ORDER BY x USING <
 	FetchFirst            bool // FETCH FIRST n ROWS ONLY
 	OffsetWithoutLimit    bool // OFFSET without LIMIT, LIMIT ALL

@@ -182,6 +182,11 @@ func (p *Parser) parseInfix(left ast.Expr, op string, prec int) ast.Expr {
 		if p.acceptOp("*") {
 			return &ast.Field{Expr: left, Star: true}
 		}
+		if k := p.peek().Kind; p.d.Features.Expr.MethodCalls && (k == lexer.Ident || k == lexer.QuotedIdent) && p.isOpAt(1, "(") {
+			fc := p.parseFuncCall(&ast.Name{Parts: []ast.Ident{p.parseAnyIdent()}})
+			fc.Receiver = left
+			return fc
+		}
 		return &ast.Field{Expr: left, Name: p.parseAnyIdent()}
 	case "BETWEEN", "IN", "LIKE", "ILIKE", "SIMILAR", "GLOB", "REGEXP", "MATCH":
 		return p.parseNegatable(left, op, prec, false)
@@ -708,6 +713,25 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			iv.Unit = p.next().Value
 			return iv
 		}
+	case "WITH":
+		if p.d.Features.Expr.WithExprs && p.isOpAt(1, "(") {
+			p.next()
+			p.next()
+			w := &ast.WithExpr{}
+			for p.canBeIdent() && p.isKwAt(1, "AS") {
+				v := &ast.WithVar{Name: p.parseIdent()}
+				p.next()
+				v.Value = p.parseExpr()
+				w.Vars = append(w.Vars, v)
+				p.expectOp(",")
+			}
+			if len(w.Vars) == 0 {
+				p.unexpected("name AS value")
+			}
+			w.Result = p.parseExpr()
+			p.expectOp(")")
+			return w
+		}
 	case "SAFE_CAST":
 		if p.d.Features.Expr.SafeCast && p.isOpAt(1, "(") {
 			return p.parseCast()
@@ -921,7 +945,7 @@ func (p *Parser) parseNameExpr() ast.Expr {
 	}
 	name := &ast.Name{Parts: []ast.Ident{first}}
 	for p.isOp(".") {
-		if p.isOpAt(1, "*") && p.d.Features.Names.KeywordLabels {
+		if p.isOpAt(1, "*") && (p.d.Features.Names.KeywordLabels || p.d.Features.Names.KeywordsAfterDot) {
 			p.next()
 			p.next()
 			return &ast.Star{Qualifier: name}
@@ -974,9 +998,12 @@ func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 	}
 	p.expectOp("(")
 	if !p.acceptOp(")") {
-		if p.isOp("*") && p.isOpAt(1, ")") {
+		if p.isOp("*") && (p.isOpAt(1, ")") || p.d.Features.Expr.AggregateModifiers && p.isOpAt(1, ",")) {
 			p.next()
 			fc.Args = []ast.Expr{&ast.Star{}}
+			for p.acceptOp(",") { // BigQuery's COUNT(*, contribution_bounds_per_group => ...)
+				fc.Args = append(fc.Args, p.parseFuncArg())
+			}
 		} else {
 			if p.acceptKw("DISTINCT") {
 				fc.Distinct = true
@@ -998,12 +1025,19 @@ func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 				if p.acceptKw("WHERE") {
 					fc.Where = p.parseExpr()
 				}
+				if p.acceptKwSeq("GROUP", "BY") { // multi-level aggregation
+					fc.GroupBy = p.parseExprList()
+				}
 				if p.acceptKw("HAVING") {
 					bound := p.acceptOneOf("MAX", "MIN")
-					if bound == "" {
+					switch {
+					case bound != "":
+						fc.Having = &ast.HavingBound{Max: bound == "MAX", Expr: p.parseExpr()}
+					case fc.GroupBy != nil:
+						fc.GroupHaving = p.parseExpr()
+					default:
 						p.unexpected("MAX or MIN")
 					}
-					fc.Having = &ast.HavingBound{Max: bound == "MAX", Expr: p.parseExpr()}
 				}
 			}
 			if p.acceptKwSeq("ORDER", "BY") {
@@ -1341,8 +1375,8 @@ func (p *Parser) parseType() *ast.DataType {
 		dt.Setof = true
 		return dt
 	case t.Kind == lexer.Ident:
-		if p.d.IsReserved(t.Value) && !p.d.FuncNameKeywords[t.Value] || p.isColNameOnly() || p.d.NotAlias[t.Value] {
-			p.unexpected("type name")
+		if p.d.IsReserved(t.Value) && !p.d.FuncNameKeywords[t.Value] && !p.d.TypedLiterals[t.Value] || p.isColNameOnly() || p.d.NotAlias[t.Value] {
+			p.unexpected("type name") // INTERVAL is a BigQuery type, though reserved
 		}
 		p.next()
 		dt.Name = p.parseTypeWords(t)

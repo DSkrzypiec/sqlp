@@ -249,6 +249,11 @@ func (b *builder) table(t ast.TableExpr, n *QStructNode, sc *scope) {
 		b.exprs(x.On, n, sc)
 	case *ast.ParenTable:
 		b.table(x.Expr, n, sc)
+	case *ast.Pivot:
+		b.table(x.Source, n, sc)
+		b.exprs(x.Aggs, n, sc)
+	case *ast.Unpivot:
+		b.table(x.Source, n, sc)
 	default:
 		panic(fmt.Sprintf("analyze: unexpected FROM item %T", t))
 	}

@@ -317,21 +317,7 @@ func (g *Generator) expr(e ast.Expr) {
 			g.w(".")
 		}
 		g.w("*")
-		if len(e.Except) > 0 {
-			g.w(" EXCEPT (")
-			for i, id := range e.Except {
-				if i > 0 {
-					g.w(", ")
-				}
-				g.ident(id)
-			}
-			g.w(")")
-		}
-		if len(e.Replace) > 0 {
-			g.w(" REPLACE (")
-			g.selectItems(e.Replace)
-			g.w(")")
-		}
+		g.starMods(e.Except, e.Replace)
 	case *ast.Literal:
 		g.literal(e)
 	case *ast.TypedString:
@@ -353,6 +339,7 @@ func (g *Generator) expr(e ast.Expr) {
 		g.w(".")
 		if e.Star {
 			g.w("*")
+			g.starMods(e.Except, e.Replace)
 		} else {
 			g.label(e.Name)
 		}
@@ -609,6 +596,16 @@ func (g *Generator) expr(e ast.Expr) {
 			g.w(" AT TIME ZONE ")
 			g.expr(e.TimeZone)
 		}
+		g.w(")")
+	case *ast.WithExpr:
+		g.w("WITH(")
+		for _, v := range e.Vars {
+			g.ident(v.Name)
+			g.w(" AS ")
+			g.expr(v.Value)
+			g.w(", ")
+		}
+		g.expr(e.Result)
 		g.w(")")
 	case *ast.TableArg:
 		g.w(e.Kind, " ")
@@ -897,6 +894,10 @@ func (g *Generator) funcCall(f *ast.FuncCall) {
 			g.warn("function " + strings.ToLower(name))
 		}
 	}
+	if f.Receiver != nil {
+		g.postfixBase(f.Receiver)
+		g.w(".")
+	}
 	g.funcName(f)
 	if f.NoParens {
 		return
@@ -913,6 +914,14 @@ func (g *Generator) funcCall(f *ast.FuncCall) {
 	if f.Where != nil {
 		g.w(" WHERE ")
 		g.expr(f.Where)
+	}
+	if len(f.GroupBy) > 0 {
+		g.w(" GROUP BY ")
+		g.exprList(f.GroupBy)
+	}
+	if f.GroupHaving != nil {
+		g.w(" HAVING ")
+		g.expr(f.GroupHaving)
 	}
 	if f.Having != nil {
 		g.w(map[bool]string{true: " HAVING MAX ", false: " HAVING MIN "}[f.Having.Max])
@@ -1069,6 +1078,80 @@ func (g *Generator) tableSample(s *ast.TableSample) {
 	}
 }
 
+func (g *Generator) namedWindows(list []*ast.NamedWindow) {
+	for i, nw := range list {
+		if i > 0 {
+			g.w(", ")
+		}
+		g.ident(nw.Name)
+		g.w(" AS ")
+		g.windowSpec(nw.Spec)
+	}
+}
+
+// pivot writes PIVOT (...) [alias], without its source.
+func (g *Generator) pivot(pv *ast.Pivot) {
+	g.w("PIVOT (")
+	g.selectItems(pv.Aggs)
+	g.w(" FOR ")
+	g.expr(pv.For)
+	g.w(" IN (")
+	g.selectItems(pv.In)
+	g.w("))")
+	g.alias(pv.Alias)
+}
+
+// unpivot writes UNPIVOT (...) [alias], without its source.
+func (g *Generator) unpivot(up *ast.Unpivot) {
+	g.w("UNPIVOT")
+	if up.Nulls != "" {
+		g.w(" ", up.Nulls, " NULLS")
+	}
+	g.w(" (")
+	if up.Multi {
+		g.w("(")
+		g.identList(up.Values)
+		g.w(")")
+	} else {
+		g.ident(up.Values[0])
+	}
+	g.w(" FOR ")
+	g.ident(up.Name)
+	g.w(" IN (")
+	for i, in := range up.In {
+		if i > 0 {
+			g.w(", ")
+		}
+		if up.Multi {
+			g.w("(")
+			g.identList(in.Columns)
+			g.w(")")
+		} else {
+			g.ident(in.Columns[0])
+		}
+		if in.Label != nil {
+			g.w(" AS ")
+			g.expr(in.Label)
+		}
+	}
+	g.w("))")
+	g.alias(up.Alias)
+}
+
+// starMods writes BigQuery's * EXCEPT (...) REPLACE (...).
+func (g *Generator) starMods(except []ast.Ident, replace []*ast.SelectItem) {
+	if len(except) > 0 {
+		g.w(" EXCEPT (")
+		g.identList(except)
+		g.w(")")
+	}
+	if len(replace) > 0 {
+		g.w(" REPLACE (")
+		g.selectItems(replace)
+		g.w(")")
+	}
+}
+
 // join writes a join from its keywords on, without its left side: a pipe's
 // input is the left side of |> JOIN.
 func (g *Generator) join(t *ast.Join) {
@@ -1109,6 +1192,10 @@ func (g *Generator) pipe(op ast.PipeOp) {
 			g.w("AS ", x.As, " ")
 		}
 		g.selectItems(x.Items)
+		if len(x.Windows) > 0 {
+			g.w(" WINDOW ")
+			g.namedWindows(x.Windows)
+		}
 	case *ast.PipeExtend:
 		g.w("EXTEND ")
 		g.selectItems(x.Items)
@@ -1183,6 +1270,10 @@ func (g *Generator) pipe(op ast.PipeOp) {
 		g.with(x.With)
 	case *ast.PipeDistinct:
 		g.w("DISTINCT")
+	case *ast.PipePivot:
+		g.pivot(x.Pivot)
+	case *ast.PipeUnpivot:
+		g.unpivot(x.Unpivot)
 	case *ast.PipeTableSample:
 		g.tableSample(x.Sample)
 	}
@@ -1215,6 +1306,7 @@ func (g *Generator) setOpWords(op ast.SetOpKind, all bool, m *ast.SetMatch) {
 	switch {
 	case m == nil:
 	case m.Corresponding:
+		g.kw(m.Strict, "STRICT")
 		g.w(" CORRESPONDING")
 		if len(m.Columns) > 0 {
 			g.w(" BY (")
@@ -1396,6 +1488,13 @@ func (g *Generator) values(v *ast.Values) {
 
 func (g *Generator) sel(s *ast.Select) {
 	g.w("SELECT")
+	if s.Privacy != nil {
+		g.w(" WITH ", s.Privacy.Kind)
+		if s.Privacy.Options != nil {
+			g.w(" OPTIONS ")
+			g.options(s.Privacy.Options, " = ")
+		}
+	}
 	switch s.Distinct {
 	case ast.DistinctAll:
 		g.w(" ALL")
@@ -1448,14 +1547,7 @@ func (g *Generator) sel(s *ast.Select) {
 	}
 	if len(s.Windows) > 0 {
 		g.w(" WINDOW ")
-		for i, nw := range s.Windows {
-			if i > 0 {
-				g.w(", ")
-			}
-			g.ident(nw.Name)
-			g.w(" AS ")
-			g.windowSpec(nw.Spec)
-		}
+		g.namedWindows(s.Windows)
 	}
 	if s.Qualify != nil {
 		g.w(" QUALIFY ")
@@ -1569,6 +1661,14 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 				g.ident(*t.UsingAlias)
 			}
 		}
+	case *ast.Pivot:
+		g.tableExpr(t.Source)
+		g.w(" ")
+		g.pivot(t)
+	case *ast.Unpivot:
+		g.tableExpr(t.Source)
+		g.w(" ")
+		g.unpivot(t)
 	case *ast.ParenTable:
 		if g.from != nil && g.d.Features.Query.ParenTableIsJoin && !ast.IsJoinTree(t.Expr) {
 			if t.Alias == nil && !isCommaJoin(t.Expr) {

@@ -547,6 +547,10 @@ func (p *Parser) parseName() *ast.Name {
 			p.unexpected("end of name")
 		}
 		p.next()
+		if p.d.Features.Names.KeywordsAfterDot {
+			n.Parts = append(n.Parts, p.parseAnyIdent())
+			continue
+		}
 		n.Parts = append(n.Parts, p.parseLabel())
 	}
 	return n

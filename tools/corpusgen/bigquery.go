@@ -88,6 +88,7 @@ var bqRejects = messageTable(
 	`The LIKE ANY\|SOME\|ALL operator does not support subquery expression as patterns`,
 	`(EXISTS|IN) subquery is not supported inside join predicate`,
 	`Expected keyword `,
+	`Invalid identifier after SELECT WITH`,
 	`Unexpected identifier `,
 	`Statement not supported: `,
 	`\S+ is not a supported object type`,
@@ -120,6 +121,8 @@ var bqAccepts = messageTable(
 	// types
 	`Could not cast `,
 	`Invalid cast from `,
+	`Argument \* can only be used in COUNT\(\*\)`,
+	`A SELECT WITH DIFFERENTIAL_PRIVACY query must `,
 	`WHERE clause not supported in \w+ with `,
 	`'FOR SYSTEM_TIME AS OF' expression for table `,
 	`.* argument of .* should be of type `,

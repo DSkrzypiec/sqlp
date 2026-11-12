@@ -315,6 +315,24 @@ type FuncCall struct {
 	Having *HavingBound
 	Limit  Expr
 	Where  Expr // f(x WHERE cond), BigQuery's conditional aggregation
+	// f(g(x) GROUP BY y HAVING cond): BigQuery's multi-level aggregation.
+	GroupBy     []Expr
+	GroupHaving Expr
+	// Receiver is x in x.F(args), BigQuery's chained call syntax for F(x, args).
+	Receiver Expr
+}
+
+// WithExpr is BigQuery's WITH(a AS expr, ..., result): variables an
+// expression can use.
+type WithExpr struct {
+	Vars   []*WithVar
+	Result Expr
+}
+
+// WithVar is one name AS value of a WithExpr.
+type WithVar struct {
+	Name  Ident
+	Value Expr
 }
 
 // TableArg is a table or model passed to a table-valued function (BigQuery):
@@ -376,6 +394,9 @@ type Field struct {
 	Expr Expr
 	Name Ident
 	Star bool
+	// (expr).* EXCEPT (a) and REPLACE (x AS a), as on Star (BigQuery).
+	Except  []Ident
+	Replace []*SelectItem
 }
 
 // Overlay is `OVERLAY(x PLACING y FROM a [FOR b])`.
@@ -450,6 +471,35 @@ type FromQuery struct {
 	From []TableExpr
 }
 
+// Pivot is BigQuery's FROM item PIVOT (agg [AS a], ... FOR col IN (value
+// [AS v], ...)) [AS alias]. Source is nil in a pipe step.
+type Pivot struct {
+	Source TableExpr
+	Aggs   []*SelectItem
+	For    Expr
+	In     []*SelectItem
+	Alias  *Alias
+}
+
+// Unpivot is BigQuery's FROM item UNPIVOT [INCLUDE|EXCLUDE NULLS] (values FOR
+// name IN (columns [AS label], ...)) [AS alias]. With Multi, values and each
+// set of columns are written in parentheses. Source is nil in a pipe step.
+type Unpivot struct {
+	Source TableExpr
+	Nulls  string // "INCLUDE", "EXCLUDE" or ""
+	Multi  bool
+	Values []Ident
+	Name   Ident
+	In     []*UnpivotIn
+	Alias  *Alias
+}
+
+// UnpivotIn is one entry of UNPIVOT's IN list.
+type UnpivotIn struct {
+	Columns []Ident
+	Label   Expr // AS 'label' or AS 1, or nil
+}
+
 // PipeOp is one |> step of BigQuery's pipe syntax.
 type PipeOp interface {
 	Node
@@ -463,6 +513,7 @@ type (
 		Distinct bool
 		As       string // STRUCT or VALUE, or ""
 		Items    []*SelectItem
+		Windows  []*NamedWindow
 	}
 	PipeExtend struct{ Items []*SelectItem }
 	PipeWindow struct{ Items []*SelectItem } // the older form of EXTEND for window functions
@@ -492,6 +543,8 @@ type (
 	}
 	PipeWith        struct{ With *With }
 	PipeDistinct    struct{}
+	PipePivot       struct{ Pivot *Pivot }
+	PipeUnpivot     struct{ Unpivot *Unpivot }
 	PipeTableSample struct{ Sample *TableSample }
 )
 
@@ -547,6 +600,14 @@ func (*PipeCall) pipeOp()        {}
 func (*PipeWith) pipeOp()        {}
 func (*PipeDistinct) pipeOp()    {}
 func (*PipeTableSample) pipeOp() {}
+func (*PipePivot) node()         {}
+func (*PipeUnpivot) node()       {}
+func (*PipePivot) pipeOp()       {}
+func (*PipeUnpivot) pipeOp()     {}
+func (*Pivot) node()             {}
+func (*Unpivot) node()           {}
+func (*Pivot) tableExpr()        {}
+func (*Unpivot) tableExpr()      {}
 
 // With is a WITH [RECURSIVE] clause.
 type With struct {
@@ -604,6 +665,14 @@ type Select struct {
 	Windows    []*NamedWindow
 	Qualify    Expr   // Snowflake/DuckDB-style; parsed when the dialect allows it
 	As         string // SELECT AS STRUCT or AS VALUE (BigQuery): "STRUCT", "VALUE" or ""
+	Privacy    *SelectWith
+}
+
+// SelectWith is BigQuery's SELECT WITH DIFFERENTIAL_PRIVACY [OPTIONS (...)],
+// or AGGREGATION_THRESHOLD.
+type SelectWith struct {
+	Kind    string
+	Options []Option // nil without OPTIONS
 }
 
 // IntoTable is the target of SELECT ... INTO [TEMP|UNLOGGED] [TABLE] name.
@@ -656,6 +725,7 @@ type SetOp struct {
 type SetMatch struct {
 	Mode          string // "", "INNER", "FULL" or "LEFT"
 	Corresponding bool   // CORRESPONDING rather than BY NAME
+	Strict        bool   // STRICT CORRESPONDING
 	Columns       []Ident
 }
 
@@ -1410,6 +1480,7 @@ func (*Tuple) node()       {}
 func (*Struct) node()      {}
 func (*Interval) node()    {}
 func (*TableArg) node()    {}
+func (*WithExpr) node()    {}
 func (*Array) node()       {}
 func (*Cast) node()        {}
 func (*Case) node()        {}
@@ -1448,6 +1519,7 @@ func (*Tuple) expr()       {}
 func (*Struct) expr()      {}
 func (*Interval) expr()    {}
 func (*TableArg) expr()    {}
+func (*WithExpr) expr()    {}
 func (*Array) expr()       {}
 func (*Cast) expr()        {}
 func (*Case) expr()        {}

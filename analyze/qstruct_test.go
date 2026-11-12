@@ -758,7 +758,7 @@ func TestQStructSeesEveryField(t *testing.T) {
 		reflect.TypeFor[ast.Query]():       "With Body OrderBy Limit Locking Pipes",
 		reflect.TypeFor[ast.With]():        "Recursive CTEs",
 		reflect.TypeFor[ast.CTE]():         "Name Columns Materialized Query DML Search Cycle",
-		reflect.TypeFor[ast.Select]():      "Distinct DistinctOn Items Into From Where GroupBy Having Windows Qualify As",
+		reflect.TypeFor[ast.Select]():      "Distinct DistinctOn Items Into From Where GroupBy Having Windows Qualify As Privacy",
 		reflect.TypeFor[ast.SetOp]():       "Op All Left Right Match",
 		reflect.TypeFor[ast.Values]():      "Rows",
 		reflect.TypeFor[ast.ParenQuery]():  "Query",

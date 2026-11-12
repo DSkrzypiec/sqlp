@@ -11,7 +11,7 @@
 {"sql":"SELECT '0x123' as hex_value, CAST('0x123' as INT64) as hex_to_int","shape":"SELECT '0x123' AS hex_value, CAST('0x123' AS INT64) AS hex_to_int;"}
 {"sql":"SELECT '-0x123' as hex_value, CAST('-0x123' as INT64) as hex_to_int","shape":"SELECT '-0x123' AS hex_value, CAST('-0x123' AS INT64) AS hex_to_int;"}
 {"sql":"CAST(expression AS INTERVAL)","reject":true}
-{"sql":"SELECT input, CAST(input AS INTERVAL) AS output\nFROM UNNEST([\n  '1-2 3 10:20:30.456',\n  '1-2',\n  '10:20:30',\n  'P1Y2M3D',\n  'PT10H20M30,456S'\n]) input"}
+{"sql":"SELECT input, CAST(input AS INTERVAL) AS output\nFROM UNNEST([\n  '1-2 3 10:20:30.456',\n  '1-2',\n  '10:20:30',\n  'P1Y2M3D',\n  'PT10H20M30,456S'\n]) input","shape":"SELECT input, CAST(input AS INTERVAL) AS output FROM UNNEST(ARRAY['1-2 3 10:20:30.456', '1-2', '10:20:30', 'P1Y2M3D', 'PT10H20M30,456S']) AS input;"}
 {"sql":"CAST(expression AS NUMERIC)","reject":true}
 {"sql":"CAST(expression AS RANGE)","reject":true}
 {"sql":"SELECT CAST(\n  '[2020-01-01, 2020-01-02)'\n  AS RANGE<DATE>) AS string_to_range","shape":"SELECT CAST('[2020-01-01, 2020-01-02)' AS RANGE<DATE>) AS string_to_range;"}

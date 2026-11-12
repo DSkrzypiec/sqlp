@@ -717,7 +717,13 @@ func (b *colBuilder) pipes(ops []ast.PipeOp, sc *colScope) []col {
 	for _, op := range ops {
 		switch x := op.(type) {
 		case *ast.PipeSelect:
-			sc = table(b.fit(items(x.Items), "a SELECT list"), "")
+			windowed := *sc // its WINDOW clause names windows for its items
+			windowed.windows = x.Windows
+			outer := sc
+			sc = &windowed
+			cols := b.fit(items(x.Items), "a SELECT list")
+			sc = outer
+			sc = table(cols, "")
 		case *ast.PipeAggregate:
 			var cols []col
 			for _, list := range [][]*ast.PipeAggItem{x.GroupBy, x.Items} { // the grouping columns come first
@@ -812,6 +818,21 @@ func (b *colBuilder) pipes(ops []ast.PipeOp, sc *colScope) []col {
 			srcs := set(append(b.allSrcs(b.star(&ast.Star{}, sc)), b.callSrcs(x.Func, sc)...))
 			rl := &rel{name: b.r.key(name), label: name, cols: []col{{open: &openCols{srcs: srcs, labels: []string{name}}}}}
 			sc = &colScope{parent: sc.parent, ctes: sc.ctes, items: []*rel{rl}, bases: []*rel{rl}}
+		case *ast.PipePivot, *ast.PipeUnpivot:
+			src := &rel{cols: b.star(&ast.Star{}, sc)}
+			var alias *ast.Alias
+			var t ast.TableExpr
+			if pv, ok := x.(*ast.PipePivot); ok {
+				t, alias = pv.Pivot, pv.Pivot.Alias
+			} else {
+				up := x.(*ast.PipeUnpivot)
+				t, alias = up.Unpivot, up.Unpivot.Alias
+			}
+			name := ""
+			if alias != nil {
+				name = b.r.ident(alias.Name)
+			}
+			sc = table(b.pivoted(t, src, sc), name)
 		case *ast.PipeWith:
 			ctes := b.finder.with(x.With, sc.ctes)
 			b.outer[x.With] = sc.parent
@@ -819,6 +840,111 @@ func (b *colBuilder) pipes(ops []ast.PipeOp, sc *colScope) []col {
 		}
 	}
 	return b.star(&ast.Star{}, sc)
+}
+
+// pivoted gives the columns of PIVOT or UNPIVOT over the relation src. A
+// pivoted column is computed from its aggregate and the FOR column, which,
+// with the aggregates' columns, leave the columns the result is grouped by. An
+// unpivoted value column is computed from the columns it gathers, which leave
+// the result; the name column is computed from nothing.
+func (b *colBuilder) pivoted(t ast.TableExpr, src *rel, sc *colScope) []col {
+	in := &colScope{parent: sc.parent, ctes: sc.ctes, items: []*rel{src}, bases: []*rel{src}}
+	drop := map[string]bool{}
+	var out []col
+	keep := func() {
+		for _, c := range src.cols {
+			if c.open != nil || !drop[c.key] {
+				out = append(out, c)
+			}
+		}
+	}
+	if pv, ok := t.(*ast.Pivot); ok {
+		for _, e := range append([]ast.Expr{pv.For}, exprsOf(pv.Aggs)...) {
+			for _, name := range namesIn(e) {
+				drop[b.r.key(b.r.ident(name.Last()))] = true
+			}
+		}
+		keep()
+		forSrcs := b.exprSrcs(pv.For, in)
+		for _, v := range pv.In {
+			for _, agg := range pv.Aggs {
+				name := b.outName(v.Expr)
+				if lit, ok := v.Expr.(*ast.Literal); ok { // BigQuery names 'Q1' Q1, and 1 _1
+					switch lit.Kind {
+					case ast.StringLit:
+						name = lit.Value
+					case ast.Integer:
+						name = "_" + lit.Value
+					}
+				}
+				if v.Alias != nil {
+					name = b.r.ident(*v.Alias)
+				}
+				if agg.Alias != nil && len(pv.Aggs) > 1 {
+					name = b.r.ident(*agg.Alias) + "_" + name
+				}
+				out = append(out, b.newCol(name, set(append(b.exprSrcs(agg.Expr, in), forSrcs...)), ""))
+			}
+		}
+		return out
+	}
+	up := t.(*ast.Unpivot)
+	gathered := make([][]int, len(up.Values))
+	for _, entry := range up.In {
+		for i, id := range entry.Columns {
+			drop[b.r.key(b.r.ident(id))] = true
+			if i < len(gathered) {
+				gathered[i] = append(gathered[i], b.column(&ast.Name{Parts: []ast.Ident{id}}, in)...)
+			}
+		}
+	}
+	keep()
+	for i, v := range up.Values {
+		out = append(out, b.newCol(b.r.ident(v), set(gathered[i]), ""))
+	}
+	return append(out, b.newCol(b.r.ident(up.Name), nil, ""))
+}
+
+func exprsOf(items []*ast.SelectItem) []ast.Expr {
+	out := make([]ast.Expr, len(items))
+	for i, it := range items {
+		out[i] = it.Expr
+	}
+	return out
+}
+
+// namesIn lists the column references in e, without looking into subqueries.
+func namesIn(e ast.Expr) []*ast.Name {
+	var out []*ast.Name
+	var visit func(v reflect.Value)
+	visit = func(v reflect.Value) {
+		switch v.Kind() {
+		case reflect.Interface, reflect.Pointer:
+			if v.IsNil() {
+				return
+			}
+			if n, ok := v.Interface().(*ast.Name); ok {
+				out = append(out, n)
+				return
+			}
+			if _, ok := v.Interface().(*ast.Query); ok {
+				return
+			}
+			visit(v.Elem())
+		case reflect.Struct:
+			for i := range v.NumField() {
+				if v.Type().Field(i).IsExported() {
+					visit(v.Field(i))
+				}
+			}
+		case reflect.Slice:
+			for i := range v.Len() {
+				visit(v.Index(i))
+			}
+		}
+	}
+	visit(reflect.ValueOf(e))
+	return out
 }
 
 // alignByName reorders the columns of later branches of a set operation to
@@ -1191,6 +1317,23 @@ func (b *colBuilder) fromItem(t ast.TableExpr, sc *colScope) *rel {
 		right := b.fromItem(x.Right, sc)
 		sc.pending = sc.pending[:len(sc.pending)-1]
 		return b.join(x, left, right, sc)
+	case *ast.Pivot, *ast.Unpivot: // the source's names are hidden behind the result
+		n := len(sc.bases)
+		var src *rel
+		var alias *ast.Alias
+		if pv, ok := x.(*ast.Pivot); ok {
+			src, alias = b.fromItem(pv.Source, sc), pv.Alias
+		} else {
+			up := x.(*ast.Unpivot)
+			src, alias = b.fromItem(up.Source, sc), up.Alias
+		}
+		sc.bases = slices.Clip(sc.bases[:n])
+		rl := &rel{cols: b.pivoted(x, src, sc)}
+		if alias != nil {
+			rl = b.aliased(&rel{label: b.r.ident(alias.Name), cols: b.relabel(rl.cols, b.r.ident(alias.Name))}, alias)
+		}
+		sc.bases = append(sc.bases, rl)
+		return rl
 	case *ast.ParenTable:
 		n := len(sc.bases)
 		inner := b.fromItem(x.Expr, sc)
@@ -1732,8 +1875,9 @@ func (b *colBuilder) callSrcs(f *ast.FuncCall, sc *colScope) []int {
 		b.walk(reflect.ValueOf(a), sc, &acc)
 	}
 	b.walk(reflect.ValueOf(f.OrderBy), sc, &acc)
-	b.walk(reflect.ValueOf(f.Where), sc, &acc)  // BigQuery's f(x WHERE cond)
-	b.walk(reflect.ValueOf(f.Having), sc, &acc) // HAVING MAX|MIN picks the rows the result comes from
+	b.walk(reflect.ValueOf(f.Receiver), sc, &acc) // x in x.F(args)
+	b.walk(reflect.ValueOf(f.Where), sc, &acc)    // BigQuery's f(x WHERE cond)
+	b.walk(reflect.ValueOf(f.Having), sc, &acc)   // HAVING MAX|MIN picks the rows the result comes from
 	b.walk(reflect.ValueOf(f.Limit), sc, &acc)
 	b.walk(reflect.ValueOf(f.WithinGroup), sc, &acc)
 	b.walk(reflect.ValueOf(f.Filter), sc, &acc)

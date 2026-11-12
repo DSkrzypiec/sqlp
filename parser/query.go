@@ -87,6 +87,9 @@ func (p *Parser) parsePipeOp() ast.PipeOp {
 			op.As = p.next().Value
 		}
 		op.Items = p.parseSelectItems()
+		if p.acceptKw("WINDOW") {
+			op.Windows = p.parseNamedWindows()
+		}
 		return op
 	case p.acceptKw("EXTEND"):
 		return &ast.PipeExtend{Items: p.parseSelectItems()}
@@ -150,6 +153,13 @@ func (p *Parser) parsePipeOp() ast.PipeOp {
 		return &ast.PipeWith{With: p.parseWith()}
 	case p.acceptKw("DISTINCT"):
 		return &ast.PipeDistinct{}
+	case p.isPivotStart():
+		switch x := p.parsePivot(nil).(type) {
+		case *ast.Pivot:
+			return &ast.PipePivot{Pivot: x}
+		case *ast.Unpivot:
+			return &ast.PipeUnpivot{Unpivot: x}
+		}
 	case p.isKw("TABLESAMPLE"):
 		return &ast.PipeTableSample{Sample: p.parseTableSample()}
 	}
@@ -236,8 +246,10 @@ func (p *Parser) parseSetMatch(mode string) *ast.SetMatch {
 	if !p.d.Features.Query.SetByName {
 		return nil
 	}
-	m := &ast.SetMatch{Mode: mode}
+	m := &ast.SetMatch{Mode: mode, Strict: p.acceptKw("STRICT")}
 	switch {
+	case m.Strict && !p.isKw("CORRESPONDING"):
+		p.unexpected("CORRESPONDING")
 	case p.acceptKwSeq("BY", "NAME"):
 		if p.acceptKw("ON") {
 			m.Columns = p.parseParenIdentList()
@@ -298,7 +310,9 @@ func (p *Parser) parseQueryTail(q *ast.Query) {
 			q.Locking = append(q.Locking, p.parseLocking())
 		default:
 			p.checkWithTies(q)
-			p.checkParenQueryOptions(q)
+			if !p.d.Features.Query.NestedQueryClauses {
+				p.checkParenQueryOptions(q)
+			}
 			return
 		}
 	}
@@ -689,6 +703,22 @@ func (p *Parser) parseValues() *ast.Values {
 func (p *Parser) parseSelect() *ast.Select {
 	p.expectKw("SELECT")
 	s := &ast.Select{}
+	if p.d.Features.Query.SelectWith && p.isKw("WITH") && !p.isOpAt(1, "(") { // else WITH(...), an expression
+		p.next()
+		kind := p.acceptOneOf("DIFFERENTIAL_PRIVACY", "AGGREGATION_THRESHOLD")
+		if kind == "" {
+			p.unexpected("DIFFERENTIAL_PRIVACY or AGGREGATION_THRESHOLD")
+		}
+		s.Privacy = &ast.SelectWith{Kind: kind}
+		if p.acceptKw("OPTIONS") {
+			s.Privacy.Options = []ast.Option{}
+			if p.isOp("(") && p.isOpAt(1, ")") {
+				p.pos += 2
+			} else {
+				s.Privacy.Options = p.parseParenOptions()
+			}
+		}
+	}
 	switch {
 	case p.acceptKw("ALL"):
 		s.Distinct = ast.DistinctAll
@@ -726,15 +756,7 @@ func (p *Parser) parseSelect() *ast.Select {
 	}
 	if p.isWindowClause() {
 		p.next()
-		for {
-			nw := &ast.NamedWindow{Name: p.parseIdent()}
-			p.expectKw("AS")
-			nw.Spec = p.parseWindowSpec()
-			s.Windows = append(s.Windows, nw)
-			if !p.acceptOp(",") {
-				break
-			}
-		}
+		s.Windows = p.parseNamedWindows()
 	}
 	if p.d.Features.Query.Qualify && p.acceptKw("QUALIFY") {
 		s.Qualify = p.parseExpr()
@@ -794,13 +816,18 @@ func (p *Parser) parseIntoTable() *ast.IntoTable {
 
 // parseStarModifiers parses BigQuery's * EXCEPT (a, b) and * REPLACE (expr AS a).
 func (p *Parser) parseStarModifiers(s *ast.Star) *ast.Star {
+	s.Except, s.Replace = p.parseStarMods()
+	return s
+}
+
+func (p *Parser) parseStarMods() (except []ast.Ident, replace []*ast.SelectItem) {
 	if !p.d.Features.Query.StarModifiers {
-		return s
+		return nil, nil
 	}
 	if p.isKw("EXCEPT") && p.isOpAt(1, "(") {
 		p.pos += 2
 		for {
-			s.Except = append(s.Except, p.parseAnyIdent())
+			except = append(except, p.parseAnyIdent())
 			if !p.acceptOp(",") {
 				break
 			}
@@ -814,14 +841,28 @@ func (p *Parser) parseStarModifiers(s *ast.Star) *ast.Star {
 			p.expectKw("AS")
 			name := p.parseAnyIdent()
 			item.Alias = &name
-			s.Replace = append(s.Replace, item)
+			replace = append(replace, item)
 			if !p.acceptOp(",") {
 				break
 			}
 		}
 		p.expectOp(")")
 	}
-	return s
+	return except, replace
+}
+
+// parseNamedWindows parses the list after WINDOW: name AS (spec), ...
+func (p *Parser) parseNamedWindows() []*ast.NamedWindow {
+	var list []*ast.NamedWindow
+	for {
+		nw := &ast.NamedWindow{Name: p.parseIdent()}
+		p.expectKw("AS")
+		nw.Spec = p.parseWindowSpec()
+		list = append(list, nw)
+		if !p.acceptOp(",") {
+			return list
+		}
+	}
 }
 
 // checkFromless applies BigQuery's rules to a SELECT without FROM.
@@ -864,6 +905,16 @@ func (p *Parser) parseSelectItem() *ast.SelectItem {
 		return &ast.SelectItem{Expr: p.parseStarModifiers(&ast.Star{Qualifier: name})}
 	}
 	item := &ast.SelectItem{Expr: p.parseExpr()}
+	switch e := item.Expr.(type) {
+	case *ast.Field: // (expr).* EXCEPT (...)
+		if e.Star {
+			e.Except, e.Replace = p.parseStarMods()
+			return item
+		}
+	case *ast.Star: // a.b.*
+		e.Except, e.Replace = p.parseStarMods()
+		return item
+	}
 	switch {
 	case p.acceptKw("AS"):
 		id := p.parseLabel()
@@ -888,7 +939,7 @@ func (p *Parser) isBareLabel() bool {
 // canBeBareAlias reports whether the current token can be an alias without AS.
 func (p *Parser) canBeBareAlias() bool {
 	t := p.peek()
-	if t.Kind == lexer.Ident && (p.d.NotAlias[t.Value] || p.isWindowClause()) {
+	if t.Kind == lexer.Ident && (p.d.NotAlias[t.Value] || p.isWindowClause() || p.isPivotStart()) {
 		return false
 	}
 	return p.canBeIdent()
@@ -1159,6 +1210,92 @@ func (p *Parser) isSpecialSyntaxFunc() bool {
 }
 
 func (p *Parser) parseTableFactor() ast.TableExpr {
+	t := p.parseTableFactorBase()
+	for p.isPivotStart() {
+		t = p.parsePivot(t)
+	}
+	return t
+}
+
+// isPivotStart reports whether BigQuery's PIVOT or UNPIVOT comes next; they
+// are not reserved, so otherwise they could be an alias.
+func (p *Parser) isPivotStart() bool {
+	return p.d.Features.Query.Pivot && (p.isKw("PIVOT") && p.isOpAt(1, "(") ||
+		p.isKw("UNPIVOT") && (p.isOpAt(1, "(") || p.isKwAt(1, "INCLUDE", "EXCLUDE")))
+}
+
+// parsePivot parses PIVOT (...) or UNPIVOT (...) after source, nil in a pipe.
+func (p *Parser) parsePivot(source ast.TableExpr) ast.TableExpr {
+	item := func() *ast.SelectItem {
+		it := &ast.SelectItem{Expr: p.parseExpr()}
+		if p.acceptKw("AS") || p.canBeIdent() && !p.isKw("FOR") {
+			id := p.parseIdent()
+			it.Alias = &id
+		}
+		return it
+	}
+	if p.acceptKw("PIVOT") {
+		pv := &ast.Pivot{Source: source}
+		p.expectOp("(")
+		for {
+			pv.Aggs = append(pv.Aggs, item())
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectKw("FOR")
+		pv.For = p.parseExprPrec(p.d.Precedence["IN"]) // stops before IN
+		p.expectKw("IN")
+		p.expectOp("(")
+		for {
+			pv.In = append(pv.In, item())
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectOp(")")
+		p.expectOp(")")
+		pv.Alias = p.parseAlias(false)
+		return pv
+	}
+	p.expectKw("UNPIVOT")
+	up := &ast.Unpivot{Source: source}
+	if w := p.acceptOneOf("INCLUDE", "EXCLUDE"); w != "" {
+		p.expectKw("NULLS")
+		up.Nulls = w
+	}
+	p.expectOp("(")
+	if up.Multi = p.isOp("("); up.Multi {
+		up.Values = p.parseParenIdentList()
+	} else {
+		up.Values = []ast.Ident{p.parseIdent()}
+	}
+	p.expectKw("FOR")
+	up.Name = p.parseIdent()
+	p.expectKw("IN")
+	p.expectOp("(")
+	for {
+		in := &ast.UnpivotIn{}
+		if up.Multi {
+			in.Columns = p.parseParenIdentList()
+		} else {
+			in.Columns = []ast.Ident{p.parseIdent()}
+		}
+		if p.acceptKw("AS") {
+			in.Label = p.parsePrimary()
+		}
+		up.In = append(up.In, in)
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.expectOp(")")
+	p.expectOp(")")
+	up.Alias = p.parseAlias(false)
+	return up
+}
+
+func (p *Parser) parseTableFactorBase() ast.TableExpr {
 	lateral := p.d.Features.Query.Lateral && p.acceptKw("LATERAL")
 	if p.isOp("(") {
 		return p.parseParenFactor(lateral)

@@ -41,8 +41,8 @@
 {"sql":"(SELECT a FROM t UNION SELECT a FROM u) ORDER BY a","reject":true}
 {"sql":"(SELECT a FROM t) ORDER BY a","shape":"(SELECT a FROM t) ORDER BY a;"}
 {"sql":"(SELECT a FROM t) LIMIT 1","shape":"(SELECT a FROM t) LIMIT 1;"}
-{"sql":"(SELECT a FROM t ORDER BY a) ORDER BY a"}
-{"sql":"(SELECT a FROM t LIMIT 1) LIMIT 2"}
+{"sql":"(SELECT a FROM t ORDER BY a) ORDER BY a","shape":"(SELECT a FROM t ORDER BY a) ORDER BY a;"}
+{"sql":"(SELECT a FROM t LIMIT 1) LIMIT 2","shape":"(SELECT a FROM t LIMIT 1) LIMIT 2;"}
 {"sql":"VALUES (1) UNION VALUES (2)","reject":true}
 {"sql":"VALUES (1) UNION SELECT 2","reject":true}
 {"sql":"SELECT 1 UNION VALUES (2)","reject":true}
@@ -228,9 +228,9 @@
 {"sql":"( SELECT a FROM t LIMIT ) 1","reject":true}
 {"sql":"( SELECT a FROM t ) BY 1","reject":true}
 {"sql":"( SELECT a FROM t ORDER BY a ) ORDER INTERSECT a","reject":true}
-{"sql":"( SELECT a FROM t t ORDER BY a ) ORDER BY a"}
+{"sql":"( SELECT a FROM t t ORDER BY a ) ORDER BY a","shape":"(SELECT a FROM t AS t ORDER BY a) ORDER BY a;"}
 {"sql":"( SELECT a FROM t ORDER BY a ) BY ORDER a","reject":true}
-{"sql":"( SELECT a a FROM t LIMIT 1 ) LIMIT 2"}
+{"sql":"( SELECT a a FROM t LIMIT 1 ) LIMIT 2","shape":"(SELECT a AS a FROM t LIMIT 1) LIMIT 2;"}
 {"sql":"( SELECT a FROM LIMIT t 1 ) LIMIT 2","reject":true}
 {"sql":"( SELECT a FROM t LIMIT 1 ) LIMIT","reject":true}
 {"sql":"SELECT a FROM t LIMIT 1 ) LIMIT 2","reject":true}
