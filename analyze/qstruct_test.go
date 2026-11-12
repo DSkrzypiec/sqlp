@@ -763,7 +763,7 @@ func TestQStructSeesEveryField(t *testing.T) {
 		reflect.TypeFor[ast.Values]():      "Rows",
 		reflect.TypeFor[ast.ParenQuery]():  "Query",
 		reflect.TypeFor[ast.TableBody]():   "Name",
-		reflect.TypeFor[ast.TableRef]():    "Name Only Alias Indexed Sample",
+		reflect.TypeFor[ast.TableRef]():    "Name Only Alias Indexed Sample SystemTime",
 		reflect.TypeFor[ast.SubqueryRef](): "Lateral Query Alias",
 		reflect.TypeFor[ast.FuncRef]():     "Expr Lateral Func RowsFrom RowsFromColumns Ordinality Alias Offset OffsetAlias",
 		reflect.TypeFor[ast.Join]():        "Kind Natural Left Right On Using Comma UsingAlias",

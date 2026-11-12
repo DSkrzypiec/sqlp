@@ -1495,6 +1495,10 @@ func (b *colBuilder) walk(v reflect.Value, sc *colScope, acc *[]int) {
 		case *ast.Query:
 			*acc = append(*acc, b.allSrcs(b.query(x, sc, sc.ctes, nil))...)
 		case *ast.Exists:
+		case *ast.TableArg: // TABLE t passed to a table-valued function reads all of t
+			if x.Kind == "TABLE" {
+				*acc = append(*acc, b.allSrcs(b.relation(x.Name, sc.ctes).cols)...)
+			}
 		case *ast.FuncCall:
 			*acc = append(*acc, b.callSrcs(x, sc)...)
 		case *ast.WindowSpec:
@@ -1542,6 +1546,7 @@ func (b *colBuilder) callSrcs(f *ast.FuncCall, sc *colScope) []int {
 		b.walk(reflect.ValueOf(a), sc, &acc)
 	}
 	b.walk(reflect.ValueOf(f.OrderBy), sc, &acc)
+	b.walk(reflect.ValueOf(f.Where), sc, &acc)  // BigQuery's f(x WHERE cond)
 	b.walk(reflect.ValueOf(f.Having), sc, &acc) // HAVING MAX|MIN picks the rows the result comes from
 	b.walk(reflect.ValueOf(f.Limit), sc, &acc)
 	b.walk(reflect.ValueOf(f.WithinGroup), sc, &acc)

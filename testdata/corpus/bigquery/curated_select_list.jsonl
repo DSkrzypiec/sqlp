@@ -59,7 +59,7 @@
 {"sql":"SELECT 1 + 2 * 3 - 4 / 5 % 6","reject":true}
 {"sql":"SELECT","reject":true}
 {"sql":"SELECT FROM t","reject":true}
-{"sql":"SELECT a, FROM t"}
+{"sql":"SELECT a, FROM t","shape":"SELECT a FROM t;"}
 {"sql":"SELECT , a FROM t","reject":true}
 {"sql":"SELECT a b c FROM t","reject":true}
 {"sql":"SELECT a AS FROM t","reject":true}
@@ -87,7 +87,7 @@
 {"sql":"1","reject":true}
 {"sql":"1 SELECT , 2 , 3","reject":true}
 {"sql":"SELECT , 1 2 , 3","reject":true}
-{"sql":"SELECT 1 , 2 ,"}
+{"sql":"SELECT 1 , 2 ,","shape":"SELECT 1, 2;"}
 {"sql":"SELECT 1 ELSE 2 , 3","reject":true}
 {"sql":"'x' SELECT","reject":true}
 {"sql":"SELECT x"}
@@ -306,7 +306,7 @@
 {"sql":"SELECT SELECT","reject":true}
 {"sql":"SELECT SELECT FROM t","reject":true}
 {"sql":"SELECT FROM t t","reject":true}
-{"sql":"SELECT a , FROM t"}
+{"sql":"SELECT a , FROM t","shape":"SELECT a FROM t;"}
 {"sql":"SELECT a , FROM FROM t","reject":true}
 {"sql":"a a , FROM t","reject":true}
 {"sql":"SELECT a FROM , t","reject":true}

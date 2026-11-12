@@ -196,7 +196,7 @@
 {"sql":"SELECT a , b FROM t GROUP BY CUBE ( ( a , b , c )","reject":true}
 {"sql":"SELECT a , b FROM t GROUP BY ( ( a , b ) , c )"}
 {"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( ROLLUP ( a , b b )","reject":true}
-{"sql":"SELECT a , FROM t GROUP BY GROUPING SETS ( ROLLUP ( a , b ) )"}
+{"sql":"SELECT a , FROM t GROUP BY GROUPING SETS ( ROLLUP ( a , b ) )","shape":"SELECT a FROM t GROUP BY GROUPING SETS (ROLLUP (a, b));"}
 {"sql":"SELECT a , FROM b t GROUP BY GROUPING SETS ( ROLLUP ( a , b ) )"}
 {"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( ROLLUP ( a b ) )","reject":true}
 {"sql":"SELECT a , b t FROM GROUP BY GROUPING SETS ( CUBE ( a ) , ROLLUP ( b ) , ( ) )","reject":true}

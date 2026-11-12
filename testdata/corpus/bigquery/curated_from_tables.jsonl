@@ -127,7 +127,7 @@
 {"sql":"SELECT * . * FROM ( SELECT a , b FROM t ) AS x","reject":true}
 {"sql":"SELECT x . * FROM ( SELECT a , b FROM t ) AS x","shape":"SELECT x.* FROM (SELECT a, b FROM t) AS x;"}
 {"sql":"SELECT x . * FROM p SELECT a , b FROM t ) AS x","reject":true}
-{"sql":"SELECT x . * FROM ( SELECT a b , FROM t ) AS x"}
+{"sql":"SELECT x . * FROM ( SELECT a b , FROM t ) AS x","shape":"SELECT x.* FROM (SELECT a AS b FROM t) AS x;"}
 {"sql":"SELECT p FROM ( SELECT a FROM t ) AS 1 ( p )","reject":true}
 {"sql":"SELECT p FROM ( SELECT a FROM ) AS x ( p )","reject":true}
 {"sql":"SELECT p FROM ( SELECT a t ) AS x ( p )","reject":true}

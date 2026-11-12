@@ -140,7 +140,7 @@
 {"sql":"SELECT '''a'b''' '''a'b'''","shape":"SELECT 'a\\'ba\\'b';"}
 {"sql":"SELECT ,","reject":true}
 {"sql":"'\\101'","reject":true}
-{"sql":"SELECT '\\u00e9' '\\U0001F600' ,"}
+{"sql":"SELECT '\\u00e9' '\\U0001F600' ,","shape":"SELECT 'é😀';"}
 {"sql":"SELECT '\\u00e9' , '\\U0001F600'","shape":"SELECT 'é', '😀';"}
 {"sql":"SELECT '\\x41' , '\\U0001F600'","shape":"SELECT 'A', '😀';"}
 {"sql":"9223372036854775808 '\\u00e9' , '\\U0001F600'","reject":true}
@@ -149,7 +149,7 @@
 {"sql":"SELECT t"}
 {"sql":"r'\\''","reject":true}
 {"sql":"SELECT rb'\\x00' AS Rb'a' , bR'a' , BR'a'","reject":true}
-{"sql":"SELECT rb'\\x00' , Rb'a' , bR'a' ,"}
+{"sql":"SELECT rb'\\x00' , Rb'a' , bR'a' ,","shape":"SELECT b'\\\\x00', b'a', b'a';"}
 {"sql":"SELECT rb'\\x00' , Rb'a' Rb'a' , bR'a' , BR'a'","shape":"SELECT b'\\\\x00', b'aa', b'a', b'a';"}
 {"sql":"SELECT rb'\\x00' , Rb'a' , bR'a' , , BR'a'","reject":true}
 {"sql":"SELECT SELECT b'\\xff'","reject":true}
@@ -172,7 +172,7 @@
 {"sql":"'''a'b''' `\\u0041`","reject":true}
 {"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 , .5 , 5.","shape":"SELECT 0x1F, 0X1f, 1e3, 1.5E-3, .5, 5.;"}
 {"sql":"SELECT 0x1F , 0X1f , 1e3 1.5E-3 , , .5 , 5.","reject":true}
-{"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 , .5 ,"}
+{"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 , .5 ,","shape":"SELECT 0x1F, 0X1f, 1e3, 1.5E-3, .5;"}
 {"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 .5 , , 5.","reject":true}
 {"sql":"SELECT 'a' * /","reject":true}
 {"sql":"SELECT 1 * /","reject":true}

@@ -176,7 +176,11 @@ func (g *Generator) name(n *ast.Name) {
 	for i, part := range n.Parts {
 		if i > 0 {
 			g.w(".")
-			g.label(part)
+			if g.d.Features.Names.KeywordsAfterDot && !part.Quoted && !hasSpecialChars(part.Name) {
+				g.w(part.Name)
+			} else {
+				g.label(part)
+			}
 			continue
 		}
 		g.ident(part)
@@ -606,6 +610,9 @@ func (g *Generator) expr(e ast.Expr) {
 			g.expr(e.TimeZone)
 		}
 		g.w(")")
+	case *ast.TableArg:
+		g.w(e.Kind, " ")
+		g.name(e.Name)
 	case *ast.Interval:
 		g.w("INTERVAL ")
 		g.expr(e.Value)
@@ -902,6 +909,10 @@ func (g *Generator) funcCall(f *ast.FuncCall) {
 	g.exprList(f.Args)
 	if f.Nulls != "" {
 		g.w(" ", f.Nulls, " NULLS")
+	}
+	if f.Where != nil {
+		g.w(" WHERE ")
+		g.expr(f.Where)
 	}
 	if f.Having != nil {
 		g.w(map[bool]string{true: " HAVING MAX ", false: " HAVING MIN "}[f.Having.Max])
@@ -1298,11 +1309,16 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 		g.kwInline(t.Only, "ONLY ")
 		g.name(t.Name)
 		g.alias(t.Alias)
+		if t.SystemTime != nil {
+			g.w(" FOR SYSTEM_TIME AS OF ")
+			g.expr(t.SystemTime)
+		}
 		if t.Sample != nil {
 			g.w(" TABLESAMPLE ")
 			g.name(t.Sample.Method)
 			g.w("(")
 			g.exprList(t.Sample.Args)
+			g.kw(t.Sample.Percent, "PERCENT")
 			g.w(")")
 			if t.Sample.Repeatable != nil {
 				g.w(" REPEATABLE (")

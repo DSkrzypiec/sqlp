@@ -314,6 +314,14 @@ type FuncCall struct {
 	Nulls  string // "IGNORE", "RESPECT" or ""
 	Having *HavingBound
 	Limit  Expr
+	Where  Expr // f(x WHERE cond), BigQuery's conditional aggregation
+}
+
+// TableArg is a table or model passed to a table-valued function (BigQuery):
+// TABLE t, MODEL m.
+type TableArg struct {
+	Kind string // "TABLE" or "MODEL"
+	Name *Name
 }
 
 // HavingBound is HAVING MAX expr or HAVING MIN expr in an aggregate call.
@@ -634,6 +642,8 @@ type TableRef struct {
 	Alias   *Alias
 	Indexed *Indexed     // SQLite INDEXED BY / NOT INDEXED
 	Sample  *TableSample // PostgreSQL TABLESAMPLE
+	// SystemTime is FOR SYSTEM_TIME AS OF expr (BigQuery), a constant.
+	SystemTime Expr
 }
 
 // TableSample is TABLESAMPLE method (args) [REPEATABLE (seed)].
@@ -641,6 +651,7 @@ type TableSample struct {
 	Method     *Name
 	Args       []Expr
 	Repeatable Expr
+	Percent    bool // SYSTEM (10 PERCENT) (BigQuery)
 }
 
 // Indexed is SQLite's `INDEXED BY name` (Name set) or `NOT INDEXED` (Not).
@@ -1283,6 +1294,7 @@ func (*Paren) node()       {}
 func (*Tuple) node()       {}
 func (*Struct) node()      {}
 func (*Interval) node()    {}
+func (*TableArg) node()    {}
 func (*Array) node()       {}
 func (*Cast) node()        {}
 func (*Case) node()        {}
@@ -1320,6 +1332,7 @@ func (*Paren) expr()       {}
 func (*Tuple) expr()       {}
 func (*Struct) expr()      {}
 func (*Interval) expr()    {}
+func (*TableArg) expr()    {}
 func (*Array) expr()       {}
 func (*Cast) expr()        {}
 func (*Case) expr()        {}

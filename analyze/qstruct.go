@@ -364,6 +364,11 @@ func (b *builder) walk(v reflect.Value, n *QStructNode, sc *scope) {
 				b.function(x.Func, n, sc)
 			}
 			return
+		case *ast.TableArg: // TABLE t passed to a table-valued function reads t
+			if x.Kind == "TABLE" {
+				b.addChild(n, b.relation(x.Name, sc))
+			}
+			return
 		case *ast.FuncCall:
 			if x.RawArgs != nil && mayHideQuery.MatchString(*x.RawArgs) {
 				b.diag("the arguments of %s are kept as text, so a subquery in them is not analysed",

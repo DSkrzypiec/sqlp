@@ -591,6 +591,9 @@ func (p *Parser) parseStarModifiers(s *ast.Star) *ast.Star {
 func (p *Parser) parseSelectItems() []*ast.SelectItem {
 	items := []*ast.SelectItem{p.parseSelectItem()}
 	for p.acceptOp(",") {
+		if p.d.Features.Query.TrailingComma && (p.atSelectListEnd() || p.d.Features.Query.Qualify && p.isKw("QUALIFY")) {
+			break
+		}
 		items = append(items, p.parseSelectItem())
 	}
 	return items
@@ -919,6 +922,9 @@ func (p *Parser) parseTableFactor() ast.TableExpr {
 	}
 	p.checkRelationParts(name, namePos)
 	tr := &ast.TableRef{Name: name, Only: only, Alias: p.parseAlias(false)}
+	if p.d.Features.Query.SystemTime && p.acceptKwSeq("FOR", "SYSTEM_TIME", "AS", "OF") {
+		tr.SystemTime = p.parseExpr()
+	}
 	if p.d.Features.Query.TableSample && p.isKw("TABLESAMPLE") {
 		tr.Sample = p.parseTableSample()
 	}
@@ -1032,9 +1038,13 @@ func (p *Parser) acceptLegacyStar() {
 
 func (p *Parser) parseTableSample() *ast.TableSample {
 	p.expectKw("TABLESAMPLE")
+	if p.d.Features.Query.SamplePercent && !p.isKw("SYSTEM") { // BigQuery's only method
+		p.unexpected("SYSTEM")
+	}
 	ts := &ast.TableSample{Method: p.parseName()}
 	p.expectOp("(")
 	ts.Args = p.parseExprList()
+	ts.Percent = p.d.Features.Query.SamplePercent && p.acceptKw("PERCENT")
 	p.expectOp(")")
 	if p.acceptKw("REPEATABLE") {
 		p.expectOp("(")

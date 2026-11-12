@@ -930,6 +930,10 @@ func (p *Parser) parseNameExpr() ast.Expr {
 			p.unexpected("end of column reference") // schema.table.column at most
 		}
 		p.next()
+		if p.d.Features.Names.KeywordsAfterDot {
+			name.Parts = append(name.Parts, p.parseAnyIdent())
+			continue
+		}
 		name.Parts = append(name.Parts, p.parseLabel())
 	}
 	if p.isOp("(") {
@@ -990,6 +994,9 @@ func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 				if w := p.acceptOneOf("IGNORE", "RESPECT"); w != "" {
 					p.expectKw("NULLS")
 					fc.Nulls = w
+				}
+				if p.acceptKw("WHERE") {
+					fc.Where = p.parseExpr()
 				}
 				if p.acceptKw("HAVING") {
 					bound := p.acceptOneOf("MAX", "MIN")
@@ -1074,6 +1081,9 @@ func (p *Parser) parseFuncTail(fc *ast.FuncCall) {
 		fc.Filter = p.parseExpr()
 		p.expectOp(")")
 	}
+	if fc.Where != nil && p.isKw("OVER") {
+		p.errorf(p.peek().Pos, "WHERE inside a call is not allowed with OVER")
+	}
 	if p.isKw("OVER") && (p.isOpAt(1, "(") || p.peekN(1).Kind == lexer.QuotedIdent ||
 		p.peekN(1).Kind == lexer.Ident && !p.d.IsReserved(p.peekN(1).Value)) {
 		p.next()
@@ -1116,6 +1126,9 @@ var jsonEncodings = map[string]bool{"UTF8": true, "UTF16": true, "UTF32": true}
 func (p *Parser) parseFuncArg() ast.Expr {
 	if p.d.Features.Expr.VariadicArgs && p.acceptKw("VARIADIC") {
 		return &ast.Unary{Op: "VARIADIC", Expr: p.parseExpr()}
+	}
+	if p.d.Features.Expr.TableArgs && p.isKw("TABLE", "MODEL") && (p.peekN(1).Kind == lexer.Ident || p.peekN(1).Kind == lexer.QuotedIdent) {
+		return &ast.TableArg{Kind: p.next().Value, Name: p.parseName()}
 	}
 	if p.d.Features.Expr.NamedArgs && p.canBeIdent() && !p.d.ColNameKeywords[p.peek().Value] && (p.isOpAt(1, "=>") || p.isOpAt(1, ":=")) {
 		id := p.parseIdent()

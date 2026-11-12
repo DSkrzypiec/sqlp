@@ -106,7 +106,8 @@ type ExprFeatures struct {
 	CastFormat           bool // CAST(x AS t FORMAT 'fmt' [AT TIME ZONE tz]) (BigQuery)
 	IntervalUnits        bool // INTERVAL expr unit, as in INTERVAL 5 DAY (BigQuery)
 	LikeQuantified       bool // LIKE ANY|SOME|ALL (pattern, ...) (BigQuery)
-	AggregateModifiers   bool // f(x IGNORE NULLS HAVING MAX y ORDER BY z LIMIT n) (BigQuery)
+	AggregateModifiers   bool // f(x IGNORE NULLS WHERE c HAVING MAX y ORDER BY z LIMIT n) (BigQuery)
+	TableArgs            bool // TABLE t and MODEL m as function arguments (BigQuery)
 	Int64Literals        bool // integer literals must fit INT64, -9223372036854775808 included (BigQuery)
 }
 
@@ -117,6 +118,7 @@ type NameFeatures struct {
 	StringAlias        bool // string literals usable as names (SQLite)
 	MaxNameParts       int  // parts allowed in an object name; 0 means no limit
 	MaxRelationParts   int  // parts allowed in a table name (PostgreSQL's qualified_name); 0 means no limit
+	KeywordsAfterDot   bool // any keyword as a later part of a dotted name, but not after AS (BigQuery)
 }
 
 // QueryFeatures lists query syntax.
@@ -147,6 +149,9 @@ type QueryFeatures struct {
 	Unnest                bool // FROM UNNEST(a) [alias] WITH OFFSET, x IN UNNEST(a), LIKE ANY UNNEST(a) (BigQuery)
 	StarModifiers         bool // * EXCEPT (a, b), * REPLACE (expr AS a) (BigQuery)
 	SelectAs              bool // SELECT AS STRUCT, SELECT AS VALUE (BigQuery)
+	TrailingComma         bool // SELECT a, b, FROM t (BigQuery)
+	SamplePercent         bool // TABLESAMPLE SYSTEM (n PERCENT) (BigQuery)
+	SystemTime            bool // FROM t [AS x] FOR SYSTEM_TIME AS OF expr (BigQuery)
 	OrderByUsing          bool // ORDER BY x USING <
 	FetchFirst            bool // FETCH FIRST n ROWS ONLY
 	OffsetWithoutLimit    bool // OFFSET without LIMIT, LIMIT ALL
