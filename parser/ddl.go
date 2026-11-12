@@ -50,7 +50,7 @@ var opaqueAlterAction = []string{
 func (p *Parser) parseCreate() ast.Statement {
 	start := p.pos
 	p.expectKw("CREATE")
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	orReplace := ext && p.acceptKwSeq("OR", "REPLACE")
 	if orReplace && !p.isKw(orReplaceable...) {
 		p.unexpected("an object that CREATE OR REPLACE allows")
@@ -59,7 +59,7 @@ func (p *Parser) parseCreate() ast.Statement {
 		p.next()
 	}
 	temp := p.acceptKw("TEMP") || p.acceptKw("TEMPORARY")
-	if temp && !p.isKw("TABLE", "VIEW", "RECURSIVE", "SEQUENCE") && !(p.d.Features.TempTriggers && p.isKw("TRIGGER")) {
+	if temp && !p.isKw("TABLE", "VIEW", "RECURSIVE", "SEQUENCE") && !(p.d.Features.DDL.TempTriggers && p.isKw("TRIGGER")) {
 		p.unexpected("TABLE, VIEW or another object that can be temporary")
 	}
 	unlogged := ext && !temp && p.acceptKw("UNLOGGED")
@@ -78,7 +78,7 @@ func (p *Parser) parseCreate() ast.Statement {
 		return p.parseCreateView(orReplace, temp, unlogged, false)
 	case p.acceptKw("TRIGGER"):
 		return p.parseCreateTrigger(orReplace, temp, false)
-	case p.d.Features.VirtualTables && p.acceptKwSeq("VIRTUAL", "TABLE"):
+	case p.d.Features.DDL.VirtualTables && p.acceptKwSeq("VIRTUAL", "TABLE"):
 		return p.parseCreateVirtualTable()
 	}
 	if ext {
@@ -126,7 +126,7 @@ func (p *Parser) parseCreate() ast.Statement {
 }
 
 func (p *Parser) parseCreateTable(temp, unlogged bool) ast.Statement {
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	ct := &ast.CreateTable{Temp: temp, Unlogged: unlogged, IfNotExists: p.parseIfNotExists()}
 	ct.Name = p.parseRelationName()
 	typeless := -1 // source offset of the first column without a type
@@ -152,7 +152,7 @@ func (p *Parser) parseCreateTable(temp, unlogged bool) ast.Statement {
 	if !ct.HasColumns && ct.PartitionOf == nil && ct.OfType == nil && !p.isKw("AS") {
 		p.unexpected(`"(" or AS`)
 	}
-	for p.d.Features.WithoutRowid && (p.isKwSeq("WITHOUT", "ROWID") || p.isKw("STRICT")) {
+	for p.d.Features.DDL.WithoutRowid && (p.isKwSeq("WITHOUT", "ROWID") || p.isKw("STRICT")) {
 		if p.acceptKw("STRICT") {
 			ct.Strict = true
 		} else {
@@ -204,21 +204,21 @@ func (p *Parser) parseTableElements(ct *ast.CreateTable) int {
 	typeless := -1
 	for {
 		switch {
-		case p.d.Features.ExtendedDDL && p.isKw("LIKE"):
+		case p.d.Features.DDL.ExtendedDDL && p.isKw("LIKE"):
 			l := p.parseTableLike()
 			l.Position = len(ct.Columns)
 			ct.Likes = append(ct.Likes, l)
 		case p.isTableConstraintStart():
-			if !p.d.Features.ExtendedDDL && len(ct.Columns) == 0 {
+			if !p.d.Features.DDL.ExtendedDDL && len(ct.Columns) == 0 {
 				p.unexpected("column definition") // SQLite: at least one column comes first
 			}
 			ct.Constraints = append(ct.Constraints, p.parseTableConstraint())
 			// SQLite: the comma between table constraints is optional.
-			if p.d.Features.FreeFormTypeNames && p.isTableConstraintStart() {
+			if p.d.Features.Expr.FreeFormTypeNames && p.isTableConstraintStart() {
 				continue
 			}
 		default:
-			if p.d.Features.FreeFormTypeNames && len(ct.Constraints) > 0 {
+			if p.d.Features.Expr.FreeFormTypeNames && len(ct.Constraints) > 0 {
 				p.unexpected("table constraint") // SQLite: columns come first
 			}
 			pos := p.peek().Pos
@@ -391,7 +391,7 @@ func (p *Parser) isTableConstraintStart() bool {
 		return true
 	case p.isKw("UNIQUE") && (p.isOpAt(1, "(") || p.isKwAt(1, "NULLS", "USING")):
 		return true
-	case p.d.Features.ExtendedDDL && p.isKw("EXCLUDE") && (p.isOpAt(1, "(") || p.isKwAt(1, "USING")):
+	case p.d.Features.DDL.ExtendedDDL && p.isKw("EXCLUDE") && (p.isOpAt(1, "(") || p.isKwAt(1, "USING")):
 		return true
 	}
 	return false
@@ -399,8 +399,8 @@ func (p *Parser) isTableConstraintStart() bool {
 
 func (p *Parser) parseColumnDef() *ast.ColumnDef {
 	cd := &ast.ColumnDef{Name: p.parseIdent()}
-	free := p.d.Features.FreeFormTypeNames
-	if p.d.Features.ExtendedDDL && p.acceptKwSeq("WITH", "OPTIONS") {
+	free := p.d.Features.Expr.FreeFormTypeNames
+	if p.d.Features.DDL.ExtendedDDL && p.acceptKwSeq("WITH", "OPTIONS") {
 		// typed tables and partitions: options on an existing column, no type
 	} else if !p.isOp(",") && !p.isOp(")") && !p.atStatementEnd() && (!p.isColumnConstraintStart() || free && p.isKw("GENERATED")) {
 		cd.Type = p.parseType()
@@ -408,7 +408,7 @@ func (p *Parser) parseColumnDef() *ast.ColumnDef {
 			stripGeneratedAlways(cd)
 		}
 	}
-	if p.d.Features.ExtendedDDL {
+	if p.d.Features.DDL.ExtendedDDL {
 		if p.acceptKw("STORAGE") {
 			cd.Storage = p.parseIdentOrDefault()
 		}
@@ -445,16 +445,16 @@ func (p *Parser) atStatementEnd() bool {
 
 func (p *Parser) isColumnConstraintStart() bool {
 	if p.isKw("AS") {
-		return p.d.Features.FreeFormTypeNames // SQLite shorthand for GENERATED ALWAYS AS
+		return p.d.Features.Expr.FreeFormTypeNames // SQLite shorthand for GENERATED ALWAYS AS
 	}
 	return p.isKw("CONSTRAINT", "NOT", "NULL", "PRIMARY", "UNIQUE", "CHECK", "DEFAULT",
 		"REFERENCES", "COLLATE", "GENERATED", "DEFERRABLE") ||
-		p.d.Features.ExtendedDDL && p.isKw("INITIALLY")
+		p.d.Features.DDL.ExtendedDDL && p.isKw("INITIALLY")
 }
 
 func (p *Parser) parseColumnConstraint() *ast.ColumnConstraint {
 	cc := &ast.ColumnConstraint{}
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	if p.acceptKw("CONSTRAINT") {
 		id := p.parseIdent()
 		cc.Name = &id
@@ -476,11 +476,11 @@ func (p *Parser) parseColumnConstraint() *ast.ColumnConstraint {
 	case p.acceptKwSeq("PRIMARY", "KEY"):
 		cc.Kind = ast.PrimaryKeyConstraint
 		cc.IndexWith, cc.IndexTablespace = p.parseIndexParams()
-		if p.d.Features.Autoincrement {
+		if p.d.Features.DDL.Autoincrement {
 			cc.Direction = p.acceptOneOf("ASC", "DESC")
 		}
 		cc.OnConflict = p.parseConflictClause()
-		cc.Autoincrement = p.d.Features.Autoincrement && p.acceptKw("AUTOINCREMENT")
+		cc.Autoincrement = p.d.Features.DDL.Autoincrement && p.acceptKw("AUTOINCREMENT")
 	case p.acceptKw("UNIQUE"):
 		cc.Kind = ast.UniqueConstraint
 		cc.NullsNotDist = ext && p.parseNullsDistinct()
@@ -522,7 +522,7 @@ func (p *Parser) parseColumnConstraint() *ast.ColumnConstraint {
 // b_expr (no AND/OR/IS/...), so `DEFAULT 0 NOT NULL` does not absorb NOT NULL;
 // SQLite only allows a signed literal, a name or a parenthesized expression.
 func (p *Parser) parseColumnDefault() ast.Expr {
-	if !p.d.Features.FreeFormTypeNames {
+	if !p.d.Features.Expr.FreeFormTypeNames {
 		if p.isKw("DEFAULT", "NOT") { // not the start of a b_expr
 			p.unexpected("expression")
 		}
@@ -562,7 +562,7 @@ func (p *Parser) parseColumnDefault() ast.Expr {
 // a key constraint: WITH (storage parameters) USING INDEX TABLESPACE x.
 func (p *Parser) parseIndexParams() ([]ast.Option, string) {
 	var with []ast.Option
-	if p.d.Features.ExtendedDDL && p.isKw("WITH") && p.isOpAt(1, "(") {
+	if p.d.Features.DDL.ExtendedDDL && p.isKw("WITH") && p.isOpAt(1, "(") {
 		p.next()
 		with = p.parseParenOptions()
 	}
@@ -571,7 +571,7 @@ func (p *Parser) parseIndexParams() ([]ast.Option, string) {
 
 // parseIndexTablespace parses PostgreSQL's USING INDEX TABLESPACE x.
 func (p *Parser) parseIndexTablespace() string {
-	if p.d.Features.ExtendedDDL && p.acceptKwSeq("USING", "INDEX", "TABLESPACE") {
+	if p.d.Features.DDL.ExtendedDDL && p.acceptKwSeq("USING", "INDEX", "TABLESPACE") {
 		return p.parseIdentText()
 	}
 	return ""
@@ -579,7 +579,7 @@ func (p *Parser) parseIndexTablespace() string {
 
 func (p *Parser) parseGenerated(cc *ast.ColumnConstraint) {
 	switch {
-	case p.d.Features.ExtendedDDL && p.acceptKwSeq("BY", "DEFAULT"):
+	case p.d.Features.DDL.ExtendedDDL && p.acceptKwSeq("BY", "DEFAULT"):
 		cc.Generated = "BY DEFAULT"
 	case p.acceptKw("ALWAYS"):
 		cc.Generated = "ALWAYS"
@@ -587,7 +587,7 @@ func (p *Parser) parseGenerated(cc *ast.ColumnConstraint) {
 		p.unexpected("ALWAYS or BY DEFAULT")
 	}
 	p.expectKw("AS")
-	if p.d.Features.ExtendedDDL && p.acceptKw("IDENTITY") {
+	if p.d.Features.DDL.ExtendedDDL && p.acceptKw("IDENTITY") {
 		cc.Kind = ast.IdentityConstraint
 		cc.Identity = p.parseIdentityOptions()
 		return
@@ -603,7 +603,7 @@ func (p *Parser) parseGeneratedExpr(cc *ast.ColumnConstraint) {
 	p.expectOp("(")
 	cc.Expr = p.parseExpr()
 	p.expectOp(")")
-	if p.d.Features.StoredGeneratedOnly {
+	if p.d.Features.DDL.StoredGeneratedOnly {
 		p.expectKw("STORED")
 		cc.Generated = "STORED"
 		return
@@ -612,7 +612,7 @@ func (p *Parser) parseGeneratedExpr(cc *ast.ColumnConstraint) {
 }
 
 func (p *Parser) parseConflictClause() string {
-	if !p.d.Features.ConflictClause || !p.isKwSeq("ON", "CONFLICT") {
+	if !p.d.Features.DDL.ConflictClause || !p.isKwSeq("ON", "CONFLICT") {
 		return ""
 	}
 	p.next()
@@ -631,7 +631,7 @@ func (p *Parser) parseReferences() *ast.References {
 		r.Columns = p.parseParenIdentList()
 	}
 	// PostgreSQL: MATCH first, then ON DELETE and ON UPDATE once each.
-	loose := p.d.Features.LooseReferences
+	loose := p.d.Features.DDL.LooseReferences
 	for {
 		switch {
 		case p.isKw("MATCH") && (loose || r.Match == "" && r.OnDelete == "" && r.OnUpdate == ""):
@@ -686,7 +686,7 @@ func (p *Parser) parseRefAction() string {
 
 // parseRefActionColumns parses the column list of ON DELETE SET NULL (a, b).
 func (p *Parser) parseRefActionColumns() string {
-	if !p.d.Features.ExtendedDDL || !p.acceptOp("(") {
+	if !p.d.Features.DDL.ExtendedDDL || !p.acceptOp("(") {
 		return ""
 	}
 	cols := []string{p.parseIdentText()}
@@ -698,7 +698,7 @@ func (p *Parser) parseRefActionColumns() string {
 }
 
 func (p *Parser) isDeferrableStart() bool {
-	return p.isKw("DEFERRABLE") || p.isKwSeq("NOT", "DEFERRABLE") || p.d.Features.ExtendedDDL && p.isKw("INITIALLY")
+	return p.isKw("DEFERRABLE") || p.isKwSeq("NOT", "DEFERRABLE") || p.d.Features.DDL.ExtendedDDL && p.isKw("INITIALLY")
 }
 
 // parseDeferrable parses [NOT] DEFERRABLE [INITIALLY DEFERRED|IMMEDIATE], and
@@ -710,7 +710,7 @@ func (p *Parser) parseDeferrable() *ast.Deferrable {
 	switch {
 	case p.deferrableWord(d):
 		p.initially(d)
-	case p.d.Features.ExtendedDDL && p.initially(d):
+	case p.d.Features.DDL.ExtendedDDL && p.initially(d):
 		d.InitiallyFirst = p.deferrableWord(d)
 	default:
 		return nil
@@ -798,7 +798,7 @@ func (p *Parser) parseConstraintAttrs(allow constraintAttrs) (d *ast.Deferrable,
 }
 
 func (p *Parser) parseTableConstraint() *ast.TableConstraint {
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	tc := &ast.TableConstraint{}
 	if p.acceptKw("CONSTRAINT") {
 		id := p.parseIdent()
@@ -816,12 +816,12 @@ func (p *Parser) parseTableConstraint() *ast.TableConstraint {
 			return
 		}
 		p.expectOp("(")
-		if p.d.Features.IndexOpclass {
+		if p.d.Features.DDL.IndexOpclass {
 			tc.Columns = p.parseColumnElems()
 		} else {
 			tc.Columns = p.parseIndexElems()
 		}
-		if p.d.Features.Autoincrement && tc.Kind == ast.TablePrimaryKey {
+		if p.d.Features.DDL.Autoincrement && tc.Kind == ast.TablePrimaryKey {
 			tc.Autoincrement = p.acceptKw("AUTOINCREMENT")
 		}
 		p.expectOp(")")
@@ -955,12 +955,12 @@ func (p *Parser) parseIndexElemNoOrder() *ast.IndexElem {
 	// expression, so stop before COLLATE and let it attach to the element.
 	// SQLite takes any expression; there a top-level COLLATE is unwrapped.
 	minPrec := 0
-	if p.d.Features.IndexOpclass {
+	if p.d.Features.DDL.IndexOpclass {
 		minPrec = p.d.Precedence["COLLATE"]
 	}
 	pos := p.peek().Pos
 	e := &ast.IndexElem{Expr: p.parseExprPrec(minPrec)}
-	if p.d.Features.IndexOpclass && !isIndexExpr(e.Expr) {
+	if p.d.Features.DDL.IndexOpclass && !isIndexExpr(e.Expr) {
 		p.errorf(pos, "index expressions must be a column, a function call or parenthesized")
 	}
 	if c, ok := e.Expr.(*ast.Collate); ok {
@@ -969,7 +969,7 @@ func (p *Parser) parseIndexElemNoOrder() *ast.IndexElem {
 	if p.acceptKw("COLLATE") {
 		e.Collation = p.parseName()
 	}
-	if p.d.Features.IndexOpclass && p.canBeIdent() && !p.isKw("ASC", "DESC", "NULLS") {
+	if p.d.Features.DDL.IndexOpclass && p.canBeIdent() && !p.isKw("ASC", "DESC", "NULLS") {
 		e.Opclass = p.parseName()
 		if p.isOp("(") {
 			e.OpclassOptions = p.parseParenOptions()
@@ -994,7 +994,7 @@ func isIndexExpr(e ast.Expr) bool {
 }
 
 func (p *Parser) parseCreateIndex() ast.Statement {
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	ci := &ast.CreateIndex{Unique: p.acceptKw("UNIQUE")}
 	p.expectKw("INDEX")
 	ci.Concurrently = ext && p.acceptKw("CONCURRENTLY")
@@ -1047,7 +1047,7 @@ func (p *Parser) parseNullsDistinct() bool {
 }
 
 func (p *Parser) parseCreateView(orReplace, temp, unlogged, materialized bool) ast.Statement {
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	cv := &ast.CreateView{OrReplace: orReplace, Temp: temp, Unlogged: unlogged, Materialized: materialized}
 	if !ext || materialized { // PostgreSQL has no CREATE VIEW IF NOT EXISTS
 		cv.IfNotExists = p.parseIfNotExists()
@@ -1304,7 +1304,7 @@ func (p *Parser) parseSequenceOptions() []ast.SequenceOption {
 // --- triggers and virtual tables ------------------------------------------------
 
 func (p *Parser) parseCreateTrigger(orReplace, temp, constraint bool) ast.Statement {
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	ct := &ast.CreateTrigger{OrReplace: orReplace, Temp: temp, Constraint: constraint}
 	if !ext {
 		ct.IfNotExists = p.parseIfNotExists()
@@ -1392,7 +1392,7 @@ func triggerStatementProblem(st ast.Statement) string {
 
 func (p *Parser) parseTriggerEvent() ast.TriggerEvent {
 	kinds := []string{"INSERT", "DELETE", "UPDATE"}
-	if p.d.Features.ExtendedDDL {
+	if p.d.Features.DDL.ExtendedDDL {
 		kinds = append(kinds, "TRUNCATE")
 	}
 	ev := ast.TriggerEvent{Kind: p.acceptOneOf(kinds...)}
@@ -1498,7 +1498,7 @@ func (p *Parser) takeRawArg() string {
 func (p *Parser) parseDrop() ast.Statement {
 	start := p.pos
 	p.expectKw("DROP")
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	if ext && (p.isKw(opaqueDrop...) || p.isKwSeq("USER", "MAPPING")) {
 		p.pos = start
 		return p.parseOpaque(2)
@@ -1532,7 +1532,7 @@ func (p *Parser) parseDrop() ast.Statement {
 				break
 			}
 		}
-	case p.d.Features.MultiDrop && d.Kind != "TRIGGER":
+	case p.d.Features.DDL.MultiDrop && d.Kind != "TRIGGER":
 		d.Names = p.parseNameList()
 	default:
 		d.Names = []*ast.Name{p.parseName()}
@@ -1559,7 +1559,7 @@ var singlePartKinds = map[string]bool{
 func (p *Parser) parseAlter() ast.Statement {
 	start := p.pos
 	p.expectKw("ALTER")
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	if ext && p.isKw(opaqueAlter...) {
 		p.pos = start
 		return p.parseOpaque(2)
@@ -1580,7 +1580,7 @@ func (p *Parser) parseAlter() ast.Statement {
 }
 
 func (p *Parser) parseAlterAction() ast.AlterAction {
-	ext := p.d.Features.ExtendedDDL
+	ext := p.d.Features.DDL.ExtendedDDL
 	switch {
 	case p.acceptKw("ADD"):
 		if ext && (p.isTableConstraintStart() || p.isKw("CONSTRAINT", "CHECK")) {

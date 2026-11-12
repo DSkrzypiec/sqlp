@@ -31,10 +31,10 @@ func (p *Parser) isQueryStartAtPos(pos int) bool {
 		case "SELECT", "VALUES", "WITH":
 			result = true
 		case "TABLE":
-			result = p.d.Features.TableKeyword
+			result = p.d.Features.Query.TableKeyword
 		}
 	case lexer.Op:
-		if t.Text == "(" && p.d.Features.ParenQueries {
+		if t.Text == "(" && p.d.Features.Query.ParenQueries {
 			result = p.isQueryStartAtPos(pos + 1)
 		}
 	}
@@ -66,7 +66,7 @@ func (p *Parser) parseQueryAfterWith(with *ast.With) *ast.Query {
 // parseQueryTail parses ORDER BY, then LIMIT/OFFSET/FETCH and locking clauses,
 // which PostgreSQL accepts in either order.
 func (p *Parser) parseQueryTail(q *ast.Query) {
-	if !p.d.Features.ValuesTail && endsWithValues(q.Body) && p.isKw("ORDER", "LIMIT") {
+	if !p.d.Features.Query.ValuesTail && endsWithValues(q.Body) && p.isKw("ORDER", "LIMIT") {
 		p.unexpected("end of query")
 	}
 	if p.acceptKwSeq("ORDER", "BY") {
@@ -85,13 +85,13 @@ func (p *Parser) parseQueryTail(q *ast.Query) {
 	}
 	for {
 		switch {
-		case p.isKw("LIMIT"), p.isKw("OFFSET") && p.d.Features.OffsetWithoutLimit:
+		case p.isKw("LIMIT"), p.isKw("OFFSET") && p.d.Features.Query.OffsetWithoutLimit:
 			enter(limits)
 			p.parseLimit(&q.Limit)
-		case p.isKw("FETCH") && p.d.Features.FetchFirst:
+		case p.isKw("FETCH") && p.d.Features.Query.FetchFirst:
 			enter(limits)
 			p.parseFetch(&q.Limit)
-		case p.isKw("FOR") && p.d.Features.Locking:
+		case p.isKw("FOR") && p.d.Features.Query.Locking:
 			enter(locking)
 			if n := len(q.Locking); n > 0 && (q.Locking[n-1].Strength == "READ ONLY" || p.isKwAt(1, "READ")) {
 				if q.Locking[n-1].Strength != "READ ONLY" {
@@ -161,11 +161,11 @@ func (p *Parser) parseLimit(dst **ast.Limit) {
 			p.errorf(p.peek().Pos, "multiple LIMIT clauses not allowed")
 		}
 		p.next()
-		if p.d.Features.OffsetWithoutLimit && p.acceptKw("ALL") {
+		if p.d.Features.Query.OffsetWithoutLimit && p.acceptKw("ALL") {
 			l.All = true
 		} else {
 			l.Count = p.parseExpr()
-			if p.d.Features.LimitComma && p.acceptOp(",") { // LIMIT offset, count
+			if p.d.Features.Query.LimitComma && p.acceptOp(",") { // LIMIT offset, count
 				l.Offset = l.Count
 				l.Count = p.parseExpr()
 			}
@@ -177,7 +177,7 @@ func (p *Parser) parseLimit(dst **ast.Limit) {
 		}
 		p.next()
 		l.Offset = p.parseExpr()
-		if p.d.Features.FetchFirst && p.isKw("ROW", "ROWS") {
+		if p.d.Features.Query.FetchFirst && p.isKw("ROW", "ROWS") {
 			if !isFetchValue(l.Offset) {
 				p.unexpected("end of OFFSET; with ROWS, only a constant or a parenthesized expression")
 			}
@@ -268,7 +268,7 @@ func (p *Parser) parseLocking() *ast.Locking {
 func (p *Parser) parseWith() *ast.With {
 	p.expectKw("WITH")
 	w := &ast.With{}
-	if p.isKw("RECURSIVE") && (!p.d.Features.KeywordLabels || !p.isOpAt(1, "(") && !p.isKwAt(1, "AS")) { // else a CTE named recursive
+	if p.isKw("RECURSIVE") && (!p.d.Features.Names.KeywordLabels || !p.isOpAt(1, "(") && !p.isKwAt(1, "AS")) { // else a CTE named recursive
 		p.next()
 		w.Recursive = true
 	}
@@ -296,15 +296,15 @@ func (p *Parser) parseCTE() *ast.CTE {
 	}
 	p.expectOp("(")
 	switch {
-	case p.d.Features.DataModifyingCTE && p.isKw("INSERT"):
+	case p.d.Features.Query.DataModifyingCTE && p.isKw("INSERT"):
 		cte.DML = p.parseInsert(nil)
-	case p.d.Features.DataModifyingCTE && p.isKw("UPDATE"):
+	case p.d.Features.Query.DataModifyingCTE && p.isKw("UPDATE"):
 		cte.DML = p.parseUpdate(nil)
-	case p.d.Features.DataModifyingCTE && p.isKw("DELETE"):
+	case p.d.Features.Query.DataModifyingCTE && p.isKw("DELETE"):
 		cte.DML = p.parseDelete(nil)
-	case p.d.Features.DataModifyingCTE && p.isKw("MERGE"):
+	case p.d.Features.Query.DataModifyingCTE && p.isKw("MERGE"):
 		cte.DML = p.parseMerge(nil)
-	case p.d.Features.DataModifyingCTE && p.isKw("WITH"):
+	case p.d.Features.Query.DataModifyingCTE && p.isKw("WITH"):
 		switch st := p.parseWithStatement().(type) {
 		case *ast.Query:
 			cte.Query = st
@@ -315,7 +315,7 @@ func (p *Parser) parseCTE() *ast.CTE {
 		cte.Query = p.parseQuery()
 	}
 	p.expectOp(")")
-	if p.d.Features.CTESearchCycle {
+	if p.d.Features.Query.CTESearchCycle {
 		if p.acceptKw("SEARCH") {
 			s := &ast.CTESearch{Breadth: p.acceptKw("BREADTH")}
 			if !s.Breadth {
@@ -350,7 +350,7 @@ func (p *Parser) parseCTE() *ast.CTE {
 // dialects that say so: in SQLite all compound operators are left-associative
 // at one level.
 func (p *Parser) parseQueryBody() ast.QueryBody {
-	if !p.d.Features.IntersectBindsTighter {
+	if !p.d.Features.Query.IntersectBindsTighter {
 		left := p.parseQueryPrimary()
 		for {
 			var op ast.SetOpKind
@@ -394,12 +394,12 @@ func (p *Parser) parseIntersectTerm() ast.QueryBody {
 }
 
 func (p *Parser) parseSetQuantifier(op ast.SetOpKind) bool {
-	if p.d.Features.SetQuantifiers || op == ast.Union {
+	if p.d.Features.Query.SetQuantifiers || op == ast.Union {
 		if p.acceptKw("ALL") {
 			return true
 		}
 	}
-	if p.d.Features.SetQuantifiers {
+	if p.d.Features.Query.SetQuantifiers {
 		p.acceptKw("DISTINCT")
 	}
 	return false
@@ -407,7 +407,7 @@ func (p *Parser) parseSetQuantifier(op ast.SetOpKind) bool {
 
 func (p *Parser) parseQueryPrimary() ast.QueryBody {
 	switch {
-	case p.isOp("(") && p.d.Features.ParenQueries:
+	case p.isOp("(") && p.d.Features.Query.ParenQueries:
 		p.next()
 		q := p.parseQuery()
 		p.expectOp(")")
@@ -416,7 +416,7 @@ func (p *Parser) parseQueryPrimary() ast.QueryBody {
 		return p.parseSelect()
 	case p.isKw("VALUES"):
 		return p.parseValues()
-	case p.isKw("TABLE") && p.d.Features.TableKeyword:
+	case p.isKw("TABLE") && p.d.Features.Query.TableKeyword:
 		p.next()
 		return &ast.TableBody{Name: p.parseName()}
 	}
@@ -447,7 +447,7 @@ func (p *Parser) parseSelect() *ast.Select {
 		s.Distinct = ast.DistinctAll
 	case p.acceptKw("DISTINCT"):
 		s.Distinct = ast.Distinct
-		if p.isKw("ON") && p.d.Features.DistinctOn {
+		if p.isKw("ON") && p.d.Features.Query.DistinctOn {
 			p.next()
 			p.expectOp("(")
 			s.Distinct = ast.DistinctOn
@@ -455,10 +455,10 @@ func (p *Parser) parseSelect() *ast.Select {
 			p.expectOp(")")
 		}
 	}
-	if !(p.d.Features.EmptySelectList && s.Distinct != ast.Distinct && s.Distinct != ast.DistinctOn && p.atSelectListEnd()) {
+	if !(p.d.Features.Query.EmptySelectList && s.Distinct != ast.Distinct && s.Distinct != ast.DistinctOn && p.atSelectListEnd()) {
 		s.Items = p.parseSelectItems()
 	}
-	if p.d.Features.SelectInto && p.isKw("INTO") {
+	if p.d.Features.Query.SelectInto && p.isKw("INTO") {
 		s.Into = p.parseIntoTable()
 	}
 	if p.acceptKw("FROM") {
@@ -485,7 +485,7 @@ func (p *Parser) parseSelect() *ast.Select {
 			}
 		}
 	}
-	if p.d.Features.Qualify && p.acceptKw("QUALIFY") {
+	if p.d.Features.Query.Qualify && p.acceptKw("QUALIFY") {
 		s.Qualify = p.parseExpr()
 	}
 	return s
@@ -550,7 +550,7 @@ func (p *Parser) parseSelectItem() *ast.SelectItem {
 	if p.acceptOp("*") {
 		return &ast.SelectItem{Expr: &ast.Star{}}
 	}
-	if !p.d.Features.KeywordLabels && p.canBeIdent() && p.isOpAt(1, ".") && p.isOpAt(2, "*") {
+	if !p.d.Features.Names.KeywordLabels && p.canBeIdent() && p.isOpAt(1, ".") && p.isOpAt(2, "*") {
 		// SQLite only has t.* at the top level of a select list, without alias.
 		name := &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
 		p.pos += 2
@@ -572,7 +572,7 @@ func (p *Parser) parseSelectItem() *ast.SelectItem {
 // without AS.
 func (p *Parser) isBareLabel() bool {
 	t := p.peek()
-	if t.Kind == lexer.Ident && p.d.Features.KeywordLabels {
+	if t.Kind == lexer.Ident && p.d.Features.Names.KeywordLabels {
 		return !p.d.AsOnlyLabels[t.Value]
 	}
 	return p.canBeBareAlias()
@@ -589,7 +589,7 @@ func (p *Parser) canBeBareAlias() bool {
 
 func (p *Parser) parseGroupBy() *ast.GroupBy {
 	g := &ast.GroupBy{}
-	if p.d.Features.GroupingSets {
+	if p.d.Features.Query.GroupingSets {
 		switch {
 		case p.acceptKw("DISTINCT"):
 			g.Distinct = true
@@ -602,7 +602,7 @@ func (p *Parser) parseGroupBy() *ast.GroupBy {
 }
 
 func (p *Parser) parseGroupItem() ast.Expr {
-	if p.d.Features.GroupingSets {
+	if p.d.Features.Query.GroupingSets {
 		switch {
 		case p.isKw("ROLLUP", "CUBE") && p.isOpAt(1, "("):
 			kind := p.next().Value
@@ -653,7 +653,7 @@ func (p *Parser) parseFromList() []ast.TableExpr {
 // parseTableExprAfterComma parses the operand after a comma in FROM. SQLite
 // treats that comma as a join operator, so it may carry ON or USING.
 func (p *Parser) parseTableExprAfterComma() ast.TableExpr {
-	if !p.d.Features.FreeJoinKeywords {
+	if !p.d.Features.Query.FreeJoinKeywords {
 		return p.parseTableExpr()
 	}
 	factor := p.parseTableFactor()
@@ -675,7 +675,7 @@ func (p *Parser) parseTableExpr() ast.TableExpr {
 	p.enterDepth()
 	defer p.exitDepth()
 	left := p.parseTableFactor()
-	if p.d.Features.FreeJoinKeywords && p.isKw("ON", "USING") {
+	if p.d.Features.Query.FreeJoinKeywords && p.isKw("ON", "USING") {
 		p.errorf(p.peek().Pos, "a JOIN clause is required before %s", p.peek().Value)
 	}
 	return p.continueJoins(left)
@@ -694,7 +694,7 @@ func (p *Parser) continueJoins(left ast.TableExpr) ast.TableExpr {
 func (p *Parser) parseJoin(left ast.TableExpr) (*ast.Join, bool) {
 	j := &ast.Join{Left: left}
 	save := p.pos
-	if p.d.Features.FreeJoinKeywords {
+	if p.d.Features.Query.FreeJoinKeywords {
 		p.parseFreeJoinKeywords(j)
 	} else {
 		p.parseJoinKeywords(j)
@@ -704,7 +704,7 @@ func (p *Parser) parseJoin(left ast.TableExpr) (*ast.Join, bool) {
 		return nil, false
 	}
 	j.Right = p.parseTableFactor()
-	strict := p.d.Features.JoinRequiresQual
+	strict := p.d.Features.Query.JoinRequiresQual
 	needsQual := strict && j.Kind != ast.CrossJoin && !j.Natural
 	if needsQual {
 		// a JOIN b JOIN c ON x ON y nests to the right.
@@ -806,7 +806,7 @@ func (p *Parser) parseFreeJoinKeywords(j *ast.Join) {
 // isSpecialSyntaxFunc reports a function call at the current token whose
 // arguments use keywords, so it parses as an expression rather than a name.
 func (p *Parser) isSpecialSyntaxFunc() bool {
-	if !p.d.Features.StandardFuncSyntax {
+	if !p.d.Features.Expr.StandardFuncSyntax {
 		return false
 	}
 	switch {
@@ -819,26 +819,26 @@ func (p *Parser) isSpecialSyntaxFunc() bool {
 }
 
 func (p *Parser) parseTableFactor() ast.TableExpr {
-	lateral := p.d.Features.Lateral && p.acceptKw("LATERAL")
+	lateral := p.d.Features.Query.Lateral && p.acceptKw("LATERAL")
 	if p.isOp("(") {
 		return p.parseParenFactor(lateral)
 	}
-	if p.d.Features.Lateral && p.isKwSeq("ROWS", "FROM") && p.isOpAt(2, "(") {
+	if p.d.Features.Query.Lateral && p.isKwSeq("ROWS", "FROM") && p.isOpAt(2, "(") {
 		return p.parseRowsFrom(lateral)
 	}
-	if t := p.peek(); p.d.Features.StandardFuncSyntax && t.Kind == lexer.Ident && p.d.BareFuncs[t.Value] && !p.isBareFuncCall() {
+	if t := p.peek(); p.d.Features.Expr.StandardFuncSyntax && t.Kind == lexer.Ident && p.d.BareFuncs[t.Value] && !p.isBareFuncCall() {
 		fc := p.parseBareFunc().(*ast.FuncCall) // SESSION_USER and friends are table functions too
 		return &ast.FuncRef{Lateral: lateral, Func: fc, Alias: p.parseAlias(true)}
 	}
 	if p.isSpecialSyntaxFunc() {
 		fr := &ast.FuncRef{Lateral: lateral, Expr: p.parsePrimary()}
-		fr.Ordinality = p.d.Features.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
+		fr.Ordinality = p.d.Features.Query.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
 		fr.Alias = p.parseAlias(true)
 		return fr
 	}
 	only, name, namePos := p.parseRelationExprMaybeCall()
 	if p.isOp("(") {
-		if p.d.Features.FreeJoinKeywords && p.isOpAt(1, "*") {
+		if p.d.Features.Query.FreeJoinKeywords && p.isOpAt(1, "*") {
 			p.next()
 			p.unexpected("expression")
 		}
@@ -846,7 +846,7 @@ func (p *Parser) parseTableFactor() ast.TableExpr {
 		if fr.Func.Over != nil || fr.Func.Filter != nil || fr.Func.WithinGroup != nil {
 			p.errorf(p.peek().Pos, "window and aggregate clauses are not allowed in FROM")
 		}
-		fr.Ordinality = p.d.Features.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
+		fr.Ordinality = p.d.Features.Query.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
 		fr.Alias = p.parseAlias(true)
 		return fr
 	}
@@ -855,7 +855,7 @@ func (p *Parser) parseTableFactor() ast.TableExpr {
 	}
 	p.checkRelationParts(name, namePos)
 	tr := &ast.TableRef{Name: name, Only: only, Alias: p.parseAlias(false)}
-	if p.d.Features.TableSample && p.isKw("TABLESAMPLE") {
+	if p.d.Features.Query.TableSample && p.isKw("TABLESAMPLE") {
 		tr.Sample = p.parseTableSample()
 	}
 	tr.Indexed = p.parseIndexed()
@@ -894,10 +894,10 @@ func (p *Parser) parseParenFactor(lateral bool) ast.TableExpr {
 }
 
 func (p *Parser) finishParenTable(inner ast.TableExpr) ast.TableExpr {
-	for p.d.Features.FreeJoinKeywords && p.acceptOp(",") { // SQLite: (a, b)
+	for p.d.Features.Query.FreeJoinKeywords && p.acceptOp(",") { // SQLite: (a, b)
 		inner = &ast.Join{Comma: true, Left: inner, Right: p.parseTableFactor()}
 	}
-	if p.d.Features.ParenTableIsJoin && !ast.IsJoinTree(inner) {
+	if p.d.Features.Query.ParenTableIsJoin && !ast.IsJoinTree(inner) {
 		p.unexpected("JOIN")
 	}
 	p.expectOp(")")
@@ -927,7 +927,7 @@ func (p *Parser) parseRowsFrom(lateral bool) ast.TableExpr {
 		}
 	}
 	p.expectOp(")")
-	fr.Ordinality = p.d.Features.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
+	fr.Ordinality = p.d.Features.Query.WithOrdinality && p.acceptKwSeq("WITH", "ORDINALITY")
 	fr.Alias = p.parseAlias(true)
 	return fr
 }
@@ -945,7 +945,7 @@ func (p *Parser) parseRelationExpr() (bool, *ast.Name) {
 // turn out to be a function's, which takes any number of parts. The caller
 // checks the parts once it knows, using the returned offset of the name.
 func (p *Parser) parseRelationExprMaybeCall() (bool, *ast.Name, int) {
-	if !p.d.Features.OnlyTable || !p.acceptKw("ONLY") {
+	if !p.d.Features.Query.OnlyTable || !p.acceptKw("ONLY") {
 		pos := p.peek().Pos
 		name := p.parseName()
 		p.acceptLegacyStar()
@@ -961,7 +961,7 @@ func (p *Parser) parseRelationExprMaybeCall() (bool, *ast.Name, int) {
 }
 
 func (p *Parser) acceptLegacyStar() {
-	if p.d.Features.OnlyTable {
+	if p.d.Features.Query.OnlyTable {
 		p.acceptOp("*")
 	}
 }
@@ -995,7 +995,7 @@ func (p *Parser) parseAlias(typed bool) *ast.Alias {
 	default:
 		return nil
 	}
-	if p.d.Features.ExtendedDDL && p.acceptOp("(") {
+	if p.d.Features.DDL.ExtendedDDL && p.acceptOp("(") {
 		for {
 			cd := &ast.ColumnDef{Name: p.parseIdent()}
 			if typed && !p.isOp(",") && !p.isOp(")") {
@@ -1019,7 +1019,7 @@ func (p *Parser) parseAlias(typed bool) *ast.Alias {
 
 // parseReturning parses RETURNING items if the dialect supports it.
 func (p *Parser) parseReturning() []*ast.SelectItem {
-	if !p.d.Features.Returning || !p.acceptKw("RETURNING") {
+	if !p.d.Features.DML.Returning || !p.acceptKw("RETURNING") {
 		return nil
 	}
 	return p.parseSelectItems()

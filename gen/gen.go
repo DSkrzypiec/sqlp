@@ -135,7 +135,7 @@ func (g *Generator) ident(id ast.Ident) {
 
 // label writes a name in a position where the dialect allows any keyword.
 func (g *Generator) label(id ast.Ident) {
-	if !id.Quoted && g.d.Features.KeywordLabels && !hasSpecialChars(id.Name) {
+	if !id.Quoted && g.d.Features.Names.KeywordLabels && !hasSpecialChars(id.Name) {
 		g.w(id.Name)
 		return
 	}
@@ -271,7 +271,7 @@ func (g *Generator) operand(e ast.Expr, parent int, rightSide bool) {
 func (g *Generator) expr(e ast.Expr) {
 	switch e := e.(type) {
 	case *ast.Name:
-		if g.transpiling() && g.from.Features.WithoutRowid && !g.d.Features.WithoutRowid {
+		if g.transpiling() && g.from.Features.DDL.WithoutRowid && !g.d.Features.DDL.WithoutRowid {
 			switch strings.ToUpper(e.Parts[len(e.Parts)-1].Name) {
 			case "ROWID", "_ROWID_", "OID": // tables have a rowid where WITHOUT ROWID exists
 				g.warn("rowid")
@@ -376,7 +376,7 @@ func (g *Generator) expr(e ast.Expr) {
 		g.operand(e.Expr, p, false)
 		g.kw(e.Not, "NOT")
 		g.w(" BETWEEN")
-		if e.Symmetric && !g.d.Features.BetweenSymmetric {
+		if e.Symmetric && !g.d.Features.Expr.BetweenSymmetric {
 			g.warn("BETWEEN SYMMETRIC")
 		} else {
 			g.kw(e.Symmetric, "SYMMETRIC")
@@ -425,7 +425,7 @@ func (g *Generator) expr(e ast.Expr) {
 		g.w(" COLLATE ")
 		g.collation(e.Collation)
 	case *ast.AtTimeZone:
-		if !g.d.Features.AtTimeZone {
+		if !g.d.Features.Expr.AtTimeZone {
 			g.warn("AT TIME ZONE")
 		}
 		p := g.parentPrec(e)
@@ -433,7 +433,7 @@ func (g *Generator) expr(e ast.Expr) {
 		g.w(" AT TIME ZONE ")
 		g.operand(e.Zone, p, true)
 	case *ast.Subscript:
-		if g.transpiling() && !g.d.Features.ArrayLiterals {
+		if g.transpiling() && !g.d.Features.Expr.ArrayLiterals {
 			g.warn("array subscript") // SQLite reads [1] as a quoted name
 		}
 		g.expr(e.Expr)
@@ -462,7 +462,7 @@ func (g *Generator) expr(e ast.Expr) {
 		g.exprList(e.Exprs)
 		g.w(")")
 	case *ast.Array:
-		if !g.d.Features.ArrayLiterals {
+		if !g.d.Features.Expr.ArrayLiterals {
 			g.warn("ARRAY")
 		}
 		switch {
@@ -555,7 +555,7 @@ func (g *Generator) expr(e ast.Expr) {
 		g.exprList(e.Exprs)
 		g.w(")")
 	case *ast.Position:
-		if !g.d.Features.StandardFuncSyntax { // SQLite reads IN b as a table
+		if !g.d.Features.Expr.StandardFuncSyntax { // SQLite reads IN b as a table
 			g.w("instr(")
 			g.expr(e.Str)
 			g.w(", ")
@@ -598,10 +598,10 @@ func isWord(op string) bool {
 func (g *Generator) likeOp(op string) string {
 	switch {
 	case !g.transpiling():
-	case op == "ILIKE" && !g.d.Features.Ilike:
+	case op == "ILIKE" && !g.d.Features.Expr.Ilike:
 		g.warn("ILIKE (LIKE ignores the case of ASCII letters only)")
 		return "LIKE"
-	case op == "LIKE" && !g.from.Features.Ilike && g.d.Features.Ilike:
+	case op == "LIKE" && !g.from.Features.Expr.Ilike && g.d.Features.Expr.Ilike:
 		return "ILIKE"
 	}
 	return op
@@ -667,7 +667,7 @@ func (g *Generator) literal(l *ast.Literal) {
 
 func (g *Generator) cast(c *ast.Cast) {
 	switch {
-	case c.Style == ast.CastDoubleColon && g.d.Features.DoubleColonCast:
+	case c.Style == ast.CastDoubleColon && g.d.Features.Expr.DoubleColonCast:
 		g.expr(c.Expr)
 		g.w("::")
 		g.dataType(c.Type)
@@ -717,10 +717,10 @@ func (g *Generator) dataType(dt *ast.DataType) {
 				g.warn(what)
 			}
 		}
-		if dt.TimeZone == ast.TZWith && !g.d.Features.AtTimeZone {
+		if dt.TimeZone == ast.TZWith && !g.d.Features.Expr.AtTimeZone {
 			g.warn("WITH TIME ZONE")
 		}
-		if len(dt.ArrayBounds) > 0 && !g.d.Features.ArrayLiterals {
+		if len(dt.ArrayBounds) > 0 && !g.d.Features.Expr.ArrayLiterals {
 			g.warn("array type " + dt.Name)
 		}
 	}
@@ -882,7 +882,7 @@ func (g *Generator) query(q *ast.Query) {
 		g.w(" ")
 	}
 	g.body(q.Body)
-	if !g.d.Features.ValuesTail && g.from != nil && endsWithValues(q.Body) && (len(q.OrderBy) > 0 || q.Limit != nil) {
+	if !g.d.Features.Query.ValuesTail && g.from != nil && endsWithValues(q.Body) && (len(q.OrderBy) > 0 || q.Limit != nil) {
 		g.warn("ORDER BY or LIMIT after VALUES")
 	}
 	if len(q.OrderBy) > 0 {
@@ -891,7 +891,7 @@ func (g *Generator) query(q *ast.Query) {
 	}
 	g.limit(q.Limit)
 	for _, lk := range q.Locking {
-		if !g.d.Features.Locking {
+		if !g.d.Features.Query.Locking {
 			g.warn("FOR " + lk.Strength)
 			continue
 		}
@@ -918,7 +918,7 @@ func (g *Generator) limit(l *ast.Limit) {
 		return
 	}
 	switch {
-	case l.Fetch && g.d.Features.FetchFirst:
+	case l.Fetch && g.d.Features.Query.FetchFirst:
 		if l.Offset != nil {
 			g.w(" OFFSET ")
 			g.expr(l.Offset)
@@ -938,7 +938,7 @@ func (g *Generator) limit(l *ast.Limit) {
 		return
 	case l.All, g.transpiling() && isNegativeInteger(l.Count):
 		// A negative limit is none in SQLite and an error in PostgreSQL.
-		if g.d.Features.OffsetWithoutLimit {
+		if g.d.Features.Query.OffsetWithoutLimit {
 			g.w(" LIMIT ALL")
 		} else {
 			g.w(" LIMIT -1")
@@ -1073,7 +1073,7 @@ func (g *Generator) sel(s *ast.Select) {
 		g.w(" DISTINCT")
 	case ast.DistinctOn:
 		g.w(" DISTINCT")
-		if g.d.Features.DistinctOn {
+		if g.d.Features.Query.DistinctOn {
 			g.w(" ON (")
 			g.exprList(s.DistinctOn)
 			g.w(")")
@@ -1202,7 +1202,7 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 			}
 			g.w(")")
 		}
-		if t.Ordinality && !g.d.Features.WithOrdinality {
+		if t.Ordinality && !g.d.Features.Query.WithOrdinality {
 			g.warn("WITH ORDINALITY")
 		} else {
 			g.kw(t.Ordinality, "WITH ORDINALITY")
@@ -1214,7 +1214,7 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 			g.w(", ")
 		} else {
 			kind := t.Kind
-			if t.Natural && kind == ast.CrossJoin && g.from != nil && !g.d.Features.FreeJoinKeywords {
+			if t.Natural && kind == ast.CrossJoin && g.from != nil && !g.d.Features.Query.FreeJoinKeywords {
 				kind = ast.InnerJoin // SQLite's NATURAL CROSS JOIN is a natural inner join
 			}
 			g.kw(t.Natural, "NATURAL")
@@ -1235,7 +1235,7 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 			}
 		}
 	case *ast.ParenTable:
-		if g.from != nil && g.d.Features.ParenTableIsJoin && !ast.IsJoinTree(t.Expr) {
+		if g.from != nil && g.d.Features.Query.ParenTableIsJoin && !ast.IsJoinTree(t.Expr) {
 			if t.Alias == nil && !isCommaJoin(t.Expr) {
 				g.tableExpr(t.Expr)
 				return

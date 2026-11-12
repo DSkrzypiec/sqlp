@@ -99,12 +99,15 @@ func mutations(d *dialect.Dialect) map[string]mutation {
 			out[fmt.Sprintf("%s: %s moved to %d", d.Name, op, levels[j])] = mutation{&m, op}
 		}
 	}
-	features := reflect.TypeFor[dialect.Features]()
-	for i := range features.NumField() {
-		m := *d
-		if f := reflect.ValueOf(&m.Features).Elem().Field(i); f.Kind() == reflect.Bool && f.Bool() {
-			f.SetBool(false)
-			out[fmt.Sprintf("%s: %s off", d.Name, features.Field(i).Name)] = mutation{&m, ""}
+	groups := reflect.TypeFor[dialect.Features]()
+	for g := range groups.NumField() {
+		features := groups.Field(g).Type
+		for i := range features.NumField() {
+			m := *d
+			if f := reflect.ValueOf(&m.Features).Elem().Field(g).Field(i); f.Kind() == reflect.Bool && f.Bool() {
+				f.SetBool(false)
+				out[fmt.Sprintf("%s: %s off", d.Name, features.Field(i).Name)] = mutation{&m, ""}
+			}
 		}
 	}
 	return out

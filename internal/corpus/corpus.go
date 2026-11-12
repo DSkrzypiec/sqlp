@@ -211,7 +211,7 @@ func splitStatements(src string, d *dialect.Dialect) []string {
 		case t.Kind == lexer.Op && t.Text == ";" && depth <= 0 && body == 0:
 			flush(t.Pos)
 		case t.Kind == lexer.Ident:
-			trigger := d.Features.VirtualTables && len(words) > 1 && words[0] == "CREATE" && strings.Contains(strings.Join(words, " "), "TRIGGER")
+			trigger := d.Features.DDL.VirtualTables && len(words) > 1 && words[0] == "CREATE" && strings.Contains(strings.Join(words, " "), "TRIGGER")
 			switch {
 			case t.Value == "BEGIN" && trigger && body == 0,
 				t.Value == "ATOMIC" && prev.Value == "BEGIN" && body == 0:

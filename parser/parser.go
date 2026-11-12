@@ -415,7 +415,7 @@ func (p *Parser) canBeIdent() bool {
 	case lexer.QuotedIdent:
 		return true
 	case lexer.String:
-		return p.d.Features.StringAlias
+		return p.d.Features.Names.StringAlias
 	case lexer.Ident:
 		return !p.d.IsReserved(t.Value)
 	}
@@ -443,7 +443,7 @@ func (p *Parser) parseAnyIdent() ast.Ident {
 		}
 		return id
 	case lexer.String:
-		if p.d.Features.StringAlias {
+		if p.d.Features.Names.StringAlias {
 			p.next()
 			return ast.Ident{Name: t.Value, Quoted: true}
 		}
@@ -468,7 +468,7 @@ func identText(id ast.Ident) string {
 // parseLabel parses a name after AS or a dot: any keyword in dialects with
 // PostgreSQL's ColLabel rule, otherwise an ordinary identifier.
 func (p *Parser) parseLabel() ast.Ident {
-	if p.d.Features.KeywordLabels {
+	if p.d.Features.Names.KeywordLabels {
 		return p.parseAnyIdent()
 	}
 	return p.parseIdent()
@@ -537,8 +537,8 @@ func (p *Parser) takeRaw(stopAtComma bool) string {
 func (p *Parser) parseName() *ast.Name {
 	n := &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
 	for p.isOp(".") && (p.peekN(1).Kind == lexer.Ident || p.peekN(1).Kind == lexer.QuotedIdent ||
-		p.peekN(1).Kind == lexer.String && p.d.Features.StringAlias) {
-		if limit := p.d.Features.MaxNameParts; limit > 0 && len(n.Parts) == limit {
+		p.peekN(1).Kind == lexer.String && p.d.Features.Names.StringAlias) {
+		if limit := p.d.Features.Names.MaxNameParts; limit > 0 && len(n.Parts) == limit {
 			p.unexpected("end of name")
 		}
 		p.next()
@@ -550,7 +550,7 @@ func (p *Parser) parseName() *ast.Name {
 // parseObjectName parses a collation or a referenced table: dotted in
 // PostgreSQL, a single name in SQLite's DDL.
 func (p *Parser) parseObjectName() *ast.Name {
-	if !p.d.Features.ExtendedDDL {
+	if !p.d.Features.DDL.ExtendedDDL {
 		return &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
 	}
 	return p.parseName()
@@ -568,7 +568,7 @@ func (p *Parser) parseRelationName() *ast.Name {
 // checkRelationParts rejects a table name, starting at source offset pos,
 // with more parts than the dialect allows.
 func (p *Parser) checkRelationParts(n *ast.Name, pos int) {
-	if limit := p.d.Features.MaxRelationParts; limit > 0 && len(n.Parts) > limit {
+	if limit := p.d.Features.Names.MaxRelationParts; limit > 0 && len(n.Parts) > limit {
 		p.errorf(pos, "improper qualified name (too many dotted names)")
 	}
 }
@@ -641,7 +641,7 @@ func (p *Parser) parseIfExists() bool {
 // rejectBareIf: IF is an ordinary name in SQLite, except where IF [NOT]
 // EXISTS may start.
 func (p *Parser) rejectBareIf() {
-	if p.d.Features.FreeFormTypeNames && p.isKw("IF") {
+	if p.d.Features.Expr.FreeFormTypeNames && p.isKw("IF") {
 		p.unexpected("name")
 	}
 }
@@ -660,13 +660,13 @@ func (p *Parser) parseBehavior() string { return p.acceptOneOf("CASCADE", "RESTR
 
 func (p *Parser) parseStatement() ast.Statement {
 	t := p.peek()
-	if t.Kind == lexer.Op && t.Text == "(" && p.d.Features.ParenQueries {
+	if t.Kind == lexer.Op && t.Text == "(" && p.d.Features.Query.ParenQueries {
 		return p.parseQuery()
 	}
 	if t.Kind != lexer.Ident {
 		p.unexpected("statement")
 	}
-	if p.d.Features.ServerUtilities {
+	if p.d.Features.Utility.ServerUtilities {
 		if s := p.parseServerUtility(t.Value); s != nil {
 			return s
 		}
@@ -675,7 +675,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case "SELECT", "VALUES":
 		return p.parseQuery()
 	case "TABLE":
-		if p.d.Features.TableKeyword {
+		if p.d.Features.Query.TableKeyword {
 			return p.parseQuery()
 		}
 	case "WITH":
@@ -687,7 +687,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case "DELETE":
 		return p.parseDelete(nil)
 	case "MERGE":
-		if p.d.Features.Merge {
+		if p.d.Features.DML.Merge {
 			return p.parseMerge(nil)
 		}
 	case "CREATE":
@@ -697,13 +697,13 @@ func (p *Parser) parseStatement() ast.Statement {
 	case "ALTER":
 		return p.parseAlter()
 	case "TRUNCATE":
-		if p.d.Features.Truncate {
+		if p.d.Features.DML.Truncate {
 			return p.parseTruncate()
 		}
 	case "BEGIN":
 		return p.parseBegin()
 	case "START":
-		if p.d.Features.TransactionModes {
+		if p.d.Features.Utility.TransactionModes {
 			return p.parseBegin()
 		}
 	case "COMMIT", "END":
@@ -711,7 +711,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case "ROLLBACK":
 		return p.parseRollback()
 	case "ABORT":
-		if p.d.Features.TransactionModes {
+		if p.d.Features.Utility.TransactionModes {
 			return p.parseRollback()
 		}
 	case "SAVEPOINT":
@@ -724,37 +724,37 @@ func (p *Parser) parseStatement() ast.Statement {
 	case "EXPLAIN":
 		return p.parseExplain()
 	case "SET":
-		if p.d.Features.SetShowReset {
+		if p.d.Features.Utility.SetShowReset {
 			return p.parseSet()
 		}
 	case "SHOW":
-		if p.d.Features.SetShowReset {
+		if p.d.Features.Utility.SetShowReset {
 			return p.parseShow()
 		}
 	case "RESET":
-		if p.d.Features.SetShowReset {
+		if p.d.Features.Utility.SetShowReset {
 			return p.parseReset()
 		}
 	case "PRAGMA":
-		if p.d.Features.Pragma {
+		if p.d.Features.Utility.Pragma {
 			return p.parsePragma()
 		}
 	case "ATTACH":
-		if p.d.Features.AttachDetach {
+		if p.d.Features.Utility.AttachDetach {
 			return p.parseAttach()
 		}
 	case "DETACH":
-		if p.d.Features.AttachDetach {
+		if p.d.Features.Utility.AttachDetach {
 			return p.parseDetach()
 		}
 	case "VACUUM":
-		if p.d.Features.Vacuum {
+		if p.d.Features.Utility.Vacuum {
 			return p.parseVacuum()
 		}
 	case "ANALYZE", "ANALYSE":
 		return p.parseAnalyze()
 	case "REINDEX":
-		if p.d.Features.Reindex {
+		if p.d.Features.Utility.Reindex {
 			return p.parseReindex()
 		}
 	}
@@ -772,7 +772,7 @@ func (p *Parser) parseWithStatement() ast.Statement {
 		return p.parseUpdate(with)
 	case p.isKw("DELETE"):
 		return p.parseDelete(with)
-	case p.isKw("MERGE") && p.d.Features.Merge:
+	case p.isKw("MERGE") && p.d.Features.DML.Merge:
 		return p.parseMerge(with)
 	}
 	return p.parseQueryAfterWith(with)

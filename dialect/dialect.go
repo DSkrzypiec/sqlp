@@ -60,9 +60,18 @@ type Dialect struct {
 	Features Features
 }
 
-// Features lists syntax that is only valid in some dialects.
+// Features lists syntax that is only valid in some dialects, by area.
 type Features struct {
-	// expressions
+	Expr    ExprFeatures
+	Names   NameFeatures
+	Query   QueryFeatures
+	DML     DMLFeatures
+	DDL     DDLFeatures
+	Utility UtilityFeatures
+}
+
+// ExprFeatures lists expression syntax.
+type ExprFeatures struct {
 	DoubleColonCast      bool // x::type
 	TryCast              bool // TRY_CAST(x AS t)
 	ArrayLiterals        bool // ARRAY[1,2], a[1], a[1:2]
@@ -82,16 +91,20 @@ type Features struct {
 	WithinGroup          bool
 	StandardFuncSyntax   bool // EXTRACT(x FROM y), TRIM(BOTH ...), OVERLAY, POSITION(a IN b)
 	FreeFormTypeNames    bool // any run of words is a type name (SQLite)
+}
 
-	// identifiers
-	StrictFrames       bool // gram.y's window frame consistency checks
+// NameFeatures lists how names, labels and qualified names may be written.
+type NameFeatures struct {
 	KeywordLabels      bool // any keyword allowed after AS and after a dot
 	QualifiedFunctions bool // schema.func(...) in expressions
 	StringAlias        bool // string literals usable as names (SQLite)
 	MaxNameParts       int  // parts allowed in an object name; 0 means no limit
 	MaxRelationParts   int  // parts allowed in a table name (PostgreSQL's qualified_name); 0 means no limit
+}
 
-	// queries
+// QueryFeatures lists query syntax.
+type QueryFeatures struct {
+	StrictFrames          bool // gram.y's window frame consistency checks
 	ParenQueries          bool // (SELECT ...) UNION (SELECT ...)
 	IntersectBindsTighter bool // false: all set operators share one level
 	SetQuantifiers        bool // UNION DISTINCT, INTERSECT ALL, EXCEPT ALL
@@ -118,8 +131,10 @@ type Features struct {
 	Locking               bool // FOR UPDATE / FOR SHARE
 	DataModifyingCTE      bool // WITH x AS (DELETE ... RETURNING *)
 	CTESearchCycle        bool
+}
 
-	// DML
+// DMLFeatures lists INSERT, UPDATE, DELETE and MERGE syntax.
+type DMLFeatures struct {
 	Returning            bool
 	InsertOr             bool // INSERT OR REPLACE ..., REPLACE INTO
 	UpsertMulti          bool // several ON CONFLICT clauses (SQLite)
@@ -129,8 +144,10 @@ type Features struct {
 	OrderLimitInDML      bool // UPDATE/DELETE ... ORDER BY ... LIMIT (SQLite)
 	Truncate             bool
 	Merge                bool
+}
 
-	// DDL
+// DDLFeatures lists schema statement syntax.
+type DDLFeatures struct {
 	LooseReferences     bool // REFERENCES t: MATCH any name, ON INSERT, clauses in any order and repeated (SQLite)
 	StoredGeneratedOnly bool // GENERATED ALWAYS AS (expr) must say STORED
 	ExtendedDDL         bool // schemas, sequences, types, ALTER COLUMN, constraints in ALTER, ...
@@ -141,8 +158,10 @@ type Features struct {
 	ConflictClause      bool // constraint ON CONFLICT ROLLBACK|ABORT|... (SQLite)
 	VirtualTables       bool // CREATE VIRTUAL TABLE
 	TempTriggers        bool // CREATE TEMP TRIGGER
+}
 
-	// utility statements
+// UtilityFeatures lists transaction, session and maintenance statements.
+type UtilityFeatures struct {
 	TransactionModes bool // BEGIN ISOLATION LEVEL ..., START TRANSACTION, WORK, CHAIN
 	TransactionKinds bool // BEGIN DEFERRED|IMMEDIATE|EXCLUSIVE
 	SetShowReset     bool

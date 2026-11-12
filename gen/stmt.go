@@ -17,7 +17,7 @@ func (g *Generator) stmt(s ast.Statement) {
 	case *ast.Delete:
 		g.delete(s)
 	case *ast.Truncate:
-		if !g.d.Features.Truncate {
+		if !g.d.Features.DML.Truncate {
 			g.warn("TRUNCATE")
 		}
 		g.w("TRUNCATE TABLE ")
@@ -248,7 +248,7 @@ func (g *Generator) withPrefix(w *ast.With) {
 func (g *Generator) insert(s *ast.Insert) {
 	g.withPrefix(s.With)
 	switch {
-	case s.Replace && g.d.Features.InsertOr:
+	case s.Replace && g.d.Features.DML.InsertOr:
 		g.w("REPLACE")
 	case s.Replace:
 		g.warn("REPLACE INTO")
@@ -297,7 +297,7 @@ func (g *Generator) orAction(action string) {
 	if action == "" {
 		return
 	}
-	if !g.d.Features.InsertOr {
+	if !g.d.Features.DML.InsertOr {
 		g.warn("OR " + action)
 		return
 	}
@@ -349,7 +349,7 @@ func (g *Generator) assignments(as []*ast.Assignment) {
 }
 
 func (g *Generator) returning(items []*ast.SelectItem) {
-	if len(items) == 0 || !g.d.Features.Returning {
+	if len(items) == 0 || !g.d.Features.DML.Returning {
 		return
 	}
 	g.w(" RETURNING ")
@@ -417,7 +417,7 @@ func (g *Generator) delete(s *ast.Delete) {
 
 // unlogged writes UNLOGGED, or warns when the target has no such concept.
 func (g *Generator) unlogged(on bool) {
-	if on && !g.d.Features.ExtendedDDL {
+	if on && !g.d.Features.DDL.ExtendedDDL {
 		g.warn("UNLOGGED")
 		return
 	}
@@ -489,7 +489,7 @@ func (g *Generator) tableElements(s *ast.CreateTable) {
 	likesAt := func(pos int) {
 		for nextLike < len(s.Likes) && s.Likes[nextLike].Position == pos {
 			sep()
-			if g.transpiling() && !g.d.Features.ExtendedDDL {
+			if g.transpiling() && !g.d.Features.DDL.ExtendedDDL {
 				g.warn("LIKE in CREATE TABLE") // SQLite reads it as a column named LIKE
 			}
 			g.w("LIKE ")
@@ -514,7 +514,7 @@ func (g *Generator) tableElements(s *ast.CreateTable) {
 }
 
 func (g *Generator) tableOptions(s *ast.CreateTable) {
-	if !g.d.Features.WithoutRowid {
+	if !g.d.Features.DDL.WithoutRowid {
 		if s.WithoutRowid {
 			g.warn("WITHOUT ROWID")
 		}
@@ -659,7 +659,7 @@ func (g *Generator) columnConstraint(cc *ast.ColumnConstraint) {
 		g.expr(cc.Expr)
 		g.w(")")
 		stored := cc.Generated
-		if g.from != nil && g.d.Features.StoredGeneratedOnly && stored != "STORED" {
+		if g.from != nil && g.d.Features.DDL.StoredGeneratedOnly && stored != "STORED" {
 			g.warn("generated column that is not STORED")
 			stored = "STORED"
 		}
@@ -677,7 +677,7 @@ func (g *Generator) columnConstraint(cc *ast.ColumnConstraint) {
 	}
 	g.conflictClause(cc.OnConflict)
 	if cc.Autoincrement {
-		if g.d.Features.Autoincrement {
+		if g.d.Features.DDL.Autoincrement {
 			g.w(" AUTOINCREMENT")
 		} else {
 			g.warn("AUTOINCREMENT")
@@ -691,7 +691,7 @@ func (g *Generator) conflictClause(action string) {
 	if action == "" {
 		return
 	}
-	if !g.d.Features.ConflictClause {
+	if !g.d.Features.DDL.ConflictClause {
 		g.warn("ON CONFLICT " + action)
 		return
 	}
@@ -708,7 +708,7 @@ func (g *Generator) references(r *ast.References) {
 	}
 	switch m := strings.ToUpper(r.Match); {
 	case r.Match == "":
-	case !g.d.Features.LooseReferences && m != "FULL" && m != "SIMPLE":
+	case !g.d.Features.DDL.LooseReferences && m != "FULL" && m != "SIMPLE":
 		g.warn("MATCH " + r.Match)
 	default:
 		g.w(" MATCH ", r.Match)
@@ -716,7 +716,7 @@ func (g *Generator) references(r *ast.References) {
 	g.kw(r.OnDelete != "", "ON DELETE "+r.OnDelete)
 	g.kw(r.OnUpdate != "", "ON UPDATE "+r.OnUpdate)
 	if r.OnInsert != "" {
-		if g.d.Features.LooseReferences {
+		if g.d.Features.DDL.LooseReferences {
 			g.w(" ON INSERT ", r.OnInsert)
 		} else {
 			g.warn("ON INSERT " + r.OnInsert)
@@ -733,7 +733,7 @@ func (g *Generator) deferrable(d *ast.Deferrable) {
 		g.w(" ")
 	}
 	word, first := d.Deferrable, d.InitiallyFirst
-	if !g.d.Features.ExtendedDDL && d.Initially != "" {
+	if !g.d.Features.DDL.ExtendedDDL && d.Initially != "" {
 		// SQLite needs [NOT] DEFERRABLE first. In PostgreSQL INITIALLY
 		// DEFERRED implies DEFERRABLE, and INITIALLY IMMEDIATE alone is the
 		// default, not deferrable.
@@ -807,7 +807,7 @@ func (g *Generator) tableConstraint(tc *ast.TableConstraint) {
 		g.w(")")
 	}
 	g.conflictClause(tc.OnConflict)
-	if tc.Deferrable != nil && tc.Kind != ast.TableForeignKey && !g.d.Features.ExtendedDDL {
+	if tc.Deferrable != nil && tc.Kind != ast.TableForeignKey && !g.d.Features.DDL.ExtendedDDL {
 		g.warn("DEFERRABLE or INITIALLY on a table constraint other than FOREIGN KEY")
 	} else {
 		g.deferrable(tc.Deferrable)

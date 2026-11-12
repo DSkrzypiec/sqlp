@@ -116,24 +116,33 @@ var Postgres = &Dialect{
 	UnaryMinusPrecedence: 14,
 
 	Features: Features{
-		DoubleColonCast: true, ArrayLiterals: true, RowConstructor: true, DefaultExpr: true,
-		Ilike: true, IsUnknown: true, BetweenSymmetric: true, Overlaps: true, DistinctFromNonAssoc: true, TypedStringLiteral: true, AtTimeZone: true,
-		NamedArgs: true, VariadicArgs: true, WithinGroup: true, StandardFuncSyntax: true,
-
-		StrictFrames: true, KeywordLabels: true, QualifiedFunctions: true, MaxRelationParts: 3,
-
-		ParenQueries: true, IntersectBindsTighter: true, SetQuantifiers: true, EmptySelectList: true,
-		SelectInto: true, DistinctOn: true, Lateral: true, TableSample: true, TableKeyword: true,
-		OnlyTable: true, JoinRequiresQual: true, ParenTableIsJoin: true, WithOrdinality: true, ValuesTail: true, GroupingSets: true, OrderByUsing: true,
-		FetchFirst: true, OffsetWithoutLimit: true, Locking: true, DataModifyingCTE: true,
-		CTESearchCycle: true,
-
-		Returning: true, ConflictOnConstraint: true, BareDMLAlias: true, DeleteUsing: true,
-		Truncate: true, Merge: true,
-
-		StoredGeneratedOnly: true, ExtendedDDL: true, MultiDrop: true, IndexOpclass: true,
-
-		TransactionModes: true, SetShowReset: true, ExplainOptions: true, Vacuum: true,
-		Reindex: true, ServerUtilities: true,
+		Expr: ExprFeatures{
+			DoubleColonCast: true, ArrayLiterals: true, RowConstructor: true, DefaultExpr: true,
+			Ilike: true, IsUnknown: true, BetweenSymmetric: true, Overlaps: true,
+			DistinctFromNonAssoc: true, TypedStringLiteral: true, AtTimeZone: true, NamedArgs: true,
+			VariadicArgs: true, WithinGroup: true, StandardFuncSyntax: true,
+		},
+		Names: NameFeatures{
+			KeywordLabels: true, QualifiedFunctions: true, MaxRelationParts: 3,
+		},
+		Query: QueryFeatures{
+			StrictFrames: true, ParenQueries: true, IntersectBindsTighter: true,
+			SetQuantifiers: true, EmptySelectList: true, SelectInto: true, DistinctOn: true,
+			Lateral: true, TableSample: true, TableKeyword: true, OnlyTable: true,
+			JoinRequiresQual: true, ParenTableIsJoin: true, WithOrdinality: true, ValuesTail: true,
+			GroupingSets: true, OrderByUsing: true, FetchFirst: true, OffsetWithoutLimit: true,
+			Locking: true, DataModifyingCTE: true, CTESearchCycle: true,
+		},
+		DML: DMLFeatures{
+			Returning: true, ConflictOnConstraint: true, BareDMLAlias: true, DeleteUsing: true,
+			Truncate: true, Merge: true,
+		},
+		DDL: DDLFeatures{
+			StoredGeneratedOnly: true, ExtendedDDL: true, MultiDrop: true, IndexOpclass: true,
+		},
+		Utility: UtilityFeatures{
+			TransactionModes: true, SetShowReset: true, ExplainOptions: true, Vacuum: true,
+			Reindex: true, ServerUtilities: true,
+		},
 	},
 }

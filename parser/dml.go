@@ -10,7 +10,7 @@ var conflictActions = []string{"ROLLBACK", "ABORT", "FAIL", "IGNORE", "REPLACE"}
 
 // parseOrAction parses SQLite's `OR ROLLBACK|ABORT|FAIL|IGNORE|REPLACE`.
 func (p *Parser) parseOrAction() string {
-	if !p.d.Features.InsertOr || !p.isKw("OR") {
+	if !p.d.Features.DML.InsertOr || !p.isKw("OR") {
 		return ""
 	}
 	p.next()
@@ -24,7 +24,7 @@ func (p *Parser) parseOrAction() string {
 func (p *Parser) parseInsert(with *ast.With) ast.Statement {
 	ins := &ast.Insert{With: with}
 	if p.acceptKw("REPLACE") {
-		if !p.d.Features.InsertOr {
+		if !p.d.Features.DML.InsertOr {
 			p.unsupported("REPLACE INTO")
 		}
 		ins.Replace = true
@@ -46,11 +46,11 @@ func (p *Parser) parseInsert(with *ast.With) ast.Statement {
 		}
 		p.expectOp(")")
 	}
-	if p.d.Features.ExtendedDDL && p.acceptKw("OVERRIDING") {
+	if p.d.Features.DDL.ExtendedDDL && p.acceptKw("OVERRIDING") {
 		ins.Overriding = p.parseOverriding()
 	}
 	if p.isKwSeq("DEFAULT", "VALUES") {
-		if p.d.Features.ExtendedDDL && (ins.Columns != nil || ins.Overriding != "") {
+		if p.d.Features.DDL.ExtendedDDL && (ins.Columns != nil || ins.Overriding != "") {
 			p.unexpected("query") // PostgreSQL: DEFAULT VALUES stands alone
 		}
 		p.pos += 2
@@ -59,11 +59,11 @@ func (p *Parser) parseInsert(with *ast.With) ast.Statement {
 		ins.Source = p.parseQuery()
 	}
 	for p.isKwSeq("ON", "CONFLICT") {
-		if p.d.Features.UpsertMulti && (ins.DefaultValues || len(ins.OnConflict) > 0 && ins.OnConflict[len(ins.OnConflict)-1].Target == nil) {
+		if p.d.Features.DML.UpsertMulti && (ins.DefaultValues || len(ins.OnConflict) > 0 && ins.OnConflict[len(ins.OnConflict)-1].Target == nil) {
 			p.unexpected("end of INSERT") // SQLite: no upsert after DEFAULT VALUES or after one without a target
 		}
 		ins.OnConflict = append(ins.OnConflict, p.parseOnConflict())
-		if !p.d.Features.UpsertMulti {
+		if !p.d.Features.DML.UpsertMulti {
 			break
 		}
 	}
@@ -92,7 +92,7 @@ func (p *Parser) parseOnConflict() *ast.OnConflict {
 		if p.acceptKw("WHERE") {
 			oc.TargetWhere = p.parseExpr()
 		}
-	case p.d.Features.ConflictOnConstraint && p.acceptKwSeq("ON", "CONSTRAINT"):
+	case p.d.Features.DML.ConflictOnConstraint && p.acceptKwSeq("ON", "CONSTRAINT"):
 		id := p.parseIdent()
 		oc.Constraint = &id
 	}
@@ -137,7 +137,7 @@ func (p *Parser) parseAssignment() *ast.Assignment {
 // parseSetTarget parses a column, with PostgreSQL's a.b and a[1] indirection.
 func (p *Parser) parseSetTarget() ast.Expr {
 	name := &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
-	if !p.d.Features.ArrayLiterals {
+	if !p.d.Features.Expr.ArrayLiterals {
 		return name
 	}
 	var e ast.Expr = name
@@ -163,7 +163,7 @@ func (p *Parser) parseWhere() ast.Expr {
 	if !p.acceptKw("WHERE") {
 		return nil
 	}
-	if p.d.Features.ServerUtilities && p.acceptKwSeq("CURRENT", "OF") {
+	if p.d.Features.Utility.ServerUtilities && p.acceptKwSeq("CURRENT", "OF") {
 		return &ast.Word{Text: "CURRENT OF " + p.parseIdent().Name}
 	}
 	return p.parseExpr()
@@ -182,7 +182,7 @@ func (p *Parser) parseUpdate(with *ast.With) ast.Statement {
 	}
 	u.Where = p.parseWhere()
 	u.Returning = p.parseReturning()
-	if p.d.Features.OrderLimitInDML {
+	if p.d.Features.DML.OrderLimitInDML {
 		if p.acceptKwSeq("ORDER", "BY") {
 			u.OrderBy = p.parseOrderItems()
 		}
@@ -199,12 +199,12 @@ func (p *Parser) parseDelete(with *ast.With) ast.Statement {
 	d.Only, d.Table = p.parseRelationExpr()
 	d.Alias = p.parseDMLAlias()
 	d.Indexed = p.parseIndexed()
-	if p.d.Features.DeleteUsing && p.acceptKw("USING") {
+	if p.d.Features.DML.DeleteUsing && p.acceptKw("USING") {
 		d.Using = p.parseFromList()
 	}
 	d.Where = p.parseWhere()
 	d.Returning = p.parseReturning()
-	if p.d.Features.OrderLimitInDML {
+	if p.d.Features.DML.OrderLimitInDML {
 		if p.acceptKwSeq("ORDER", "BY") {
 			d.OrderBy = p.parseOrderItems()
 		}
@@ -221,7 +221,7 @@ func (p *Parser) parseDMLAlias() *ast.Ident {
 	case p.acceptKw("AS"):
 		id := p.parseIdent()
 		return &id
-	case p.d.Features.BareDMLAlias && p.peek().Kind != lexer.EOF && p.canBeIdent() && !p.isKw("SET"):
+	case p.d.Features.DML.BareDMLAlias && p.peek().Kind != lexer.EOF && p.canBeIdent() && !p.isKw("SET"):
 		id := p.parseIdent()
 		return &id
 	}
@@ -229,7 +229,7 @@ func (p *Parser) parseDMLAlias() *ast.Ident {
 }
 
 func (p *Parser) parseIndexed() *ast.Indexed {
-	if !p.d.Features.IndexedBy {
+	if !p.d.Features.Query.IndexedBy {
 		return nil
 	}
 	switch {

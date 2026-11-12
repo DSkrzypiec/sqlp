@@ -10,7 +10,7 @@ import (
 // --- transactions -------------------------------------------------------------
 
 func (p *Parser) parseBegin() ast.Statement {
-	f := p.d.Features
+	f := p.d.Features.Utility
 	b := &ast.Begin{}
 	if p.acceptKw("START") {
 		p.expectKw("TRANSACTION")
@@ -71,7 +71,7 @@ func (p *Parser) parseTransactionModes() []string {
 // acceptSavepointWord consumes an optional SAVEPOINT, which is unreserved and
 // may itself be the savepoint's name.
 func (p *Parser) acceptSavepointWord() {
-	if p.isKw("SAVEPOINT") && (!p.d.Features.TransactionModes || !p.atStatementEndAt(1)) {
+	if p.isKw("SAVEPOINT") && (!p.d.Features.Utility.TransactionModes || !p.atStatementEndAt(1)) {
 		p.next()
 	}
 }
@@ -83,7 +83,7 @@ func (p *Parser) atStatementEndAt(n int) bool {
 
 // parseTxnWord consumes the optional WORK/TRANSACTION after COMMIT or ROLLBACK.
 func (p *Parser) parseTxnWord() {
-	if p.d.Features.TransactionModes {
+	if p.d.Features.Utility.TransactionModes {
 		p.acceptOneOf("WORK", "TRANSACTION")
 	} else if p.acceptKw("TRANSACTION") && p.canBeIdent() && !p.isKw("TO") {
 		p.next() // SQLite ignores an optional transaction name
@@ -91,7 +91,7 @@ func (p *Parser) parseTxnWord() {
 }
 
 func (p *Parser) parseChain() bool {
-	if !p.d.Features.TransactionModes {
+	if !p.d.Features.Utility.TransactionModes {
 		return false
 	}
 	if p.acceptKwSeq("AND", "NO", "CHAIN") {
@@ -125,7 +125,7 @@ func (p *Parser) parseRollback() ast.Statement {
 func (p *Parser) parseExplain() ast.Statement {
 	p.expectKw("EXPLAIN")
 	ex := &ast.Explain{}
-	f := p.d.Features
+	f := p.d.Features.Utility
 	if f.ExplainQueryPlan && p.acceptKwSeq("QUERY", "PLAN") {
 		ex.QueryPlan = true
 	}
@@ -144,7 +144,7 @@ func (p *Parser) parseExplain() ast.Statement {
 // parseExplainable parses the statement under EXPLAIN. SQLite takes anything
 // but another EXPLAIN; PostgreSQL has a fixed list.
 func (p *Parser) parseExplainable() ast.Statement {
-	if !p.d.Features.ExplainOptions {
+	if !p.d.Features.Utility.ExplainOptions {
 		if p.isKw("EXPLAIN") {
 			p.unexpected("statement other than EXPLAIN")
 		}
@@ -482,7 +482,7 @@ func (p *Parser) parseMaintTargets() []*ast.MaintTarget {
 func (p *Parser) parseVacuum() ast.Statement {
 	p.expectKw("VACUUM")
 	v := &ast.Vacuum{}
-	if p.d.Features.VacuumInto { // SQLite: VACUUM [schema] [INTO file]
+	if p.d.Features.Utility.VacuumInto { // SQLite: VACUUM [schema] [INTO file]
 		if p.canBeIdent() {
 			id := p.parseIdent()
 			v.Schema = &id
@@ -513,7 +513,7 @@ func (p *Parser) parseVacuum() ast.Statement {
 func (p *Parser) parseAnalyze() ast.Statement {
 	p.next() // ANALYZE / ANALYSE
 	a := &ast.Analyze{}
-	if p.d.Features.ExplainOptions {
+	if p.d.Features.Utility.ExplainOptions {
 		if p.isOp("(") {
 			a.Paren = p.parseUtilityOptions(false)
 		} else {
@@ -533,7 +533,7 @@ func (p *Parser) parseAnalyze() ast.Statement {
 func (p *Parser) parseReindex() ast.Statement {
 	p.expectKw("REINDEX")
 	r := &ast.Reindex{}
-	if p.d.Features.ExtendedDDL {
+	if p.d.Features.DDL.ExtendedDDL {
 		if p.isOp("(") {
 			r.Paren = p.parseUtilityOptions(false)
 		}

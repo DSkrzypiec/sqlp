@@ -87,18 +87,25 @@ var SQLite = &Dialect{
 	UnaryMinusPrecedence: 12,
 
 	Features: Features{
-		IsAsOperator: true, NotNullPostfix: true, FreeFormTypeNames: true,
-
-		StringAlias: true, MaxNameParts: 2,
-
-		IndexedBy: true, LimitComma: true, FreeJoinKeywords: true, InTable: true,
-
-		Returning: true, InsertOr: true, UpsertMulti: true, OrderLimitInDML: true,
-
-		LooseReferences: true, WithoutRowid: true, Autoincrement: true, ConflictClause: true, VirtualTables: true,
-		TempTriggers: true,
-
-		TransactionKinds: true, ExplainQueryPlan: true, Vacuum: true, VacuumInto: true,
-		Reindex: true, Pragma: true, AttachDetach: true,
+		Expr: ExprFeatures{
+			IsAsOperator: true, NotNullPostfix: true, FreeFormTypeNames: true,
+		},
+		Names: NameFeatures{
+			StringAlias: true, MaxNameParts: 2,
+		},
+		Query: QueryFeatures{
+			IndexedBy: true, LimitComma: true, FreeJoinKeywords: true, InTable: true,
+		},
+		DML: DMLFeatures{
+			Returning: true, InsertOr: true, UpsertMulti: true, OrderLimitInDML: true,
+		},
+		DDL: DDLFeatures{
+			LooseReferences: true, WithoutRowid: true, Autoincrement: true, ConflictClause: true,
+			VirtualTables: true, TempTriggers: true,
+		},
+		Utility: UtilityFeatures{
+			TransactionKinds: true, ExplainQueryPlan: true, Vacuum: true, VacuumInto: true,
+			Reindex: true, Pragma: true, AttachDetach: true,
+		},
 	},
 }

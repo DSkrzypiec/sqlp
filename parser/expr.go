@@ -89,11 +89,11 @@ func (p *Parser) infixOp() (op string, prec int, ok bool) {
 		case "(", ")", ",", ";", "]", "=>":
 			return "", 0, false
 		case "::":
-			if !p.d.Features.DoubleColonCast {
+			if !p.d.Features.Expr.DoubleColonCast {
 				return "", 0, false
 			}
 		case "[":
-			if !p.d.Features.ArrayLiterals {
+			if !p.d.Features.Expr.ArrayLiterals {
 				return "", 0, false
 			}
 		}
@@ -101,7 +101,7 @@ func (p *Parser) infixOp() (op string, prec int, ok bool) {
 		return t.Text, prec, ok
 	case lexer.Ident:
 		kw := t.Value
-		if p.d.Features.KeywordLabels && p.d.Precedence[kw] != 0 && !p.d.AsOnlyLabels[kw] && p.noOperandAt(1) {
+		if p.d.Features.Names.KeywordLabels && p.d.Precedence[kw] != 0 && !p.d.AsOnlyLabels[kw] && p.noOperandAt(1) {
 			return "", 0, false // `SELECT a is, b`: a bare label, not an operator
 		}
 		switch kw {
@@ -112,7 +112,7 @@ func (p *Parser) infixOp() (op string, prec int, ok bool) {
 			if inner.Kind != lexer.Ident {
 				return "", 0, false
 			}
-			if inner.Value == "NULL" && p.d.Features.NotNullPostfix {
+			if inner.Value == "NULL" && p.d.Features.Expr.NotNullPostfix {
 				return "NOT NULL", p.d.Precedence["NOTNULL"], true
 			}
 			switch inner.Value {
@@ -314,7 +314,7 @@ func unwrapParenQuery(q *ast.Query) *ast.Query {
 // finishRow parses `row OVERLAPS row`. The grammar makes it a whole operand
 // rather than an infix operator, so 1 / (a, b) OVERLAPS (c, d) is valid.
 func (p *Parser) finishRow(row *ast.Tuple) ast.Expr {
-	if !p.d.Features.Overlaps || !p.isKw("OVERLAPS") {
+	if !p.d.Features.Expr.Overlaps || !p.isKw("OVERLAPS") {
 		return row
 	}
 	pos := p.next().Pos
@@ -334,8 +334,8 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 	p.next()
 	switch op {
 	case "BETWEEN":
-		sym := p.d.Features.BetweenSymmetric && p.acceptKw("SYMMETRIC")
-		if !sym && p.d.Features.BetweenSymmetric {
+		sym := p.d.Features.Expr.BetweenSymmetric && p.acceptKw("SYMMETRIC")
+		if !sym && p.d.Features.Expr.BetweenSymmetric {
 			p.acceptKw("ASYMMETRIC")
 		}
 		low := p.parseExprPrec(prec)
@@ -344,7 +344,7 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 		return &ast.Between{Expr: left, Not: not, Symmetric: sym, Low: low, High: high}
 	case "IN":
 		in := &ast.In{Expr: left, Not: not}
-		if p.d.Features.InTable && !p.isOp("(") {
+		if p.d.Features.Query.InTable && !p.isOp("(") {
 			name := p.parseName()
 			if p.isOp("(") {
 				in.Func = p.parseFuncCall(name)
@@ -363,7 +363,7 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 				list = append(list, p.parseExpr())
 			}
 			in.List = list
-		case p.isOp(")") && p.d.Features.InTable:
+		case p.isOp(")") && p.d.Features.Query.InTable:
 			in.List = []ast.Expr{}
 		default:
 			in.List = p.parseExprList()
@@ -407,17 +407,17 @@ func (p *Parser) parseIs(left ast.Expr, prec int) ast.Expr {
 		is.Kind = ast.IsTrue
 	case !operand && p.acceptKw("FALSE"):
 		is.Kind = ast.IsFalse
-	case p.d.Features.IsUnknown && p.acceptKw("UNKNOWN"):
+	case p.d.Features.Expr.IsUnknown && p.acceptKw("UNKNOWN"):
 		is.Kind = ast.IsUnknown
-	case p.d.Features.IsUnknown && p.parseIsOther(is):
+	case p.d.Features.Expr.IsUnknown && p.parseIsOther(is):
 	case p.acceptKwSeq("DISTINCT", "FROM"):
 		is.Kind = ast.IsDistinctFrom
 		is.Other = p.parseExprPrec(prec)
-		if _, next, ok := p.infixOp(); ok && next == prec && p.d.Features.DistinctFromNonAssoc {
+		if _, next, ok := p.infixOp(); ok && next == prec && p.d.Features.Expr.DistinctFromNonAssoc {
 			p.unexpected("end of IS DISTINCT FROM")
 		}
 	default:
-		if !p.d.Features.IsAsOperator {
+		if !p.d.Features.Expr.IsAsOperator {
 			p.unexpected("NULL, TRUE, FALSE, UNKNOWN or DISTINCT FROM")
 		}
 		// SQLite: IS / IS NOT as a general null-safe equality operator.
@@ -434,7 +434,7 @@ func (p *Parser) parseIs(left ast.Expr, prec int) ast.Expr {
 // larger right operand: where IS is an ordinary operator, x IS NULL + 1 means
 // x IS (NULL + 1).
 func (p *Parser) isConstantOperand(prec int) bool {
-	if !p.d.Features.IsAsOperator || !p.isKw("NULL", "TRUE", "FALSE") {
+	if !p.d.Features.Expr.IsAsOperator || !p.isKw("NULL", "TRUE", "FALSE") {
 		return false
 	}
 	p.pos++
@@ -542,7 +542,7 @@ func (p *Parser) parsePrimary() ast.Expr {
 		}
 		return &ast.Literal{Kind: kind, Value: t.Text}
 	case lexer.String:
-		if p.d.Features.StringAlias && p.isOpAt(1, ".") { // SQLite: 'tbl'.col
+		if p.d.Features.Names.StringAlias && p.isOpAt(1, ".") { // SQLite: 'tbl'.col
 			return p.parseNameExpr()
 		}
 		return p.parseStringLit()
@@ -602,7 +602,7 @@ func (p *Parser) parseWordExpr() ast.Expr {
 		p.next()
 		return &ast.Literal{Kind: ast.Null}
 	case "COLLATION":
-		if p.isKwAt(1, "FOR") && p.isOpAt(2, "(") && p.d.Features.StandardFuncSyntax {
+		if p.isKwAt(1, "FOR") && p.isOpAt(2, "(") && p.d.Features.Expr.StandardFuncSyntax {
 			p.pos += 2
 			return &ast.Unary{Op: "COLLATION FOR", Expr: p.parseParenExpr()}
 		}
@@ -617,7 +617,7 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			return &ast.Literal{Kind: ast.False}
 		}
 	case "DEFAULT":
-		if p.d.Features.DefaultExpr {
+		if p.d.Features.Expr.DefaultExpr {
 			p.next()
 			return &ast.Default{}
 		}
@@ -629,11 +629,11 @@ func (p *Parser) parseWordExpr() ast.Expr {
 		}
 		p.unexpected(`"(" after CAST`)
 	case "TRY_CAST":
-		if p.d.Features.TryCast && p.isOpAt(1, "(") {
+		if p.d.Features.Expr.TryCast && p.isOpAt(1, "(") {
 			return p.parseCast()
 		}
 	case "RAISE":
-		if p.d.Features.FreeFormTypeNames {
+		if p.d.Features.Expr.FreeFormTypeNames {
 			return p.parseRaise()
 		}
 	case "EXISTS":
@@ -645,11 +645,11 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			return &ast.Exists{Query: q}
 		}
 	case "ARRAY":
-		if p.d.Features.ArrayLiterals && (p.isOpAt(1, "[") || p.isOpAt(1, "(")) {
+		if p.d.Features.Expr.ArrayLiterals && (p.isOpAt(1, "[") || p.isOpAt(1, "(")) {
 			return p.parseArray()
 		}
 	case "ROW":
-		if p.d.Features.RowConstructor && p.isOpAt(1, "(") {
+		if p.d.Features.Expr.RowConstructor && p.isOpAt(1, "(") {
 			p.next()
 			p.expectOp("(")
 			tup := &ast.Tuple{Row: true}
@@ -660,7 +660,7 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			return p.finishRow(tup)
 		}
 	case "EXTRACT":
-		if p.d.Features.StandardFuncSyntax && p.isOpAt(1, "(") {
+		if p.d.Features.Expr.StandardFuncSyntax && p.isOpAt(1, "(") {
 			p.next()
 			p.expectOp("(")
 			e := &ast.Extract{}
@@ -681,15 +681,15 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			return e
 		}
 	case "SUBSTRING":
-		if p.isOpAt(1, "(") && p.d.Features.StandardFuncSyntax {
+		if p.isOpAt(1, "(") && p.d.Features.Expr.StandardFuncSyntax {
 			return p.parseSubstring()
 		}
 	case "TRIM":
-		if p.isOpAt(1, "(") && p.d.Features.StandardFuncSyntax {
+		if p.isOpAt(1, "(") && p.d.Features.Expr.StandardFuncSyntax {
 			return p.parseTrim()
 		}
 	case "POSITION":
-		if p.isOpAt(1, "(") && p.d.Features.StandardFuncSyntax {
+		if p.isOpAt(1, "(") && p.d.Features.Expr.StandardFuncSyntax {
 			p.next()
 			p.expectOp("(")
 			sub := p.parseBExpr()
@@ -699,7 +699,7 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			return pos
 		}
 	case "OVERLAY":
-		if p.d.Features.StandardFuncSyntax && p.isOpAt(1, "(") {
+		if p.d.Features.Expr.StandardFuncSyntax && p.isOpAt(1, "(") {
 			if e := p.tryOverlay(); e != nil {
 				return e
 			}
@@ -708,7 +708,7 @@ func (p *Parser) parseWordExpr() ast.Expr {
 	if p.d.BareFuncs[t.Value] && !p.isBareFuncCall() {
 		return p.parseBareFunc()
 	}
-	if p.d.Features.TypedStringLiteral && (!p.d.IsReserved(t.Value) || p.d.FuncNameKeywords[t.Value]) {
+	if p.d.Features.Expr.TypedStringLiteral && (!p.d.IsReserved(t.Value) || p.d.FuncNameKeywords[t.Value]) {
 		if ts := p.tryTypedString(); ts != nil {
 			return ts
 		}
@@ -749,7 +749,7 @@ func (p *Parser) parseBareFunc() ast.Expr {
 	fc := &ast.FuncCall{Name: &ast.Name{Parts: []ast.Ident{{Name: t.Text}}}, NoParens: true}
 	switch t.Value {
 	case "CURRENT_TIME", "CURRENT_TIMESTAMP", "LOCALTIME", "LOCALTIMESTAMP":
-		if p.d.Features.StandardFuncSyntax && p.acceptOp("(") { // SQLite's are keywords, never called
+		if p.d.Features.Expr.StandardFuncSyntax && p.acceptOp("(") { // SQLite's are keywords, never called
 			if p.peek().Kind != lexer.Number {
 				p.unexpected("precision")
 			}
@@ -858,19 +858,19 @@ func (p *Parser) parseNameExpr() ast.Expr {
 	}
 	name := &ast.Name{Parts: []ast.Ident{first}}
 	for p.isOp(".") {
-		if p.isOpAt(1, "*") && p.d.Features.KeywordLabels {
+		if p.isOpAt(1, "*") && p.d.Features.Names.KeywordLabels {
 			p.next()
 			p.next()
 			return &ast.Star{Qualifier: name}
 		}
-		if limit := p.d.Features.MaxNameParts; limit > 0 && len(name.Parts) > limit {
+		if limit := p.d.Features.Names.MaxNameParts; limit > 0 && len(name.Parts) > limit {
 			p.unexpected("end of column reference") // schema.table.column at most
 		}
 		p.next()
 		name.Parts = append(name.Parts, p.parseLabel())
 	}
 	if p.isOp("(") {
-		if len(name.Parts) > 1 && !p.d.Features.QualifiedFunctions {
+		if len(name.Parts) > 1 && !p.d.Features.Names.QualifiedFunctions {
 			p.unexpected("end of column reference")
 		}
 		if word := strings.ToUpper(first.Name); len(name.Parts) == 1 && !first.Quoted &&
@@ -878,13 +878,13 @@ func (p *Parser) parseNameExpr() ast.Expr {
 			p.errorf(t.Pos, "%s cannot be used as a function name", t.Text)
 		}
 		fc := p.parseFuncCall(name)
-		if p.d.Features.TypedStringLiteral && p.peek().Kind == lexer.String && fc.Over == nil && fc.Filter == nil {
+		if p.d.Features.Expr.TypedStringLiteral && p.peek().Kind == lexer.String && fc.Over == nil && fc.Filter == nil {
 			// numeric(10, 2) '1.5': a modified type name, not a call
 			return &ast.TypedString{Type: &ast.DataType{Name: nameText(name), Args: fc.Args}, Value: p.parseStringValue()}
 		}
 		return fc
 	}
-	if len(name.Parts) > 1 && p.d.Features.TypedStringLiteral && p.peek().Kind == lexer.String {
+	if len(name.Parts) > 1 && p.d.Features.Expr.TypedStringLiteral && p.peek().Kind == lexer.String {
 		return &ast.TypedString{Type: &ast.DataType{Name: nameText(name)}, Value: p.parseStringValue()}
 	}
 	return name
@@ -912,7 +912,7 @@ func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 				p.acceptKw("ALL")
 			}
 			// SQLite allows COUNT(DISTINCT), and rejects it only at analysis.
-			if !p.d.Features.FreeFormTypeNames || !p.isOp(")") && !p.isKwSeq("ORDER", "BY") {
+			if !p.d.Features.Expr.FreeFormTypeNames || !p.isOp(")") && !p.isKwSeq("ORDER", "BY") {
 				fc.Args = []ast.Expr{p.parseFuncArg()}
 				for p.acceptOp(",") {
 					fc.Args = append(fc.Args, p.parseFuncArg())
@@ -966,7 +966,7 @@ func (p *Parser) checkCallArgs(fc *ast.FuncCall) {
 
 // parseFuncTail parses WITHIN GROUP, FILTER and OVER after the argument list.
 func (p *Parser) parseFuncTail(fc *ast.FuncCall) {
-	if p.d.Features.WithinGroup && p.acceptKwSeq("WITHIN", "GROUP") {
+	if p.d.Features.Expr.WithinGroup && p.acceptKwSeq("WITHIN", "GROUP") {
 		if len(fc.OrderBy) > 0 {
 			p.errorf(p.peek().Pos, "cannot use multiple ORDER BY clauses with WITHIN GROUP")
 		}
@@ -1030,10 +1030,10 @@ func (p *Parser) takeRawArgs() string {
 var jsonEncodings = map[string]bool{"UTF8": true, "UTF16": true, "UTF32": true}
 
 func (p *Parser) parseFuncArg() ast.Expr {
-	if p.d.Features.VariadicArgs && p.acceptKw("VARIADIC") {
+	if p.d.Features.Expr.VariadicArgs && p.acceptKw("VARIADIC") {
 		return &ast.Unary{Op: "VARIADIC", Expr: p.parseExpr()}
 	}
-	if p.d.Features.NamedArgs && p.canBeIdent() && !p.d.ColNameKeywords[p.peek().Value] && (p.isOpAt(1, "=>") || p.isOpAt(1, ":=")) {
+	if p.d.Features.Expr.NamedArgs && p.canBeIdent() && !p.d.ColNameKeywords[p.peek().Value] && (p.isOpAt(1, "=>") || p.isOpAt(1, ":=")) {
 		id := p.parseIdent()
 		p.next()
 		return &ast.NamedArg{Name: id, Value: p.parseExpr()}
@@ -1072,7 +1072,7 @@ func (p *Parser) parseCast() ast.Expr {
 	e := p.parseExpr()
 	p.expectKw("AS")
 	c := &ast.Cast{Expr: e, Style: style}
-	if p.d.Features.FreeFormTypeNames && p.isOp(")") { // SQLite allows no type at all
+	if p.d.Features.Expr.FreeFormTypeNames && p.isOp(")") { // SQLite allows no type at all
 		c.Type = &ast.DataType{}
 	} else {
 		c.Type = p.parseType()
@@ -1099,7 +1099,7 @@ func (p *Parser) parseArrayBody(arr *ast.Array) {
 	arr.Elems = []ast.Expr{}
 	nested := p.isOp("[") // all elements are sub-arrays, or none (PostgreSQL)
 	for !p.isOp("]") {
-		if p.isOp("[") != nested && p.d.Features.ArrayLiterals {
+		if p.isOp("[") != nested && p.d.Features.Expr.ArrayLiterals {
 			p.unexpected("element of the same kind as the first")
 		}
 		if p.isOp("[") {
@@ -1189,12 +1189,12 @@ func (p *Parser) parseType() *ast.DataType {
 	t := p.peek()
 	dt := &ast.DataType{}
 	switch {
-	case p.d.Features.FreeFormTypeNames && (t.Kind == lexer.QuotedIdent || t.Kind == lexer.String):
+	case p.d.Features.Expr.FreeFormTypeNames && (t.Kind == lexer.QuotedIdent || t.Kind == lexer.String):
 		p.next()
 		dt.Name = p.parseTypeWords(t)
 	case t.Kind == lexer.QuotedIdent:
 		dt.Name = nameText(p.parseName())
-	case t.Kind == lexer.Ident && t.Value == "SETOF" && p.d.Features.ExtendedDDL:
+	case t.Kind == lexer.Ident && t.Value == "SETOF" && p.d.Features.DDL.ExtendedDDL:
 		p.next()
 		if p.isKw("SETOF") {
 			p.unexpected("type name")
@@ -1212,7 +1212,7 @@ func (p *Parser) parseType() *ast.DataType {
 		p.unexpected("type name")
 	}
 	p.parseTypeArgs(dt)
-	if p.d.Features.FreeFormTypeNames {
+	if p.d.Features.Expr.FreeFormTypeNames {
 		return dt
 	}
 	switch strings.ToUpper(dt.Name) {
@@ -1244,14 +1244,14 @@ var noArgTypes = map[string]bool{
 }
 
 func (p *Parser) parseTypeArgs(dt *ast.DataType) {
-	if !p.d.Features.FreeFormTypeNames && noArgTypes[strings.ToUpper(dt.Name)] {
+	if !p.d.Features.Expr.FreeFormTypeNames && noArgTypes[strings.ToUpper(dt.Name)] {
 		return
 	}
 	if !p.acceptOp("(") {
 		return
 	}
 	switch {
-	case p.d.Features.FreeFormTypeNames:
+	case p.d.Features.Expr.FreeFormTypeNames:
 		dt.Args = []ast.Expr{p.parseSignedNumber()}
 		if p.acceptOp(",") {
 			dt.Args = append(dt.Args, p.parseSignedNumber())
@@ -1286,7 +1286,7 @@ func (p *Parser) parseSignedNumber() ast.Expr {
 func (p *Parser) parseTypeWords(first lexer.Token) string {
 	words := []string{first.Text}
 	switch {
-	case p.d.Features.FreeFormTypeNames:
+	case p.d.Features.Expr.FreeFormTypeNames:
 		// SQLite: any run of bare words is a type name (UNSIGNED BIG INT).
 		for p.isFreeFormTypeWord() {
 			words = append(words, p.next().Text)
@@ -1326,7 +1326,7 @@ func (p *Parser) isFreeFormTypeWord() bool {
 
 // parseArrayBounds parses [] and [n], any number of them, or a single ARRAY [n].
 func (p *Parser) parseArrayBounds(dt *ast.DataType) {
-	if !p.d.Features.ArrayLiterals {
+	if !p.d.Features.Expr.ArrayLiterals {
 		return
 	}
 	sized := func() (string, bool) {
@@ -1404,7 +1404,7 @@ func (p *Parser) parseOrderItems() []*ast.OrderItem {
 func (p *Parser) parseOrderItem() *ast.OrderItem {
 	item := &ast.OrderItem{Expr: p.parseExpr()}
 	item.Direction = p.acceptOneOf("ASC", "DESC")
-	if item.Direction == "" && p.d.Features.OrderByUsing && p.acceptKw("USING") {
+	if item.Direction == "" && p.d.Features.Query.OrderByUsing && p.acceptKw("USING") {
 		switch t := p.peek(); {
 		case p.isKw("OPERATOR"):
 			item.Using = p.parseOperatorName()
@@ -1472,7 +1472,7 @@ func (p *Parser) checkFrame(f *ast.Frame) {
 		p.errorf(pos, "frame start cannot be UNBOUNDED FOLLOWING")
 	}
 	if f.End == nil {
-		if p.d.Features.StrictFrames && f.Start.Kind == ast.Following {
+		if p.d.Features.Query.StrictFrames && f.Start.Kind == ast.Following {
 			p.errorf(pos, "frame starting from following row cannot end with current row")
 		}
 		return
@@ -1480,7 +1480,7 @@ func (p *Parser) checkFrame(f *ast.Frame) {
 	if f.End.Kind == ast.UnboundedPreceding {
 		p.errorf(pos, "frame end cannot be UNBOUNDED PRECEDING")
 	}
-	if !p.d.Features.StrictFrames {
+	if !p.d.Features.Query.StrictFrames {
 		return
 	}
 	if f.Start.Kind == ast.CurrentRow && f.End.Kind == ast.Preceding {
@@ -1499,7 +1499,7 @@ func (p *Parser) parseFrameBound() *ast.FrameBound {
 		return &ast.FrameBound{Kind: ast.UnboundedPreceding}
 	case p.acceptKwSeq("UNBOUNDED", "FOLLOWING"):
 		return &ast.FrameBound{Kind: ast.UnboundedFollowing}
-	case p.d.Features.FreeFormTypeNames && p.isKw("CURRENT", "UNBOUNDED"):
+	case p.d.Features.Expr.FreeFormTypeNames && p.isKw("CURRENT", "UNBOUNDED"):
 		p.unexpected("frame bound") // keywords here in SQLite, never column names
 	}
 	e := p.parseExpr()
