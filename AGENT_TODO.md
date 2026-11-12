@@ -788,8 +788,11 @@ because the sample tables are recreated on every run.
   `(expr).* EXCEPT (…)` (19), `PIVOT`/`UNPIVOT` (about 11, also as pipe steps),
   multi-level aggregation `SUM(AVG(x) GROUP BY y)` (4), `STRICT CORRESPONDING`
   (3), method calls `'a'.REPLACE(…)`, the remaining 80 accepted invalid ones.
-  Also a reserved-word probe (`SELECT 1 AS kw` for every keyword) and a
-  function-name probe, as section 1.9 did for the other dialects.
+  The reserved words are checked: `corpusgen -bigquery-keywords` tries every
+  keyword sqlp knows (286) as an alias, and all agree (MATCH_RECOGNIZE is
+  reserved though the reference's list leaves it out). Still to do: a
+  function-name probe (`SELECT fn()`: "Function not found" or not) to fill
+  `dialect.BigQuery.Functions` for Transpile's warnings.
 - [ ] 4. DML: `INSERT` (optional `INTO`), `UPDATE`, `DELETE`, `MERGE`, `TRUNCATE`.
 - [ ] 5. DDL and DCL: `OPTIONS`, `PARTITION BY`, `CLUSTER BY`, tables, views,
   functions, procedures, schemas, `ALTER`, policies, indexes, `GRANT`.

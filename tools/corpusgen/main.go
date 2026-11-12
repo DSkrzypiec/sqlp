@@ -73,6 +73,7 @@ func main() {
 	bqProbe := flag.String("bq-probe", "", "print BigQuery's verdict on each statement of this file")
 	bqDocs := flag.String("bq-docs", "", "with -bigquery: the reference pages saved by -bq-docs-fetch")
 	bqDocsFetch := flag.String("bq-docs-fetch", "", "save the examples of the BigQuery SQL reference in this directory")
+	bqKeywords := flag.Bool("bigquery-keywords", false, "check dialect.BigQuery.Reserved word by word against BigQuery")
 	home, _ := os.UserHomeDir()
 	bqCache := flag.String("bq-cache", filepath.Join(home, ".cache", "sqlp", "bigquery.jsonl"), "BigQuery answers already received")
 	flag.IntVar(&workers, "workers", workers, "statements checked at a time")
@@ -80,6 +81,12 @@ func main() {
 
 	if *bqProbe != "" {
 		newBigQuery(*bqCache).probe(*bqProbe)
+		return
+	}
+	if *bqKeywords {
+		if newBigQuery(*bqCache).checkKeywords() {
+			os.Exit(1)
+		}
 		return
 	}
 	if *bqDocsFetch != "" {

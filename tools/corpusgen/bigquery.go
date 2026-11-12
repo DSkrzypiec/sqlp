@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"maps"
 	"net/http"
 	"os"
 	"os/exec"
@@ -25,6 +26,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"sqlp/dialect"
 )
 
 const (
@@ -623,4 +626,43 @@ func fetchDocs(dir string) {
 		time.Sleep(300 * time.Millisecond)
 	}
 	fmt.Printf("bigquery docs: %d pages, %d code blocks, in %s\n", len(pages), blocks, dir)
+}
+
+// checkKeywords tries every keyword sqlp knows of, in any dialect, as an alias
+// (SELECT 1 AS word): BigQuery refuses a reserved word there with a syntax
+// error. It prints the words where dialect.BigQuery.Reserved disagrees and
+// reports whether there were any.
+func (b *bigQuery) checkKeywords() bool {
+	words := map[string]bool{}
+	for _, d := range dialect.All {
+		for _, set := range []map[string]bool{d.Reserved, d.FuncNameKeywords, d.ColNameKeywords, d.AsOnlyLabels,
+			d.TypeKeywords, d.SpecialFuncs, d.BareFuncs, d.NotAlias, d.TypedLiterals} {
+			for w := range set {
+				words[w] = true
+			}
+		}
+	}
+	for _, w := range strings.Fields(`QUALIFY PIVOT UNPIVOT OFFSET ORDINAL SAFE_OFFSET SAFE_ORDINAL REPLACE OPTIONS
+		CLUSTER EXTEND AGGREGATE RENAME DROP CALL ASSERT EXPORT LOAD MODEL TABLE SYSTEM_TIME DIFFERENTIAL_PRIVACY
+		AGGREGATION_THRESHOLD CORRESPONDING STRICT NAME UNNEST STRUCT ARRAY RANGE INTERVAL JSON GRAPH_TABLE MATCH_RECOGNIZE
+		SAFE_CAST DECLARE BEGIN EXCEPTION RAISE RETURN LOOP WHILE REPEAT UNTIL ITERATE LEAVE BREAK CONTINUE ELSEIF
+		EXECUTE IMMEDIATE TRANSACTION COMMIT ROLLBACK TRUNCATE MERGE MATCHED SOURCE TARGET TEMP TEMPORARY VIEW
+		MATERIALIZED SCHEMA FUNCTION PROCEDURE RETURNS LANGUAGE CONNECTION FILES SNAPSHOT CLONE COPY POLICY ACCESS
+		GRANT REVOKE FILTER INDEX SEARCH VECTOR`) {
+		words[w] = true
+	}
+	list := slices.Sorted(maps.Keys(words))
+	reserved := parallel(list, func(w string) bool {
+		reject, _ := verdict(b.dry("SELECT 1 AS " + w))
+		return reject
+	})
+	wrong := 0
+	for i, w := range list {
+		if reserved[i] != dialect.BigQuery.Reserved[w] {
+			wrong++
+			fmt.Printf("%-28s BigQuery: reserved=%v, dialect.BigQuery.Reserved=%v\n", w, reserved[i], dialect.BigQuery.Reserved[w])
+		}
+	}
+	fmt.Printf("bigquery keywords: %d words tried, %d disagree\n", len(list), wrong)
+	return wrong > 0
 }

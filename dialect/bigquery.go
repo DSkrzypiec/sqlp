@@ -3,15 +3,16 @@ package dialect
 import "sqlp/lexer"
 
 // bigQueryReserved is the reserved keyword list of the BigQuery lexical
-// reference (GoogleSQL for BigQuery, 2026-11-12). tools/corpusgen
-// -bigquery-keywords probes every word against BigQuery.
+// reference (GoogleSQL for BigQuery, 2026-11-12), plus MATCH_RECOGNIZE, which
+// BigQuery reserves though the list leaves it out. tools/corpusgen
+// -bigquery-keywords tries every keyword sqlp knows against BigQuery.
 var bigQueryReserved = set(
 	"ALL", "AND", "ANY", "ARRAY", "AS", "ASC", "ASSERT_ROWS_MODIFIED", "AT", "BETWEEN", "BY",
 	"CASE", "CAST", "COLLATE", "CONTAINS", "CREATE", "CROSS", "CUBE", "CURRENT", "DEFAULT",
 	"DEFINE", "DESC", "DISTINCT", "ELSE", "END", "ENUM", "ESCAPE", "EXCEPT", "EXCLUDE", "EXISTS",
 	"EXTRACT", "FALSE", "FETCH", "FOLLOWING", "FOR", "FROM", "FULL", "GRAPH_TABLE", "GROUP",
 	"GROUPING", "GROUPS", "HASH", "HAVING", "IF", "IGNORE", "IN", "INNER", "INTERSECT", "INTERVAL",
-	"INTO", "IS", "JOIN", "LATERAL", "LEFT", "LIKE", "LIMIT", "LOOKUP", "MERGE", "NATURAL", "NEW",
+	"INTO", "IS", "JOIN", "LATERAL", "LEFT", "LIKE", "LIMIT", "LOOKUP", "MATCH_RECOGNIZE", "MERGE", "NATURAL", "NEW",
 	"NO", "NOT", "NULL", "NULLS", "OF", "ON", "OR", "ORDER", "OUTER", "OVER", "PARTITION",
 	"PRECEDING", "PROTO", "QUALIFY", "RANGE", "RECURSIVE", "RESPECT", "RIGHT", "ROLLUP", "ROWS",
 	"SELECT", "SET", "SOME", "STRUCT", "TABLESAMPLE", "THEN", "TO", "TREAT", "TRUE", "UNBOUNDED",
