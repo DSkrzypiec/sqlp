@@ -36,6 +36,10 @@ type Dialect struct {
 	// AsOnlyLabels holds words that need AS to be a select-list label
 	// (PostgreSQL's AS_LABEL keywords). Only used with Features.KeywordLabels.
 	AsOnlyLabels map[string]bool
+	// TypedLiterals, when set, holds the only type names that may come before a
+	// string literal, as in DATE '2020-01-01' (BigQuery). Otherwise any type
+	// name may (Features.Expr.TypedStringLiteral).
+	TypedLiterals map[string]bool
 	// BareFuncs holds keywords that are function calls without parentheses.
 	BareFuncs map[string]bool
 	// Functions holds the upper-cased names of the built-in functions, so
@@ -85,12 +89,17 @@ type ExprFeatures struct {
 	IsUnknown            bool // IS [NOT] UNKNOWN keyword form
 	NotNullPostfix       bool // a NOT NULL as a predicate (SQLite)
 	TypedStringLiteral   bool // DATE '2020-01-01', int4 '7'
+	LikeEscape           bool // LIKE pattern ESCAPE char
 	AtTimeZone           bool
 	NamedArgs            bool // f(a => 1)
 	VariadicArgs         bool // f(VARIADIC arr)
 	WithinGroup          bool
 	StandardFuncSyntax   bool // EXTRACT(x FROM y), TRIM(BOTH ...), OVERLAY, POSITION(a IN b)
 	FreeFormTypeNames    bool // any run of words is a type name (SQLite)
+	AtParams             bool // @name, @`name`, @ name and @@system_variable (BigQuery)
+	FreePostfix          bool // . and [ ] apply to any operand, not only names, parentheses and subqueries (BigQuery)
+	BracketArrays        bool // [1, 2] is an array without the word ARRAY (BigQuery)
+	Int64Literals        bool // integer literals must fit INT64, -9223372036854775808 included (BigQuery)
 }
 
 // NameFeatures lists how names, labels and qualified names may be written.
@@ -108,6 +117,8 @@ type QueryFeatures struct {
 	ParenQueries          bool // (SELECT ...) UNION (SELECT ...)
 	IntersectBindsTighter bool // false: all set operators share one level
 	SetQuantifiers        bool // UNION DISTINCT, INTERSECT ALL, EXCEPT ALL
+	SetQuantifierRequired bool // set operators must say DISTINCT, or ALL after UNION (BigQuery)
+	UnmixedSetOps         bool // one chain repeats one set operator; another needs parentheses (BigQuery)
 	EmptySelectList       bool // SELECT FROM t
 	SelectInto            bool
 	DistinctOn            bool
@@ -244,6 +255,9 @@ func IsOperatorText(s string) bool {
 	return true
 }
 
+// All lists the built-in dialects.
+var All = []*Dialect{Postgres, SQLite, BigQuery}
+
 // ByName returns a built-in dialect by (case-insensitive) name.
 func ByName(name string) (*Dialect, bool) {
 	switch strings.ToLower(name) {
@@ -251,6 +265,8 @@ func ByName(name string) (*Dialect, bool) {
 		return Postgres, true
 	case "sqlite", "sqlite3":
 		return SQLite, true
+	case "bigquery", "bq":
+		return BigQuery, true
 	}
 	return nil, false
 }

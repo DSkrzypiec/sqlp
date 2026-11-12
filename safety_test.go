@@ -13,7 +13,7 @@ import (
 // eachDialect runs f as a subtest for every selected dialect.
 func eachDialect(t *testing.T, f func(t *testing.T, d *dialect.Dialect)) {
 	t.Helper()
-	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+	for _, d := range dialect.All {
 		testkit.Run(t, d.Name, func(t *testing.T) { f(t, d) })
 	}
 }
@@ -59,7 +59,7 @@ func TestMaxBytesExceeded(t *testing.T) {
 }
 
 // longUnion is valid in every dialect and long enough to reach a context check.
-var longUnion = strings.Repeat("SELECT 1 UNION ", 5000) + "SELECT 1"
+var longUnion = strings.Repeat("SELECT 1 UNION ALL ", 5000) + "SELECT 1"
 
 func TestParseContextCancellation(t *testing.T) {
 	eachDialect(t, func(t *testing.T, d *dialect.Dialect) {

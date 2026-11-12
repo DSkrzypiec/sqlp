@@ -11,6 +11,11 @@ type ANSICase struct {
 	Dialects []string
 }
 
+// ANSIDialects are the dialects whose verdicts the table's labels hold.
+// BigQuery's are frozen by tools/corpusgen -bigquery in
+// testdata/corpus/bigquery/ansi.jsonl instead, with the other BigQuery verdicts.
+var ANSIDialects = []string{"postgres", "sqlite"}
+
 // Accepted reports whether the named dialect's engine accepts the statement.
 func (c ANSICase) Accepted(dialect string) bool { return slices.Contains(c.Dialects, dialect) }
 

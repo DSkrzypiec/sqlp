@@ -46,6 +46,8 @@ type Token struct {
 	Escape bool
 	// Unicode is set on String tokens written as U&'...' (PostgreSQL).
 	Unicode bool
+	// Bytes is set on String tokens written as b'...' (BigQuery).
+	Bytes bool
 }
 
 func (t Token) String() string {
@@ -107,6 +109,24 @@ type Config struct {
 	// CommentEndsAtCR ends a -- comment at a carriage return as well as at a
 	// line feed (PostgreSQL). SQLite ends it only at a line feed.
 	CommentEndsAtCR bool
+	// BackslashEscapes makes a backslash escape the next character in strings
+	// and quoted identifiers, where a doubled quote is not an escape (BigQuery).
+	// The escapes are decoded into Value and invalid ones are errors.
+	BackslashEscapes bool
+	// DoubleQuotedStrings makes "..." a string, not a name (BigQuery).
+	DoubleQuotedStrings bool
+	// PrefixedStrings enables raw r'...' and bytes b'...' literals, in either
+	// order and case, and tripled quotes ''' or """ that may span lines
+	// (BigQuery). It goes with BackslashEscapes.
+	PrefixedStrings bool
+	// AdjacentStrings joins literals separated by whitespace or comments into
+	// one; literals with nothing between them are an error (BigQuery).
+	AdjacentStrings bool
+	// HashComments makes # start a line comment (BigQuery).
+	HashComments bool
+	// ASCIIIdents allows only ASCII letters, digits and _ in bare names
+	// (BigQuery). Otherwise any byte >= 0x80 and $ count too.
+	ASCIIIdents bool
 	// BOMIsSpace treats a UTF-8 byte-order mark between tokens as whitespace
 	// (SQLite). Elsewhere its bytes are identifier characters.
 	BOMIsSpace bool
@@ -157,15 +177,20 @@ func (l *Lexer) Next() Token {
 func (l *Lexer) scan(start int) Token {
 	c := l.src[l.pos]
 	switch {
-	case c == '-' && l.peekAt(1) == '-':
+	case c == '-' && l.peekAt(1) == '-', c == '#' && l.cfg.HashComments:
 		return l.lineComment(start)
+	case l.cfg.BackslashEscapes && (c == '\'' || c == '"' && l.cfg.DoubleQuotedStrings):
+		return l.backslashString(start, false, false)
 	case c == '/' && l.peekAt(1) == '*' && !(l.cfg.LaxBlockComments && l.pos+2 >= len(l.src)):
 		return l.blockComment(start) // SQLite reads a final "/*" as two operators
 	case c == '\'':
 		return l.quotedString(start, false)
 	case c == '"' || strings.IndexByte(l.cfg.IdentQuotes, c) >= 0:
 		if c == '"' && strings.IndexByte(l.cfg.IdentQuotes, '"') < 0 {
-			return l.illegal(start, "unexpected character %q", c)
+			return l.unexpectedChar(start)
+		}
+		if l.cfg.BackslashEscapes {
+			return l.backslashIdent(start, c)
 		}
 		return l.quotedIdent(start, c)
 	case isDigit(c), c == '.' && isDigit(l.peekAt(1)):
@@ -196,7 +221,11 @@ func (l *Lexer) scan(start int) Token {
 		return l.dollar(start)
 	case strings.IndexByte(l.cfg.ParamPrefixes, c) >= 0 && l.paramFollows(c):
 		return l.param(start)
-	case isIdentStart(c):
+	case l.identStart(c):
+		if raw, bytes, n, ok := l.stringStartAt(l.pos); ok && n > 0 {
+			l.pos += n
+			return l.backslashString(start, raw, bytes)
+		}
 		return l.ident(start)
 	case strings.IndexByte("(),;[]", c) >= 0:
 		l.pos++
@@ -216,7 +245,7 @@ func (l *Lexer) scan(start int) Token {
 	case isOpChar(c) || c == ':':
 		return l.operator(start)
 	}
-	return l.illegal(start, "unexpected character %q", c)
+	return l.unexpectedChar(start)
 }
 
 // --- helpers -------------------------------------------------------------
@@ -225,6 +254,18 @@ func (l *Lexer) tok(k Kind, start int) Token {
 	text := l.src[start:l.pos]
 	return Token{Kind: k, Text: text, Value: text, Pos: start}
 }
+
+// unexpectedChar reports a character that starts no token. Unlike other
+// lexing errors it does not end the input: the lexer resumes after it, so a
+// script can go on with its next statement.
+func (l *Lexer) unexpectedChar(start int) Token {
+	r, size := utf8.DecodeRuneInString(l.src[start:])
+	l.pos = start + size
+	return Token{Kind: Illegal, Text: l.src[start:l.pos], Pos: start, Value: fmt.Sprintf("unexpected character %q", r)}
+}
+
+// AtEnd reports whether the lexer has consumed all of its input.
+func (l *Lexer) AtEnd() bool { return l.pos >= len(l.src) }
 
 func (l *Lexer) illegal(start int, format string, args ...any) Token {
 	l.pos = len(l.src)
@@ -454,14 +495,14 @@ func (l *Lexer) number(start int) Token {
 // endNumber rejects a literal running straight into a word (`1a`), which both
 // PostgreSQL (>= 15) and SQLite treat as a lexical error.
 func (l *Lexer) endNumber(start int) Token {
-	if l.pos < len(l.src) && isIdentStart(l.src[l.pos]) {
+	if l.pos < len(l.src) && l.identStart(l.src[l.pos]) {
 		return l.illegal(start, "trailing junk after numeric literal")
 	}
 	return l.tok(Number, start)
 }
 
 func (l *Lexer) ident(start int) Token {
-	for l.pos < len(l.src) && isIdentPart(l.src[l.pos]) {
+	for l.pos < len(l.src) && l.identPart(l.src[l.pos]) {
 		l.pos++
 	}
 	t := l.tok(Ident, start)
@@ -494,7 +535,7 @@ func (l *Lexer) dollar(start int) Token {
 	if strings.IndexByte(l.cfg.ParamPrefixes, '$') >= 0 && l.paramFollows('$') {
 		return l.param(start)
 	}
-	return l.illegal(start, "unexpected character '$'")
+	return l.unexpectedChar(start)
 }
 
 func (l *Lexer) paramFollows(prefix byte) bool {
@@ -608,4 +649,12 @@ func isIdentStart(c byte) bool {
 	return c == '_' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= utf8.RuneSelf
 }
 func isIdentPart(c byte) bool { return isIdentStart(c) || isDigit(c) || c == '$' }
-func isOpChar(c byte) bool    { return strings.IndexByte("+-*/<>=~!@#%^&|`?", c) >= 0 }
+
+func (l *Lexer) identStart(c byte) bool {
+	return isIdentStart(c) && !(l.cfg.ASCIIIdents && c >= utf8.RuneSelf)
+}
+
+func (l *Lexer) identPart(c byte) bool {
+	return l.identStart(c) || isDigit(c) || c == '$' && !l.cfg.ASCIIIdents
+}
+func isOpChar(c byte) bool { return strings.IndexByte("+-*/<>=~!@#%^&|`?", c) >= 0 }

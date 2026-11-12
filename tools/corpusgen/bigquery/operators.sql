@@ -1,0 +1,40 @@
+SELECT 1 >= 2 >= 3
+SELECT 1 < 2 = TRUE
+SELECT 1 IN (1) IN (TRUE)
+SELECT 'a' LIKE 'b' LIKE 'c'
+SELECT 1 IS NULL IS NULL
+SELECT 1 BETWEEN 0 AND 2 BETWEEN FALSE AND TRUE
+SELECT 1 IS DISTINCT FROM 2 IS NULL
+SELECT 6 | 3 >= 7
+SELECT 7 >= 6 | 3
+SELECT 6 | 1 IN (7, 3)
+SELECT 'ab' || 'c' LIKE 'a%'
+SELECT 'a' LIKE 'a' || '%'
+SELECT ~b'ab' || b'cd'
+SELECT ~(b'ab' || b'cd')
+SELECT b'ab' || b'cd' & b'efgh'
+SELECT [1, 2] || [3]
+SELECT [1, 2][0]
+SELECT ARRAY[1, 2][0]
+SELECT [1, 2][OFFSET(0)]
+SELECT ['a', 'b'][0] || 'c'
+SELECT 'c' || ['a', 'b'][0]
+SELECT -t.a FROM t
+SELECT 2 * t.a FROM t
+SELECT sqlp_oracle.f(1)
+SELECT (t).a FROM t
+SELECT 2 + 3 * 4 - 5 / 5
+SELECT 5 - 3 - 1
+SELECT 64 / 4 / 2
+SELECT 1 << 2 & 7 ^ 5 | 8
+SELECT -2 * 3 + ~1
+SELECT NOT 1 = 2 AND TRUE OR FALSE
+SELECT NOT TRUE IS FALSE
+SELECT 2 + 3 BETWEEN 4 AND 6 - 1
+SELECT 'x' || 'y' = 'xy' AND 1 < 2
+SELECT 1 = 2 IN (TRUE)
+SELECT TRUE IN (TRUE) = TRUE
+SELECT 2 * (t).a FROM t
+SELECT -(t).a FROM t
+SELECT 2 * ARRAY[1, 2][0]
+SELECT -ARRAY[1, 2][0]

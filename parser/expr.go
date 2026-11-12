@@ -55,7 +55,7 @@ func (p *Parser) parseExprPrec(minPrec int) ast.Expr {
 func (p *Parser) continueExprPrec(left ast.Expr, minPrec int) ast.Expr {
 	for {
 		op, prec, ok := p.infixOp()
-		if !ok || prec <= minPrec || (op == "." || op == "[") && !canIndirect(left) || p.bExpr && !p.inBExpr(op) {
+		if !ok || prec <= minPrec || (op == "." || op == "[") && !canIndirect(left) && !p.d.Features.Expr.FreePostfix || p.bExpr && !p.inBExpr(op) {
 			return left
 		}
 		// `a IN (1) IN (2)` is legal because IN ends with its own parenthesis;
@@ -381,7 +381,7 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 		pattern = p.parseExprPrec(prec)
 	}
 	like := &ast.Like{Expr: left, Not: not, Op: op, Pattern: pattern}
-	if p.acceptKw("ESCAPE") {
+	if p.d.Features.Expr.LikeEscape && p.acceptKw("ESCAPE") {
 		like.Escape = p.parseExprPrec(p.d.Precedence["ESCAPE"])
 	}
 	return like
@@ -508,7 +508,15 @@ func (p *Parser) parsePrefix() ast.Expr {
 		switch {
 		case t.Text == "-", t.Text == "+", t.Text == "~" && !custom:
 			p.next()
+			p.negativeLiteral = t.Text == "-" && p.peek().Kind == lexer.Number
 			return &ast.Unary{Op: t.Text, Expr: p.parseExprPrec(p.d.UnaryMinusPrecedence)}
+		case (t.Text == "@" || t.Text == "@@") && p.d.Features.Expr.AtParams:
+			p.next()
+			if n := p.peek(); n.Kind == lexer.Ident || n.Kind == lexer.QuotedIdent {
+				p.next()
+				return &ast.Param{Text: t.Text + n.Text}
+			}
+			p.unexpected("parameter name")
 		case custom && dialect.IsOperatorText(t.Text) && !builtinInfixOnly[t.Text]:
 			// gram.y gives prefix generic operators the precedence of Op, so
 			// `@ a + b` is `@ (a + b)`.
@@ -533,9 +541,19 @@ func (p *Parser) parsePrefix() ast.Expr {
 
 func (p *Parser) parsePrimary() ast.Expr {
 	t := p.peek()
+	if t.Kind == lexer.Op && t.Text == "[" && p.d.Features.Expr.BracketArrays {
+		arr := &ast.Array{}
+		p.parseArrayBody(arr)
+		return arr
+	}
 	switch t.Kind {
 	case lexer.Number:
 		p.next()
+		negative := p.negativeLiteral
+		p.negativeLiteral = false
+		if p.d.Features.Expr.Int64Literals && isInteger(t) && !fitsInt64(t.Text, negative) {
+			p.errorf(t.Pos, "invalid integer literal: %s", t.Text)
+		}
 		kind := ast.Float
 		if isInteger(t) {
 			kind = ast.Integer
@@ -708,7 +726,8 @@ func (p *Parser) parseWordExpr() ast.Expr {
 	if p.d.BareFuncs[t.Value] && !p.isBareFuncCall() {
 		return p.parseBareFunc()
 	}
-	if p.d.Features.Expr.TypedStringLiteral && (!p.d.IsReserved(t.Value) || p.d.FuncNameKeywords[t.Value]) {
+	if p.d.Features.Expr.TypedStringLiteral && (p.d.TypedLiterals[t.Value] ||
+		p.d.TypedLiterals == nil && (!p.d.IsReserved(t.Value) || p.d.FuncNameKeywords[t.Value])) {
 		if ts := p.tryTypedString(); ts != nil {
 			return ts
 		}
@@ -878,13 +897,13 @@ func (p *Parser) parseNameExpr() ast.Expr {
 			p.errorf(t.Pos, "%s cannot be used as a function name", t.Text)
 		}
 		fc := p.parseFuncCall(name)
-		if p.d.Features.Expr.TypedStringLiteral && p.peek().Kind == lexer.String && fc.Over == nil && fc.Filter == nil {
+		if p.d.Features.Expr.TypedStringLiteral && p.d.TypedLiterals == nil && p.peek().Kind == lexer.String && fc.Over == nil && fc.Filter == nil {
 			// numeric(10, 2) '1.5': a modified type name, not a call
 			return &ast.TypedString{Type: &ast.DataType{Name: nameText(name), Args: fc.Args}, Value: p.parseStringValue()}
 		}
 		return fc
 	}
-	if len(name.Parts) > 1 && p.d.Features.Expr.TypedStringLiteral && p.peek().Kind == lexer.String {
+	if len(name.Parts) > 1 && p.d.Features.Expr.TypedStringLiteral && p.d.TypedLiterals == nil && p.peek().Kind == lexer.String {
 		return &ast.TypedString{Type: &ast.DataType{Name: nameText(name)}, Value: p.parseStringValue()}
 	}
 	return name

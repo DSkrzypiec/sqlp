@@ -17,7 +17,7 @@ import (
 // engine yet; this only requires that they never fail or panic on a
 // statement the parser accepts, and that their output is well formed.
 func TestQStructOnCorpus(t *testing.T) {
-	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+	for _, d := range dialect.All {
 		testkit.Run(t, d.Name, func(t *testing.T) {
 			files, _ := filepath.Glob(filepath.Join("testdata", "corpus", d.Name, "*.jsonl"))
 			analysed := 0

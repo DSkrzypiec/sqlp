@@ -20,7 +20,7 @@ import (
 // Dialects names every dialect under test, as in dialect.Dialect.Name. It is
 // not derived from package dialect because the lexer's tests import testkit
 // and dialect imports lexer.
-var Dialects = []string{"postgres", "sqlite"}
+var Dialects = []string{"postgres", "sqlite", "bigquery"}
 
 var dialectFlag = flag.String("dialect", "", "comma-separated dialects to test: "+
 	strings.Join(Dialects, ", ")+" (default all)")

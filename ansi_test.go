@@ -2,6 +2,7 @@ package sqlp
 
 import (
 	"os"
+	"slices"
 	"strings"
 	"testing"
 
@@ -20,7 +21,10 @@ func TestANSI(t *testing.T) {
 			t.Errorf("unknown feature ID %s: %s", c.Feature, c.SQL)
 		}
 	}
-	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+	for _, d := range dialect.All {
+		if !slices.Contains(corpus.ANSIDialects, d.Name) {
+			continue // its verdicts are frozen with its corpus, which TestCorpus replays
+		}
 		testkit.Run(t, d.Name, func(t *testing.T) {
 			supported, opaque := map[string]bool{}, 0
 			for _, c := range corpus.ANSI {

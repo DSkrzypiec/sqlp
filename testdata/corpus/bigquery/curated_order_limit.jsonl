@@ -1,0 +1,476 @@
+{"sql":"SELECT a FROM t ORDER BY a","shape":"SELECT a FROM t ORDER BY a;"}
+{"sql":"SELECT a FROM t ORDER BY a ASC","shape":"SELECT a FROM t ORDER BY a ASC;"}
+{"sql":"SELECT a FROM t ORDER BY a DESC","shape":"SELECT a FROM t ORDER BY a DESC;"}
+{"sql":"SELECT a FROM t ORDER BY a, b","shape":"SELECT a FROM t ORDER BY a, b;"}
+{"sql":"SELECT a FROM t ORDER BY a DESC, b ASC, c","shape":"SELECT a FROM t ORDER BY a DESC, b ASC, c;"}
+{"sql":"SELECT a FROM t ORDER BY 1","shape":"SELECT a FROM t ORDER BY 1;"}
+{"sql":"SELECT a, b FROM t ORDER BY 2 DESC, 1","shape":"SELECT a, b FROM t ORDER BY 2 DESC, 1;"}
+{"sql":"SELECT a AS x FROM t ORDER BY x","shape":"SELECT a AS x FROM t ORDER BY x;"}
+{"sql":"SELECT a FROM t ORDER BY a + 1","shape":"SELECT a FROM t ORDER BY a + 1;"}
+{"sql":"SELECT a FROM t ORDER BY (a)","shape":"SELECT a FROM t ORDER BY (a);"}
+{"sql":"SELECT a FROM t ORDER BY (a, b)"}
+{"sql":"SELECT a FROM t ORDER BY f(a) DESC"}
+{"sql":"SELECT a FROM t ORDER BY CASE WHEN a = 1 THEN 0 ELSE 1 END","shape":"SELECT a FROM t ORDER BY CASE WHEN a = 1 THEN 0 ELSE 1 END;"}
+{"sql":"SELECT a FROM t ORDER BY a NULLS FIRST","shape":"SELECT a FROM t ORDER BY a NULLS FIRST;"}
+{"sql":"SELECT a FROM t ORDER BY a NULLS LAST","shape":"SELECT a FROM t ORDER BY a NULLS LAST;"}
+{"sql":"SELECT a FROM t ORDER BY a ASC NULLS FIRST, b DESC NULLS LAST","shape":"SELECT a FROM t ORDER BY a ASC NULLS FIRST, b DESC NULLS LAST;"}
+{"sql":"SELECT a FROM t ORDER BY a COLLATE NOCASE","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a COLLATE \"C\" DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a USING <","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a USING > NULLS LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a USING OPERATOR(pg_catalog.<)","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1","shape":"SELECT a FROM t LIMIT 1;"}
+{"sql":"SELECT a FROM t LIMIT 1 + 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT (1)","shape":"SELECT a FROM t LIMIT (1);"}
+{"sql":"SELECT a FROM t LIMIT ALL","reject":true}
+{"sql":"SELECT a FROM t LIMIT NULL","reject":true}
+{"sql":"SELECT a FROM t LIMIT $1","reject":true}
+{"sql":"SELECT a FROM t LIMIT ?"}
+{"sql":"SELECT a FROM t OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 ROW","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 ROWS","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 OFFSET 2","shape":"SELECT a FROM t LIMIT 1 OFFSET 2;"}
+{"sql":"SELECT a FROM t OFFSET 2 LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1, 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT ALL OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1","shape":"SELECT a FROM t ORDER BY a LIMIT 1;"}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 OFFSET 2","shape":"SELECT a FROM t ORDER BY a LIMIT 1 OFFSET 2;"}
+{"sql":"SELECT a FROM t ORDER BY a OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH NEXT ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH NEXT 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST (1 + 1) ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a FETCH FIRST 5 ROWS WITH TIES","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 ROWS FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ROWS ONLY OFFSET 1 ROWS","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a OFFSET 1 ROW FETCH NEXT 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR SHARE","reject":true}
+{"sql":"SELECT a FROM t FOR NO KEY UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR KEY SHARE","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE OF t","reject":true}
+{"sql":"SELECT a FROM t, u FOR UPDATE OF t, u","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE NOWAIT","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE SKIP LOCKED","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE OF t NOWAIT","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE OF t FOR SHARE OF u","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 FOR UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FOR SHARE OFFSET 1","reject":true}
+{"sql":"SELECT a INTO x FROM t","reject":true}
+{"sql":"SELECT a INTO TEMP x FROM t","reject":true}
+{"sql":"SELECT a INTO TABLE x FROM t","reject":true}
+{"sql":"SELECT a FROM t ORDER","reject":true}
+{"sql":"SELECT a FROM t ORDER BY","reject":true}
+{"sql":"SELECT a FROM t ORDER a","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a,","reject":true}
+{"sql":"SELECT a FROM t ORDER BY , a","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a ASC DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ASC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a ORDER BY b","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS MIDDLE","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS FIRST LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS FIRST ASC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a USING","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t LIMIT","reject":true}
+{"sql":"SELECT a FROM t LIMIT ,","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1,","reject":true}
+{"sql":"SELECT a FROM t LIMIT , 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1, 2, 3","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 LIMIT 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 OFFSET","reject":true}
+{"sql":"SELECT a FROM t OFFSET","shape":"SELECT a FROM t AS OFFSET;"}
+{"sql":"SELECT a FROM t OFFSET 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 ORDER BY a","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 RECORDS","reject":true}
+{"sql":"SELECT a FROM t FETCH","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ROWS","reject":true}
+{"sql":"SELECT a FROM t FETCH 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ROWS WITH","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ONLY","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FOR","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE OF","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE SKIP","reject":true}
+{"sql":"SELECT a FROM t FOR KEY","reject":true}
+{"sql":"SELECT a FROM t FOR NO UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE NOWAIT SKIP LOCKED","reject":true}
+{"sql":"SELECT a FROM t ORDER BY FROM","reject":true}
+{"sql":"SELECT SELECT a FROM t ORDER BY a","reject":true}
+{"sql":"SELECT a FROM t ORDER ORDER BY a","reject":true}
+{"sql":"SELECT a FROM t BY ORDER a ASC","reject":true}
+{"sql":"SELECT FROM t ORDER BY a ASC","reject":true}
+{"sql":"SELECT a ORDER t ORDER BY a ASC","reject":true}
+{"sql":"SELECT a FROM t ORDER a BY DESC","reject":true}
+{"sql":"a SELECT FROM t ORDER BY a DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT","reject":true}
+{"sql":"SELECT FROM a t ORDER BY a , b","reject":true}
+{"sql":"SELECT a FROM t t ORDER BY a , b","shape":"SELECT a FROM t AS t ORDER BY a, b;"}
+{"sql":"SELECT a FROM t ORDER BY SELECT , b","reject":true}
+{"sql":"SELECT a FROM ORDER BY a , b","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a DESC , ROWS ASC , c","reject":true}
+{"sql":"SELECT a FROM FROM t ORDER BY a DESC , b ASC , c","reject":true}
+{"sql":"SELECT FROM a t ORDER BY a DESC , b ASC , c","reject":true}
+{"sql":"SELECT a FROM t ORDER BY BY a DESC , b ASC , c","reject":true}
+{"sql":"SELECT FROM a t ORDER BY 1","reject":true}
+{"sql":"SELECT a FROM t FROM BY 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY 1 1","reject":true}
+{"sql":"SELECT a FROM t ORDER 1 1","reject":true}
+{"sql":"SELECT , b FROM t ORDER BY 2 DESC , 1","reject":true}
+{"sql":"SELECT a , b FROM t SELECT BY 2 DESC , 1","reject":true}
+{"sql":"SELECT a , b FROM t ORDER BY 2 DESC , 1","shape":"SELECT a, b FROM t ORDER BY 2 DESC, 1;"}
+{"sql":"SELECT a , b FROM t ORDER BY 2 , 1","shape":"SELECT a, b FROM t ORDER BY 2, 1;"}
+{"sql":"SELECT AS x FROM t ORDER BY x","reject":true}
+{"sql":"SELECT a AS x FROM ORDER t BY x","reject":true}
+{"sql":"SELECT a FROM t ORDER BY + a 1","reject":true}
+{"sql":"SELECT OFFSET FROM t ORDER BY a + 1"}
+{"sql":"SELECT a FROM t ORDER BY ( a a )","reject":true}
+{"sql":"SELECT a FIRST t ORDER BY ( a )","reject":true}
+{"sql":"SELECT a FROM t ORDER t ( a )","reject":true}
+{"sql":"SELECT a t ORDER BY ( a )","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ( a , t )"}
+{"sql":"SELECT a FROM t ORDER BY ( a , b","reject":true}
+{"sql":"SELECT a FROM t t ORDER BY ( a , b )"}
+{"sql":"SELECT a FROM t ORDER BY ( a , b b )","reject":true}
+{"sql":"SELECT a FROM , ORDER BY f ( a ) DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY f a ( ) DESC","reject":true}
+{"sql":"SELECT SELECT a FROM t ORDER BY f ( a ) DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ( a ) DESC","shape":"SELECT a FROM t ORDER BY (a) DESC;"}
+{"sql":"SELECT a FROM t ORDER BY CASE WHEN a = 1 1 THEN 0 ELSE 1 END","reject":true}
+{"sql":"SELECT a FROM t ORDER BY CASE WHEN a a = 1 THEN 0 ELSE 1 END","reject":true}
+{"sql":"SELECT a FROM t t ORDER BY CASE WHEN a = 1 THEN 0 ELSE 1 END","shape":"SELECT a FROM t AS t ORDER BY CASE WHEN a = 1 THEN 0 ELSE 1 END;"}
+{"sql":"SELECT a FROM ORDER t BY a NULLS FIRST","reject":true}
+{"sql":"SELECT a t FROM ORDER BY a NULLS FIRST","reject":true}
+{"sql":"DESC a FROM t ORDER BY a NULLS FIRST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a a NULLS FIRST","reject":true}
+{"sql":"NULLS a FROM t ORDER BY a NULLS LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS SELECT","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a ASC NULLS SELECT , b DESC NULLS LAST","reject":true}
+{"sql":"SELECT a t ORDER BY a ASC NULLS FIRST , b DESC NULLS LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS FIRST , b DESC NULLS LAST","shape":"SELECT a FROM t ORDER BY a NULLS FIRST, b DESC NULLS LAST;"}
+{"sql":"SELECT a FROM t ORDER BY a ASC NULLS FIRST , b DESC NULLS","reject":true}
+{"sql":"SELECT a ) t ORDER BY a COLLATE NOCASE","reject":true}
+{"sql":"SELECT a FROM t SELECT BY a COLLATE NOCASE","reject":true}
+{"sql":"SELECT a a FROM t ORDER BY a COLLATE NOCASE","reject":true}
+{"sql":"SELECT a FROM t ORDER ORDER BY a COLLATE NOCASE","reject":true}
+{"sql":"a SELECT FROM t ORDER BY a COLLATE \"C\" DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a COLLATE FROM DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a COLLATE DESC \"C\"","reject":true}
+{"sql":"SELECT a FOR t ORDER BY a COLLATE \"C\" DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY FROM USING <","reject":true}
+{"sql":"SELECT a FROM ORDER t BY a USING <","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a USING > NULLS t","reject":true}
+{"sql":"SELECT a t FROM ORDER BY a USING > NULLS LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a USING NULLS LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY USING > NULLS LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a OPERATOR USING ( pg_catalog . < )","reject":true}
+{"sql":"SELECT a FROM t t BY a USING OPERATOR ( pg_catalog . < )","reject":true}
+{"sql":"SELECT FROM a t ORDER BY a USING OPERATOR ( pg_catalog . < )","reject":true}
+{"sql":"SELECT a FROM ORDER BY a USING OPERATOR ( pg_catalog . < )","reject":true}
+{"sql":"a FROM t LIMIT 1","reject":true}
+{"sql":"SELECT a t LIMIT 1"}
+{"sql":"SELECT a FROM LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 + 1 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 +","reject":true}
+{"sql":"BY a FROM t LIMIT ( 1 )","reject":true}
+{"sql":"a SELECT FROM t LIMIT ( 1 )","reject":true}
+{"sql":"SELECT a FROM t t ( 1 )","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 )","reject":true}
+{"sql":"SELECT a FROM t t LIMIT ALL","reject":true}
+{"sql":"SELECT a FROM t LIMIT FETCH","reject":true}
+{"sql":"SELECT a FROM LIMIT t ALL","reject":true}
+{"sql":"SELECT a FROM t ALL LIMIT","reject":true}
+{"sql":"SELECT a t LIMIT NULL"}
+{"sql":"SELECT a t FROM LIMIT NULL","reject":true}
+{"sql":"SELECT a FROM t t LIMIT NULL","reject":true}
+{"sql":"SELECT a FROM t NULL","reject":true}
+{"sql":"a FROM t LIMIT ?","reject":true}
+{"sql":"SELECT a FROM t t LIMIT ?"}
+{"sql":"SELECT a 1 t OFFSET 1","reject":true}
+{"sql":"SELECT a a FROM t OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t OFFSET OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t OFFSET b","reject":true}
+{"sql":"SELECT a FROM t OFFSET ROW","reject":true}
+{"sql":"SELECT a FROM OFFSET 1 ROW","reject":true}
+{"sql":"a FROM t OFFSET 1 ROW","reject":true}
+{"sql":"t a FROM t OFFSET 1 ROW","reject":true}
+{"sql":"SELECT a FROM t 1 OFFSET ROWS","reject":true}
+{"sql":"SELECT SELECT a FROM t OFFSET 1 ROWS","reject":true}
+{"sql":"SELECT a FROM OFFSET 1 ROWS","reject":true}
+{"sql":"NOWAIT a FROM t LIMIT 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT OFFSET 1 2","reject":true}
+{"sql":"a FROM t LIMIT 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t 2 OFFSET LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t t OFFSET 2 LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t OFFSET 2 LIMIT 1 1","reject":true}
+{"sql":"SELECT a FETCH t OFFSET 2 LIMIT 1","reject":true}
+{"sql":"SELECT 5 FROM t LIMIT 1 , 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 , t","reject":true}
+{"sql":"SELECT a FROM t LIMIT , 1 2","reject":true}
+{"sql":"SELECT a FROM SELECT LIMIT 1 , 2","reject":true}
+{"sql":"a FROM t LIMIT ALL OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT OFFSET ALL 1","reject":true}
+{"sql":"SELECT a FROM t SELECT ALL OFFSET 1","reject":true}
+{"sql":"SELECT a FROM FROM t LIMIT ALL OFFSET 1","reject":true}
+{"sql":"SELECT a BY t ORDER BY a LIMIT 1","reject":true}
+{"sql":"SELECT a FROM FROM ORDER BY a LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY BY a LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 SELECT 2","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 OFFSET a"}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT OFFSET 1 2","reject":true}
+{"sql":"SELECT a FROM t ORDER BY LIMIT 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM a ORDER BY a OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t ORDER ORDER BY a OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a a 2","reject":true}
+{"sql":"SELECT FROM t ORDER BY a OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST ROW ONLY ONLY","reject":true}
+{"sql":"SELECT a t FROM FETCH FIRST ROW ONLY","reject":true}
+{"sql":"a FROM t FETCH FIRST ROW ONLY","reject":true}
+{"sql":"SELECT a a FROM t FETCH NEXT ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FETCH NEXT ROW ONLY","reject":true}
+{"sql":"SELECT a t FETCH NEXT ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH NEXT ROW","reject":true}
+{"sql":"SELECT a a FROM t FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a t FROM FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM FROM t FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t t FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"a FROM t FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM FROM FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t NEXT FETCH 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH NEXT 5 ROWS","reject":true}
+{"sql":"SELECT a FROM FROM t FETCH NEXT 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a t FROM FETCH NEXT 5 ROWS ONLY","reject":true}
+{"sql":"SELECT FROM t FETCH FIRST ( 1 + 1 ) ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM FETCH FIRST ( 1 + 1 ) ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 1 ( + 1 ) ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST ( 1 + 1 FETCH ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM FETCH ORDER BY a FETCH FIRST 5 ROWS WITH TIES","reject":true}
+{"sql":"SELECT a FROM t t ORDER BY a FETCH FIRST 5 ROWS WITH TIES","reject":true}
+{"sql":"SELECT a FROM t ORDER BY FETCH a FIRST 5 ROWS WITH TIES","reject":true}
+{"sql":"SELECT a FROM FROM t ORDER BY a FETCH FIRST 5 ROWS WITH TIES","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 ROWS ROWS FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 FETCH ROWS FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM OFFSET 1 ROWS FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"a FROM t OFFSET 1 ROWS FETCH FIRST 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ROWS ONLY OFFSET 1 a","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 ROWS ONLY OFFSET OFFSET 1 ROWS","reject":true}
+{"sql":"SELECT a a t FETCH FIRST 5 ROWS ONLY OFFSET 1 ROWS","reject":true}
+{"sql":"SELECT a FROM t FETCH 5 FIRST ROWS ONLY OFFSET 1 ROWS","reject":true}
+{"sql":"SELECT , FROM t ORDER BY a OFFSET 1 ROW FETCH NEXT 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a OFFSET 1 SELECT FETCH NEXT 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a 1 ROW FETCH NEXT 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t t FOR UPDATE","reject":true}
+{"sql":"SELECT SELECT a FROM t FOR UPDATE","reject":true}
+{"sql":"SELECT a FROM a FOR UPDATE","reject":true}
+{"sql":"SELECT a FROM FROM t FOR UPDATE","reject":true}
+{"sql":"a SELECT FROM t FOR SHARE","reject":true}
+{"sql":"5 a FROM t FOR SHARE","reject":true}
+{"sql":"SELECT SELECT a FROM t FOR SHARE","reject":true}
+{"sql":"SELECT a t FROM FOR SHARE","reject":true}
+{"sql":"SELECT a FROM t FOR NO SELECT UPDATE","reject":true}
+{"sql":"SELECT a FROM FOR t NO KEY UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR NO NO KEY UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR t KEY UPDATE","reject":true}
+{"sql":"SELECT a FROM FOR t KEY SHARE","reject":true}
+{"sql":"a SELECT FROM t FOR KEY SHARE","reject":true}
+{"sql":"SELECT a FROM FETCH FOR KEY SHARE","reject":true}
+{"sql":"SELECT a FROM FROM t FOR KEY SHARE","reject":true}
+{"sql":"SELECT a FROM t t FOR UPDATE OF t","reject":true}
+{"sql":"SELECT FROM t FOR UPDATE OF t","reject":true}
+{"sql":"a SELECT FROM t FOR UPDATE OF t","reject":true}
+{"sql":"SELECT a FROM t , u FOR UPDATE OF , u","reject":true}
+{"sql":"SELECT a FROM t , u FOR UPDATE OF t ORDER u","reject":true}
+{"sql":"SELECT SELECT a FROM t , u FOR UPDATE OF t , u","reject":true}
+{"sql":"SELECT a FROM t , u FOR UPDATE OF t FROM u","reject":true}
+{"sql":"SELECT a FROM FROM t FOR UPDATE NOWAIT","reject":true}
+{"sql":"SELECT a FROM MIDDLE FOR UPDATE NOWAIT","reject":true}
+{"sql":"SELECT a FROM t UPDATE NOWAIT","reject":true}
+{"sql":"SELECT a FROM t t FOR UPDATE NOWAIT","reject":true}
+{"sql":"SELECT a a t FOR UPDATE SKIP LOCKED","reject":true}
+{"sql":"SELECT a t FROM FOR UPDATE SKIP LOCKED","reject":true}
+{"sql":"a FROM t FOR UPDATE SKIP LOCKED","reject":true}
+{"sql":"SELECT a FROM FOR t UPDATE SKIP LOCKED","reject":true}
+{"sql":"SELECT a FROM FOR t UPDATE OF t NOWAIT","reject":true}
+{"sql":"SELECT a FROM FROM t FOR UPDATE OF t NOWAIT","reject":true}
+{"sql":"SELECT FROM a t FOR UPDATE OF t NOWAIT","reject":true}
+{"sql":"a SELECT FROM t FOR UPDATE OF t NOWAIT","reject":true}
+{"sql":"SELECT a FROM t FOR OF UPDATE t FOR SHARE OF u","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE OF t FOR OF SHARE u","reject":true}
+{"sql":"SELECT a FROM t FOR OF t FOR SHARE OF u","reject":true}
+{"sql":"SELECT a FROM t UPDATE OF t FOR SHARE OF u","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 BY UPDATE","reject":true}
+{"sql":"SELECT a FROM t ORDER BY BY a LIMIT 1 FOR UPDATE","reject":true}
+{"sql":"SELECT a FROM t ORDER a BY LIMIT 1 FOR UPDATE","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 FOR a","reject":true}
+{"sql":"SELECT a FROM t t FOR UPDATE LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t FOR UPDATE 1","reject":true}
+{"sql":"SELECT a FROM SELECT FOR UPDATE LIMIT 1","reject":true}
+{"sql":"SELECT a FROM t SELECT UPDATE LIMIT 1","reject":true}
+{"sql":"SELECT a t LIMIT 1 FOR SHARE OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FOR a OFFSET 1","reject":true}
+{"sql":"SELECT a t FROM LIMIT 1 FOR SHARE OFFSET 1","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FOR SHARE OFFSET","reject":true}
+{"sql":"SELECT a x INTO FROM t","reject":true}
+{"sql":"SELECT a INTO x FROM ASC","reject":true}
+{"sql":"SELECT a INTO x 1 t","reject":true}
+{"sql":"SELECT a INTO x FROM t t","reject":true}
+{"sql":"SELECT a INTO INTO TEMP x FROM t","reject":true}
+{"sql":"SELECT SELECT a INTO TEMP x FROM t","reject":true}
+{"sql":"SELECT a INTO TEMP x FROM t t","reject":true}
+{"sql":"SELECT a INTO TABLE FROM x t","reject":true}
+{"sql":"SELECT a a INTO TABLE x FROM t","reject":true}
+{"sql":"SELECT a INTO TABLE x ( t","reject":true}
+{"sql":"a SELECT INTO TABLE x FROM t","reject":true}
+{"sql":"SELECT FROM a t ORDER","reject":true}
+{"sql":"SELECT t FROM t ORDER","reject":true}
+{"sql":"a FROM t ORDER","reject":true}
+{"sql":"SELECT a ORDER t ORDER","reject":true}
+{"sql":"SELECT FROM t ORDER BY","reject":true}
+{"sql":"a SELECT FROM t ORDER BY","reject":true}
+{"sql":"SELECT a FROM FROM t ORDER BY","reject":true}
+{"sql":"SELECT a t FROM ORDER BY","reject":true}
+{"sql":"SELECT a FROM t a ORDER","reject":true}
+{"sql":"SELECT a t ORDER a","reject":true}
+{"sql":"SELECT a FETCH t BY a","reject":true}
+{"sql":"SELECT a FROM t t BY a","reject":true}
+{"sql":"SELECT SELECT a FROM t BY a","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a a ,","reject":true}
+{"sql":"SELECT a t FROM ORDER BY a ,","reject":true}
+{"sql":"SELECT a a FROM t ORDER BY a ,","reject":true}
+{"sql":"THEN a FROM t ORDER BY , a","reject":true}
+{"sql":"SELECT FROM t ORDER BY , a","reject":true}
+{"sql":"SELECT a FROM t ORDER ORDER BY , a","reject":true}
+{"sql":"SELECT a a t ORDER BY , a","reject":true}
+{"sql":"SELECT a FROM FROM t ORDER BY a ASC DESC","reject":true}
+{"sql":"SELECT a FROM t BY a ASC DESC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY ROW ASC DESC","reject":true}
+{"sql":"SELECT a t ORDER BY ASC","reject":true}
+{"sql":"SELECT a FROM ORDER t BY ASC","reject":true}
+{"sql":"SELECT a FROM t BY ORDER a ORDER BY b","reject":true}
+{"sql":"SELECT FROM a t ORDER BY a ORDER BY b","reject":true}
+{"sql":"a SELECT FROM t ORDER BY a ORDER BY b","reject":true}
+{"sql":"SELECT a FROM t ORDER a BY NULLS","reject":true}
+{"sql":"SELECT a FROM FROM t ORDER BY a NULLS","reject":true}
+{"sql":"SELECT a FROM t ORDER a NULLS","reject":true}
+{"sql":"SELECT a FROM t BY ORDER a NULLS MIDDLE","reject":true}
+{"sql":"SELECT a FROM t ORDER t a NULLS MIDDLE","reject":true}
+{"sql":"SELECT a FROM t ORDER ORDER BY a NULLS MIDDLE","reject":true}
+{"sql":"SELECT FROM t ORDER BY a NULLS MIDDLE","reject":true}
+{"sql":"a a FROM t ORDER BY a NULLS FIRST LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER FETCH a NULLS FIRST LAST","reject":true}
+{"sql":"a FROM t ORDER BY a NULLS FIRST LAST","reject":true}
+{"sql":"SELECT a t ORDER BY a NULLS FIRST LAST","reject":true}
+{"sql":"SELECT a FROM t ORDER a BY NULLS FIRST ASC","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a NULLS NULLS FIRST ASC","reject":true}
+{"sql":"SELECT a a FROM t ORDER BY a NULLS FIRST ASC","reject":true}
+{"sql":"SELECT FROM FROM t ORDER BY a NULLS FIRST ASC","reject":true}
+{"sql":"SELECT a FROM t ORDER a a USING","reject":true}
+{"sql":"SELECT a t t ORDER BY a USING","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a SELECT","reject":true}
+{"sql":"SELECT a FROM t b BY a USING","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a a = 1","reject":true}
+{"sql":"SELECT a a FROM t ORDER BY a WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t ORDER BY a WHERE a ONLY 1","reject":true}
+{"sql":"SELECT a FROM t ORDER a a WHERE a = 1","reject":true}
+{"sql":"SELECT a FROM t ORDER ORDER BY a GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t ORDER BY SKIP GROUP BY a","reject":true}
+{"sql":"SELECT a FROM t ORDER BY GROUP a BY a","reject":true}
+{"sql":"SELECT a FROM ORDER BY a GROUP BY a","reject":true}
+{"sql":"SELECT FROM t LIMIT","reject":true}
+{"sql":"SELECT a FROM t ,","reject":true}
+{"sql":"SELECT a t LIMIT","reject":true}
+{"sql":"SELECT SELECT a FROM t LIMIT ,","reject":true}
+{"sql":"SELECT a FROM t LIMIT , ,","reject":true}
+{"sql":"SELECT t FROM t LIMIT ,","reject":true}
+{"sql":"SELECT a t LIMIT 1 ,","reject":true}
+{"sql":"SELECT FROM t LIMIT 1 ,","reject":true}
+{"sql":"SELECT a FROM LIMIT 1 ,","reject":true}
+{"sql":"a SELECT FROM t LIMIT 1 ,","reject":true}
+{"sql":"SELECT a a FROM t LIMIT , 1","reject":true}
+{"sql":"SELECT a t FROM LIMIT , 1","reject":true}
+{"sql":"SELECT FROM FROM t LIMIT , 1","reject":true}
+{"sql":"SELECT a FROM t , 1","reject":true}
+{"sql":"SELECT a a FROM t LIMIT 1 , 2 , 3","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 , 2 3","reject":true}
+{"sql":"SELECT BY FROM t LIMIT 1 , 2 , 3","reject":true}
+{"sql":"SELECT a , t LIMIT 1 LIMIT 2","reject":true}
+{"sql":"SELECT a t LIMIT 1 LIMIT 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT LIMIT 1 LIMIT 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 1 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT ROW OFFSET","reject":true}
+{"sql":"SELECT FROM a t LIMIT 1 OFFSET","reject":true}
+{"sql":"SELECT a FROM t 1 OFFSET","reject":true}
+{"sql":"SELECT a FROM t t OFFSET","reject":true}
+{"sql":"SELECT a FROM FROM t OFFSET","reject":true}
+{"sql":"a SELECT FROM t OFFSET","reject":true}
+{"sql":"SELECT 5 FROM t OFFSET 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 OFFSET FROM","reject":true}
+{"sql":"SELECT FROM a t OFFSET 1 OFFSET 2","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 ORDER BY a a","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FROM BY a","reject":true}
+{"sql":"SELECT a FROM t 1 LIMIT ORDER BY a","reject":true}
+{"sql":"SELECT FROM a t LIMIT 1 ORDER BY a","reject":true}
+{"sql":"a SELECT FROM t OFFSET 1 RECORDS","reject":true}
+{"sql":"SELECT a FROM t 1 RECORDS","reject":true}
+{"sql":"SELECT a FROM t OFFSET 1 t","reject":true}
+{"sql":"SELECT a FROM FETCH","reject":true}
+{"sql":"SELECT a FROM FETCH t","reject":true}
+{"sql":"SELECT a FROM t t FETCH","reject":true}
+{"sql":"SELECT a FROM FETCH FIRST","reject":true}
+{"sql":"SELECT a FROM t < FIRST","reject":true}
+{"sql":"ONLY a FROM t FETCH FIRST","reject":true}
+{"sql":"a FROM t FETCH FIRST","reject":true}
+{"sql":"SELECT a FROM FETCH FIRST 5","reject":true}
+{"sql":"SELECT a FROM t FIRST 5","reject":true}
+{"sql":"SELECT a FROM SELECT FETCH FIRST 5","reject":true}
+{"sql":"SELECT a FROM t FETCH FETCH FIRST 5 ROWS","reject":true}
+{"sql":"SELECT a FROM t FETCH 5 ROWS","reject":true}
+{"sql":"SELECT SELECT a FROM t FETCH 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH 5 ROWS ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM FETCH t 5 ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH ROWS ONLY","reject":true}
+{"sql":"SELECT a FROM t t FETCH FIRST 5 ROWS WITH","reject":true}
+{"sql":"SELECT a FROM FROM FETCH FIRST 5 ROWS WITH","reject":true}
+{"sql":"SELECT a FROM FETCH t FIRST 5 ROWS WITH","reject":true}
+{"sql":"SELECT a FROM t FETCH FOR 5 ROWS WITH","reject":true}
+{"sql":"SELECT FROM t FETCH FIRST 5 ONLY","reject":true}
+{"sql":"SELECT a a FROM t FETCH FIRST 5 ONLY","reject":true}
+{"sql":"SELECT a FROM t t FETCH FIRST 5 ONLY","reject":true}
+{"sql":"SELECT a FROM t FETCH FIRST 5 5 ONLY","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FETCH FIRST ROW ONLY","reject":true}
+{"sql":"SELECT ASC FROM t LIMIT 1 FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM t LIMIT 1 FETCH FIRST 1 ROW ONLY ONLY","reject":true}
+{"sql":"SELECT SELECT a FROM t LIMIT 1 FETCH FIRST 1 ROW ONLY","reject":true}
+{"sql":"SELECT a FROM FOR","reject":true}
+{"sql":"SELECT FROM a t FOR","reject":true}
+{"sql":"SELECT a FROM FOR t","reject":true}
+{"sql":"SELECT a a t FOR UPDATE OF","reject":true}
+{"sql":"SELECT a FROM t FOR OF UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR FOR UPDATE OF","reject":true}
+{"sql":"SELECT FROM t FOR UPDATE OF","reject":true}
+{"sql":"SELECT SELECT a FROM t FOR UPDATE SKIP","reject":true}
+{"sql":"SELECT a t FROM FOR UPDATE SKIP","reject":true}
+{"sql":"a SELECT FROM t FOR UPDATE SKIP","reject":true}
+{"sql":"a FROM t FOR KEY","reject":true}
+{"sql":"SELECT a FROM FROM t FOR KEY","reject":true}
+{"sql":"SELECT a FROM t t FOR KEY","reject":true}
+{"sql":"SELECT a FROM t FOR SELECT","reject":true}
+{"sql":"SELECT a FROM t FOR NO ORDER","reject":true}
+{"sql":"SELECT a FROM FOR NO UPDATE","reject":true}
+{"sql":"a SELECT FROM t FOR NO UPDATE","reject":true}
+{"sql":"SELECT a FROM t FOR NOWAIT UPDATE SKIP LOCKED","reject":true}
+{"sql":"SELECT a t FROM FOR UPDATE NOWAIT SKIP LOCKED","reject":true}
+{"sql":"SELECT a FROM t t FOR UPDATE NOWAIT SKIP LOCKED","reject":true}

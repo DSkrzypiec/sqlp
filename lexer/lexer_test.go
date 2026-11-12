@@ -25,6 +25,13 @@ var sqliteCfg = dialectConfig{name: "sqlite", Config: Config{
 	Operators: []string{"->>", "->", "||", "<<", ">>", "<=", ">=", "<>", "!=", "==", "=", "<", ">", "+", "-", "*", "/", "%", "&", "|", "~"},
 }}
 
+var bqCfg = dialectConfig{name: "bigquery", Config: Config{
+	IdentQuotes: "`", NoEmptyQuotedIdent: true, BackslashEscapes: true, DoubleQuotedStrings: true,
+	PrefixedStrings: true, AdjacentStrings: true, HashComments: true, ASCIIIdents: true, CommentEndsAtCR: true,
+	ParamPrefixes: "?",
+	Operators:     []string{"<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@", "=", "<", ">", "+", "-", "*", "/", "&", "|", "^", "~", "@"},
+}}
+
 // render is a compact token description used in test tables: "Kind:Value".
 func render(toks []Token) string {
 	var parts []string
@@ -124,6 +131,23 @@ func TestTokenize(t *testing.T) {
 		{pgCfg, "'a'\f\r'b'", "String:ab"},
 		{sqliteCfg, bom + "a " + bom + bom + "b a" + bom, "Ident:A Ident:B Ident:A" + bom},
 		{pgCfg, bom + "a", "Ident:" + bom + "A"},
+		// BigQuery, each checked with a dry run
+		{bqCfg, "\"\"\"a\nb\"\"\"", "String:a\nb"}, // a tripled quote may span lines
+		{bqCfg, `'''a'b'''`, "String:a'b"},
+		{bqCfg, `'a' "b"`, "String:ab"},
+		{bqCfg, "'a' /* c */ 'b'", "String:ab"},
+		{bqCfg, "'a' -- c\n'b'", "String:ab"},
+		{bqCfg, "'a'#c\n'b'", "String:ab"},
+		{bqCfg, `'\x41\101\u00e9'`, "String:AAé"},
+		{bqCfg, "'\\a\\b\\f\\n\\r\\t\\v\\\\\\?\\\"\\'\\`'", "String:\a\b\f\n\r\t\v\\?\"'`"},
+		{bqCfg, `r'\d'`, `String:\d`},
+		{bqCfg, `r'\''`, `String:\'`},
+		{bqCfg, `b'\xff' BR'\x'`, "String:\xff\\x"},
+		{bqCfg, "`a\\`b`", "QuotedIdent:a`b"},
+		{bqCfg, "`a``b`", "QuotedIdent:a QuotedIdent:b"}, // a doubled quote is not an escape
+		{bqCfg, "1 # c\n2", "Number:1 Number:2"},
+		{bqCfg, "a --x\rb", "Ident:A Ident:B"},
+		{bqCfg, "@@x @ a", "Op:@@ Ident:X Op:@ Ident:A"},
 	}
 	for _, c := range cases {
 		if !testkit.Enabled(c.cfg.name) {
@@ -170,6 +194,26 @@ func TestTokenizeErrors(t *testing.T) {
 		{sqliteCfg, "$a(b", "unterminated parameter name"},
 		{sqliteCfg, "$(a)", "unexpected character '$'"},
 		{sqliteCfg, "$::", "unexpected character '$'"},
+		// BigQuery, each checked with a dry run
+		{bqCfg, "'a\nb'", "unterminated string"},
+		{bqCfg, "`a\nb`", "unterminated quoted identifier"},
+		{bqCfg, "``", "zero-length"},
+		{bqCfg, "'a''b'", "concatenated string literals must be separated"},
+		{bqCfg, "'a' b'x'", "string and bytes literals cannot be concatenated"},
+		{bqCfg, "'a'b'x'", "string and bytes literals cannot be concatenated"},
+		{bqCfg, `'\q'`, `illegal escape sequence: \q`},
+		{bqCfg, `'\10'`, "octal escape needs 3"},
+		{bqCfg, `'\777'`, `illegal escape sequence: \7`}, // an octal escape is at most \377
+		{bqCfg, `'\x4'`, "hex escape needs 2"},
+		{bqCfg, `'\ud800'`, "not a valid character"},
+		{bqCfg, `'\U00110000'`, "not a valid character"},
+		{bqCfg, `b'\u00e9'`, "cannot be used in bytes"},
+		{bqCfg, `r'\'`, "unterminated raw string"},
+		{bqCfg, "'abc\\\nx'", "illegal escaped newline"},
+		{bqCfg, "é", "unexpected character"},
+		{bqCfg, "a$b", "unexpected character '$'"},
+		{bqCfg, "1a", "trailing junk"},
+		{bqCfg, "1 /* x", "unterminated block comment"},
 	}
 	for _, c := range cases {
 		if !testkit.Enabled(c.cfg.name) {

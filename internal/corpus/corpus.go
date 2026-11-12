@@ -105,6 +105,9 @@ func Shape(stmts []ast.Statement, d *dialect.Dialect) string { return gen.Shape(
 // distinct and nonzero, so a different grouping almost always evaluates
 // differently. A binary operator ending in ESCAPE takes an escape clause.
 func Exprs(name string, n int) []string {
+	if name == "bigquery" {
+		return bigQueryExprs(n)
+	}
 	binary := []string{"*", "/", "%", "+", "-", "<<", ">>", "&", "|", "<", "<=", ">", ">=", "=", "<>", "!=", "AND", "OR", "||", "LIKE", "NOT LIKE", "LIKE ESCAPE"}
 	prefix := []string{"-", "+", "NOT "}
 	postfix := []string{" IS NULL", " IS NOT NULL", " BETWEEN 2 AND 7", " NOT BETWEEN 3 AND 11", " IN (5, 13)", " NOT IN (17, 19)", " ISNULL", " NOTNULL"}

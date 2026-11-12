@@ -1,0 +1,336 @@
+{"sql":"SELECT a FROM t AS x","shape":"SELECT a FROM t AS x;"}
+{"sql":"SELECT a FROM t x","shape":"SELECT a FROM t AS x;"}
+{"sql":"SELECT x.a FROM t AS x","shape":"SELECT x.a FROM t AS x;"}
+{"sql":"SELECT a FROM main.t"}
+{"sql":"SELECT a FROM main.t AS x"}
+{"sql":"SELECT p FROM t AS x (p)","reject":true}
+{"sql":"SELECT p, q FROM t AS x (p, q)","reject":true}
+{"sql":"SELECT p FROM t x (p)","reject":true}
+{"sql":"SELECT a FROM t, u"}
+{"sql":"SELECT a FROM t, u, c"}
+{"sql":"SELECT x.a FROM t x, t y WHERE x.a = y.a","shape":"SELECT x.a FROM t AS x, t AS y WHERE x.a = y.a;"}
+{"sql":"SELECT * FROM (SELECT a FROM t) AS x","shape":"SELECT * FROM (SELECT a FROM t) AS x;"}
+{"sql":"SELECT * FROM (SELECT a FROM t) x","shape":"SELECT * FROM (SELECT a FROM t) AS x;"}
+{"sql":"SELECT * FROM (SELECT a FROM t)","shape":"SELECT * FROM (SELECT a FROM t);"}
+{"sql":"SELECT x.* FROM (SELECT a, b FROM t) AS x","shape":"SELECT x.* FROM (SELECT a, b FROM t) AS x;"}
+{"sql":"SELECT p FROM (SELECT a FROM t) AS x (p)","reject":true}
+{"sql":"SELECT * FROM (SELECT a FROM t) AS x, (SELECT b FROM u) AS y","shape":"SELECT * FROM (SELECT a FROM t) AS x, (SELECT b FROM u) AS y;"}
+{"sql":"SELECT * FROM (SELECT * FROM (SELECT * FROM t) AS x) AS y","shape":"SELECT * FROM (SELECT * FROM (SELECT * FROM t) AS x) AS y;"}
+{"sql":"SELECT * FROM ((SELECT a FROM t)) AS x","shape":"SELECT * FROM ((SELECT a FROM t)) AS x;"}
+{"sql":"SELECT * FROM (VALUES (1, 2), (3, 4)) AS x","reject":true}
+{"sql":"SELECT * FROM (VALUES (1, 2), (3, 4)) AS x (p, q)","reject":true}
+{"sql":"SELECT * FROM (SELECT a FROM t UNION SELECT a FROM u) AS x","reject":true}
+{"sql":"SELECT * FROM (SELECT a FROM t ORDER BY a LIMIT 1) AS x","shape":"SELECT * FROM (SELECT a FROM t ORDER BY a LIMIT 1) AS x;"}
+{"sql":"SELECT * FROM (WITH w AS (SELECT 1) SELECT * FROM w) AS x","shape":"SELECT * FROM (WITH w AS (SELECT 1) SELECT * FROM w) AS x;"}
+{"sql":"SELECT * FROM f()"}
+{"sql":"SELECT * FROM f(1, 2)"}
+{"sql":"SELECT * FROM f(1) AS x"}
+{"sql":"SELECT * FROM f(1) AS x (p, q)","reject":true}
+{"sql":"SELECT * FROM f(1) x"}
+{"sql":"SELECT * FROM public.f(1)"}
+{"sql":"SELECT * FROM f(1), g(2)"}
+{"sql":"SELECT * FROM generate_series(1, 3)"}
+{"sql":"SELECT * FROM generate_series(1, 3) WITH ORDINALITY","reject":true}
+{"sql":"SELECT * FROM generate_series(1, 3) WITH ORDINALITY AS x (v, n)","reject":true}
+{"sql":"SELECT * FROM ROWS FROM (f(1), g(2))","reject":true}
+{"sql":"SELECT * FROM ROWS FROM (f(1), g(2)) WITH ORDINALITY","reject":true}
+{"sql":"SELECT * FROM f(1) AS x (p int, q text)","reject":true}
+{"sql":"SELECT * FROM ONLY t"}
+{"sql":"SELECT * FROM ONLY (t)"}
+{"sql":"SELECT * FROM t *","reject":true}
+{"sql":"SELECT * FROM t TABLESAMPLE SYSTEM (10)","reject":true}
+{"sql":"SELECT * FROM t AS x TABLESAMPLE BERNOULLI (5) REPEATABLE (1)","reject":true}
+{"sql":"SELECT * FROM t INDEXED BY idx","reject":true}
+{"sql":"SELECT * FROM t NOT INDEXED","reject":true}
+{"sql":"SELECT * FROM t AS x INDEXED BY idx","reject":true}
+{"sql":"SELECT a FROM","reject":true}
+{"sql":"SELECT a FROM ,t","reject":true}
+{"sql":"SELECT a FROM t,","reject":true}
+{"sql":"SELECT a FROM t AS","reject":true}
+{"sql":"SELECT a FROM t AS x AS y","reject":true}
+{"sql":"SELECT a FROM t x y","reject":true}
+{"sql":"SELECT a FROM (t","reject":true}
+{"sql":"SELECT a FROM t)","reject":true}
+{"sql":"SELECT a FROM ()","reject":true}
+{"sql":"SELECT a FROM (SELECT a FROM t","reject":true}
+{"sql":"SELECT a FROM SELECT a FROM t","reject":true}
+{"sql":"SELECT a FROM t AS x ()","reject":true}
+{"sql":"SELECT a FROM t AS x (p,)","reject":true}
+{"sql":"SELECT a FROM t AS 1","reject":true}
+{"sql":"SELECT a FROM 1","reject":true}
+{"sql":"SELECT a FROM 'x'","reject":true}
+{"sql":"SELECT a FROM t.","reject":true}
+{"sql":"SELECT a FROM .t","reject":true}
+{"sql":"SELECT a FROM f(","reject":true}
+{"sql":"SELECT a FROM ONLY"}
+{"sql":"SELECT * FROM t TABLESAMPLE","reject":true}
+{"sql":"SELECT * FROM t TABLESAMPLE SYSTEM","reject":true}
+{"sql":"SELECT * FROM t INDEXED","shape":"SELECT * FROM t AS INDEXED;"}
+{"sql":"SELECT * FROM t NOT","reject":true}
+{"sql":"SELECT * FROM f() WITH","reject":true}
+{"sql":"SELECT a FROM t AS (","reject":true}
+{"sql":"SELECT a FROM t AS x x","reject":true}
+{"sql":"SELECT SELECT a FROM t AS x","reject":true}
+{"sql":"SELECT a t AS x","reject":true}
+{"sql":"a SELECT FROM t x","reject":true}
+{"sql":"SELECT FROM a t x","reject":true}
+{"sql":"SELECT a FROM t","shape":"SELECT a FROM t;"}
+{"sql":"SELECT a FROM t SELECT","reject":true}
+{"sql":"SELECT x . a FROM AS t x","reject":true}
+{"sql":"SELECT x . a FROM t AS x","shape":"SELECT x.a FROM t AS x;"}
+{"sql":"x SELECT . a FROM t AS x","reject":true}
+{"sql":"SELECT x . a FROM t AS )","reject":true}
+{"sql":"SELECT a FROM main t .","reject":true}
+{"sql":"SELECT a FROM main main . t","reject":true}
+{"sql":"a a FROM main . t","reject":true}
+{"sql":"SELECT a FROM . t","reject":true}
+{"sql":"SELECT * FROM main . t AS x"}
+{"sql":"SELECT a FROM FROM main . t AS x","reject":true}
+{"sql":"SELECT a main FROM . t AS x","reject":true}
+{"sql":"SELECT a FROM main main . t AS x","reject":true}
+{"sql":"p SELECT FROM t AS x ( p )","reject":true}
+{"sql":"SELECT a FROM t AS x ( p )","reject":true}
+{"sql":"SELECT SELECT p FROM t AS x ( p )","reject":true}
+{"sql":", p FROM t AS x ( p )","reject":true}
+{"sql":"SELECT , q FROM t AS x ( p , q )","reject":true}
+{"sql":"SELECT p , q FROM SELECT AS x ( p , q )","reject":true}
+{"sql":"SELECT p , q FROM t AS x ( p , ) q","reject":true}
+{"sql":"SELECT p , q FROM t x ( p , q )","reject":true}
+{"sql":"SELECT p t x ( p )","reject":true}
+{"sql":"SELECT FROM p t x ( p )","reject":true}
+{"sql":"SELECT p FROM t x ( p )","reject":true}
+{"sql":"SELECT p FROM x ( p )"}
+{"sql":"SELECT a t FROM , u","reject":true}
+{"sql":"SELECT a FROM , t u","reject":true}
+{"sql":"SELECT 1 FROM t , u","shape":"SELECT 1 FROM t, u;"}
+{"sql":"SELECT a q t , u","reject":true}
+{"sql":"SELECT a a FROM t , u , c"}
+{"sql":"SELECT ( FROM t , u , c","reject":true}
+{"sql":"SELECT a FROM x , u , c"}
+{"sql":"SELECT a FROM t , u c"}
+{"sql":"SELECT x . a FROM t SELECT , t y WHERE x . a = y . a","reject":true}
+{"sql":"SELECT x . a FROM t x , t y WHERE x . = y . a","reject":true}
+{"sql":"SELECT x . a FROM t x , t y y WHERE x . a = y . a","reject":true}
+{"sql":"SELECT x . . a FROM t x , t y WHERE x . a = y . a","reject":true}
+{"sql":"SELECT * FROM generate_series SELECT a FROM t ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM ) t AS x","reject":true}
+{"sql":"SELECT SELECT * FROM ( SELECT a FROM t ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a t ) AS x"}
+{"sql":"SELECT * FROM ( SELECT a FROM t ) ) x","reject":true}
+{"sql":"SELECT FROM * ( SELECT a FROM t ) x","reject":true}
+{"sql":"SELECT * FROM ( SELECT SELECT a FROM t ) x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t t ) x","shape":"SELECT * FROM (SELECT a FROM t AS t) AS x;"}
+{"sql":"SELECT * FROM SELECT ( a FROM t )","reject":true}
+{"sql":"SELECT * ( FROM SELECT a FROM t )","reject":true}
+{"sql":") * FROM ( SELECT a FROM t )","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM FROM t )","reject":true}
+{"sql":"SELECT * . * FROM ( SELECT a , b FROM t ) AS x","reject":true}
+{"sql":"SELECT x . * FROM ( SELECT a , b FROM t ) AS x","shape":"SELECT x.* FROM (SELECT a, b FROM t) AS x;"}
+{"sql":"SELECT x . * FROM p SELECT a , b FROM t ) AS x","reject":true}
+{"sql":"SELECT x . * FROM ( SELECT a b , FROM t ) AS x"}
+{"sql":"SELECT p FROM ( SELECT a FROM t ) AS 1 ( p )","reject":true}
+{"sql":"SELECT p FROM ( SELECT a FROM ) AS x ( p )","reject":true}
+{"sql":"SELECT p FROM ( SELECT a t ) AS x ( p )","reject":true}
+{"sql":"SELECT p FROM ( SELECT a FROM t ) AS x p )","reject":true}
+{"sql":"SELECT * FROM ( SELECT a ) t ) AS x , ( SELECT b FROM u ) AS y","reject":true}
+{"sql":") * FROM ( SELECT a FROM t ) AS x , ( SELECT b FROM u ) AS y","reject":true}
+{"sql":"SELECT * FROM ( SELECT SELECT a FROM t ) AS x , ( SELECT b FROM u ) AS y","reject":true}
+{"sql":"SELECT * FROM ( ( SELECT a FROM t ) AS x , ( SELECT b FROM u ) AS y","reject":true}
+{"sql":"SELECT * FROM ( SELECT * FROM ( SELECT * FROM t AS ) x ) AS y","reject":true}
+{"sql":"SELECT * a ( SELECT * FROM ( SELECT * FROM t ) AS x ) AS y","reject":true}
+{"sql":"SELECT * FROM ( * SELECT FROM ( SELECT * FROM t ) AS x ) AS y","reject":true}
+{"sql":"SELECT * FROM ( SELECT * SELECT ( SELECT * FROM t ) AS x ) AS y","reject":true}
+{"sql":"SELECT * FROM ( ( SELECT x FROM t ) ) AS x","shape":"SELECT * FROM ((SELECT x FROM t)) AS x;"}
+{"sql":"SELECT * FROM ( ( a SELECT FROM t ) ) AS x","reject":true}
+{"sql":"SELECT * FROM ( ( SELECT a FROM ) ) AS x","reject":true}
+{"sql":"* SELECT FROM ( ( SELECT a FROM t ) ) AS x","reject":true}
+{"sql":"SELECT 4 FROM ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) AS x","reject":true}
+{"sql":"SELECT FROM * ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) AS x","reject":true}
+{"sql":"SELECT * ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) AS x","reject":true}
+{"sql":"SELECT * FROM ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) x","reject":true}
+{"sql":"SELECT * FROM ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) AS x ( p , q )","reject":true}
+{"sql":"x * FROM ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM ( VALUES 1 ( , 2 ) , ( 3 , 4 ) ) AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM ( VALUES 1 , 2 ) , ( 3 , 4 ) ) AS x ( p , q )","reject":true}
+{"sql":"* FROM ( SELECT a FROM t UNION SELECT a FROM u ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t UNION SELECT a FROM u ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t SELECT a FROM u ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT FROM t UNION SELECT a FROM u ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t ORDER BY a LIMIT 1 ) AS x x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM t ORDER BY a LIMIT 1 ) x","shape":"SELECT * FROM (SELECT a FROM t ORDER BY a LIMIT 1) AS x;"}
+{"sql":"SELECT * FROM ( SELECT a FROM ORDER t BY a LIMIT 1 ) AS x","reject":true}
+{"sql":"SELECT * FROM ( SELECT a FROM ORDER BY a LIMIT 1 ) AS x","reject":true}
+{"sql":"SELECT * FROM ( WITH w AS ( SELECT 1 ( SELECT * FROM w ) AS x","reject":true}
+{"sql":"SELECT * FROM ( WITH w AS ( SELECT 1 ) SELECT FROM * w ) AS x","reject":true}
+{"sql":"SELECT * FROM ( WITH w AS ( SELECT 1 ) SELECT 2 FROM w ) AS x","shape":"SELECT * FROM (WITH w AS (SELECT 1) SELECT 2 FROM w) AS x;"}
+{"sql":"SELECT * FROM ( WITH w AS ( SELECT 1 ) SELECT * w ) AS x","reject":true}
+{"sql":"SELECT * FROM f f ( )","reject":true}
+{"sql":"SELECT * FROM f ( SELECT","reject":true}
+{"sql":"SELECT * FROM ( f )","reject":true}
+{"sql":"SELECT * FROM f ) (","reject":true}
+{"sql":"SELECT * f ( 1 , 2 )","reject":true}
+{"sql":"SELECT * FROM f ( , 1 2 )","reject":true}
+{"sql":"SELECT * FROM f ( 1 , , 2 )","reject":true}
+{"sql":"SELECT * FROM f 1 , 2 )","reject":true}
+{"sql":"SELECT * f FROM ( 1 ) AS x","reject":true}
+{"sql":"SELECT * FROM f ( 1 AS x","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) ) AS x","reject":true}
+{"sql":"SELECT * FROM f ( ) AS x"}
+{"sql":"SELECT * a f ( 1 ) AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM f f ( 1 ) AS x ( p , q )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) AS x ( p , q q )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) AS x ( p * q )","reject":true}
+{"sql":"SELECT * FROM f ( 1 x","reject":true}
+{"sql":"* FROM f ( 1 ) x","reject":true}
+{"sql":"SELECT * FROM f ( FROM ) x","reject":true}
+{"sql":"SELECT * FROM public . ( f 1 )","reject":true}
+{"sql":"SELECT * FROM public . f ( 1 ) )","reject":true}
+{"sql":"SELECT * FROM public . ( 1 )","reject":true}
+{"sql":"SELECT * FROM public . f ( 1","reject":true}
+{"sql":"SELECT * FROM f , 1 ) , g ( 2 )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) , g 2 )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) , g 2 ( )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) , ( 2 )","reject":true}
+{"sql":"SELECT * FROM generate_series ( 1 , ) 3","reject":true}
+{"sql":"SELECT * * FROM generate_series ( 1 , 3 )","reject":true}
+{"sql":"SELECT * FROM generate_series ( 1 , 3 )"}
+{"sql":"SELECT * FROM generate_series ( 1 , 3 * WITH ORDINALITY","reject":true}
+{"sql":"SELECT FROM FROM generate_series ( 1 , 3 ) WITH ORDINALITY","reject":true}
+{"sql":"SELECT FROM * generate_series ( 1 , 3 ) WITH ORDINALITY","reject":true}
+{"sql":"t * FROM generate_series ( 1 , 3 ) WITH ORDINALITY","reject":true}
+{"sql":"SELECT * FROM generate_series ( 1 , 3 ) WITH ORDINALITY AS ( v , n )","reject":true}
+{"sql":"SELECT * FROM generate_series ( 1 , 3 ) WITH ORDINALITY x AS ( v , n )","reject":true}
+{"sql":"SELECT * FROM generate_series 1 1 , 3 ) WITH ORDINALITY AS x ( v , n )","reject":true}
+{"sql":"SELECT * FROM generate_series ( 1 , 3 ) WITH ORDINALITY AS x ( v , n n )","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( f ( 1 ) , g ( 2 x )","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( f ( 1 ) , g ( 2 ) )","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( f ( 1 ) , ( 2 ) )","reject":true}
+{"sql":"SELECT * FROM ROWS ROWS FROM ( f ( 1 ) , g ( 2 ) )","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( f ( 1 ) , g ( 2 ) ) SELECT ORDINALITY","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( f ( 1 ) , g ( 2 a ) WITH ORDINALITY","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( ( f 1 ) , g ( 2 ) ) WITH ORDINALITY","reject":true}
+{"sql":"SELECT * FROM ROWS FROM ( f ( 1 ) , g ( ) ) WITH ORDINALITY","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) AS x ( p int AS q text )","reject":true}
+{"sql":"SELECT * FROM FROM f ( 1 ) AS x ( p int , q text )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) AS x ( ) int , q text )","reject":true}
+{"sql":"SELECT * FROM f ( 1 ) AS x p int , q text )","reject":true}
+{"sql":"SELECT * FROM ONLY t t","reject":true}
+{"sql":"SELECT * ONLY FROM t","reject":true}
+{"sql":"g * FROM ONLY t","reject":true}
+{"sql":"* FROM ONLY t","reject":true}
+{"sql":"SELECT * FROM ONLY ONLY ( t )","reject":true}
+{"sql":"SELECT * FROM FROM ONLY ( t )","reject":true}
+{"sql":"SELECT * FROM ONLY t )","reject":true}
+{"sql":"SELECT FROM ONLY ( t )","reject":true}
+{"sql":"SELECT * FROM t * *","reject":true}
+{"sql":"SELECT * t FROM *","reject":true}
+{"sql":"SELECT SELECT * FROM t *","reject":true}
+{"sql":"* FROM t *","reject":true}
+{"sql":"SELECT * FROM t t TABLESAMPLE SYSTEM ( 10 )","reject":true}
+{"sql":"* FROM t TABLESAMPLE SYSTEM ( 10 )","reject":true}
+{"sql":"SELECT * FROM FROM TABLESAMPLE SYSTEM ( 10 )","reject":true}
+{"sql":"SELECT * FROM TABLESAMPLE SYSTEM ( 10 )","reject":true}
+{"sql":"SELECT * FROM t AS x TABLESAMPLE BERNOULLI ( 5 ) REPEATABLE ( ) 1","reject":true}
+{"sql":"SELECT * t AS x TABLESAMPLE BERNOULLI ( 5 ) REPEATABLE ( 1 )","reject":true}
+{"sql":"SELECT * FROM t AS x TABLESAMPLE BERNOULLI ( ( 5 ) REPEATABLE ( 1 )","reject":true}
+{"sql":"SELECT * FROM t AS x TABLESAMPLE BERNOULLI ( 5 ) ( REPEATABLE 1 )","reject":true}
+{"sql":"SELECT * FROM t INDEXED idx","reject":true}
+{"sql":"SELECT * FROM t INDEXED BY","reject":true}
+{"sql":"SELECT * t FROM INDEXED BY idx","reject":true}
+{"sql":"SELECT t FROM t INDEXED BY idx","reject":true}
+{"sql":"SELECT * FROM t SELECT INDEXED","reject":true}
+{"sql":"SELECT * FROM t NOT NOT INDEXED","reject":true}
+{"sql":"SELECT * FROM NOT t INDEXED","reject":true}
+{"sql":"SELECT SELECT * FROM t AS x INDEXED BY idx","reject":true}
+{"sql":"SELECT * FROM t AS x BY INDEXED idx","reject":true}
+{"sql":"SELECT * FROM t AS x BY idx","reject":true}
+{"sql":"* FROM t AS x INDEXED BY idx","reject":true}
+{"sql":"SELECT a SELECT","reject":true}
+{"sql":"SELECT SELECT a FROM","reject":true}
+{"sql":"SELECT a ,"}
+{"sql":"t a FROM , t","reject":true}
+{"sql":"SELECT FROM FROM , t","reject":true}
+{"sql":"SELECT a FROM , AS","reject":true}
+{"sql":"SELECT a , t"}
+{"sql":"SELECT SELECT a FROM t ,","reject":true}
+{"sql":"SELECT a FROM FROM t ,","reject":true}
+{"sql":"SELECT a u t ,","reject":true}
+{"sql":"SELECT FROM a t AS","reject":true}
+{"sql":"SELECT a FROM t WITH","reject":true}
+{"sql":"SELECT a FROM FROM t AS","reject":true}
+{"sql":"SELECT a FROM t AS x , y"}
+{"sql":"SELECT a FROM AS t x AS y","reject":true}
+{"sql":"SELECT a FROM t AS x x AS y","reject":true}
+{"sql":"SELECT a FROM t AS SELECT AS y","reject":true}
+{"sql":"SELECT a FROM t y x","reject":true}
+{"sql":"SELECT FROM a t x y","reject":true}
+{"sql":"SELECT a FROM t x t","reject":true}
+{"sql":"SELECT SELECT a FROM t x y","reject":true}
+{"sql":"SELECT a FROM FROM ( t","reject":true}
+{"sql":"SELECT a FROM (","reject":true}
+{"sql":"a SELECT FROM ( t","reject":true}
+{"sql":"SELECT FROM ( t","reject":true}
+{"sql":"SELECT a FROM )","reject":true}
+{"sql":"SELECT x FROM t )","reject":true}
+{"sql":"SELECT a FROM FROM t )","reject":true}
+{"sql":"SELECT a a FROM ( )","reject":true}
+{"sql":"SELECT a FROM ( n","reject":true}
+{"sql":"SELECT a ( )"}
+{"sql":"SELECT a FROM ( ( )","reject":true}
+{"sql":"SELECT a * ( SELECT a FROM t","reject":true}
+{"sql":"SELECT a ( FROM SELECT a FROM t","reject":true}
+{"sql":"a FROM ( SELECT a FROM t","reject":true}
+{"sql":"SELECT a FROM SELECT ( a FROM t","reject":true}
+{"sql":"SELECT FROM a SELECT a FROM t","reject":true}
+{"sql":"SELECT a FROM SELECT a FROM FROM t","reject":true}
+{"sql":"SELECT a FROM SELECT a t FROM","reject":true}
+{"sql":"SELECT a FROM t AS ( x )","reject":true}
+{"sql":"SELECT a FROM t AS ( )","reject":true}
+{"sql":"a FROM t AS x ( )","reject":true}
+{"sql":"SELECT a FROM t AS x a p , )","reject":true}
+{"sql":"SELECT a FROM t AS x ( ( p , )","reject":true}
+{"sql":"SELECT a FROM t AS x p ( , )","reject":true}
+{"sql":"SELECT SELECT FROM t AS x ( p , )","reject":true}
+{"sql":"SELECT a a FROM t AS 1","reject":true}
+{"sql":"SELECT a FROM t 1","reject":true}
+{"sql":"SELECT a FROM x AS 1","reject":true}
+{"sql":"a FROM 1","reject":true}
+{"sql":"SELECT , FROM 1","reject":true}
+{"sql":"a SELECT FROM 1","reject":true}
+{"sql":"SELECT FROM 1","reject":true}
+{"sql":"a SELECT FROM 'x'","reject":true}
+{"sql":"SELECT 2 FROM 'x'","reject":true}
+{"sql":"FROM a FROM 'x'","reject":true}
+{"sql":"SELECT a FROM 'x' 'x'","reject":true}
+{"sql":"a SELECT FROM t .","reject":true}
+{"sql":"SELECT SELECT a FROM t .","reject":true}
+{"sql":"SELECT a FROM t t .","reject":true}
+{"sql":"SELECT a FROM . . t","reject":true}
+{"sql":"FROM a FROM . t","reject":true}
+{"sql":"SELECT a . FROM t"}
+{"sql":"SELECT FROM a f (","reject":true}
+{"sql":"SELECT ) FROM f (","reject":true}
+{"sql":"a FROM f (","reject":true}
+{"sql":"SELECT a FROM f (","reject":true}
+{"sql":"SELECT FROM ONLY","reject":true}
+{"sql":"SELECT a ONLY FROM","reject":true}
+{"sql":"SELECT a FROM FROM ONLY","reject":true}
+{"sql":"* SELECT FROM t TABLESAMPLE","reject":true}
+{"sql":"SELECT * FROM TABLESAMPLE","reject":true}
+{"sql":"SELECT FROM t TABLESAMPLE","reject":true}
+{"sql":"* FROM t TABLESAMPLE","reject":true}
+{"sql":"SELECT * * t TABLESAMPLE SYSTEM","reject":true}
+{"sql":"SELECT * * FROM t TABLESAMPLE SYSTEM","reject":true}
+{"sql":"SELECT * FROM t t TABLESAMPLE SYSTEM","reject":true}
+{"sql":"SELECT SELECT * FROM t TABLESAMPLE SYSTEM","reject":true}
+{"sql":"SELECT * * FROM t INDEXED","reject":true}
+{"sql":"* SELECT FROM t INDEXED","reject":true}
+{"sql":"SELECT SELECT * FROM t INDEXED","reject":true}
+{"sql":"SELECT * FROM INDEXED t"}
+{"sql":"SELECT FROM t NOT","reject":true}
+{"sql":"SELECT * * FROM t NOT","reject":true}
+{"sql":"SELECT * FROM t )","reject":true}
+{"sql":"SELECT * * FROM f ( ) WITH","reject":true}
+{"sql":"SELECT * FROM f ( WITH","reject":true}
+{"sql":"SELECT * FROM f ( ) WITH","reject":true}
+{"sql":"FROM * FROM f ( ) WITH","reject":true}

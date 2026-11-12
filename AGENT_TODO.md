@@ -350,7 +350,7 @@ So that nobody repeats the work:
 
 ```sh
 go build ./... && go vet ./... && go vet -tags oracle . && go test ./...
-go test ./... -dialect=postgres      # or sqlite, or sqlite,postgres; default all
+go test ./... -dialect=postgres      # or sqlite, bigquery, or a list such as sqlite,postgres; default all
 go build -o sqlp ./cmd/sqlp && ./sqlp -dialect sqlite "SELECT 1"
 go vet -C cmd/sqlp_serv ./... && go test -C cmd/sqlp_serv ./...  # the web UI: own module
 go run -C cmd/sqlp_serv . -addr 127.0.0.1:9393   # the web UI, locally
@@ -710,22 +710,73 @@ to Google). Each regeneration reports feature coverage, agreement per source,
 known disagreements, opaque statements, round trips and verified shapes in
 section 7.
 
+**Running the oracle.** Everything is in `tools/corpusgen` (`bigquery.go`):
+
+```sh
+cd tools/corpusgen
+go run . -bigquery            # freeze testdata/corpus/bigquery and testdata/known/bigquery.jsonl
+go run . -bq-probe FILE       # BigQuery's verdict on each statement of FILE (one per line, or ---- between)
+```
+
+- Answers are cached in `~/.cache/sqlp/bigquery.jsonl` (`-bq-cache`); delete it to
+  take fresh verdicts. A rerun of everything takes seconds; new statements need
+  a dry run each (about 30 a second).
+- Before writing anything, `-bigquery` asks about every statement. If a message is
+  in neither `bqRejects` nor `bqAccepts`, it lists the messages, writes nothing
+  and exits 1. Classify by the rule written above the tables: **reject** what
+  BigQuery refuses for the statement's structure (which clauses, operators and
+  forms appear where), whatever the tables, columns, types and functions are;
+  **accept** refusals that depend on names, types or what kind of function
+  something is.
+- Shapes: constant queries are evaluated (`sameValue`, rows compared as a set,
+  billing capped at 1 byte); other statements must dry-run to the same type,
+  schema and tables (`sameMeaning`). `checkable` leaves out statements BigQuery
+  cannot resolve, so a printed `MISMATCH` is a real disagreement.
+- Mutations of the curated lists are made with the dialect's lexer, so a lexer
+  change changes the corpus: rerun `-bigquery` after one.
+- Lists that only BigQuery needs are in `tools/corpusgen/bigquery/*.sql`, frozen as
+  `curated_bigquery_<name>.jsonl`, so the other dialects need no regeneration.
+  The statements of `corpus.ANSI` are frozen as `ansi.jsonl`; the table's labels
+  hold only PostgreSQL and SQLite verdicts (`corpus.ANSIDialects`).
+- Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
+  `-bq-probe` the same way.
+
+**Status, 2026-11-12.** 7,608 frozen statements, 4,586 rejected by BigQuery;
+2,702 with a verified shape, including 1,999 of the 2,000 generated expressions
+(the other overflows: `>>` does not sign-extend, so `-30 >> 1` is huge). The
+one remaining `MISMATCH` is `SELECT CURRENT_TIME, CURRENT_TIMESTAMP`, whose
+values change between two runs. Known disagreements: 226 statements sqlp
+accepts and BigQuery rejects, 72 the other way round. They are the work list:
+`testdata/known/bigquery.jsonl`.
+
 **Phases**
 
-- [ ] 0. Oracle: `corpusgen -bigquery`, the message table, the sample tables, a
-  verdict cache.
-- [ ] 1. Group `dialect.Features` by area before adding the dialect's flags.
-  `ExtendedDDL` is split in phase 5, when BigQuery needs parts of it. Source
-  positions on AST nodes are not part of this work.
-- [ ] 2. Lexer: `#` comments, `"…"` strings, raw, bytes and triple-quoted strings,
-  backslash escapes, backtick names, `@param`, `@@system_variable`, dashed
-  project names in paths.
-- [ ] 3. Queries: STRUCT and ARRAY types and literals, subscripts (`OFFSET`,
-  `ORDINAL`, `SAFE_…`), field access, `UNNEST … WITH OFFSET`, implicit unnest,
-  `* EXCEPT/REPLACE`, `SELECT AS STRUCT|VALUE`, `QUALIFY`, `PIVOT/UNPIVOT`,
-  `TABLESAMPLE`, `FOR SYSTEM_TIME AS OF`, `GROUP BY ALL`, aggregate modifiers,
-  `SAFE.` calls, `SAFE_CAST`, `CAST … FORMAT`, typed literals, `INTERVAL`, wildcard
-  tables, pipe syntax.
+- [x] 0. Oracle: `corpusgen -bigquery` and `-bq-probe`, the message tables, the
+  sample tables, the verdict cache, shapes by value or by dry run.
+- [x] 1. `dialect.Features` grouped by area (`Expr`, `Names`, `Query`, `DML`,
+  `DDL`, `Utility`); `dialect.All` lists the dialects for tests. `ExtendedDDL`
+  is split in phase 5, when BigQuery needs parts of it. Source positions on AST
+  nodes are not part of this work.
+- [x] 2. Lexer (`lexer/backslash.go`): backslash escapes, decoded and checked as
+  BigQuery does (octal needs 3 digits up to `\377`, `\x` 2 hex digits, no
+  surrogates, no `\u` in bytes); `"…"` strings; raw, bytes and triple-quoted
+  literals; literals joined across whitespace and comments; `#` comments; ASCII
+  bare names; `\r` ends a comment. An unexpected character no longer ends a
+  script: `ParseScript` resumes at the next `;`.
+- [ ] 3. Queries. Done: `ALL` or `DISTINCT` required after set operators (only
+  `UNION ALL`), no mixing of set operators without parentheses, typed literals
+  only for BigQuery's literal types (`TypedLiterals`), no `LIKE … ESCAPE`, `.`
+  and `[ ]` on any operand (`FreePostfix`), `[1, 2]` arrays, `@name` and
+  `@@system_variable` (`AtParams`), integer literals limited to INT64 except
+  `-9223372036854775808`. To do, from the known list: STRUCT and ARRAY types and
+  literals, `UNNEST … WITH OFFSET`, implicit unnest, `* EXCEPT/REPLACE`,
+  `SELECT AS STRUCT|VALUE`, `PIVOT/UNPIVOT`, `TABLESAMPLE`, `FOR SYSTEM_TIME AS OF`,
+  `GROUP BY ALL`, aggregate modifiers, `SAFE.` calls, `SAFE_CAST`, `CAST … FORMAT`,
+  `RANGE<T>`, `INTERVAL` ranges, wildcard tables, dashed project names, pipe
+  syntax, and the structural rules in `bqRejects` (`JOIN` needs `ON`, no `LATERAL`,
+  no `WHERE` without `FROM`, `a IN (1) IN (2)` needs parentheses, …). Also a
+  reserved-word probe (`SELECT 1 AS kw` for every keyword) and a function-name
+  probe, as section 1.9 did for the other dialects.
 - [ ] 4. DML: `INSERT` (optional `INTO`), `UPDATE`, `DELETE`, `MERGE`, `TRUNCATE`.
 - [ ] 5. DDL and DCL: `OPTIONS`, `PARTITION BY`, `CLUSTER BY`, tables, views,
   functions, procedures, schemas, `ALTER`, policies, indexes, `GRANT`.

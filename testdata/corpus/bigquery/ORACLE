@@ -1,0 +1,3 @@
+Verdicts in this directory are BigQuery's (GoogleSQL), from dry runs taken on 2026-11-12,
+written by tools/corpusgen -bigquery. BigQuery has no versions; regenerate to
+follow it, and review verdicts that change.

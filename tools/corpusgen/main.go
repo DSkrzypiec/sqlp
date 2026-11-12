@@ -4,8 +4,12 @@
 // sqlite3 -safe, in a scratch directory, because the corpus is untrusted.
 //
 //	cd tools/corpusgen && go run . -root ../.. -pg DIR -sqlite DIR -sqlite-bin PATH
+//	cd tools/corpusgen && go run . -bigquery
+//	cd tools/corpusgen && go run . -bq-probe FILE
 //
 // -pg is src/test/regress/sql of PostgreSQL 16; -sqlite is test/ of SQLite 3.51.
+// -bigquery asks BigQuery itself through gcloud's login (see bigquery.go), and
+// -bq-probe prints BigQuery's verdict on each statement of FILE.
 package main
 
 import (
@@ -42,6 +46,15 @@ type engine struct {
 	// alike, for constant expressions and for queries on the sample tables.
 	sameTree, sameQuery func(sql, shape string) bool
 	report              *stats
+	// write is false on a pass that only collects the engine's answers.
+	write bool
+	// checkable, when set, says whether the engine can compare sql with its
+	// shape at all; the others are left without a shape and not counted as
+	// mismatches.
+	checkable func(sql string) bool
+	// ansi freezes the statements of corpus.ANSI as ansi.jsonl, for an engine
+	// whose verdicts the table's labels do not hold.
+	ansi bool
 }
 
 type stats struct {
@@ -55,7 +68,21 @@ func main() {
 	sqliteDir := flag.String("sqlite", "", "SQLite test/")
 	sqliteBin := flag.String("sqlite-bin", "", "sqlite3 3.51 built with SQLITE_ENABLE_UPDATE_DELETE_LIMIT")
 	ansi := flag.Bool("ansi", false, "check the ANSI table's dialect lists against the engines")
+	bq := flag.Bool("bigquery", false, "freeze BigQuery verdicts (needs gcloud logged in)")
+	bqProbe := flag.String("bq-probe", "", "print BigQuery's verdict on each statement of this file")
+	home, _ := os.UserHomeDir()
+	bqCache := flag.String("bq-cache", filepath.Join(home, ".cache", "sqlp", "bigquery.jsonl"), "BigQuery answers already received")
+	flag.IntVar(&workers, "workers", workers, "statements checked at a time")
 	flag.Parse()
+
+	if *bqProbe != "" {
+		newBigQuery(*bqCache).probe(*bqProbe)
+		return
+	}
+	if *bq {
+		freezeBigQuery(*root, newBigQuery(*bqCache))
+		return
+	}
 
 	if *ansi {
 		checkANSI(*sqliteBin)
@@ -63,13 +90,13 @@ func main() {
 	}
 
 	if *pgDir != "" {
-		e := engine{d: dialect.Postgres, rejects: pgRejects, sameTree: pgSameTree, sameQuery: pgSameTree, report: &stats{}}
+		e := engine{d: dialect.Postgres, rejects: pgRejects, sameTree: pgSameTree, sameQuery: pgSameTree, report: &stats{}, write: true}
 		valid := func(s string) bool { return !pgRejects(s) }
 		extract := func(script string) []string { return corpus.PostgresStatements(script, valid) }
 		e.freeze(*root, *pgDir, "*.sql", extract, pgSameTree)
 	}
 	if *sqliteBin != "" {
-		e := engine{d: dialect.SQLite, rejects: sqliteRejects(*sqliteBin), sameTree: sqliteSameTree(*sqliteBin), sameQuery: sqliteSameQuery(*sqliteBin), report: &stats{}}
+		e := engine{d: dialect.SQLite, rejects: sqliteRejects(*sqliteBin), sameTree: sqliteSameTree(*sqliteBin), sameQuery: sqliteSameQuery(*sqliteBin), report: &stats{}, write: true}
 		e.freeze(*root, *sqliteDir, "*.test", corpus.SQLiteStatements, nil)
 	}
 }
@@ -107,6 +134,18 @@ func (e engine) freeze(root, dir, glob string, extract func(string) []string, su
 	}
 	known = append(known, e.writeFile(filepath.Join(out, "generated_exprs.jsonl"), corpus.Exprs(e.d.Name, exprCount), e.sameTree)...)
 	known = append(known, e.freezeCurated(root, out)...)
+	if e.ansi {
+		var list []string
+		for _, c := range corpus.ANSI {
+			if !slices.Contains(list, c.SQL) {
+				list = append(list, c.SQL)
+			}
+		}
+		known = append(known, e.writeFile(filepath.Join(out, "ansi.jsonl"), list, e.sameQuery)...)
+	}
+	if !e.write {
+		return
+	}
 	if err := corpus.Write(filepath.Join(root, "testdata", "known", e.d.Name+".jsonl"), known); err != nil {
 		log.Fatal(err)
 	}
@@ -151,12 +190,19 @@ func usable(d *dialect.Dialect, s string) bool {
 }
 
 // freezeCurated freezes select/*.sql, one statement per line, plus mutations
-// of each statement, as curated_<name>.jsonl.
+// of each statement, as curated_<name>.jsonl. Lists for one dialect only sit
+// in a directory named after it and are frozen as curated_<dialect>_<name>.jsonl,
+// so adding one does not mean regenerating the other dialects.
 func (e engine) freezeCurated(root, out string) []corpus.Known {
 	files, err := filepath.Glob(filepath.Join(root, "tools", "corpusgen", "select", "*.sql"))
 	if err != nil {
 		log.Fatal(err)
 	}
+	own, err := filepath.Glob(filepath.Join(root, "tools", "corpusgen", e.d.Name, "*.sql"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	files = append(files, own...)
 	var known []corpus.Known
 	seen := map[string]bool{}
 	for _, f := range files {
@@ -173,6 +219,9 @@ func (e engine) freezeCurated(root, out string) []corpus.Known {
 			}
 		}
 		name := "curated_" + strings.TrimSuffix(filepath.Base(f), ".sql") + ".jsonl"
+		if filepath.Base(filepath.Dir(f)) == e.d.Name {
+			name = "curated_" + e.d.Name + "_" + strings.TrimSuffix(filepath.Base(f), ".sql") + ".jsonl"
+		}
 		known = append(known, e.writeFile(filepath.Join(out, name), list, e.sameQuery)...)
 	}
 	return known
@@ -201,6 +250,9 @@ func (e engine) writeFile(path string, list []string, sameTree func(sql, shape s
 		for n, same := range parallel(idx, func(k string) bool {
 			var i int
 			fmt.Sscan(k, &i)
+			if shapes[i].shape != "" && e.checkable != nil && !e.checkable(list[i]) {
+				shapes[i].shape = ""
+			}
 			return shapes[i].shape != "" && sameTree(list[i], shapes[i].shape)
 		}) {
 			shapes[n].ok = same
@@ -236,7 +288,7 @@ func (e engine) writeFile(path string, list []string, sameTree func(sql, shape s
 		}
 		rows = append(rows, rec)
 	}
-	if len(rows) > 0 {
+	if len(rows) > 0 && e.write {
 		if err := corpus.Write(path, rows); err != nil {
 			log.Fatal(err)
 		}
@@ -252,11 +304,14 @@ func oneLine(s string) string {
 	return s
 }
 
+// workers is how many statements parallel checks at a time.
+var workers = 8
+
 func parallel(list []string, f func(string) bool) []bool {
 	out := make([]bool, len(list))
 	var wg sync.WaitGroup
 	next := make(chan int)
-	for w := 0; w < 8; w++ {
+	for w := 0; w < workers; w++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -388,5 +443,24 @@ func sqliteSameQuery(bin string) func(string, string) bool {
 	return func(sql, shape string) bool {
 		x := run(sql)
 		return x == run(shape) && !strings.Contains(x, "rror")
+	}
+}
+
+// freezeBigQuery asks BigQuery about every statement first, without writing.
+// It writes nothing while some message is unclassified, since the verdict on
+// those statements would be a guess.
+func freezeBigQuery(root string, b *bigQuery) {
+	b.setUp()
+	e := engine{d: dialect.BigQuery, rejects: b.rejects, sameTree: b.sameValue, sameQuery: b.sameQuery, checkable: b.checkable, report: &stats{}, ansi: true}
+	e.freeze(root, "", "", nil, nil)
+	if b.reportUnknown() {
+		os.Exit(1)
+	}
+	e.write, e.report = true, &stats{}
+	e.freeze(root, "", "", nil, nil)
+	note := "Verdicts in this directory are BigQuery's (GoogleSQL), from dry runs taken on " + b.dayRange() +
+		",\nwritten by tools/corpusgen -bigquery. BigQuery has no versions; regenerate to\nfollow it, and review verdicts that change.\n"
+	if err := os.WriteFile(filepath.Join(root, "testdata", "corpus", "bigquery", "ORACLE"), []byte(note), 0o644); err != nil {
+		log.Fatal(err)
 	}
 }

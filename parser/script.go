@@ -65,8 +65,9 @@ func ParseScript(ctx context.Context, sql string, d *dialect.Dialect, limits Lim
 	}
 }
 
-// scriptTokens lexes sql, keeping a lexing error as the last token before EOF
-// so that the statements in front of it still parse.
+// scriptTokens lexes sql. A lexing error that ends the input stays as the last
+// token before EOF, so that the statements in front of it still parse; an
+// unexpected character does not end it, and the statements after it parse too.
 func scriptTokens(sql string, d *dialect.Dialect) []lexer.Token {
 	lx := lexer.New(sql, d.Lexer)
 	var toks []lexer.Token
@@ -80,7 +81,9 @@ func scriptTokens(sql string, d *dialect.Dialect) []lexer.Token {
 		case lexer.EOF:
 			return toks
 		case lexer.Illegal:
-			return append(toks, lexer.Token{Kind: lexer.EOF, Pos: len(sql)})
+			if lx.AtEnd() {
+				return append(toks, lexer.Token{Kind: lexer.EOF, Pos: len(sql)})
+			}
 		}
 	}
 }
@@ -93,8 +96,14 @@ func (p *Parser) scriptStatement() Statement {
 		return p.locate(start, Statement{Node: node, Opaque: ast.IsOpaque(node)})
 	}
 	bad := err.(*Error)
-	if t := p.toks[len(p.toks)-2:][0]; len(p.toks) > 1 && t.Kind == lexer.Illegal && bad.Pos >= t.Pos {
-		bad = p.errorAt(t.Pos, t.Value)
+	for _, t := range p.toks[start:] { // a lexing error explains the failure best
+		if t.Pos > bad.Pos {
+			break
+		}
+		if t.Kind == lexer.Illegal {
+			bad = p.errorAt(t.Pos, t.Value)
+			break
+		}
 	}
 	p.skipStatement(start)
 	return p.locate(start, Statement{Err: bad})
@@ -116,8 +125,12 @@ func (p *Parser) skipStatement(start int) {
 	for ; ; p.pos++ {
 		t := p.peek()
 		switch t.Kind {
-		case lexer.EOF, lexer.Illegal:
+		case lexer.EOF:
 			return
+		case lexer.Illegal:
+			if p.pos == len(p.toks)-2 { // the lexing error that ends the input
+				return
+			}
 		case lexer.Op:
 			if t.Text == ";" && body == 0 {
 				return

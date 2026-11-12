@@ -49,7 +49,9 @@ func pinsFor(t *testing.T, d *dialect.Dialect) []pin {
 		}
 	}
 	for _, c := range corpus.ANSI {
-		pins = append(pins, pin{sql: c.SQL, reject: !c.Accepted(d.Name)})
+		if slices.Contains(corpus.ANSIDialects, d.Name) {
+			pins = append(pins, pin{sql: c.SQL, reject: !c.Accepted(d.Name)})
+		}
 	}
 	known, err := corpus.Read[corpus.Known](filepath.Join("testdata", "known", d.Name+".jsonl"))
 	if err != nil {
@@ -159,6 +161,7 @@ var unobservable = map[string]string{
 	"postgres: ESCAPE moved to 6": escapeOnly,
 	"postgres: Ilike off":         "only decides how Transpile carries LIKE and ILIKE over, which TestTranspile covers",
 	"sqlite: ESCAPE moved to 5":   escapeOnly,
+	"bigquery: || moved to 9":     "|| takes strings, bytes and arrays, which neither + and - (9) nor * and / (10) accept",
 	"sqlite: MATCH moved to 2":    noMatch,
 	"sqlite: MATCH moved to 5":    noMatch,
 }

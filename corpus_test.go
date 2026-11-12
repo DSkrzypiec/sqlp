@@ -16,7 +16,7 @@ import (
 // It needs no engine. Each disagreement must be listed in testdata/known, and
 // a listed one that no longer disagrees fails too, so the list stays honest.
 func TestCorpus(t *testing.T) {
-	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+	for _, d := range dialect.All {
 		testkit.Run(t, d.Name, func(t *testing.T) {
 			files, _ := filepath.Glob(filepath.Join("testdata", "corpus", d.Name, "*.jsonl"))
 			if len(files) == 0 {

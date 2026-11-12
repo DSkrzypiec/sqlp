@@ -44,7 +44,7 @@ func FuzzParse(f *testing.F) {
 	f.Add(nestedParenJoin(200))
 
 	f.Fuzz(func(t *testing.T, sql string) {
-		for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+		for _, d := range dialect.All {
 			if !testkit.Enabled(d.Name) {
 				continue
 			}

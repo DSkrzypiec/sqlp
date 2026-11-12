@@ -88,6 +88,7 @@ var SQLite = &Dialect{
 
 	Features: Features{
 		Expr: ExprFeatures{
+			LikeEscape:   true,
 			IsAsOperator: true, NotNullPostfix: true, FreeFormTypeNames: true,
 		},
 		Names: NameFeatures{

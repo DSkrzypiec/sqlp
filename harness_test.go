@@ -98,6 +98,11 @@ var conformance = []struct {
 		{name: "dialect", identity: sqliteIdentity, rewrites: sqliteRewrites, failures: sqliteFailures},
 		{name: "foreign", failures: sqliteRejectsPostgres},
 	}},
+	// The common sets are PostgreSQL and SQLite syntax: in BigQuery "x" is a
+	// string, and INSERT t VALUES (1) is valid.
+	{dialect.BigQuery, []caseSet{
+		{name: "dialect", identity: bigqueryIdentity, failures: bigqueryFailures},
+	}},
 }
 
 // TestConformance runs as TestConformance/<dialect>/<set>/<kind>/<sql>.

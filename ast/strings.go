@@ -5,7 +5,7 @@ import "strconv"
 var (
 	literalKindNames = []string{
 		Null: "Null", True: "True", False: "False", Integer: "Integer", Float: "Float",
-		StringLit: "StringLit", BlobLit: "BlobLit",
+		StringLit: "StringLit", BlobLit: "BlobLit", BytesLit: "BytesLit",
 	}
 	isKindNames = []string{
 		IsNull: "IsNull", IsTrue: "IsTrue", IsFalse: "IsFalse", IsUnknown: "IsUnknown",

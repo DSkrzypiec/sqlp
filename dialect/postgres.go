@@ -117,6 +117,7 @@ var Postgres = &Dialect{
 
 	Features: Features{
 		Expr: ExprFeatures{
+			LikeEscape:      true,
 			DoubleColonCast: true, ArrayLiterals: true, RowConstructor: true, DefaultExpr: true,
 			Ilike: true, IsUnknown: true, BetweenSymmetric: true, Overlaps: true,
 			DistinctFromNonAssoc: true, TypedStringLiteral: true, AtTimeZone: true, NamedArgs: true,

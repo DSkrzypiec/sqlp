@@ -1,0 +1,192 @@
+{"sql":"SELECT 1 >= 2 >= 3","reject":true}
+{"sql":"SELECT 1 < 2 = TRUE","reject":true}
+{"sql":"SELECT 1 IN (1) IN (TRUE)","reject":true}
+{"sql":"SELECT 'a' LIKE 'b' LIKE 'c'","reject":true}
+{"sql":"SELECT 1 IS NULL IS NULL","reject":true}
+{"sql":"SELECT 1 BETWEEN 0 AND 2 BETWEEN FALSE AND TRUE","reject":true}
+{"sql":"SELECT 1 IS DISTINCT FROM 2 IS NULL","reject":true}
+{"sql":"SELECT 6 | 3 >= 7","shape":"SELECT (6 | 3) >= 7;"}
+{"sql":"SELECT 7 >= 6 | 3","shape":"SELECT 7 >= (6 | 3);"}
+{"sql":"SELECT 6 | 1 IN (7, 3)","shape":"SELECT (6 | 1) IN (7, 3);"}
+{"sql":"SELECT 'ab' || 'c' LIKE 'a%'","shape":"SELECT ('ab' || 'c') LIKE 'a%';"}
+{"sql":"SELECT 'a' LIKE 'a' || '%'","shape":"SELECT 'a' LIKE ('a' || '%');"}
+{"sql":"SELECT ~b'ab' || b'cd'","shape":"SELECT (~b'ab') || b'cd';"}
+{"sql":"SELECT ~(b'ab' || b'cd')","shape":"SELECT ~(b'ab' || b'cd');"}
+{"sql":"SELECT b'ab' || b'cd' & b'efgh'","shape":"SELECT (b'ab' || b'cd') & b'efgh';"}
+{"sql":"SELECT [1, 2] || [3]","shape":"SELECT ARRAY[1, 2] || ARRAY[3];"}
+{"sql":"SELECT [1, 2][0]","shape":"SELECT ARRAY[1, 2][0];"}
+{"sql":"SELECT ARRAY[1, 2][0]","shape":"SELECT ARRAY[1, 2][0];"}
+{"sql":"SELECT [1, 2][OFFSET(0)]","shape":"SELECT ARRAY[1, 2][OFFSET(0)];"}
+{"sql":"SELECT ['a', 'b'][0] || 'c'","shape":"SELECT ARRAY['a', 'b'][0] || 'c';"}
+{"sql":"SELECT 'c' || ['a', 'b'][0]","shape":"SELECT 'c' || ARRAY['a', 'b'][0];"}
+{"sql":"SELECT -t.a FROM t","shape":"SELECT -t.a FROM t;"}
+{"sql":"SELECT 2 * t.a FROM t","shape":"SELECT 2 * t.a FROM t;"}
+{"sql":"SELECT sqlp_oracle.f(1)"}
+{"sql":"SELECT (t).a FROM t","shape":"SELECT (t).a FROM t;"}
+{"sql":"SELECT 2 + 3 * 4 - 5 / 5","shape":"SELECT (2 + (3 * 4)) - (5 / 5);"}
+{"sql":"SELECT 5 - 3 - 1","shape":"SELECT (5 - 3) - 1;"}
+{"sql":"SELECT 64 / 4 / 2","shape":"SELECT (64 / 4) / 2;"}
+{"sql":"SELECT 1 << 2 & 7 ^ 5 | 8","shape":"SELECT (((1 << 2) & 7) ^ 5) | 8;"}
+{"sql":"SELECT -2 * 3 + ~1","shape":"SELECT ((-2) * 3) + (~1);"}
+{"sql":"SELECT NOT 1 = 2 AND TRUE OR FALSE","shape":"SELECT ((NOT (1 = 2)) AND TRUE) OR FALSE;"}
+{"sql":"SELECT NOT TRUE IS FALSE","shape":"SELECT NOT (TRUE IS FALSE);"}
+{"sql":"SELECT 2 + 3 BETWEEN 4 AND 6 - 1","shape":"SELECT (2 + 3) BETWEEN 4 AND (6 - 1);"}
+{"sql":"SELECT 'x' || 'y' = 'xy' AND 1 < 2","shape":"SELECT (('x' || 'y') = 'xy') AND (1 < 2);"}
+{"sql":"SELECT 1 = 2 IN (TRUE)","reject":true}
+{"sql":"SELECT TRUE IN (TRUE) = TRUE","reject":true}
+{"sql":"SELECT 2 * (t).a FROM t","shape":"SELECT 2 * (t).a FROM t;"}
+{"sql":"SELECT -(t).a FROM t","shape":"SELECT -(t).a FROM t;"}
+{"sql":"SELECT 2 * ARRAY[1, 2][0]","shape":"SELECT 2 * ARRAY[1, 2][0];"}
+{"sql":"SELECT -ARRAY[1, 2][0]","shape":"SELECT -ARRAY[1, 2][0];"}
+{"sql":"SELECT 1 >= 2 >= +","reject":true}
+{"sql":"SELECT 1 >= 2 >= 3 3","reject":true}
+{"sql":"SELECT SELECT 1 >= 2 >= 3","reject":true}
+{"sql":"SELECT 1 2 >= 3","reject":true}
+{"sql":"1 SELECT < 2 = TRUE","reject":true}
+{"sql":"SELECT < 1 2 = TRUE","reject":true}
+{"sql":"SELECT 1 < 2 =","reject":true}
+{"sql":"SELECT 1 'a' 2 = TRUE","reject":true}
+{"sql":"SELECT 1 IN ( 1 ) IN TRUE ( )","reject":true}
+{"sql":"SELECT 1 IN ( 1 IN ) ( TRUE )","reject":true}
+{"sql":"SELECT 1 IN ( 1 ) IN ( ) TRUE","reject":true}
+{"sql":"SELECT 1 IN ( 1 ) IN ( TRUE )","reject":true}
+{"sql":"SELECT 'a' LIKE 'b' 'c' LIKE","reject":true}
+{"sql":"SELECT 'a' LIKE 'b' 'b' LIKE 'c'","reject":true}
+{"sql":"- 'a' LIKE 'b' LIKE 'c'","reject":true}
+{"sql":"SELECT 'a' LIKE LIKE 'c'","reject":true}
+{"sql":"SELECT 1 IS 6 IS NULL","reject":true}
+{"sql":"SELECT SELECT 1 IS NULL IS NULL","reject":true}
+{"sql":"SELECT 1 IS NULL NULL IS","reject":true}
+{"sql":"SELECT 1 IS NULL NULL IS NULL","reject":true}
+{"sql":"SELECT 1 BETWEEN 0 AND 2 BETWEEN AND FALSE TRUE","reject":true}
+{"sql":"SELECT 1 BETWEEN 0 IN 2 BETWEEN FALSE AND TRUE","reject":true}
+{"sql":"SELECT 1 BETWEEN 0 AND 2 BETWEEN FALSE FALSE AND TRUE","reject":true}
+{"sql":"SELECT 1 BETWEEN 0 AND 2 BETWEEN FALSE AND '%'","reject":true}
+{"sql":"SELECT IS DISTINCT FROM 2 IS NULL","reject":true}
+{"sql":"SELECT 1 ) DISTINCT FROM 2 IS NULL","reject":true}
+{"sql":"SELECT 1 IS FROM DISTINCT 2 IS NULL","reject":true}
+{"sql":"SELECT 1 IS DISTINCT FROM IS NULL","reject":true}
+{"sql":"SELECT 6 | 3 7","reject":true}
+{"sql":"SELECT | 3 >= 7","reject":true}
+{"sql":"SELECT 7 6 >= | 3","reject":true}
+{"sql":"SELECT 7 >= | 6 3","reject":true}
+{"sql":"SELECT ] >= 6 | 3","reject":true}
+{"sql":"SELECT 7 ( 6 | 3","reject":true}
+{"sql":"SELECT 6 | 1 IN ( 7 , , 3 )","reject":true}
+{"sql":"SELECT 'b' | 1 IN ( 7 , 3 )"}
+{"sql":"SELECT 6 | 'y' IN ( 7 , 3 )"}
+{"sql":"SELECT 6 | 1 IN ( 7 , )","reject":true}
+{"sql":") 'ab' || 'c' LIKE 'a%'","reject":true}
+{"sql":"SELECT || 'c' LIKE 'a%'","reject":true}
+{"sql":"SELECT 'ab' || 'c' 'c' LIKE 'a%'","shape":"SELECT ('ab' || 'cc') LIKE 'a%';"}
+{"sql":"SELECT 'ab' || || 'c' LIKE 'a%'","reject":true}
+{"sql":"SELECT ) LIKE 'a' || '%'","reject":true}
+{"sql":"SELECT 'a' LIKE 'a' || || '%'","reject":true}
+{"sql":"'a' LIKE 'a' || '%'","reject":true}
+{"sql":"SELECT ~ b'ab' || || b'cd'","reject":true}
+{"sql":"SELECT b'ab' ~ || b'cd'","reject":true}
+{"sql":"SELECT ~ b'ab' || b'cd' b'cd'","shape":"SELECT (~b'ab') || b'cdcd';"}
+{"sql":"SELECT ~ b'ab' b'ab' || b'cd'","shape":"SELECT (~b'abab') || b'cd';"}
+{"sql":"~ SELECT ( b'ab' || b'cd' )","reject":true}
+{"sql":"SELECT ~ b'ab' ( || b'cd' )","reject":true}
+{"sql":"SELECT ~ ( b'ab' ( b'cd' )","reject":true}
+{"sql":"SELECT ~ ( b'ab' || b'cd' ) )","reject":true}
+{"sql":"SELECT b'ab' || b'cd' SELECT b'efgh'","reject":true}
+{"sql":"SELECT b'ab' FROM b'cd' & b'efgh'","reject":true}
+{"sql":"SELECT b'ab' b'cd' || & b'efgh'","reject":true}
+{"sql":"SELECT [ 1 , + ] || [ 3 ]","reject":true}
+{"sql":"SELECT [ 1 , 2 ] || 3 ]","reject":true}
+{"sql":"SELECT [ , 2 ] || [ 3 ]","reject":true}
+{"sql":"SELECT [ 1 , 2 ] || [ 3","reject":true}
+{"sql":"SELECT [ TRUE , 2 ] [ 0 ]"}
+{"sql":"SELECT [ 1 , = ] [ 0 ]","reject":true}
+{"sql":"SELECT [ [ 1 , 2 ] [ 0 ]","reject":true}
+{"sql":"SELECT [ 1 , 2 2 ] [ 0 ]","reject":true}
+{"sql":"ARRAY SELECT [ 1 , 2 ] [ 0 ]","reject":true}
+{"sql":"SELECT ARRAY [ 1 , 2 ] [ ] ]","reject":true}
+{"sql":"SELECT ARRAY [ 1 , 2 ] [ ] 0","reject":true}
+{"sql":"SELECT ARRAY 2 1 , 2 ] [ 0 ]","reject":true}
+{"sql":"~ [ 1 , 2 ] [ OFFSET ( 0 ) ]","reject":true}
+{"sql":"SELECT [ 1 , 2 ] OFFSET [ ( 0 ) ]","reject":true}
+{"sql":"SELECT [ 1 , 2 ] [ OFFSET ( 0 )","reject":true}
+{"sql":"SELECT [ 1 , 2 ] [ OFFSET 0 ( ) ]","reject":true}
+{"sql":"SELECT [ 'a' , 'b' ] [ 0 ] || *","reject":true}
+{"sql":"SELECT [ , 'a' 'b' ] [ 0 ] || 'c'","reject":true}
+{"sql":"SELECT [ 'a' , 'b' ] [ 0 || 'c'","reject":true}
+{"sql":"SELECT [ 'a' , 'b' ] 0 ] || 'c'","reject":true}
+{"sql":"SELECT 'c' || [ 'a' , 'b' ] [ ] 0","reject":true}
+{"sql":"SELECT 'c' || [ 'a' NOT 'b' ] [ 0 ]","reject":true}
+{"sql":"SELECT 'c' || [ 'a' , 'b' ] [ ]","reject":true}
+{"sql":"SELECT - . a FROM t","reject":true}
+{"sql":"SELECT - t . FROM a t","reject":true}
+{"sql":"SELECT - t . a FROM","reject":true}
+{"sql":"SELECT - t . FROM t"}
+{"sql":"SELECT 2 * t . a FROM t t","shape":"SELECT 2 * t.a FROM t AS t;"}
+{"sql":"SELECT 2 * t . a t"}
+{"sql":"SELECT 2 * t . a FROM t","shape":"SELECT 2 * t.a FROM t;"}
+{"sql":"SELECT 2 * t . a FROM","reject":true}
+{"sql":"SELECT sqlp_oracle [ f ( 1 )","reject":true}
+{"sql":"SELECT sqlp_oracle . f 1 ( )","reject":true}
+{"sql":"SELECT sqlp_oracle . f ( 2 )"}
+{"sql":"sqlp_oracle . f ( 1 )","reject":true}
+{"sql":"SELECT ( t ) ) . a FROM t","reject":true}
+{"sql":"SELECT ( t ) . 2 FROM t"}
+{"sql":"SELECT t ( ) . a FROM t"}
+{"sql":"SELECT ( t ) a . FROM t","reject":true}
+{"sql":"SELECT 2 3 * 4 - 5 / 5","reject":true}
+{"sql":"2 SELECT + 3 * 4 - 5 / 5","reject":true}
+{"sql":"SELECT 2 + 3 * 4 - 5 / 5 5","reject":true}
+{"sql":"2 + 3 * 4 - 5 / 5","reject":true}
+{"sql":"5 - 3 - 1","reject":true}
+{"sql":"SELECT 5 - 3 3 - 1","reject":true}
+{"sql":"SELECT 5 - 3 -","reject":true}
+{"sql":"SELECT 64 SELECT 4 / 2","reject":true}
+{"sql":"SELECT 64 64 / 4 / 2","reject":true}
+{"sql":"SELECT 64 / 4 / / 2","reject":true}
+{"sql":"SELECT 64 / 4 / t"}
+{"sql":"SELECT 1 << 2 7 ^ 5 | 8","reject":true}
+{"sql":"SELECT 1 2 & 7 ^ 5 | 8","reject":true}
+{"sql":"1 << 2 & 7 ^ 5 | 8","reject":true}
+{"sql":"SELECT 1 << . & 7 ^ 5 | 8","reject":true}
+{"sql":"SELECT - 2 * 3 ~ + 1","reject":true}
+{"sql":"SELECT - 2 * 3 + ~ ~ 1","shape":"SELECT ((-2) * 3) + (~(~1));"}
+{"sql":"SELECT - 2 * 3 + 1","shape":"SELECT ((-2) * 3) + 1;"}
+{"sql":"SELECT - * 3 + ~ 1","reject":true}
+{"sql":"SELECT NOT 1 = 2 AND TRUE || FALSE"}
+{"sql":"SELECT NOT 1 2 AND TRUE OR FALSE","reject":true}
+{"sql":"SELECT NOT 1 2 = AND TRUE OR FALSE","reject":true}
+{"sql":"SELECT NOT 1 = 2 TRUE OR FALSE","reject":true}
+{"sql":"NOT SELECT TRUE IS FALSE","reject":true}
+{"sql":"SELECT NOT NOT TRUE IS FALSE","shape":"SELECT NOT (NOT (TRUE IS FALSE));"}
+{"sql":"SELECT NOT SELECT IS FALSE","reject":true}
+{"sql":"SELECT 2 + 3 BETWEEN 4 AND 6 - SELECT","reject":true}
+{"sql":"SELECT 2 + 3 BETWEEN ] AND 6 - 1","reject":true}
+{"sql":"SELECT 2 + BETWEEN 3 4 AND 6 - 1","reject":true}
+{"sql":"SELECT 'x' || 'y' = 'xy' AND 1 2","reject":true}
+{"sql":"SELECT 'x' || = 'y' 'xy' AND 1 < 2","reject":true}
+{"sql":"SELECT 'x' || 'y' - 'xy' AND 1 < 2"}
+{"sql":"SELECT 'x' || 'y' = 'xy' AND AND 1 < 2","reject":true}
+{"sql":"SELECT 1 = 2 IN ( t )","reject":true}
+{"sql":"SELECT 1 SELECT 2 IN ( TRUE )","reject":true}
+{"sql":"SELECT 1 = IN ( TRUE )","reject":true}
+{"sql":"SELECT 1 = 2 2 IN ( TRUE )","reject":true}
+{"sql":"SELECT TRUE IN ( TRUE ) 2 TRUE","reject":true}
+{"sql":"SELECT TRUE [ ( TRUE ) = TRUE","reject":true}
+{"sql":"SELECT TRUE IN ( ) TRUE = TRUE","reject":true}
+{"sql":"SELECT TRUE IN ( TRUE = TRUE","reject":true}
+{"sql":"SELECT 2 * ( t ) t a FROM t","reject":true}
+{"sql":"SELECT 2 * * ( t ) . a FROM t","reject":true}
+{"sql":"SELECT 2 * ( t ) . a SELECT t","reject":true}
+{"sql":"SELECT 2 * ( t ) . a FROM","reject":true}
+{"sql":"SELECT - ( t ) ) . a FROM t","reject":true}
+{"sql":"SELECT - ( t . ) a FROM t","reject":true}
+{"sql":"SELECT - ( ( ) . a FROM t","reject":true}
+{"sql":"SELECT - ( t ) a FROM t"}
+{"sql":"SELECT 2 * ARRAY [ 1 , 2 ] [ [ 0 ]","reject":true}
+{"sql":"SELECT 2 * ARRAY [ 1 , 2 ] ] [ 0 ]","reject":true}
+{"sql":"SELECT 2 * ARRAY [ 1 2 ] [ 0 ]","reject":true}
+{"sql":"SELECT 2 * [ 1 , 2 ] [ 0 ]","shape":"SELECT 2 * ARRAY[1, 2][0];"}
+{"sql":"SELECT - ARRAY ARRAY [ 1 , 2 ] [ 0 ]","reject":true}
+{"sql":"SELECT - ARRAY [ 1 , 2 ] [ ] 0","reject":true}
+{"sql":"SELECT - - ARRAY [ 1 , 2 ] [ 0 ]","shape":"SELECT -(-ARRAY[1, 2][0]);"}
+{"sql":"SELECT - [ 1 , 2 ] [ 0 ]","shape":"SELECT -ARRAY[1, 2][0];"}

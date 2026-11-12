@@ -34,7 +34,7 @@ func accepted(b *testing.B, d *dialect.Dialect) (list []string, size int64) {
 //
 //	go test -run '^$' -bench Corpus -benchmem . -dialect=postgres
 func BenchmarkCorpus(b *testing.B) {
-	for _, d := range []*dialect.Dialect{dialect.Postgres, dialect.SQLite} {
+	for _, d := range dialect.All {
 		if !testkit.Enabled(d.Name) {
 			continue
 		}

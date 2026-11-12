@@ -6,6 +6,7 @@
 package gen
 
 import (
+	"encoding/hex"
 	"strings"
 
 	"sqlp/ast"
@@ -105,8 +106,20 @@ func (g *Generator) kw(cond bool, words string) {
 	}
 }
 
+// quoted writes name in the dialect's first identifier quotes.
 func (g *Generator) quoted(name string) {
-	g.w(`"`, strings.ReplaceAll(name, `"`, `""`), `"`)
+	open := g.d.Lexer.IdentQuotes[:1]
+	closing := map[string]string{"[": "]"}[open]
+	if closing == "" {
+		closing = open
+	}
+	if g.d.Lexer.BackslashEscapes {
+		g.w(lexer.BackslashQuote(name, open[0], false))
+		return
+	} else {
+		name = strings.ReplaceAll(name, closing, closing+closing)
+	}
+	g.w(open, name, closing)
 }
 
 func (g *Generator) ident(id ast.Ident) {
@@ -198,10 +211,26 @@ func (g *Generator) exprList(es []ast.Expr) {
 }
 
 func (g *Generator) str(s string) {
+	if g.d.Lexer.BackslashEscapes {
+		g.w(lexer.BackslashQuote(s, '\'', false))
+		return
+	}
 	g.w("'", strings.ReplaceAll(s, "'", "''"), "'")
 }
 
 // --- expressions ---------------------------------------------------------------
+
+// postfixBase writes the operand of . or [ ], in parentheses unless it is an
+// atom: (a + b).c is not a + b.c.
+func (g *Generator) postfixBase(e ast.Expr) {
+	if g.prec(e) < atomPrec {
+		g.w("(")
+		g.expr(e)
+		g.w(")")
+		return
+	}
+	g.expr(e)
+}
 
 // atomPrec is the precedence of anything that never needs parentheses.
 const atomPrec = 1000
@@ -301,7 +330,7 @@ func (g *Generator) expr(e ast.Expr) {
 	case *ast.Word:
 		g.w(e.Text)
 	case *ast.Field:
-		g.expr(e.Expr)
+		g.postfixBase(e.Expr)
 		g.w(".")
 		if e.Star {
 			g.w("*")
@@ -436,7 +465,7 @@ func (g *Generator) expr(e ast.Expr) {
 		if g.transpiling() && !g.d.Features.Expr.ArrayLiterals {
 			g.warn("array subscript") // SQLite reads [1] as a quoted name
 		}
-		g.expr(e.Expr)
+		g.postfixBase(e.Expr)
 		g.w("[")
 		if e.Slice {
 			if e.Lower != nil {
@@ -631,8 +660,22 @@ func (g *Generator) literal(l *ast.Literal) {
 		g.w("FALSE")
 	case ast.Integer, ast.Float:
 		g.w(l.Value)
+	case ast.BytesLit:
+		digits := strings.ToUpper(hex.EncodeToString([]byte(l.Value)))
+		switch {
+		case g.d.Lexer.PrefixedStrings:
+			g.w("b", lexer.BackslashQuote(l.Value, '\'', true))
+		case g.d.Lexer.BlobLiterals:
+			g.w("X'", digits, "'")
+		default: // the target's binary type, written in hex, as for a blob
+			g.cast(&ast.Cast{Style: ast.CastDoubleColon, Type: &ast.DataType{Name: "BLOB"},
+				Expr: &ast.Literal{Kind: ast.StringLit, Value: `\x` + digits}})
+		}
 	case ast.BlobLit:
 		switch {
+		case g.transpiling() && g.d.Lexer.PrefixedStrings && !g.from.Lexer.BitStrings: // X'0F' is b'\x0f'
+			raw, _ := hex.DecodeString(l.Value[2 : len(l.Value)-1])
+			g.literal(&ast.Literal{Kind: ast.BytesLit, Value: string(raw)})
 		case !g.transpiling() || g.from.Lexer.BitStrings == g.d.Lexer.BitStrings:
 			g.w(l.Value)
 		case g.from.Lexer.BitStrings: // X'1F' is a bit string in PostgreSQL, a blob in SQLite
@@ -1018,6 +1061,7 @@ func (g *Generator) body(b ast.QueryBody) {
 		g.setOperand(b.Left)
 		g.w(" ", [...]string{"UNION", "INTERSECT", "EXCEPT"}[b.Op])
 		g.kw(b.All, "ALL")
+		g.kw(!b.All && g.d.Features.Query.SetQuantifierRequired, "DISTINCT")
 		g.w(" ")
 		g.setOperand(b.Right)
 	case *ast.Values:

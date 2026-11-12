@@ -77,6 +77,7 @@ const (
 	Float
 	StringLit // Value is the logical string content
 	BlobLit   // Value is the raw text, e.g. X'0F'
+	BytesLit  // Value is the decoded content of a bytes literal, b'...' (BigQuery)
 )
 
 // Literal is a constant. For StringLit, Escape marks a PostgreSQL E'...'

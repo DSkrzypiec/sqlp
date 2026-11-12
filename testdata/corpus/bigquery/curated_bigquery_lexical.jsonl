@@ -1,0 +1,397 @@
+{"sql":"SELECT 'a' 'b'","shape":"SELECT 'ab';"}
+{"sql":"SELECT 'a''b'","reject":true}
+{"sql":"SELECT 'a' /* c */ 'b'","shape":"SELECT 'ab';"}
+{"sql":"SELECT 'a' \"b\"","shape":"SELECT 'ab';"}
+{"sql":"SELECT 'a' r'b'","shape":"SELECT 'ab';"}
+{"sql":"SELECT 'a' b'x'","reject":true}
+{"sql":"SELECT b'a' b'x'","shape":"SELECT b'ax';"}
+{"sql":"SELECT '''a'b'''","shape":"SELECT 'a\\'b';"}
+{"sql":"SELECT '\\q'","reject":true}
+{"sql":"SELECT '\\x4'","reject":true}
+{"sql":"SELECT '\\x41'","shape":"SELECT 'A';"}
+{"sql":"SELECT '\\101'","shape":"SELECT 'A';"}
+{"sql":"SELECT '\\10'","reject":true}
+{"sql":"SELECT '\\u00e9', '\\U0001F600'","shape":"SELECT 'é', '😀';"}
+{"sql":"SELECT '\\ud800'","reject":true}
+{"sql":"SELECT r'\\'","reject":true}
+{"sql":"SELECT r'\\''","shape":"SELECT '\\\\\\'';"}
+{"sql":"SELECT rb'\\x00', Rb'a', bR'a', BR'a'","shape":"SELECT b'\\\\x00', b'a', b'a', b'a';"}
+{"sql":"SELECT b'\\u00e9'","reject":true}
+{"sql":"SELECT b'\\xff'","shape":"SELECT b'\\xff';"}
+{"sql":"SELECT @@project_id","shape":"SELECT @@project_id;"}
+{"sql":"SELECT @`select`"}
+{"sql":"SELECT @select"}
+{"sql":"SELECT a$b FROM t","reject":true}
+{"sql":"SELECT 1 # comment","shape":"SELECT 1;"}
+{"sql":"SELECT ``","reject":true}
+{"sql":"SELECT `a\\`b`"}
+{"sql":"SELECT `\\u0041`"}
+{"sql":"SELECT 0x1F, 0X1f, 1e3, 1.5E-3, .5, 5.","shape":"SELECT 0x1F, 0X1f, 1e3, 1.5E-3, .5, 5.;"}
+{"sql":"SELECT 1_000","reject":true}
+{"sql":"SELECT 1 /* a /* b */ */","reject":true}
+{"sql":"SELECT 'a' 'b' 'c'","shape":"SELECT 'abc';"}
+{"sql":"SELECT ''''''","shape":"SELECT '';"}
+{"sql":"SELECT \"\"\"\"\"\"","shape":"SELECT '';"}
+{"sql":"SELECT '\\''","shape":"SELECT '\\'';"}
+{"sql":"SELECT \"\\\"\"","shape":"SELECT '\"';"}
+{"sql":"SELECT 'é'","shape":"SELECT 'é';"}
+{"sql":"SELECT x'0F'","reject":true}
+{"sql":"SELECT N'abc'","reject":true}
+{"sql":"SELECT E'abc'","reject":true}
+{"sql":"SELECT $1","reject":true}
+{"sql":"SELECT :a","reject":true}
+{"sql":"SELECT 1 == 2","reject":true}
+{"sql":"SELECT 1 /* unterminated","reject":true}
+{"sql":"SELECT 1e","reject":true}
+{"sql":"SELECT 1.2.3","reject":true}
+{"sql":"SELECT 0x","reject":true}
+{"sql":"SELECT 'a' AS b","shape":"SELECT 'a' AS b;"}
+{"sql":"SELECT 'a'b","shape":"SELECT 'a' AS b;"}
+{"sql":"SELECT 1a","reject":true}
+{"sql":"SELECT `a` `b`"}
+{"sql":"SELECT '\\a\\b\\f\\n\\r\\t\\v\\\\\\?\\\"\\'\\`'","shape":"SELECT '\\x07\\x08\\x0c\\n\\r\\t\\x0b\\\\?\"\\'`';"}
+{"sql":"SELECT '\\0'","reject":true}
+{"sql":"SELECT '\\777'","reject":true}
+{"sql":"SELECT 1 @ 2","reject":true}
+{"sql":"SELECT ?"}
+{"sql":"SELECT @1","reject":true}
+{"sql":"SELECT @_a"}
+{"sql":"SELECT @@x.y"}
+{"sql":"SELECT r\"a\"","shape":"SELECT 'a';"}
+{"sql":"SELECT r'''a'''","shape":"SELECT 'a';"}
+{"sql":"SELECT b'''x'''","shape":"SELECT b'x';"}
+{"sql":"SELECT 0x8000000000000000","reject":true}
+{"sql":"SELECT 99999999999999999999","reject":true}
+{"sql":"SELECT 1.5e309","shape":"SELECT 1.5e309;"}
+{"sql":"SELECT a.1 FROM t"}
+{"sql":"SELECT t.`1` FROM t"}
+{"sql":"SELECT _1"}
+{"sql":"SELECT 1 /**/ + /**/ 2","shape":"SELECT 1 + 2;"}
+{"sql":"SELECT 9223372036854775807","shape":"SELECT 9223372036854775807;"}
+{"sql":"SELECT 9223372036854775808","reject":true}
+{"sql":"SELECT -9223372036854775808","shape":"SELECT -9223372036854775808;"}
+{"sql":"SELECT - 9223372036854775808","shape":"SELECT -9223372036854775808;"}
+{"sql":"SELECT 0x7FFFFFFFFFFFFFFF","shape":"SELECT 0x7FFFFFFFFFFFFFFF;"}
+{"sql":"SELECT -0x8000000000000000","shape":"SELECT -0x8000000000000000;"}
+{"sql":"SELECT 0xFFFFFFFFFFFFFFFF","reject":true}
+{"sql":"SELECT 1 AS é","reject":true}
+{"sql":"SELECT 1 AS aé","reject":true}
+{"sql":"SELECT '\\377'","shape":"SELECT '\\xff';"}
+{"sql":"SELECT b'\\377'","shape":"SELECT b'\\xff';"}
+{"sql":"SELECT '\\xff'","shape":"SELECT '\\xff';"}
+{"sql":"SELECT 'a'b'x'","reject":true}
+{"sql":"SELECT 'a'r'b'","reject":true}
+{"sql":"SELECT 'a'\"b\"","reject":true}
+{"sql":"SELECT 1 AS `a\\nb`"}
+{"sql":"SELECT @a.b"}
+{"sql":"SELECT @ a"}
+{"sql":"SELECT @@ a"}
+{"sql":"SELECT @`a b`"}
+{"sql":"SELECT 1.e3","shape":"SELECT 1.e3;"}
+{"sql":"SELECT 1.5.f"}
+{"sql":"SELECT .5e1","shape":"SELECT .5e1;"}
+{"sql":"SELECT 1e+3, 1E-3","shape":"SELECT 1e+3, 1E-3;"}
+{"sql":"SELECT 00012","shape":"SELECT 00012;"}
+{"sql":"SELECT 0123.5","shape":"SELECT 0123.5;"}
+{"sql":"SELECT 1 AS _","shape":"SELECT 1 AS _;"}
+{"sql":"SELECT 'a' AS r","shape":"SELECT 'a' AS r;"}
+{"sql":"SELECT r AS rb FROM (SELECT 1 AS r)","shape":"SELECT r AS rb FROM (SELECT 1 AS r);"}
+{"sql":"SELECT '''a''''","reject":true}
+{"sql":"SELECT '''a'''''","reject":true}
+{"sql":"SELECT \"\"\"a\"\"\"\"","reject":true}
+{"sql":"SELECT 'a\\\\'","shape":"SELECT 'a\\\\';"}
+{"sql":"SELECT r'a\\\\'","shape":"SELECT 'a\\\\\\\\';"}
+{"sql":"SELECT br'\\x'","shape":"SELECT b'\\\\x';"}
+{"sql":"SELECT '\\U00110000'","reject":true}
+{"sql":"SELECT '\\uD7FF'","shape":"SELECT '퟿';"}
+{"sql":"SELECT 1 /*/ 2","reject":true}
+{"sql":"SELECT 1 /*","reject":true}
+{"sql":"SELECT 1 FROM t#c","shape":"SELECT 1 FROM t;"}
+{"sql":"SELECT 'x' -- c","shape":"SELECT 'x';"}
+{"sql":"SELECT '\\x00'","shape":"SELECT '\\x00';"}
+{"sql":"SELECT 1 AS `\\u0000`"}
+{"sql":"SELECT 'a' LIKE 'a' ESCAPE '#'","reject":true}
+{"sql":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', DATETIME '2020-01-01 00:00:00', TIME '12:00:00'","shape":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', DATETIME '2020-01-01 00:00:00', TIME '12:00:00';"}
+{"sql":"SELECT RANGE<DATE> '[2020-01-01, 2021-01-01)'"}
+{"sql":"SELECT INT64 '1'","reject":true}
+{"sql":"SELECT STRING 'a'","reject":true}
+{"sql":"SELECT BOOL 'true'","reject":true}
+{"sql":"SELECT FLOAT64 '1.5'","reject":true}
+{"sql":"SELECT DECIMAL '1.5'","shape":"SELECT DECIMAL '1.5';"}
+{"sql":"SELECT BIGDECIMAL '1.5'","shape":"SELECT BIGDECIMAL '1.5';"}
+{"sql":"SELECT INTERVAL '1' DAY","shape":"SELECT INTERVAL '1' DAY;"}
+{"sql":"SELECT DATE \"2020-01-01\"","shape":"SELECT DATE '2020-01-01';"}
+{"sql":"SELECT DATE r'2020-01-01'","shape":"SELECT DATE '2020-01-01';"}
+{"sql":"SELECT TIMESTAMP '2020-01-01' 'x'"}
+{"sql":"SELECT 'a' 'b' 'a' 'b'","shape":"SELECT 'abab';"}
+{"sql":"SELECT SELECT 'a' 'b'","reject":true}
+{"sql":"'a' 'b'","reject":true}
+{"sql":"'a' /* c */ 'b' SELECT","reject":true}
+{"sql":", 'a' /* c */ 'b'","reject":true}
+{"sql":"'a' \"b\" SELECT","reject":true}
+{"sql":"'a' r'b' SELECT","reject":true}
+{"sql":"SELECT 'a' r'b' 'a' r'b'","shape":"SELECT 'abab';"}
+{"sql":"9223372036854775808 'a' r'b'","reject":true}
+{"sql":"SELECT BIGNUMERIC"}
+{"sql":"SELECT SELECT b'a' b'x'","reject":true}
+{"sql":"b'a' b'x' SELECT","reject":true}
+{"sql":"SELECT b'a' b'x' b'a' b'x'","shape":"SELECT b'axax';"}
+{"sql":"r'a\\\\' '''a'b'''","reject":true}
+{"sql":"SELECT '''a'b''' '''a'b'''","shape":"SELECT 'a\\'ba\\'b';"}
+{"sql":"SELECT ,","reject":true}
+{"sql":"'\\101'","reject":true}
+{"sql":"SELECT '\\u00e9' '\\U0001F600' ,"}
+{"sql":"SELECT '\\u00e9' , '\\U0001F600'","shape":"SELECT 'é', '😀';"}
+{"sql":"SELECT '\\x41' , '\\U0001F600'","shape":"SELECT 'A', '😀';"}
+{"sql":"9223372036854775808 '\\u00e9' , '\\U0001F600'","reject":true}
+{"sql":"SELECT r'\\'' r'\\''","shape":"SELECT '\\\\\\'\\\\\\'';"}
+{"sql":"SELECT ESCAPE","reject":true}
+{"sql":"SELECT t"}
+{"sql":"r'\\''","reject":true}
+{"sql":"SELECT rb'\\x00' AS Rb'a' , bR'a' , BR'a'","reject":true}
+{"sql":"SELECT rb'\\x00' , Rb'a' , bR'a' ,"}
+{"sql":"SELECT rb'\\x00' , Rb'a' Rb'a' , bR'a' , BR'a'","shape":"SELECT b'\\\\x00', b'aa', b'a', b'a';"}
+{"sql":"SELECT rb'\\x00' , Rb'a' , bR'a' , , BR'a'","reject":true}
+{"sql":"SELECT SELECT b'\\xff'","reject":true}
+{"sql":"b'\\xff'","reject":true}
+{"sql":"SELECT SELECT @@ project_id","reject":true}
+{"sql":"SELECT project_id @@","reject":true}
+{"sql":"SELECT @@ project_id project_id","shape":"SELECT @@project_id AS project_id;"}
+{"sql":"@ SELECT `select`","reject":true}
+{"sql":"SELECT @ `select`"}
+{"sql":"AS @ `select`","reject":true}
+{"sql":"SELECT SELECT @ `select`","reject":true}
+{"sql":"SELECT 9223372036854775807 select","reject":true}
+{"sql":"SELECT @ select"}
+{"sql":"SELECT @ .3","reject":true}
+{"sql":". `a\\`b`","reject":true}
+{"sql":"SELECT SELECT `a\\`b`","reject":true}
+{"sql":"SELECT `a\\`b` `a\\`b`"}
+{"sql":"`\\u0041` SELECT","reject":true}
+{"sql":"'\\uD7FF' `\\u0041`","reject":true}
+{"sql":"'''a'b''' `\\u0041`","reject":true}
+{"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 , .5 , 5.","shape":"SELECT 0x1F, 0X1f, 1e3, 1.5E-3, .5, 5.;"}
+{"sql":"SELECT 0x1F , 0X1f , 1e3 1.5E-3 , , .5 , 5.","reject":true}
+{"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 , .5 ,"}
+{"sql":"SELECT 0x1F , 0X1f , 1e3 , 1.5E-3 .5 , , 5.","reject":true}
+{"sql":"SELECT 'a' * /","reject":true}
+{"sql":"SELECT 1 * /","reject":true}
+{"sql":"SELECT * /","reject":true}
+{"sql":"SELECT 1 *","reject":true}
+{"sql":"t 'a' 'b' 'c'","reject":true}
+{"sql":"''''''","reject":true}
+{"sql":"SELECT \"\"\"\"\"\" \"\"\"\"\"\"","shape":"SELECT '';"}
+{"sql":"\"\"\"\"\"\"","reject":true}
+{"sql":"2 '\\''","reject":true}
+{"sql":"'\\'' SELECT","reject":true}
+{"sql":"BR'a' '\\''","reject":true}
+{"sql":"SELECT \"\\\"\" \"\\\"\"","shape":"SELECT '\"\"';"}
+{"sql":"\"\\\"\" SELECT","reject":true}
+{"sql":"'é'","reject":true}
+{"sql":"'é' SELECT","reject":true}
+{"sql":"SELECT 'é' 'é'","shape":"SELECT 'éé';"}
+{"sql":"SELECT x '0F'","reject":true}
+{"sql":"x '0F'","reject":true}
+{"sql":"SELECT SELECT x '0F'","reject":true}
+{"sql":"SELECT N AS","reject":true}
+{"sql":"SELECT N N 'abc'","reject":true}
+{"sql":"SELECT N project_id"}
+{"sql":"SELECT E"}
+{"sql":"E 'abc'","reject":true}
+{"sql":"SELECT SELECT 'abc'","reject":true}
+{"sql":"SELECT : a","reject":true}
+{"sql":"SELECT : a a","reject":true}
+{"sql":"SELECT :","reject":true}
+{"sql":"SELECT 1 = = '2'","reject":true}
+{"sql":"SELECT 1 = 2","shape":"SELECT 1 = 2;"}
+{"sql":"SELECT 1 = 2 =","reject":true}
+{"sql":"SELECT .3 1.2","reject":true}
+{"sql":"SELECT 1.2 1.2 .3","reject":true}
+{"sql":"SELECT 9223372036854775808 .3","reject":true}
+{"sql":"SELECT @@ AS b"}
+{"sql":"SELECT 'a' AS 2","reject":true}
+{"sql":"SELECT AS 'a' b","reject":true}
+{"sql":"SELECT 'a' AS '\\377'","reject":true}
+{"sql":"'a' b","reject":true}
+{"sql":"SELECT 'a' b","shape":"SELECT 'a' AS b;"}
+{"sql":"SELECT SELECT b","reject":true}
+{"sql":"SELECT 'a' 'a' b","shape":"SELECT 'aa' AS b;"}
+{"sql":"SELECT `a` ,"}
+{"sql":"'abc' `a` `b`","reject":true}
+{"sql":"`a` `b`","reject":true}
+{"sql":"SELECT `a` `b` `b`","reject":true}
+{"sql":"N '\\a\\b\\f\\n\\r\\t\\v\\\\\\?\\\"\\'\\`'","reject":true}
+{"sql":"'\\a\\b\\f\\n\\r\\t\\v\\\\\\?\\\"\\'\\`' SELECT","reject":true}
+{"sql":"1 1 @ 2","reject":true}
+{"sql":"SELECT 1 @ @ 2","reject":true}
+{"sql":"SELECT 1 \"\"\"\"\"\" 2","reject":true}
+{"sql":"SELECT @ 2","reject":true}
+{"sql":"SELECT ? ?","reject":true}
+{"sql":"? SELECT","reject":true}
+{"sql":"SELECT .","reject":true}
+{"sql":"?","reject":true}
+{"sql":"SELECT SELECT @ 1","reject":true}
+{"sql":"SELECT @ 1 1","reject":true}
+{"sql":"@ 1","reject":true}
+{"sql":"SELECT @ @ _a","reject":true}
+{"sql":"SELECT @ _a"}
+{"sql":"SELECT @ _a _a"}
+{"sql":"SELECT @","reject":true}
+{"sql":"SELECT @@ @@ x . y","reject":true}
+{"sql":"SELECT @@ x y"}
+{"sql":"SELECT @@ 'a' . y","reject":true}
+{"sql":"SELECT SELECT r\"a\"","reject":true}
+{"sql":"r'''a'''","reject":true}
+{"sql":"'a' r'''a'''","reject":true}
+{"sql":"1 b'''x'''","reject":true}
+{"sql":"SELECT SELECT b'''x'''","reject":true}
+{"sql":"SELECT SELECT 0x8000000000000000","reject":true}
+{"sql":"0x8000000000000000 SELECT","reject":true}
+{"sql":"0x8000000000000000","reject":true}
+{"sql":"SELECT `\\u0000`"}
+{"sql":"SELECT 99999999999999999999 99999999999999999999","reject":true}
+{"sql":"'a' r'b' 99999999999999999999","reject":true}
+{"sql":"1.5e309","reject":true}
+{"sql":"SELECT SELECT a .1 FROM t","reject":true}
+{"sql":"SELECT a .1 .1 FROM t"}
+{"sql":"SELECT a SELECT FROM t","reject":true}
+{"sql":"t SELECT . `1` FROM t","reject":true}
+{"sql":"`1` t . `1` FROM t","reject":true}
+{"sql":"SELECT SELECT t . `1` FROM t","reject":true}
+{"sql":"SELECT t `1` . FROM t","reject":true}
+{"sql":"SELECT _1 _1"}
+{"sql":"SELECT 1 2 +","reject":true}
+{"sql":"SELECT 1 + 2","shape":"SELECT 1 + 2;"}
+{"sql":"SELECT SELECT + 2","reject":true}
+{"sql":"SELECT 1 + + 2","shape":"SELECT 1 + (+2);"}
+{"sql":"SELECT 9223372036854775807 9223372036854775807","reject":true}
+{"sql":"9223372036854775807 SELECT","reject":true}
+{"sql":"SELECT SELECT 9223372036854775808","reject":true}
+{"sql":"'é' 9223372036854775808","reject":true}
+{"sql":"SELECT SELECT - 9223372036854775808","reject":true}
+{"sql":"SELECT 1.5 9223372036854775808","reject":true}
+{"sql":"SELECT -","reject":true}
+{"sql":"SELECT - 9223372036854775808 9223372036854775808","reject":true}
+{"sql":"SELECT .1 9223372036854775808","reject":true}
+{"sql":"SELECT 9223372036854775808 -","reject":true}
+{"sql":"- SELECT 9223372036854775808","reject":true}
+{"sql":"SELECT 0x7FFFFFFFFFFFFFFF 0x7FFFFFFFFFFFFFFF","reject":true}
+{"sql":"SELECT - 0x8000000000000000","shape":"SELECT -0x8000000000000000;"}
+{"sql":"- SELECT 0x8000000000000000","reject":true}
+{"sql":"name 0xFFFFFFFFFFFFFFFF","reject":true}
+{"sql":"SELECT SELECT 0xFFFFFFFFFFFFFFFF","reject":true}
+{"sql":"0xFFFFFFFFFFFFFFFF SELECT","reject":true}
+{"sql":"SELECT '\\377' '\\377'","shape":"SELECT '\\xff\\xff';"}
+{"sql":"'\\377'","reject":true}
+{"sql":"SELECT LIKE","reject":true}
+{"sql":"b'\\377'","reject":true}
+{"sql":"b'\\377' SELECT","reject":true}
+{"sql":"'\\xff' SELECT","reject":true}
+{"sql":"SELECT '\\xff' '\\xff'","shape":"SELECT '\\xff\\xff';"}
+{"sql":"1 SELECT AS `a\\nb`","reject":true}
+{"sql":"SELECT 1 1 AS `a\\nb`","reject":true}
+{"sql":"SELECT SELECT 1 AS `a\\nb`","reject":true}
+{"sql":"SELECT @ a . b"}
+{"sql":"SELECT @ a . . b","reject":true}
+{"sql":"'2' @ a . b","reject":true}
+{"sql":"SELECT @ . a b","reject":true}
+{"sql":"SELECT SELECT a","reject":true}
+{"sql":"SELECT a"}
+{"sql":"0x1F @ a","reject":true}
+{"sql":"@@ SELECT a","reject":true}
+{"sql":"SELECT @@ a a"}
+{"sql":"SELECT `a b` @","reject":true}
+{"sql":", 1.e3","reject":true}
+{"sql":"SELECT 1.e3 1.e3","reject":true}
+{"sql":"SELECT SELECT 1.e3","reject":true}
+{"sql":"SELECT 1.5 . . f","reject":true}
+{"sql":"SELECT 1.5 f .","reject":true}
+{"sql":"SELECT 1.5 1.5 . f","reject":true}
+{"sql":"BIGNUMERIC .5e1","reject":true}
+{"sql":"SELECT SELECT .5e1","reject":true}
+{"sql":"SELECT 1e+3 , 1E-3 1E-3","reject":true}
+{"sql":"1e+3 , 1E-3","reject":true}
+{"sql":"1e+3 SELECT , 1E-3","reject":true}
+{"sql":"SELECT 1e+3 BIGNUMERIC 1E-3","reject":true}
+{"sql":"00012 SELECT","reject":true}
+{"sql":"00012","reject":true}
+{"sql":"0123.5 SELECT","reject":true}
+{"sql":"SELECT AS 1 _","reject":true}
+{"sql":"SELECT 1 AS AS _","reject":true}
+{"sql":"SELECT AS _","reject":true}
+{"sql":"SELECT AS 'a' r","reject":true}
+{"sql":"RANGE 'a' AS r","reject":true}
+{"sql":"SELECT 'a' AS AS r","reject":true}
+{"sql":"SELECT 'a' AS","reject":true}
+{"sql":"SELECT r `b` rb FROM ( SELECT 1 AS r )","reject":true}
+{"sql":"SELECT r AS rb FROM ( SELECT 1 AS r =","reject":true}
+{"sql":"SELECT r AS rb FROM ( SELECT 1 r )","shape":"SELECT r AS rb FROM (SELECT 1 AS r);"}
+{"sql":"SELECT r AS rb FROM ( SELECT AS r )","reject":true}
+{"sql":"SELECT 'a\\\\' 'a\\\\'","shape":"SELECT 'a\\\\a\\\\';"}
+{"sql":"SELECT 1.5","shape":"SELECT 1.5;"}
+{"sql":"SELECT b"}
+{"sql":".1 r'a\\\\'","reject":true}
+{"sql":"`1` r'a\\\\'","reject":true}
+{"sql":"SELECT SELECT br'\\x'","reject":true}
+{"sql":"WHERE br'\\x'","reject":true}
+{"sql":"SELECT SELECT '\\uD7FF'","reject":true}
+{"sql":"> '\\uD7FF'","reject":true}
+{"sql":"'\\uD7FF' SELECT","reject":true}
+{"sql":"SELECT 1 FROM SELECT","reject":true}
+{"sql":"SELECT 1 FROM","reject":true}
+{"sql":"SELECT 1 FROM -","reject":true}
+{"sql":"SELECT SELECT 'x'","reject":true}
+{"sql":"SELECT 'x' 'x'","shape":"SELECT 'xx';"}
+{"sql":"'\\x00'","reject":true}
+{"sql":"'\\x00' SELECT","reject":true}
+{"sql":"SELECT 1 AS `\\u0000` `\\u0000`","reject":true}
+{"sql":"1 SELECT AS `\\u0000`","reject":true}
+{"sql":". 1 AS `\\u0000`","reject":true}
+{"sql":"SELECT 1 `\\u0000`"}
+{"sql":"SELECT 'a' LIKE 'a' ESCAPE '#' '#'","reject":true}
+{"sql":"SELECT 'a' 'a' ESCAPE '#'","reject":true}
+{"sql":"SELECT , LIKE 'a' ESCAPE '#'","reject":true}
+{"sql":"SELECT a FROM t @@ name LIKE 'a#%' ESCAPE '#'","reject":true}
+{"sql":"SELECT a FROM t WHERE name LIKE 'a#%' '#'","shape":"SELECT a FROM t WHERE name LIKE 'a#%#';"}
+{"sql":"SELECT a FROM t WHERE WHERE name LIKE 'a#%' ESCAPE '#'","reject":true}
+{"sql":"SELECT a FROM t WHERE name LIKE 'a#%' 1 '#'","reject":true}
+{"sql":"SELECT NUMERIC '1.5' , BIGNUMERIC '2' , JSON '{}' , '2020-01-01 00:00:00' DATETIME , TIME '12:00:00'","shape":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', '2020-01-01 00:00:00' AS DATETIME, TIME '12:00:00';"}
+{"sql":"SELECT NUMERIC '1.5' , BIGNUMERIC '2' , JSON '{}' , 'é' '2020-01-01 00:00:00' , TIME '12:00:00'","shape":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', 'é2020-01-01 00:00:00', TIME '12:00:00';"}
+{"sql":"SELECT NUMERIC '1.5' , BIGNUMERIC '2' , JSON '{}' , DATETIME '2020-01-01 00:00:00' , '12:00:00' TIME","shape":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', DATETIME '2020-01-01 00:00:00', '12:00:00' AS TIME;"}
+{"sql":"NUMERIC '1.5' , BIGNUMERIC '2' , JSON '{}' , DATETIME '2020-01-01 00:00:00' , TIME '12:00:00'","reject":true}
+{"sql":"SELECT SELECT RANGE < DATE > '[2020-01-01, 2021-01-01)'","reject":true}
+{"sql":"SELECT RANGE < > DATE '[2020-01-01, 2021-01-01)'","reject":true}
+{"sql":"SELECT RANGE DATE > '[2020-01-01, 2021-01-01)'","reject":true}
+{"sql":"SELECT JSON '1'","shape":"SELECT JSON '1';"}
+{"sql":"INT64 '1'","reject":true}
+{"sql":"SELECT '\\uD7FF' '1'","shape":"SELECT '퟿1';"}
+{"sql":"SELECT '1' INT64","shape":"SELECT '1' AS INT64;"}
+{"sql":"SELECT STRING 'a' 'a'","reject":true}
+{"sql":"SELECT 'a' STRING","shape":"SELECT 'a' AS STRING;"}
+{"sql":"SELECT 'true' BOOL","shape":"SELECT 'true' AS BOOL;"}
+{"sql":"BOOL 'true'","reject":true}
+{"sql":"SELECT 'true'","shape":"SELECT 'true';"}
+{"sql":"y BOOL 'true'","reject":true}
+{"sql":"SELECT '1.5'","shape":"SELECT '1.5';"}
+{"sql":"FLOAT64 SELECT '1.5'","reject":true}
+{"sql":"SELECT SELECT FLOAT64 '1.5'","reject":true}
+{"sql":"FLOAT64 '1.5'","reject":true}
+{"sql":"DECIMAL '1.5'","reject":true}
+{"sql":"SELECT @@ '1.5'","reject":true}
+{"sql":"5. DECIMAL '1.5'","reject":true}
+{"sql":"BIGDECIMAL '1.5'","reject":true}
+{"sql":"SELECT BIGDECIMAL 99999999999999999999","reject":true}
+{"sql":"SELECT SELECT '1.5'","reject":true}
+{"sql":"SELECT SELECT INTERVAL '1' DAY","reject":true}
+{"sql":"SELECT INTERVAL '1'","reject":true}
+{"sql":"SELECT '1' DAY","shape":"SELECT '1' AS DAY;"}
+{"sql":"SELECT DATE \"2020-01-01\" \"2020-01-01\""}
+{"sql":"SELECT SELECT DATE \"2020-01-01\"","reject":true}
+{"sql":"SELECT DATE"}
+{"sql":"SELECT SELECT DATE r'2020-01-01'","reject":true}
+{"sql":"'1.5' DATE r'2020-01-01'","reject":true}
+{"sql":"DATE SELECT r'2020-01-01'","reject":true}
+{"sql":"SELECT DATE b'\\377'","reject":true}
+{"sql":"SELECT TIMESTAMP"}
+{"sql":"SELECT TIMESTAMP TIMESTAMP '2020-01-01' 'x'","reject":true}
+{"sql":"SELECT SELECT TIMESTAMP '2020-01-01' 'x'","reject":true}

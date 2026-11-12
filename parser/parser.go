@@ -9,7 +9,9 @@ package parser
 import (
 	"context"
 	"fmt"
+	"math"
 	"sort"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 
@@ -78,6 +80,9 @@ type Parser struct {
 
 	// bExpr is set while parsing PostgreSQL's b_expr (see parseBExpr).
 	bExpr bool
+	// negativeLiteral is set when a minus applies directly to the number that
+	// follows it, so that the most negative INT64 can be written.
+	negativeLiteral bool
 
 	lineStarts []int // byte offset of each line, built on first use
 	lastPos    int   // the last position lineCol counted characters to,
@@ -618,10 +623,26 @@ func (p *Parser) parseStringLit() *ast.Literal {
 	}
 	p.next()
 	lit := &ast.Literal{Kind: ast.StringLit, Value: t.Value, Escape: t.Escape, Unicode: t.Unicode}
+	if t.Bytes {
+		lit.Kind = ast.BytesLit
+	}
 	if t.Unicode && p.acceptKw("UESCAPE") {
 		lit.UEscape = p.parseStringValue()
 	}
 	return lit
+}
+
+// fitsInt64 reports whether an integer literal fits INT64, where a minus
+// written right before it allows one more.
+func fitsInt64(text string, negative bool) bool {
+	var v uint64
+	var err error
+	if len(text) > 2 && (text[1] == 'x' || text[1] == 'X') {
+		v, err = strconv.ParseUint(text[2:], 16, 64)
+	} else {
+		v, err = strconv.ParseUint(text, 10, 64)
+	}
+	return err == nil && (v <= math.MaxInt64 || negative && v == math.MaxInt64+1)
 }
 
 // isInteger reports whether a number token has no fraction or exponent.

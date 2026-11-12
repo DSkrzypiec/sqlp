@@ -10,6 +10,7 @@ import (
 	"sqlp/ast"
 	"sqlp/dialect"
 	"sqlp/internal/corpus"
+	"sqlp/lexer"
 )
 
 // wantStatement is one expected Statement. err is a fragment of the error, or
@@ -162,11 +163,14 @@ func TestParseScriptMatchesSingleStatements(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			sqls := make([]string, len(rows))
-			for i, r := range rows {
-				sqls[i] = r.SQL
+			var sqls []string
+			for _, r := range rows {
+				if !endsInput(r.SQL, d) {
+					sqls = append(sqls, r.SQL)
+				}
 			}
-			script, err := ParseScript(context.Background(), strings.Join(sqls, ";\n"), d, Options{Limits{MaxBytes: -1}})
+			// The newline before ";" ends a trailing -- or # comment.
+			script, err := ParseScript(context.Background(), strings.Join(sqls, "\n;\n"), d, Options{Limits{MaxBytes: -1}})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -183,6 +187,19 @@ func TestParseScriptMatchesSingleStatements(t *testing.T) {
 			}
 		}
 	})
+}
+
+// endsInput reports whether lexing sql stops at an error that swallows the
+// rest of the input, such as an unterminated string. In a script it swallows
+// the statements after it too.
+func endsInput(sql string, d *dialect.Dialect) bool {
+	lx := lexer.New(sql, d.Lexer)
+	for t := lx.Next(); t.Kind != lexer.EOF; t = lx.Next() {
+		if t.Kind == lexer.Illegal && lx.AtEnd() {
+			return true
+		}
+	}
+	return false
 }
 
 func TestParseIsAllOrNothing(t *testing.T) {

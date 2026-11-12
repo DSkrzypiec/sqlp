@@ -354,6 +354,7 @@ func (p *Parser) parseQueryBody() ast.QueryBody {
 		left := p.parseQueryPrimary()
 		for {
 			var op ast.SetOpKind
+			pos := p.peek().Pos
 			switch {
 			case p.acceptKw("UNION"):
 				op = ast.Union
@@ -365,12 +366,13 @@ func (p *Parser) parseQueryBody() ast.QueryBody {
 				return left
 			}
 			all := p.parseSetQuantifier(op)
-			left = &ast.SetOp{Op: op, All: all, Left: left, Right: p.parseQueryPrimary()}
+			left = p.setOp(pos, op, all, left, p.parseQueryPrimary)
 		}
 	}
 	left := p.parseIntersectTerm()
 	for {
 		var op ast.SetOpKind
+		pos := p.peek().Pos
 		switch {
 		case p.acceptKw("UNION"):
 			op = ast.Union
@@ -380,29 +382,41 @@ func (p *Parser) parseQueryBody() ast.QueryBody {
 			return left
 		}
 		all := p.parseSetQuantifier(op)
-		left = &ast.SetOp{Op: op, All: all, Left: left, Right: p.parseIntersectTerm()}
+		left = p.setOp(pos, op, all, left, p.parseIntersectTerm)
 	}
 }
 
 func (p *Parser) parseIntersectTerm() ast.QueryBody {
 	left := p.parseQueryPrimary()
-	for p.acceptKw("INTERSECT") {
+	for pos := p.peek().Pos; p.acceptKw("INTERSECT"); pos = p.peek().Pos {
 		all := p.parseSetQuantifier(ast.Intersect)
-		left = &ast.SetOp{Op: ast.Intersect, All: all, Left: left, Right: p.parseQueryPrimary()}
+		left = p.setOp(pos, ast.Intersect, all, left, p.parseQueryPrimary)
 	}
 	return left
 }
 
 func (p *Parser) parseSetQuantifier(op ast.SetOpKind) bool {
-	if p.d.Features.Query.SetQuantifiers || op == ast.Union {
-		if p.acceptKw("ALL") {
-			return true
-		}
+	f := p.d.Features.Query
+	if (f.SetQuantifiers || op == ast.Union) && p.acceptKw("ALL") {
+		return true
 	}
-	if p.d.Features.Query.SetQuantifiers {
-		p.acceptKw("DISTINCT")
+	if (f.SetQuantifiers || f.SetQuantifierRequired) && p.acceptKw("DISTINCT") || !f.SetQuantifierRequired {
+		return false
 	}
+	if op == ast.Union {
+		p.unexpected("ALL or DISTINCT")
+	}
+	p.unexpected("DISTINCT")
 	return false
+}
+
+// setOp adds the operation at pos to a chain. Where the dialect wants it, a
+// chain repeats one operator and quantifier, and any other needs parentheses.
+func (p *Parser) setOp(pos int, op ast.SetOpKind, all bool, left ast.QueryBody, right func() ast.QueryBody) ast.QueryBody {
+	if prev, ok := left.(*ast.SetOp); ok && p.d.Features.Query.UnmixedSetOps && (prev.Op != op || prev.All != all) {
+		p.errorf(pos, "different set operations need parentheses")
+	}
+	return &ast.SetOp{Op: op, All: all, Left: left, Right: right()}
 }
 
 func (p *Parser) parseQueryPrimary() ast.QueryBody {
