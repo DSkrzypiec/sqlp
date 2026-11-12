@@ -714,9 +714,14 @@ section 7.
 
 ```sh
 cd tools/corpusgen
-go run . -bigquery            # freeze testdata/corpus/bigquery and testdata/known/bigquery.jsonl
-go run . -bq-probe FILE       # BigQuery's verdict on each statement of FILE (one per line, or ---- between)
+go run . -bq-docs-fetch $W/bqdocs           # save the examples of the BigQuery SQL reference (4 minutes)
+go run . -bigquery -bq-docs $W/bqdocs       # freeze testdata/corpus/bigquery and testdata/known/bigquery.jsonl
+go run . -bq-probe FILE                     # BigQuery's verdict on each statement of FILE (one per line, or ---- between)
 ```
+
+The reference examples (`docs_*.jsonl`, 189 pages) are the completeness measure:
+they cover what BigQuery users write, which the curated lists do not. They are
+Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 
 - Answers are cached in `~/.cache/sqlp/bigquery.jsonl` (`-bq-cache`); delete it to
   take fresh verdicts. A rerun of everything takes seconds; new statements need
@@ -741,13 +746,14 @@ go run . -bq-probe FILE       # BigQuery's verdict on each statement of FILE (on
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12.** 7,608 frozen statements, 4,586 rejected by BigQuery;
-2,702 with a verified shape, including 1,999 of the 2,000 generated expressions
-(the other overflows: `>>` does not sign-extend, so `-30 >> 1` is huge). The
-one remaining `MISMATCH` is `SELECT CURRENT_TIME, CURRENT_TIMESTAMP`, whose
-values change between two runs. Known disagreements: 226 statements sqlp
-accepts and BigQuery rejects, 72 the other way round. They are the work list:
-`testdata/known/bigquery.jsonl`.
+**Status, 2026-11-12, end of day.** 10,512 frozen statements, 5,350 rejected by
+BigQuery, 4,021 with a verified shape, no mismatch. Known disagreements: 443
+valid statements sqlp rejects (before this day's work on the reference examples:
+1,102) and 80 invalid ones it accepts (206). Of the 443, about 80 are queries;
+the rest are DDL, DML, scripts and GQL graph queries (102, out of scope for now).
+Shapes of constant queries are compared by value, except where a function's
+value changes from run to run (`bqVolatile`); FOR SYSTEM_TIME is left out
+because the sample tables are recreated on every run.
 
 **Phases**
 
@@ -763,20 +769,27 @@ accepts and BigQuery rejects, 72 the other way round. They are the work list:
   literals; literals joined across whitespace and comments; `#` comments; ASCII
   bare names; `\r` ends a comment. An unexpected character no longer ends a
   script: `ParseScript` resumes at the next `;`.
-- [ ] 3. Queries. Done: `ALL` or `DISTINCT` required after set operators (only
-  `UNION ALL`), no mixing of set operators without parentheses, typed literals
-  only for BigQuery's literal types (`TypedLiterals`), no `LIKE … ESCAPE`, `.`
-  and `[ ]` on any operand (`FreePostfix`), `[1, 2]` arrays, `@name` and
-  `@@system_variable` (`AtParams`), integer literals limited to INT64 except
-  `-9223372036854775808`. To do, from the known list: STRUCT and ARRAY types and
-  literals, `UNNEST … WITH OFFSET`, implicit unnest, `* EXCEPT/REPLACE`,
-  `SELECT AS STRUCT|VALUE`, `PIVOT/UNPIVOT`, `TABLESAMPLE`, `FOR SYSTEM_TIME AS OF`,
-  `GROUP BY ALL`, aggregate modifiers, `SAFE.` calls, `SAFE_CAST`, `CAST … FORMAT`,
-  `RANGE<T>`, `INTERVAL` ranges, wildcard tables, dashed project names, pipe
-  syntax, and the structural rules in `bqRejects` (`JOIN` needs `ON`, no `LATERAL`,
-  no `WHERE` without `FROM`, `a IN (1) IN (2)` needs parentheses, …). Also a
-  reserved-word probe (`SELECT 1 AS kw` for every keyword) and a function-name
-  probe, as section 1.9 did for the other dialects.
+- [ ] 3. Queries. Done, each a dialect flag pinned by frozen statements:
+  set operators (`ALL`/`DISTINCT` required, no mixing, `BY NAME`,
+  `CORRESPONDING`, `INNER`/`FULL`/`LEFT` modes), typed literals only for
+  BigQuery's types, `ARRAY<T>`, `STRUCT<…>`, `RANGE<T>`, `STRUCT(…)`, `[1, 2]`,
+  `.` and `[ ]` on any operand, `@name` and `@@sysvar`, INT64 literals, `UNNEST`
+  (FROM, `WITH OFFSET`, `IN UNNEST`, `LIKE ANY UNNEST`), `* EXCEPT/REPLACE`,
+  `SELECT AS STRUCT|VALUE`, aggregate modifiers (`IGNORE NULLS`, `WHERE`, `HAVING
+  MAX`, `LIMIT`), `SAFE_CAST`, `CAST … FORMAT`, `EXTRACT`, `INTERVAL 5 DAY`,
+  `LIKE ANY (…)`, `GROUP BY ALL`, named arguments, `TABLE t`/`MODEL m` arguments,
+  trailing commas, keywords after a dot, `FOR SYSTEM_TIME AS OF`, `TABLESAMPLE …
+  PERCENT`, pipe syntax (`FROM t |> …`, every step but `PIVOT`/`UNPIVOT`), `JOIN`
+  rules (`ON` needed except for arrays), and the structural rules (no clauses or
+  `*` without `FROM`, grouping sets alone, `LIMIT` literals, no `VALUES`, CTE
+  column lists, `MATERIALIZED`, `NATURAL`, `GROUPS`, `FILTER`). The analyses
+  follow pipes, star modifiers, `UNNEST`, `TABLE t` arguments and `BY NAME`. To
+  do, by count in the known list: `SELECT WITH DIFFERENTIAL_PRIVACY` (23),
+  `(expr).* EXCEPT (…)` (19), `PIVOT`/`UNPIVOT` (about 11, also as pipe steps),
+  multi-level aggregation `SUM(AVG(x) GROUP BY y)` (4), `STRICT CORRESPONDING`
+  (3), method calls `'a'.REPLACE(…)`, the remaining 80 accepted invalid ones.
+  Also a reserved-word probe (`SELECT 1 AS kw` for every keyword) and a
+  function-name probe, as section 1.9 did for the other dialects.
 - [ ] 4. DML: `INSERT` (optional `INTO`), `UPDATE`, `DELETE`, `MERGE`, `TRUNCATE`.
 - [ ] 5. DDL and DCL: `OPTIONS`, `PARTITION BY`, `CLUSTER BY`, tables, views,
   functions, procedures, schemas, `ALTER`, policies, indexes, `GRANT`.
