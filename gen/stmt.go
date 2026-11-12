@@ -33,7 +33,11 @@ func (g *Generator) stmt(s ast.Statement) {
 			g.createTable(s)
 		}
 	case *ast.CreateIndex:
-		g.createIndex(s)
+		if s.Kind != "" {
+			g.googleCreateIndex(s)
+		} else {
+			g.createIndex(s)
+		}
 	case *ast.CreateView:
 		if g.d.Features.DDL.GoogleSQL {
 			g.googleCreateView(s)

@@ -445,3 +445,107 @@ func (g *Generator) googleAlterAction(a ast.AlterAction) {
 		g.warn("this ALTER TABLE action")
 	}
 }
+
+func (g *Generator) googleCreateFunction(s *ast.CreateFunction) {
+	if s.Procedure || s.ReturnsSetOf || len(s.ReturnsTable) > 0 || len(s.Options) > 0 || s.Return != nil || len(s.Body) > 0 {
+		g.warn("this form of CREATE FUNCTION")
+	}
+	g.w("CREATE")
+	g.kw(s.OrReplace, "OR REPLACE")
+	g.kw(s.Temp, "TEMP")
+	g.kw(s.Aggregate, "AGGREGATE")
+	g.kw(s.TableFunction, "TABLE")
+	g.w(" FUNCTION")
+	g.kw(s.IfNotExists, "IF NOT EXISTS")
+	g.w(" ")
+	g.name(s.Name)
+	g.w("(")
+	for i, p := range s.Params {
+		if i > 0 {
+			g.w(", ")
+		}
+		if p.Mode != "" || p.Default != nil || p.Name == nil {
+			g.warn("a parameter mode, default or unnamed parameter")
+		}
+		if p.Name != nil {
+			g.ident(*p.Name)
+			g.w(" ")
+		}
+		g.dataType(p.Type)
+		g.kw(p.NotAggregate, "NOT AGGREGATE")
+	}
+	g.w(")")
+	if s.Returns != nil {
+		g.w(" RETURNS ")
+		g.dataType(s.Returns)
+	}
+	before := s.OptionsFirst || s.TableFunction || s.Remote
+	switch {
+	case s.Remote:
+		g.w(" REMOTE WITH CONNECTION ")
+		g.name(s.Connection)
+	case s.Language != "":
+		g.kw(s.Determinism != "", s.Determinism)
+		g.w(" LANGUAGE ", s.Language)
+	}
+	if before {
+		g.googleOptions(s.OptionList)
+	}
+	switch {
+	case s.AsQuery != nil:
+		g.w(" AS ")
+		g.query(s.AsQuery)
+	case s.Language != "":
+		g.w(" AS ")
+		g.str(s.Code)
+	case !s.Remote:
+		g.w(" AS (")
+		g.expr(s.As)
+		g.w(")")
+	}
+	if !before {
+		g.googleOptions(s.OptionList)
+	}
+}
+
+func (g *Generator) googleCreateIndex(s *ast.CreateIndex) {
+	g.w("CREATE")
+	g.kw(s.OrReplace, "OR REPLACE")
+	g.w(" ", s.Kind, " INDEX")
+	g.kw(s.IfNotExists, "IF NOT EXISTS")
+	g.w(" ")
+	g.name(s.Name)
+	g.w(" ON ")
+	g.name(s.Table)
+	columns := func(list []*ast.IndexElem) {
+		for i, e := range list {
+			if i > 0 {
+				g.w(", ")
+			}
+			g.expr(e.Expr)
+			g.googleOptions(e.Options)
+		}
+	}
+	g.w(" (")
+	if s.AllColumns {
+		g.w("ALL COLUMNS")
+		if len(s.ColumnOptions) > 0 {
+			g.w(" WITH COLUMN OPTIONS (")
+			columns(s.ColumnOptions)
+			g.w(")")
+		}
+	} else {
+		columns(s.Columns)
+	}
+	g.w(")")
+	if len(s.Storing) > 0 {
+		g.w(" STORING (")
+		g.identList(s.Storing)
+		g.w(")")
+	}
+	if s.PartitionExpr != nil {
+		g.w(" PARTITION BY ")
+		g.expr(s.PartitionExpr)
+	}
+	g.googleOptions(s.Options)
+}

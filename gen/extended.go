@@ -151,7 +151,36 @@ func (g *Generator) extendedStmt(s ast.Statement) bool {
 			g.w(")")
 		}
 	case *ast.CreateFunction:
-		g.createFunction(s)
+		if g.d.Features.DDL.GoogleSQL {
+			g.googleCreateFunction(s)
+		} else {
+			g.createFunction(s)
+		}
+	case *ast.CreateRowAccessPolicy:
+		g.w("CREATE")
+		g.kw(s.OrReplace, "OR REPLACE")
+		g.w(" ROW ACCESS POLICY")
+		g.kw(s.IfNotExists, "IF NOT EXISTS")
+		g.w(" ")
+		g.ident(s.Name)
+		g.w(" ON ")
+		g.name(s.Table)
+		if len(s.GrantTo) > 0 {
+			g.w(" GRANT TO (")
+			g.exprList(s.GrantTo)
+			g.w(")")
+		}
+		g.w(" FILTER USING (")
+		g.expr(s.Filter)
+		g.w(")")
+	case *ast.CreateResource:
+		g.w("CREATE")
+		g.kw(s.OrReplace, "OR REPLACE")
+		g.w(" ", s.Kind)
+		g.kw(s.IfNotExists, "IF NOT EXISTS")
+		g.w(" ")
+		g.name(s.Name)
+		g.googleOptions(s.Options)
 	case *ast.CreateTrigger:
 		g.createTrigger(s)
 	case *ast.CreateVirtualTable:

@@ -750,10 +750,11 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after CREATE, DROP and ALTER.** 12,559 frozen statements,
-7,059 rejected by BigQuery, 4,260 with a verified shape, no mismatch. Known
-disagreements: 203 valid statements sqlp rejects (before the day's work on the
-reference examples: 1,102) and 4 invalid ones it accepts (206). Many of the
+**Status, 2026-11-12, after the DDL but procedures and DCL.** 13,016 frozen
+statements, 7,440 rejected by BigQuery, 4,311 with a verified shape, no
+mismatch. Known disagreements: 177 valid statements sqlp rejects (before the
+day's work on the reference examples: 1,102) and 4 invalid ones it accepts
+(206). Many of the
 rest come from BigQuery's order of checks: it reports a missing name or a type
 error before the structural rule sqlp applies (GROUP BY tuples, keys that are
 enforced, parameters in CAST). The others: the DDL still to do (above), GQL
@@ -836,10 +837,14 @@ because the sample tables are recreated on every run.
   every object kind: `AlterTable` with a `Kind` (VIEW, SCHEMA, SEARCH INDEX,
   ORGANIZATION, ...), one action list as BigQuery parses it, and the actions
   each kind takes checked after (`googleAlterRefuses`), with the rules on
-  combined actions. To do: functions (SQL, JavaScript, remote, TABLE and
-  AGGREGATE), procedures (with phase 6), row access policies, search and
-  vector indexes, capacity, reservation, assignment, connection, data policy,
-  `GRANT`/`REVOKE`.
+  combined actions. Functions (SQL, JavaScript and other languages, remote,
+  TABLE and AGGREGATE; `CreateFunction` with BigQuery's parts), row access
+  policies, search and vector indexes (`CreateIndex` with a `Kind`), and
+  capacity, reservation, assignment, connection and data policy
+  (`CreateResource`), each with the OR REPLACE and IF NOT EXISTS it allows.
+  To do: procedures (with phase 6), `GRANT`/`REVOKE`.
+  corpusgen trims BigQuery's messages before classifying them: some start
+  with a space.
 - [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,
   `EXECUTE IMMEDIATE`, transactions, `CALL`, `RAISE`, `ASSERT`.
 - [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.

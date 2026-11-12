@@ -1210,6 +1210,7 @@ type IndexElem struct {
 	OpclassOptions []Option // gist_trgm_ops(siglen = 32)
 	Direction      string
 	Nulls          string
+	Options        []Option // BigQuery: a search index column's OPTIONS (...)
 }
 
 // CreateIndex is CREATE INDEX.
@@ -1227,6 +1228,37 @@ type CreateIndex struct {
 	With         []Option
 	Tablespace   string
 	Where        Expr
+	// BigQuery: CREATE [OR REPLACE] {SEARCH|VECTOR} INDEX ... ON t ({ALL
+	// COLUMNS [WITH COLUMN OPTIONS (cols)] | cols}) [STORING (cols)]
+	// [PARTITION BY expr] [OPTIONS (...)]. Kind is SEARCH or VECTOR.
+	Kind          string
+	OrReplace     bool
+	AllColumns    bool
+	ColumnOptions []*IndexElem
+	Storing       []Ident
+	PartitionExpr Expr
+	Options       []Option
+}
+
+// CreateRowAccessPolicy is BigQuery's CREATE [OR REPLACE] ROW ACCESS POLICY
+// [IF NOT EXISTS] name ON table [GRANT TO (grantees)] FILTER USING (expr).
+type CreateRowAccessPolicy struct {
+	OrReplace   bool
+	IfNotExists bool
+	Name        Ident
+	Table       *Name
+	GrantTo     []Expr // string literals
+	Filter      Expr
+}
+
+// CreateResource is BigQuery's CREATE of a CAPACITY, RESERVATION,
+// ASSIGNMENT, CONNECTION or DATA_POLICY: a name and OPTIONS (...).
+type CreateResource struct {
+	Kind        string
+	OrReplace   bool
+	IfNotExists bool
+	Name        *Name
+	Options     []Option
 }
 
 // CreateView is CREATE VIEW.
@@ -1640,66 +1672,70 @@ func (*FuncRef) tableExpr()     {}
 func (*Join) tableExpr()        {}
 func (*ParenTable) tableExpr()  {}
 
-func (*Insert) node()           {}
-func (*Update) node()           {}
-func (*Delete) node()           {}
-func (*Truncate) node()         {}
-func (*CreateTable) node()      {}
-func (*CreateIndex) node()      {}
-func (*CreateView) node()       {}
-func (*CreateSchema) node()     {}
-func (*Undrop) node()           {}
-func (*CreateSequence) node()   {}
-func (*CreateEnum) node()       {}
-func (*CreateExtension) node()  {}
-func (*Drop) node()             {}
-func (*AlterTable) node()       {}
-func (*Begin) node()            {}
-func (*Commit) node()           {}
-func (*Rollback) node()         {}
-func (*Savepoint) node()        {}
-func (*ReleaseSavepoint) node() {}
-func (*Explain) node()          {}
-func (*Set) node()              {}
-func (*Show) node()             {}
-func (*Reset) node()            {}
-func (*Pragma) node()           {}
-func (*Attach) node()           {}
-func (*Detach) node()           {}
-func (*Vacuum) node()           {}
-func (*Analyze) node()          {}
-func (*Reindex) node()          {}
+func (*Insert) node()                {}
+func (*Update) node()                {}
+func (*Delete) node()                {}
+func (*Truncate) node()              {}
+func (*CreateTable) node()           {}
+func (*CreateIndex) node()           {}
+func (*CreateView) node()            {}
+func (*CreateSchema) node()          {}
+func (*Undrop) node()                {}
+func (*CreateResource) node()        {}
+func (*CreateRowAccessPolicy) node() {}
+func (*CreateSequence) node()        {}
+func (*CreateEnum) node()            {}
+func (*CreateExtension) node()       {}
+func (*Drop) node()                  {}
+func (*AlterTable) node()            {}
+func (*Begin) node()                 {}
+func (*Commit) node()                {}
+func (*Rollback) node()              {}
+func (*Savepoint) node()             {}
+func (*ReleaseSavepoint) node()      {}
+func (*Explain) node()               {}
+func (*Set) node()                   {}
+func (*Show) node()                  {}
+func (*Reset) node()                 {}
+func (*Pragma) node()                {}
+func (*Attach) node()                {}
+func (*Detach) node()                {}
+func (*Vacuum) node()                {}
+func (*Analyze) node()               {}
+func (*Reindex) node()               {}
 
-func (*Query) stmt()            {}
-func (*Insert) stmt()           {}
-func (*Update) stmt()           {}
-func (*Delete) stmt()           {}
-func (*Truncate) stmt()         {}
-func (*CreateTable) stmt()      {}
-func (*CreateIndex) stmt()      {}
-func (*CreateView) stmt()       {}
-func (*CreateSchema) stmt()     {}
-func (*Undrop) stmt()           {}
-func (*CreateSequence) stmt()   {}
-func (*CreateEnum) stmt()       {}
-func (*CreateExtension) stmt()  {}
-func (*Drop) stmt()             {}
-func (*AlterTable) stmt()       {}
-func (*Begin) stmt()            {}
-func (*Commit) stmt()           {}
-func (*Rollback) stmt()         {}
-func (*Savepoint) stmt()        {}
-func (*ReleaseSavepoint) stmt() {}
-func (*Explain) stmt()          {}
-func (*Set) stmt()              {}
-func (*Show) stmt()             {}
-func (*Reset) stmt()            {}
-func (*Pragma) stmt()           {}
-func (*Attach) stmt()           {}
-func (*Detach) stmt()           {}
-func (*Vacuum) stmt()           {}
-func (*Analyze) stmt()          {}
-func (*Reindex) stmt()          {}
+func (*Query) stmt()                 {}
+func (*Insert) stmt()                {}
+func (*Update) stmt()                {}
+func (*Delete) stmt()                {}
+func (*Truncate) stmt()              {}
+func (*CreateTable) stmt()           {}
+func (*CreateIndex) stmt()           {}
+func (*CreateView) stmt()            {}
+func (*CreateSchema) stmt()          {}
+func (*Undrop) stmt()                {}
+func (*CreateResource) stmt()        {}
+func (*CreateRowAccessPolicy) stmt() {}
+func (*CreateSequence) stmt()        {}
+func (*CreateEnum) stmt()            {}
+func (*CreateExtension) stmt()       {}
+func (*Drop) stmt()                  {}
+func (*AlterTable) stmt()            {}
+func (*Begin) stmt()                 {}
+func (*Commit) stmt()                {}
+func (*Rollback) stmt()              {}
+func (*Savepoint) stmt()             {}
+func (*ReleaseSavepoint) stmt()      {}
+func (*Explain) stmt()               {}
+func (*Set) stmt()                   {}
+func (*Show) stmt()                  {}
+func (*Reset) stmt()                 {}
+func (*Pragma) stmt()                {}
+func (*Attach) stmt()                {}
+func (*Detach) stmt()                {}
+func (*Vacuum) stmt()                {}
+func (*Analyze) stmt()               {}
+func (*Reindex) stmt()               {}
 
 func (*AddColumn) node()        {}
 func (*DropColumn) node()       {}

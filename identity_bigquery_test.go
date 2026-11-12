@@ -71,6 +71,20 @@ var bigqueryIdentity = []string{
 	"ALTER CONNECTION IF EXISTS `us.c` SET OPTIONS (description = 'x')",
 	"ALTER SEARCH INDEX i ON t ADD COLUMN b OPTIONS (x = 1), ALTER COLUMN c SET OPTIONS (x = 1), DROP COLUMN a, SET OPTIONS (x = 1), REBUILD",
 	"ALTER VECTOR INDEX IF EXISTS i ON t REBUILD",
+	"CREATE FUNCTION zf(x INT64) RETURNS INT64 AS (x + 1) OPTIONS (description = 'd')",
+	"CREATE FUNCTION zf(x INT64) OPTIONS (description = 'd') AS (x + 1)",
+	"CREATE FUNCTION IF NOT EXISTS zf(x ANY TYPE) AS (x)",
+	"CREATE FUNCTION zf(x STRING) RETURNS STRING NOT DETERMINISTIC LANGUAGE js OPTIONS (library = ARRAY['gs://b/l.js']) AS 'return x;'",
+	"CREATE FUNCTION zf(x INT64) RETURNS INT64 LANGUAGE js AS 'return x' OPTIONS ()",
+	"CREATE FUNCTION zf(x INT64) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS (endpoint = 'https://x')",
+	"CREATE AGGREGATE FUNCTION zf(x FLOAT64, y FLOAT64 NOT AGGREGATE) RETURNS FLOAT64 AS (SUM(x) / y)",
+	"CREATE TABLE FUNCTION zf(t TABLE<a INT64>) RETURNS TABLE<a INT64> OPTIONS (description = 'd') AS SELECT a FROM t",
+	"CREATE ROW ACCESS POLICY zp ON t GRANT TO ('user:a@b.c', 'group:g@b.c') FILTER USING (a = 1)",
+	"CREATE SEARCH INDEX zi ON t (ALL COLUMNS WITH COLUMN OPTIONS (a OPTIONS (index_granularity = 'COLUMN'))) OPTIONS (analyzer = 'LOG_ANALYZER')",
+	"CREATE SEARCH INDEX IF NOT EXISTS zi ON t (a, b OPTIONS (index_granularity = 'COLUMN'))",
+	"CREATE OR REPLACE VECTOR INDEX zi ON t (a) STORING (b, c) PARTITION BY d OPTIONS (index_type = 'IVF')",
+	"CREATE RESERVATION IF NOT EXISTS `zp.region-us.r` OPTIONS (slot_capacity = 100)",
+	"CREATE OR REPLACE DATA_POLICY `zp.region-us.d` OPTIONS (data_policy_type = 'DATA_MASKING_POLICY')",
 }
 
 // bigqueryFailures holds statements a BigQuery dry run rejects.

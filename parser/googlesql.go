@@ -13,8 +13,17 @@ func (p *Parser) parseGoogleCreate() ast.Statement {
 	orReplace := p.acceptKwSeq("OR", "REPLACE")
 	temp := p.acceptKw("TEMP") || p.acceptKw("TEMPORARY")
 	switch {
+	case p.acceptKwSeq("TABLE", "FUNCTION"):
+		if temp {
+			p.errorf(p.peekN(-1).Pos, "a table function cannot be temporary")
+		}
+		return p.parseGoogleFunction(orReplace, false, false, true)
 	case p.acceptKw("TABLE"):
 		return p.parseGoogleTable(orReplace, temp, "")
+	case p.acceptKw("FUNCTION"):
+		return p.parseGoogleFunction(orReplace, temp, false, false)
+	case p.acceptKwSeq("AGGREGATE", "FUNCTION"):
+		return p.parseGoogleFunction(orReplace, temp, true, false)
 	case temp:
 	case p.acceptKwSeq("EXTERNAL", "TABLE"):
 		return p.parseGoogleTable(orReplace, false, "EXTERNAL")
@@ -28,6 +37,14 @@ func (p *Parser) parseGoogleCreate() ast.Statement {
 		return p.parseGoogleSchema(orReplace, false)
 	case p.acceptKwSeq("EXTERNAL", "SCHEMA"):
 		return p.parseGoogleSchema(orReplace, true)
+	case p.acceptKwSeq("ROW", "ACCESS", "POLICY"):
+		return p.parseRowAccessPolicy(orReplace)
+	case p.acceptKwSeq("SEARCH", "INDEX"):
+		return p.parseGoogleIndex(orReplace, "SEARCH")
+	case p.acceptKwSeq("VECTOR", "INDEX"):
+		return p.parseGoogleIndex(orReplace, "VECTOR")
+	case p.isKw("CAPACITY", "RESERVATION", "ASSIGNMENT", "CONNECTION", "DATA_POLICY"):
+		return p.parseResource(orReplace, p.next().Value)
 	}
 	if temp {
 		p.unexpected("TABLE")
@@ -572,7 +589,7 @@ func googleAlterRefuses(kind string, a ast.AlterAction) string {
 		}
 		return "DROP COLUMN"
 	case *ast.AlterColumn:
-		if kind == "" || columnOptions && (kind == "VIEW" || kind == "MATERIALIZED VIEW" || kind == "SEARCH INDEX") {
+		if kind == "" || columnOptions && (kind == "VIEW" || kind == "SEARCH INDEX") {
 			return ""
 		}
 		return "ALTER COLUMN " + map[bool]string{true: "SET OPTIONS", false: "other than SET OPTIONS"}[columnOptions]
@@ -712,4 +729,212 @@ func (p *Parser) parseGoogleAlterAction(kind string) ast.AlterAction {
 	}
 	p.unexpected("an ALTER action")
 	return nil
+}
+
+// parseGoogleFunction parses CREATE [AGGREGATE|TABLE] FUNCTION after FUNCTION.
+func (p *Parser) parseGoogleFunction(orReplace, temp, aggregate, table bool) ast.Statement {
+	cf := &ast.CreateFunction{OrReplace: orReplace, Temp: temp, Aggregate: aggregate, TableFunction: table}
+	cf.IfNotExists = p.parseCreateIfNotExists(orReplace)
+	cf.Name = p.parseName()
+	p.expectOp("(")
+	for !p.isOp(")") || len(cf.Params) > 0 {
+		pos := p.peek().Pos
+		id := p.parseIdent()
+		fp := &ast.FuncParam{Name: &id}
+		if p.isOp(",") || p.isOp(")") {
+			p.errorf(pos, "a parameter needs a name and a type")
+		}
+		fp.Type = p.parseParamType(table)
+		if p.isKwSeq("NOT", "AGGREGATE") {
+			if !aggregate {
+				p.errorf(p.peek().Pos, "only an aggregate function has NOT AGGREGATE parameters")
+			}
+			p.pos += 2
+			fp.NotAggregate = true
+		}
+		cf.Params = append(cf.Params, fp)
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.expectOp(")")
+	if p.acceptKw("RETURNS") {
+		if table && !(p.isKw("TABLE") && p.isOpAt(1, "<")) {
+			p.unexpected("TABLE<columns>")
+		}
+		cf.Returns = p.parseParamType(table)
+	}
+	options := func() {
+		if cf.OptionList == nil && p.isKw("OPTIONS") {
+			cf.OptionList = p.parseOptionList()
+		}
+	}
+	switch {
+	case table:
+		options()
+		p.expectKw("AS")
+		cf.AsQuery = p.parseQuery()
+	case p.acceptKw("REMOTE"):
+		cf.Remote = true
+		p.expectKw("WITH", "CONNECTION")
+		cf.Connection = p.parseName()
+		options()
+	case p.isKw("DETERMINISTIC", "LANGUAGE") || p.isKwSeq("NOT", "DETERMINISTIC"):
+		switch {
+		case p.acceptKw("DETERMINISTIC"):
+			cf.Determinism = "DETERMINISTIC"
+		case p.acceptKwSeq("NOT", "DETERMINISTIC"):
+			cf.Determinism = "NOT DETERMINISTIC"
+		}
+		pos := p.peek().Pos
+		p.expectKw("LANGUAGE")
+		cf.Language = p.parseIdent().Name
+		if cf.Returns == nil {
+			p.errorf(pos, "a function in another language than SQL needs RETURNS")
+		}
+		options()
+		cf.OptionsFirst = cf.OptionList != nil
+		p.expectKw("AS")
+		cf.Code = p.parseStringValue()
+		options()
+	default:
+		options()
+		cf.OptionsFirst = cf.OptionList != nil
+		p.expectKw("AS")
+		p.expectOp("(")
+		cf.As = p.parseExpr()
+		p.expectOp(")")
+		options()
+	}
+	return cf
+}
+
+// parseParamType parses a parameter's or a result's type: also ANY TYPE, and
+// for a table function ANY TABLE and TABLE<name type, ...>.
+func (p *Parser) parseParamType(table bool) *ast.DataType {
+	switch {
+	case p.isKwSeq("ANY", "TYPE"):
+		p.pos += 2
+		return &ast.DataType{Name: "ANY TYPE"}
+	case table && p.isKwSeq("ANY", "TABLE"):
+		p.pos += 2
+		return &ast.DataType{Name: "ANY TABLE"}
+	case table && p.isKw("TABLE") && p.isOpAt(1, "<"):
+		p.pos += 2
+		dt := &ast.DataType{Name: "TABLE", Angle: true}
+		for {
+			dt.Struct = append(dt.Struct, &ast.StructField{Name: p.parseIdent(), Type: p.parseType()})
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectCloseAngle()
+		return dt
+	}
+	return p.parseType()
+}
+
+// parseRowAccessPolicy parses CREATE ROW ACCESS POLICY after POLICY.
+func (p *Parser) parseRowAccessPolicy(orReplace bool) ast.Statement {
+	rp := &ast.CreateRowAccessPolicy{OrReplace: orReplace, IfNotExists: p.parseCreateIfNotExists(orReplace)}
+	rp.Name = p.parseIdent()
+	p.expectKw("ON")
+	rp.Table = p.parseRelationName()
+	if p.acceptKwSeq("GRANT", "TO") {
+		p.expectOp("(")
+		for {
+			switch t := p.peek(); {
+			case t.Kind == lexer.String:
+				rp.GrantTo = append(rp.GrantTo, p.parseStringLit())
+			case t.Kind == lexer.Op && (t.Text == "@" || t.Text == "@@"):
+				rp.GrantTo = append(rp.GrantTo, p.parsePrefix())
+			default:
+				p.unexpected("a string literal or a parameter")
+			}
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectOp(")")
+	}
+	p.expectKw("FILTER", "USING")
+	p.expectOp("(")
+	rp.Filter = p.parseExpr()
+	p.expectOp(")")
+	return rp
+}
+
+// parseGoogleIndex parses CREATE SEARCH INDEX or CREATE VECTOR INDEX.
+func (p *Parser) parseGoogleIndex(orReplace bool, kind string) ast.Statement {
+	if orReplace && kind == "SEARCH" {
+		p.errorf(p.peekN(-1).Pos, "a search index cannot be OR REPLACE")
+	}
+	ci := &ast.CreateIndex{Kind: kind, OrReplace: orReplace, IfNotExists: p.parseCreateIfNotExists(orReplace)}
+	ci.Name = p.parseName()
+	p.expectKw("ON")
+	ci.Table = p.parseRelationName()
+	p.expectOp("(")
+	column := func() *ast.IndexElem {
+		e := &ast.IndexElem{Expr: p.parseName()}
+		if kind == "SEARCH" && p.isKw("OPTIONS") {
+			e.Options = p.parseOptionList()
+		}
+		return e
+	}
+	if kind == "SEARCH" && p.acceptKwSeq("ALL", "COLUMNS") {
+		ci.AllColumns = true
+		if p.acceptKwSeq("WITH", "COLUMN", "OPTIONS") {
+			p.expectOp("(")
+			for {
+				ci.ColumnOptions = append(ci.ColumnOptions, column())
+				if !p.acceptOp(",") {
+					break
+				}
+			}
+			p.expectOp(")")
+		}
+	} else {
+		for {
+			ci.Columns = append(ci.Columns, column())
+			if kind == "VECTOR" || !p.acceptOp(",") {
+				break
+			}
+		}
+	}
+	p.expectOp(")")
+	if kind == "VECTOR" {
+		if p.acceptKw("STORING") {
+			ci.Storing = p.parseParenIdentList()
+		}
+		if p.acceptKwSeq("PARTITION", "BY") {
+			ci.PartitionExpr = p.parseExpr()
+		}
+	}
+	switch {
+	case p.isKw("OPTIONS"):
+		ci.Options = p.parseOptionList()
+	case kind == "VECTOR":
+		p.unexpected("OPTIONS")
+	}
+	return ci
+}
+
+// parseResource parses CREATE CAPACITY, RESERVATION, ASSIGNMENT, CONNECTION
+// or DATA_POLICY after the kind. Each allows OR REPLACE and IF NOT EXISTS
+// differently.
+func (p *Parser) parseResource(orReplace bool, kind string) ast.Statement {
+	if orReplace && kind != "DATA_POLICY" {
+		p.errorf(p.peekN(-1).Pos, "CREATE OR REPLACE %s is not supported", kind)
+	}
+	r := &ast.CreateResource{Kind: kind, OrReplace: orReplace}
+	pos := p.peek().Pos
+	r.IfNotExists = p.parseCreateIfNotExists(orReplace)
+	if r.IfNotExists && (kind == "CAPACITY" || kind == "ASSIGNMENT") {
+		p.errorf(pos, "CREATE %s IF NOT EXISTS is not supported", kind)
+	}
+	r.Name = p.parseName()
+	if p.isKw("OPTIONS") {
+		r.Options = p.parseOptionList()
+	}
+	return r
 }

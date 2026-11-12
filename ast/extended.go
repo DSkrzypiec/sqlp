@@ -218,6 +218,25 @@ type CreateFunction struct {
 	Return       Expr        // RETURN expr
 	Body         []Statement // BEGIN ATOMIC ... END
 	Atomic       bool
+	// BigQuery: CREATE [OR REPLACE] [TEMP] [AGGREGATE|TABLE] FUNCTION [IF
+	// NOT EXISTS] f(params) [RETURNS type] followed by AS (expr) [OPTIONS],
+	// OPTIONS AS (expr), [DETERMINISTIC|NOT DETERMINISTIC] LANGUAGE lang
+	// [OPTIONS] AS 'code', REMOTE [WITH CONNECTION c] [OPTIONS], or, for a
+	// table function, [OPTIONS] AS query. A table function's RETURNS TABLE<...>
+	// is in Returns. OptionsFirst keeps OPTIONS before AS (expr).
+	Temp          bool
+	IfNotExists   bool
+	Aggregate     bool
+	TableFunction bool
+	Language      string
+	Determinism   string // DETERMINISTIC, NOT DETERMINISTIC or ""
+	Remote        bool
+	Connection    *Name
+	OptionList    []Option
+	OptionsFirst  bool
+	As            Expr
+	AsQuery       *Query
+	Code          string
 }
 
 // ReturnStmt is RETURN expr inside BEGIN ATOMIC.
@@ -228,10 +247,11 @@ type ReturnStmt struct {
 
 // FuncParam is `[mode] [name] type [DEFAULT expr]`.
 type FuncParam struct {
-	Mode    string
-	Name    *Ident
-	Type    *DataType
-	Default Expr
+	Mode         string
+	Name         *Ident
+	Type         *DataType
+	Default      Expr
+	NotAggregate bool // BigQuery: an aggregate function's NOT AGGREGATE parameter
 }
 
 // FuncOption is a function attribute. Value is printed after Name when set.
