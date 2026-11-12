@@ -94,7 +94,7 @@ func QStruct(stmt ast.Statement, d *dialect.Dialect, o Options) (*QStructGraph, 
 		name = r.created(name, s.Temp)
 		root = b.node(name.String(), kind)
 		root.Name = name
-		b.query(s.Query, root, nil)
+		b.query(viewQuery(s), root, nil)
 	default:
 		return nil, fmt.Errorf("analyze: QStruct needs a SELECT or CREATE VIEW statement, not %T", stmt)
 	}
@@ -342,7 +342,7 @@ func (b *builder) expand(n *QStructNode, definition string) {
 		case *ast.Query:
 			q = s
 		case *ast.CreateView:
-			q = s.Query
+			q = viewQuery(s)
 		}
 	}
 	if q == nil {

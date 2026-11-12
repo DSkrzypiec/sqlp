@@ -27,17 +27,34 @@ func (g *Generator) stmt(s ast.Statement) {
 		g.kw(s.Identity != "", s.Identity)
 		g.kw(s.Behavior != "", s.Behavior)
 	case *ast.CreateTable:
-		g.createTable(s)
+		if g.d.Features.DDL.GoogleSQL {
+			g.googleCreateTable(s)
+		} else {
+			g.createTable(s)
+		}
 	case *ast.CreateIndex:
 		g.createIndex(s)
 	case *ast.CreateView:
-		g.createView(s)
+		if g.d.Features.DDL.GoogleSQL {
+			g.googleCreateView(s)
+		} else {
+			g.createView(s)
+		}
+	case *ast.Undrop:
+		g.w("UNDROP SCHEMA")
+		g.kw(s.IfNotExists, "IF NOT EXISTS")
+		g.w(" ")
+		g.name(s.Name)
 	case *ast.CreateSchema:
+		if g.d.Features.DDL.GoogleSQL {
+			g.googleCreateSchema(s)
+			break
+		}
 		g.w("CREATE SCHEMA")
 		g.kw(s.IfNotExists, "IF NOT EXISTS")
 		if s.Name != nil {
 			g.w(" ")
-			g.ident(*s.Name)
+			g.name(s.Name)
 		}
 		if s.Authorization != nil {
 			g.w(" AUTHORIZATION ")
@@ -87,13 +104,25 @@ func (g *Generator) stmt(s ast.Statement) {
 		g.w("DROP ", s.Kind)
 		g.kw(s.Concurrently, "CONCURRENTLY")
 		g.kw(s.IfExists, "IF EXISTS")
-		g.w(" ")
+		if len(s.Names) > 0 || len(s.Types) > 0 {
+			g.w(" ")
+		}
 		g.nameList(s.Names)
 		for i, t := range s.Types {
 			if i > 0 {
 				g.w(", ")
 			}
 			g.dataType(t)
+		}
+		if s.Params != nil {
+			g.w("(")
+			for i, t := range s.Params {
+				if i > 0 {
+					g.w(", ")
+				}
+				g.dataType(t)
+			}
+			g.w(")")
 		}
 		if s.On != nil {
 			g.w(" ON ")

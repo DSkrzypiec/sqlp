@@ -50,6 +50,9 @@ var opaqueAlterAction = []string{
 func (p *Parser) parseCreate() ast.Statement {
 	start := p.pos
 	p.expectKw("CREATE")
+	if p.d.Features.DDL.GoogleSQL {
+		return p.parseGoogleCreate()
+	}
 	ext := p.d.Features.DDL.ExtendedDDL
 	orReplace := ext && p.acceptKwSeq("OR", "REPLACE")
 	if orReplace && !p.isKw(orReplaceable...) {
@@ -1089,8 +1092,7 @@ func (p *Parser) parseCreateView(orReplace, temp, unlogged, materialized bool) a
 func (p *Parser) parseCreateSchema() ast.Statement {
 	cs := &ast.CreateSchema{IfNotExists: p.parseIfNotExists()}
 	if p.canBeIdent() {
-		id := p.parseIdent()
-		cs.Name = &id
+		cs.Name = &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
 	}
 	if p.acceptKw("AUTHORIZATION") {
 		cs.Authorization = p.parseGrantee()
@@ -1498,6 +1500,9 @@ func (p *Parser) takeRawArg() string {
 func (p *Parser) parseDrop() ast.Statement {
 	start := p.pos
 	p.expectKw("DROP")
+	if p.d.Features.DDL.GoogleSQL {
+		return p.parseGoogleDrop()
+	}
 	ext := p.d.Features.DDL.ExtendedDDL
 	if ext && (p.isKw(opaqueDrop...) || p.isKwSeq("USER", "MAPPING")) {
 		p.pos = start

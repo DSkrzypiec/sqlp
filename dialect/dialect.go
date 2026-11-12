@@ -114,6 +114,7 @@ type ExprFeatures struct {
 	MethodCalls          bool // (expr).F(args), chained calls for F(expr, args) (BigQuery)
 	WithExprs            bool // WITH(a AS 1, b AS a + 1, a * b) (BigQuery)
 	Int64Literals        bool // integer literals must fit INT64, -9223372036854775808 included (BigQuery)
+	SimpleTypeNames      bool // a type is a name with optional (literals or MAX), none in CAST; no DOUBLE PRECISION, WITH TIME ZONE, INTERVAL DAY or [] (BigQuery)
 }
 
 // NameFeatures lists how names, labels and qualified names may be written.
@@ -229,6 +230,11 @@ type DDLFeatures struct {
 	ConflictClause      bool // constraint ON CONFLICT ROLLBACK|ABORT|... (SQLite)
 	VirtualTables       bool // CREATE VIRTUAL TABLE
 	TempTriggers        bool // CREATE TEMP TRIGGER
+	// GoogleSQL is BigQuery's DDL grammar in place of the ones above:
+	// OPTIONS (name = value) on objects, columns and fields, PARTITION BY
+	// expr, CLUSTER BY, keys that are NOT ENFORCED, LIKE/COPY/CLONE sources,
+	// external and snapshot tables, and the object kinds DROP takes.
+	GoogleSQL bool
 }
 
 // UtilityFeatures lists transaction, session and maintenance statements.

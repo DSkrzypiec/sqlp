@@ -770,7 +770,7 @@ func TestQStructSeesEveryField(t *testing.T) {
 		reflect.TypeFor[ast.ParenTable]():  "Expr Alias",
 		reflect.TypeFor[ast.In]():          "Expr Not List Subquery Table Func",
 		reflect.TypeFor[ast.CreateView](): "OrReplace Temp Unlogged Materialized IfNotExists Name Columns Using With " +
-			"Tablespace Query CheckOption WithData",
+			"Tablespace Query CheckOption WithData ColumnOptions SQLSecurity PartitionExpr ClusterBy Options ReplicaOf",
 	} {
 		var fields []string
 		for f := range typ.Fields() {

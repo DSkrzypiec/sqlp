@@ -7,7 +7,7 @@
 {"sql":"LOAD DATA OVERWRITE cymbal_pets.products\nFROM\n  FILES(\n    format = 'avro',\n    uris = [\n      'gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/tables/products/products_*.avro'])"}
 {"sql":"CREATE OR REPLACE EXTERNAL TABLE cymbal_pets.product_images\n  WITH CONNECTION us.example_connection\n  OPTIONS (\n    object_metadata = 'SIMPLE',\n    uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/*.png'])"}
 {"sql":"SELECT product_name, brand, signed_url\nFROM\n  cymbal_pets.products INNER JOIN\n  EXTERNAL_OBJECT_TRANSFORM(TABLE `cymbal_pets.product_images`, ['SIGNED_URL']) as images\nON\n  AI.IF(\n    (\n      \"\"\"You will be provided an image of a pet product.\n      Determine if the image is of the following pet toy: \"\"\",\n      products.product_name,\n      images.ref\n    ))\nWHERE\n  products.category = \"Toys\" AND\n  products.brand = \"Fluffy Buns\""}
-{"sql":"CREATE SCHEMA IF NOT EXISTS audio_repo"}
+{"sql":"CREATE SCHEMA IF NOT EXISTS audio_repo","shape":"CREATE SCHEMA IF NOT EXISTS audio_repo;"}
 {"sql":"CREATE OR REPLACE EXTERNAL TABLE audio_repo.prompt_audio\nWITH CONNECTION us.test_connection\nOPTIONS (\n  object_metadata = 'SIMPLE',\n  uris = ['gs://cloud-samples-data/generative-ai/audio/*.mp3']\n)"}
 {"sql":"SELECT\n  OBJ.GET_READ_URL(ref).url AS signed_url,\nFROM\n  `audio_repo.prompt_audio`\nWHERE\n  AI.IF(('Does the audio talk about large language models? ', ref))"}
 {"sql":"SELECT\n  title, body\nFROM\n  `bigquery-public-data.bbc_news.fulltext`\nWHERE\n  AI.IF(('The following news story is about a natural disaster: ', body)\n    max_error_ratio => 0.05)","reject":true}

@@ -795,7 +795,7 @@ func TestListOutColsSeesEveryField(t *testing.T) {
 		reflect.TypeFor[ast.NamedWindow](): "Name Spec",
 		reflect.TypeFor[ast.Exists]():      "Query",
 		reflect.TypeFor[ast.CreateView](): "OrReplace Temp Unlogged Materialized IfNotExists Name Columns Using With " +
-			"Tablespace Query CheckOption WithData",
+			"Tablespace Query CheckOption WithData ColumnOptions SQLSecurity PartitionExpr ClusterBy Options ReplicaOf",
 	} {
 		var fields []string
 		for f := range typ.Fields() {

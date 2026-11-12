@@ -446,6 +446,11 @@ type DataType struct {
 	Angle  bool
 	Of     *DataType
 	Struct []*StructField
+	// In a BigQuery table schema: STRING COLLATE 'und:ci', and for an array's
+	// element or a struct's field, NOT NULL and OPTIONS (...).
+	Collate string
+	NotNull bool
+	Options []Option
 }
 
 // StructField is one field of a STRUCT type. Name is empty when unnamed.
@@ -1035,12 +1040,36 @@ type CreateTable struct {
 	WithData     *bool    // CREATE TABLE AS ... WITH [NO] DATA
 	WithoutRowid bool     // SQLite
 	Strict       bool     // SQLite
+	// BigQuery: CREATE [OR REPLACE] [EXTERNAL|SNAPSHOT] TABLE ... [DEFAULT
+	// COLLATE 'c'] [PARTITION BY expr] [CLUSTER BY exprs] [WITH PARTITION
+	// COLUMNS [(cols)]] [WITH CONNECTION name|DEFAULT] [OPTIONS (...)].
+	// Options is non-nil when OPTIONS was written, even empty.
+	OrReplace           bool
+	Kind                string // "", "EXTERNAL" or "SNAPSHOT"
+	DefaultCollate      string
+	PartitionExpr       Expr
+	ClusterBy           []Expr
+	PartitionColumns    []*ColumnDef
+	HasPartitionColumns bool
+	Connection          *Name
+	ConnectionDefault   bool
+	Options             []Option
+	Source              *TableSource
 }
 
-// Option is a generic `name [value]` storage or utility option.
+// TableSource is BigQuery's LIKE, COPY or CLONE source of a new table.
+type TableSource struct {
+	Kind       string // LIKE, COPY or CLONE
+	Name       *Name
+	SystemTime Expr // FOR SYSTEM_TIME AS OF expr
+}
+
+// Option is a generic `name [value]` storage or utility option. In
+// BigQuery's OPTIONS (name = value), Assign is "=", "+=" or "-=".
 type Option struct {
-	Name  string
-	Value Expr
+	Name   string
+	Value  Expr
+	Assign string
 }
 
 // TableLike is LIKE source [INCLUDING|EXCLUDING what]...
@@ -1109,6 +1138,8 @@ type ColumnConstraint struct {
 	IndexTablespace string           // USING INDEX TABLESPACE x
 	NoInherit       bool             // CHECK ... NO INHERIT
 	NullsNotDist    bool             // UNIQUE NULLS NOT DISTINCT
+	NotEnforced     bool             // BigQuery: PRIMARY KEY or REFERENCES ... NOT ENFORCED
+	Options         []Option         // BigQuery: GENERATED ALWAYS AS (expr) STORED OPTIONS (...)
 }
 
 // References is a foreign key target.
@@ -1161,6 +1192,8 @@ type TableConstraint struct {
 	Method          string         // EXCLUDE USING method
 	Excludes        []*ExcludeElem // EXCLUDE (elem WITH op, ...)
 	Where           Expr           // EXCLUDE ... WHERE (pred)
+	NotEnforced     bool           // BigQuery: ... NOT ENFORCED
+	Options         []Option       // BigQuery: ... NOT ENFORCED OPTIONS (...)
 }
 
 // ExcludeElem is `index_elem WITH operator`.
@@ -1211,14 +1244,36 @@ type CreateView struct {
 	Query        *Query
 	CheckOption  string // CASCADED, LOCAL, or "" ; "CHECK" for a bare WITH CHECK OPTION
 	WithData     *bool
+	// BigQuery: OPTIONS of each column, parallel to Columns (nil when none
+	// has any), SQL SECURITY INVOKER, a materialized view's PARTITION BY and
+	// CLUSTER BY, the view's OPTIONS (non-nil when written), and a replica's
+	// AS REPLICA OF source, which stands for Query.
+	ColumnOptions [][]Option
+	SQLSecurity   string
+	PartitionExpr Expr
+	ClusterBy     []Expr
+	Options       []Option
+	ReplicaOf     *Name
 }
 
 // CreateSchema is CREATE SCHEMA.
 type CreateSchema struct {
 	IfNotExists   bool
-	Name          *Ident
-	Authorization Expr // *Name or *Word
+	Name          *Name // one part, but for BigQuery's project.dataset
+	Authorization Expr  // *Name or *Word
 	Elements      []Statement
+	// BigQuery: CREATE [EXTERNAL] SCHEMA ... [DEFAULT COLLATE 'c'] [WITH
+	// CONNECTION name] [OPTIONS (...)]; Options is non-nil when written.
+	External       bool
+	DefaultCollate string
+	Connection     *Name
+	Options        []Option
+}
+
+// Undrop is BigQuery's UNDROP SCHEMA [IF NOT EXISTS] name.
+type Undrop struct {
+	IfNotExists bool
+	Name        *Name
 }
 
 // CreateSequence is CREATE SEQUENCE with its options kept as written.
@@ -1266,6 +1321,9 @@ type Drop struct {
 	Types        []*DataType // DROP TYPE and DROP DOMAIN name types: int[], double precision
 	On           *Name       // DROP TRIGGER|RULE|POLICY name ON table
 	Behavior     string      // CASCADE, RESTRICT or ""
+	// Params is BigQuery's DROP FUNCTION f(types); nil when no list was
+	// written.
+	Params []*DataType
 }
 
 // AlterTable is ALTER TABLE with one or more actions.
@@ -1576,6 +1634,7 @@ func (*CreateTable) node()      {}
 func (*CreateIndex) node()      {}
 func (*CreateView) node()       {}
 func (*CreateSchema) node()     {}
+func (*Undrop) node()           {}
 func (*CreateSequence) node()   {}
 func (*CreateEnum) node()       {}
 func (*CreateExtension) node()  {}
@@ -1606,6 +1665,7 @@ func (*CreateTable) stmt()      {}
 func (*CreateIndex) stmt()      {}
 func (*CreateView) stmt()       {}
 func (*CreateSchema) stmt()     {}
+func (*Undrop) stmt()           {}
 func (*CreateSequence) stmt()   {}
 func (*CreateEnum) stmt()       {}
 func (*CreateExtension) stmt()  {}

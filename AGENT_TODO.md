@@ -750,15 +750,15 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after DML and the query rules.** 11,238 frozen
-statements, 5,954 rejected by BigQuery, 4,125 with a verified shape, no
-mismatch. Known disagreements: 356 valid statements sqlp rejects (before the
-day's work on the reference examples: 1,102) and 44 invalid ones it accepts
-(206). Rejected valid: 202 DDL, 98 GQL graph queries (out of scope for now), 27
-queries (11 of them `GRAPH_TABLE` and `MATCH_RECOGNIZE`, 12 from BigQuery's
-order of checks), 21 scripts, 4 `EXPORT`/`LOAD`, 4 others. Accepted invalid: 40
-DDL, 2 transaction statements, 1 query (`GROUP BY 1` whose output is a whole
-row), 1 script. DML: none either way.
+**Status, 2026-11-12, after the first DDL batch.** 12,194 frozen statements,
+6,758 rejected by BigQuery, 4,217 with a verified shape, no mismatch. Known
+disagreements: 261 valid statements sqlp rejects (before the day's work on the
+reference examples: 1,102) and 7 invalid ones it accepts (206). Many of the
+rest come from BigQuery's order of checks: it reports a missing name or a type
+error before the structural rule sqlp applies (GROUP BY tuples, keys that are
+enforced, parameters in CAST). The others: the DDL still to do (above), GQL
+graph queries (out of scope for now), scripts, `EXPORT`/`LOAD`. DML: none
+either way.
 Shapes of constant queries are compared by value, except where a function's
 value changes from run to run (`bqVolatile`); FOR SYSTEM_TIME is left out
 because the sample tables are recreated on every run.
@@ -820,8 +820,24 @@ because the sample tables are recreated on every run.
   `RETURNING`, `DO NOTHING`, `OVERRIDING` (each a `DMLFeatures` flag that
   PostgreSQL or SQLite sets; Transpile warns when the target lacks one). Not
   done: `THEN RETURN` and the WHERE rule, see the oracle findings above.
-- [ ] 5. DDL and DCL: `OPTIONS`, `PARTITION BY`, `CLUSTER BY`, tables, views,
-  functions, procedures, schemas, `ALTER`, policies, indexes, `GRANT`.
+- [ ] 5. DDL and DCL. `DDLFeatures.GoogleSQL` switches CREATE, DROP and UNDROP to
+  BigQuery's grammar (`parser/googlesql.go`, `gen/googlesql.go`), reusing the
+  AST's table, view, schema and drop nodes with fields of their own. Done,
+  frozen in `tools/corpusgen/bigquery/ddl.sql`: `CREATE [OR REPLACE] [TEMP]
+  TABLE` with columns in BigQuery's order (type [COLLATE], DEFAULT, generated
+  or identity value, keys and NOT NULL in any order, OPTIONS), fields and
+  elements with NOT NULL and OPTIONS, keys only NOT ENFORCED, LIKE/COPY/CLONE,
+  DEFAULT COLLATE, PARTITION BY, CLUSTER BY, WITH CONNECTION, OPTIONS (with `+=`
+  and `-=`), AS query; EXTERNAL and SNAPSHOT tables; views with column OPTIONS
+  and SQL SECURITY INVOKER; materialized views and replicas (analysed as
+  `SELECT * FROM source`); [EXTERNAL] schemas; every DROP kind (`DROP FUNCTION
+  f(types)`, `ON table`, `ALL ROW ACCESS POLICIES`); UNDROP SCHEMA. Types are a
+  name and literal parameters (`Expr.SimpleTypeNames`), none in CAST. To do:
+  ALTER (TABLE, VIEW, MATERIALIZED VIEW, SCHEMA, ORGANIZATION, PROJECT,
+  BI_CAPACITY, CAPACITY, RESERVATION, CONNECTION, SEARCH/VECTOR INDEX),
+  functions (SQL, JavaScript, remote, TABLE and AGGREGATE), procedures (with
+  phase 6), row access policies, search and vector indexes, capacity,
+  reservation, assignment, connection, data policy, `GRANT`/`REVOKE`.
 - [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,
   `EXECUTE IMMEDIATE`, transactions, `CALL`, `RAISE`, `ASSERT`.
 - [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.

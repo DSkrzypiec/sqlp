@@ -2,7 +2,7 @@
 {"sql":"SELECT *\nFROM UNNEST([\n  'B',\n  'b',\n  'a'\n]) AS character\nORDER BY character","shape":"SELECT * FROM UNNEST(ARRAY['B', 'b', 'a']) AS character ORDER BY character;"}
 {"sql":"CREATE TABLE (\n  case_insensitive_column STRING COLLATE 'und:ci'\n)","reject":true}
 {"sql":"SELECT COLLATE('a', 'und:ci') AS character","shape":"SELECT COLLATE('a', 'und:ci') AS character;"}
-{"sql":"CREATE TABLE table_a\n(\n    col_a STRING COLLATE 'und:ci',\n    col_b STRING COLLATE '',\n    col_c STRING,\n    col_d STRING COLLATE 'und:ci'\n)"}
+{"sql":"CREATE TABLE table_a\n(\n    col_a STRING COLLATE 'und:ci',\n    col_b STRING COLLATE '',\n    col_c STRING,\n    col_d STRING COLLATE 'und:ci'\n)","shape":"CREATE TABLE table_a (col_a STRING COLLATE 'und:ci', col_b STRING, col_c STRING, col_d STRING COLLATE 'und:ci');"}
 {"sql":"SELECT STARTS_WITH(col_b_expression, col_c_expression)\nFROM table_a"}
 {"sql":"SELECT STARTS_WITH(col_a_expression, col_d_expression)\nFROM table_a"}
 {"sql":"SELECT STARTS_WITH(col_a_expression, col_b_expression)\nFROM table_a"}

@@ -11,7 +11,7 @@
 {"sql":"PROPERTIES ALL COLUMNS","reject":true}
 {"sql":"PROPERTIES ARE ALL COLUMNS EXCEPT (home_city, home_country)","reject":true}
 {"sql":"PROPERTIES (id, name, salary + bonus AS income)","reject":true}
-{"sql":"CREATE SCHEMA IF NOT EXISTS graph_db"}
+{"sql":"CREATE SCHEMA IF NOT EXISTS graph_db","shape":"CREATE SCHEMA IF NOT EXISTS graph_db;"}
 {"sql":"CREATE OR REPLACE TABLE graph_db.Person (\n  id               INT64,\n  name             STRING,\n  birthday         TIMESTAMP,\n  country          STRING,\n  city             STRING,\n  PRIMARY KEY (id) NOT ENFORCED\n)"}
 {"sql":"CREATE OR REPLACE TABLE graph_db.Account (\n  id               INT64,\n  create_time      TIMESTAMP,\n  is_blocked       BOOL,\n  nick_name        STRING,\n  PRIMARY KEY (id) NOT ENFORCED\n)"}
 {"sql":"CREATE OR REPLACE TABLE graph_db.PersonOwnAccount (\n  id               INT64 NOT NULL,\n  account_id       INT64 NOT NULL,\n  create_time      TIMESTAMP,\n  PRIMARY KEY (id, account_id) NOT ENFORCED,\n  FOREIGN KEY (id) REFERENCES graph_db.Person(id) NOT ENFORCED,\n  FOREIGN KEY (account_id) REFERENCES graph_db.Account(id) NOT ENFORCED\n)"}
@@ -22,4 +22,4 @@
 {"sql":"INSERT INTO graph_db.PersonOwnAccount\n  (id, account_id, create_time)\nVALUES\n  (1,7,\"2020-01-10 06:22:20.222\"),\n  (2,20,\"2020-01-27 17:55:09.206\"),\n  (3,16,\"2020-02-18 05:44:20.655\")"}
 {"sql":"CREATE OR REPLACE PROPERTY GRAPH graph_db.FinGraph\n  NODE TABLES (\n    graph_db.Account,\n    graph_db.Person\n  )\n  EDGE TABLES (\n    graph_db.PersonOwnAccount\n      SOURCE KEY (id) REFERENCES Person (id)\n      DESTINATION KEY (account_id) REFERENCES Account (id)\n      LABEL Owns,\n    graph_db.AccountTransferAccount\n      SOURCE KEY (id) REFERENCES Account (id)\n      DESTINATION KEY (to_id) REFERENCES Account (id)\n      LABEL Transfers\n  )"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name"}
-{"sql":"DROP PROPERTY GRAPH graph_db.FinGraph"}
+{"sql":"DROP PROPERTY GRAPH graph_db.FinGraph","shape":"DROP PROPERTY GRAPH graph_db.FinGraph;"}

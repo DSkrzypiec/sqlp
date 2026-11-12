@@ -37,6 +37,7 @@ var BigQuery = &Dialect{
 		ParamPrefixes:       "?", // @name is parsed: BigQuery allows `@ name`
 		Operators: []string{
 			"|>", "<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@",
+			"+=", "-=", // only in OPTIONS (...), but tokens everywhere
 			"=", "<", ">", "+", "-", "*", "/", "&", "|", "^", "~", "@",
 		},
 	},
@@ -80,6 +81,7 @@ var BigQuery = &Dialect{
 			FreePostfix: true, BracketArrays: true, AngleTypes: true, Extract: true, SafeCast: true,
 			CastFormat: true, IntervalUnits: true, LikeQuantified: true, IsUnknown: true, NamedArgs: true,
 			AggregateModifiers: true, TableArgs: true, MethodCalls: true, WithExprs: true, DefaultExpr: true,
+			SimpleTypeNames: true,
 		},
 		Names: NameFeatures{
 			QualifiedFunctions: true, MaxRelationParts: 3, KeywordsAfterDot: true,
@@ -95,5 +97,6 @@ var BigQuery = &Dialect{
 		DML: DMLFeatures{
 			Merge: true, MergeBy: true, OptionalDMLKeywords: true, Truncate: true, BareDMLAlias: true,
 		},
+		DDL: DDLFeatures{GoogleSQL: true},
 	},
 }

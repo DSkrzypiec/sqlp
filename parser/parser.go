@@ -726,6 +726,10 @@ func (p *Parser) parseStatement() ast.Statement {
 		return p.parseCreate()
 	case "DROP":
 		return p.parseDrop()
+	case "UNDROP":
+		if p.d.Features.DDL.GoogleSQL {
+			return p.parseUndrop()
+		}
 	case "ALTER":
 		return p.parseAlter()
 	case "TRUNCATE":

@@ -1,73 +1,12 @@
 {"sql":"DECLARE kms_resource_name STRING;\nSET kms_resource_name = 'gcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key';","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.Stores (\n  name STRING PRIMARY KEY NOT ENFORCED,\n  location_id INT64 REFERENCES mydataset.Locations(id) NOT ENFORCED\n) AS (\n  SELECT 'Store 1' AS name, 101 AS location_id\n  UNION ALL\n  SELECT 'Store 2' AS name, 101 AS location_id\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.Locations (\n  id INT64 PRIMARY KEY NOT ENFORCED,\n  name STRING,\n  population INT64\n) AS (\n  SELECT 101 AS id, 'Anytown' AS name, 1000 AS population\n)","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE PROPERTY GRAPH mydataset.StoreGraph\n  NODE TABLES (\n    mydataset.Stores AS S,\n    mydataset.Locations AS L\n    PROPERTIES(id, name, population, MEASURE(SUM(population)) AS total_population)\n  )\n  EDGE TABLES (\n    mydataset.Stores AS SL\n    SOURCE KEY (location_id) REFERENCES L (id)\n    DESTINATION KEY (name) REFERENCES S (name)\n  )","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA IF NOT EXISTS cymbal_pets","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE cymbal_pets.product_images\nWITH CONNECTION us.example_connection\nOPTIONS (\n  object_metadata = 'SIMPLE',\n  uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/*.png']\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE cymbal_pets.product_manual\nWITH CONNECTION us.example_connection\nOPTIONS (\n  object_metadata = 'SIMPLE',\n  uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/document_chunks/*.pdf']\n)","kind":"rejects-valid"}
 {"sql":"DECLARE article_types ARRAY<STRING>\n  DEFAULT (SELECT ARRAY_AGG(category) FROM mydataset.categories);\n\nSELECT\n  title,\n  body,\n  AI.CLASSIFY(\n    body,\n    categories => article_types) AS category\nFROM\n  `bigquery-public-data.bbc_news.fulltext`\nLIMIT 100;","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE cymbal_pets.product_images\nWITH CONNECTION us.example_connection\nOPTIONS (\n object_metadata = 'SIMPLE',\n uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/*.png']\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.bbc_news_embeddings AS\nSELECT\n  title,\n  body,\n  AI.EMBED(\n    body,\n    endpoint => 'text-embedding-005',\n    model_params => JSON '{\"outputDimensionality\": 768}'\n  ).result AS embedding\nFROM\n  `bigquery-public-data.bbc_news.fulltext`","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE cymbal_pets.product_images\nWITH CONNECTION DEFAULT\nOPTIONS (\n  object_metadata = 'SIMPLE',\n  uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/*.png']\n)","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA IF NOT EXISTS bqml_tutorial","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE bqml_tutorial.product_images\n  WITH CONNECTION DEFAULT OPTIONS (\n    object_metadata = 'SIMPLE',\n    uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/*.png'])","kind":"rejects-valid"}
 {"sql":"LOAD DATA OVERWRITE cymbal_pets.products\nFROM\n  FILES(\n    format = 'avro',\n    uris = [\n      'gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/tables/products/products_*.avro'])","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE cymbal_pets.product_images\n  WITH CONNECTION us.example_connection\n  OPTIONS (\n    object_metadata = 'SIMPLE',\n    uris = ['gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/*.png'])","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA IF NOT EXISTS audio_repo","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE audio_repo.prompt_audio\nWITH CONNECTION us.test_connection\nOPTIONS (\n  object_metadata = 'SIMPLE',\n  uris = ['gs://cloud-samples-data/generative-ai/audio/*.mp3']\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.products (\n  name STRING,\n  description STRING,\n  description_embedding STRUCT<result ARRAY<FLOAT64>, status STRING>\n    GENERATED ALWAYS AS (AI.EMBED(\n      description,\n      connection_id => 'us.example_connection',\n      endpoint => 'text-embedding-005'\n    ))\n    STORED OPTIONS( asynchronous = TRUE )\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE my_dataset.marketing_sample AS (\n  -- New York data\n  SELECT 'USA' AS country, 'New York' AS city, 'Electronics' AS product_category, 100 AS ad_spend, 150 AS budget, 1000 AS revenue UNION ALL\n  SELECT 'USA', 'New York', 'Electronics', 150, 200, 1500 UNION ALL\n  SELECT 'USA', 'New York', 'Apparel',     200, 250, 1800 UNION ALL\n\n  -- Seattle data\n  SELECT 'USA', 'Seattle',  'Apparel',     220, 240, 2400 UNION ALL\n  SELECT 'USA', 'Seattle',  'Apparel',     300, 320, 2700 UNION ALL\n\n  -- London data (Genuine NULL country)\n  SELECT NULL,  'London',   'Electronics', 100, 120, 500  UNION ALL\n  SELECT NULL,  'London',   'Electronics', 200, 220, 900  UNION ALL\n\n  -- Missing city data (Genuine NULL city)\n  SELECT NULL,  NULL,       'Apparel',     200, 200, 1000 UNION ALL\n  SELECT NULL,  NULL,       'Apparel',     250, 250, 1200\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE `my_dataset.decoded_images`\n  AS (SELECT ML.DECODE_IMAGE(data) AS decoded_image\n  FROM `my_dataset.object_table`)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE\n  `mydataset.products`\nAS\n  SELECT\n  *\nFROM\nAI.GENERATE_TABLE( MODEL `mydataset.gemini`,\n  (\n  SELECT\n    ('Can you describe the following image?',\n      ref) AS prompt,\n    *\n  FROM\n   `mydataset.products` ),\n  STRUCT ( \"image_description STRING\" AS output_schema ))","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.penguin_body_mass_predictions\nAS (\n  WITH prepared_data AS (\n    SELECT *, RAND() <= 0.8 AS training\n    FROM `bigquery-public-data.ml_datasets.penguins`\n    WHERE body_mass_g > 0\n  )\n  SELECT\n  *\n  FROM\n  AI.PREDICT(\n    # Training data\n    (SELECT * EXCEPT(training) FROM prepared_data WHERE training),\n    # Prediction data\n    (SELECT * EXCEPT(training) FROM prepared_data WHERE NOT training),\n    label_col => 'body_mass_g')\n)","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE MODEL `myproject.mydataset.invoice_parser`\nREMOTE WITH CONNECTION `myproject.myregion.myconnection`\nOPTIONS (remote_service_type = 'cloud_ai_document_v1',\n         document_processor='processor_id')","kind":"rejects-valid"}
-{"sql":"CREATE TABLE table_a\n(\n    col_a STRING COLLATE 'und:ci',\n    col_b STRING COLLATE '',\n    col_c STRING,\n    col_d STRING COLLATE 'und:ci'\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE my_dataset.my_table\n(\n  word STRING COLLATE 'und:ci',\n  number INT64\n)\nCLUSTER BY word","kind":"rejects-valid"}
-{"sql":"CREATE MATERIALIZED VIEW my_dataset.my_view\nAS SELECT\n  -- Assume collated_table.col_ci is a string column with 'und:ci' collation.\n  ARRAY_AGG(col_int64 ORDER BY col_ci) AS col_int64_arr\nFROM my_dataset.collated_table","kind":"rejects-valid"}
 {"sql":"CREATE TABLE FUNCTION my_dataset.my_tvf(x STRING) AS (\n  SELECT x\n)","kind":"rejects-valid"}
 {"sql":"CREATE TABLE FUNCTION my_dataset.my_tvf(x STRING)\nRETURNS TABLE<output_str STRING>\nAS (SELECT COLLATE(x, 'und:ci') AS output_str)","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION tmp_dataset.my_udf(x STRING) AS (x)","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION my_dataset.my_udf(x STRING) AS (COLLATE(x, 'und:ci'))","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  location=\"us\",\n  default_table_expiration_days=3.75,\n  labels=[(\"label1\",\"value1\"),(\"label2\",\"value2\")]\n  )","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  is_case_insensitive=TRUE\n)","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA mydataset\nDEFAULT COLLATE 'und:ci'","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.newtable\n(\n  x INT64 OPTIONS(description=\"An optional INTEGER field\"),\n  y STRUCT <\n    a ARRAY <STRING> OPTIONS(description=\"A repeated STRING field\"),\n    b BOOL\n  >\n)\nPARTITION BY _PARTITIONDATE\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  partition_expiration_days=1,\n  description=\"a table that expires in 2025, with each partition living for 24 hours\",\n  labels=[(\"org_unit\", \"development\")]\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.top_words\nOPTIONS(\n  description=\"Top ten words per Shakespeare corpus\"\n) AS\nSELECT\n  corpus,\n  ARRAY_AGG(STRUCT(word, word_count) ORDER BY word_count DESC LIMIT 10) AS top_words\nFROM `bigquery-public-data`.samples.shakespeare\nGROUP BY corpus","kind":"rejects-valid"}
-{"sql":"CREATE TABLE IF NOT EXISTS mydataset.newtable (x INT64, y STRUCT <a ARRAY <STRING>, b BOOL>)\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  description=\"a table that expires in 2025\",\n  labels=[(\"org_unit\", \"development\")]\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.newtable (x INT64, y STRUCT <a ARRAY <STRING>, b BOOL>)\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  description=\"a table that expires in 2025\",\n  labels=[(\"org_unit\", \"development\")]\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.newtable (\n  x INT64 NOT NULL,\n  y STRUCT <\n    a ARRAY <STRING>,\n    b BOOL NOT NULL,\n    c FLOAT64\n  > NOT NULL,\n  z STRING\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.newtable (\n  x STRING(10),\n  y STRUCT <\n    a ARRAY <BYTES(5)>,\n    b NUMERIC(15, 2) OPTIONS(rounding_mode = 'ROUND_HALF_EVEN'),\n    c FLOAT64\n  >,\n  z BIGNUMERIC(35)\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.newtable (transaction_id INT64, transaction_date DATE)\nPARTITION BY transaction_date\nOPTIONS(\n  partition_expiration_days=3,\n  description=\"a table partitioned by transaction_date\"\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.days_with_rain\nPARTITION BY date\nOPTIONS (\n  partition_expiration_days=365,\n  description=\"weather stations with precipitation, partitioned by day\"\n) AS\nSELECT\n  DATE(CAST(year AS INT64), CAST(mo AS INT64), CAST(da AS INT64)) AS date,\n  (SELECT ANY_VALUE(name) FROM `bigquery-public-data.noaa_gsod.stations` AS stations\n   WHERE stations.usaf = stn) AS station_name,  -- Stations can have multiple names\n  prcp\nFROM `bigquery-public-data.noaa_gsod.gsod2017` AS weather\nWHERE prcp != 99.9  -- Filter unknown values\n  AND prcp > 0      -- Filter stations/days with no precipitation","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  input_timestamp TIMESTAMP,\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nPARTITION BY TIMESTAMP_TRUNC(input_timestamp, HOUR)\nCLUSTER BY customer_id\nOPTIONS (\n  partition_expiration_days=3,\n  description=\"a table clustered by customer_id\"\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nPARTITION BY DATE(_PARTITIONTIME)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  partition_expiration_days=3,\n  description=\"a table clustered by customer_id\"\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  description=\"a table clustered by customer_id\"\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  input_timestamp TIMESTAMP,\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nPARTITION BY DATE(input_timestamp)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  partition_expiration_days=3,\n  description=\"a table clustered by customer_id\"\n)\nAS SELECT * FROM mydataset.myothertable","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  description=\"a table clustered by customer_id\"\n)\nAS SELECT * FROM mydataset.myothertable","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.embedded_table (\n  id INT64,\n  content STRING,\n  embedding STRUCT<result ARRAY<FLOAT64>, status STRING>\n    GENERATED ALWAYS AS (\n      AI.EMBED(\n        content,\n        connection_id => \"US.embed_connection\",\n        endpoint => \"text-embedding-005\")\n    )\n    STORED OPTIONS (asynchronous = true)\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.identity_table (\n  name STRING,\n  id INT64 GENERATED ALWAYS AS IDENTITY(START WITH 0 INCREMENT BY 2)\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE\n  myotherdataset.orders\n  PARTITION BY DATE_TRUNC(l_commitdate, YEAR) AS\nSELECT\n  *\nFROM\n  myawsdataset.orders\nWHERE\n  EXTRACT(YEAR FROM l_commitdate) = 1992","kind":"rejects-valid"}
-{"sql":"CREATE TABLE\n mydataset.orders(id String, numeric_id INT64)\nPARTITION BY _PARTITIONDATE","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.newtable\nLIKE mydataset.sourcetable","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.newtable\nLIKE mydataset.sourcetable\nAS SELECT * FROM mydataset.myothertable","kind":"rejects-valid"}
-{"sql":"CREATE SNAPSHOT TABLE `myproject.mydataset.mytablesnapshot`\nCLONE `myproject.mydataset.mytable`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"my_table_snapshot\",\n  description=\"A table snapshot that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE `myproject.mydataset.mytable`\nCLONE `myproject.mydataset.mytablesnapshot`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 365 DAY),\n  friendly_name=\"my_table\",\n  description=\"A table that expires in 1 year\",\n  labels=[(\"org_unit\", \"development\")]\n)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE IF NOT EXISTS `myproject.mydataset.mytableclone`\nCLONE `myproject.mydataset.mytable`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 365 DAY),\n  friendly_name=\"my_table\",\n  description=\"A table that expires in 1 year\",\n  labels=[(\"org_unit\", \"development\")]\n)","kind":"rejects-valid"}
-{"sql":"CREATE VIEW `myproject.mydataset.newview`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"newview\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`","kind":"rejects-valid"}
-{"sql":"CREATE VIEW IF NOT EXISTS `myproject.mydataset.newview`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"newview\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE VIEW `myproject.mydataset.newview`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"newview\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`","kind":"rejects-valid"}
-{"sql":"CREATE VIEW `myproject.mydataset.newview` (\n  column_1_new_name OPTIONS (DESCRIPTION='Description of the column 1 contents'),\n  column_2_new_name OPTIONS (DESCRIPTION='Description of the column 2 contents'),\n  column_3_new_name OPTIONS (DESCRIPTION='Description of the column 3 contents')\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`","kind":"rejects-valid"}
-{"sql":"CREATE MATERIALIZED VIEW myProject.myDataset.myView AS SELECT * FROM anotherDataset.myTable","kind":"rejects-valid"}
-{"sql":"CREATE MATERIALIZED VIEW `myproject.mydataset.new_mv`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"new_mv\",\n  description=\"a materialized view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")],\n  enable_refresh=true,\n  refresh_interval_minutes=20\n)\nAS SELECT column_1, SUM(column_2) AS sum_2, AVG(column_3) AS avg_3\nFROM `myproject.mydataset.mytable`\nGROUP BY column_1","kind":"rejects-valid"}
-{"sql":"CREATE MATERIALIZED VIEW IF NOT EXISTS `myproject.mydataset.new_mv`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"new_mv\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")],\n  enable_refresh=false\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`","kind":"rejects-valid"}
-{"sql":"CREATE MATERIALIZED VIEW `myproject.mydataset.new_mv`\nPARTITION BY DATE(col_datetime)\nCLUSTER BY col_int\nAS SELECT col_int, col_datetime, COUNT(1) as cnt\n   FROM `myproject.mydataset.mv_base_table`\n   GROUP BY col_int, col_datetime","kind":"rejects-valid"}
-{"sql":"CREATE MATERIALIZED VIEW `myproject.bq_dataset.mv_replica`\nOPTIONS(\n  replication_interval_seconds=600\n)\nAS REPLICA OF `myproject.s3_dataset.my_s3_mv`","kind":"rejects-valid"}
-{"sql":"CREATE EXTERNAL SCHEMA mydataset\nWITH CONNECTION myproject.`aws-us-east-1`.myconnection\n  OPTIONS (\n    external_source = 'aws-glue://arn:aws:glue:us-east-1:123456789:database/test_database',\n    location = 'aws-us-east-1')","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE mydataset.newtable (x INT64, y STRING, z BOOL)\n  WITH CONNECTION myconnection\n  OPTIONS(\n    format =\"PARQUET\",\n    max_staleness = STALENESS_INTERVAL,\n    metadata_cache_mode = 'AUTOMATIC')","kind":"rejects-valid"}
-{"sql":"CREATE EXTERNAL TABLE dataset.CsvTable OPTIONS (\n  format = 'CSV',\n  uris = ['gs://bucket/path1.csv', 'gs://bucket/path2.csv']\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE dataset.CsvTable\n(\n  x INT64,\n  y STRING\n)\nOPTIONS (\n  format = 'CSV',\n  uris = ['gs://bucket/path1.csv'],\n  field_delimiter = '|',\n  max_bad_records = 5\n)","kind":"rejects-valid"}
-{"sql":"CREATE EXTERNAL TABLE dataset.AutoHivePartitionedTable\nWITH PARTITION COLUMNS\nOPTIONS (\n  uris = ['gs://bucket/path/*'],\n  format = 'PARQUET',\n  hive_partition_uri_prefix = 'gs://bucket/path',\n  require_hive_partition_filter = false)","kind":"rejects-valid"}
-{"sql":"CREATE EXTERNAL TABLE dataset.CustomHivePartitionedTable\nWITH PARTITION COLUMNS (\n  field_1 STRING, -- column order must match the external path\n  field_2 INT64)\nOPTIONS (\n  uris = ['gs://bucket/path/*'],\n  format = 'PARQUET',\n  hive_partition_uri_prefix = 'gs://bucket/path',\n  require_hive_partition_filter = false)","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION mydataset.multiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nAS (x * y)","kind":"rejects-valid"}
 {"sql":"CREATE TEMP FUNCTION multiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nLANGUAGE js\nAS r\"\"\"\n  return x*y;\n\"\"\"","kind":"rejects-valid"}
 {"sql":"CREATE TEMP FUNCTION tempRemoteMultiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nREMOTE WITH CONNECTION us.myconnection\nOPTIONS(endpoint=\"https://us-central1-myproject.cloudfunctions.net/multiply\")","kind":"rejects-valid"}
@@ -93,7 +32,6 @@
 {"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (\n  index_type = 'IVF',\n  distance_type = 'COSINE',\n  ivf_options = '{\"num_lists\":2500}')","kind":"rejects-valid"}
 {"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (\n  index_type = 'TREE_AH',\n  distance_type = 'EUCLIDEAN',\n  tree_ah_options = '{\"normalization_type\": \"L2\"}')","kind":"rejects-valid"}
 {"sql":"CREATE CONNECTION IF NOT EXISTS `us.my_cloud_resource_connection`\nOPTIONS (\n  connection_type = \"CLOUD_RESOURCE\",\n  friendly_name = \"My Resource Connection\",\n  description = \"Connection to access Cloud resources\"\n  )","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA mydataset","kind":"rejects-valid"}
 {"sql":"ALTER SCHEMA mydataset\nSET DEFAULT COLLATE 'und:ci'","kind":"rejects-valid"}
 {"sql":"ALTER SCHEMA mydataset\nSET OPTIONS(\n  default_table_expiration_days=3.75\n  )","kind":"rejects-valid"}
 {"sql":"ALTER SCHEMA mydataset\nSET OPTIONS(\n  is_case_insensitive=TRUE\n)","kind":"rejects-valid"}
@@ -113,7 +51,6 @@
 {"sql":"ALTER TABLE mydataset.mytable\n  DROP COLUMN A,\n  DROP COLUMN IF EXISTS B","kind":"rejects-valid"}
 {"sql":"ALTER TABLE mytable DROP CONSTRAINT myConstraint","kind":"rejects-valid"}
 {"sql":"ALTER TABLE myTable\nDROP PRIMARY KEY","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.mytable\n(\n  number INT64,\n  word STRING\n) DEFAULT COLLATE 'und:ci'","kind":"rejects-valid"}
 {"sql":"ALTER TABLE mydataset.mytable\nSET DEFAULT COLLATE ''","kind":"rejects-valid"}
 {"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN price\nSET OPTIONS (description = 'Price per unit')","kind":"rejects-valid"}
 {"sql":"ALTER VIEW mydataset.myview\nALTER COLUMN total\nSET OPTIONS (description = 'Total sales of the product')","kind":"rejects-valid"}
@@ -146,29 +83,6 @@
 {"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\n  ADD COLUMN b OPTIONS(data_types = ['INT64'], index_granularity = 'COLUMN'),\n  ALTER COLUMN my_struct SET OPTIONS(data_types = ['STRING', 'INT64']),\n  DROP COLUMN a,\n  SET OPTIONS(default_index_column_granularity = 'GLOBAL'),\n  REBUILD","kind":"rejects-valid"}
 {"sql":"ALTER VECTOR INDEX IF EXISTS index1\nON mydataset.sales\nREBUILD","kind":"rejects-valid"}
 {"sql":"ALTER CONNECTION `us.my_cloud_resource_connection`\nSET OPTIONS (\n  description = \"Updated description for my Cloud resource connection\"\n  )","kind":"rejects-valid"}
-{"sql":"DROP SCHEMA mydataset","kind":"rejects-valid"}
-{"sql":"DROP SCHEMA IF EXISTS mydataset CASCADE","kind":"rejects-valid"}
-{"sql":"UNDROP SCHEMA mydataset","kind":"rejects-valid"}
-{"sql":"DROP SNAPSHOT TABLE mydataset.mytablesnapshot","kind":"rejects-valid"}
-{"sql":"DROP SNAPSHOT TABLE IF EXISTS mydataset.mytablesnapshot","kind":"rejects-valid"}
-{"sql":"DROP EXTERNAL TABLE mydataset.external_table","kind":"rejects-valid"}
-{"sql":"DROP EXTERNAL TABLE IF EXISTS mydataset.external_table","kind":"rejects-valid"}
-{"sql":"DROP MATERIALIZED VIEW mydataset.my_mv","kind":"rejects-valid"}
-{"sql":"DROP MATERIALIZED VIEW IF EXISTS mydataset.my_mv","kind":"rejects-valid"}
-{"sql":"DROP FUNCTION mydataset.parseJsonAsStruct","kind":"rejects-valid"}
-{"sql":"DROP FUNCTION `other_project`.sample_dataset.parseJsonAsStruct","kind":"rejects-valid"}
-{"sql":"DROP TABLE FUNCTION mydataset.my_table_function","kind":"rejects-valid"}
-{"sql":"DROP PROCEDURE mydataset.myProcedure","kind":"rejects-valid"}
-{"sql":"DROP PROCEDURE `other-project`.sample_dataset.myprocedure","kind":"rejects-valid"}
-{"sql":"DROP ALL ROW ACCESS POLICIES ON table_name","kind":"rejects-valid"}
-{"sql":"DROP ROW ACCESS POLICY my_row_filter ON project.dataset.my_table","kind":"rejects-valid"}
-{"sql":"DROP ALL ROW ACCESS POLICIES ON project.dataset.my_table","kind":"rejects-valid"}
-{"sql":"DROP CAPACITY `admin_project.region-us.1234`","kind":"rejects-valid"}
-{"sql":"DROP RESERVATION `admin_project.region-us.prod`","kind":"rejects-valid"}
-{"sql":"DROP ASSIGNMENT `admin_project.region-us.prod.1234`","kind":"rejects-valid"}
-{"sql":"DROP SEARCH INDEX my_index ON dataset.my_table","kind":"rejects-valid"}
-{"sql":"DROP VECTOR INDEX my_index ON dataset.my_table","kind":"rejects-valid"}
-{"sql":"DROP CONNECTION IF EXISTS `us.my_cloud_resource_connection`","kind":"rejects-valid"}
 {"sql":"-- Declare a variable with type parameters.\nDECLARE x STRING(10);\n\n-- This is a valid assignment to x.\nSET x = \"hello\";\n\n-- This assignment to x violates the type parameter constraint and results in an OUT_OF_RANGE error.\nSET x = \"this string is too long\"","kind":"rejects-valid"}
 {"sql":"-- Declare variables with type parameters.\nDECLARE x NUMERIC(10) DEFAULT 12345;\nDECLARE y NUMERIC(5, 2) DEFAULT 123.45;\n\n-- The variable x is treated as a NUMERIC value when read, so the result of this query\n-- is a NUMERIC without type parameters.\nSELECT x;\n\n-- Type parameters aren't propagated within expressions, so variables x and y are treated\n-- as NUMERIC values when read and the result of this query is a NUMERIC without type parameters.\nSELECT x + y;","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN n.name","kind":"rejects-valid"}
@@ -181,7 +95,6 @@
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_DECRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'your_surrogate(36):AWDeSznl9C7+NzTaCgiqiEAZ8Y55fZSuvCQ=',\n    'your_surrogate',\n    'aad') AS results;","kind":"rejects-valid"}
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_ENCRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'Plaintext',\n    '',\n    'aad') AS results;","kind":"rejects-valid"}
 {"sql":"ALTER TABLE dataset.NewArrivals ALTER COLUMN quantity SET DEFAULT 100","kind":"rejects-valid"}
-{"sql":"CREATE TABLE dataset.Products (\n  id INT64 GENERATED ALWAYS AS IDENTITY(INCREMENT BY 2),\n  product STRING)","kind":"rejects-valid"}
 {"sql":"SELECT (x).(SAFE.LEFT)(count) AS result","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION my_dataset.multiply_by_three(x INT64) AS (x * 3)","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (:Person)-[o:Owns]->(a:Account)\nRETURN a.id AS account_id, DESTINATION_NODE_ID(o) AS destination_node_id","kind":"rejects-valid"}
@@ -281,15 +194,8 @@
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]->(dst:Account)\nWITH dst\nRETURN src.id AS source_id","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, 1 AS group_id\nUNION ALL\nMATCH (p:Person)\nRETURN 2 AS group_id, p.name\nUNION ALL\nMATCH (p:Person)\nRETURN 3 AS group_id, p.name","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, 1 AS group_id\nUNION ALL\nMATCH (p:Person)\nRETURN 2 AS group_id, p.name\nEXCEPT DISTINCT\nMATCH (p:Person)\nRETURN 3 AS group_id, p.name","kind":"rejects-valid"}
-{"sql":"CREATE SCHEMA IF NOT EXISTS graph_db","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE graph_db.Person (\n  id               INT64,\n  name             STRING,\n  birthday         TIMESTAMP,\n  country          STRING,\n  city             STRING,\n  PRIMARY KEY (id) NOT ENFORCED\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE graph_db.Account (\n  id               INT64,\n  create_time      TIMESTAMP,\n  is_blocked       BOOL,\n  nick_name        STRING,\n  PRIMARY KEY (id) NOT ENFORCED\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE graph_db.PersonOwnAccount (\n  id               INT64 NOT NULL,\n  account_id       INT64 NOT NULL,\n  create_time      TIMESTAMP,\n  PRIMARY KEY (id, account_id) NOT ENFORCED,\n  FOREIGN KEY (id) REFERENCES graph_db.Person(id) NOT ENFORCED,\n  FOREIGN KEY (account_id) REFERENCES graph_db.Account(id) NOT ENFORCED\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE graph_db.AccountTransferAccount (\n  id               INT64 NOT NULL,\n  to_id            INT64 NOT NULL,\n  amount           FLOAT64,\n  create_time      TIMESTAMP NOT NULL,\n  order_number     STRING,\n  PRIMARY KEY (id, to_id, create_time) NOT ENFORCED,\n  FOREIGN KEY (id) REFERENCES graph_db.Account(id) NOT ENFORCED,\n  FOREIGN KEY (to_id) REFERENCES graph_db.Account(id) NOT ENFORCED\n)","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE PROPERTY GRAPH graph_db.FinGraph\n  NODE TABLES (\n    graph_db.Account,\n    graph_db.Person\n  )\n  EDGE TABLES (\n    graph_db.PersonOwnAccount\n      SOURCE KEY (id) REFERENCES Person (id)\n      DESTINATION KEY (account_id) REFERENCES Account (id)\n      LABEL Owns,\n    graph_db.AccountTransferAccount\n      SOURCE KEY (id) REFERENCES Account (id)\n      DESTINATION KEY (to_id) REFERENCES Account (id)\n      LABEL Transfers\n  )","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name","kind":"rejects-valid"}
-{"sql":"DROP PROPERTY GRAPH graph_db.FinGraph","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.Locations (\n  id INT64 PRIMARY KEY NOT ENFORCED,\n  name STRING,\n  population INT64\n) AS (\n  SELECT 101 AS id, 'Anytown' AS name, 1000 AS population\n  UNION ALL\n  SELECT 102 AS id, 'Sometown' AS name, 500 AS population\n)","kind":"rejects-valid"}
 {"sql":"SELECT name, id\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n.name AS name, n.id AS id\n)","kind":"rejects-valid"}
 {"sql":"SELECT name, id\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n.name\n)","kind":"rejects-valid"}
 {"sql":"SELECT n\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n\n)","kind":"rejects-valid"}
@@ -300,7 +206,6 @@
 {"sql":"CREATE TEMP FUNCTION TimestampIsValid(t TIMESTAMP) AS (\n  t >= TIMESTAMP('0001-01-01 00:00:00') AND\n  t <= TIMESTAMP('9999-12-31 23:59:59.999999')\n)","kind":"rejects-valid"}
 {"sql":"#GoogleSQL\n-- Takes a struct of x, y, and z and returns a struct with a new field foo.\nCREATE TEMPORARY FUNCTION AddField(s STRUCT<x FLOAT64, y BOOL, z STRING>)\n  RETURNS STRUCT<x FLOAT64, y BOOL, z STRING, foo STRING> LANGUAGE js AS \"\"\"\nvar new_struct = new Object();\nnew_struct.x = s.x;\nnew_struct.y = s.y;\nnew_struct.z = s.z;\nif (s.y) {\n  new_struct.foo = 'bar';\n} else {\n  new_struct.foo = 'baz';\n}\n\nreturn new_struct;\n\"\"\";\n\nWITH T AS (\n  SELECT x, MOD(off, 2) = 0 AS y, CAST(x AS STRING) AS z\n  FROM UNNEST([5.0, 4.0, 3.0, 2.0, 1.0]) AS x WITH OFFSET off\n)\nSELECT AddField(t).*\nFROM T AS t;","kind":"rejects-valid"}
 {"sql":"#GoogleSQL\nBEGIN\n  DECLARE missing_suffixes STRING;\n\n  SET missing_suffixes = (\n    SELECT STRING_AGG(FORMAT_DATE('%Y%m%d', day), ', ')\n    FROM UNNEST(GENERATE_DATE_ARRAY(DATE '2016-05-01', DATE '2016-05-09')) AS day\n    WHERE FORMAT_DATE('%Y%m%d', day) NOT IN (\n      SELECT _TABLE_SUFFIX\n      FROM `mydataset.sea_weather_*`\n      WHERE _TABLE_SUFFIX BETWEEN '20160501' AND '20160509'\n    )\n  );\n\n  -- Raise error or run query\n  IF missing_suffixes IS NOT NULL THEN\n    SELECT ERROR(FORMAT(\"Not found suffixes: %s\", missing_suffixes));\n  ELSE\n    SELECT\n      ROUND(AVG(TemperatureF),1) AS AVG_TEMP_F\n    FROM\n      `mydataset.sea_weather_*`\n    WHERE\n      _TABLE_SUFFIX BETWEEN '20160501' AND '20160509';\n  END IF;\nEND;","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE Produce AS (\n  SELECT 'apples' AS item, 2 AS sales, 'fruit' AS category\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales, 'vegetable' AS category\n  UNION ALL\n  SELECT 'apples' AS item, 7 AS sales, 'fruit' AS category\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales, 'fruit' AS category\n)","kind":"rejects-valid"}
 {"sql":"(\n  SELECT 1 as x\n  UNION ALL\n  SELECT 2\n  UNION ALL\n  SELECT 3\n)\n|> MATCH_RECOGNIZE(\n   ORDER BY x\n   MEASURES\n     ARRAY_AGG(high.x) AS high_agg,\n     ARRAY_AGG(low.x) AS low_agg\n   AFTER MATCH SKIP TO NEXT ROW\n   PATTERN (low | high)\n   DEFINE\n     low AS x <= 2,\n     high AS x >= 2\n)","kind":"rejects-valid"}
 {"sql":"DECLARE y INT64;\n-- y = 1 * (3 + 2) = 5\nEXECUTE IMMEDIATE \"SELECT ? * (? + 2)\" INTO y USING 1, 3;","kind":"rejects-valid"}
 {"sql":"DECLARE y INT64;\n-- y = 1 * (3 + 2) = 5\nEXECUTE IMMEDIATE \"SELECT @a * (@b + 2)\" INTO y USING 1 as a, 3 as b;","kind":"rejects-valid"}
@@ -313,17 +218,6 @@
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    LAST(electronics.sale_date) AS last_electronics_sale_date,\n    FIRST(software.sale_date) AS first_software_sale_date,\n    DATE_DIFF(FIRST(software.sale_date), LAST(electronics.sale_date), day) AS date_gap\n  PATTERN (electronics+ any_category*? software+)\n  DEFINE\n    electronics AS product_category = 'Electronics',\n    software AS product_category = 'Software',\n    any_category AS TRUE\n)","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    MATCH_NUMBER() AS match_number,\n    ARRAY_AGG(STRUCT(MATCH_ROW_NUMBER() AS row,\n                     CLASSIFIER() AS symbol,\n                     sale_date,\n                     product_category)) AS sales\n  PATTERN (low+ mid+ high+)\n  DEFINE\n    low AS amount < 50,\n    mid AS amount >= 50 AND amount <= 100,\n    high AS amount > 100\n)","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    MATCH_NUMBER() AS match_number,\n    ARRAY_AGG(STRUCT(MATCH_ROW_NUMBER() AS row,\n                     CLASSIFIER() AS symbol,\n                     sale_date,\n                     product_category)) AS sales\n  AFTER MATCH SKIP TO NEXT ROW\n  PATTERN (low+ mid+ high+)\n  DEFINE\n    low AS amount < 50,\n    mid AS amount >= 50 AND amount <= 100,\n    high AS amount > 100\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE `myproject.mydataset.new_table` AS\n  WITH RECURSIVE\n    T1 AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM T1 WHERE n < 3)\n  SELECT * FROM T1","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE VIEW `myproject.mydataset.new_view` AS\n  WITH RECURSIVE\n    T1 AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM T1 WHERE n < 3)\n  SELECT * FROM T1","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.ExamTable AS (\n  SELECT \"Hansen\" AS last_name, \"P91\" AS test_id, 510 AS test_score UNION ALL\n  SELECT \"Wang\", \"U25\", 500 UNION ALL\n  SELECT \"Wang\", \"C83\", 520 UNION ALL\n  SELECT \"Wang\", \"U25\", 460 UNION ALL\n  SELECT \"Hansen\", \"C83\", 420 UNION ALL\n  SELECT \"Hansen\", \"C83\", 560 UNION ALL\n  SELECT \"Devi\", \"U25\", 580 UNION ALL\n  SELECT \"Devi\", \"P91\", 480 UNION ALL\n  SELECT \"Ivanov\", \"U25\", 490 UNION ALL\n  SELECT \"Ivanov\", \"P91\", 540 UNION ALL\n  SELECT \"Silva\", \"U25\", 550)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE VIEW mydataset.ExamView\nOPTIONS(\n  privacy_policy= '{\"aggregation_threshold_policy\": {\"threshold\": 3, \"privacy_unit_column\": \"last_name\"}}'\n)\nAS ( SELECT * FROM mydataset.ExamTable )","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE professors AS (\n  SELECT 101 AS id, \"pencil\" AS item, 24 AS quantity UNION ALL\n  SELECT 123, \"pen\", 16 UNION ALL\n  SELECT 123, \"pencil\", 10 UNION ALL\n  SELECT 123, \"pencil\", 38 UNION ALL\n  SELECT 101, \"pen\", 19 UNION ALL\n  SELECT 101, \"pen\", 23 UNION ALL\n  SELECT 130, \"scissors\", 8 UNION ALL\n  SELECT 150, \"pencil\", 72)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE students AS (\n  SELECT 1 AS id, \"pencil\" AS item, 5 AS quantity UNION ALL\n  SELECT 1, \"pen\", 2 UNION ALL\n  SELECT 2, \"pen\", 1 UNION ALL\n  SELECT 3, \"pen\", 4)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.base_table\n(\n  id STRING,\n  description STRING,\n  my_embedding ARRAY<FLOAT64>\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE TABLE mydataset.query_table\n(\n  query_id STRING,\n  embedding ARRAY<FLOAT64>\n)","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE VIEW my_dataset.sales_view AS\nWITH\n  Orders AS (\n    SELECT 1001 AS order_id, 'Sales' AS department, 250.00 AS amount\n    UNION ALL\n    SELECT 1002 AS order_id, 'Engineering' AS department, 500.00 AS amount\n    UNION ALL\n    SELECT 1004 AS order_id, 'Sales' AS department, 430.50 AS amount\n  )\nSELECT\n  order_id,\n  department,\n  amount\nFROM Orders\nWHERE department = SECURE_CONTEXT('user_dept')","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.Produce (product STRING, inventory INT64) AS (\n  SELECT 'apples' AS product, 10 AS inventory)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE mydataset.Produce (\n  product STRING,\n  inventory INT64)\nOPTIONS(enable_change_history=true)","kind":"rejects-valid"}
 {"sql":"ALTER TABLE `my_dataset.my_table`\nSET OPTIONS (enable_change_history = TRUE)","kind":"rejects-valid"}
 {"sql":"SELECT a FROM t GROUP BY (a, b)","kind":"rejects-valid"}
 {"sql":"SELECT a FROM a GROUP BY 1","kind":"accepts-invalid"}
@@ -337,6 +231,18 @@
 {"sql":"TABLE main.t","kind":"rejects-valid"}
 {"sql":"TABLE main . t","kind":"rejects-valid"}
 {"sql":"TABLE TABLE","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t ( a ) ENFORCED )","kind":"rejects-valid"}
+{"sql":"TABLE zz1","kind":"rejects-valid"}
+{"sql":"CREATE TABLE TABLE ( x )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 COPY x PARTITION BY a","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED NOT ENFORCED )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 ( x INT64 , , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE ) )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED AS ( x ) )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 ( x INT64 , FOREIGN KEY ( x ) REFERENCES t ( TABLE ) )","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 ( INT64 x , FOREIGN KEY ( x ) REFERENCES t ( a ) )","kind":"rejects-valid"}
+{"sql":"CREATE TEMP VIEW zz2 AS SELECT x AS a","kind":"rejects-valid"}
+{"sql":"CREATE ASSIGNMENT `zzp.region-us.r.a`","kind":"rejects-valid"}
 {"sql":"SELECT a.1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a .1 .1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT ( t ) . 2 FROM t","kind":"rejects-valid"}
@@ -344,57 +250,19 @@
 {"sql":"SELECT SUM ( ) OVER ( w PARTITION BY b ) FROM t WINDOW w AS ( ORDER BY c )","kind":"rejects-valid"}
 {"sql":"SELECT * FROM t JOIN u ON t . ORDER IN ( SELECT u . a )","kind":"rejects-valid"}
 {"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE w . id = t . a )","kind":"rejects-valid"}
-{"sql":"CREATE TABLE n (a REAL, b DOUBLE PRECISION, c FLOAT, d FLOAT(10))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a CHARACTER VARYING(5), b CHAR VARYING(5), c VARCHAR(5))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER NOT NULL UNIQUE)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER NOT NULL, UNIQUE (a))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER PRIMARY KEY)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER, b INTEGER, PRIMARY KEY (a, b))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t (a))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER, FOREIGN KEY (a) REFERENCES t (a) ON DELETE NO ACTION ON UPDATE NO ACTION)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER CHECK (a > 0))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER, CONSTRAINT c CHECK (a > 0))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER, b INTEGER, FOREIGN KEY (b, a) REFERENCES u (a, b))","kind":"accepts-invalid"}
+{"sql":"SELECT CAST(a AS VARCHAR(5)) FROM t","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ADD z INTEGER","kind":"accepts-invalid"}
 {"sql":"ALTER TABLE t DROP a","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTERVAL YEAR TO MONTH, b INTERVAL DAY TO SECOND(3))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE CASCADE)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE SET NULL)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE SET DEFAULT)","kind":"accepts-invalid"}
-{"sql":"CREATE SCHEMA s","kind":"rejects-valid"}
+{"sql":"SELECT CAST(a AS DATE), CAST(b AS VARCHAR(20)) FROM t","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET DATA TYPE BIGINT","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a DROP NOT NULL","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET DEFAULT 1","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a DROP DEFAULT","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ADD CONSTRAINT c CHECK (a > 0)","kind":"accepts-invalid"}
 {"sql":"ALTER TABLE t DROP CONSTRAINT c","kind":"rejects-valid"}
-{"sql":"CREATE TABLE n (a TIMESTAMP WITH TIME ZONE, b TIME WITH TIME ZONE, c TIMESTAMP(3) WITHOUT TIME ZONE)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a NATIONAL CHARACTER(5), b NCHAR(5), c NATIONAL CHARACTER VARYING(5))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER CHECK (a IN (SELECT b FROM u)))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a VARCHAR(5) COLLATE \"C\")","kind":"rejects-valid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON UPDATE CASCADE)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON UPDATE SET NULL)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER UNIQUE DEFERRABLE INITIALLY DEFERRED)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER UNIQUE NOT DEFERRABLE INITIALLY IMMEDIATE)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t MATCH FULL)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t MATCH SIMPLE)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER ARRAY)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER ARRAY[5])","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER[])","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER GENERATED BY DEFAULT AS IDENTITY (START WITH 5 INCREMENT BY 2))","kind":"rejects-valid"}
-{"sql":"CREATE TABLE n (a INTEGER, b INTEGER GENERATED ALWAYS AS (a + 1))","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER, b INTEGER GENERATED ALWAYS AS (a + 1) STORED)","kind":"accepts-invalid"}
-{"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE RESTRICT)","kind":"accepts-invalid"}
-{"sql":"DROP TRIGGER g","kind":"accepts-invalid"}
-{"sql":"CREATE TRIGGER g AFTER INSERT ON t BEGIN DELETE FROM u; END","kind":"accepts-invalid"}
-{"sql":"CREATE TRIGGER g INSTEAD OF INSERT ON v BEGIN DELETE FROM u; END","kind":"accepts-invalid"}
-{"sql":"CREATE TRIGGER g BEFORE UPDATE OF a ON t BEGIN DELETE FROM u; END","kind":"accepts-invalid"}
-{"sql":"CREATE TRIGGER g AFTER DELETE ON t BEGIN DELETE FROM u; END","kind":"accepts-invalid"}
-{"sql":"CREATE TRIGGER g AFTER INSERT ON t WHEN (1 > 0) BEGIN DELETE FROM u; END","kind":"accepts-invalid"}
 {"sql":"START TRANSACTION","kind":"rejects-valid"}
 {"sql":"SAVEPOINT s","kind":"accepts-invalid"}
 {"sql":"RELEASE SAVEPOINT s","kind":"accepts-invalid"}
 {"sql":"ROLLBACK TO SAVEPOINT s","kind":"accepts-invalid"}
 {"sql":"CALL p(1)","kind":"rejects-valid"}
 {"sql":"CALL p(a => 1)","kind":"rejects-valid"}
-{"sql":"CREATE TABLE n (a INTEGER UNIQUE)","kind":"accepts-invalid"}

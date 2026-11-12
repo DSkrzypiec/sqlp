@@ -75,7 +75,7 @@ func ListOutCols(stmt ast.Statement, d *dialect.Dialect, o Options) (*OutCols, e
 	case *ast.Query:
 		q = s
 	case *ast.CreateView:
-		q = s.Query
+		q = viewQuery(s)
 	default:
 		return nil, fmt.Errorf("analyze: ListOutCols needs a SELECT or CREATE VIEW statement, not %T", stmt)
 	}
@@ -88,6 +88,18 @@ func ListOutCols(stmt ast.Statement, d *dialect.Dialect, o Options) (*OutCols, e
 		b.emit(b.allSrcs([]col{c}), inSelect)
 	}
 	return b.result(), nil
+}
+
+// viewQuery returns the query a view runs. A BigQuery replica, AS REPLICA OF
+// source, reads all of its source, as SELECT * FROM source does.
+func viewQuery(v *ast.CreateView) *ast.Query {
+	if v.ReplicaOf == nil {
+		return v.Query
+	}
+	return &ast.Query{Body: &ast.Select{
+		Items: []*ast.SelectItem{{Expr: &ast.Star{}}},
+		From:  []ast.TableExpr{&ast.TableRef{Name: v.ReplicaOf}},
+	}}
 }
 
 // result turns the sources the query used into OutCols.

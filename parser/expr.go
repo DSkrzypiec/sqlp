@@ -1253,7 +1253,11 @@ func (p *Parser) parseCast() ast.Expr {
 	if p.d.Features.Expr.FreeFormTypeNames && p.isOp(")") { // SQLite allows no type at all
 		c.Type = &ast.DataType{}
 	} else {
+		pos := p.peek().Pos
 		c.Type = p.parseType()
+		if p.d.Features.Expr.SimpleTypeNames && hasTypeArgs(c.Type) {
+			p.errorf(pos, "a type in CAST cannot have parameters")
+		}
 	}
 	if p.d.Features.Expr.CastFormat && p.acceptKw("FORMAT") {
 		c.Format = p.parseExpr()
@@ -1428,7 +1432,7 @@ func (p *Parser) parseType() *ast.DataType {
 		p.unexpected("type name")
 	}
 	p.parseTypeArgs(dt)
-	if p.d.Features.Expr.FreeFormTypeNames {
+	if p.d.Features.Expr.FreeFormTypeNames || p.d.Features.Expr.SimpleTypeNames {
 		return dt
 	}
 	switch strings.ToUpper(dt.Name) {
@@ -1503,6 +1507,19 @@ var noArgTypes = map[string]bool{
 	"DOUBLE PRECISION": true,
 }
 
+// hasTypeArgs reports whether dt or a type within it has parameters.
+func hasTypeArgs(dt *ast.DataType) bool {
+	if len(dt.Args) > 0 || dt.Of != nil && hasTypeArgs(dt.Of) {
+		return true
+	}
+	for _, f := range dt.Struct {
+		if hasTypeArgs(f.Type) {
+			return true
+		}
+	}
+	return false
+}
+
 func (p *Parser) parseTypeArgs(dt *ast.DataType) {
 	if !p.d.Features.Expr.FreeFormTypeNames && noArgTypes[strings.ToUpper(dt.Name)] {
 		return
@@ -1511,6 +1528,21 @@ func (p *Parser) parseTypeArgs(dt *ast.DataType) {
 		return
 	}
 	switch {
+	case p.d.Features.Expr.SimpleTypeNames: // BigQuery: literals or MAX
+		for {
+			switch t := p.peek(); {
+			case p.isKw("MAX"):
+				p.next()
+				dt.Args = append(dt.Args, &ast.Name{Parts: []ast.Ident{{Name: t.Text}}})
+			case t.Kind == lexer.Number, t.Kind == lexer.String:
+				dt.Args = append(dt.Args, p.parsePrimary())
+			default:
+				p.unexpected("a literal or MAX")
+			}
+			if !p.acceptOp(",") {
+				break
+			}
+		}
 	case p.d.Features.Expr.FreeFormTypeNames:
 		dt.Args = []ast.Expr{p.parseSignedNumber()}
 		if p.acceptOp(",") {
@@ -1557,7 +1589,7 @@ func (p *Parser) parseTypeWords(first lexer.Token) string {
 			n.Parts = append(n.Parts, p.parseAnyIdent())
 		}
 		return nameText(n)
-	default:
+	case !p.d.Features.Expr.SimpleTypeNames:
 		for _, second := range pgMultiWord[first.Value] {
 			if p.isKw(second) {
 				words = append(words, p.next().Text)

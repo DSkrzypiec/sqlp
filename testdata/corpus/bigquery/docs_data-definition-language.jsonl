@@ -1,7 +1,7 @@
 {"sql":"CREATE TABLE mydataset.newtable ( x INT64 )"}
-{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  location=\"us\",\n  default_table_expiration_days=3.75,\n  labels=[(\"label1\",\"value1\"),(\"label2\",\"value2\")]\n  )"}
-{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  is_case_insensitive=TRUE\n)"}
-{"sql":"CREATE SCHEMA mydataset\nDEFAULT COLLATE 'und:ci'"}
+{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  location=\"us\",\n  default_table_expiration_days=3.75,\n  labels=[(\"label1\",\"value1\"),(\"label2\",\"value2\")]\n  )","shape":"CREATE SCHEMA mydataset OPTIONS (location = 'us', default_table_expiration_days = 3.75, labels = ARRAY[('label1', 'value1'), ('label2', 'value2')]);"}
+{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  is_case_insensitive=TRUE\n)","shape":"CREATE SCHEMA mydataset OPTIONS (is_case_insensitive = TRUE);"}
+{"sql":"CREATE SCHEMA mydataset\nDEFAULT COLLATE 'und:ci'","shape":"CREATE SCHEMA mydataset DEFAULT COLLATE 'und:ci';"}
 {"sql":"STRING COLLATE collate_specification","reject":true}
 {"sql":"CREATE TABLE mydataset.newtable\n(\n  x INT64 OPTIONS(description=\"An optional INTEGER field\"),\n  y STRUCT <\n    a ARRAY <STRING> OPTIONS(description=\"A repeated STRING field\"),\n    b BOOL\n  >\n)\nPARTITION BY _PARTITIONDATE\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  partition_expiration_days=1,\n  description=\"a table that expires in 2025, with each partition living for 24 hours\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
 {"sql":"CREATE TABLE mydataset.top_words\nOPTIONS(\n  description=\"Top ten words per Shakespeare corpus\"\n) AS\nSELECT\n  corpus,\n  ARRAY_AGG(STRUCT(word, word_count) ORDER BY word_count DESC LIMIT 10) AS top_words\nFROM `bigquery-public-data`.samples.shakespeare\nGROUP BY corpus"}
@@ -92,7 +92,7 @@
 {"sql":"CREATE CONNECTION [IF NOT EXISTS] `[[project_id.]location.]connection_id`\nOPTIONS (connection_option_list)","reject":true}
 {"sql":"CREATE CONNECTION IF NOT EXISTS `us.my_cloud_resource_connection`\nOPTIONS (\n  connection_type = \"CLOUD_RESOURCE\",\n  friendly_name = \"My Resource Connection\",\n  description = \"Connection to access Cloud resources\"\n  )"}
 {"sql":"ALTER SCHEMA [IF EXISTS]\n[project_name.]dataset_name\nSET DEFAULT COLLATE collate_specification","reject":true}
-{"sql":"CREATE SCHEMA mydataset"}
+{"sql":"CREATE SCHEMA mydataset","shape":"CREATE SCHEMA mydataset;"}
 {"sql":"CREATE TABLE mydataset.mytable_a\n(\n  number INT64,\n  word STRING\n)"}
 {"sql":"ALTER SCHEMA mydataset\nSET DEFAULT COLLATE 'und:ci'"}
 {"sql":"CREATE TABLE mydataset.mytable_b\n(\n  amount INT64,\n  characters STRING\n)"}
@@ -179,7 +179,7 @@
 {"sql":"ALTER CONNECTION [IF EXISTS] `[[project_id.]location.]connection_id`\nSET OPTIONS (alter_connection_option_list)","reject":true}
 {"sql":"ALTER CONNECTION `us.my_cloud_resource_connection`\nSET OPTIONS (\n  description = \"Updated description for my Cloud resource connection\"\n  )"}
 {"sql":"DROP SCHEMA mydataset"}
-{"sql":"DROP SCHEMA IF EXISTS mydataset CASCADE"}
+{"sql":"DROP SCHEMA IF EXISTS mydataset CASCADE","shape":"DROP SCHEMA IF EXISTS mydataset CASCADE;"}
 {"sql":"UNDROP SCHEMA [IF NOT EXISTS]\n[project_name.]dataset_name\n[OPTIONS (location=\"us\")]","reject":true}
 {"sql":"UNDROP SCHEMA mydataset"}
 {"sql":"DROP TABLE [IF EXISTS] table_name","reject":true}
@@ -209,13 +209,13 @@
 {"sql":"DROP ROW ACCESS POLICY my_row_filter ON project.dataset.my_table"}
 {"sql":"DROP ALL ROW ACCESS POLICIES ON project.dataset.my_table"}
 {"sql":"DROP CAPACITY [IF EXISTS]\nproject_id.location.capacity-commitment-id","reject":true}
-{"sql":"DROP CAPACITY `admin_project.region-us.1234`"}
+{"sql":"DROP CAPACITY `admin_project.region-us.1234`","shape":"DROP CAPACITY `admin_project.region-us.1234`;"}
 {"sql":"DROP RESERVATION [IF EXISTS]\nproject_id.location.reservation_id","reject":true}
-{"sql":"DROP RESERVATION `admin_project.region-us.prod`"}
+{"sql":"DROP RESERVATION `admin_project.region-us.prod`","shape":"DROP RESERVATION `admin_project.region-us.prod`;"}
 {"sql":"DROP ASSIGNMENT [IF EXISTS]\nproject_id.location.reservation_id.assignment_id","reject":true}
-{"sql":"DROP ASSIGNMENT `admin_project.region-us.prod.1234`"}
+{"sql":"DROP ASSIGNMENT `admin_project.region-us.prod.1234`","shape":"DROP ASSIGNMENT `admin_project.region-us.prod.1234`;"}
 {"sql":"DROP SEARCH INDEX my_index ON dataset.my_table"}
 {"sql":"DROP VECTOR INDEX my_index ON dataset.my_table"}
 {"sql":"DROP CONNECTION [IF EXISTS] `[[project_id.]location.]connection_id`","reject":true}
-{"sql":"DROP CONNECTION IF EXISTS `us.my_cloud_resource_connection`"}
+{"sql":"DROP CONNECTION IF EXISTS `us.my_cloud_resource_connection`","shape":"DROP CONNECTION IF EXISTS `us.my_cloud_resource_connection`;"}
 {"sql":"table_path :=\n  [[project_name.]dataset_name.]table_name","reject":true}

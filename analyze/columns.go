@@ -1483,7 +1483,7 @@ func (b *colBuilder) expand(o *objRef) ([]col, bool) {
 		case *ast.Query:
 			q = s
 		case *ast.CreateView:
-			q, names = s.Query, s.Columns
+			q, names = viewQuery(s), s.Columns
 		}
 	}
 	if q == nil {
