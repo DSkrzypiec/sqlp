@@ -340,6 +340,10 @@ type WithVar struct {
 type TableArg struct {
 	Kind string // "TABLE" or "MODEL"
 	Name *Name
+	// TABLE f(args) [AS alias] passes the result of a table-valued function;
+	// Name is nil then.
+	Func  *FuncCall
+	Alias *Ident
 }
 
 // HavingBound is HAVING MAX expr or HAVING MIN expr in an aggregate call.
@@ -515,7 +519,10 @@ type (
 		Items    []*SelectItem
 		Windows  []*NamedWindow
 	}
-	PipeExtend struct{ Items []*SelectItem }
+	PipeExtend struct {
+		Items   []*SelectItem
+		Windows []*NamedWindow
+	}
 	PipeWindow struct{ Items []*SelectItem } // the older form of EXTEND for window functions
 	PipeSet    struct{ Items []*PipeAssign }
 	PipeDrop   struct{ Columns []Ident }
@@ -738,6 +745,9 @@ type Values struct {
 // e.g. `(SELECT 1 ORDER BY 1) UNION (SELECT 2)`.
 type ParenQuery struct {
 	Query *Query
+	// Alias is BigQuery's (query) AS alias: the name of the query's rows in
+	// the pipe steps that follow it; nil when absent.
+	Alias *Ident
 }
 
 // TableBody is PostgreSQL's `TABLE name` shorthand.

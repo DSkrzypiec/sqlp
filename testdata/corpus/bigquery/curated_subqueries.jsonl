@@ -160,7 +160,7 @@
 {"sql":"SELECT ABS ( ( MAX SELECT ( a ) FROM t ) )","reject":true}
 {"sql":"SELECT ABS ( ( SELECT MAX ( a ) FROM FROM ) )","reject":true}
 {"sql":"SELECT ABS ( ( SELECT MAX ( a ) FROM t t ) )","shape":"SELECT ABS((SELECT MAX(a) FROM t AS t));"}
-{"sql":"SELECT EXISTS ( ( SELECT MAX ( a ) FROM t ) AS TEXT )"}
+{"sql":"SELECT EXISTS ( ( SELECT MAX ( a ) FROM t ) AS TEXT )","shape":"SELECT EXISTS ((SELECT MAX(a) FROM t) AS TEXT);"}
 {"sql":"SELECT CAST ( ( SELECT MAX ( a ) FROM t ) a TEXT )","reject":true}
 {"sql":"SELECT CAST ( ( SELECT a ( a ) FROM t ) AS TEXT )"}
 {"sql":"SELECT CAST ( ( SELECT MAX ( a FROM ) t ) AS TEXT )","reject":true}

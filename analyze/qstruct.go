@@ -392,7 +392,10 @@ func (b *builder) walk(v reflect.Value, n *QStructNode, sc *scope) {
 			}
 			return
 		case *ast.TableArg: // TABLE t passed to a table-valued function reads t
-			if x.Kind == "TABLE" {
+			switch {
+			case x.Func != nil: // TABLE f(args): f's result
+				b.function(x.Func, n, sc)
+			case x.Kind == "TABLE":
 				b.addChild(n, b.relation(x.Name, sc))
 			}
 			return

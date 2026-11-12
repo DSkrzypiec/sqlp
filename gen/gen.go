@@ -609,7 +609,15 @@ func (g *Generator) expr(e ast.Expr) {
 		g.w(")")
 	case *ast.TableArg:
 		g.w(e.Kind, " ")
-		g.name(e.Name)
+		if e.Func != nil {
+			g.funcCall(e.Func)
+		} else {
+			g.name(e.Name)
+		}
+		if e.Alias != nil {
+			g.w(" AS ")
+			g.ident(*e.Alias)
+		}
 	case *ast.Interval:
 		g.w("INTERVAL ")
 		g.expr(e.Value)
@@ -906,34 +914,48 @@ func (g *Generator) funcCall(f *ast.FuncCall) {
 	if f.RawArgs != nil {
 		g.w(*f.RawArgs)
 	}
-	g.kwInline(f.Distinct, "DISTINCT ")
-	g.exprList(f.Args)
+	// Each part after the first is preceded by a space: BigQuery allows
+	// modifiers without arguments, as in SUM(ORDER BY x).
+	started := false
+	part := func(s string) {
+		if started {
+			g.w(" ")
+		}
+		started = true
+		g.w(s)
+	}
+	if f.Distinct {
+		part("DISTINCT")
+	}
+	if len(f.Args) > 0 {
+		part("")
+		g.exprList(f.Args)
+	}
 	if f.Nulls != "" {
-		g.w(" ", f.Nulls, " NULLS")
+		part(f.Nulls + " NULLS")
 	}
 	if f.Where != nil {
-		g.w(" WHERE ")
+		part("WHERE ")
 		g.expr(f.Where)
 	}
 	if len(f.GroupBy) > 0 {
-		g.w(" GROUP BY ")
+		part("GROUP BY ")
 		g.exprList(f.GroupBy)
 	}
 	if f.GroupHaving != nil {
-		g.w(" HAVING ")
+		part("HAVING ")
 		g.expr(f.GroupHaving)
 	}
 	if f.Having != nil {
-		g.w(map[bool]string{true: " HAVING MAX ", false: " HAVING MIN "}[f.Having.Max])
+		part(map[bool]string{true: "HAVING MAX ", false: "HAVING MIN "}[f.Having.Max])
 		g.expr(f.Having.Expr)
 	}
 	if len(f.OrderBy) > 0 {
-		g.kwInline(len(f.Args) > 0, " ")
-		g.w("ORDER BY ")
+		part("ORDER BY ")
 		g.orderItems(f.OrderBy)
 	}
 	if f.Limit != nil {
-		g.w(" LIMIT ")
+		part("LIMIT ")
 		g.expr(f.Limit)
 	}
 	g.w(")")
@@ -1085,7 +1107,11 @@ func (g *Generator) namedWindows(list []*ast.NamedWindow) {
 		}
 		g.ident(nw.Name)
 		g.w(" AS ")
-		g.windowSpec(nw.Spec)
+		if nw.Spec.NameOnly {
+			g.ident(*nw.Spec.Name)
+		} else {
+			g.windowSpec(nw.Spec)
+		}
 	}
 }
 
@@ -1199,6 +1225,10 @@ func (g *Generator) pipe(op ast.PipeOp) {
 	case *ast.PipeExtend:
 		g.w("EXTEND ")
 		g.selectItems(x.Items)
+		if len(x.Windows) > 0 {
+			g.w(" WINDOW ")
+			g.namedWindows(x.Windows)
+		}
 	case *ast.PipeWindow:
 		g.w("WINDOW ")
 		g.selectItems(x.Items)
@@ -1445,6 +1475,10 @@ func (g *Generator) body(b ast.QueryBody) {
 		g.w("(")
 		g.query(b.Query)
 		g.w(")")
+		if b.Alias != nil {
+			g.w(" AS ")
+			g.ident(*b.Alias)
+		}
 	case *ast.TableBody:
 		g.w("TABLE ")
 		g.name(b.Name)

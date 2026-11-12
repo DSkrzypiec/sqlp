@@ -109,6 +109,7 @@ type ExprFeatures struct {
 	IntervalUnits        bool // INTERVAL expr unit, as in INTERVAL 5 DAY (BigQuery)
 	LikeQuantified       bool // LIKE ANY|SOME|ALL (pattern, ...) (BigQuery)
 	AggregateModifiers   bool // f(x IGNORE NULLS WHERE c HAVING MAX y ORDER BY z LIMIT n) (BigQuery)
+	AggregateAll         bool // f(ALL x)
 	TableArgs            bool // TABLE t and MODEL m as function arguments (BigQuery)
 	MethodCalls          bool // (expr).F(args), chained calls for F(expr, args) (BigQuery)
 	WithExprs            bool // WITH(a AS 1, b AS a + 1, a * b) (BigQuery)
@@ -145,6 +146,8 @@ type QueryFeatures struct {
 	JoinRequiresQual      bool // [INNER|LEFT|...] JOIN must have ON/USING
 	JoinUsingAlias        bool // JOIN ... USING (a) AS x (PostgreSQL)
 	ParenTableIsJoin      bool // ( ... ) in FROM must hold a join, not a lone table
+	ParenJoinOnly         bool // ( ... ) in FROM is itself a JOIN, not a comma list or another ( ... ), and has no alias (BigQuery)
+	ParenQueryAlias       bool // (query) AS alias, a name for the query's rows in the pipe steps after it (BigQuery)
 	ValuesTail            bool // VALUES ... ORDER BY / LIMIT
 	WithOrdinality        bool // FROM f() WITH ORDINALITY
 	FreeJoinKeywords      bool // up to three join keywords in any order, ON after a comma (SQLite)
@@ -174,12 +177,24 @@ type QueryFeatures struct {
 	ValuesQuery           bool // VALUES (...) as a query, not only as INSERT's source
 	NaturalJoin           bool // NATURAL JOIN
 	WindowGroups          bool // GROUPS frames in windows
-	// BigQuery's rules for a SELECT without FROM (no WHERE, GROUP BY, HAVING,
-	// ORDER BY or *), for grouping sets (alone in GROUP BY, no tuples there), and
-	// for LIMIT and OFFSET (an integer literal or a parameter).
+	FrameExclusion        bool // EXCLUDE CURRENT ROW | GROUP | TIES | NO OTHERS in frames
+	// BigQuery's rules:
+	//   - FromlessRules: a SELECT without FROM has no WHERE, GROUP BY, HAVING,
+	//     ORDER BY, * or window function;
+	//   - GroupingSetsAlone: ROLLUP, CUBE, GROUPING SETS and () are alone in GROUP
+	//     BY, ROLLUP and CUBE nest only in GROUPING SETS, () only there, and no
+	//     grouping key is a tuple or STRUCT(...);
+	//   - LimitLiterals: LIMIT and OFFSET take an integer literal or a parameter;
+	//   - WindowRules: a frame offset is a literal or a parameter, possibly cast,
+	//     neither NULL nor negative, a window that names another one has no
+	//     PARTITION BY, and WINDOW c AS b names another window without
+	//     parentheses;
+	//   - JoinOnRules: a join's ON has no IN or EXISTS subquery.
 	FromlessRules     bool
 	GroupingSetsAlone bool
 	LimitLiterals     bool
+	WindowRules       bool
+	JoinOnRules       bool
 }
 
 // DMLFeatures lists INSERT, UPDATE, DELETE and MERGE syntax.

@@ -41,7 +41,7 @@ func FuzzParse(f *testing.F) {
 		f.Add(c.SQL)
 	}
 	f.Add(nestedParenExpr(200))
-	f.Add(nestedParenJoin(200))
+	f.Add(nestedParenJoin(200, dialect.Postgres))
 
 	f.Fuzz(func(t *testing.T, sql string) {
 		for _, d := range dialect.All {

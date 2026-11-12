@@ -22,10 +22,14 @@ func nestedParenExpr(n int) string {
 	return s
 }
 
-func nestedParenJoin(n int) string {
+func nestedParenJoin(n int, d *dialect.Dialect) string {
+	alias := " AS c"
+	if d.Features.Query.ParenJoinOnly { // BigQuery: no alias after a parenthesized join
+		alias = ""
+	}
 	s := "SELECT 1"
 	for i := 0; i < n; i++ {
-		s = "SELECT * FROM ((" + s + ") AS a JOIN b ON true) AS c"
+		s = "SELECT * FROM ((" + s + ") AS a JOIN b ON true)" + alias
 	}
 	return s
 }
@@ -45,7 +49,7 @@ func TestPerfNestedParenExpr(t *testing.T) {
 func TestPerfNestedParenJoin(t *testing.T) {
 	eachDialect(t, func(t *testing.T, d *dialect.Dialect) {
 		start := time.Now()
-		if _, err := parser.Parse(nestedParenJoin(200), d); err != nil {
+		if _, err := parser.Parse(nestedParenJoin(200, d), d); err != nil {
 			t.Fatalf("parse error: %v", err)
 		}
 		if took := time.Since(start); took > time.Second {

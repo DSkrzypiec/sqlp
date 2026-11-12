@@ -295,7 +295,10 @@ func (p *Parser) tryParenBodyQuery() (query *ast.Query, pending ast.Expr) {
 	if p.isOp(")") {
 		return q, nil
 	}
-	return nil, p.continueExprPrec(&ast.Subquery{Query: unwrapParenQuery(q)}, 0)
+	if pq, ok := q.Body.(*ast.ParenQuery); !ok || pq.Alias == nil { // else the alias would be lost
+		q = unwrapParenQuery(q)
+	}
+	return nil, p.continueExprPrec(&ast.Subquery{Query: q}, 0)
 }
 
 // unwrapParenQuery undoes a single incidental ast.ParenQuery layer that
@@ -308,7 +311,7 @@ func (p *Parser) tryParenBodyQuery() (query *ast.Query, pending ast.Expr) {
 // combine with a set operator, and must be preserved).
 func unwrapParenQuery(q *ast.Query) *ast.Query {
 	pq, ok := q.Body.(*ast.ParenQuery)
-	if !ok || q.With != nil || q.OrderBy != nil || q.Limit != nil || q.Locking != nil {
+	if !ok || q.With != nil || q.OrderBy != nil || q.Limit != nil || q.Locking != nil || q.Pipes != nil {
 		return q
 	}
 	return pq.Query
@@ -707,10 +710,7 @@ func (p *Parser) parseWordExpr() ast.Expr {
 		if p.d.Features.Expr.IntervalUnits && p.peekN(1).Kind != lexer.String {
 			p.next()
 			iv := &ast.Interval{Value: p.parseExpr()}
-			if t := p.peek(); t.Kind != lexer.Ident || p.d.IsReserved(t.Value) {
-				p.unexpected("date or time part")
-			}
-			iv.Unit = p.next().Value
+			iv.Unit = p.parseDatePart()
 			return iv
 		}
 	case "WITH":
@@ -874,7 +874,7 @@ func (p *Parser) tryOverlay() ast.Expr {
 // TIMESTAMP WITH TIME ZONE '...', int4 '7'). It returns nil and leaves the
 // position untouched when the input is not a typed literal.
 func (p *Parser) tryTypedString() ast.Expr {
-	if p.peekN(1).Kind == lexer.String && !p.isColNameOnly() {
+	if p.peekN(1).Kind == lexer.String && !p.peekN(1).Bytes && !p.isColNameOnly() {
 		t := p.next()
 		name := t.Text
 		if !strings.EqualFold(t.Text, t.Value) { // N'x' is NCHAR 'x'
@@ -882,7 +882,13 @@ func (p *Parser) tryTypedString() ast.Expr {
 		}
 		dt := &ast.DataType{Name: name}
 		ts := &ast.TypedString{Type: dt, Value: p.parseStringValue()}
-		if t.Value == "INTERVAL" {
+		switch {
+		case t.Value == "INTERVAL" && p.d.Features.Expr.IntervalUnits:
+			dt.Fields = p.parseDatePart()
+			if p.acceptKw("TO") {
+				dt.Fields += " TO " + p.parseDatePart()
+			}
+		case t.Value == "INTERVAL":
 			dt.Fields = p.parseIntervalFields()
 		}
 		return ts
@@ -895,7 +901,7 @@ func (p *Parser) tryTypedString() ast.Expr {
 	var ts *ast.TypedString
 	ok := p.try(func() {
 		typ := p.parseType()
-		if p.peek().Kind != lexer.String || typ.Fields != "" { // INTERVAL YEAR '1' is not valid
+		if p.peek().Kind != lexer.String || p.peek().Bytes || typ.Fields != "" { // INTERVAL YEAR '1' is not valid
 			p.unexpected("string literal")
 		}
 		ts = &ast.TypedString{Type: typ, Value: p.parseStringValue()}
@@ -988,6 +994,8 @@ func (p *Parser) parseUnnest() *ast.FuncCall {
 
 func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 	fc := &ast.FuncCall{Name: name}
+	tvf := p.tvf
+	p.tvf = false
 	if len(name.Parts) == 1 && !name.Parts[0].Quoted && p.d.RawArgFuncs[strings.ToUpper(name.Parts[0].Name)] {
 		p.expectOp("(")
 		raw := p.takeRawArgs()
@@ -997,61 +1005,86 @@ func (p *Parser) parseFuncCall(name *ast.Name) *ast.FuncCall {
 		return fc
 	}
 	p.expectOp("(")
-	if !p.acceptOp(")") {
-		if p.isOp("*") && (p.isOpAt(1, ")") || p.d.Features.Expr.AggregateModifiers && p.isOpAt(1, ",")) {
+	if p.acceptOp(")") {
+		// no arguments
+	} else if tvf && p.d.Features.Expr.TableArgs {
+		// BigQuery: a table-valued function takes arguments, nothing more.
+		fc.Args = []ast.Expr{p.parseFuncArg(true)}
+		for p.acceptOp(",") {
+			fc.Args = append(fc.Args, p.parseFuncArg(true))
+		}
+		p.expectOp(")")
+	} else {
+		// BigQuery parses * and modifiers in any call, COUNT(DISTINCT) and
+		// SUM(ORDER BY x) included, and rejects what does not fit the function
+		// at analysis.
+		mods := p.d.Features.Expr.AggregateModifiers
+		if p.isOp("*") && (p.isOpAt(1, ")") || mods) {
 			p.next()
 			fc.Args = []ast.Expr{&ast.Star{}}
 			for p.acceptOp(",") { // BigQuery's COUNT(*, contribution_bounds_per_group => ...)
-				fc.Args = append(fc.Args, p.parseFuncArg())
+				fc.Args = append(fc.Args, p.parseFuncArg(tvf))
 			}
 		} else {
 			if p.acceptKw("DISTINCT") {
 				fc.Distinct = true
-			} else {
+			} else if p.d.Features.Expr.AggregateAll {
 				p.acceptKw("ALL")
 			}
+			switch {
+			case mods && p.isOp("*"):
+				p.next()
+				fc.Args = []ast.Expr{&ast.Star{}}
+			case mods && p.atCallModifier():
 			// SQLite allows COUNT(DISTINCT), and rejects it only at analysis.
-			if !p.d.Features.Expr.FreeFormTypeNames || !p.isOp(")") && !p.isKwSeq("ORDER", "BY") {
-				fc.Args = []ast.Expr{p.parseFuncArg()}
+			case !p.d.Features.Expr.FreeFormTypeNames || !p.isOp(")") && !p.isKwSeq("ORDER", "BY"):
+				fc.Args = []ast.Expr{p.parseFuncArg(tvf)}
 				for p.acceptOp(",") {
-					fc.Args = append(fc.Args, p.parseFuncArg())
+					fc.Args = append(fc.Args, p.parseFuncArg(tvf))
 				}
 			}
-			if p.d.Features.Expr.AggregateModifiers {
-				if w := p.acceptOneOf("IGNORE", "RESPECT"); w != "" {
-					p.expectKw("NULLS")
-					fc.Nulls = w
-				}
-				if p.acceptKw("WHERE") {
-					fc.Where = p.parseExpr()
-				}
-				if p.acceptKwSeq("GROUP", "BY") { // multi-level aggregation
-					fc.GroupBy = p.parseExprList()
-				}
-				if p.acceptKw("HAVING") {
-					bound := p.acceptOneOf("MAX", "MIN")
-					switch {
-					case bound != "":
-						fc.Having = &ast.HavingBound{Max: bound == "MAX", Expr: p.parseExpr()}
-					case fc.GroupBy != nil:
-						fc.GroupHaving = p.parseExpr()
-					default:
-						p.unexpected("MAX or MIN")
-					}
+		}
+		if mods {
+			if w := p.acceptOneOf("IGNORE", "RESPECT"); w != "" {
+				p.expectKw("NULLS")
+				fc.Nulls = w
+			}
+			if p.acceptKw("WHERE") {
+				fc.Where = p.parseExpr()
+			}
+			if p.acceptKwSeq("GROUP", "BY") { // multi-level aggregation
+				fc.GroupBy = p.parseExprList()
+			}
+			if p.acceptKw("HAVING") {
+				bound := p.acceptOneOf("MAX", "MIN")
+				switch {
+				case bound != "":
+					fc.Having = &ast.HavingBound{Max: bound == "MAX", Expr: p.parseExpr()}
+				case fc.GroupBy != nil:
+					fc.GroupHaving = p.parseExpr()
+				default:
+					p.unexpected("MAX or MIN")
 				}
 			}
-			if p.acceptKwSeq("ORDER", "BY") {
-				fc.OrderBy = p.parseOrderItems()
-			}
-			if p.d.Features.Expr.AggregateModifiers && p.acceptKw("LIMIT") {
-				fc.Limit = p.parseExpr()
-			}
+		}
+		if p.acceptKwSeq("ORDER", "BY") {
+			fc.OrderBy = p.parseOrderItems()
+		}
+		if mods && p.acceptKw("LIMIT") {
+			fc.Limit = p.parseExpr()
 		}
 		p.expectOp(")")
 	}
 	p.checkCallArgs(fc)
 	p.parseFuncTail(fc)
 	return fc
+}
+
+// atCallModifier reports whether a modifier of BigQuery's aggregate calls, or
+// the call's end, comes next.
+func (p *Parser) atCallModifier() bool {
+	return p.isOp(")") || p.isKwSeq("IGNORE", "NULLS") || p.isKwSeq("RESPECT", "NULLS") || p.isKw("WHERE", "HAVING", "LIMIT") ||
+		p.isKwSeq("GROUP", "BY") || p.isKwSeq("ORDER", "BY")
 }
 
 // specialArity gives the argument counts of PostgreSQL's functions with
@@ -1157,12 +1190,23 @@ func (p *Parser) takeRawArgs() string {
 
 var jsonEncodings = map[string]bool{"UTF8": true, "UTF16": true, "UTF32": true}
 
-func (p *Parser) parseFuncArg() ast.Expr {
+// parseFuncArg parses an argument of a call; tvf is set for a table-valued
+// function's.
+func (p *Parser) parseFuncArg(tvf bool) ast.Expr {
 	if p.d.Features.Expr.VariadicArgs && p.acceptKw("VARIADIC") {
 		return &ast.Unary{Op: "VARIADIC", Expr: p.parseExpr()}
 	}
-	if p.d.Features.Expr.TableArgs && p.isKw("TABLE", "MODEL") && (p.peekN(1).Kind == lexer.Ident || p.peekN(1).Kind == lexer.QuotedIdent) {
-		return &ast.TableArg{Kind: p.next().Value, Name: p.parseName()}
+	if p.d.Features.Expr.TableArgs && (p.isKw("MODEL") || tvf && p.isKw("TABLE")) &&
+		(p.peekN(1).Kind == lexer.Ident || p.peekN(1).Kind == lexer.QuotedIdent) {
+		a := &ast.TableArg{Kind: p.next().Value, Name: p.parseName()}
+		if a.Kind == "TABLE" && p.isOp("(") { // TABLE f(args) [AS x]: another function's result
+			p.tvf = true
+			a.Func, a.Name = p.parseFuncCall(a.Name), nil
+			if al := p.parseAlias(false); al != nil {
+				a.Alias = &al.Name
+			}
+		}
+		return a
 	}
 	if p.d.Features.Expr.NamedArgs && p.canBeIdent() && !p.d.ColNameKeywords[p.peek().Value] && (p.isOpAt(1, "=>") || p.isOpAt(1, ":=")) {
 		id := p.parseIdent()
@@ -1594,6 +1638,15 @@ func (p *Parser) parseIntervalFields() string {
 	return first + " TO " + second
 }
 
+// parseDatePart parses the unit of BigQuery's INTERVAL: any word that is not
+// reserved. BigQuery checks the word after parsing.
+func (p *Parser) parseDatePart() string {
+	if t := p.peek(); t.Kind != lexer.Ident || p.d.IsReserved(t.Value) {
+		p.unexpected("date or time part")
+	}
+	return p.next().Value
+}
+
 // nameText renders a Name as it would be printed, for use as a type name.
 func nameText(n *ast.Name) string {
 	parts := make([]string, len(n.Parts))
@@ -1646,6 +1699,9 @@ func (p *Parser) parseWindowSpec() *ast.WindowSpec {
 		id := p.parseIdent()
 		ws.Name = &id
 	}
+	if p.isKwSeq("PARTITION", "BY") && ws.Name != nil && p.d.Features.Query.WindowRules {
+		p.errorf(p.peek().Pos, "a window that names another window cannot have PARTITION BY")
+	}
 	if p.acceptKwSeq("PARTITION", "BY") {
 		ws.PartitionBy = p.parseExprList()
 	}
@@ -1665,7 +1721,7 @@ func (p *Parser) parseWindowSpec() *ast.WindowSpec {
 			f.Start = p.parseFrameBound()
 		}
 		p.checkFrame(f)
-		if p.acceptKw("EXCLUDE") {
+		if p.d.Features.Query.FrameExclusion && p.acceptKw("EXCLUDE") {
 			switch {
 			case p.acceptKwSeq("CURRENT", "ROW"):
 				f.Exclude = "CURRENT ROW"
@@ -1710,6 +1766,27 @@ func (p *Parser) checkFrame(f *ast.Frame) {
 	}
 }
 
+// frameOffsetOK reports whether BigQuery takes e as a frame offset: a literal
+// (+1 is one, -1 is refused as negative, -(1) as not a literal) or a
+// parameter, in parentheses or cast. INTERVAL 1 DAY is a call, INTERVAL '1'
+// DAY a literal.
+func frameOffsetOK(e ast.Expr) bool {
+	switch x := e.(type) {
+	case *ast.Paren:
+		return frameOffsetOK(x.Expr)
+	case *ast.Cast:
+		return frameOffsetOK(x.Expr)
+	case *ast.Param, *ast.TypedString:
+		return true
+	case *ast.Literal:
+		return x.Kind != ast.Null
+	case *ast.Unary:
+		lit, ok := x.Expr.(*ast.Literal)
+		return x.Op == "+" && ok && (lit.Kind == ast.Integer || lit.Kind == ast.Float)
+	}
+	return false
+}
+
 func (p *Parser) parseFrameBound() *ast.FrameBound {
 	switch {
 	case p.acceptKwSeq("CURRENT", "ROW"):
@@ -1721,7 +1798,11 @@ func (p *Parser) parseFrameBound() *ast.FrameBound {
 	case p.d.Features.Expr.FreeFormTypeNames && p.isKw("CURRENT", "UNBOUNDED"):
 		p.unexpected("frame bound") // keywords here in SQLite, never column names
 	}
+	pos := p.peek().Pos
 	e := p.parseExpr()
+	if p.d.Features.Query.WindowRules && !frameOffsetOK(e) {
+		p.errorf(pos, "a frame offset must be a literal or a parameter, neither NULL nor negative")
+	}
 	switch {
 	case p.acceptKw("PRECEDING"):
 		return &ast.FrameBound{Kind: ast.Preceding, Expr: e}

@@ -670,9 +670,31 @@ func (b *colBuilder) query(q *ast.Query, outer *colScope, ctes *scope, first fun
 	if fq, ok := q.Body.(*ast.FromQuery); ok { // the FROM items stay visible to the steps
 		sc = b.fromScope(fq, outer, ctes)
 	} else {
-		sc = &colScope{parent: outer, ctes: ctes, items: []*rel{{cols: b.body(q.Body, outer, ctes, first)}}}
+		rl := &rel{cols: b.body(q.Body, outer, ctes, first)}
+		if alias := pipeInputAlias(q.Body); alias != nil { // (query) AS x |> ...
+			name := b.r.ident(*alias)
+			rl = &rel{name: b.r.key(name), label: name, cols: b.relabel(rl.cols, name)}
+		}
+		sc = &colScope{parent: outer, ctes: ctes, items: []*rel{rl}}
 	}
 	return b.pipes(q.Pipes, sc)
+}
+
+// pipeInputAlias returns the name BigQuery gives the rows of body in the pipe
+// steps after it: the alias of (query) AS x, also from within more parentheses.
+func pipeInputAlias(body ast.QueryBody) *ast.Ident {
+	for {
+		pq, ok := body.(*ast.ParenQuery)
+		switch {
+		case !ok:
+			return nil
+		case pq.Alias != nil:
+			return pq.Alias
+		case pq.Query.With != nil || pq.Query.Pipes != nil:
+			return nil
+		}
+		body = pq.Query.Body
+	}
 }
 
 func (b *colBuilder) fromScope(fq *ast.FromQuery, outer *colScope, ctes *scope) *colScope {
@@ -738,12 +760,17 @@ func (b *colBuilder) pipes(ops []ast.PipeOp, sc *colScope) []col {
 			sc = table(cols, "")
 		case *ast.PipeExtend, *ast.PipeWindow:
 			var list []*ast.SelectItem
+			outer := sc
 			if e, ok := x.(*ast.PipeExtend); ok {
 				list = e.Items
+				windowed := *sc // its WINDOW clause names windows for its items
+				windowed.windows = e.Windows
+				sc = &windowed
 			} else {
 				list = x.(*ast.PipeWindow).Items
 			}
 			added := &rel{cols: items(list)}
+			sc = outer
 			sc = &colScope{parent: sc.parent, ctes: sc.ctes, items: append(slices.Clip(sc.items), added),
 				bases: slices.Clip(sc.bases)}
 		case *ast.PipeSet:
@@ -1825,7 +1852,10 @@ func (b *colBuilder) walk(v reflect.Value, sc *colScope, acc *[]int) {
 			*acc = append(*acc, b.allSrcs(b.query(x, sc, sc.ctes, nil))...)
 		case *ast.Exists:
 		case *ast.TableArg: // TABLE t passed to a table-valued function reads all of t
-			if x.Kind == "TABLE" {
+			switch {
+			case x.Func != nil: // TABLE f(args): what f's arguments read
+				*acc = append(*acc, b.callSrcs(x.Func, sc)...)
+			case x.Kind == "TABLE":
 				*acc = append(*acc, b.allSrcs(b.relation(x.Name, sc.ctes).cols)...)
 			}
 		case *ast.FuncCall:

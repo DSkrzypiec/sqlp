@@ -122,14 +122,14 @@ var Postgres = &Dialect{
 			DoubleColonCast: true, ArrayLiterals: true, RowConstructor: true, DefaultExpr: true,
 			Ilike: true, IsUnknown: true, IsOtherPredicates: true, BetweenSymmetric: true, Overlaps: true,
 			DistinctFromNonAssoc: true, TypedStringLiteral: true, AtTimeZone: true, NamedArgs: true,
-			VariadicArgs: true, WithinGroup: true, StandardFuncSyntax: true,
+			VariadicArgs: true, WithinGroup: true, StandardFuncSyntax: true, AggregateAll: true,
 		},
 		Names: NameFeatures{
 			KeywordLabels: true, QualifiedFunctions: true, MaxRelationParts: 3,
 		},
 		Query: QueryFeatures{
 			CTEColumns: true, CTEMaterialized: true, ValuesQuery: true, NaturalJoin: true, WindowGroups: true,
-			StrictFrames: true, ParenQueries: true, IntersectBindsTighter: true,
+			FrameExclusion: true, StrictFrames: true, ParenQueries: true, IntersectBindsTighter: true,
 			SetQuantifiers: true, EmptySelectList: true, SelectInto: true, DistinctOn: true,
 			Lateral: true, TableSample: true, TableKeyword: true, OnlyTable: true,
 			JoinRequiresQual: true, JoinUsingAlias: true, ParenTableIsJoin: true, WithOrdinality: true, ValuesTail: true,

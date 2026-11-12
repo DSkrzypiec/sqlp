@@ -750,13 +750,15 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after DML.** 10,512 frozen statements, 5,350 rejected by
-BigQuery, 4,043 with a verified shape, no mismatch. Known disagreements: 357
-valid statements sqlp rejects (before the day's work on the reference examples:
-1,102) and 74 invalid ones it accepts (206). Rejected valid: 202 DDL, 98 GQL
-graph queries (out of scope for now), 28 queries (10 of them `GRAPH_TABLE` and
-`MATCH_RECOGNIZE`), 21 scripts, 4 `EXPORT`/`LOAD`, 4 others. Accepted invalid: 41
-DDL, 31 queries, 2 transaction statements, 1 script. DML: none either way.
+**Status, 2026-11-12, after DML and the query rules.** 11,238 frozen
+statements, 5,954 rejected by BigQuery, 4,125 with a verified shape, no
+mismatch. Known disagreements: 356 valid statements sqlp rejects (before the
+day's work on the reference examples: 1,102) and 44 invalid ones it accepts
+(206). Rejected valid: 202 DDL, 98 GQL graph queries (out of scope for now), 27
+queries (11 of them `GRAPH_TABLE` and `MATCH_RECOGNIZE`, 12 from BigQuery's
+order of checks), 21 scripts, 4 `EXPORT`/`LOAD`, 4 others. Accepted invalid: 40
+DDL, 2 transaction statements, 1 query (`GROUP BY 1` whose output is a whole
+row), 1 script. DML: none either way.
 Shapes of constant queries are compared by value, except where a function's
 value changes from run to run (`bqVolatile`); FOR SYSTEM_TIME is left out
 because the sample tables are recreated on every run.
@@ -789,11 +791,24 @@ because the sample tables are recreated on every run.
   rules (`ON` needed except for arrays), and the structural rules (no clauses or
   `*` without `FROM`, grouping sets alone, `LIMIT` literals, no `VALUES`, CTE
   column lists, `MATERIALIZED`, `NATURAL`, `GROUPS`, `FILTER`). The analyses
-  follow pipes, star modifiers, `UNNEST`, `TABLE t` arguments and `BY NAME`. To
-  do, by count in the known list: `SELECT WITH DIFFERENTIAL_PRIVACY` (23),
-  `(expr).* EXCEPT (…)` (19), `PIVOT`/`UNPIVOT` (about 11, also as pipe steps),
-  multi-level aggregation `SUM(AVG(x) GROUP BY y)` (4), `STRICT CORRESPONDING`
-  (3), method calls `'a'.REPLACE(…)`, the remaining 80 accepted invalid ones.
+  follow pipes, star modifiers, `UNNEST`, `TABLE t` arguments and `BY NAME`.
+  Also done: `SELECT WITH DIFFERENTIAL_PRIVACY`, `(expr).* EXCEPT (…)`, `PIVOT`
+  and `UNPIVOT`, multi-level aggregation, `STRICT CORRESPONDING`, method calls,
+  and the rules of `tools/corpusgen/bigquery/rules.sql` (2026-11-12): calls in
+  any form BigQuery parses (`COUNT(DISTINCT)`, `SUM(ORDER BY x)`, `COUNT(*
+  WHERE c)`), no `ALL` in calls or `EXCLUDE` in frames, frame offsets that are
+  literals or parameters (`WindowRules`), `WINDOW c AS b`, no window function or
+  `QUALIFY` without FROM, `( … )` in FROM only around a join and without alias
+  (`ParenJoinOnly`), `(query) AS x` naming the rows for the pipe steps after it,
+  no `IN`/`EXISTS` subquery in `ON` (`JoinOnRules`), `ROLLUP` and `CUBE` nested
+  only in `GROUPING SETS` and no tuple or `STRUCT(…)` keys, `INTERVAL '…'` with
+  any date part and never without one, no bytes after a type name, `TABLE t`
+  only as a table function's argument and `TABLE f(…) [AS x]` there, plain
+  arguments for table functions, `EXTEND … WINDOW`. Left in the known list: 17
+  queries, of which 13 only because BigQuery reports a name, type or signature
+  error before the rule sqlp applies (tuples in GROUP BY, `LIMIT` values, `IN`
+  and `EXISTS` in `ON`, frame offsets); `a.1`, a field named by a number (3);
+  `(x).(SAFE.LEFT)(…)` (1); and 11 with `GRAPH_TABLE` or `MATCH_RECOGNIZE`.
   The reserved words are checked: `corpusgen -bigquery-keywords` tries every
   keyword sqlp knows (286) as an alias, and all agree (MATCH_RECOGNIZE is
   reserved though the reference's list leaves it out). Still to do: a

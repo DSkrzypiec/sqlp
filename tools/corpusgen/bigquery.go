@@ -81,6 +81,9 @@ var bqRejects = messageTable(
 	`Struct constructors are not supported within group by keys`,
 	`(Starting|Ending) window framing expression cannot be `,
 	`Window framing expression must be a literal or parameter`,
+	`Window framing expression cannot (evaluate to a negative value|be NULL)`,
+	`If a window has a PARTITION BY, it cannot reference a named window`,
+	`Invalid interval literal\. Expected INTERVAL keyword to be followed by an INT64 expression or STRING literal`,
 	`WHERE clause is not supported inside Window function call`,
 	`Units for SYSTEM sampling must be PERCENT`,
 	`Unsupported sampling method `,
@@ -170,6 +173,18 @@ var bqAccepts = messageTable(
 	`Unsupported WITH entry dependency cycle`,
 	`Column '.*' is introduced by WITH`,
 	`Function \w+ has both having expression and group by list`,
+	`COUNT\(\*\) cannot be used with DISTINCT`,
+	`Unsupported having modifier in the aggregate function`,
+	`Window framing expression (has type|for ROWS can only be of integer type)`,
+	`FORMAT is not allowed for cast from`,
+	// which side of a join a subquery reads, and whether a name in it is a
+	// table or a CTE (a CTE is allowed)
+	`Subquery in join predicate should (depend on one of join sides|only depend on exactly one join side)`,
+	`Unsupported subquery with table in join predicate`,
+	// INTERVAL's date part, read as a name
+	`Unsupported interval datetime field `,
+	`A valid date part name is required`,
+	`Invalid INTERVAL value `,
 	// values: projects, connections, options, timestamps, lengths
 	`Invalid project ID `,
 	`Unknown project ID`,

@@ -779,7 +779,7 @@ func TestListOutColsSeesEveryField(t *testing.T) {
 		reflect.TypeFor[ast.SelectItem]():  "Expr Alias",
 		reflect.TypeFor[ast.SetOp]():       "Op All Left Right Match",
 		reflect.TypeFor[ast.Values]():      "Rows",
-		reflect.TypeFor[ast.ParenQuery]():  "Query",
+		reflect.TypeFor[ast.ParenQuery]():  "Query Alias",
 		reflect.TypeFor[ast.TableBody]():   "Name",
 		reflect.TypeFor[ast.TableRef]():    "Name Only Alias Indexed Sample SystemTime",
 		reflect.TypeFor[ast.Alias]():       "Name Columns",

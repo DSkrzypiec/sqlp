@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"reflect"
 	"strings"
 
 	"sqlp/ast"
@@ -92,7 +93,11 @@ func (p *Parser) parsePipeOp() ast.PipeOp {
 		}
 		return op
 	case p.acceptKw("EXTEND"):
-		return &ast.PipeExtend{Items: p.parseSelectItems()}
+		op := &ast.PipeExtend{Items: p.parseSelectItems()}
+		if p.acceptKw("WINDOW") {
+			op.Windows = p.parseNamedWindows()
+		}
+		return op
 	case p.acceptKw("WINDOW"):
 		return &ast.PipeWindow{Items: p.parseSelectItems()}
 	case p.acceptKw("SET"):
@@ -144,7 +149,9 @@ func (p *Parser) parsePipeOp() ast.PipeOp {
 		}
 		return op
 	case p.acceptKw("CALL"):
-		op := &ast.PipeCall{Func: p.parseFuncCall(p.parseName())}
+		name := p.parseName()
+		p.tvf = true
+		op := &ast.PipeCall{Func: p.parseFuncCall(name)}
 		if a := p.parseAlias(false); a != nil {
 			op.Alias = &a.Name
 		}
@@ -197,7 +204,7 @@ func (p *Parser) parsePipeAggItems(group bool) []*ast.PipeAggItem {
 	for !p.atPipeEnd() && !(!group && p.isKw("GROUP")) {
 		it := &ast.PipeAggItem{}
 		if group {
-			it.Expr = p.parseGroupItem()
+			it.Expr = p.parseGroupItem("")
 		} else {
 			it.Expr = p.parseExpr()
 		}
@@ -672,7 +679,12 @@ func (p *Parser) parseQueryPrimary() ast.QueryBody {
 		p.next()
 		q := p.parseQuery()
 		p.expectOp(")")
-		return &ast.ParenQuery{Query: q}
+		pq := &ast.ParenQuery{Query: q}
+		if p.d.Features.Query.ParenQueryAlias && p.acceptKw("AS") {
+			id := p.parseIdent()
+			pq.Alias = &id
+		}
+		return pq
 	case p.isKw("SELECT"):
 		return p.parseSelect()
 	case p.isKw("VALUES") && p.d.Features.Query.ValuesQuery:
@@ -857,7 +869,12 @@ func (p *Parser) parseNamedWindows() []*ast.NamedWindow {
 	for {
 		nw := &ast.NamedWindow{Name: p.parseIdent()}
 		p.expectKw("AS")
-		nw.Spec = p.parseWindowSpec()
+		if p.d.Features.Query.WindowRules && !p.isOp("(") { // BigQuery: c AS b
+			id := p.parseIdent()
+			nw.Spec = &ast.WindowSpec{Name: &id, NameOnly: true}
+		} else {
+			nw.Spec = p.parseWindowSpec()
+		}
 		list = append(list, nw)
 		if !p.acceptOp(",") {
 			return list
@@ -875,12 +892,50 @@ func (p *Parser) checkFromless(s *ast.Select) {
 		p.errorf(at, "a query without FROM cannot have GROUP BY")
 	case s.Having != nil:
 		p.errorf(at, "a query without FROM cannot have HAVING")
+	case s.Qualify != nil:
+		p.errorf(at, "a query without FROM cannot have QUALIFY")
 	}
 	for _, it := range s.Items {
 		if st, ok := it.Expr.(*ast.Star); ok && st.Qualifier == nil {
 			p.errorf(at, "SELECT * needs a FROM clause")
 		}
+		if contains(it.Expr, func(n any) bool { fc, ok := n.(*ast.FuncCall); return ok && fc.Over != nil }) {
+			p.errorf(at, "a query without FROM cannot have a window function")
+		}
 	}
+}
+
+var queryType = reflect.TypeFor[*ast.Query]()
+
+// contains reports whether a node for which match is true is in tree x,
+// outside the queries nested in it.
+func contains(x any, match func(any) bool) bool {
+	var visit func(v reflect.Value) bool
+	visit = func(v reflect.Value) bool {
+		switch v.Kind() {
+		case reflect.Interface:
+			return !v.IsNil() && visit(v.Elem())
+		case reflect.Pointer:
+			if v.IsNil() || v.Type() == queryType {
+				return false
+			}
+			return match(v.Interface()) || visit(v.Elem())
+		case reflect.Struct:
+			for i := range v.NumField() {
+				if v.Type().Field(i).IsExported() && visit(v.Field(i)) {
+					return true
+				}
+			}
+		case reflect.Slice:
+			for i := range v.Len() {
+				if visit(v.Index(i)) {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	return visit(reflect.ValueOf(x))
 }
 
 func (p *Parser) parseSelectItems() []*ast.SelectItem {
@@ -959,49 +1014,58 @@ func (p *Parser) parseGroupBy() *ast.GroupBy {
 			g.All = true
 		}
 	}
-	g.Items = p.parseGroupItems()
+	g.Items = p.parseGroupItems("")
 	if p.d.Features.Query.GroupingSetsAlone {
 		for _, it := range g.Items {
 			if _, set := it.(*ast.GroupingSet); set && len(g.Items) > 1 {
 				p.errorf(p.peekN(-1).Pos, "ROLLUP, CUBE, GROUPING SETS and () must be the only grouping item")
-			}
-			if _, tuple := it.(*ast.Tuple); tuple && len(g.Items) > 1 { // alone, (a, b) groups by both
-				p.errorf(p.peekN(-1).Pos, "a tuple cannot be a grouping item next to others")
 			}
 		}
 	}
 	return g
 }
 
-func (p *Parser) parseGroupItem() ast.Expr {
+// parseGroupItem parses an item of GROUP BY (in is "") or of the ROLLUP, CUBE
+// or GROUPING SETS named by in.
+func (p *Parser) parseGroupItem(in string) ast.Expr {
+	// BigQuery nests ROLLUP and CUBE only in GROUPING SETS, and () only there.
+	bq := p.d.Features.Query.GroupingSetsAlone
 	if p.d.Features.Query.GroupingSets {
 		switch {
-		case p.isKw("ROLLUP", "CUBE") && p.isOpAt(1, "("):
+		case p.isKw("ROLLUP", "CUBE") && p.isOpAt(1, "(") && (!bq || in == "" || in == "GROUPING SETS"):
 			kind := p.next().Value
 			p.expectOp("(")
-			gs := &ast.GroupingSet{Kind: kind, Items: p.parseGroupItems()}
+			gs := &ast.GroupingSet{Kind: kind, Items: p.parseGroupItems(kind)}
 			p.expectOp(")")
 			return gs
-		case p.isKwSeq("GROUPING", "SETS") && p.isOpAt(2, "("):
+		case p.isKwSeq("GROUPING", "SETS") && p.isOpAt(2, "(") && (!bq || in == ""):
 			p.next()
 			p.next()
 			p.expectOp("(")
-			gs := &ast.GroupingSet{Kind: "GROUPING SETS", Items: p.parseGroupItems()}
+			gs := &ast.GroupingSet{Kind: "GROUPING SETS", Items: p.parseGroupItems("GROUPING SETS")}
 			p.expectOp(")")
 			return gs
-		case p.isOp("(") && p.isOpAt(1, ")"):
+		case p.isOp("(") && p.isOpAt(1, ")") && (!bq || in == "" || in == "GROUPING SETS"):
 			p.next()
 			p.next()
 			return &ast.GroupingSet{}
 		}
 	}
-	return p.parseExpr()
+	pos := p.peek().Pos
+	e := p.parseExpr()
+	if bq {
+		_, tuple := e.(*ast.Tuple) // in ROLLUP, CUBE and GROUPING SETS, (a, b) is one set
+		if _, st := e.(*ast.Struct); st || tuple && in == "" {
+			p.errorf(pos, "a grouping key cannot be a tuple or STRUCT(...)")
+		}
+	}
+	return e
 }
 
-func (p *Parser) parseGroupItems() []ast.Expr {
-	items := []ast.Expr{p.parseGroupItem()}
+func (p *Parser) parseGroupItems(in string) []ast.Expr {
+	items := []ast.Expr{p.parseGroupItem(in)}
 	for p.acceptOp(",") {
-		items = append(items, p.parseGroupItem())
+		items = append(items, p.parseGroupItem(in))
 	}
 	return items
 }
@@ -1095,7 +1159,15 @@ func (p *Parser) parseJoin(left ast.TableExpr) (*ast.Join, bool) {
 	if needsQual || !strict || optional {
 		switch {
 		case p.acceptKw("ON"):
+			pos := p.peek().Pos
 			j.On = p.parseExpr()
+			if p.d.Features.Query.JoinOnRules && contains(j.On, func(n any) bool {
+				in, isIn := n.(*ast.In)
+				_, exists := n.(*ast.Exists)
+				return exists || isIn && in.Subquery != nil
+			}) {
+				p.errorf(pos, "a join's ON cannot have an IN or EXISTS subquery")
+			}
 		case p.acceptKw("USING"):
 			j.Using = p.parseParenIdentList()
 			if p.d.Features.Query.JoinUsingAlias && p.acceptKw("AS") {
@@ -1329,6 +1401,7 @@ func (p *Parser) parseTableFactorBase() ast.TableExpr {
 			p.next()
 			p.unexpected("expression")
 		}
+		p.tvf = true
 		fr := &ast.FuncRef{Lateral: lateral, Func: p.parseFuncCall(name)}
 		if fr.Func.Over != nil || fr.Func.Filter != nil || fr.Func.WithinGroup != nil {
 			p.errorf(p.peek().Pos, "window and aggregate clauses are not allowed in FROM")
@@ -1373,7 +1446,13 @@ func (p *Parser) parseParenFactor(lateral bool) ast.TableExpr {
 			p.next()
 			return &ast.SubqueryRef{Lateral: lateral, Query: q, Alias: p.parseAlias(false)}
 		}
-		ref := &ast.SubqueryRef{Lateral: lateral, Query: unwrapParenQuery(q), Alias: p.parseAlias(false)}
+		ref := &ast.SubqueryRef{Lateral: lateral, Query: unwrapParenQuery(q)}
+		if pq, ok := q.Body.(*ast.ParenQuery); ok && pq.Alias != nil && ref.Query == pq.Query {
+			// ((SELECT 1) AS q JOIN b ...): the alias is the subquery's.
+			ref.Alias = &ast.Alias{Name: *pq.Alias}
+		} else {
+			ref.Alias = p.parseAlias(false)
+		}
 		return p.finishParenTable(p.continueJoins(ref))
 	}
 	if lateral {
@@ -1390,8 +1469,15 @@ func (p *Parser) finishParenTable(inner ast.TableExpr) ast.TableExpr {
 	if p.d.Features.Query.ParenTableIsJoin && !ast.IsJoinTree(inner) {
 		p.unexpected("JOIN")
 	}
+	if j, ok := inner.(*ast.Join); p.d.Features.Query.ParenJoinOnly && (!ok || j.Comma) {
+		p.unexpected("JOIN")
+	}
 	p.expectOp(")")
-	return &ast.ParenTable{Expr: inner, Alias: p.parseAlias(false)}
+	pt := &ast.ParenTable{Expr: inner}
+	if !p.d.Features.Query.ParenJoinOnly {
+		pt.Alias = p.parseAlias(false)
+	}
+	return pt
 }
 
 func (p *Parser) parseRowsFrom(lateral bool) ast.TableExpr {

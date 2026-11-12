@@ -83,6 +83,9 @@ type Parser struct {
 	// negativeLiteral is set when a minus applies directly to the number that
 	// follows it, so that the most negative INT64 can be written.
 	negativeLiteral bool
+	// tvf is set for the call parseFuncCall parses next when it is a
+	// table-valued function's: only its arguments may be TABLE t (BigQuery).
+	tvf bool
 
 	lineStarts []int // byte offset of each line, built on first use
 	lastPos    int   // the last position lineCol counted characters to,

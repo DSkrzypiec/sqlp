@@ -90,6 +90,7 @@ var BigQuery = &Dialect{
 			TrailingComma: true, TableSample: true, SamplePercent: true, SystemTime: true, Pipes: true,
 			SetByName: true, JoinRequiresQual: true, FromlessRules: true, GroupingSetsAlone: true,
 			LimitLiterals: true, SelectWith: true, NestedQueryClauses: true, Pivot: true,
+			StrictFrames: true, ParenJoinOnly: true, ParenQueryAlias: true, WindowRules: true, JoinOnRules: true,
 		},
 		DML: DMLFeatures{
 			Merge: true, MergeBy: true, OptionalDMLKeywords: true, Truncate: true, BareDMLAlias: true,
