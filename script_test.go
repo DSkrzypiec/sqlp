@@ -159,6 +159,9 @@ func TestParseScriptMatchesSingleStatements(t *testing.T) {
 	eachDialect(t, func(t *testing.T, d *dialect.Dialect) {
 		files, _ := filepath.Glob(filepath.Join("testdata", "corpus", d.Name, "curated_*.jsonl"))
 		for _, f := range files {
+			if strings.HasSuffix(f, "_script.jsonl") { // each record is a whole script
+				continue
+			}
 			rows, err := corpus.Read[corpus.Record](f)
 			if err != nil {
 				t.Fatal(err)

@@ -250,6 +250,12 @@ type UtilityFeatures struct {
 	Pragma           bool
 	AttachDetach     bool
 	ServerUtilities  bool // GRANT, COPY, COMMENT ON, DO, CALL, LISTEN, PREPARE, LOCK, ...
+	Savepoints       bool // SAVEPOINT, RELEASE, ROLLBACK TO
+	// Scripting is BigQuery's procedural language: DECLARE, SET, BEGIN ...
+	// [EXCEPTION WHEN ERROR THEN ...] END, IF, CASE, loops and labels, BREAK
+	// and CONTINUE, RAISE, RETURN, CALL, EXECUTE IMMEDIATE, ASSERT; no empty
+	// statements.
+	Scripting bool
 }
 
 // NameRules says how names in a query find the objects they refer to. Only

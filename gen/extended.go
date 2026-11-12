@@ -69,8 +69,11 @@ func (g *Generator) extendedStmt(s ast.Statement) bool {
 			}
 		}
 	case *ast.ReturnStmt:
-		g.w("RETURN ")
-		g.expr(s.Expr)
+		g.w("RETURN")
+		if s.Expr != nil {
+			g.w(" ")
+			g.expr(s.Expr)
+		}
 	case *ast.Call:
 		g.w("CALL ")
 		g.funcCall(s.Func)
@@ -155,7 +158,9 @@ func (g *Generator) extendedStmt(s ast.Statement) bool {
 			g.w(")")
 		}
 	case *ast.CreateFunction:
-		if g.d.Features.DDL.GoogleSQL {
+		if g.d.Features.DDL.GoogleSQL && s.Procedure {
+			g.googleCreateProcedure(s)
+		} else if g.d.Features.DDL.GoogleSQL {
 			g.googleCreateFunction(s)
 		} else {
 			g.createFunction(s)

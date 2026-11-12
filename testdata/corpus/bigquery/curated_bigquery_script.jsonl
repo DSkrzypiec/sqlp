@@ -1,0 +1,134 @@
+{"sql":"BEGIN; SELECT 1; COMMIT;","shape":"BEGIN TRANSACTION;\nSELECT 1;\nCOMMIT;"}
+{"sql":"BEGIN TRANSACTION; SELECT 1; COMMIT TRANSACTION;","shape":"BEGIN TRANSACTION;\nSELECT 1;\nCOMMIT;"}
+{"sql":"BEGIN SELECT 1; END;","shape":"BEGIN SELECT 1; END;"}
+{"sql":"BEGIN SELECT 1 END","reject":true}
+{"sql":"BEGIN END","shape":"BEGIN END;"}
+{"sql":"BEGIN ; END","reject":true}
+{"sql":"BEGIN SELECT 1; END; SELECT 2;","shape":"BEGIN SELECT 1; END;\nSELECT 2;"}
+{"sql":"DECLARE x INT64; SET x = 1; SELECT x;","shape":"DECLARE x INT64;\nSET x = 1;\nSELECT x;"}
+{"sql":"SELECT 1; DECLARE x INT64;","reject":true}
+{"sql":"BEGIN SELECT 1; DECLARE x INT64; END","reject":true}
+{"sql":"BEGIN DECLARE x INT64; SELECT x; END","shape":"BEGIN DECLARE x INT64; SELECT x; END;"}
+{"sql":"DECLARE x, y INT64 DEFAULT 1; SELECT x + y;","shape":"DECLARE x, y INT64 DEFAULT 1;\nSELECT x + y;"}
+{"sql":"DECLARE x DEFAULT 1; SELECT x;","shape":"DECLARE x DEFAULT 1;\nSELECT x;"}
+{"sql":"DECLARE x; SELECT 1;","reject":true}
+{"sql":"DECLARE x INT64 = 1;","reject":true}
+{"sql":"DECLARE x INT64; SET (x) = (SELECT AS STRUCT 1);","shape":"DECLARE x INT64;\nSET (x) = (SELECT AS STRUCT 1);"}
+{"sql":"DECLARE x INT64; DECLARE y STRING; SET (x, y) = (1, 'a');","shape":"DECLARE x INT64;\nDECLARE y STRING;\nSET (x, y) = (1, 'a');"}
+{"sql":"SET @@dataset_id = 'sqlp_oracle';","shape":"SET @@dataset_id = 'sqlp_oracle';"}
+{"sql":"SET @@query_label = 'a:b';","shape":"SET @@query_label = 'a:b';"}
+{"sql":"DECLARE x INT64; SET x = 1, y = 2;","reject":true}
+{"sql":"DECLARE x INT64; IF x > 1 THEN SELECT 1; ELSEIF x > 0 THEN SELECT 2; ELSE SELECT 3; END IF;","shape":"DECLARE x INT64;\nIF x > 1 THEN SELECT 1; ELSEIF x > 0 THEN SELECT 2; ELSE SELECT 3; END IF;"}
+{"sql":"DECLARE x INT64; IF x > 1 THEN END IF;","shape":"DECLARE x INT64;\nIF x > 1 THEN END IF;"}
+{"sql":"DECLARE x INT64; IF x > 1 THEN SELECT 1; ELSE IF x > 0 THEN SELECT 2; END IF; END IF;","shape":"DECLARE x INT64;\nIF x > 1 THEN SELECT 1; ELSE IF x > 0 THEN SELECT 2; END IF; END IF;"}
+{"sql":"DECLARE x INT64; IF x > 1 THEN SELECT 1 END IF;","reject":true}
+{"sql":"DECLARE x INT64; IF x > 1 THEN SELECT 1; END;","reject":true}
+{"sql":"DECLARE x INT64 DEFAULT 0; LOOP SET x = x + 1; IF x >= 3 THEN BREAK; END IF; END LOOP;","shape":"DECLARE x INT64 DEFAULT 0;\nLOOP SET x = x + 1; IF x >= 3 THEN BREAK; END IF; END LOOP;"}
+{"sql":"DECLARE x INT64 DEFAULT 0; lbl: LOOP SET x = x + 1; IF x >= 3 THEN LEAVE lbl; END IF; END LOOP lbl;","shape":"DECLARE x INT64 DEFAULT 0;\nlbl: LOOP SET x = x + 1; IF x >= 3 THEN LEAVE lbl; END IF; END LOOP lbl;"}
+{"sql":"DECLARE x INT64 DEFAULT 0; lbl: LOOP SET x = x + 1; IF x >= 3 THEN LEAVE; END IF; END LOOP other;","reject":true}
+{"sql":"DECLARE x INT64 DEFAULT 0; WHILE x < 3 DO SET x = x + 1; CONTINUE; END WHILE;","shape":"DECLARE x INT64 DEFAULT 0;\nWHILE x < 3 DO SET x = x + 1; CONTINUE; END WHILE;"}
+{"sql":"DECLARE x INT64 DEFAULT 0; REPEAT SET x = x + 1; UNTIL x >= 3 END REPEAT;","shape":"DECLARE x INT64 DEFAULT 0;\nREPEAT SET x = x + 1; UNTIL x >= 3 END REPEAT;"}
+{"sql":"FOR r IN (SELECT 1 AS a) DO SELECT r.a; END FOR;","shape":"FOR r IN (SELECT 1 AS a) DO SELECT r.a; END FOR;"}
+{"sql":"FOR r IN SELECT 1 AS a DO SELECT r.a; END FOR;","reject":true}
+{"sql":"lbl: FOR r IN (SELECT 1 AS a) DO ITERATE lbl; END FOR lbl;","shape":"lbl: FOR r IN (SELECT 1 AS a) DO ITERATE lbl; END FOR lbl;"}
+{"sql":"lbl: BEGIN SELECT 1; END lbl;","shape":"lbl: BEGIN SELECT 1; END lbl;"}
+{"sql":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT @@error.message; END;","shape":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT @@error.message; END;"}
+{"sql":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN END;","shape":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN END;"}
+{"sql":"BREAK;","reject":true}
+{"sql":"DECLARE x INT64 DEFAULT 1; CASE x WHEN 1 THEN SELECT 1; WHEN 2 THEN SELECT 2; ELSE SELECT 3; END CASE;","shape":"DECLARE x INT64 DEFAULT 1;\nCASE x WHEN 1 THEN SELECT 1; WHEN 2 THEN SELECT 2; ELSE SELECT 3; END CASE;"}
+{"sql":"DECLARE x INT64 DEFAULT 1; CASE WHEN x = 1 THEN SELECT 1; END CASE;","shape":"DECLARE x INT64 DEFAULT 1;\nCASE WHEN x = 1 THEN SELECT 1; END CASE;"}
+{"sql":"RAISE USING MESSAGE = 'x';","shape":"RAISE USING MESSAGE = 'x';"}
+{"sql":"RAISE;","reject":true}
+{"sql":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN RAISE; END;","shape":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN RAISE; END;"}
+{"sql":"RETURN;","shape":"RETURN;"}
+{"sql":"CALL p(1);"}
+{"sql":"CALL p();"}
+{"sql":"CALL p;","reject":true}
+{"sql":"EXECUTE IMMEDIATE 'SELECT 1';","shape":"EXECUTE IMMEDIATE 'SELECT 1';"}
+{"sql":"DECLARE x INT64; EXECUTE IMMEDIATE 'SELECT ?' INTO x USING 1;","shape":"DECLARE x INT64;\nEXECUTE IMMEDIATE 'SELECT ?' INTO x USING 1;"}
+{"sql":"DECLARE x INT64; EXECUTE IMMEDIATE 'SELECT @a' INTO x USING 1 AS a, 2 AS b;","shape":"DECLARE x INT64;\nEXECUTE IMMEDIATE 'SELECT @a' INTO x USING 1 AS a, 2 AS b;"}
+{"sql":"DECLARE x INT64; DECLARE y INT64; EXECUTE IMMEDIATE CONCAT('SELECT ', '1, 2') INTO x, y;","shape":"DECLARE x INT64;\nDECLARE y INT64;\nEXECUTE IMMEDIATE CONCAT('SELECT ', '1, 2') INTO x, y;"}
+{"sql":"ASSERT 1 = 1 AS 'one is one';","shape":"ASSERT 1 = 1 AS 'one is one';"}
+{"sql":"ASSERT 1 = 1;","shape":"ASSERT 1 = 1;"}
+{"sql":"ASSERT (SELECT COUNT(*) > 0 FROM t) AS 'rows';","shape":"ASSERT (SELECT COUNT(*) > 0 FROM t) AS 'rows';"}
+{"sql":"START TRANSACTION; COMMIT;","shape":"BEGIN TRANSACTION;\nCOMMIT;"}
+{"sql":"BEGIN TRANSACTION; ROLLBACK TRANSACTION;","shape":"BEGIN TRANSACTION;\nROLLBACK;"}
+{"sql":"BEGIN TRANSACTION; ROLLBACK TO SAVEPOINT s;","reject":true}
+{"sql":"SAVEPOINT s;","reject":true}
+{"sql":"DECLARE x INT64; SET x = 1","shape":"DECLARE x INT64;\nSET x = 1;"}
+{"sql":"CREATE TEMP FUNCTION f(x INT64) AS (x + 1); SELECT f(1);","shape":"CREATE TEMP FUNCTION f(x INT64) AS (x + 1);\nSELECT f(1);"}
+{"sql":"lbl: BEGIN LEAVE lbl; END;","shape":"lbl: BEGIN LEAVE lbl; END;"}
+{"sql":"lbl: BEGIN CONTINUE lbl; END;","reject":true}
+{"sql":"LOOP LEAVE nosuch; END LOOP;","reject":true}
+{"sql":"lbl: LOOP BEGIN BREAK lbl; END; END LOOP;","shape":"lbl: LOOP BEGIN BREAK lbl; END; END LOOP;"}
+{"sql":"lbl: WHILE TRUE DO BREAK lbl; END WHILE lbl;","shape":"lbl: WHILE TRUE DO BREAK lbl; END WHILE lbl;"}
+{"sql":"lbl: REPEAT BREAK; UNTIL TRUE END REPEAT lbl;","shape":"lbl: REPEAT BREAK; UNTIL TRUE END REPEAT lbl;"}
+{"sql":"lbl: IF TRUE THEN SELECT 1; END IF;","reject":true}
+{"sql":"BEGIN SELECT 1; END lbl;","reject":true}
+{"sql":"lbl: LOOP BREAK; END LOOP; lbl: LOOP BREAK; END LOOP;","shape":"lbl: LOOP BREAK; END LOOP;\nlbl: LOOP BREAK; END LOOP;"}
+{"sql":"lbl: LOOP lbl: LOOP BREAK; END LOOP; END LOOP;","reject":true}
+{"sql":"LOOP BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN BREAK; END; END LOOP;","shape":"LOOP BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN BREAK; END; END LOOP;"}
+{"sql":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN BEGIN RAISE; END; END;","shape":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN BEGIN RAISE; END; END;"}
+{"sql":"SELECT 1;; SELECT 2","reject":true}
+{"sql":"BEGIN BEGIN SELECT 1; END; END","shape":"BEGIN BEGIN SELECT 1; END; END;"}
+{"sql":"IF TRUE THEN DECLARE x INT64; END IF;","reject":true}
+{"sql":"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN DECLARE x INT64; END;","reject":true}
+{"sql":"LOOP DECLARE x INT64; BREAK; END LOOP;","reject":true}
+{"sql":"DECLARE x INT64; BEGIN DECLARE y INT64; END; DECLARE z INT64;","reject":true}
+{"sql":"SELECT 1 a: ","reject":true}
+{"sql":"`lbl`: LOOP BREAK `lbl`; END LOOP `lbl`;","shape":"`lbl`: LOOP BREAK `lbl`; END LOOP `lbl`;"}
+{"sql":"CREATE PROCEDURE zp(x INT64, OUT y INT64, INOUT z STRING) BEGIN SET y = x; END","shape":"CREATE PROCEDURE zp(x INT64, OUT y INT64, INOUT z STRING) BEGIN SET y = x; END;"}
+{"sql":"CREATE OR REPLACE PROCEDURE zp() OPTIONS (strict_mode = FALSE) BEGIN SELECT 1; END","shape":"CREATE OR REPLACE PROCEDURE zp() OPTIONS (strict_mode = FALSE) BEGIN SELECT 1; END;"}
+{"sql":"CREATE PROCEDURE IF NOT EXISTS zp() BEGIN END","shape":"CREATE PROCEDURE IF NOT EXISTS zp() BEGIN END;"}
+{"sql":"CREATE PROCEDURE zp() BEGIN SELECT 1; END lbl","reject":true}
+{"sql":"CREATE PROCEDURE zp() lbl: BEGIN SELECT 1; END","reject":true}
+{"sql":"CREATE PROCEDURE zp() SELECT 1","reject":true}
+{"sql":"CREATE PROCEDURE zp(x INT64 DEFAULT 1) BEGIN END","reject":true}
+{"sql":"CREATE TEMP PROCEDURE zp() BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE zp() BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT 2; END","shape":"CREATE PROCEDURE zp() BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT 2; END;"}
+{"sql":"CREATE PROCEDURE zp() WITH CONNECTION `us.c` OPTIONS (engine = 'SPARK') LANGUAGE PYTHON AS r'''print(1)'''"}
+{"sql":"CREATE PROCEDURE zp() EXTERNAL SECURITY INVOKER WITH CONNECTION `us.c` OPTIONS (engine = 'SPARK', main_file_uri = 'gs://b/x.py') LANGUAGE PYTHON"}
+{"sql":"CREATE PROCEDURE zp() BEGIN RETURN; END","shape":"CREATE PROCEDURE zp() BEGIN RETURN; END;"}
+{"sql":"SELECT BEGIN 1 END","reject":true}
+{"sql":"BEGIN SELECT 1 END END","reject":true}
+{"sql":"BEGIN 1 END","reject":true}
+{"sql":"BEGIN BEGIN END","reject":true}
+{"sql":"END BEGIN","reject":true}
+{"sql":"BEGIN END END","reject":true}
+{"sql":"BEGIN , END","reject":true}
+{"sql":"SET @@ query_label = 'a:b'","shape":"SET @@query_label = 'a:b';"}
+{"sql":"BREAK","reject":true}
+{"sql":"RAISE","reject":true}
+{"sql":"RETURN","shape":"RETURN;"}
+{"sql":"CALL p ( )"}
+{"sql":"CALL p INT64","reject":true}
+{"sql":"EXECUTE IMMEDIATE 'SELECT 1' )","reject":true}
+{"sql":"ASSERT 1 = 1","shape":"ASSERT 1 = 1;"}
+{"sql":"SAVEPOINT s","reject":true}
+{"sql":"SELECT 1 a","shape":"SELECT 1 AS a;"}
+{"sql":"SELECT 1 a a :","reject":true}
+{"sql":"SELECT 1 ( :","reject":true}
+{"sql":"SELECT SELECT a :","reject":true}
+{"sql":"CREATE PROCEDURE IF NOT EXISTS zp ) BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE IF NOT zp ( ) BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE IF NOT EXISTS zp ( BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE NOT IF EXISTS zp ( ) BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ELSEIF SELECT 1","reject":true}
+{"sql":"PROCEDURE zp ( ) SELECT 1","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ( ) SELECT 1","reject":true}
+{"sql":"CREATE PROCEDURE ( zp x INT64 DEFAULT 1 ) BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE zp ( x INT64 DEFAULT 1 ) BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE zp ( INT64 DEFAULT 1 ) BEGIN END","reject":true}
+{"sql":"CREATE TEMP PROCEDURE zp ( ) BEGIN BEGIN END","reject":true}
+{"sql":"CREATE CREATE TEMP PROCEDURE zp ( ) BEGIN END","reject":true}
+{"sql":"CREATE TEMP PROCEDURE ( zp ) BEGIN END","reject":true}
+{"sql":"CREATE TEMP PROCEDURE zp ) BEGIN END","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) WITH CONNECTION `us.c` OPTIONS ( engine = 'SPARK' ) LANGUAGE PYTHON AS r'''print(1)''' r'''print(1)'''"}
+{"sql":"CREATE PROCEDURE zp ( ) WITH CONNECTION `us.c` OPTIONS ( engine = 'SPARK' ) LANGUAGE = AS r'''print(1)'''","reject":true}
+{"sql":"CREATE PROCEDURE zp ( WITH ) CONNECTION `us.c` OPTIONS ( engine = 'SPARK' ) LANGUAGE PYTHON AS r'''print(1)'''","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) WITH CONNECTION `us.c` OPTIONS ( = engine 'SPARK' ) LANGUAGE PYTHON AS r'''print(1)'''","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) EXTERNAL SECURITY INVOKER WITH CONNECTION `us.c` OPTIONS ( engine = 'SPARK' , = main_file_uri 'gs://b/x.py' ) LANGUAGE PYTHON","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) EXTERNAL SECURITY INVOKER WITH CONNECTION `us.c` OPTIONS engine = 'SPARK' , main_file_uri = 'gs://b/x.py' ) LANGUAGE PYTHON","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) EXTERNAL SECURITY INVOKER WITH CONNECTION OPTIONS ( engine = 'SPARK' , main_file_uri = 'gs://b/x.py' ) LANGUAGE PYTHON","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) EXTERNAL SECURITY INVOKER WITH CONNECTION `us.c` OPTIONS ( engine = THEN , main_file_uri = 'gs://b/x.py' ) LANGUAGE PYTHON","reject":true}
+{"sql":"CREATE PROCEDURE zp ( ) BEGIN RETURN END","reject":true}

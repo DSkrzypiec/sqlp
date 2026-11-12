@@ -141,6 +141,9 @@ func (g *Generator) stmt(s ast.Statement) {
 		}
 	case *ast.Begin:
 		g.w("BEGIN")
+		if g.d.Features.Utility.Scripting { // BEGIN alone may start a block
+			g.w(" TRANSACTION")
+		}
 		if len(s.Modes) > 0 {
 			g.w(" ", strings.Join(s.Modes, ", "))
 		}
@@ -269,7 +272,7 @@ func (g *Generator) stmt(s ast.Statement) {
 			g.name(s.Name)
 		}
 	default:
-		if !g.extendedStmt(s) {
+		if !g.extendedStmt(s) && !g.scriptStmt(s) {
 			g.w("<?stmt>")
 		}
 	}

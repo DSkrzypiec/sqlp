@@ -568,3 +568,47 @@ func (g *Generator) googleGrant(s *ast.Grant) {
 	g.w(map[bool]string{true: " FROM ", false: " TO "}[s.Revoke])
 	g.exprList(s.Grantees)
 }
+
+func (g *Generator) googleCreateProcedure(s *ast.CreateFunction) {
+	if len(s.Options) > 0 || s.Return != nil || len(s.Body) > 0 || s.Returns != nil {
+		g.warn("this form of CREATE PROCEDURE")
+	}
+	g.w("CREATE")
+	g.kw(s.OrReplace, "OR REPLACE")
+	g.w(" PROCEDURE")
+	g.kw(s.IfNotExists, "IF NOT EXISTS")
+	g.w(" ")
+	g.name(s.Name)
+	g.w("(")
+	for i, p := range s.Params {
+		if i > 0 {
+			g.w(", ")
+		}
+		if p.Mode != "" {
+			g.w(p.Mode, " ")
+		}
+		if p.Name != nil {
+			g.ident(*p.Name)
+			g.w(" ")
+		}
+		g.dataType(p.Type)
+	}
+	g.w(")")
+	if s.Connection != nil {
+		g.kw(s.ExternalSecurity != "", "EXTERNAL SECURITY "+s.ExternalSecurity)
+		g.w(" WITH CONNECTION ")
+		g.name(s.Connection)
+		g.googleOptions(s.OptionList)
+		g.w(" LANGUAGE ", s.Language)
+		if !s.NoCode {
+			g.w(" AS ")
+			g.str(s.Code)
+		}
+		return
+	}
+	g.googleOptions(s.OptionList)
+	g.w(" ")
+	if s.Block != nil {
+		g.stmt(s.Block)
+	}
+}

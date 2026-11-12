@@ -109,7 +109,7 @@ var SQLite = &Dialect{
 		},
 		Utility: UtilityFeatures{
 			TransactionKinds: true, ExplainQueryPlan: true, Vacuum: true, VacuumInto: true,
-			Reindex: true, Pragma: true, AttachDetach: true,
+			Reindex: true, Pragma: true, AttachDetach: true, Savepoints: true,
 		},
 	},
 }

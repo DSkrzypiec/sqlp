@@ -110,7 +110,7 @@ func (p *Parser) parseRollback() ast.Statement {
 	p.next() // ROLLBACK or ABORT
 	p.parseTxnWord()
 	rb := &ast.Rollback{}
-	if p.acceptKw("TO") {
+	if p.d.Features.Utility.Savepoints && p.acceptKw("TO") {
 		p.acceptSavepointWord()
 		id := p.parseIdent()
 		rb.To = &id

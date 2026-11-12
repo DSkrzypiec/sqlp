@@ -237,6 +237,12 @@ type CreateFunction struct {
 	As            Expr
 	AsQuery       *Query
 	Code          string
+	// A BigQuery procedure has a Block, or, for Spark, [EXTERNAL SECURITY
+	// INVOKER] WITH CONNECTION c [OPTIONS] LANGUAGE lang [AS code]; NoCode
+	// marks one without AS code.
+	Block            *Block
+	ExternalSecurity string
+	NoCode           bool
 }
 
 // ReturnStmt is RETURN expr inside BEGIN ATOMIC.

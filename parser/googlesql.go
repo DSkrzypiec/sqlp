@@ -25,6 +25,8 @@ func (p *Parser) parseGoogleCreate() ast.Statement {
 	case p.acceptKwSeq("AGGREGATE", "FUNCTION"):
 		return p.parseGoogleFunction(orReplace, temp, true, false)
 	case temp:
+	case p.acceptKw("PROCEDURE"):
+		return p.parseGoogleProcedure(orReplace)
 	case p.acceptKwSeq("EXTERNAL", "TABLE"):
 		return p.parseGoogleTable(orReplace, false, "EXTERNAL")
 	case p.acceptKwSeq("SNAPSHOT", "TABLE"):
@@ -229,10 +231,12 @@ func (p *Parser) parseGoogleColumn() *ast.ColumnDef {
 	case p.isKwSeq("GENERATED", "ALWAYS", "AS") && p.isKwAt(3, "IDENTITY"):
 		p.pos += 2
 		identity("ALWAYS")
-	case p.isKwSeq("GENERATED", "ALWAYS", "AS") || p.isKw("AS") && p.isOpAt(1, "("):
-		// [GENERATED ALWAYS] AS (expr) [STORED] [OPTIONS (...)]: BigQuery
+	case p.isKwSeq("GENERATED", "ALWAYS", "AS") || p.isKwSeq("GENERATED", "AS") || p.isKw("AS") && p.isOpAt(1, "("):
+		// [GENERATED [ALWAYS]] AS (expr) [STORED] [OPTIONS (...)]: BigQuery
 		// takes only some functions here, and says so at analysis.
-		p.acceptKwSeq("GENERATED", "ALWAYS")
+		if p.acceptKw("GENERATED") {
+			p.acceptKw("ALWAYS")
+		}
 		p.expectKw("AS")
 		p.expectOp("(")
 		cc := &ast.ColumnConstraint{Kind: ast.GeneratedConstraint, Expr: p.parseExpr()}

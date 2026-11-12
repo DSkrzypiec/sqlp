@@ -26,7 +26,7 @@
 {"sql":"KEYS.NEW_KEYSET(key_type)","reject":true}
 {"sql":"SELECT customer_id, KEYS.NEW_KEYSET('AEAD_AES_GCM_256') AS keyset\nFROM (\n  SELECT 1 AS customer_id UNION ALL\n  SELECT 2 UNION ALL\n  SELECT 3\n) AS CustomerIds","shape":"SELECT customer_id, KEYS.NEW_KEYSET('AEAD_AES_GCM_256') AS keyset FROM ((SELECT 1 AS customer_id UNION ALL SELECT 2) UNION ALL SELECT 3) AS CustomerIds;"}
 {"sql":"KEYS.NEW_WRAPPED_KEYSET(kms_resource_name, key_type)","reject":true}
-{"sql":"DECLARE kms_resource_name STRING;\nSET kms_resource_name = 'gcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key';"}
+{"sql":"DECLARE kms_resource_name STRING;\nSET kms_resource_name = 'gcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key';","shape":"DECLARE kms_resource_name STRING;\nSET kms_resource_name = 'gcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key';"}
 {"sql":"SELECT KEYS.NEW_WRAPPED_KEYSET(kms_resource_name, 'AEAD_AES_GCM_256')"}
 {"sql":"SELECT\n  *,\n  KEYS.NEW_WRAPPED_KEYSET(kms_resource_name, 'AEAD_AES_GCM_256')\nFROM my_table"}
 {"sql":"KEYS.REWRAP_KEYSET(source_kms_resource_name, target_kms_resource_name, wrapped_keyset)","reject":true}

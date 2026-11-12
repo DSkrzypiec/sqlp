@@ -380,7 +380,7 @@
 {"sql":"CREATE TRIGGER g AFTER INSERT ON t WHEN (1 > 0) BEGIN DELETE FROM u; END","reject":true}
 {"sql":"CREATE TRIGGER g AFTER INSERT ON t FOR EACH ROW WHEN (NEW.a > 0) EXECUTE FUNCTION f()","reject":true}
 {"sql":"GRANT TRIGGER ON t TO r","reject":true}
-{"sql":"START TRANSACTION"}
+{"sql":"START TRANSACTION","shape":"BEGIN TRANSACTION;"}
 {"sql":"START TRANSACTION READ ONLY","reject":true}
 {"sql":"SET LOCAL TRANSACTION READ ONLY","reject":true}
 {"sql":"COMMIT AND CHAIN","reject":true}

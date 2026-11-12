@@ -88,6 +88,23 @@ var bigqueryIdentity = []string{
 	"GRANT `roles/bigquery.dataViewer`, `roles/bigquery.dataEditor` ON TABLE sqlp_oracle.t TO 'user:nobody@example.com', 'group:g@example.com'",
 	"REVOKE `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle FROM 'user:nobody@example.com'",
 	"ALTER TABLE t ALTER COLUMN a SET GENERATED AS IDENTITY (START WITH 1)",
+	"DECLARE x, y INT64 DEFAULT 1;\nSET x = x + y;\nSELECT x",
+	"DECLARE x INT64;\nDECLARE y STRING;\nSET (x, y) = (1, 'a')",
+	"SET @@dataset_id = 'sqlp_oracle'",
+	"BEGIN TRANSACTION;\nSELECT 1;\nCOMMIT",
+	"DECLARE x INT64;\nIF x > 1 THEN SELECT 1; ELSEIF x > 0 THEN SELECT 2; ELSE SELECT 3; END IF",
+	"DECLARE x INT64 DEFAULT 0;\nlbl: LOOP SET x = x + 1; IF x >= 3 THEN LEAVE lbl; END IF; END LOOP lbl",
+	"DECLARE x INT64 DEFAULT 0;\nWHILE x < 3 DO SET x = x + 1; CONTINUE; END WHILE",
+	"DECLARE x INT64 DEFAULT 0;\nREPEAT SET x = x + 1; UNTIL x >= 3 END REPEAT",
+	"lbl: FOR r IN (SELECT 1 AS a) DO ITERATE lbl; END FOR lbl",
+	"BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT @@error.message; RAISE; END",
+	"DECLARE x INT64 DEFAULT 1;\nCASE x WHEN 1 THEN SELECT 1; ELSE SELECT 3; END CASE",
+	"RAISE USING MESSAGE = 'x'",
+	"DECLARE x INT64;\nEXECUTE IMMEDIATE 'SELECT @a' INTO x USING 1 AS a, 2 AS b",
+	"ASSERT 1 = 1 AS 'one is one'",
+	"CREATE PROCEDURE zp(x INT64, OUT y INT64, INOUT z STRING) BEGIN SET y = x; RETURN; END",
+	"CREATE OR REPLACE PROCEDURE zp() OPTIONS (strict_mode = FALSE) BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT 2; END",
+	"CREATE PROCEDURE zp() EXTERNAL SECURITY INVOKER WITH CONNECTION `us.c` OPTIONS (engine = 'SPARK') LANGUAGE PYTHON AS 'print(1)'",
 }
 
 // bigqueryFailures holds statements a BigQuery dry run rejects.

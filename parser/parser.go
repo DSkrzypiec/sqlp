@@ -83,6 +83,13 @@ type Parser struct {
 	// negativeLiteral is set when a minus applies directly to the number that
 	// follows it, so that the most negative INT64 can be written.
 	negativeLiteral bool
+	// BigQuery's scripts (UtilityFeatures.Scripting): declareClosed is set
+	// once a statement other than DECLARE ends the declarations of the
+	// current block or script; frames are the enclosing labelled blocks and
+	// loops; handlers counts the enclosing exception handlers.
+	declareClosed bool
+	frames        []scriptFrame
+	handlers      int
 	// tvf is set for the call parseFuncCall parses next when it is a
 	// table-valued function's: only its arguments may be TABLE t (BigQuery).
 	tvf bool
@@ -114,6 +121,9 @@ func ParseWithLimits(ctx context.Context, sql string, d *dialect.Dialect, limits
 	defer p.recover(&err)
 	for {
 		for p.acceptOp(";") {
+			if p.d.Features.Utility.Scripting { // BigQuery has no empty statement
+				p.unexpected("statement")
+			}
 		}
 		if p.peek().Kind == lexer.EOF {
 			return stmts, nil
@@ -687,9 +697,22 @@ func (p *Parser) parseBehavior() string { return p.acceptOneOf("CASCADE", "RESTR
 // --- statements ---------------------------------------------------------------
 
 func (p *Parser) parseStatement() ast.Statement {
+	st := p.parseStatementBody()
+	if _, ok := st.(*ast.Declare); !ok {
+		p.declareClosed = true // DECLARE only opens a block or script
+	}
+	return st
+}
+
+func (p *Parser) parseStatementBody() ast.Statement {
 	t := p.peek()
 	if t.Kind == lexer.Op && t.Text == "(" && p.d.Features.Query.ParenQueries {
 		return p.parseQuery()
+	}
+	if p.d.Features.Utility.Scripting {
+		if s := p.parseScriptStatement(t.Value); s != nil {
+			return s
+		}
 	}
 	if t.Kind != lexer.Ident {
 		p.unexpected("statement")
@@ -747,7 +770,9 @@ func (p *Parser) parseStatement() ast.Statement {
 			return p.parseBegin()
 		}
 	case "COMMIT", "END":
-		return p.parseCommit()
+		if t.Value == "COMMIT" || !p.d.Features.Utility.Scripting {
+			return p.parseCommit()
+		}
 	case "ROLLBACK":
 		return p.parseRollback()
 	case "ABORT":
@@ -755,12 +780,16 @@ func (p *Parser) parseStatement() ast.Statement {
 			return p.parseRollback()
 		}
 	case "SAVEPOINT":
-		p.next()
-		return &ast.Savepoint{Name: p.parseIdent()}
+		if p.d.Features.Utility.Savepoints {
+			p.next()
+			return &ast.Savepoint{Name: p.parseIdent()}
+		}
 	case "RELEASE":
-		p.next()
-		p.acceptSavepointWord()
-		return &ast.ReleaseSavepoint{Name: p.parseIdent()}
+		if p.d.Features.Utility.Savepoints {
+			p.next()
+			p.acceptSavepointWord()
+			return &ast.ReleaseSavepoint{Name: p.parseIdent()}
+		}
 	case "EXPLAIN":
 		return p.parseExplain()
 	case "SET":

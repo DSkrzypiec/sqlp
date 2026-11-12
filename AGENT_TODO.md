@@ -750,15 +750,15 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after the DDL and DCL but procedures.** 13,105 frozen
-statements, 7,525 rejected by BigQuery, 4,319 with a verified shape, no
-mismatch. Known disagreements: 175 valid statements sqlp rejects (before the
-day's work on the reference examples: 1,102) and 4 invalid ones it accepts
-(206). Many of the
-rest come from BigQuery's order of checks: it reports a missing name or a type
-error before the structural rule sqlp applies (GROUP BY tuples, keys that are
-enforced, parameters in CAST). The others: the DDL still to do (above), GQL
-graph queries (out of scope for now), scripts, `EXPORT`/`LOAD`. DML: none
+**Status, 2026-11-12, after phases 4 to 6.** 13,239 frozen statements, 7,594
+rejected by BigQuery, 4,391 with a verified shape, no mismatch. Known
+disagreements: 149 valid statements sqlp rejects (before the day's work on
+the reference examples: 1,102) and 1 invalid one it accepts (206). Of the
+149: 105 GQL graph queries and property graphs (out of scope for now), 4 `LOAD
+DATA` and 1 `CREATE MODEL` (phase 7), 4 queries sqlp cannot read yet (`a.1`,
+`(x).(SAFE.LEFT)(…)`), and the rest because BigQuery reports a missing name or
+a type error before the structural rule sqlp applies (GROUP BY tuples, keys
+that are enforced, parameters in CAST, `TABLE t`). DML and scripts: none
 either way.
 Shapes of constant queries are compared by value, except where a function's
 value changes from run to run (`bqVolatile`); FOR SYSTEM_TIME is left out
@@ -821,7 +821,7 @@ because the sample tables are recreated on every run.
   `RETURNING`, `DO NOTHING`, `OVERRIDING` (each a `DMLFeatures` flag that
   PostgreSQL or SQLite sets; Transpile warns when the target lacks one). Not
   done: `THEN RETURN` and the WHERE rule, see the oracle findings above.
-- [ ] 5. DDL and DCL. `DDLFeatures.GoogleSQL` switches CREATE, DROP and UNDROP to
+- [x] 5. DDL and DCL. `DDLFeatures.GoogleSQL` switches CREATE, DROP and UNDROP to
   BigQuery's grammar (`parser/googlesql.go`, `gen/googlesql.go`), reusing the
   AST's table, view, schema and drop nodes with fields of their own. Done,
   frozen in `tools/corpusgen/bigquery/ddl.sql`: `CREATE [OR REPLACE] [TEMP]
@@ -844,12 +844,22 @@ because the sample tables are recreated on every run.
   (`CreateResource`), each with the OR REPLACE and IF NOT EXISTS it allows.
   `GRANT`/`REVOKE` of roles on a SCHEMA, TABLE, MATERIALIZED VIEW or PROJECT
   to strings or parameters (the DCL page of the reference has no examples
-  marked GoogleSQL, so all of it comes from dry runs). To do: procedures
-  (with phase 6).
+  marked GoogleSQL, so all of it comes from dry runs). Procedures: phase 6.
   corpusgen trims BigQuery's messages before classifying them: some start
   with a space.
-- [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,
-  `EXECUTE IMMEDIATE`, transactions, `CALL`, `RAISE`, `ASSERT`.
+- [x] 6. Procedural language (`UtilityFeatures.Scripting`, `parser/procedural.go`,
+  `gen/procedural.go`, `ast/script.go`), frozen in
+  `tools/corpusgen/bigquery/script.sql`, one script per line: DECLARE only at
+  the start of a block or script, SET (also of tuples and `@@` variables),
+  `BEGIN … [EXCEPTION WHEN ERROR THEN …] END`, IF/ELSEIF/ELSE, CASE, LOOP,
+  WHILE, REPEAT, FOR … IN (query), labels on blocks and loops (matching end
+  labels, no reuse when nested), BREAK/LEAVE/CONTINUE/ITERATE checked against
+  the enclosing loops and labels, RAISE (bare only in a handler), RETURN, CALL,
+  EXECUTE IMMEDIATE … INTO … USING, ASSERT, BEGIN/START TRANSACTION, COMMIT,
+  ROLLBACK, no savepoints (`Savepoints` is PostgreSQL's and SQLite's), no empty
+  statements; `CREATE PROCEDURE` with a block body or Spark's LANGUAGE form.
+  `ParseScript` still skips empty statements, and its recovery after a bad
+  statement knows only BEGIN … END bodies, not IF or loops.
 - [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.
 - [ ] 8. Web UI, transpile, run-log triage. Done 2026-11-12: BigQuery is a dialect
   of the web UI, with its own sample query and catalog (`web/samples/`, files

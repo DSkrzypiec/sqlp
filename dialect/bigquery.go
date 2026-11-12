@@ -38,6 +38,7 @@ var BigQuery = &Dialect{
 		Operators: []string{
 			"|>", "<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@",
 			"+=", "-=", // only in OPTIONS (...), but tokens everywhere
+			":", // after a script's labels
 			"=", "<", ">", "+", "-", "*", "/", "&", "|", "^", "~", "@",
 		},
 	},
@@ -97,6 +98,7 @@ var BigQuery = &Dialect{
 		DML: DMLFeatures{
 			Merge: true, MergeBy: true, OptionalDMLKeywords: true, Truncate: true, BareDMLAlias: true,
 		},
-		DDL: DDLFeatures{GoogleSQL: true},
+		DDL:     DDLFeatures{GoogleSQL: true},
+		Utility: UtilityFeatures{Scripting: true},
 	},
 }

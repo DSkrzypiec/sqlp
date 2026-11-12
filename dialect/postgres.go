@@ -146,7 +146,7 @@ var Postgres = &Dialect{
 		},
 		Utility: UtilityFeatures{
 			TransactionModes: true, SetShowReset: true, ExplainOptions: true, Vacuum: true,
-			Reindex: true, ServerUtilities: true,
+			Reindex: true, ServerUtilities: true, Savepoints: true,
 		},
 	},
 }
