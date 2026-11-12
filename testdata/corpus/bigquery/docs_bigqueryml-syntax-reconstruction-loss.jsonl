@@ -1,0 +1,1 @@
+{"sql":"SELECT *\nFROM ML.RECONSTRUCTION_LOSS(\n  MODEL `mydataset.mymodel`,\n  (SELECT column1,\n          column2,\n          column3,\n          column4\n   FROM `mydataset.mytable`)\n)"}

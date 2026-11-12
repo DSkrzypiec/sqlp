@@ -1,0 +1,5 @@
+{"sql":"LEARN_RATE = 0.01","reject":true}
+{"sql":"LEARN_RATE = [STRUCT('dnn', 0.001), STRUCT('linear', 0.01)]","reject":true}
+{"sql":"OPTIMIZER = 'ADAGRAD'","reject":true}
+{"sql":"OPTIMIZER = [STRUCT('dnn', 'ADAGRAD'), STRUCT('linear', 'SGD')]","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\nOPTIONS(MODEL_TYPE='DNN_LINEAR_COMBINED_CLASSIFIER',\n        ACTIVATION_FN = 'RELU',\n        BATCH_SIZE = 16,\n        DROPOUT = 0.1,\n        EARLY_STOP = FALSE,\n        HIDDEN_UNITS = [128, 128, 128],\n        INPUT_LABEL_COLS = ['mylabel'],\n        LEARN_RATE=0.001,\n        MAX_ITERATIONS = 50,\n        OPTIMIZER = 'ADAGRAD')\nAS SELECT * FROM `project_id.mydataset.mytable`"}

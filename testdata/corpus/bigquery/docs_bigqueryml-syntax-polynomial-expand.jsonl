@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  ML.POLYNOMIAL_EXPAND(STRUCT(2 AS f1, 3 AS f2)) AS output","shape":"SELECT ML.POLYNOMIAL_EXPAND(STRUCT(2 AS f1, 3 AS f2)) AS output;"}

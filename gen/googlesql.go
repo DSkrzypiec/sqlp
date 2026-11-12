@@ -230,7 +230,13 @@ func (g *Generator) googleOptions(opts []ast.Option) {
 	if opts == nil {
 		return
 	}
-	g.w(" OPTIONS (")
+	g.w(" OPTIONS ")
+	g.optionBody(opts)
+}
+
+// optionBody writes (name = value, ...).
+func (g *Generator) optionBody(opts []ast.Option) {
+	g.w("(")
 	for i, o := range opts {
 		if i > 0 {
 			g.w(", ")
@@ -611,4 +617,135 @@ func (g *Generator) googleCreateProcedure(s *ast.CreateFunction) {
 	if s.Block != nil {
 		g.stmt(s.Block)
 	}
+}
+
+// googleStmt writes BigQuery's ML, export and load statements, reporting
+// whether s was one.
+func (g *Generator) googleStmt(s ast.Statement) bool {
+	switch s.(type) {
+	case *ast.CreateModel, *ast.ExportData, *ast.ExportModel, *ast.LoadData:
+		if !g.d.Features.DDL.GoogleSQL {
+			g.warn("BigQuery's CREATE MODEL, EXPORT and LOAD DATA")
+		}
+	}
+	switch s := s.(type) {
+	case *ast.CreateModel:
+		g.w("CREATE")
+		g.kw(s.OrReplace, "OR REPLACE")
+		g.kw(s.Temp, "TEMP")
+		g.w(" MODEL")
+		g.kw(s.IfNotExists, "IF NOT EXISTS")
+		g.w(" ")
+		g.name(s.Name)
+		if len(s.Transform) > 0 {
+			g.w(" TRANSFORM (")
+			g.selectItems(s.Transform)
+			g.w(")")
+		}
+		if len(s.Input) > 0 {
+			g.w(" INPUT ")
+			g.typedColumns(s.Input)
+			g.w(" OUTPUT ")
+			g.typedColumns(s.Output)
+		}
+		if s.Remote {
+			g.w(" REMOTE")
+			switch {
+			case s.ConnectionDefault:
+				g.w(" WITH CONNECTION DEFAULT")
+			case s.Connection != nil:
+				g.w(" WITH CONNECTION ")
+				g.name(s.Connection)
+			}
+		}
+		g.googleOptions(s.Options)
+		switch {
+		case s.TrainingData != nil:
+			g.w(" AS (training_data AS (")
+			g.query(s.TrainingData)
+			g.w(")")
+			if s.CustomHoliday != nil {
+				g.w(", custom_holiday AS (")
+				g.query(s.CustomHoliday)
+				g.w(")")
+			}
+			g.w(")")
+		case s.AsQuery != nil:
+			g.w(" AS ")
+			g.query(s.AsQuery)
+		}
+	case *ast.ExportData:
+		g.w("EXPORT DATA")
+		if s.Connection != nil {
+			g.w(" WITH CONNECTION ")
+			g.name(s.Connection)
+		}
+		g.googleOptions(s.Options)
+		g.w(" AS ")
+		g.query(s.Query)
+	case *ast.ExportModel:
+		g.w("EXPORT MODEL ")
+		g.name(s.Name)
+		g.googleOptions(s.Options)
+	case *ast.LoadData:
+		g.w("LOAD DATA ", map[bool]string{true: "OVERWRITE", false: "INTO"}[s.Overwrite])
+		g.kw(s.Temp, "TEMP TABLE")
+		g.w(" ")
+		g.name(s.Table)
+		if s.Partitions != nil {
+			g.kw(s.OverwritePartitions, "OVERWRITE")
+			g.w(" PARTITIONS (", s.Partitions.Name, " = ")
+			g.expr(s.Partitions.Value)
+			g.w(")")
+		}
+		if s.HasColumns {
+			g.w(" (")
+			for i, c := range s.Columns {
+				if i > 0 {
+					g.w(", ")
+				}
+				g.googleColumn(c)
+			}
+			g.w(")")
+		}
+		if s.PartitionExpr != nil {
+			g.w(" PARTITION BY ")
+			g.expr(s.PartitionExpr)
+		}
+		if len(s.ClusterBy) > 0 {
+			g.w(" CLUSTER BY ")
+			g.exprList(s.ClusterBy)
+		}
+		g.googleOptions(s.Options)
+		g.w(" FROM FILES ")
+		g.optionBody(s.Files)
+		if s.HasPartitionColumns {
+			g.w(" WITH PARTITION COLUMNS")
+			if len(s.PartitionColumns) > 0 {
+				g.w(" ")
+				g.typedColumns(s.PartitionColumns)
+			}
+		}
+		if s.Connection != nil {
+			g.w(" WITH CONNECTION ")
+			g.name(s.Connection)
+		}
+	default:
+		return false
+	}
+	return true
+}
+
+// typedColumns writes (name type, ...).
+func (g *Generator) typedColumns(cols []*ast.ColumnDef) {
+	g.w("(")
+	for i, c := range cols {
+		if i > 0 {
+			g.w(", ")
+		}
+		g.ident(c.Name)
+		g.w(" ")
+		g.dataType(c.Type)
+	}
+	g.w(")")
 }

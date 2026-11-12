@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.PRINCIPAL_COMPONENT_INFO(MODEL `mydataset.mymodel`)"}

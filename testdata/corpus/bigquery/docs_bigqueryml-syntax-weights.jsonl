@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  category,\n  weight\nFROM\n  UNNEST((\n    SELECT\n      category_weights\n    FROM\n      ML.WEIGHTS(MODEL `mydataset.mymodel`)\n    WHERE\n      processed_input = 'input_col'))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.WEIGHTS(MODEL `mydataset.mymodel`,\n    STRUCT(true AS standardize))"}

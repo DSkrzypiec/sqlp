@@ -125,6 +125,7 @@ type NameFeatures struct {
 	MaxNameParts       int  // parts allowed in an object name; 0 means no limit
 	MaxRelationParts   int  // parts allowed in a table name (PostgreSQL's qualified_name); 0 means no limit
 	KeywordsAfterDot   bool // any keyword as a later part of a dotted name, but not after AS (BigQuery)
+	DashedNames        bool // a table name's first part may be a-b-1, written without spaces (BigQuery)
 }
 
 // QueryFeatures lists query syntax.

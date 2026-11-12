@@ -1,0 +1,4 @@
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='PCA',\n    NUM_PRINCIPAL_COMPONENTS=4 ) AS\nSELECT\n  *\nFROM `mydataset.mytable`"}
+{"sql":"CREATE MODEL\n  `mydataset.iris_pca`\nOPTIONS\n  ( MODEL_TYPE='PCA',\n    NUM_PRINCIPAL_COMPONENTS=2,\n    SCALE_FEATURES=FALSE ) AS\nSELECT\n  sepal_length,\n  sepal_width,\n  petal_length,\n  petal_width\nFROM `bigquery-public-data.ml_datasets.iris`"}
+{"sql":"CREATE MODEL\n  `mydataset.iris_logistic`\nOPTIONS\n  ( MODEL_TYPE='LOGISTIC_REG',\n    INPUT_LABEL_COLS=['species'] ) AS\nSELECT\n  *\nFROM\n  ML.PREDICT(\n    MODEL `mydataset.iris_pca`,\n    (\n      SELECT\n        sepal_length,\n        sepal_width,\n        petal_length,\n        petal_width,\n        species\n      FROM `bigquery-public-data.ml_datasets.iris`\n    )\n  )"}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='PCA',\n    PCA_EXPLAINED_VARIANCE_RATIO=0.8 ) AS\nSELECT\n  *\nFROM\n  `mydataset.mytable`"}

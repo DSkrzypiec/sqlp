@@ -1,0 +1,1 @@
+{"sql":"SELECT * FROM ML.TFDV_DESCRIBE(\n  TABLE `bigquery-public-data.ml_datasets.penguins`,\n  STRUCT(20 AS num_rank_histogram_buckets)\n)","shape":"SELECT * FROM ML.TFDV_DESCRIBE(TABLE `bigquery-public-data.ml_datasets.penguins`, STRUCT(20 AS num_rank_histogram_buckets));"}

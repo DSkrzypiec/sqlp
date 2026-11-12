@@ -24,9 +24,13 @@ func (p *Parser) parseGoogleCreate() ast.Statement {
 		return p.parseGoogleFunction(orReplace, temp, false, false)
 	case p.acceptKwSeq("AGGREGATE", "FUNCTION"):
 		return p.parseGoogleFunction(orReplace, temp, true, false)
+	case temp && p.acceptKw("MODEL"):
+		return p.parseCreateModel(orReplace, true)
 	case temp:
 	case p.acceptKw("PROCEDURE"):
 		return p.parseGoogleProcedure(orReplace)
+	case p.acceptKw("MODEL"):
+		return p.parseCreateModel(orReplace, false)
 	case p.acceptKwSeq("EXTERNAL", "TABLE"):
 		return p.parseGoogleTable(orReplace, false, "EXTERNAL")
 	case p.acceptKwSeq("SNAPSHOT", "TABLE"):
@@ -327,6 +331,12 @@ func (p *Parser) parseSchemaType(field bool) *ast.DataType {
 // the result is never nil, so that OPTIONS () is kept.
 func (p *Parser) parseOptionList() []ast.Option {
 	p.expectKw("OPTIONS")
+	return p.parseOptionBody()
+}
+
+// parseOptionBody parses (name = value, ...), the list of OPTIONS or of LOAD
+// DATA's FILES.
+func (p *Parser) parseOptionBody() []ast.Option {
 	p.expectOp("(")
 	opts := []ast.Option{}
 	for !p.isOp(")") || len(opts) > 0 { // no trailing comma
@@ -502,7 +512,7 @@ func (p *Parser) parseGoogleIdentity() []ast.SequenceOption {
 var googleAlterKinds = [][]string{
 	{"MATERIALIZED", "VIEW"}, {"SEARCH", "INDEX"}, {"VECTOR", "INDEX"}, {"TABLE"}, {"VIEW"}, {"SCHEMA"},
 	{"ORGANIZATION"}, {"PROJECT"}, {"BI_CAPACITY"}, {"CAPACITY"}, {"RESERVATION"}, {"CONNECTION"},
-	{"DATA_POLICY"},
+	{"DATA_POLICY"}, {"MODEL"},
 }
 
 // parseGoogleAlter parses ALTER ..., the word ALTER already read. BigQuery
@@ -984,4 +994,154 @@ func (p *Parser) parseGoogleGrant() ast.Statement {
 		}
 	}
 	return g
+}
+
+// parseCreateModel parses CREATE MODEL after MODEL.
+func (p *Parser) parseCreateModel(orReplace, temp bool) ast.Statement {
+	m := &ast.CreateModel{OrReplace: orReplace, Temp: temp}
+	m.IfNotExists = p.parseCreateIfNotExists(orReplace)
+	m.Name = p.parseName()
+	if p.acceptKw("TRANSFORM") {
+		p.expectOp("(")
+		m.Transform = p.parseSelectItems()
+		p.expectOp(")")
+	}
+	if p.acceptKw("INPUT") {
+		m.Input = p.parseTypedColumns()
+		p.expectKw("OUTPUT")
+		m.Output = p.parseTypedColumns()
+	}
+	if p.acceptKw("REMOTE") {
+		m.Remote = true
+		if p.acceptKwSeq("WITH", "CONNECTION") {
+			if !p.acceptKw("DEFAULT") {
+				m.Connection = p.parseName()
+			} else {
+				m.ConnectionDefault = true
+			}
+		}
+	}
+	if p.isKw("OPTIONS") {
+		m.Options = p.parseOptionList()
+	}
+	if !p.acceptKw("AS") {
+		return m
+	}
+	if p.isOp("(") && p.isKwAt(1, "TRAINING_DATA") && p.isKwAt(2, "AS") {
+		p.pos += 3
+		m.TrainingData = p.parseParenQuery()
+		if p.acceptOp(",") {
+			if !p.isKw("CUSTOM_HOLIDAY") {
+				p.unexpected("custom_holiday")
+			}
+			p.next()
+			p.expectKw("AS")
+			m.CustomHoliday = p.parseParenQuery()
+		}
+		p.expectOp(")")
+		return m
+	}
+	m.AsQuery = p.parseQuery()
+	return m
+}
+
+// parseParenQuery parses (query).
+func (p *Parser) parseParenQuery() *ast.Query {
+	p.expectOp("(")
+	q := p.parseQuery()
+	p.expectOp(")")
+	return q
+}
+
+// parseTypedColumns parses (name type, ...).
+func (p *Parser) parseTypedColumns() []*ast.ColumnDef {
+	p.expectOp("(")
+	var cols []*ast.ColumnDef
+	for {
+		cols = append(cols, &ast.ColumnDef{Name: p.parseIdent(), Type: p.parseType()})
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.expectOp(")")
+	return cols
+}
+
+// parseExport parses EXPORT DATA and EXPORT MODEL.
+func (p *Parser) parseExport() ast.Statement {
+	p.expectKw("EXPORT")
+	if p.acceptKw("MODEL") {
+		m := &ast.ExportModel{Name: p.parseName()}
+		if p.isKw("OPTIONS") {
+			m.Options = p.parseOptionList()
+		}
+		return m
+	}
+	p.expectKw("DATA")
+	e := &ast.ExportData{}
+	if p.acceptKwSeq("WITH", "CONNECTION") {
+		e.Connection = p.parseName()
+	}
+	if p.isKw("OPTIONS") {
+		e.Options = p.parseOptionList()
+	}
+	p.expectKw("AS")
+	e.Query = p.parseQuery()
+	return e
+}
+
+// parseLoadData parses LOAD DATA.
+func (p *Parser) parseLoadData() ast.Statement {
+	p.expectKw("LOAD", "DATA")
+	l := &ast.LoadData{}
+	if !p.acceptKw("INTO") {
+		p.expectKw("OVERWRITE")
+		l.Overwrite = true
+	}
+	if p.acceptKw("TEMP") || p.acceptKw("TEMPORARY") {
+		p.expectKw("TABLE")
+		l.Temp = true
+	}
+	l.Table = p.parseRelationName()
+	if p.isKw("PARTITIONS") || p.isKwSeq("OVERWRITE", "PARTITIONS") {
+		l.OverwritePartitions = p.acceptKw("OVERWRITE")
+		p.next()
+		p.expectOp("(")
+		o := ast.Option{Name: p.parseIdent().Name, Assign: "="}
+		p.expectOp("=")
+		o.Value = p.parseExpr()
+		l.Partitions = &o
+		p.expectOp(")")
+	}
+	if p.acceptOp("(") {
+		l.HasColumns = true
+		for {
+			l.Columns = append(l.Columns, p.parseGoogleColumn())
+			if !p.acceptOp(",") {
+				break
+			}
+		}
+		p.expectOp(")")
+	}
+	if p.acceptKwSeq("PARTITION", "BY") {
+		l.PartitionExpr = p.parseExpr()
+	}
+	if p.acceptKwSeq("CLUSTER", "BY") {
+		l.ClusterBy = p.parseExprList()
+	}
+	if p.isKw("OPTIONS") {
+		l.Options = p.parseOptionList()
+	}
+	p.expectKw("FROM", "FILES")
+	l.Files = p.parseOptionBody()
+	if p.acceptKwSeq("WITH", "PARTITION", "COLUMNS") {
+		l.HasPartitionColumns = true
+		if p.isOp("(") {
+			l.PartitionColumns = p.parseTypedColumns()
+		}
+	}
+	if p.acceptKwSeq("WITH", "CONNECTION") {
+		l.Connection = p.parseName()
+	}
+	return l
 }

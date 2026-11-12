@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  ML.NGRAMS(['a', 'b', 'c'], [2,3], '#') AS output","shape":"SELECT ML.NGRAMS(ARRAY['a', 'b', 'c'], ARRAY[2, 3], '#') AS output;"}

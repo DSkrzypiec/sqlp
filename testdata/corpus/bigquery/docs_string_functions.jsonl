@@ -52,6 +52,7 @@
 {"sql":"SELECT FORMAT('date: %s!', FORMAT_DATE('%B %d, %Y', date '2015-01-02'))","shape":"SELECT FORMAT('date: %s!', FORMAT_DATE('%B %d, %Y', date '2015-01-02'));"}
 {"sql":"date: January 02, 2015!","reject":true}
 {"sql":"%[flags][width][.precision]specifier","reject":true}
+{"sql":"JSON '{\"name\":\"apple\",\"stock\":3}'","reject":true}
 {"sql":"FORMAT('%s', 1)","reject":true}
 {"sql":"FORMAT('%')","reject":true}
 {"sql":"FORMAT('00-%t-00', NULL_expression)","reject":true}

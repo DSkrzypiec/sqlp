@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  ML.FEATURE_CROSS(STRUCT('a' AS f1, 'b' AS f2, 'c' AS f3)) AS output","shape":"SELECT ML.FEATURE_CROSS(STRUCT('a' AS f1, 'b' AS f2, 'c' AS f3)) AS output;"}

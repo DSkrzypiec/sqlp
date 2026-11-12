@@ -139,29 +139,49 @@
 {"sql":"FROM t |> SELECT SUM(a) OVER w AS s WINDOW w AS (PARTITION BY c)","shape":"FROM t |> SELECT SUM(a) OVER w AS s WINDOW w AS (PARTITION BY c);"}
 {"sql":"FROM t |> WINDOW SUM(a) OVER w AS s WINDOW w AS (PARTITION BY c)","reject":true}
 {"sql":"FROM t |> AGGREGATE SUM(a) WINDOW w AS (PARTITION BY c)","reject":true}
-{"sql":"SELECT BY ( ALL a ) FROM t","reject":true}
+{"sql":"SELECT word FROM bigquery-public-data.samples.shakespeare LIMIT 1","shape":"SELECT word FROM `bigquery-public-data`.samples.shakespeare LIMIT 1;"}
+{"sql":"SELECT word FROM bigquery - public - data.samples.shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery-public-data .samples.shakespeare LIMIT 1","shape":"SELECT word FROM `bigquery-public-data`.samples.shakespeare LIMIT 1;"}
+{"sql":"SELECT s.word FROM bigquery-public-data.samples.shakespeare AS s LIMIT 1","shape":"SELECT s.word FROM `bigquery-public-data`.samples.shakespeare AS s LIMIT 1;"}
+{"sql":"SELECT 1 FROM p-123.d.t"}
+{"sql":"SELECT 1 FROM p-1x.d.t","reject":true}
+{"sql":"SELECT 1 FROM p.my-ds.t","reject":true}
+{"sql":"SELECT 1 FROM my-table"}
+{"sql":"SELECT 1 FROM p-.d.t","reject":true}
+{"sql":"SELECT 1 FROM -p.d.t","reject":true}
+{"sql":"SELECT bigquery-public-data.samples.shakespeare.word FROM bigquery-public-data.samples.shakespeare LIMIT 1"}
+{"sql":"INSERT my-p.d.t VALUES (1)"}
+{"sql":"CREATE TABLE my-p.d.t (x INT64)"}
+{"sql":"DROP TABLE my-p.d.t"}
+{"sql":"SELECT * FROM my-p.d.tvf(1)","reject":true}
+{"sql":"SELECT 1 FROM t JOIN my-p.d.u ON true"}
+{"sql":"SELECT 1 FROM my-p.d.t, UNNEST([1])"}
+{"sql":"SELECT x-y FROM t","shape":"SELECT x - y FROM t;"}
+{"sql":"SELECT a-b.c FROM t"}
+{"sql":"SELECT 1 FROM my-project-123456.dataset.t AS x"}
+{"sql":"SELECT x ( ALL a ) FROM t","reject":true}
 {"sql":"SELECT COUNT ( ALL a ) FROM FROM t","reject":true}
 {"sql":"SELECT COUNT ( ALL ) FROM t","reject":true}
 {"sql":"SELECT SUM ( DISTINCT ) a FROM t"}
 {"sql":"SELECT SUM ( DISTINCT a ) FROM t","shape":"SELECT SUM(DISTINCT a) FROM t;"}
 {"sql":"SELECT ( DISTINCT a ) FROM t","reject":true}
-{"sql":"SELECT SUM 1 DISTINCT a ) FROM t","reject":true}
+{"sql":"SELECT SUM t DISTINCT a ) FROM t","reject":true}
 {"sql":"COUNT SELECT ( DISTINCT ) FROM t","reject":true}
 {"sql":"SELECT COUNT ( ) DISTINCT FROM t","reject":true}
-{"sql":"SELECT ARRAY ( DISTINCT ) FROM t","reject":true}
+{"sql":"SELECT samples ( DISTINCT ) FROM t"}
 {"sql":"SELECT COUNT ( ) t FROM","reject":true}
 {"sql":"SELECT COUNT ( ) ) FROM t","reject":true}
-{"sql":"JOIN COUNT ( ) FROM t","reject":true}
+{"sql":"FROM COUNT ( ) FROM t","reject":true}
 {"sql":"SELECT COUNT ( FROM t","reject":true}
-{"sql":"SELECT SUM ( ORDER BY a BY FROM t","reject":true}
+{"sql":"SELECT SUM ( ORDER BY a SELECT FROM t","reject":true}
 {"sql":"SELECT SELECT SUM ( ORDER BY a ) FROM t","reject":true}
 {"sql":"SELECT SUM ( ORDER a BY ) FROM t","reject":true}
 {"sql":"SELECT SUM ( 1 LIMIT ) FROM t","reject":true}
-{"sql":"SELECT SUM ( LIMIT WITH ) FROM t","reject":true}
+{"sql":"SELECT SUM ( LIMIT AS ) FROM t","reject":true}
 {"sql":"SELECT SUM ( LIMIT 1 ) ) FROM t","reject":true}
-{"sql":"SELECT SUM ( LIMIT 1 1 FROM t","reject":true}
+{"sql":"SELECT SUM ( LIMIT 1 FROM FROM t","reject":true}
 {"sql":"SELECT ( IGNORE NULLS ) FROM t","reject":true}
-{"sql":"SELECT SUM WHERE IGNORE NULLS ) FROM t","reject":true}
+{"sql":"SELECT SUM SUM IGNORE NULLS ) FROM t","reject":true}
 {"sql":"SELECT SUM ( NULLS IGNORE ) FROM t","reject":true}
 {"sql":"SELECT SUM ( IGNORE NULLS FROM t","reject":true}
 {"sql":"SELECT ARRAY_AGG ( DISTINCT ORDER BY ) FROM t","reject":true}
@@ -170,17 +190,17 @@
 {"sql":"SELECT ARRAY_AGG ( ORDER BY a ) FROM t"}
 {"sql":"SELECT COUNT ( * WHERE > a 1 ) FROM t","reject":true}
 {"sql":"SELECT ( COUNT * WHERE a > 1 ) FROM t","reject":true}
-{"sql":"SELECT * ( * WHERE a > 1 ) FROM t","reject":true}
-{"sql":"SELECT COUNT ( * WHERE AS > 1 ) FROM t","reject":true}
+{"sql":"SELECT FROM ( * WHERE a > 1 ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( * WHERE INTERVAL > 1 ) FROM t","reject":true}
 {"sql":"SELECT COUNT ( * ORDER BY a ) ) FROM t","reject":true}
-{"sql":"SELECT t ( * ORDER BY a ) FROM t"}
-{"sql":"SELECT COUNT ( SELECT ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT ) ( * ORDER BY a ) FROM t","reject":true}
+{"sql":"SELECT COUNT ( SETS ORDER BY a ) FROM t"}
 {"sql":"SELECT COUNT ( * ORDER BY a ) t"}
-{"sql":"SELECT COUNT SELECT DISTINCT * ) FROM t","reject":true}
+{"sql":"SELECT COUNT AS DISTINCT * ) FROM t","reject":true}
 {"sql":"SELECT COUNT ( DISTINCT * ) FROM","reject":true}
 {"sql":"SELECT COUNT ( DISTINCT DISTINCT * ) FROM t","reject":true}
 {"sql":"SELECT COUNT ( DISTINCT * ) FROM FROM t","reject":true}
-{"sql":"SELECT SUM ( ORDER ) FROM t","reject":true}
+{"sql":"SELECT SUM ( ( ) FROM t","reject":true}
 {"sql":"SELECT SUM ( * ) t FROM","reject":true}
 {"sql":"SELECT SELECT SUM ( * ) FROM t","reject":true}
 {"sql":"SUM ( * ) FROM t","reject":true}
@@ -190,32 +210,32 @@
 {"sql":"SELECT SUM ( a ) ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS PRECEDING 1 EXCLUDE NO OTHERS ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 PRECEDING EXCLUDE NO ) OTHERS FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS c PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS SELECT PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 1 PRECEDING EXCLUDE NO OTHERS ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING ) t t","reject":true}
-{"sql":"SELECT SUM ( a SELECT OVER ( ORDER BY b ROWS 1 FOLLOWING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING ) SUM t","reject":true}
-{"sql":"SELECT SUM ( a + OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING ) ) t","reject":true}
+{"sql":"SELECT SUM ( a ( OVER ( ORDER BY b ROWS 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a OVER OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN FOLLOWING AND CURRENT ROW ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW ) FROM","reject":true}
-{"sql":"SELECT SUM ( a ) OVER BY ORDER BY b ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING ) FROM t","reject":true}
-{"sql":"BY SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER . ORDER BY b ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING ) FROM t","reject":true}
+{"sql":") SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a a ) OVER ( ORDER BY b ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b BETWEEN ROWS 2 FOLLOWING AND 1 FOLLOWING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING ) SUM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING ) t t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING ) t FROM","reject":true}
 {"sql":"SELECT SUM ) a ) OVER ( ORDER BY b ROWS BETWEEN 2 FOLLOWING AND 1 FOLLOWING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER y b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER JOIN b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ORDER ( BY b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a OVER ) ( ORDER BY b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING ( FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING c FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING) FROM t;"}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 AND 2 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS BETWEEN 1 PRECEDING AND 2 PRECEDING ) FROM","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER t b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER ) b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ( OVER ORDER BY b ROWS UNBOUNDED FOLLOWING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS UNBOUNDED FOLLOWING FROM t","reject":true}
 {"sql":"SUM ( a ) OVER ( ORDER BY b ROWS CURRENT ROW ) FROM t","reject":true}
@@ -226,12 +246,12 @@
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ( 1 ) ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ( OVER ORDER BY b ROWS ( 1 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( BY b ROWS ( 1 ) PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER PRECEDING b ROWS ( ( 1 ) ) PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER ( b ROWS ( ( 1 ) ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER b BY ROWS ( ( 1 ) ) PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ( ( 1 ) ) SUM ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ( ( 1 ) ) ( ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ( ( 1 ) ) PRECEDING FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ROWS + 1 PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( a BY b ROWS + 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( 1 BY b ROWS + 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM a ( ) OVER ( ORDER BY b ROWS + 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS + 1 PRECEDING FROM ) t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS - 1 PRECEDING ) t","reject":true}
@@ -242,45 +262,45 @@
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS - ( 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS - ( 1 ) PRECEDING PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a OVER ( ORDER BY b ROWS - ( 1 ) PRECEDING ) FROM t","reject":true}
-{"sql":"ON SUM ( a ) OVER ( ORDER BY b ROWS ~ 1 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS ~ 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ( ORDER BY b ROWS ~ 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM SUM ( a ) OVER ( ORDER BY b ROWS ~ 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b BY ~ 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM a ) OVER ( ORDER BY b ROWS 1 + 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER b ROWS 1 + 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 1 PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 + ON PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1 + 1 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ( OVER ORDER BY b ROWS b PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS b PRECEDING ) FROM FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ORDER BY b ROWS b PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b b PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER ) b ROWS NULL PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER a b ROWS NULL PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ( ORDER BY b ROWS NULL PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS NULL PRECEDING FROM ) t","reject":true}
 {"sql":"SUM ( a ) OVER ( ORDER BY b ROWS NULL PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY ROWS b ( SELECT 1 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ) OVER ( ORDER BY b ROWS ( SELECT 1 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ( ORDER BY b ROWS ( SELECT 1 ) PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY u ROWS ( SELECT 1 ) PRECEDING ) FROM t"}
-{"sql":"SELECT t ( a ) OVER ( ORDER BY b ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t"}
-{"sql":"SELECT SUM ( a ) OVER SUM ORDER BY b ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY JOIN ROWS ( SELECT 1 ) PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT OVER ( a ) OVER ( ORDER BY b ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER JOIN ORDER BY b ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER b BY ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t","reject":true}
-{"sql":"1 SUM ( a ) OVER ( ORDER BY b ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t","reject":true}
+{"sql":"AND SUM ( a ) OVER ( ORDER BY b ROWS CAST ( 1 AS INT64 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SUM ( a ) OVER ( ORDER BY b ROWS SAFE_CAST ( '1' AS INT64 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS SAFE_CAST ( '1' AS INT64 ) PRECEDING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS SAFE_CAST('1' AS INT64) PRECEDING) FROM t;"}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b 1 SAFE_CAST ( '1' AS INT64 ) PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b PARTITION SAFE_CAST ( '1' AS INT64 ) PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS SAFE_CAST ( '1' AS INT64 ) PRECEDING ) FROM FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS @ p PRECEDING ) FROM t","shape":"SELECT SUM(a) OVER (ORDER BY b ROWS @p PRECEDING) FROM t;"}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS @ p PRECEDING ) FOLLOWING t","reject":true}
+{"sql":"BY SUM ( a ) OVER ( ORDER BY b ROWS @ p PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS @ p PRECEDING ) TABLE t","reject":true}
 {"sql":"SELECT SUM a ) OVER ( ORDER BY b ROWS @ p PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ( ORDER BY b ROWS @ p PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1.5 PRECEDING ) ) t","reject":true}
-{"sql":"SELECT SUM SELECT a ) OVER ( ORDER BY b ROWS 1.5 PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1.5 PRECEDING ) AS t","reject":true}
+{"sql":"SELECT SUM IN a ) OVER ( ORDER BY b ROWS 1.5 PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b ROWS 1.5 ) PRECEDING FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ( ORDER BY b ROWS 1.5 PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE INTERVAL x DAY PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE INTERVAL WHERE DAY PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) ) OVER ( ORDER BY b RANGE INTERVAL 1 DAY PRECEDING ) FROM t","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE INTERVAL 1 DAY PRECEDING ) FROM t","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE INTERVAL 1 DAY PRECEDING ) '1' t","reject":true}
 {"sql":"SELECT ( a ) OVER ( ORDER BY b RANGE INTERVAL 1 DAY PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( ORDER BY b RANGE INTERVAL '1' DAY DAY PRECEDING ) FROM t","reject":true}
 {"sql":"SELECT SUM ( a OVER ) ( ORDER BY b RANGE INTERVAL '1' DAY PRECEDING ) FROM t","reject":true}
@@ -296,7 +316,7 @@
 {"sql":"SELECT SUM a ) OVER ( w ROWS 1 PRECEDING ) FROM t WINDOW w AS ( ORDER BY b )","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( w ORDER BY BY b ) FROM t WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( w ORDER BY b ) FROM t WINDOW w ( PARTITION BY c )","reject":true}
-{"sql":"SELECT SUM ( a ) OVER ( w ORDER BY b ) FROM t FROM w AS ( PARTITION BY c )","reject":true}
+{"sql":"SELECT SUM ( a ) OVER ( w ORDER BY b ) FROM t p w AS ( PARTITION BY c )","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( w ORDER BY b ) FROM WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"SELECT SUM ( a ) OVER ( w PARTITION BY b ) FROM t WINDOW AS w ( ORDER BY c )","reject":true}
 {"sql":"SELECT SUM ( ) OVER ( w PARTITION BY b ) FROM t WINDOW w AS ( ORDER BY c )"}
@@ -305,50 +325,51 @@
 {"sql":"SELECT LAG 1 ) OVER ( )","reject":true}
 {"sql":"SELECT LAG ( ) OVER ( )","reject":true}
 {"sql":"SELECT LAG ( 1 ) ( OVER )","reject":true}
-{"sql":"SELECT LAG ( 1 ) OVER ( )","reject":true}
-{"sql":"SELECT ( SELECT SUM ( 1 ) OVER ( ) )","reject":true}
+{"sql":"SELECT LAG ( 1 ) OVER t )","reject":true}
+{"sql":"SELECT ( SELECT SUM ( 1 ON OVER ( ) )","reject":true}
 {"sql":"SELECT ( SELECT SUM SUM ( 1 ) OVER ( ) )","reject":true}
+{"sql":"SELECT ( SELECT SUM ( 1 ) OVER ( ) )","reject":true}
 {"sql":"SELECT ( SELECT SUM ( ( 1 ) OVER ( ) )","reject":true}
 {"sql":"SELECT ARRAY ( SELECT ROW_NUMBER ( ( ) OVER ( ) )","reject":true}
 {"sql":"SELECT ARRAY ( SELECT ROW_NUMBER ( ) OVER ( ) )","reject":true}
 {"sql":"SELECT ARRAY SELECT ROW_NUMBER ( ) OVER ( ) )","reject":true}
 {"sql":"SELECT ARRAY ( SELECT ROW_NUMBER ( OVER ( ) )","reject":true}
-{"sql":"SELECT 1 FROM t WHERE ( SELECT SUM ( 1 ) OVER ( ) ) = 1","reject":true}
+{"sql":"SELECT 1 t t WHERE ( SELECT SUM ( 1 ) OVER ( ) ) = 1","reject":true}
 {"sql":"SELECT 1 FROM t WHERE ( ( SELECT SUM ( 1 ) OVER ( ) ) = 1","reject":true}
-{"sql":"SELECT 1 FROM t WHERE ( SELECT SUM ( JOIN ) OVER ( ) ) = 1","reject":true}
+{"sql":"SELECT 1 FROM t WHERE ( SELECT SUM ( a ) OVER ( ) ) = 1","reject":true}
 {"sql":"SELECT 1 FROM t WHERE ( SELECT SUM 1 ( ) OVER ( ) ) = 1","reject":true}
-{"sql":"FROM 1 QUALIFY ROW_NUMBER ( ) OVER ( ) = 1","reject":true}
 {"sql":"( 1 QUALIFY ROW_NUMBER ( ) OVER ( ) = 1","reject":true}
-{"sql":"SELECT 1 QUALIFY ROW_NUMBER ( ) OVER ( SELECT = 1","reject":true}
+{"sql":"SELECT 1 QUALIFY ROW_NUMBER ( ) OVER ( ) = 1","reject":true}
+{"sql":"SELECT 1 QUALIFY ROW_NUMBER ( ) OVER ( . = 1","reject":true}
 {"sql":"SELECT 1 QUALIFY ROW_NUMBER ( ) OVER ( ) =","reject":true}
 {"sql":"SELECT * FROM ( a JOIN JOIN b ON true )","reject":true}
 {"sql":"SELECT * FROM FROM ( a JOIN b ON true )","reject":true}
-{"sql":"SELECT * FROM ( a JOIN b = true )","reject":true}
+{"sql":"SELECT * FROM ( a JOIN b t true )","reject":true}
 {"sql":"SELECT SELECT * FROM ( a JOIN b ON true )","reject":true}
 {"sql":"SELECT * FROM ( a JOIN ON b true ) AS x","reject":true}
-{"sql":"|> * FROM ( a JOIN b ON true ) AS x","reject":true}
+{"sql":"LIMIT * FROM ( a JOIN b ON true ) AS x","reject":true}
 {"sql":"SELECT * FROM ( a JOIN b b ON true ) AS x","reject":true}
 {"sql":"SELECT * ( FROM a JOIN b ON true ) AS x","reject":true}
-{"sql":") * FROM ( a JOIN b USING ( id ) ) x","reject":true}
+{"sql":". * FROM ( a JOIN b USING ( id ) ) x","reject":true}
 {"sql":"SELECT * FROM ( a JOIN b USING id ( ) ) x","reject":true}
 {"sql":"SELECT * FROM ( a JOIN b USING ( id ) ) x x","reject":true}
-{"sql":"SELECT ) FROM ( a JOIN b USING ( id ) ) x","reject":true}
+{"sql":"SELECT . FROM ( a JOIN b USING ( id ) ) x","reject":true}
 {"sql":"SELECT * FROM ( ( a JOIN b ON true ) )","reject":true}
 {"sql":"SELECT * FROM ( ( a JOIN ON b true ) )","reject":true}
-{"sql":"SELECT * FROM ( ( c JOIN b ON true ) )","reject":true}
+{"sql":"SELECT * FROM ( ( ) JOIN b ON true ) )","reject":true}
 {"sql":"SELECT * FROM ( ( a JOIN JOIN b ON true ) )","reject":true}
 {"sql":"SELECT * FROM ( ( ( a JOIN b ON true ) JOIN c ON true )","reject":true}
 {"sql":"SELECT FROM ( ( a JOIN b ON true ) JOIN c ON true )","reject":true}
 {"sql":"* SELECT FROM ( ( a JOIN b ON true ) JOIN c ON true )","reject":true}
 {"sql":"SELECT * FROM ( ( a ) JOIN b true )","reject":true}
-{"sql":"SELECT * FROM ( ( a ) JOIN b ON GROUP )","reject":true}
+{"sql":"SELECT * FROM ( ( a ) JOIN b ON ROWS )","reject":true}
 {"sql":"SELECT SELECT * FROM ( ( a ) JOIN b ON true )","reject":true}
-{"sql":"SELECT * FROM ( ( a ) JOIN b ON 1 )","reject":true}
+{"sql":"SELECT * FROM ( ( a ) JOIN b ON SELECT )","reject":true}
 {"sql":"SELECT * FROM ( a JOIN ( ( b ) ON true )","reject":true}
 {"sql":"SELECT * FROM ( t JOIN ( b ) ON true )","reject":true}
 {"sql":"SELECT * FROM ( a JOIN ( b ) ON true","reject":true}
 {"sql":"SELECT * FROM ( a JOIN ( b ) ON true ) )","reject":true}
-{"sql":"SELECT * FROM ( a CROSS JOIN OVER )","reject":true}
+{"sql":"SELECT * FROM ( a CROSS JOIN ( )","reject":true}
 {"sql":"SELECT FROM * ( a CROSS JOIN b )","reject":true}
 {"sql":"SELECT * FROM ( a CROSS JOIN )","reject":true}
 {"sql":"* SELECT FROM ( a CROSS JOIN b )","reject":true}
@@ -360,21 +381,21 @@
 {"sql":"SELECT * FROM a ( )"}
 {"sql":"SELECT * FROM ( a","reject":true}
 {"sql":"SELECT * FROM ( )","reject":true}
-{"sql":"( * FROM ( a AS x )","reject":true}
+{"sql":"FROM * FROM ( a AS x )","reject":true}
 {"sql":"SELECT * FROM ( a a AS x )","reject":true}
 {"sql":"SELECT * FROM ( AS a x )","reject":true}
-{"sql":"SELECT * FROM ( a a x )","reject":true}
+{"sql":"SELECT * FROM ( a u x )","reject":true}
 {"sql":"SELECT * FROM ( t AS x , , x . arr )","reject":true}
 {"sql":"SELECT * FROM ( t AS x , x . )","reject":true}
-{"sql":"SELECT * FROM ORDER t AS x , x . arr )","reject":true}
-{"sql":"SELECT * FROM ( ARRAY AS x , x . arr )","reject":true}
+{"sql":"SELECT * FROM 1 t AS x , x . arr )","reject":true}
+{"sql":"SELECT * FROM ( t AS x , x . arr )","reject":true}
 {"sql":"SELECT * FROM ( UNNEST ( [ ] ) JOIN b ON true )","shape":"SELECT * FROM (UNNEST(ARRAY[]) JOIN b ON TRUE);"}
-{"sql":"SELECT * ) ( UNNEST ( [ 1 ] ) JOIN b ON true )","reject":true}
+{"sql":"SELECT * AS ( UNNEST ( [ 1 ] ) JOIN b ON true )","reject":true}
 {"sql":"SELECT * ( FROM UNNEST ( [ 1 ] ) JOIN b ON true )","reject":true}
 {"sql":"SELECT * FROM ( UNNEST ( [ 1 ] JOIN b ON true )","reject":true}
 {"sql":"SELECT FROM * ( ( SELECT 1 ) JOIN b ON true )","reject":true}
-{"sql":"SELECT * FROM ( ( SELECT 1 ) JOIN ( ON true )","reject":true}
-{"sql":"SELECT * FROM ( . SELECT 1 ) JOIN b ON true )","reject":true}
+{"sql":"SELECT * FROM ( ( SELECT 1 ) JOIN ) ON true )","reject":true}
+{"sql":"SELECT * FROM ( * SELECT 1 ) JOIN b ON true )","reject":true}
 {"sql":"SELECT * * FROM ( ( SELECT 1 ) JOIN b ON true )","reject":true}
 {"sql":"SELECT * FROM ( ( SELECT 1 AS a AS ) q JOIN b ON q . a = b . id )","reject":true}
 {"sql":"SELECT * FROM ( ( ( SELECT 1 AS a ) AS q JOIN b ON q . a = b . id )","reject":true}
@@ -382,17 +403,18 @@
 {"sql":"SELECT * FROM ( ( SELECT 1 AS a ) AS q JOIN b ON q . . a = b . id )","reject":true}
 {"sql":"SELECT * ( FROM ( SELECT 1 ) AS q )","reject":true}
 {"sql":"SELECT * FROM ( ( ( SELECT 1 ) AS q )","reject":true}
-{"sql":"SELECT * FROM ( ( SELECT 1 ) AS ( )","reject":true}
+{"sql":"SELECT * FROM ( ( SELECT 1 ) AS ) )","reject":true}
 {"sql":"SELECT * FROM ( ( SELECT 1 ) q AS )","reject":true}
 {"sql":"SELECT * FROM ( ( SELECT 1 AS a ) AS ) q AS r","reject":true}
-{"sql":"SELECT * FROM ( ( SELECT 1 AS a ) AS q ) AS r","shape":"SELECT * FROM ((SELECT 1 AS a) AS q) AS r;"}
+{"sql":"SELECT |> FROM ( ( SELECT 1 AS a ) AS q ) AS r","reject":true}
 {"sql":"SELECT * FROM ( ( SELECT 1 AS a ) q ) AS r","reject":true}
+{"sql":"SELECT * FROM ( ( SELECT 1 AS a ) AS q , AS r","reject":true}
 {"sql":"SELECT * FROM TABLE t )","reject":true}
 {"sql":"SELECT * FROM ( TABLE ) t","reject":true}
 {"sql":"SELECT * FROM FROM ( TABLE t )","reject":true}
 {"sql":"SELECT * ( FROM TABLE t )","reject":true}
 {"sql":"t TABLE","reject":true}
-{"sql":"( SELECT PRECEDING AS a ) AS x","reject":true}
+{"sql":"( SELECT SUM AS a ) AS x"}
 {"sql":"( SELECT SELECT 1 AS a ) AS x","reject":true}
 {"sql":"( SELECT 1 AS a ) ) AS x","reject":true}
 {"sql":"( SELECT 1 AS a ) AS AS x","reject":true}
@@ -400,14 +422,14 @@
 {"sql":"( SELECT 1 AS ) a x","reject":true}
 {"sql":"( ( SELECT 1 AS a ) x","reject":true}
 {"sql":"( SELECT 1 AS a ) x","reject":true}
-{"sql":"( SELECT 1 AS a ) AS x |> SELECT x . true"}
+{"sql":"( SELECT 1 AS a ) AS x |> SELECT x . FROM"}
 {"sql":"( SELECT 1 AS a ) AS |> SELECT x . a","reject":true}
 {"sql":"( SELECT 1 AS a ) ) AS x |> SELECT x . a","reject":true}
-{"sql":"( SELECT 1 AS a ) AS x |> SELECT x . (","reject":true}
+{"sql":"( SELECT 1 AS a ) AS x |> SELECT x . a","shape":"(SELECT 1 AS a) AS x |> SELECT x.a;"}
 {"sql":"( SELECT 1 AS a ) AS x |> AS y |> |> SELECT y . a","reject":true}
 {"sql":"( SELECT 1 AS a ) AS x |> AS y |> y . a","reject":true}
 {"sql":"( SELECT 1 AS a ) AS x |> AS y |> y SELECT . a","reject":true}
-{"sql":"( SELECT 1 AS a ) SELECT x |> AS y |> SELECT y . a","reject":true}
+{"sql":"( SELECT 1 AS a ) t x |> AS y |> SELECT y . a","reject":true}
 {"sql":"( ( SELECT 1 AS a ) AS x ) |> SELECT x a .","reject":true}
 {"sql":"( ( SELECT 1 AS a ) AS x ) SELECT x . a","reject":true}
 {"sql":"( ( SELECT 1 AS a ) AS x ) |> SELECT x . a","shape":"((SELECT 1 AS a) AS x) |> SELECT x.a;"}
@@ -420,83 +442,82 @@
 {"sql":"( SELECT 1 ) AS x UNION ALL SELECT SELECT 2","reject":true}
 {"sql":"( SELECT 1 AS x UNION ALL SELECT 2","reject":true}
 {"sql":"SELECT UNION 2 ALL ( SELECT 1 ) AS x","reject":true}
-{"sql":"SELECT 2 UNION ALL ( SELECT 1 ) ORDER x","reject":true}
+{"sql":"SELECT 2 UNION ALL ( SELECT 1 ) FROM x","reject":true}
 {"sql":"SELECT 2 UNION UNION ALL ( SELECT 1 ) AS x","reject":true}
 {"sql":"SELECT 2 UNION ALL ( SELECT 1 AS x","reject":true}
-{"sql":"( SELECT 1 ) BY x ORDER BY 1","reject":true}
+{"sql":"( SELECT 1 ) id x ORDER BY 1","reject":true}
 {"sql":"FROM SELECT 1 ) AS x ORDER BY 1","reject":true}
 {"sql":"( 1 ) AS x ORDER BY 1","reject":true}
 {"sql":"( SELECT 1 ) AS x ORDER 1","reject":true}
 {"sql":"WITH q AS ( ( SELECT 1 ) AS x SELECT ) * FROM q","reject":true}
 {"sql":"WITH q AS ( ( SELECT 1 ) AS x ) SELECT * * FROM q","reject":true}
 {"sql":"WITH q AS ( ( SELECT 1 ) AS x ) SELECT SELECT * FROM q","reject":true}
-{"sql":"WITH ) AS ( ( SELECT 1 ) AS x ) SELECT * FROM q","reject":true}
-{"sql":"SELECT EXISTS ( ( SELECT ( ) AS x )","reject":true}
-{"sql":"SELECT EXISTS ( ( SELECT 1 ) AS IN )","reject":true}
-{"sql":"SELECT EXISTS ( ( SELECT SELECT ) AS x )","reject":true}
-{"sql":") EXISTS ( ( SELECT 1 ) AS x )","reject":true}
+{"sql":"WITH t AS ( ( SELECT 1 ) AS x ) SELECT * FROM q"}
+{"sql":"SELECT EXISTS ( ( SELECT c ) AS x )"}
+{"sql":"SELECT EXISTS ( ( SELECT 1 ) AS ) )","reject":true}
+{"sql":"SELECT EXISTS ( ( SELECT AS ) AS x )","reject":true}
+{"sql":"* EXISTS ( ( SELECT 1 ) AS x )","reject":true}
 {"sql":"SELECT ( ( SELECT 1 ) AS x )","shape":"SELECT ((SELECT 1) AS x);"}
 {"sql":"SELECT ARRAY ( ( SELECT 1 ) AS x x )","reject":true}
-{"sql":"SELECT ARRAY ( ( SELECT 1 JOIN AS x )","reject":true}
-{"sql":"SELECT ARRAY ( ( SELECT ( ) AS x )","reject":true}
+{"sql":"SELECT ARRAY ( ( SELECT 1 d AS x )","reject":true}
+{"sql":"SELECT ARRAY ( ( SELECT ROWS ) AS x )","reject":true}
 {"sql":"SELECT 1 1 IN ( ( SELECT 1 ) AS x )","reject":true}
-{"sql":"SUM 1 IN ( ( SELECT 1 ) AS x )","reject":true}
+{"sql":"SELECT 1 IN ( ( SELECT 1 ) AS x )","shape":"SELECT 1 IN ((SELECT 1) AS x);"}
 {"sql":"1 SELECT IN ( ( SELECT 1 ) AS x )","reject":true}
 {"sql":"SELECT 1 IN ( ( SELECT 1 AS x )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON . a IN ( SELECT u . a )","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON t . ORDER IN ( SELECT u . a )"}
+{"sql":"SELECT * FROM t JOIN u ON t . t IN ( SELECT u . a )"}
 {"sql":"SELECT * FROM t JOIN u t . a IN ( SELECT u . a )","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON t . a IN ( . u . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a IN ( SELECT u . a )","reject":true}
 {"sql":"SELECT SELECT * FROM t JOIN u ON t . a NOT IN ( SELECT u . a )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a NOT IN ( SELECT u . a ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a NOT ( SELECT u . a )","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON t . a NOT IN ( t u . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a NOT IN ( ( u . a )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a IN ( SELECT u . a OR true","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a ( SELECT u . a ) OR true","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a IN ( u . a ) OR true","shape":"SELECT * FROM t JOIN u ON (t.a IN (u.a)) OR TRUE;"}
 {"sql":"SELECT * FROM t JOIN u ON t a . IN ( SELECT u . a ) OR true","reject":true}
 {"sql":"SELECT * FROM t LEFT JOIN JOIN u ON EXISTS ( SELECT 1 )","reject":true}
 {"sql":"SELECT * FROM t LEFT JOIN u EXISTS ON ( SELECT 1 )","reject":true}
-{"sql":"SELECT * FROM ( LEFT JOIN u ON EXISTS ( SELECT 1 )","reject":true}
+{"sql":"SELECT * FROM SUM LEFT JOIN u ON EXISTS ( SELECT 1 )"}
 {"sql":"SELECT * FROM t LEFT JOIN u ON EXISTS ( SELECT )","reject":true}
 {"sql":"SELECT * FROM t JOIN u u ON NOT EXISTS ( SELECT 1 FROM c WHERE c . id = t . a )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON NOT ( SELECT 1 FROM c WHERE c . id = t . a )"}
 {"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE c . = t . a )","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE w . id = t . a )"}
-{"sql":"SELECT * FROM t JOIN u ON CASE WHEN EXISTS ( SELECT t . a ) ) true END","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE word . id = t . a )"}
+{"sql":"SELECT * FROM t JOIN u ON CASE WHEN EXISTS ( SELECT t . a ) a true END","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON CASE WHEN EXISTS ( t . a ) THEN true END","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON CASE WHEN EXISTS ( SELECT t . a ) THEN THEN true END","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON CASE WHEN EXISTS ( * t . a ) THEN true END","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON CASE WHEN EXISTS ( ROWS t . a ) THEN true END","reject":true}
 {"sql":"FROM t |> JOIN u ON t . a IN ( u SELECT . a )","reject":true}
-{"sql":"FROM t |> OVER u ON t . a IN ( SELECT u . a )","reject":true}
+{"sql":"FROM t |> ) u ON t . a IN ( SELECT u . a )","reject":true}
 {"sql":"FROM t |> JOIN ON u t . a IN ( SELECT u . a )","reject":true}
 {"sql":"FROM t |> JOIN u ON t a IN ( SELECT u . a )","reject":true}
 {"sql":"SELECT * FROM t WHERE t . a IN ( SELECT 1 FROM c JOIN u ON c . id IN ( SELECT SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM t WHERE t . a IN IN ( SELECT 1 FROM c JOIN u ON c . id IN ( SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM WHERE t t . a IN ( SELECT 1 FROM c JOIN u ON c . id IN ( SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM t WHERE t . a ( SELECT 1 FROM c JOIN u ON c . id IN ( SELECT t . a ) )","reject":true}
-{"sql":"SELECT * FROM t x u ON t . a = ( SELECT 1 )","reject":true}
+{"sql":"SELECT * FROM t ( u ON t . a = ( SELECT 1 )","reject":true}
 {"sql":"* FROM t JOIN u ON t . a = ( SELECT 1 )","reject":true}
-{"sql":"SELECT * FROM t CALL u ON t . a = ( SELECT 1 )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a ( = SELECT 1 )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON ( SELECT SELECT t . a ) = 1","reject":true}
-{"sql":"SELECT * FROM AS JOIN u ON ( SELECT t . a ) = 1","reject":true}
+{"sql":"SELECT * FROM ) JOIN u ON ( SELECT t . a ) = 1","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON SELECT ( t . a ) = 1","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON . t a IN ( 1 , ( SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a IN ( 1 , ( SELECT t . ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a IN ( 1 ( SELECT t . a ) )","reject":true}
-{"sql":"SELECT * FROM t JOIN u BY t . a IN ( 1 , ( SELECT t . a ) )","reject":true}
+{"sql":"SELECT * FROM t JOIN u b t . a IN ( 1 , ( SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON . a IN UNNEST ( ARRAY ( SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a IN UNNEST ( ARRAY ( t SELECT . a ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a IN UNNEST ( ARRAY ( SELECT t . a a ) )","shape":"SELECT * FROM t JOIN u ON t.a IN UNNEST(ARRAY(SELECT t.a AS a));"}
 {"sql":"SELECT * FROM t JOIN u ON t . IN UNNEST ( ARRAY ( SELECT t . a ) )","reject":true}
 {"sql":"SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( . id ) FROM c WHERE c . id = t . a )","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( c a id ) FROM c WHERE c . id = t . a )","reject":true}
-{"sql":"SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( c . id t FROM c WHERE c . id = t . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( c 1 id ) FROM c WHERE c . id = t . a )","reject":true}
+{"sql":"SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( c . id 1 FROM c WHERE c . id = t . a )","reject":true}
 {"sql":"* FROM t JOIN u ON t . a = ( SELECT MAX ( c . id ) FROM c WHERE c . id = t . a )","reject":true}
 {"sql":"WITH q AS ( SELECT 1 AS id ) SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( q . id ) FROM q WHERE q . = t . a )","reject":true}
 {"sql":"WITH q AS SELECT 1 AS id ) SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( q . id ) FROM q WHERE q . id = t . a )","reject":true}
-{"sql":"WITH q AS ( SELECT 1 AS id ) SELECT * FROM t JOIN ( ON t . a = ( SELECT MAX ( q . id ) FROM q WHERE q . id = t . a )","reject":true}
+{"sql":"WITH q AS ( SELECT 1 AS id ) SELECT * FROM t JOIN AS ON t . a = ( SELECT MAX ( q . id ) FROM q WHERE q . id = t . a )","reject":true}
 {"sql":"WITH q AS ( SELECT 1 AS id ) SELECT * FROM t JOIN u ON t . a = ( SELECT MAX ( q ) id ) FROM q WHERE q . id = t . a )","reject":true}
 {"sql":"SELECT * FROM t , , u WHERE t . a IN ( SELECT 1 )","reject":true}
 {"sql":"SELECT * FROM t , u WHERE t a IN ( SELECT 1 )","reject":true}
@@ -507,21 +528,21 @@
 {"sql":"SELECT 1 FROM t GROUP BY a ( , b )","reject":true}
 {"sql":"SELECT 1 FROM GROUP BY ( a , b )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ( a , b b ) , c","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY ( a , b ) a c","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY ( a , b ) * c"}
 {"sql":"SELECT 1 FROM t GROUP BY ( , a b ) , c","reject":true}
-{"sql":"SELECT 1 FROM || GROUP BY ( a , b ) , c","reject":true}
+{"sql":"SELECT 1 FROM a GROUP BY ( a , b ) , c"}
 {"sql":"SELECT 1 t GROUP BY ( a )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ( a a )","reject":true}
 {"sql":"SELECT SELECT 1 FROM t GROUP BY ( a )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY a , b )","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY a , ( b )","shape":"SELECT 1 FROM t GROUP BY a, (b);"}
+{"sql":"SELECT SELECT FROM t GROUP BY a , ( b )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY a , ( b ) )","reject":true}
 {"sql":"SELECT SELECT 1 FROM t GROUP BY a , ( b )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY STRUCT ( a , b","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY STRUCT * a , b )","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY STRUCT ) a , b )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY STRUCT ( , a b )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY STRUCT a ( , b )","reject":true}
-{"sql":"SELECT 1 FROM t GROUP * GROUPING SETS ( ROLLUP ( a ) , CUBE ( b ) )","reject":true}
+{"sql":"SELECT 1 FROM t GROUP 1 GROUPING SETS ( ROLLUP ( a ) , CUBE ( b ) )","reject":true}
 {"sql":"SELECT 1 t FROM GROUP BY GROUPING SETS ( ROLLUP ( a ) , CUBE ( b ) )","reject":true}
 {"sql":"SELECT 1 FROM FROM t GROUP BY GROUPING SETS ( ROLLUP ( a ) , CUBE ( b ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( ROLLUP ( a ) , CUBE ( ) )","reject":true}
@@ -532,8 +553,8 @@
 {"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( a , GROUPING SETS ( b )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( a , GROUPING SETS ( ( b ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( a , GROUPING GROUPING SETS ( b ) )","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( a , GROUPING SETS ( b ) BY","reject":true}
-{"sql":"FROM 1 FROM t GROUP BY GROUPING SETS ( STRUCT ( a , b ) )","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( a , GROUPING SETS ( b ) SELECT","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( STRUCT ( a , b ) )","reject":true}
 {"sql":"SELECT FROM t GROUP BY GROUPING SETS ( STRUCT ( a , b ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( STRUCT ( , b ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY GROUPING SETS ( STRUCT a ( , b ) )","reject":true}
@@ -543,25 +564,25 @@
 {"sql":"SELECT 1 FROM t t GROUP BY GROUPING SETS ( CUBE ( ( a , b ) ) )","shape":"SELECT 1 FROM t AS t GROUP BY GROUPING SETS (CUBE ((a, b)));"}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ROLLUP ( a ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP ROLLUP ( ROLLUP ( a ) )","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY FROM ( ROLLUP ( a ) )","reject":true}
-{"sql":"SELECT a FROM t GROUP BY ROLLUP ( CUBE ( a ) )","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY WINDOW ( ROLLUP ( a ) )","reject":true}
+{"sql":"SELECT t FROM t GROUP BY ROLLUP ( CUBE ( a ) )","reject":true}
 {"sql":"SELECT 1 FROM t t GROUP BY ROLLUP ( CUBE ( a ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ( ROLLUP CUBE ( a ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( CUBE ( a a ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP ROLLUP BY ( GROUPING SETS ( a ) )","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( FROM SETS ( a ) )","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ) SETS ( a ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( GROUPING SETS ( a ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( GROUPING ( SETS a ) )","reject":true}
 {"sql":"SELECT 1 1 FROM t GROUP BY ROLLUP ( ( a , b ) , ( ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ( a , b b ) , ( ) )","reject":true}
-{"sql":"SELECT 1 a t GROUP BY ROLLUP ( ( a , b ) , ( ) )","reject":true}
+{"sql":"SELECT 1 d t GROUP BY ROLLUP ( ( a , b ) , ( ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP GROUP BY ROLLUP ( ( a , b ) , ( ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ROLLUP ( ( a , b ) , c )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ( a , b ) c )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ( ROLLUP ( a , b ) , c )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP ROLLUP ( ( ( a , b ) ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ( ( a , , b ) ) )","reject":true}
-{"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( tvf ( a , b ) ) )","reject":true}
+{"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ) ( a , b ) ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP BY ROLLUP ( ( ( , a b ) ) )","reject":true}
 {"sql":"SELECT 1 FROM GROUP t BY CUBE ( ( ) )","reject":true}
 {"sql":"SELECT 1 FROM t GROUP CUBE BY ( ( ) )","reject":true}
@@ -570,92 +591,91 @@
 {"sql":"SELECT SELECT INTERVAL '1'","reject":true}
 {"sql":"INTERVAL SELECT '1'","reject":true}
 {"sql":"SELECT '1' INTERVAL","reject":true}
-{"sql":"u INTERVAL '1'","reject":true}
+{"sql":"* INTERVAL '1'","reject":true}
 {"sql":"INTERVAL 1","reject":true}
-{"sql":"EXCLUDE INTERVAL 1","reject":true}
+{"sql":"b'2020-01-01' INTERVAL 1","reject":true}
 {"sql":"SELECT INTERVAL p @","reject":true}
 {"sql":"SELECT INTERVAL INTERVAL @ p","reject":true}
 {"sql":"SELECT @ INTERVAL p"}
 {"sql":"SELECT INTERVAL @ @ p","reject":true}
-{"sql":"SELECT INTERVAL '1' =","reject":true}
-{"sql":"SELECT INTERVAL SELECT WEEK","reject":true}
+{"sql":"SELECT INTERVAL '1' (","reject":true}
+{"sql":"SELECT INTERVAL . WEEK","reject":true}
 {"sql":"SELECT INTERVAL '1' WEEK WEEK","shape":"SELECT INTERVAL '1' WEEK AS WEEK;"}
 {"sql":"SELECT SELECT INTERVAL '1' WEEK","reject":true}
 {"sql":"INTERVAL '1' WEEK","reject":true}
 {"sql":"SELECT '1' INTERVAL QUARTER","reject":true}
 {"sql":"SELECT '1' QUARTER","shape":"SELECT '1' AS QUARTER;"}
 {"sql":"SELECT INTERVAL '1' QUARTER QUARTER","shape":"SELECT INTERVAL '1' QUARTER AS QUARTER;"}
-{"sql":"SELECT INTERVAL ( QUARTER","reject":true}
+{"sql":"SELECT INTERVAL , QUARTER","reject":true}
 {"sql":"SELECT '1' INTERVAL MILLISECOND","reject":true}
 {"sql":"SELECT INTERVAL MILLISECOND","reject":true}
-{"sql":"SELECT BY '1' MILLISECOND","reject":true}
+{"sql":"SELECT t '1' MILLISECOND","reject":true}
 {"sql":"SELECT INTERVAL '1' SECOND ( 3 )","reject":true}
-{"sql":"SELECT INTERVAL '1' SECOND FROM 3 )","reject":true}
+{"sql":"SELECT INTERVAL '1' SECOND ) 3 )","reject":true}
 {"sql":"SELECT INTERVAL '1' SECOND ( ) 3","reject":true}
 {"sql":"SELECT '1' SECOND ( 3 )","reject":true}
 {"sql":"SELECT '1:2' INTERVAL HOUR TO MINUTE","reject":true}
-{"sql":"SELECT INTERVAL '1:2' BY TO MINUTE","reject":true}
+{"sql":"SELECT INTERVAL '1:2' ( TO MINUTE","reject":true}
 {"sql":"SELECT INTERVAL INTERVAL '1:2' HOUR TO MINUTE","reject":true}
 {"sql":"SELECT INTERVAL '1-2 3 4:5:6' TO SECOND","reject":true}
-{"sql":"SELECT INTERVAL SELECT YEAR TO SECOND","reject":true}
+{"sql":"SELECT INTERVAL ) YEAR TO SECOND","reject":true}
 {"sql":"INTERVAL '1-2 3 4:5:6' YEAR TO SECOND","reject":true}
 {"sql":"SELECT INTERVAL '1-2 3 4:5:6' YEAR TO TO SECOND","reject":true}
 {"sql":"SELECT SELECT INTERVAL '1' xyz","reject":true}
-{"sql":"SELECT INTERVAL |> xyz","reject":true}
+{"sql":"SELECT INTERVAL SELECT xyz","reject":true}
 {"sql":"SELECT INTERVAL INTERVAL '1' xyz","reject":true}
-{"sql":"u INTERVAL '1' xyz","reject":true}
-{"sql":"SELECT INTERVAL 1 YEAR TO SELECT","reject":true}
-{"sql":"SELECT INTERVAL ) YEAR TO MONTH","reject":true}
+{"sql":") INTERVAL '1' xyz","reject":true}
+{"sql":"SELECT INTERVAL 1 YEAR TO *","reject":true}
 {"sql":"SELECT INTERVAL 1 YEAR TO MONTH MONTH","reject":true}
 {"sql":"SELECT SELECT INTERVAL @ p DAY","reject":true}
 {"sql":"SELECT INTERVAL @ @ p DAY","reject":true}
 {"sql":"SELECT INTERVAL p @ DAY","reject":true}
-{"sql":"SELECT INTERVAL @ p DAY"}
+{"sql":"d INTERVAL @ p DAY","reject":true}
 {"sql":"SELECT INTERVAL ( ) DAY","reject":true}
 {"sql":"SELECT INTERVAL ( '1' '1' ) DAY","shape":"SELECT INTERVAL ('11') DAY;"}
 {"sql":"SELECT INTERVAL ( '1' )","reject":true}
 {"sql":"SELECT INTERVAL ( ) '1' DAY","reject":true}
 {"sql":"SELECT INTERVAL || 'y' DAY","reject":true}
 {"sql":"SELECT INTERVAL 'x' || DAY 'y'","reject":true}
-{"sql":"SELECT INTERVAL 'x' || 'y' JOIN","reject":true}
-{"sql":"SELECT INTERVAL 'x' FROM 'y' DAY","reject":true}
-{"sql":"SELECT DATE SELECT","reject":true}
+{"sql":"SELECT INTERVAL 'x' || 'y' INSERT"}
+{"sql":"SELECT INTERVAL 'x' AS 'y' DAY","reject":true}
+{"sql":"SELECT DATE .","reject":true}
 {"sql":"SELECT b'2020-01-01' DATE","shape":"SELECT b'2020-01-01' AS DATE;"}
 {"sql":"SELECT DATE DATE b'2020-01-01'","reject":true}
-{"sql":"AS JSON b'{}'","reject":true}
+{"sql":"TABLE JSON b'{}'","reject":true}
 {"sql":"SELECT b'{}' JSON","shape":"SELECT b'{}' AS JSON;"}
-{"sql":"1 JSON b'{}'","reject":true}
-{"sql":"SELECT JSON OVER","reject":true}
+{"sql":"ROWS JSON b'{}'","reject":true}
+{"sql":"SELECT JSON id"}
 {"sql":"SELECT TIMESTAMP b'2020-01-01' b'2020-01-01'","reject":true}
 {"sql":"TIMESTAMP b'2020-01-01'","reject":true}
 {"sql":"SELECT DATE DATE r'2020-01-01'","reject":true}
 {"sql":"SELECT r'2020-01-01' DATE","shape":"SELECT '2020-01-01' AS DATE;"}
 {"sql":"SELECT \"\"\"2020-01-01\"\"\" DATE","shape":"SELECT '2020-01-01' AS DATE;"}
 {"sql":"DATE SELECT \"\"\"2020-01-01\"\"\"","reject":true}
-{"sql":"SELECT b \"\"\"2020-01-01\"\"\"","reject":true}
+{"sql":"SELECT 1 \"\"\"2020-01-01\"\"\"","reject":true}
 {"sql":"SELECT DATE DATE \"\"\"2020-01-01\"\"\"","reject":true}
 {"sql":"SELECT '2020-01-' '01' DATE","shape":"SELECT '2020-01-01' AS DATE;"}
 {"sql":"DATE SELECT '2020-01-' '01'","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE tvf1 ( TABLE , 1 ) )"}
 {"sql":"SELECT * FROM tvf ( ( TABLE tvf1 ( TABLE t , 1 ) )","reject":true}
-{"sql":"SELECT * FROM tvf ( TABLE tvf1 ( TABLE t ( 1 ) )","reject":true}
+{"sql":"SELECT * FROM tvf ( TABLE tvf1 ( TABLE t = 1 ) )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE tvf1 ( TABLE t , ) 1 )","reject":true}
 {"sql":"SELECT * FROM ( tvf TABLE tvf1 ( ) )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE tvf1 ) )","reject":true}
 {"sql":"SELECT FROM * tvf ( TABLE tvf1 ( ) )","reject":true}
 {"sql":"SELECT * FROM ( tvf TABLE d . tvf1 ( 1 ) )","reject":true}
-{"sql":"SELECT * FROM tvf ( TABLE d . tvf1 ( 1 ( )","reject":true}
+{"sql":"SELECT * FROM tvf ( TABLE d . tvf1 ( 1 WHERE )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE d d . tvf1 ( 1 ) )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE d . tvf1 ( 1 1 ) )","reject":true}
 {"sql":"SELECT * FROM tvf tvf ( TABLE tvf1 ( 1 ) AS x )","reject":true}
 {"sql":"SELECT * FROM tvf TABLE ( tvf1 ( 1 ) AS x )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE tvf1 ( 1 ) ) AS x )","reject":true}
-{"sql":"SELECT * FROM tvf ( TABLE tvf1 ( 1 ) FROM x )","reject":true}
-{"sql":"SELECT * SELECT tvf ( TABLE tvf1 ( 1 ) x )","reject":true}
+{"sql":"SELECT * FROM tvf ( TABLE tvf1 ( 1 ) t x )","reject":true}
+{"sql":"SELECT * ) tvf ( TABLE tvf1 ( 1 ) x )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE tvf1 ( ) x )"}
 {"sql":"SELECT * tvf FROM ( TABLE tvf1 ( 1 ) x )","reject":true}
 {"sql":"SELECT * FROM tvf ( TABLE t AS AS x )","reject":true}
-{"sql":"SELECT * FROM tvf ( TABLE t AS x x","reject":true}
+{"sql":"SELECT * FROM tvf ( TABLE t AS x SELECT","reject":true}
 {"sql":"SELECT * FROM tvf tvf ( TABLE t AS x )","reject":true}
 {"sql":"SELECT SELECT * FROM tvf ( TABLE t AS x )","reject":true}
 {"sql":"SELECT * FROM ( tvf MODEL tvf1 ( 1 ) )","reject":true}
@@ -666,7 +686,7 @@
 {"sql":"SELECT * FROM tvf ( 1 , f ( TABLE t ) )","reject":true}
 {"sql":"SELECT * * FROM tvf ( 1 , f ( TABLE t ) )","reject":true}
 {"sql":"FROM t |> CALL tvf ( TABLE tvf1 ( 1 ) ) )","reject":true}
-{"sql":"FROM t |> CALL tvf ( TABLE tvf1 + 1 ) )","reject":true}
+{"sql":"FROM t |> CALL tvf ( TABLE tvf1 ( 1 ) )"}
 {"sql":"t |> CALL tvf ( TABLE tvf1 ( 1 ) )","reject":true}
 {"sql":"SELECT f ( TABLE t t )","reject":true}
 {"sql":"SELECT SELECT f ( TABLE t )","reject":true}
@@ -680,17 +700,18 @@
 {"sql":"SELECT * FROM t WHERE f ( TABLE t ) )","reject":true}
 {"sql":"SELECT * FROM t WHERE f ( TABLE t )","reject":true}
 {"sql":"SELECT * FROM FROM tvf ( )","reject":true}
-{"sql":"SELECT * '1' tvf ( )","reject":true}
+{"sql":"SELECT * BY tvf ( )","reject":true}
 {"sql":"SELECT * * FROM tvf ( )","reject":true}
-{"sql":"SELECT ) FROM tvf ( x , y => 1 )","reject":true}
+{"sql":"SELECT SELECT FROM tvf ( x , y => 1 )","reject":true}
 {"sql":"SELECT * FROM tvf ( x , => 1 )","reject":true}
 {"sql":"SELECT * FROM tvf ( x , y => 1 ) )","reject":true}
 {"sql":"SELECT * FROM tvf ( x , y => ) 1","reject":true}
 {"sql":"SELECT * FROM tvf tvf ( DISTINCT x )","reject":true}
+{"sql":"SELECT * FROM tvf ( DISTINCT x TABLE","reject":true}
 {"sql":"SELECT * FROM tvf ( DISTINCT x )","reject":true}
 {"sql":"SELECT * FROM tvf ( x ORDER BY 1","reject":true}
-{"sql":"SELECT * FROM tvf ( x ( BY 1 )","reject":true}
-{"sql":"EXISTS * FROM tvf ( x ORDER BY 1 )","reject":true}
+{"sql":"SELECT * FROM tvf ( x FROM BY 1 )","reject":true}
+{"sql":"AS * FROM tvf ( x ORDER BY 1 )","reject":true}
 {"sql":"SELECT * FROM tvf ( x ORDER BY ) 1","reject":true}
 {"sql":"SELECT * tvf ( x WHERE true )","reject":true}
 {"sql":"* SELECT FROM tvf ( x WHERE true )","reject":true}
@@ -700,21 +721,21 @@
 {"sql":"SELECT * FROM tvf tvf ( * )","reject":true}
 {"sql":"SELECT * FROM tvf ( * )","reject":true}
 {"sql":"SELECT SELECT * FROM tvf ( * )","reject":true}
-{"sql":"* t |> CALL tvf ( x ORDER BY 1 )","reject":true}
+{"sql":"( t |> CALL tvf ( x ORDER BY 1 )","reject":true}
 {"sql":"FROM t |> CALL ( x ORDER BY 1 )","reject":true}
 {"sql":"FROM t |> CALL tvf x ( ORDER BY 1 )","reject":true}
 {"sql":"FROM FROM t |> CALL tvf ( x ORDER BY 1 )","reject":true}
-{"sql":"FROM t |> EXTEND SUM ( a ) OVER w AS s WINDOW w * ( PARTITION BY c )","reject":true}
+{"sql":"FROM t |> EXTEND SUM ( a ) OVER w AS s WINDOW w . ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> EXTEND SUM ( a ) OVER AS s WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> EXTEND SUM ( a OVER ) w AS s WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> EXTEND SUM ( a ) OVER w AS s WINDOW w AS ( PARTITION c BY )","reject":true}
 {"sql":"FROM t |> EXTEND a + 1 AS s WINDOW w AS ( PARTITION BY c c )","reject":true}
 {"sql":"FROM |> t EXTEND a + 1 AS s WINDOW w AS ( PARTITION BY c )","reject":true}
-{"sql":"r t |> EXTEND a + 1 AS s WINDOW w AS ( PARTITION BY c )","reject":true}
+{"sql":") t |> EXTEND a + 1 AS s WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> EXTEND a + 1 AS s WINDOW AS w ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> SUM SELECT ( a ) OVER w AS s WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> SELECT SUM ( a ) OVER w AS WINDOW s w AS ( PARTITION BY c )","reject":true}
-{"sql":"FROM t |> SELECT SUM ( a ) OVER w AS s WINDOW w AS * PARTITION BY c )","reject":true}
+{"sql":"FROM t |> SELECT SUM ( a ) OVER w AS s WINDOW w AS FROM PARTITION BY c )","reject":true}
 {"sql":"FROM t |> SELECT SUM ( a ) OVER w AS s WINDOW w AS ( PARTITION BY c c )","reject":true}
 {"sql":"FROM t |> WINDOW SUM ( a ) OVER OVER w AS s WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> WINDOW SUM ( a ) OVER w AS s WINDOW w ( PARTITION BY c )","reject":true}
@@ -723,4 +744,76 @@
 {"sql":"FROM t |> AGGREGATE SUM SUM ( a ) WINDOW w AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> AGGREGATE SUM ( a ) WINDOW w AS AS ( PARTITION BY c )","reject":true}
 {"sql":"FROM t |> AGGREGATE SUM ( a ) WINDOW w AS ( PARTITION c BY )","reject":true}
-{"sql":"FROM t |> AGGREGATE SUM ( a ) WINDOW w x ( PARTITION BY c )","reject":true}
+{"sql":"FROM t |> AGGREGATE SUM ( a ) WINDOW w FROM ( PARTITION BY c )","reject":true}
+{"sql":"SELECT word a bigquery - public - data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery - public c data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery public - - data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT SELECT word FROM bigquery - public - data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery - public * data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery - public - data samples . . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery - public - . data samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery - public - data . samples . shakespeare LIMIT","reject":true}
+{"sql":"SELECT word FROM bigquery - public - data . samples . LIMIT 1","reject":true}
+{"sql":"SELECT word FROM bigquery - public - data . samples shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT s . word FROM bigquery - public - data . samples . AS shakespeare s LIMIT 1","reject":true}
+{"sql":"SELECT s . word FROM bigquery - - public - data . samples . shakespeare AS s LIMIT 1","reject":true}
+{"sql":"SELECT s . word FROM bigquery - public - data data . samples . shakespeare AS s LIMIT 1","reject":true}
+{"sql":"SELECT s . word FROM bigquery - public - data . samples . shakespeare shakespeare AS s LIMIT 1","reject":true}
+{"sql":"SELECT 1 FROM p b 123 . d . t","reject":true}
+{"sql":"SELECT FROM p - 123 . d . t","reject":true}
+{"sql":"SELECT 1 FROM - 123 . d . t","reject":true}
+{"sql":"SELECT 1 FROM p - 123 . d ) t","reject":true}
+{"sql":"SELECT 1 FROM p . my - ds t","reject":true}
+{"sql":"SELECT 1 FROM p . my - ds .","reject":true}
+{"sql":"SELECT 1 FROM p . . my - ds . t","reject":true}
+{"sql":"SELECT 1 1 FROM p . my - ds . t","reject":true}
+{"sql":"SELECT 1 FROM FROM my - table","reject":true}
+{"sql":"1 SELECT FROM my - table","reject":true}
+{"sql":"SELECT SUM FROM my - table","reject":true}
+{"sql":"SELECT 1 FROM p - . d d . t","reject":true}
+{"sql":"SELECT 1 * p - . d . t","reject":true}
+{"sql":"SELECT 1 FROM p - . . d . t","reject":true}
+{"sql":"SELECT 1 p - . d . t","reject":true}
+{"sql":"1 SELECT FROM - p . d . t","reject":true}
+{"sql":"SELECT 1 FROM - p . d . (","reject":true}
+{"sql":"SELECT 1 FROM - p . u . t","reject":true}
+{"sql":"SELECT 1 FROM - p . d . t t","reject":true}
+{"sql":"SELECT bigquery - public - - data . samples . shakespeare . word FROM bigquery - public - data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT bigquery public - - data . samples . shakespeare . word FROM bigquery - public - data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT bigquery - public - data samples . . shakespeare . word FROM bigquery - public - data . samples . shakespeare LIMIT 1","reject":true}
+{"sql":"SELECT bigquery - public - data . samples . shakespeare . word FROM bigquery - public - data samples . . shakespeare LIMIT 1","reject":true}
+{"sql":"INSERT my - p . d . t ( 1 )","reject":true}
+{"sql":"INSERT my - p . d . t VALUES ( 1 ]","reject":true}
+{"sql":"INSERT my - p . . t VALUES ( 1 )","reject":true}
+{"sql":"INSERT my - p . . d t VALUES ( 1 )","reject":true}
+{"sql":"CREATE TABLE my - p . d . t ( INT64 )","reject":true}
+{"sql":"CREATE TABLE . - p . d . t ( x INT64 )","reject":true}
+{"sql":"CREATE TABLE my p - . d . t ( x INT64 )","reject":true}
+{"sql":"CREATE TABLE my - - p . d . t ( x INT64 )","reject":true}
+{"sql":"DROP TABLE TABLE my - p . d . t","reject":true}
+{"sql":"DROP DROP TABLE my - p . d . t","reject":true}
+{"sql":"DROP TABLE my - p d . t","reject":true}
+{"sql":"DROP TABLE my - p . . d . t","reject":true}
+{"sql":"SELECT * my FROM - p . d . tvf ( 1 )","reject":true}
+{"sql":"SELECT * FROM my - p . d . tvf ( 1 AS","reject":true}
+{"sql":"SELECT * FROM - my p . d . tvf ( 1 )","reject":true}
+{"sql":"SELECT * FROM my - p . d . tvf ( 1 1 )","reject":true}
+{"sql":"SELECT 1 FROM t JOIN my p - . d . u ON true","reject":true}
+{"sql":"SELECT SELECT 1 FROM t JOIN my - p . d . u ON true","reject":true}
+{"sql":"SELECT 1 FROM t t JOIN my - p . d . u ON true","reject":true}
+{"sql":"SELECT 1 FROM SELECT JOIN my - p . d . u ON true","reject":true}
+{"sql":"SELECT 1 FROM my - . d . t , UNNEST ( [ 1 ] )","reject":true}
+{"sql":"SELECT 1 FROM my - p . d . t , DISTINCT ( [ 1 ] )","reject":true}
+{"sql":"SELECT ) FROM my - p . d . t , UNNEST ( [ 1 ] )","reject":true}
+{"sql":"SELECT 1 FROM my - p . d . t , UNNEST ( [ 1 ] ] )","reject":true}
+{"sql":"my x - y FROM t","reject":true}
+{"sql":"SELECT x - y FROM FROM t","reject":true}
+{"sql":"SELECT x - - y FROM t","shape":"SELECT x - (-y) FROM t;"}
+{"sql":"SELECT x - y y FROM t","shape":"SELECT x - y AS y FROM t;"}
+{"sql":"SELECT a a - b . c FROM t","reject":true}
+{"sql":"SELECT a - b . . c FROM t","reject":true}
+{"sql":"SELECT a - b . c FROM (","reject":true}
+{"sql":"SELECT a ] b . c FROM t","reject":true}
+{"sql":"SELECT 1 FROM my - project - 123456 . . t AS x","reject":true}
+{"sql":"SELECT 1 my FROM - project - 123456 . dataset . t AS x","reject":true}
+{"sql":"SELECT 1 FROM my - project - . dataset . t AS x","reject":true}

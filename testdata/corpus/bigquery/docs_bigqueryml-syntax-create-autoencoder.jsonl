@@ -1,3 +1,4 @@
 {"sql":"HIDDEN_UNITS = [256, 128, 64]","reject":true}
 {"sql":"hidden_units=hparam_candidates([struct([8]), struct([8, 16]), struct([16, 32, 64])])","reject":true}
 {"sql":"loss_reduction = losses_utils.ReductionV2.SUM_OVER_BATCH_SIZE\n\nbatch_norm = False","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\nOPTIONS(MODEL_TYPE='AUTOENCODER',\n        ACTIVATION_FN = 'RELU',\n        BATCH_SIZE = 16,\n        DROPOUT = 0.1,\n        EARLY_STOP = FALSE,\n        HIDDEN_UNITS = [128, 64, 8, 64, 128],\n        LEARN_RATE=0.001,\n        MAX_ITERATIONS = 50,\n        OPTIMIZER = 'ADAGRAD')\nAS SELECT * FROM `project_id.mydataset.mytable`"}

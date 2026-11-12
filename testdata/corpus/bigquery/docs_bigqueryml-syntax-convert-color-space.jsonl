@@ -1,0 +1,1 @@
+{"sql":"CREATE OR REPLACE TABLE mydataset.model_output\nAS (\n  SELECT *\n  FROM\n    ML.PREDICT(\n      MODEL `mydataset.mymodel`,\n      SELECT\n        ML.CONVERT_COLOR_SPACE(ML.DECODE_IMAGE(data), 'GRAYSCALE')\n          AS image,\n        uri\n      FROM `mydataset.images`)\n)","reject":true}

@@ -1,0 +1,1 @@
+{"sql":"SELECT *\nFROM ML.DESCRIBE_DATA(\n  TABLE `myproject.mydataset.mytable`,\n  STRUCT(5 AS num_quantiles, 3 AS top_k)\n)"}

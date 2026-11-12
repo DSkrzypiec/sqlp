@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.ARIMA_EVALUATE(MODEL `mydataset.mymodel`, STRUCT(FALSE AS show_all_candidate_models))"}

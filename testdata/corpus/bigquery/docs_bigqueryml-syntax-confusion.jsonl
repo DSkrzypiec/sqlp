@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.CONFUSION_MATRIX(MODEL `mydataset.mymodel`,\n  (\n    SELECT\n      *\n    FROM\n      `mydataset.mytable`))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.CONFUSION_MATRIX(MODEL `mydataset.mymodel`,\n    (\n    SELECT\n      *\n    FROM\n      `mydataset.mytable`),\n    STRUCT(0.6 AS threshold))"}

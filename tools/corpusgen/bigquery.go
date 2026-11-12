@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -139,10 +140,11 @@ var bqRejects = messageTable(
 	`object_type is required, but missing`,
 	`ALTER \S+ only supports SET OPTIONS operation`,
 	`ALTER MATERIALIZED VIEW does not support ALTER COLUMN SET OPTIONS`,
+	`EXPORT MODEL statement does not support WITH CONNECTION clause`,
 	// scripts
 	`Variable declarations are allowed only at the start of a block or script`,
 	`Mismatched end label`,
-	`\w+ without label is only allowed inside of a loop body`,
+	`\w+ (without label )?is only allowed inside of a loop body`,
 	`\w+ with label must refer to a loop`,
 	`Label \S+ does not exist or is out of scope`,
 	`Label \S+ already exists`,
@@ -268,8 +270,21 @@ var bqAccepts = messageTable(
 	`unsupported option `,
 	// functions, policies and indexes: options, parameters and column types
 	`Incomplete query parameters`,
-	`Permission denied for project `,
+	`Permission denied for (project|connection) `,
+	`Undeclared variable: `,
 	`Default value expressions cannot reference columns`,
+	// BQML, EXPORT and LOAD: what the model, the options and the files allow
+	`Column \S+ in SELECT \* EXCEPT list does not exist`,
+	`REMOTE WITH CONNECTION clause is required for`,
+	`'.*' must have a type of`,
+	`No feature column was found in the query`,
+	`training options cannot be empty`,
+	`EXPORT to AWS S3 is only supported`,
+	`Option '.*' is missing or empty`,
+	`Invalid path: `,
+	`required option \S+ missing`,
+	`Model option \S+ must be specified`,
+	`EXPORT DATA doesn't support using a Connection for the current storage`,
 	`'.*' is not a valid value; failed to set`,
 	`'.*' must be specified with a non empty value`,
 	`Function declared to return \S+ but the function body produces incompatible type`,
@@ -311,7 +326,7 @@ var bqAccepts = messageTable(
 	// the request: a temporary function needs a query after it in one script
 	`CREATE TEMPORARY FUNCTION statements must be followed by an actual query`,
 	// the sandbox project
-	`Use of CREATE TEMPORARY TABLE requires a script or session`,
+	`Use of .* requires a script or session`,
 )
 
 // bqPosition is the source position at the end of a message.
@@ -585,10 +600,25 @@ func sortedRows(rows string) []string {
 	for i, r := range list {
 		var buf bytes.Buffer
 		_ = json.Compact(&buf, r)
-		out[i] = buf.String()
+		out[i] = bqDecimal.ReplaceAllStringFunc(buf.String(), roundDecimal)
 	}
 	slices.Sort(out)
 	return out
+}
+
+// bqDecimal matches a decimal value in a result row. Floating-point sums come
+// out in no fixed order, so 0.75 may be 0.7500000000000001 in another run:
+// decimals are compared to 12 significant digits, far finer than what a wrong
+// grouping changes.
+var bqDecimal = regexp.MustCompile(`"v":"-?[0-9]+\.[0-9]+(?:[eE][-+]?[0-9]+)?"`)
+
+func roundDecimal(m string) string {
+	v := m[5 : len(m)-1]
+	f, err := strconv.ParseFloat(v, 64)
+	if err != nil {
+		return m
+	}
+	return `"v":"` + strconv.FormatFloat(f, 'g', 12, 64) + `"`
 }
 
 // sameMeaning dry-runs both statements: the parenthesized form must resolve
@@ -734,7 +764,7 @@ func fetchDocs(dir string) {
 		return data
 	}
 	link := regexp.MustCompile(`href="/bigquery/docs/reference/standard-sql/([a-z0-9_-]+)"`)
-	block := regexp.MustCompile(`(?s)<pre[^>]*syntax="GoogleSQL"[^>]*>.*?</pre>`)
+	block := regexp.MustCompile(`(?s)<pre[^>]*syntax="(?:GoogleSQL|SQL)"[^>]*>.*?</pre>`)
 	seen := map[string]bool{}
 	pages := []string{"query-syntax"}
 	for _, m := range link.FindAllSubmatch(get(bqDocsRoot+"query-syntax"), -1) {

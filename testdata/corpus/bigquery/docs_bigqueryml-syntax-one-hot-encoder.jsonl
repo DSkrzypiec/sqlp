@@ -1,0 +1,1 @@
+{"sql":"SELECT f, ML.ONE_HOT_ENCODER(f, 'most_frequent', 10, 0) OVER () AS output\nFROM UNNEST([NULL, 'a', 'b', 'b', 'c', 'c', 'c', 'd', 'd']) AS f\nORDER BY f","shape":"SELECT f, ML.ONE_HOT_ENCODER(f, 'most_frequent', 10, 0) OVER () AS output FROM UNNEST(ARRAY[NULL, 'a', 'b', 'b', 'c', 'c', 'c', 'd', 'd']) AS f ORDER BY f;"}

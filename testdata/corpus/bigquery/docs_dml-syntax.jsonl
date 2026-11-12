@@ -8,11 +8,18 @@
 {"sql":"INSERT dataset.DetailedInventory (product, quantity, supply_constrained)\nSELECT product, quantity, false\nFROM dataset.Inventory"}
 {"sql":"INSERT dataset.DetailedInventory (product, quantity)\nVALUES('countertop microwave',\n  (SELECT quantity FROM dataset.DetailedInventory\n   WHERE product = 'microwave'))"}
 {"sql":"INSERT dataset.Warehouse VALUES('warehouse #4', 'WA'), ('warehouse #5', 'NY')"}
+{"sql":"INSERT dataset.DetailedInventory\nVALUES('top load washer', 10, FALSE, [(CURRENT_DATE, \"comment1\")], (\"white\",\"1 year\",(30,40,28))),\n      ('front load washer', 20, FALSE, [(CURRENT_DATE, \"comment1\")], (\"beige\",\"1 year\",(35,45,30)))"}
+{"sql":"CREATE TABLE IF NOT EXISTS dataset.table1 (names ARRAY<STRING>)"}
+{"sql":"INSERT INTO dataset.table1 (names)\nVALUES ([\"name1\",\"name2\"])"}
 {"sql":"+-------------------+\n|       names       |\n+-------------------+\n| [\"name1\",\"name2\"] |\n+-------------------+","reject":true}
+{"sql":"INSERT mydataset.my_range_table (emp_id, dept_id, duration)\nVALUES(10, 1000, RANGE<DATE> '[2010-01-10, 2010-03-10)'),\n      (10, 2000, RANGE<DATE> '[2010-03-10, 2010-07-15)'),\n      (10, 2000, RANGE<DATE> '[2010-06-15, 2010-08-18)'),\n      (20, 2000, RANGE<DATE> '[2010-03-10, 2010-07-20)'),\n      (20, 1000, RANGE<DATE> '[2020-05-10, 2020-09-20)')"}
+{"sql":"SELECT * FROM mydataset.my_range_table ORDER BY emp_id"}
 {"sql":"DELETE [FROM] target_name [alias]\nWHERE condition","reject":true}
 {"sql":"DELETE dataset.Inventory\nWHERE quantity = 0"}
 {"sql":"DELETE dataset.Inventory i\nWHERE i.product NOT IN (SELECT product from dataset.NewArrivals)"}
 {"sql":"DELETE dataset.Inventory\nWHERE NOT EXISTS\n  (SELECT * from dataset.NewArrivals\n   WHERE Inventory.product = NewArrivals.product)"}
+{"sql":"TRUNCATE TABLE [[project_name.]dataset_name.]table_name","reject":true}
+{"sql":"TRUNCATE TABLE dataset.Inventory"}
 {"sql":"UPDATE dataset.Inventory\nSET quantity = quantity - 10,\n    supply_constrained = DEFAULT\nWHERE product like '%washer%'"}
 {"sql":"UPDATE dataset.Inventory\nSET quantity = quantity +\n  (SELECT quantity FROM dataset.NewArrivals\n   WHERE Inventory.product = NewArrivals.product),\n    supply_constrained = false\nWHERE product IN (SELECT product FROM dataset.NewArrivals)"}
 {"sql":"UPDATE dataset.Inventory i\nSET quantity = i.quantity + n.quantity,\n    supply_constrained = false\nFROM dataset.NewArrivals n\nWHERE i.product = n.product"}
@@ -32,3 +39,7 @@
 {"sql":"MERGE dataset.Inventory T\nUSING (SELECT product, quantity, state FROM dataset.NewArrivals t1 JOIN dataset.Warehouse t2 ON t1.warehouse = t2.warehouse) S\nON T.product = S.product\nWHEN MATCHED AND state = 'CA' THEN\n  UPDATE SET quantity = T.quantity + S.quantity\nWHEN MATCHED THEN\n  DELETE"}
 {"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON T.product = S.product\nWHEN MATCHED THEN\n  UPDATE SET quantity = T.quantity + S.quantity"}
 {"sql":"MERGE dataset.NewArrivals\nUSING (SELECT * FROM UNNEST([('microwave', 10, 'warehouse #1'),\n                             ('dryer', 30, 'warehouse #1'),\n                             ('oven', 20, 'warehouse #2')]))\nON FALSE\nWHEN NOT MATCHED THEN\n  INSERT ROW\nWHEN NOT MATCHED BY SOURCE THEN\n  DELETE"}
+{"sql":"CREATE OR REPLACE TABLE\n  dataset.Inventory (product STRING,\n    quantity INT64,\n    supply_constrained BOOLEAN)"}
+{"sql":"CREATE OR REPLACE TABLE\n  dataset.NewArrivals (product STRING,\n    quantity INT64,\n    warehouse STRING)"}
+{"sql":"CREATE OR REPLACE TABLE\n  dataset.Warehouse (warehouse STRING,\n    state STRING)"}
+{"sql":"CREATE OR REPLACE TABLE\n  dataset.DetailedInventory (product STRING,\n    quantity INT64,\n    supply_constrained BOOLEAN,\n    comments ARRAY<STRUCT<created DATE, comment STRING>>,\n    specifications STRUCT<color STRING, warranty STRING,\n      dimensions STRUCT<depth FLOAT64, height FLOAT64, width FLOAT64>>)"}

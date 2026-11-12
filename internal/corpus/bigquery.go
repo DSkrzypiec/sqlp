@@ -176,9 +176,10 @@ func (g *bqGen) expr(t bqType, depth int) bqExpr {
 	}
 }
 
-// The BigQuery reference marks its SQL examples as <pre ... syntax="GoogleSQL">.
+// The BigQuery reference marks its SQL examples as <pre ... syntax="GoogleSQL">,
+// and on the BigQuery ML pages as syntax="SQL".
 var (
-	bqCodeBlock = regexp.MustCompile(`(?s)<pre[^>]*syntax="GoogleSQL"[^>]*>(.*?)</pre>`)
+	bqCodeBlock = regexp.MustCompile(`(?s)<pre[^>]*syntax="(?:GoogleSQL|SQL)"[^>]*>(.*?)</pre>`)
 	htmlTag     = regexp.MustCompile(`<[^>]+>`)
 	// Result tables drawn in block comments: /*---+---+ ... +---*/.
 	bqResultTable = regexp.MustCompile(`(?s)/\*[-+].*?\*/`)

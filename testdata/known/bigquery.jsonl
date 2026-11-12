@@ -1,6 +1,4 @@
 {"sql":"CREATE OR REPLACE PROPERTY GRAPH mydataset.StoreGraph\n  NODE TABLES (\n    mydataset.Stores AS S,\n    mydataset.Locations AS L\n    PROPERTIES(id, name, population, MEASURE(SUM(population)) AS total_population)\n  )\n  EDGE TABLES (\n    mydataset.Stores AS SL\n    SOURCE KEY (location_id) REFERENCES L (id)\n    DESTINATION KEY (name) REFERENCES S (name)\n  )","kind":"rejects-valid"}
-{"sql":"LOAD DATA OVERWRITE cymbal_pets.products\nFROM\n  FILES(\n    format = 'avro',\n    uris = [\n      'gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/tables/products/products_*.avro'])","kind":"rejects-valid"}
-{"sql":"CREATE OR REPLACE MODEL `myproject.mydataset.invoice_parser`\nREMOTE WITH CONNECTION `myproject.myregion.myconnection`\nOPTIONS (remote_service_type = 'cloud_ai_document_v1',\n         document_processor='processor_id')","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN n.name","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN TYPEOF(n) AS t\nLIMIT 1","kind":"rejects-valid"}
 {"sql":"SELECT (x).(SAFE.LEFT)(count) AS result","kind":"rejects-valid"}
@@ -105,9 +103,6 @@
 {"sql":"SELECT name, id\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n.name\n)","kind":"rejects-valid"}
 {"sql":"SELECT n\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n\n)","kind":"rejects-valid"}
 {"sql":"SELECT TO_JSON(n) as json_node\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n\n)","kind":"rejects-valid"}
-{"sql":"LOAD DATA INTO mydataset.testparquet\n  FROM FILES (\n    uris = ['s3://test-bucket/sample.parquet'],\n    format = 'PARQUET'\n  )\n  WITH CONNECTION `aws-us-east-1.test-connection`","kind":"rejects-valid"}
-{"sql":"LOAD DATA INTO mydataset.test_csv (Number INT64, Name STRING, Time DATE)\n  PARTITION BY Time\n  FROM FILES (\n    format = 'CSV', uris = ['azure://test.blob.core.windows.net/container/sampled*'],\n    skip_leading_rows=1\n  )\n  WITH CONNECTION `azure-eastus2.test-connection`","kind":"rejects-valid"}
-{"sql":"LOAD DATA OVERWRITE mydataset.testparquet\n  FROM FILES (\n    uris = ['s3://test-bucket/sample.parquet'],\n    format = 'PARQUET'\n  )\n  WITH CONNECTION `aws-us-east-1.test-connection`","kind":"rejects-valid"}
 {"sql":"(\n  SELECT 1 as x\n  UNION ALL\n  SELECT 2\n  UNION ALL\n  SELECT 3\n)\n|> MATCH_RECOGNIZE(\n   ORDER BY x\n   MEASURES\n     ARRAY_AGG(high.x) AS high_agg,\n     ARRAY_AGG(low.x) AS low_agg\n   AFTER MATCH SKIP TO NEXT ROW\n   PATTERN (low | high)\n   DEFINE\n     low AS x <= 2,\n     high AS x >= 2\n)","kind":"rejects-valid"}
 {"sql":"SELECT * FROM (\n  SELECT 1 as x\n  UNION ALL\n  SELECT 2\n  UNION ALL\n  SELECT 3\n)\nMATCH_RECOGNIZE(\n  ORDER BY x\n  MEASURES\n    ARRAY_AGG(high.x) AS high_agg,\n    ARRAY_AGG(low.x) AS low_agg\n  AFTER MATCH SKIP TO NEXT ROW\n  PATTERN (low | high)\n  DEFINE\n    low AS x <= 2,\n    high AS x >= 2\n)","kind":"rejects-valid"}
 {"sql":"SELECT * FROM (\n  SELECT 1 as x\n  UNION ALL\n  SELECT 2\n  UNION ALL\n  SELECT 3\n)\nMATCH_RECOGNIZE(\n  ORDER BY x\n  MEASURES\n    ARRAY_AGG(high.x) AS high_agg,\n    ARRAY_AGG(low.x) AS low_agg\n  AFTER MATCH SKIP TO NEXT ROW\n  PATTERN (low | high+)\n  DEFINE\n    low AS x <= 2,\n    high AS x >= 2\n  OPTIONS (use_longest_match = TRUE)\n)","kind":"rejects-valid"}
@@ -141,10 +136,14 @@
 {"sql":"CREATE TABLE FUNCTION zf ( t TABLE < INT64 > ) AS SELECT a FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a.1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a .1 .1 FROM t","kind":"rejects-valid"}
+{"sql":"CREATE MODEL IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT AS a label , b FROM t","kind":"rejects-valid"}
+{"sql":"LOAD DATA INTO TEMPORARY TABLE zl ( INT64 ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","kind":"rejects-valid"}
 {"sql":"SELECT ( t ) . 2 FROM t","kind":"rejects-valid"}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY u ROWS ( SELECT 1 ) PRECEDING ) FROM t","kind":"rejects-valid"}
 {"sql":"SELECT SUM ( ) OVER ( w PARTITION BY b ) FROM t WINDOW w AS ( ORDER BY c )","kind":"rejects-valid"}
-{"sql":"SELECT * FROM t JOIN u ON t . ORDER IN ( SELECT u . a )","kind":"rejects-valid"}
-{"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE w . id = t . a )","kind":"rejects-valid"}
+{"sql":"SELECT * FROM t JOIN u ON t . t IN ( SELECT u . a )","kind":"rejects-valid"}
+{"sql":"SELECT * FROM SUM LEFT JOIN u ON EXISTS ( SELECT 1 )","kind":"rejects-valid"}
+{"sql":"SELECT * FROM t JOIN u ON NOT EXISTS ( SELECT 1 FROM c WHERE word . id = t . a )","kind":"rejects-valid"}
+{"sql":"SELECT 1 FROM a GROUP BY ( a , b ) , c","kind":"rejects-valid"}
+{"sql":"SELECT INTERVAL 'x' || 'y' INSERT","kind":"rejects-valid"}
 {"sql":"SELECT CAST(a AS VARCHAR(5)) FROM t","kind":"rejects-valid"}
 {"sql":"SELECT CAST(a AS DATE), CAST(b AS VARCHAR(20)) FROM t","kind":"rejects-valid"}

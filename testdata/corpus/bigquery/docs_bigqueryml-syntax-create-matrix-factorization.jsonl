@@ -1,1 +1,5 @@
+{"sql":"MODEL_TYPE = 'MATRIX_FACTORIZATION'","reject":true}
+{"sql":"HPARAM_TUNING_OBJECTIVES = 'MEAN_SQUARED_ERROR'","reject":true}
 {"sql":"max(num_rated_user, num_rated_item) < 100 million","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\n OPTIONS(MODEL_TYPE='MATRIX_FACTORIZATION') AS\nSELECT\n  user,\n  item,\n  rating\nFROM\n  `mydataset.mytable`"}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\n OPTIONS(MODEL_TYPE='MATRIX_FACTORIZATION',\n         FEEDBACK_TYPE='IMPLICIT') AS\nSELECT\n  user,\n  item,\n  rating\nFROM\n  `mydataset.mytable`"}

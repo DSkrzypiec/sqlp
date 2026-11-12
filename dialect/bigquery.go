@@ -34,6 +34,7 @@ var BigQuery = &Dialect{
 		ASCIIIdents:         true,
 		CommentEndsAtCR:     true,
 		PlainQuestionMarks:  true,
+		DashedPaths:         true,
 		ParamPrefixes:       "?", // @name is parsed: BigQuery allows `@ name`
 		Operators: []string{
 			"|>", "<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@",
@@ -85,7 +86,7 @@ var BigQuery = &Dialect{
 			SimpleTypeNames: true,
 		},
 		Names: NameFeatures{
-			QualifiedFunctions: true, MaxRelationParts: 3, KeywordsAfterDot: true,
+			QualifiedFunctions: true, MaxRelationParts: 3, KeywordsAfterDot: true, DashedNames: true,
 		},
 		Query: QueryFeatures{
 			ParenQueries: true, SetQuantifierRequired: true, UnmixedSetOps: true, Qualify: true,

@@ -1,0 +1,1 @@
+{"sql":"SELECT f, ML.MAX_ABS_SCALER(f) OVER () AS output\nFROM\n  UNNEST([NULL, -3, 1, 2, 3, 4, 5]) AS f\nORDER BY f","shape":"SELECT f, ML.MAX_ABS_SCALER(f) OVER () AS output FROM UNNEST(ARRAY[NULL, -3, 1, 2, 3, 4, 5]) AS f ORDER BY f;"}

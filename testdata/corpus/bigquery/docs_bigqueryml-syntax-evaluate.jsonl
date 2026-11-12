@@ -1,0 +1,6 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.EVALUATE(MODEL `mydataset.mymodel`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.EVALUATE(MODEL `mydataset.mymodel`,\n    (\n    SELECT\n      custom_label,\n      column1,\n      column2\n    FROM\n      `mydataset.mytable`),\n    STRUCT(0.55 AS threshold))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.EVALUATE(MODEL `mydataset.my_arima_model`,\n    (\n    SELECT\n      timeseries_date,\n      timeseries_metric\n    FROM\n      `mydataset.mytable`),\n    STRUCT(TRUE AS perform_aggregation, 30 AS horizon))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.EVALUATE(MODEL `mydataset.my_arima_model`,\n    (\n    SELECT\n      timeseries_date,\n      timeseries_metric\n    FROM\n      `mydataset.mytable`),\n    STRUCT(FALSE AS perform_aggregation, 0.9 AS confidence_level,\n    30 AS horizon))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.EVALUATE(MODEL `mydataset.my_arima_xreg_model`,\n    (\n    SELECT\n      timeseries_date,\n      timeseries_metric,\n      feature1,\n      feature2\n    FROM\n      `mydataset.mytable`),\n    STRUCT(FALSE AS perform_aggregation, 0.9 AS confidence_level,\n    30 AS horizon))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.EVALUATE(MODEL `mydataset.my_llm`,\n    (\n    SELECT\n      prompt,\n      label\n    FROM\n      `mydataset.mytable`),\n    STRUCT('classification' AS task_type))"}

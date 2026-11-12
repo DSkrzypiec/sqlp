@@ -1,2 +1,10 @@
 {"sql":"SELECT *\nFROM\nML.GENERATE_EMBEDDING(\n  MODEL `mydataset.embedding_model`,\n  (SELECT abstract as content, header as title, publication_number\n  FROM `mydataset.publications`),\n  STRUCT(TRUE AS flatten_json_output, 'RETRIEVAL_DOCUMENT' as task_type)\n)"}
 {"sql":"ML.GENERATE_EMBEDDING(\n  MODEL `PROJECT_ID.DATASET.MODEL_NAME`,\n  STRUCT([TRIAL_ID AS trial_id])\n)","reject":true}
+{"sql":"CREATE OR REPLACE MODEL `mydataset.text_embedding`\nREMOTE WITH CONNECTION DEFAULT\nOPTIONS(ENDPOINT = 'text-embedding-005')"}
+{"sql":"SELECT *\nFROM\n  ML.GENERATE_EMBEDDING(\n    MODEL `mydataset.text_embedding`,\n    (SELECT \"Example text to embed\" AS content),\n    STRUCT(TRUE AS flatten_json_output)\n)"}
+{"sql":"CREATE OR REPLACE MODEL `mydataset.multimodalembedding`\nREMOTE WITH CONNECTION DEFAULT\nOPTIONS(ENDPOINT = 'gemini-embedding-2')"}
+{"sql":"SELECT *\nFROM ML.GENERATE_EMBEDDING(\n  MODEL `mydataset.multimodalembedding`,\n    (\n      SELECT\n        OBJ.MAKE_REF(\"gs://cloud-samples-data/bigquery/tutorials/cymbal-pets/images/aquaclear-aquarium-background-poster.png\",\n          \"us.test_connection\") AS content\n    )\n )"}
+{"sql":"SELECT *\nFROM ML.GENERATE_EMBEDDING(\n  MODEL `mydataset.multimodalembedding`,\n  TABLE `mydataset.my_object_table`)"}
+{"sql":"SELECT *\nFROM\n  ML.GENERATE_EMBEDDING(\n    MODEL `mydataset.pca_nyc_trees`,\n(\n  SELECT\n    tree_id,\n    block_id,\n    tree_dbh,\n    stump_diam,\n    curb_loc,\n    status,\n    health,\n    spc_latin\n  FROM\n    `bigquery-public-data.new_york_trees.tree_census_2015`\n))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.GENERATE_EMBEDDING(\n    MODEL `mydataset.my_autoencoder_model`,\n    TABLE `bigquery-public-data.ml_datasets.ulb_fraud_detection`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.GENERATE_EMBEDDING(MODEL `mydataset.my_mf_model`)"}

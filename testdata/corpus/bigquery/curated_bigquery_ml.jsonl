@@ -1,0 +1,216 @@
+{"sql":"CREATE MODEL zm OPTIONS (model_type = 'LINEAR_REG', input_label_cols = ['a']) AS SELECT a, b FROM t","shape":"CREATE MODEL zm OPTIONS (model_type = 'LINEAR_REG', input_label_cols = ARRAY['a']) AS SELECT a, b FROM t;"}
+{"sql":"CREATE OR REPLACE MODEL zm OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t","shape":"CREATE OR REPLACE MODEL zm OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t;"}
+{"sql":"CREATE MODEL IF NOT EXISTS zm OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t","shape":"CREATE MODEL IF NOT EXISTS zm OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t;"}
+{"sql":"CREATE OR REPLACE MODEL IF NOT EXISTS zm OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE TEMP MODEL zm OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t"}
+{"sql":"CREATE MODEL zm TRANSFORM (a * 2 AS a2, b) OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t"}
+{"sql":"CREATE MODEL zm TRANSFORM (* EXCEPT (a), ML.STANDARD_SCALER(b) OVER () AS bs) OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t"}
+{"sql":"CREATE MODEL zm INPUT (a INT64, b STRING) OUTPUT (c FLOAT64) REMOTE WITH CONNECTION `us.c` OPTIONS (endpoint = 'https://x')"}
+{"sql":"CREATE MODEL zm REMOTE WITH CONNECTION DEFAULT OPTIONS (endpoint = 'gemini-2.0-flash')","shape":"CREATE MODEL zm REMOTE WITH CONNECTION DEFAULT OPTIONS (endpoint = 'gemini-2.0-flash');"}
+{"sql":"CREATE MODEL zm REMOTE OPTIONS (endpoint = 'gemini-2.0-flash')"}
+{"sql":"CREATE MODEL zm OPTIONS (model_type = 'TENSORFLOW', model_path = 'gs://b/m/*')","shape":"CREATE MODEL zm OPTIONS (model_type = 'TENSORFLOW', model_path = 'gs://b/m/*');"}
+{"sql":"CREATE MODEL zm OPTIONS (model_type = 'ARIMA_PLUS', time_series_timestamp_col = 'd', time_series_data_col = 'a') AS (training_data AS (SELECT d, a FROM t), custom_holiday AS (SELECT 'US' AS region))"}
+{"sql":"CREATE MODEL zm OPTIONS (model_type = 'LINEAR_REG') AS (SELECT a AS label FROM t)"}
+{"sql":"CREATE MODEL zm AS SELECT a AS label FROM t"}
+{"sql":"CREATE MODEL zm"}
+{"sql":"CREATE MODEL zm OPTIONS (model_type = 'LINEAR_REG') TRANSFORM (a) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM () OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm INPUT (a INT64) OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label FROM t","reject":true}
+{"sql":"ALTER MODEL zm SET OPTIONS (description = 'x')"}
+{"sql":"ALTER MODEL IF EXISTS zm SET OPTIONS (description = 'x')","shape":"ALTER MODEL IF EXISTS zm SET OPTIONS (description = 'x');"}
+{"sql":"ALTER MODEL zm ADD COLUMN a INT64","reject":true}
+{"sql":"EXPORT MODEL zm OPTIONS (uri = 'gs://b/m')"}
+{"sql":"EXPORT MODEL zm"}
+{"sql":"EXPORT MODEL zm WITH CONNECTION `us.c` OPTIONS (uri = 'gs://b/m')","reject":true}
+{"sql":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS SELECT a FROM t","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS SELECT a FROM t;"}
+{"sql":"EXPORT DATA WITH CONNECTION `us.c` OPTIONS (uri = 's3://b/x-*.csv', format = 'CSV') AS SELECT a FROM t"}
+{"sql":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS (SELECT a FROM t)","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS (SELECT a FROM t);"}
+{"sql":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA AS SELECT a FROM t"}
+{"sql":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS WITH q AS (SELECT a FROM t) SELECT * FROM q","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS WITH q AS (SELECT a FROM t) SELECT * FROM q;"}
+{"sql":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS FROM t |> SELECT a","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS FROM t |> SELECT a;"}
+{"sql":"LOAD DATA INTO zl FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])"}
+{"sql":"LOAD DATA OVERWRITE zl (a INT64, b STRING NOT NULL OPTIONS (description = 'x')) PARTITION BY a CLUSTER BY b OPTIONS (description = 'd') FROM FILES (format = 'CSV', uris = ['gs://b/x.csv']) WITH PARTITION COLUMNS (p STRING) WITH CONNECTION `us.c`"}
+{"sql":"LOAD DATA INTO TEMP TABLE zl FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])"}
+{"sql":"LOAD DATA INTO TEMPORARY TABLE zl (a INT64) FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])"}
+{"sql":"LOAD DATA INTO zl PARTITIONS (d = DATE '2020-01-01') FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])"}
+{"sql":"LOAD DATA INTO zl OVERWRITE PARTITIONS (d = DATE '2020-01-01') FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])"}
+{"sql":"LOAD DATA zl FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ()"}
+{"sql":"LOAD DATA INTO zl","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES (format = 'CSV', uris = ['gs://b/x.csv']) WITH CONNECTION `us.c` WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA INTO zl WITH PARTITION COLUMNS FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])","reject":true}
+{"sql":"LOAD DATA INTO zl OPTIONS () PARTITION BY a FROM FILES (format = 'CSV', uris = ['gs://b/x.csv'])","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES (format = 'CSV', uris = ['gs://b/x.csv']) WITH PARTITION COLUMNS"}
+{"sql":"CREATE 'CSV' zm OPTIONS ( model_type = 'LINEAR_REG' , input_label_cols = [ 'a' ] ) AS SELECT a , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS OPTIONS ( model_type = 'LINEAR_REG' , input_label_cols = [ 'a' ] ) AS SELECT a , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( ( model_type = 'LINEAR_REG' , input_label_cols = [ 'a' ] ) AS SELECT a , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type 'LINEAR_REG' , input_label_cols = [ 'a' ] ) AS SELECT a , b FROM t","reject":true}
+{"sql":"OR CREATE REPLACE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE OR REPLACE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) SELECT AS a AS label , b FROM t","reject":true}
+{"sql":"CREATE OR REPLACE MODEL zm OPTIONS ( model_type = ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE OR REPLACE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a MODEL label , b FROM t","reject":true}
+{"sql":"CREATE MODEL IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT AS a label , b FROM t"}
+{"sql":"CREATE MODEL IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label b , FROM t","reject":true}
+{"sql":"CREATE MODEL IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a 'gs://b/x.csv' label , b FROM t","reject":true}
+{"sql":"CREATE OR REPLACE MODEL IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' AS ) SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE OR REPLACE MODEL IF NOT EXISTS zm OPTIONS ( ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE OR REPLACE zm IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE OR REPLACE IF NOT EXISTS zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE TEMP MODEL zm OPTIONS ( model_type = 'LINEAR_REG' = AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE TEMP MODEL zm OPTIONS OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE TEMP MODEL zm OPTIONS ( model_type 'LINEAR_REG' = ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE TEMP MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM ( a * 2 AS a2 , b ) OPTIONS ( = model_type 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM custom_holiday a * 2 AS a2 , b ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM ( a * 2 AS a2 , b ) OPTIONS OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM ( [ * 2 AS a2 , b ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM ( * EXCEPT ( a ) , ML . STANDARD_SCALER ( b ) OVER ( ) AS bs ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM 2 * EXCEPT ( a ) , ML . STANDARD_SCALER ( b ) OVER ( ) AS bs ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm ( TRANSFORM * EXCEPT ( a ) , ML . STANDARD_SCALER ( b ) OVER ( ) AS bs ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM ( * EXCEPT ( a ) , ML . STANDARD_SCALER ( ) OVER ( ) AS bs ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label , b FROM t"}
+{"sql":"CREATE MODEL zm INPUT ( a INT64 , b STRING ) OUTPUT c FLOAT64 ) REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
+{"sql":"CREATE MODEL zm INPUT ( a INT64 , b STRING ) OUTPUT ( c FLOAT64 REMOTE ) WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
+{"sql":"CREATE MODEL zm INPUT ( a INT64 , b STRING ) OUTPUT ( c FLOAT64 ) REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )"}
+{"sql":"CREATE MODEL zm INPUT ( a INT64 , b STRING ) ( c FLOAT64 ) REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
+{"sql":"CREATE MODEL zm WITH REMOTE CONNECTION DEFAULT OPTIONS ( endpoint = 'gemini-2.0-flash' )","reject":true}
+{"sql":"CREATE MODEL zm REMOTE WITH CONNECTION DEFAULT ( OPTIONS endpoint = 'gemini-2.0-flash' )","reject":true}
+{"sql":"CREATE MODEL zm REMOTE WITH CONNECTION DEFAULT OPTIONS ( endpoint = 'gemini-2.0-flash' ,","reject":true}
+{"sql":"CREATE MODEL zm REMOTE WITH CONNECTION DEFAULT OPTIONS ( EXPORT = 'gemini-2.0-flash' )"}
+{"sql":"CREATE MODEL zm REMOTE OPTIONS ( endpoint = = 'gemini-2.0-flash' )","reject":true}
+{"sql":"CREATE model_path zm REMOTE OPTIONS ( endpoint = 'gemini-2.0-flash' )","reject":true}
+{"sql":"CREATE MODEL zm ) OPTIONS ( endpoint = 'gemini-2.0-flash' )","reject":true}
+{"sql":"CREATE MODEL zm REMOTE OPTIONS ( endpoint = )","reject":true}
+{"sql":"CREATE OPTIONS zm OPTIONS ( model_type = 'TENSORFLOW' , model_path = 'gs://b/m/*' )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( = 'TENSORFLOW' , model_path = 'gs://b/m/*' )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = = 'TENSORFLOW' , model_path = 'gs://b/m/*' )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type model_type = 'TENSORFLOW' , model_path = 'gs://b/m/*' )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'ARIMA_PLUS' , time_series_timestamp_col = 'd' , time_series_data_col = 'a' ) AS ( training_data AS ( SELECT d , = FROM t ) , custom_holiday AS ( SELECT 'US' AS region ) )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'ARIMA_PLUS' , time_series_timestamp_col = 'd' , time_series_data_col = 'a' ) AS ( training_data AS ( SELECT , d a FROM t ) , custom_holiday AS ( SELECT 'US' AS region ) )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'ARIMA_PLUS' , time_series_timestamp_col = 'd' , time_series_data_col = 'a' ) AS ( training_data AS ( SELECT SELECT d , a FROM t ) , custom_holiday AS ( SELECT 'US' AS region ) )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'ARIMA_PLUS' , = 'd' , time_series_data_col = 'a' ) AS ( training_data AS ( SELECT d , a FROM t ) , custom_holiday AS ( SELECT 'US' AS region ) )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = = 'LINEAR_REG' ) AS ( SELECT a AS label FROM t )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) AS ( SELECT a label AS FROM t )","reject":true}
+{"sql":"CREATE CREATE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) AS ( SELECT a AS label FROM t )","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type model_type = 'LINEAR_REG' ) AS ( SELECT a AS label FROM t )","reject":true}
+{"sql":"CREATE zm MODEL AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm AS SELECT a label AS FROM t","reject":true}
+{"sql":"CREATE SELECT zm AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE CREATE MODEL zm AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE zm zm","reject":true}
+{"sql":"description MODEL zm","reject":true}
+{"sql":"CREATE MODEL a"}
+{"sql":"CREATE MODEL zm OPTIONS zm model_type = 'LINEAR_REG' ) TRANSFORM ( a ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = ) TRANSFORM ( a ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) TRANSFORM ( a AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm OPTIONS ( model_type = 'LINEAR_REG' ) TRANSFORM ( a ) AS SELECT a AS label FROM","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM FROM ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm TRANSFORM ( zm OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL MODEL zm TRANSFORM ( ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm zm TRANSFORM ( ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"MODEL CREATE zm INPUT ( a INT64 ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm INPUT ( a INT64 ) OPTIONS ( model_type = 'LINEAR_REG' ) ( SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE zm MODEL INPUT ( a INT64 ) OPTIONS ( model_type = 'LINEAR_REG' ) AS SELECT a AS label FROM t","reject":true}
+{"sql":"CREATE MODEL zm INPUT ( a INT64 ) OPTIONS ( model_type = 'LINEAR_REG' ) AS AS a AS label FROM t","reject":true}
+{"sql":"ALTER MODEL zm SET OPTIONS ( description = FILES )"}
+{"sql":"ALTER MODEL zm SET OPTIONS ( = description 'x' )","reject":true}
+{"sql":"ALTER MODEL zm SET OPTIONS description = 'x' )","reject":true}
+{"sql":"ALTER MODEL zm SET ( OPTIONS description = 'x' )","reject":true}
+{"sql":"ALTER = IF EXISTS zm SET OPTIONS ( description = 'x' )","reject":true}
+{"sql":"ALTER MODEL IF EXISTS zm SET OPTIONS ( description = 'x' )","shape":"ALTER MODEL IF EXISTS zm SET OPTIONS (description = 'x');"}
+{"sql":"ALTER MODEL IF EXISTS zm SET OPTIONS ( description 'x' )","reject":true}
+{"sql":"ALTER MODEL IF zm SET OPTIONS ( description = 'x' )","reject":true}
+{"sql":"MODEL ALTER zm ADD COLUMN a INT64","reject":true}
+{"sql":"ALTER MODEL zm ADD = a INT64","reject":true}
+{"sql":"ALTER zm MODEL ADD COLUMN a INT64","reject":true}
+{"sql":"ALTER MODEL zm COLUMN a INT64","reject":true}
+{"sql":"EXPORT MODEL zm OPTIONS ( uri 'gs://b/m' )","reject":true}
+{"sql":"EXPORT MODEL zm OPTIONS ( uri = 'gs://b/m' )"}
+{"sql":"EXPORT MODEL zm OPTIONS ( = 'gs://b/m' )","reject":true}
+{"sql":"MODEL zm OPTIONS ( uri = 'gs://b/m' )","reject":true}
+{"sql":"EXPORT MODEL zm zm","reject":true}
+{"sql":"EXPORT MODEL","reject":true}
+{"sql":"EXPORT zm","reject":true}
+{"sql":"EXPORT MODEL zm WITH endpoint `us.c` OPTIONS ( uri = 'gs://b/m' )","reject":true}
+{"sql":"MODEL EXPORT zm WITH CONNECTION `us.c` OPTIONS ( uri = 'gs://b/m' )","reject":true}
+{"sql":"= MODEL zm WITH CONNECTION `us.c` OPTIONS ( uri = 'gs://b/m' )","reject":true}
+{"sql":"EXPORT zm WITH CONNECTION `us.c` OPTIONS ( uri = 'gs://b/m' )","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' 'CSV' ) AS SELECT a FROM t"}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS SELECT a FROM t","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS SELECT a FROM t;"}
+{"sql":"EXPORT DATA ( OPTIONS uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS SELECT FROM a t","reject":true}
+{"sql":"EXPORT DATA WITH CONNECTION `us.c` OPTIONS ( uri = 's3://b/x-*.csv' , format 'CSV' ) AS SELECT a FROM t","reject":true}
+{"sql":"DATA EXPORT WITH CONNECTION `us.c` OPTIONS ( uri = 's3://b/x-*.csv' , format = 'CSV' ) AS SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA WITH CONNECTION `us.c` OPTIONS ( uri = 's3://b/x-*.csv' 's3://b/x-*.csv' , format = 'CSV' ) AS SELECT a FROM t"}
+{"sql":"DATA WITH CONNECTION `us.c` OPTIONS ( uri = 's3://b/x-*.csv' , format = 'CSV' ) AS SELECT a FROM t","reject":true}
+{"sql":"EXPORT OPTIONS DATA ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS ( SELECT a FROM t )","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS ( a FROM t )","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS ( SELECT a a FROM t )","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS (SELECT a AS a FROM t);"}
+{"sql":"EXPORT DATA OPTIONS ( = 'gs://b/x-*.csv' , format = 'CSV' ) AS ( SELECT a FROM t )","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , 'LINEAR_REG' = 'CSV' ) SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) SELECT a a FROM t","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri uri = 'gs://b/x-*.csv' , format = 'CSV' ) SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri ) 'gs://b/x-*.csv' , format = 'CSV' ) SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA AS SELECT a t"}
+{"sql":"EXPORT DATA AS a FROM t","reject":true}
+{"sql":"DATA AS SELECT a FROM t","reject":true}
+{"sql":"'gs://b/x.csv' DATA AS SELECT a FROM t","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS WITH q AS ( SELECT a FROM t ) SELECT * FROM q","shape":"EXPORT DATA OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS WITH q AS (SELECT a FROM t) SELECT * FROM q;"}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS AS WITH q AS ( SELECT a FROM t ) SELECT * FROM q","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS WITH q AS SELECT a FROM t ) SELECT * FROM q","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS WITH q AS ( SELECT a FROM t ) SELECT * q","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS FROM t |> ( a","reject":true}
+{"sql":"EXPORT DATA OPTIONS uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS FROM t |> SELECT a","reject":true}
+{"sql":"EXPORT DATA OPTIONS uri ( = 'gs://b/x-*.csv' , format = 'CSV' ) AS FROM t |> SELECT a","reject":true}
+{"sql":"EXPORT DATA OPTIONS ( uri = 'gs://b/x-*.csv' , format = 'CSV' ) AS FROM |> SELECT a","reject":true}
+{"sql":"DATA LOAD INTO zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ( format = 'CSV' , uris = [ [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA DATA INTO zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"[ DATA INTO zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA OVERWRITE zl ( a INT64 , b STRING NOT NULL OPTIONS ( description = 'x' ) ) PARTITION BY a CLUSTER BY b c ( description = 'd' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH PARTITION COLUMNS ( p STRING ) WITH CONNECTION `us.c`","reject":true}
+{"sql":"LOAD DATA OVERWRITE zl ( a INT64 , b STRING NOT NULL OPTIONS ( description SELECT 'x' ) ) PARTITION BY a CLUSTER BY b OPTIONS ( description = 'd' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH PARTITION COLUMNS ( p STRING ) WITH CONNECTION `us.c`","reject":true}
+{"sql":"LOAD DATA OVERWRITE zl ( a INT64 , b STRING NOT NULL OPTIONS ( description = 'x' ) ) PARTITION BY a CLUSTER BY b OPTIONS ( description = 'd' ) FROM FILES ( format 'CSV' = , uris = [ 'gs://b/x.csv' ] ) WITH PARTITION COLUMNS ( p STRING ) WITH CONNECTION `us.c`","reject":true}
+{"sql":"LOAD DATA OVERWRITE zl ( a INT64 , b STRING NOT NULL OPTIONS ( description [ 'x' ) ) PARTITION BY a CLUSTER BY b OPTIONS ( description = 'd' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH PARTITION COLUMNS ( p STRING ) WITH CONNECTION `us.c`","reject":true}
+{"sql":"LOAD DATA INTO TEMP TABLE zl FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO TEMP TABLE zl FROM FILES ( format = 'CSV' uris , = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO TEMP TABLE zl FROM FILES ( format = 'CSV' , `us.c` = [ 'gs://b/x.csv' ] )"}
+{"sql":"LOAD LOAD DATA INTO TEMP TABLE zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO TEMPORARY TABLE zl ( a INT64 ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )"}
+{"sql":"LOAD DATA INTO TEMPORARY TABLE zl ( a INT64 ) FROM CREATE ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO TEMPORARY TABLE zl ( INT64 ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )"}
+{"sql":"LOAD DATA INTO TEMPORARY TABLE zl ( a INT64 ) FROM FILES ( format = 'CSV' , , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl PARTITIONS ( d = DATE '2020-01-01' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' model_type )","reject":true}
+{"sql":"LOAD DATA INT64 zl PARTITIONS ( d = DATE '2020-01-01' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl PARTITIONS ( d = DATE '2020-01-01' ) FROM ( FILES format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl PARTITIONS ( d = DATE '2020-01-01' ) FROM FILES format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl OVERWRITE PARTITIONS ( d = DATE '2020-01-01' 'TENSORFLOW' FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl OVERWRITE PARTITIONS ( d = DATE '2020-01-01' ) FROM FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl OVERWRITE PARTITIONS ( d = DATE '2020-01-01' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' endpoint )","reject":true}
+{"sql":"LOAD DATA INTO zl OVERWRITE PARTITIONS ( d = '2020-01-01' ) FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )"}
+{"sql":"LOAD DATA zl FROM FILES ( format = = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA zl FROM FILES ( format = 'CSV' , = uris [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA zl FROM FILES ( format = 'CSV' MODEL uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"DATA zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA DATA INTO zl FROM FILES ( )","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FROM FILES ( )","reject":true}
+{"sql":"LOAD DATA zl FROM FILES ( )","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES (","reject":true}
+{"sql":"LOAD DATA INTO INTO zl","reject":true}
+{"sql":"LOAD DATA INTO zl zl","reject":true}
+{"sql":"DATA INTO zl","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ] ) WITH CONNECTION `us.c` WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH CONNECTION `us.c` WITH PARTITION","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ( 'a' = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH CONNECTION `us.c` WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH CONNECTION `us.c` WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA INTO zl WITH PARTITION COLUMNS FROM FILES ( format = 'CSV' uris , = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl WITH PARTITION COLUMNS FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl WITH PARTITION COLUMNS FROM FILES FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl WITH PARTITION COLUMNS FROM FILES ( format 'CSV' = , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl OPTIONS ( ) PARTITION BY a FROM FILES ( = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl OPTIONS ( ) PARTITION BY a FROM FILES ( format = 'CSV' uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA zl INTO OPTIONS ( ) PARTITION BY a FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"LOAD DATA INTO zl OPTIONS ( ) PARTITION BY a FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' SELECT )","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES t format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ( format = 'CSV' , uris = 'gs://b/x.csv' [ ] ) WITH PARTITION COLUMNS","reject":true}
+{"sql":"LOAD DATA INTO zl FROM FILES ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) ) WITH PARTITION COLUMNS","reject":true}

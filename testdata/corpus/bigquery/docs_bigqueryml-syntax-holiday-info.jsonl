@@ -1,0 +1,1 @@
+{"sql":"SELECT * FROM\nML.HOLIDAY_INFO(MODEL `mydataset.arima_model`)"}

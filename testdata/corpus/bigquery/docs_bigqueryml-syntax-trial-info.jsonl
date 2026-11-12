@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.TRIAL_INFO(MODEL `mydataset.mymodel`)"}

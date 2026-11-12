@@ -1,0 +1,2 @@
+{"sql":"SELECT *\nFROM ML.VALIDATE_DATA_DRIFT(\n  TABLE `myproject.mydataset.previous_serving_data`,\n  TABLE `myproject.mydataset.serving`,\n  STRUCT(0.2 AS categorical_default_threshold)\n)"}
+{"sql":"SELECT *\nFROM ML.VALIDATE_DATA_DRIFT(\n  TABLE `myproject.mydataset.previous_serving_data`,\n  TABLE `myproject.mydataset.serving`,\n  STRUCT(0.2 AS categorical_default_threshold),\n  MODEL `myproject.mydataset.registered_model`\n)"}

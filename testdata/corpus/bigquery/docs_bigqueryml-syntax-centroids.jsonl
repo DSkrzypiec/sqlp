@@ -1,0 +1,3 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.CENTROIDS(MODEL `mydataset.my_kmeans_model`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.CENTROIDS(MODEL `mydataset.my_kmeans_model`)\nORDER BY\n  centroid_id"}
+{"sql":"SELECT\n  *\nFROM\n  ML.CENTROIDS(MODEL `mydataset.my_kmeans_model`,\n    STRUCT(TRUE AS standardize))"}

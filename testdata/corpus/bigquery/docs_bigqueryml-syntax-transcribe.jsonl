@@ -1,0 +1,3 @@
+{"sql":"CREATE OR REPLACE MODEL\n`myproject.mydataset.transcribe_model`\nREMOTE WITH CONNECTION `myproject.myregion.myconnection`\nOPTIONS (remote_service_type = 'CLOUD_AI_SPEECH_TO_TEXT_V2',\nspeech_recognizer = 'projects/project_number/locations/recognizer_location/recognizer/recognizer_id')"}
+{"sql":"SELECT *\nFROM ML.TRANSCRIBE(\n  MODEL `myproject.mydataset.transcribe_model`,\n  TABLE `myproject.mydataset.audio`\n)"}
+{"sql":"SELECT *\nFROM ML.TRANSCRIBE(\n  MODEL `myproject.mydataset.transcribe_model`,\n  TABLE `myproject.mydataset.audio`,\n  recognition_config => ( JSON '{\"language_codes\": [\"en-US\" ],\"model\": \"chirp\",\"auto_decoding_config\": {}}')\n)"}

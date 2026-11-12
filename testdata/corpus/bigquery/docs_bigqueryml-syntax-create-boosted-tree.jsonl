@@ -1,2 +1,4 @@
 {"sql":"total_input_rows / (input_rows_for_class_n * number_of_unique_classes)","reject":true}
 {"sql":"CLASS_WEIGHTS = [STRUCT('example_label', .2)]","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\nOPTIONS(MODEL_TYPE='BOOSTED_TREE_CLASSIFIER',\n        BOOSTER_TYPE = 'GBTREE',\n        NUM_PARALLEL_TREE = 1,\n        MAX_ITERATIONS = 50,\n        TREE_METHOD = 'HIST',\n        EARLY_STOP = FALSE,\n        SUBSAMPLE = 0.85,\n        INPUT_LABEL_COLS = ['mylabel'])\nAS SELECT * FROM `project_id.mydataset.mytable`"}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='BOOSTED_TREE_REGRESSOR',\n    num_trials=10,\n    max_parallel_trials=2,\n    HPARAM_TUNING_OBJECTIVES=['R2_SCORE'] ) AS\nSELECT\n  column1,\n  column2,\n  column3,\n  label\nFROM\n  `mydataset.mytable`"}

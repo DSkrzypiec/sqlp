@@ -1,0 +1,8 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_arima_plus_model`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_arima_plus_model`,\n    STRUCT(0.8 AS anomaly_prob_threshold))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_arima_plus_model`,\n    STRUCT(0.9 AS anomaly_prob_threshold),\n    (\n      SELECT\n        state, city, date, temperature, weather\n      FROM\n        `mydataset.my_time_series_data_table`))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_arima_plus_model`,\n    STRUCT(0.9 AS anomaly_prob_threshold),\n    TABLE `mydataset.my_time_series_data_table`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES (\n   MODEL `mydataset.my arima_plus_xreg_model`,\n   STRUCT(0.6 AS anomaly_prob_threshold)\n  )\nORDER BY\n  date ASC"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_autoencoder_model`,\n    STRUCT(0.1 AS contamination),\n    TABLE `mydataset.mytable`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_kmeans_model`,\n    STRUCT(0.2 AS contamination),\n    (\n      SELECT\n        f1,\n        f2\n      FROM\n        `mydataset.mytable`))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.DETECT_ANOMALIES(MODEL `mydataset.my_pca_model`,\n    STRUCT(0.1 AS contamination),\n    TABLE `mydataset.mytable`)"}

@@ -1,0 +1,4 @@
+{"sql":"GRANT `roles/bigquery.dataViewer` ON SCHEMA `myProject`.myDataset\nTO \"user:raha@example-pet-store.com\", \"user:sasha@example-pet-store.com\""}
+{"sql":"GRANT `roles/aiplatform.user`, `roles/run.invoker`\nON PROJECT `my-vertex-project`\nTO \"connection:my-bq-project.us.my-connection\", \"connection:another-bq-project.eu.other-connection\""}
+{"sql":"REVOKE `roles/bigquery.admin` ON SCHEMA `myProject`.myDataset\nFROM \"group:example-team@example-pet-store.com\", \"serviceAccount:user@test-project.iam.gserviceaccount.com\""}
+{"sql":"REVOKE `roles/run.invoker`\nON PROJECT `my-vertex-project`\nFROM \"connection:my-bq-project.us.my-connection\""}

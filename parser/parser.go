@@ -552,8 +552,37 @@ func (p *Parser) takeRaw(stopAtComma bool) string {
 }
 
 // parseName parses a dotted name: a, a.b, a.b.c.
-func (p *Parser) parseName() *ast.Name {
-	n := &ast.Name{Parts: []ast.Ident{p.parseIdent()}}
+func (p *Parser) parseName() *ast.Name { return p.parseNameFrom(p.parseIdent()) }
+
+// parseTableName parses a table's name. In BigQuery its first part may be
+// a-b-c, written without spaces, as project names are (Names.DashedNames);
+// dashed reports such a part.
+func (p *Parser) parseTableName() (n *ast.Name, dashed bool) {
+	if !p.d.Features.Names.DashedNames {
+		return p.parseName(), false
+	}
+	t := p.peek()
+	adjacent := func(a, b lexer.Token) bool { return a.Pos+len(a.Text) == b.Pos }
+	// The lexer ends my-project-123 before the dot (lexer.Config.DashedPaths).
+	part := func(t lexer.Token) bool {
+		return t.Kind == lexer.Ident || t.Kind == lexer.Number && t.Text != "" && strings.Trim(t.Text, "0123456789") == ""
+	}
+	i := 0
+	for p.isOpAt(i+1, "-") && adjacent(p.peekN(i), p.peekN(i+1)) && adjacent(p.peekN(i+1), p.peekN(i+2)) && part(p.peekN(i+2)) {
+		i += 2
+	}
+	if t.Kind != lexer.Ident || i == 0 {
+		return p.parseName(), false
+	}
+	last := p.peekN(i)
+	text := p.src[t.Pos : last.Pos+len(last.Text)]
+	p.pos += i + 1
+	return p.parseNameFrom(ast.Ident{Name: text}), true
+}
+
+// parseNameFrom parses the rest of a dotted name whose first part is first.
+func (p *Parser) parseNameFrom(first ast.Ident) *ast.Name {
+	n := &ast.Name{Parts: []ast.Ident{first}}
 	for p.isOp(".") && (p.peekN(1).Kind == lexer.Ident || p.peekN(1).Kind == lexer.QuotedIdent ||
 		p.peekN(1).Kind == lexer.String && p.d.Features.Names.StringAlias) {
 		if limit := p.d.Features.Names.MaxNameParts; limit > 0 && len(n.Parts) == limit {
@@ -582,7 +611,7 @@ func (p *Parser) parseObjectName() *ast.Name {
 // at most catalog.schema.name in PostgreSQL.
 func (p *Parser) parseRelationName() *ast.Name {
 	pos := p.peek().Pos
-	n := p.parseName()
+	n, _ := p.parseTableName()
 	p.checkRelationParts(n, pos)
 	return n
 }
@@ -756,6 +785,14 @@ func (p *Parser) parseStatementBody() ast.Statement {
 	case "GRANT", "REVOKE":
 		if p.d.Features.DDL.GoogleSQL {
 			return p.parseGoogleGrant()
+		}
+	case "EXPORT":
+		if p.d.Features.DDL.GoogleSQL {
+			return p.parseExport()
+		}
+	case "LOAD":
+		if p.d.Features.DDL.GoogleSQL {
+			return p.parseLoadData()
 		}
 	case "ALTER":
 		return p.parseAlter()

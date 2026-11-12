@@ -1,0 +1,4 @@
+{"sql":"INPUT(f1 INT64, f2 FLOAT64, f3 STRING, f4 ARRAY<INT64>)","reject":true}
+{"sql":"OUTPUT(out1 INT64, out2 INT64)","reject":true}
+{"sql":"ENDPOINT = vertex_ai_https_endpoint","reject":true}
+{"sql":"ENDPOINT = 'https://us-central1-aiplatform.googleapis.com/v1/projects/myproject/locations/us-central1/endpoints/1234'","reject":true}

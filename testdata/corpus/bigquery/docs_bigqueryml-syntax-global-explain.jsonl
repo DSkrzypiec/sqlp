@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.GLOBAL_EXPLAIN(MODEL `mydataset.mymodel`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.GLOBAL_EXPLAIN(MODEL `mydataset.mymodel`, STRUCT(TRUE AS class_level_explain))"}

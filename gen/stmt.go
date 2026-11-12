@@ -272,7 +272,7 @@ func (g *Generator) stmt(s ast.Statement) {
 			g.name(s.Name)
 		}
 	default:
-		if !g.extendedStmt(s) && !g.scriptStmt(s) {
+		if !g.extendedStmt(s) && !g.scriptStmt(s) && !g.googleStmt(s) {
 			g.w("<?stmt>")
 		}
 	}

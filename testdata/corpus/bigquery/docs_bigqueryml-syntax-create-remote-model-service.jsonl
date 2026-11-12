@@ -1,0 +1,3 @@
+{"sql":"REMOTE_SERVICE_TYPE = 'CLOUD_AI_VISION_V1'","reject":true}
+{"sql":"projects/PROJECT_NUMBER/locations/LOCATION/processors/PROCESSOR_ID/processorVersions/PROCESSOR_VERSION","reject":true}
+{"sql":"projects/PROJECT_NUMBER/locations/LOCATION/recognizers/RECOGNIZER_ID","reject":true}

@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.RECOMMEND(MODEL `mydataset.mymodel`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.RECOMMEND(MODEL `mydataset.mymodel`,\n      (\n      SELECT\n        user,\n        item\n      FROM\n        `mydataset.mytable`))"}

@@ -61,5 +61,6 @@
 {"sql":"SELECT PARSE_NUMERIC(\"  - 12.3 - \") as parsed"}
 {"sql":"SELECT PARSE_NUMERIC(\"12.34E100 \") as parsed"}
 {"sql":"SELECT PARSE_NUMERIC(\"$12.34\") as parsed"}
+{"sql":"SAFE_CAST(expression AS typename [format_clause])","reject":true}
 {"sql":"SELECT CAST(\"apple\" AS INT64) AS not_a_number"}
 {"sql":"SELECT SAFE_CAST(\"apple\" AS INT64) AS not_a_number","shape":"SELECT SAFE_CAST('apple' AS INT64) AS not_a_number;"}

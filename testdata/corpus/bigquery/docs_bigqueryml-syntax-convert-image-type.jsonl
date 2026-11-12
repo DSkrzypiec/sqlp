@@ -1,0 +1,1 @@
+{"sql":"CREATE OR REPLACE TABLE mydataset.detections\nAS (\n  SELECT uri, detection_scores\n  FROM\n    ML.PREDICT(\n      MODEL `mydataset.mobilenet`,\n      SELECT\n        ML.CONVERT_IMAGE_TYPE(ML.DECODE_IMAGE(data))\n          AS image,\n        uri\n      FROM `mydataset.images`)\n)","reject":true}

@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.EXPLAIN_PREDICT(MODEL `mydataset.mymodel`,\n    (\n    SELECT\n      label,\n      column1,\n      column2,\n      column3,\n      column4,\n      column5\n    FROM\n      `mydataset.mytable`), STRUCT(3 AS top_k_features))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.EXPLAIN_PREDICT(MODEL `mydataset.mymodel`,\n    (\n    SELECT\n      label,\n      column1,\n      column2,\n      column3,\n      column4,\n      column5\n    FROM\n      `mydataset.mytable`), STRUCT(3 AS top_k_features, 0.7 AS threshold))"}

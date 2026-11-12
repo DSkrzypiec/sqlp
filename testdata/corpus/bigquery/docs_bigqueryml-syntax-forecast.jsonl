@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.FORECAST(MODEL `mydataset.mymodel`,\n    STRUCT(30 AS horizon, 0.8 AS confidence_level))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.FORECAST(MODEL `mydataset.mymodel`,\n    STRUCT(30 AS horizon, 0.8 AS confidence_level),\n    (SELECT * FROM `mydataset.mytable`))"}

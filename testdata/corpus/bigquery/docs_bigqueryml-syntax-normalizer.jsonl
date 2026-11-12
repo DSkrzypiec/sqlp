@@ -1,0 +1,1 @@
+{"sql":"SELECT ML.NORMALIZER([4.0, 1.0, 2.0, 2.0, 0.0]) AS output","shape":"SELECT ML.NORMALIZER(ARRAY[4.0, 1.0, 2.0, 2.0, 0.0]) AS output;"}

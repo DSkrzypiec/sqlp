@@ -1523,7 +1523,10 @@ func (p *Parser) parseRelationExpr() (bool, *ast.Name) {
 func (p *Parser) parseRelationExprMaybeCall() (bool, *ast.Name, int) {
 	if !p.d.Features.Query.OnlyTable || !p.acceptKw("ONLY") {
 		pos := p.peek().Pos
-		name := p.parseName()
+		name, dashed := p.parseTableName()
+		if dashed && p.isOp("(") {
+			p.unexpected("end of the table name") // a dashed name is not a function's
+		}
 		p.acceptLegacyStar()
 		return false, name, pos
 	}

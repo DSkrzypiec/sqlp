@@ -1,0 +1,8 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.PREDICT(MODEL `mydataset.mymodel`,\n    (\n    SELECT\n      label,\n      column1,\n      column2\n    FROM\n      `mydataset.mytable`))"}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel1`\nOPTIONS\n  (model_type='linear_reg',\n    input_label_cols=['label'],\n  ) AS\nSELECT\n  label,\n  input_column1\nFROM\n  `mydataset.mytable`","reject":true}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel2`\nOPTIONS\n  (model_type='linear_reg',\n    input_label_cols=['label'],\n  ) AS\nSELECT\n  label,\n  input_column2\nFROM\n  `mydataset.mytable`","reject":true}
+{"sql":"SELECT\n  label,\n  predicted_label1,\n  predicted_label AS predicted_label2\nFROM\n  ML.PREDICT(MODEL `mydataset.mymodel2`,\n    (\n    SELECT\n      * EXCEPT (predicted_label),\n          predicted_label AS predicted_label1\n    FROM\n      ML.PREDICT(MODEL `mydataset.mymodel1`,\n        TABLE `mydataset.mytable`)))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.PREDICT(MODEL `mydataset.mymodel`,\n    (\n    SELECT\n      custom_label,\n      column1,\n      column2\n    FROM\n      `mydataset.mytable`),\n    STRUCT(0.55 AS threshold))"}
+{"sql":"SELECT *\nFROM ML.PREDICT(MODEL `my_project.my_dataset.my_model`,\n  (SELECT * FROM input_data))"}
+{"sql":"SELECT * FROM ML.PREDICT(\n  MODEL `mydataset.mymodel`, (SELECT f1, f2 FROM t1))"}
+{"sql":"SELECT * FROM ML.PREDICT(\n  MODEL `mydataset.mymodel`, (SELECT f1, f2, f3, f4 FROM t1))"}

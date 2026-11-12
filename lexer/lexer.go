@@ -127,6 +127,10 @@ type Config struct {
 	// PlainQuestionMarks makes ? a parameter that takes no number (BigQuery):
 	// ?1 is ? followed by 1.
 	PlainQuestionMarks bool
+	// DashedPaths: in my-project-123.dataset, a number right after word- ends
+	// before a dot that leads into a name, for the parser to join the parts
+	// (BigQuery's project names).
+	DashedPaths bool
 	// ASCIIIdents allows only ASCII letters, digits and _ in bare names
 	// (BigQuery). Otherwise any byte >= 0x80 and $ count too.
 	ASCIIIdents bool
@@ -478,7 +482,7 @@ func (l *Lexer) number(start int) Token {
 		}
 	}
 	l.digits(isDigit, false)
-	if l.peekAt(0) == '.' && l.peekAt(1) != '.' {
+	if l.peekAt(0) == '.' && l.peekAt(1) != '.' && !l.dashedPathDot(start) {
 		l.pos++
 		l.digits(isDigit, false)
 	}
@@ -493,6 +497,20 @@ func (l *Lexer) number(start int) Token {
 		}
 	}
 	return l.endNumber(start)
+}
+
+// dashedPathDot reports whether the dot after the number at start separates
+// the parts of a dashed path (Config.DashedPaths): the number follows word-,
+// and a name, not an exponent, follows the dot.
+func (l *Lexer) dashedPathDot(start int) bool {
+	if !l.cfg.DashedPaths || start < 2 || l.src[start-1] != '-' || !l.identPart(l.src[start-2]) {
+		return false
+	}
+	c := l.peekAt(1)
+	if (c == 'e' || c == 'E') && (isDigit(l.peekAt(2)) || l.peekAt(2) == '+' || l.peekAt(2) == '-') {
+		return false
+	}
+	return l.identStart(c) || c == '`'
 }
 
 // endNumber rejects a literal running straight into a word (`1a`), which both

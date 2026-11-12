@@ -1,0 +1,3 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.ROC_CURVE(MODEL `mydataset.mymodel`,\n    TABLE `mydataset.mytable`)"}
+{"sql":"SELECT\n  *\nFROM\n  ML.ROC_CURVE(MODEL `mydataset.mymodel`,\n    TABLE `mydataset.mytable`,\n    GENERATE_ARRAY(0.4,0.6,0.01))"}
+{"sql":"SELECT\n  recall,\n  true_positives / (true_positives + false_positives) AS precision\nFROM\n  ML.ROC_CURVE(MODEL `mydataset.mymodel`,\n    TABLE `mydataset.mytable`)"}

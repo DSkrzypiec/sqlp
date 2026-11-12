@@ -1,0 +1,5 @@
+{"sql":"INPUT(f1 INT64, f2 FLOAT64, f3 FLOAT64)\nOUTPUT(predicted_label FLOAT64)","reject":true}
+{"sql":"MODEL_TYPE = 'XGBOOST'","reject":true}
+{"sql":"MODEL_PATH = 'gs://bucket/path/to/xgboost_model/*'","reject":true}
+{"sql":"CREATE OR REPLACE\n  MODEL\n    `project_id.mydataset.mymodel`\n      INPUT(f1 float64, f2 float64, f3 float64, f4 float64)\n      OUTPUT(predicted_label float64)\n  OPTIONS (\n    MODEL_TYPE = 'XGBOOST',\n    MODEL_PATH = 'gs://bucket-name/xgboost-model/*')"}
+{"sql":"CREATE OR REPLACE\n  MODEL\n    `project_id.mydataset.mymodel`\n  OPTIONS (\n    MODEL_TYPE = 'XGBOOST',\n    MODEL_PATH = 'gs://bucket-name/xgboost-model/*')"}

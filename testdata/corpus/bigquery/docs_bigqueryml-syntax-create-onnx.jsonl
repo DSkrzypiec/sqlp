@@ -1,0 +1,5 @@
+{"sql":"MODEL_TYPE = 'ONNX'","reject":true}
+{"sql":"MODEL_PATH = string_value","reject":true}
+{"sql":"MODEL_PATH = 'gs://bucket/path/to/onnx_model/*'","reject":true}
+{"sql":"MODEL_PATH = 'gs://bucket/path/to/onnx_model/model.onnx'","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\n OPTIONS(MODEL_TYPE='ONNX',\n         MODEL_PATH=\"gs://bucket/path/to/onnx_model/*\")"}

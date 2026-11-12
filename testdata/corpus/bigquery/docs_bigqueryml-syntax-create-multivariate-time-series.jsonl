@@ -1,2 +1,5 @@
+{"sql":"MODEL_TYPE = 'ARIMA_PLUS_XREG'","reject":true}
 {"sql":"HOLIDAY_REGION = 'GLOBAL'","reject":true}
 {"sql":"HOLIDAY_REGION = ['US', 'GB']","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\n OPTIONS(MODEL_TYPE='ARIMA_PLUS_XREG',\n         time_series_timestamp_col='date',\n         time_series_data_col='transaction') AS\nSELECT\n  date,\n  transaction,\n  feature1,\n  feature2\nFROM\n  `mydataset.mytable`"}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\n OPTIONS(MODEL_TYPE='ARIMA_PLUS_XREG',\n         time_series_timestamp_col='date',\n         time_series_data_col='transaction',\n         time_series_length_fraction=0.5,\n         min_time_series_length=30) AS\nSELECT\n  date,\n  transaction,\n  feature1,\n  feature2\nFROM\n  `mydataset.mytable`"}

@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  f, ML.HASH_BUCKETIZE(f, 3) AS bucket\nFROM UNNEST(['a', 'b', 'c', 'd']) AS f","shape":"SELECT f, ML.HASH_BUCKETIZE(f, 3) AS bucket FROM UNNEST(ARRAY['a', 'b', 'c', 'd']) AS f;"}

@@ -105,6 +105,15 @@ var bigqueryIdentity = []string{
 	"CREATE PROCEDURE zp(x INT64, OUT y INT64, INOUT z STRING) BEGIN SET y = x; RETURN; END",
 	"CREATE OR REPLACE PROCEDURE zp() OPTIONS (strict_mode = FALSE) BEGIN SELECT 1; EXCEPTION WHEN ERROR THEN SELECT 2; END",
 	"CREATE PROCEDURE zp() EXTERNAL SECURITY INVOKER WITH CONNECTION `us.c` OPTIONS (engine = 'SPARK') LANGUAGE PYTHON AS 'print(1)'",
+	"CREATE OR REPLACE MODEL zm TRANSFORM (a * 2 AS a2, b) OPTIONS (model_type = 'LINEAR_REG') AS SELECT a AS label, b FROM t",
+	"CREATE MODEL zm INPUT (a INT64, b STRING) OUTPUT (c FLOAT64) REMOTE WITH CONNECTION `us.c` OPTIONS (endpoint = 'https://x')",
+	"CREATE MODEL zm REMOTE WITH CONNECTION DEFAULT OPTIONS (endpoint = 'gemini-2.0-flash')",
+	"CREATE MODEL zm OPTIONS (model_type = 'ARIMA_PLUS') AS (training_data AS (SELECT d, a FROM t), custom_holiday AS (SELECT 'US' AS region))",
+	"ALTER MODEL IF EXISTS zm SET OPTIONS (description = 'x')",
+	"EXPORT MODEL zm OPTIONS (uri = 'gs://b/m')",
+	"EXPORT DATA WITH CONNECTION `us.c` OPTIONS (uri = 'gs://b/x-*.csv', format = 'CSV') AS SELECT a FROM t",
+	"LOAD DATA OVERWRITE zl (a INT64, b STRING NOT NULL OPTIONS (description = 'x')) PARTITION BY a CLUSTER BY b OPTIONS (description = 'd') FROM FILES (format = 'CSV', uris = ARRAY['gs://b/x.csv']) WITH PARTITION COLUMNS (p STRING) WITH CONNECTION `us.c`",
+	"LOAD DATA INTO TEMP TABLE zl OVERWRITE PARTITIONS (d = DATE '2020-01-01') FROM FILES (format = 'CSV', uris = ARRAY['gs://b/x.csv'])",
 }
 
 // bigqueryFailures holds statements a BigQuery dry run rejects.

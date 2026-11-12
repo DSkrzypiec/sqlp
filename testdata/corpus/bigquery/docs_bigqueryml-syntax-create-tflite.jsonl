@@ -1,0 +1,3 @@
+{"sql":"MODEL_TYPE = 'TENSORFLOW_LITE'","reject":true}
+{"sql":"MODEL_PATH = 'gs://bucket/path/to/tflite_model/*'","reject":true}
+{"sql":"CREATE MODEL `project_id.mydataset.mymodel`\n OPTIONS(MODEL_TYPE='TENSORFLOW_LITE',\n         MODEL_PATH=\"gs://bucket/path/to/tflite_model/*\")"}

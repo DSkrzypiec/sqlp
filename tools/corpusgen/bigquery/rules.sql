@@ -154,3 +154,23 @@ FROM t |> EXTEND a + 1 AS s WINDOW w AS (PARTITION BY c)
 FROM t |> SELECT SUM(a) OVER w AS s WINDOW w AS (PARTITION BY c)
 FROM t |> WINDOW SUM(a) OVER w AS s WINDOW w AS (PARTITION BY c)
 FROM t |> AGGREGATE SUM(a) WINDOW w AS (PARTITION BY c)
+SELECT word FROM bigquery-public-data.samples.shakespeare LIMIT 1
+SELECT word FROM bigquery - public - data.samples.shakespeare LIMIT 1
+SELECT word FROM bigquery-public-data .samples.shakespeare LIMIT 1
+SELECT s.word FROM bigquery-public-data.samples.shakespeare AS s LIMIT 1
+SELECT 1 FROM p-123.d.t
+SELECT 1 FROM p-1x.d.t
+SELECT 1 FROM p.my-ds.t
+SELECT 1 FROM my-table
+SELECT 1 FROM p-.d.t
+SELECT 1 FROM -p.d.t
+SELECT bigquery-public-data.samples.shakespeare.word FROM bigquery-public-data.samples.shakespeare LIMIT 1
+INSERT my-p.d.t VALUES (1)
+CREATE TABLE my-p.d.t (x INT64)
+DROP TABLE my-p.d.t
+SELECT * FROM my-p.d.tvf(1)
+SELECT 1 FROM t JOIN my-p.d.u ON true
+SELECT 1 FROM my-p.d.t, UNNEST([1])
+SELECT x-y FROM t
+SELECT a-b.c FROM t
+SELECT 1 FROM my-project-123456.dataset.t AS x

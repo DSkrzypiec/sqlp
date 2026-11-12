@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.FEATURE_IMPORTANCE(MODEL `mydataset.mymodel`)"}

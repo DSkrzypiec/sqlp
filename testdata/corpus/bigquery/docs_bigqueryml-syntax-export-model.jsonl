@@ -1,0 +1,4 @@
+{"sql":"EXPORT MODEL MODEL_NAME [OPTIONS(URI = STRING_VALUE)]","reject":true}
+{"sql":"`PROJECT.DATASET.MODEL`","reject":true}
+{"sql":"URI = 'gs://bucket/path/to/saved_model/'","reject":true}
+{"sql":"EXPORT MODEL MODEL_NAME [OPTIONS(URI = STRING_VALUE [, TRIAL_ID = INT_VALUE])]","reject":true}

@@ -1,0 +1,2 @@
+{"sql":"SELECT\n  *\nFROM\n  ML.ADVANCED_WEIGHTS(MODEL `mydataset.mymodel`,\n    STRUCT(FALSE AS standardize))"}
+{"sql":"SELECT\n  *\nFROM\n  ML.ADVANCED_WEIGHTS(MODEL `mydataset.mymodel`,\n    STRUCT(TRUE AS standardize))"}

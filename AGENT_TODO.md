@@ -750,16 +750,22 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after phases 4 to 6.** 13,239 frozen statements, 7,594
-rejected by BigQuery, 4,391 with a verified shape, no mismatch. Known
-disagreements: 149 valid statements sqlp rejects (before the day's work on
+**Status, 2026-11-12, after phases 4 to 7.** 13,901 frozen statements, 7,936
+rejected by BigQuery, 4,453 with a verified shape, no mismatch. Known
+disagreements: 148 valid statements sqlp rejects (before the day's work on
 the reference examples: 1,102) and 1 invalid one it accepts (206). Of the
-149: 105 GQL graph queries and property graphs (out of scope for now), 4 `LOAD
-DATA` and 1 `CREATE MODEL` (phase 7), 4 queries sqlp cannot read yet (`a.1`,
-`(x).(SAFE.LEFT)(…)`), and the rest because BigQuery reports a missing name or
-a type error before the structural rule sqlp applies (GROUP BY tuples, keys
-that are enforced, parameters in CAST, `TABLE t`). DML and scripts: none
-either way.
+148: 104 GQL graph queries and property graphs (out of scope for now), 4
+queries sqlp cannot read yet (`a.1`, `(x).(SAFE.LEFT)(…)`), and the rest because
+BigQuery reports a missing name or a type error before the structural rule
+sqlp applies (GROUP BY tuples, keys that are enforced, parameters in CAST,
+`TABLE t`). Every example of the reference but GQL parses. DML and scripts:
+none either way.
+
+The reference examples are the `<pre>` blocks marked `syntax="GoogleSQL"` and,
+on the BigQuery ML pages, `syntax="SQL"` (since 2026-11-12: 569 more
+statements, mostly CREATE MODEL). Results of constant queries are compared with
+decimals rounded to 12 significant digits: floating-point sums come out in no
+fixed order (0.75 against 0.7500000000000001).
 Shapes of constant queries are compared by value, except where a function's
 value changes from run to run (`bqVolatile`); FOR SYSTEM_TIME is left out
 because the sample tables are recreated on every run.
@@ -860,7 +866,17 @@ because the sample tables are recreated on every run.
   statements; `CREATE PROCEDURE` with a block body or Spark's LANGUAGE form.
   `ParseScript` still skips empty statements, and its recovery after a bad
   statement knows only BEGIN … END bodies, not IF or loops.
-- [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.
+- [x] 7. BQML, `EXPORT DATA`, `LOAD DATA` (`ast/bigquery.go`), frozen in
+  `tools/corpusgen/bigquery/ml.sql`: CREATE [TEMP] MODEL with TRANSFORM,
+  INPUT/OUTPUT, REMOTE [WITH CONNECTION], OPTIONS, AS query or AS
+  (training_data AS (…), custom_holiday AS (…)); ALTER MODEL SET OPTIONS;
+  EXPORT MODEL; EXPORT DATA [WITH CONNECTION] OPTIONS AS query; LOAD DATA
+  INTO|OVERWRITE [TEMP TABLE] with PARTITIONS, columns, PARTITION BY, CLUSTER
+  BY, OPTIONS, FROM FILES, WITH PARTITION COLUMNS, WITH CONNECTION. ML
+  functions are table functions with MODEL arguments (phase 3). Also: a table
+  name's first part may be dashed, `my-project-123456.dataset.t`
+  (`Names.DashedNames`, and `Lexer.DashedPaths` so that `123456.` stays a
+  number before the dot).
 - [ ] 8. Web UI, transpile, run-log triage. Done 2026-11-12: BigQuery is a dialect
   of the web UI, with its own sample query and catalog (`web/samples/`, files
   because of the backquotes). A dialect change swaps an editor that still holds

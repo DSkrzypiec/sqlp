@@ -1,0 +1,4 @@
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='KMEANS',\n    NUM_CLUSTERS=4 ) AS\nSELECT\n  *\nFROM\n  `mydataset.mytable`"}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='KMEANS',\n    NUM_CLUSTERS=3,\n    KMEANS_INIT_METHOD='RANDOM') AS\nSELECT\n  *\nFROM\n  `mydataset.mytable`"}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='KMEANS',\n    NUM_CLUSTERS=3,\n    KMEANS_INIT_METHOD='CUSTOM',\n    KMEANS_INIT_COL='init_col') AS\nSELECT\n  init_col,\n  features\nFROM\n  `mydataset.mytable`"}
+{"sql":"CREATE MODEL\n  `mydataset.mymodel`\nOPTIONS\n  ( MODEL_TYPE='KMEANS',\n    num_trials=10,\n    max_parallel_trials=2,\n    HPARAM_TUNING_OBJECTIVES=['DAVIES_BOULDIN_INDEX'] ) AS\nSELECT\n  *\nFROM\n  `mydataset.mytable`"}

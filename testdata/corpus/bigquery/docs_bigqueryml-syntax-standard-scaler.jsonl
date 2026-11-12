@@ -1,0 +1,1 @@
+{"sql":"SELECT\n  f, ML.STANDARD_SCALER(f) OVER() AS output\nFROM\n  UNNEST([1,2,3,4,5]) AS f","shape":"SELECT f, ML.STANDARD_SCALER(f) OVER () AS output FROM UNNEST(ARRAY[1, 2, 3, 4, 5]) AS f;"}

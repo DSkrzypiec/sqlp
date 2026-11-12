@@ -1,1 +1,4 @@
+{"sql":"CREATE TABLE mydataset.t1\n(\nv1 ARRAY<FLOAT64>,\nv2 ARRAY<FLOAT64>\n)"}
+{"sql":"INSERT mydataset.t1 (v1,v2)\nVALUES ([4.1,0.5,1.0], [3.0,0.0,2.5])"}
+{"sql":"SELECT v1, v2, ML.DISTANCE(v1, v2, 'EUCLIDEAN') AS output FROM mydataset.t1"}
 {"sql":"+---------------+---------------+-------------------+\n| v1            | v2            | output            |\n+---------------+---------------+-------------------|\n| [4.1,0.5,1.0] | [3.0,0.0,2.5] | 1.926136028425822 |\n+------------+------------------+-------------------+","reject":true}
