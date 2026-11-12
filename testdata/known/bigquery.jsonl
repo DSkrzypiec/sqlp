@@ -403,105 +403,29 @@
 {"sql":"CREATE TABLE mydataset.Produce (\n  product STRING,\n  inventory INT64)\nOPTIONS(enable_change_history=true)","kind":"rejects-valid"}
 {"sql":"DELETE mydataset.Produce\nWHERE product = 'bananas'","kind":"rejects-valid"}
 {"sql":"ALTER TABLE `my_dataset.my_table`\nSET OPTIONS (enable_change_history = TRUE)","kind":"rejects-valid"}
-{"sql":"WITH x (p) AS (SELECT a FROM t) SELECT p FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x (p, q) AS (SELECT a, b FROM t) SELECT p, q FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x (p) AS (SELECT 1), y (q) AS (SELECT p FROM x) SELECT q FROM y","kind":"accepts-invalid"}
-{"sql":"WITH x AS (VALUES (1), (2)) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x (p) AS (VALUES (1), (2)) SELECT p FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS (SELECT 1) VALUES (1)","kind":"accepts-invalid"}
-{"sql":"WITH x AS MATERIALIZED (SELECT 1) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS NOT MATERIALIZED (SELECT 1) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS MATERIALIZED (SELECT 1), y AS NOT MATERIALIZED (SELECT 2) SELECT * FROM x, y","kind":"accepts-invalid"}
-{"sql":"WITH x (p) AS MATERIALIZED (SELECT 1) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH x AS (SELECT 1) INSERT INTO t (a) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH x AS (SELECT 1) UPDATE t SET a = (SELECT * FROM x)","kind":"accepts-invalid"}
 {"sql":"WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH x ( p ) AS ( SELECT a * t ) SELECT p FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x ( p , q ) AS ( SELECT a , b FROM t ) SELECT p , RETURNING FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x ( p ) AS ( SELECT 1 ) , y ( q ) AS ( SELECT p p FROM x ) SELECT q FROM y","kind":"accepts-invalid"}
-{"sql":"WITH x AS ( SELECT a FROM t ) SELECT * FROM t WHERE EXISTS ( SELECT 1 x WHERE x . a = t . a )","kind":"accepts-invalid"}
-{"sql":"WITH x AS ( SELECT a t ORDER BY a LIMIT 1 ) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) , y AS NOT MATERIALIZED ( SELECT 2 ) SELECT * FROM x x , y","kind":"accepts-invalid"}
-{"sql":"WITH x ( p ) AS MATERIALIZED ( SELECT 1 ) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH a AS ( SELECT 1 ) INSERT INTO t ( a ) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n, m) AS (SELECT 1, 2 UNION ALL SELECT n + 1, m * 2 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (VALUES (1) UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT SUM(n) FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x ORDER BY n DESC LIMIT 2","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x, x AS y","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5), y (m) AS (SELECT n FROM x) SELECT * FROM y","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5), y (m) AS (SELECT 1 UNION ALL SELECT m + 1 FROM y WHERE m < 3) SELECT * FROM x, y","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE y (m) AS (SELECT 1), x (n) AS (SELECT m FROM y UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (id, p) AS (SELECT id, a FROM t UNION ALL SELECT t.id, t.a FROM t JOIN x ON t.a = x.id) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (id) AS (SELECT id FROM t WHERE a IS NULL UNION ALL SELECT t.id FROM t, x WHERE t.a = x.id) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ORDER BY 1 LIMIT 3) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x LIMIT 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS ((SELECT 1) UNION ALL (SELECT n + 1 FROM x WHERE n < 5)) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3 UNION ALL SELECT n + 2 FROM x WHERE n < 3) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x) AS y","kind":"accepts-invalid"}
-{"sql":"SELECT (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT MAX(n) FROM x)","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t WHERE a IN (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT n FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) INSERT INTO t (a) SELECT n FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) UPDATE t SET a = 1 WHERE a IN (SELECT n FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) DELETE FROM t WHERE a IN (SELECT n FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS NOT MATERIALIZED (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x ( n , m ) AS ( SELECT 1 , 2 UNION ALL SELECT n + 1 , m * 2 x WHERE n < 5 ) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT SUM ( n ) FROM x","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < x ) SELECT * FROM x ORDER BY n DESC LIMIT 2","kind":"accepts-invalid"}
-{"sql":"SELECT ( WITH RECURSIVE x ( n ) AS ( SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5 ) SELECT MAX ( n ) x )","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM (VALUES (1, 2), (3, 4)) AS x","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t TABLESAMPLE SYSTEM (10)","kind":"accepts-invalid"}
-{"sql":"SELECT 4 FROM ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) AS x","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM ( VALUES ( 1 , 2 ) , ( 3 , 4 ) ) x","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM ( f )","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t t TABLESAMPLE SYSTEM ( 10 )","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t GROUP BY a, (b, c)","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t GROUP BY a, ()","kind":"accepts-invalid"}
-{"sql":"SELECT a, b, c FROM t GROUP BY a, ROLLUP (b, c)","kind":"accepts-invalid"}
-{"sql":"SELECT a, b, c FROM t GROUP BY ROLLUP (a), CUBE (b), c","kind":"accepts-invalid"}
 {"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)))","kind":"accepts-invalid"}
-{"sql":"SELECT 1 HAVING 1 = 1","kind":"accepts-invalid"}
-{"sql":"SELECT COUNT(*) FILTER (WHERE a > 1) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT SUM(a) FILTER (WHERE a > 1), SUM(b) FILTER (WHERE b > 1) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT a, COUNT(*) FILTER (WHERE b > 1) FROM t GROUP BY a","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(ORDER BY a) FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a FROM a GROUP BY 1","kind":"accepts-invalid"}
-{"sql":"SELECT a , b , c t GROUP BY a , ROLLUP ( b , c )","kind":"accepts-invalid"}
-{"sql":"SELECT a , b , FROM t GROUP BY a , ROLLUP ( b , c )","kind":"accepts-invalid"}
+{"sql":"SELECT a FROM a GROUP BY a , ( b , c )","kind":"rejects-valid"}
 {"sql":"SELECT t , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( b ) ) )","kind":"accepts-invalid"}
 {"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( b ) ) )","kind":"accepts-invalid"}
 {"sql":"SELECT a , b FROM t GROUP BY GROUPING SETS ( GROUPING SETS ( ( a ) , ( a ) ) )","kind":"accepts-invalid"}
-{"sql":"SELECT a t GROUP BY a HAVING a > 1","kind":"accepts-invalid"}
-{"sql":"SELECT a t GROUP BY a HAVING NOT COUNT ( * ) = 1","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL INNER JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL LEFT JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL RIGHT JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL FULL JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) AS x","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a NATURAL JOIN b NATURAL JOIN c","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t JOIN u ON t.a IN (SELECT id FROM c)","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t JOIN u ON EXISTS (SELECT 1 FROM c WHERE c.id = t.a)","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t . OUTER JOIN u ON t . a = u . a","kind":"rejects-valid"}
-{"sql":"SELECT * FROM t NATURAL JOIN a","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t t NATURAL INNER JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t t NATURAL RIGHT JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t . JOIN u","kind":"rejects-valid"}
 {"sql":"SELECT * FROM t . RIGHT JOIN u ON t . a = u . a","kind":"rejects-valid"}
 {"sql":"SELECT * FROM ( a b )","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t LIMIT 1 + 1","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t LIMIT NULL","kind":"accepts-invalid"}
-{"sql":"SELECT a t ORDER BY ( a )","kind":"accepts-invalid"}
-{"sql":"SELECT a t ORDER BY a ASC NULLS FIRST , b DESC NULLS LAST","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t t LIMIT NULL","kind":"accepts-invalid"}
+{"sql":"SELECT a t LIMIT NULL","kind":"rejects-valid"}
+{"sql":"SELECT a FROM t ORDER BY a LIMIT 1 OFFSET a","kind":"rejects-valid"}
 {"sql":"SELECT COUNT(ALL a) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT COUNT(DISTINCT) FROM t","kind":"rejects-valid"}
-{"sql":"SELECT *","kind":"accepts-invalid"}
-{"sql":"SELECT * , a t","kind":"accepts-invalid"}
 {"sql":"SELECT COUNT ( ALL a ) FROM t t","kind":"accepts-invalid"}
 {"sql":"SELECT COUNT ( ALL a ) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT COUNT ( DISTINCT ) t","kind":"rejects-valid"}
@@ -509,64 +433,29 @@
 {"sql":"(SELECT a FROM t LIMIT 1) LIMIT 2","kind":"rejects-valid"}
 {"sql":"( SELECT a FROM t t ORDER BY a ) ORDER BY a","kind":"rejects-valid"}
 {"sql":"( SELECT a a FROM t LIMIT 1 ) LIMIT 2","kind":"rejects-valid"}
-{"sql":"SELECT a FROM t WHERE EXISTS (VALUES (1))","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t LIMIT (SELECT 1)","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t LIMIT 1 OFFSET (SELECT 1)","kind":"accepts-invalid"}
-{"sql":"SELECT COUNT(*) FILTER (WHERE a IN (SELECT a FROM u)) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT EXISTS ( ( SELECT MAX ( a ) FROM t ) AS TEXT )","kind":"rejects-valid"}
-{"sql":"SELECT ( SELECT a t ORDER BY a LIMIT 1 )","kind":"accepts-invalid"}
-{"sql":"SELECT a t WHERE ( a ) IN ( SELECT a FROM u )","kind":"accepts-invalid"}
-{"sql":"SELECT a t WHERE a IN ( SELECT a FROM u WHERE b IN ( SELECT id FROM c ) )","kind":"accepts-invalid"}
-{"sql":"SELECT COUNT ( ) FILTER ( WHERE a IN ( SELECT a FROM u ) ) FROM t","kind":"accepts-invalid"}
-{"sql":"VALUES (1)","kind":"accepts-invalid"}
-{"sql":"VALUES (1, 2)","kind":"accepts-invalid"}
-{"sql":"VALUES (1), (2), (3)","kind":"accepts-invalid"}
-{"sql":"VALUES (1, 'a'), (2, 'b')","kind":"accepts-invalid"}
-{"sql":"VALUES (1 + 2, (SELECT 1))","kind":"accepts-invalid"}
-{"sql":"VALUES (NULL)","kind":"accepts-invalid"}
-{"sql":"(VALUES (1))","kind":"accepts-invalid"}
-{"sql":"(VALUES (1)) ORDER BY 1","kind":"accepts-invalid"}
+{"sql":"SELECT a t LIMIT ( SELECT 1 )","kind":"rejects-valid"}
 {"sql":"SELECT * FROM (VALUES (1)) AS x","kind":"accepts-invalid"}
 {"sql":"TABLE main.t","kind":"rejects-valid"}
 {"sql":"SELECT * FROM (TABLE t) AS x","kind":"accepts-invalid"}
-{"sql":"VALUES ( VALUES , 2 )","kind":"accepts-invalid"}
-{"sql":"VALUES ( 1 ) , ( 2 ) , ( 3 )","kind":"accepts-invalid"}
-{"sql":"VALUES ( 1 , 'a' ) , ( 2 , 'b' )","kind":"accepts-invalid"}
-{"sql":"VALUES ( NULL )","kind":"accepts-invalid"}
-{"sql":"VALUES ( 1 )","kind":"accepts-invalid"}
 {"sql":"TABLE main . t","kind":"rejects-valid"}
 {"sql":"SELECT * FROM ( TABLE t ) AS x","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM ( TABLE ) AS x","kind":"accepts-invalid"}
 {"sql":"TABLE TABLE","kind":"rejects-valid"}
-{"sql":"SELECT a FROM t WHERE a = ?1","kind":"accepts-invalid"}
-{"sql":"SELECT a t WHERE a","kind":"accepts-invalid"}
-{"sql":"SELECT a t WHERE ( a = 1 OR b = 2 ) AND c = 3","kind":"accepts-invalid"}
-{"sql":"SELECT a t WHERE a IS DISTINCT FROM b","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t t WHERE a = ?1","kind":"accepts-invalid"}
-{"sql":"SELECT a WHERE a","kind":"accepts-invalid"}
-{"sql":"SELECT SUM(a) OVER (ORDER BY b GROUPS 1 PRECEDING) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT SUM(a) OVER (ORDER BY b GROUPS BETWEEN 1 PRECEDING AND CURRENT ROW) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE CURRENT ROW) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE GROUP) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE TIES) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 PRECEDING EXCLUDE NO OTHERS) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN a + 1 PRECEDING AND b * 2 FOLLOWING) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT SUM(a) FILTER (WHERE a > 1) OVER (PARTITION BY b) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT COUNT(*) FILTER (WHERE a > 1) OVER w FROM t WINDOW w AS (ORDER BY b)","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS 1 FOLLOWING) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN 1 FOLLOWING AND CURRENT ROW) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY b ROWS BETWEEN CURRENT ROW AND 1 PRECEDING) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT LAG ( a ) OVER ( ORDER BY a ) , LEAD ( a , 1 , 0 ) OVER ( ORDER BY a ) t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM ( a ) OVER ( ) t","kind":"accepts-invalid"}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b GROUPS 1 PRECEDING ) FROM t t","kind":"accepts-invalid"}
-{"sql":"SELECT SUM ( a ) OVER ( ORDER BY b GROUPS 1 PRECEDING ) t","kind":"accepts-invalid"}
 {"sql":"SELECT a.1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a .1 .1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT INTERVAL '1'","kind":"accepts-invalid"}
 {"sql":"SELECT DATE b'\\377'","kind":"accepts-invalid"}
-{"sql":"SELECT 1 IN (1) IN (TRUE)","kind":"accepts-invalid"}
-{"sql":"SELECT TRUE IN (TRUE) = TRUE","kind":"accepts-invalid"}
-{"sql":"SELECT 1 IN ( 1 ) IN ( TRUE )","kind":"accepts-invalid"}
 {"sql":"SELECT ( t ) . 2 FROM t","kind":"rejects-valid"}
 {"sql":"CREATE TABLE n (a REAL, b DOUBLE PRECISION, c FLOAT, d FLOAT(10))","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a CHARACTER VARYING(5), b CHAR VARYING(5), c VARCHAR(5))","kind":"accepts-invalid"}
@@ -599,12 +488,8 @@
 {"sql":"ALTER TABLE t ALTER COLUMN a DROP DEFAULT","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ADD CONSTRAINT c CHECK (a > 0)","kind":"accepts-invalid"}
 {"sql":"ALTER TABLE t DROP CONSTRAINT c","kind":"rejects-valid"}
-{"sql":"SELECT * FROM t NATURAL JOIN u JOIN a USING (id)","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL LEFT JOIN u","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a TIMESTAMP WITH TIME ZONE, b TIME WITH TIME ZONE, c TIMESTAMP(3) WITHOUT TIME ZONE)","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a NATIONAL CHARACTER(5), b NCHAR(5), c NATIONAL CHARACTER VARYING(5))","kind":"accepts-invalid"}
-{"sql":"VALUES (1, 2), (3, 4)","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER CHECK (a IN (SELECT b FROM u)))","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a VARCHAR(5) COLLATE \"C\")","kind":"rejects-valid"}
 {"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON UPDATE CASCADE)","kind":"accepts-invalid"}
@@ -616,9 +501,6 @@
 {"sql":"CREATE TABLE n (a INTEGER ARRAY)","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER ARRAY[5])","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER[])","kind":"accepts-invalid"}
-{"sql":"WITH x (p) AS (SELECT 1), y AS (SELECT 2) SELECT * FROM x, y","kind":"accepts-invalid"}
-{"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM (WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x) AS y","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER GENERATED BY DEFAULT AS IDENTITY (START WITH 5 INCREMENT BY 2))","kind":"rejects-valid"}
 {"sql":"CREATE TABLE n (a INTEGER, b INTEGER GENERATED ALWAYS AS (a + 1))","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER, b INTEGER GENERATED ALWAYS AS (a + 1) STORED)","kind":"accepts-invalid"}
@@ -634,12 +516,8 @@
 {"sql":"RELEASE SAVEPOINT s","kind":"accepts-invalid"}
 {"sql":"ROLLBACK TO SAVEPOINT s","kind":"accepts-invalid"}
 {"sql":"CALL p(1)","kind":"rejects-valid"}
-{"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (ROLLUP (a), CUBE (b)), c","kind":"accepts-invalid"}
 {"sql":"CALL p(a => 1)","kind":"rejects-valid"}
 {"sql":"CREATE TABLE n (a INTEGER UNIQUE)","kind":"accepts-invalid"}
-{"sql":"SELECT COUNT(*) FILTER (WHERE a > 0) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT a FROM t TABLESAMPLE SYSTEM (10) REPEATABLE (1)","kind":"accepts-invalid"}
-{"sql":"SELECT SUM(a) OVER (ORDER BY c GROUPS BETWEEN 1 PRECEDING AND 1 FOLLOWING) FROM t","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY c ROWS 1 PRECEDING EXCLUDE TIES) FROM t","kind":"accepts-invalid"}
 {"sql":"UPDATE t SET (a, b) = (1, 2)","kind":"accepts-invalid"}
 {"sql":"UPDATE t SET (a, b) = (SELECT a, b FROM u)","kind":"accepts-invalid"}

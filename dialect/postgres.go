@@ -117,6 +117,7 @@ var Postgres = &Dialect{
 
 	Features: Features{
 		Expr: ExprFeatures{
+			AggregateFilter: true, ChainedIn: true,
 			LikeEscape:      true,
 			DoubleColonCast: true, ArrayLiterals: true, RowConstructor: true, DefaultExpr: true,
 			Ilike: true, IsUnknown: true, IsOtherPredicates: true, BetweenSymmetric: true, Overlaps: true,
@@ -127,6 +128,7 @@ var Postgres = &Dialect{
 			KeywordLabels: true, QualifiedFunctions: true, MaxRelationParts: 3,
 		},
 		Query: QueryFeatures{
+			CTEColumns: true, CTEMaterialized: true, ValuesQuery: true, NaturalJoin: true, WindowGroups: true,
 			StrictFrames: true, ParenQueries: true, IntersectBindsTighter: true,
 			SetQuantifiers: true, EmptySelectList: true, SelectInto: true, DistinctOn: true,
 			Lateral: true, TableSample: true, TableKeyword: true, OnlyTable: true,

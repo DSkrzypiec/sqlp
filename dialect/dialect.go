@@ -91,6 +91,8 @@ type ExprFeatures struct {
 	NotNullPostfix       bool // a NOT NULL as a predicate (SQLite)
 	TypedStringLiteral   bool // DATE '2020-01-01', int4 '7'
 	LikeEscape           bool // LIKE pattern ESCAPE char
+	ChainedIn            bool // a IN (1) IN (2): IN ends with its own parenthesis (PostgreSQL)
+	AggregateFilter      bool // f(x) FILTER (WHERE cond)
 	AtTimeZone           bool
 	NamedArgs            bool // f(a => 1)
 	VariadicArgs         bool // f(VARIADIC arr)
@@ -162,6 +164,17 @@ type QueryFeatures struct {
 	Locking               bool // FOR UPDATE / FOR SHARE
 	DataModifyingCTE      bool // WITH x AS (DELETE ... RETURNING *)
 	CTESearchCycle        bool
+	CTEColumns            bool // WITH x (a, b) AS (...)
+	CTEMaterialized       bool // WITH x AS [NOT] MATERIALIZED (...)
+	ValuesQuery           bool // VALUES (...) as a query, not only as INSERT's source
+	NaturalJoin           bool // NATURAL JOIN
+	WindowGroups          bool // GROUPS frames in windows
+	// BigQuery's rules for a SELECT without FROM (no WHERE, GROUP BY, HAVING,
+	// ORDER BY or *), for grouping sets (alone in GROUP BY, no tuples there), and
+	// for LIMIT and OFFSET (an integer literal or a parameter).
+	FromlessRules     bool
+	GroupingSetsAlone bool
+	LimitLiterals     bool
 }
 
 // DMLFeatures lists INSERT, UPDATE, DELETE and MERGE syntax.

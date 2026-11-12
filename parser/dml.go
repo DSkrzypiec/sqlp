@@ -55,6 +55,8 @@ func (p *Parser) parseInsert(with *ast.With) ast.Statement {
 		}
 		p.pos += 2
 		ins.DefaultValues = true
+	} else if p.isKw("VALUES") && !p.d.Features.Query.ValuesQuery { // INSERT's own VALUES
+		ins.Source = &ast.Query{Body: p.parseValues()}
 	} else {
 		ins.Source = p.parseQuery()
 	}

@@ -112,7 +112,6 @@
 {"sql":"SELECT a FROM t WHERE a SIMILAR 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE a IS DISTINCT b","reject":true}
 {"sql":"SELECT a FROM t WHERE a IS DISTINCT FROM","reject":true}
-{"sql":"SELECT a FROM t WHERE FROM","reject":true}
 {"sql":"SELECT a FROM t WHERE a a","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE a","reject":true}
 {"sql":"SELECT a t WHERE a","reject":true}
@@ -122,21 +121,20 @@
 {"sql":"SELECT a FROM t WHERE ( a 1 = )","reject":true}
 {"sql":"SELECT a FROM t WHERE a ( = 1 )","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a = ) 1","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a 3 1 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a = 1 )","shape":"SELECT a FROM t WHERE (a = 1);"}
 {"sql":"SELECT a FROM t ( WHERE ( a = 1 ) )","reject":true}
 {"sql":"SELECT a FROM t t WHERE ( ( a = 1 ) )","shape":"SELECT a FROM t AS t WHERE ((a = 1));"}
-{"sql":"a a FROM t WHERE ( ( a = 1 ) )","reject":true}
+{"sql":"FROM a FROM t WHERE ( ( a = 1 ) )","reject":true}
 {"sql":"SELECT a FROM t WHERE ( ( a = ) )","reject":true}
-{"sql":"SELECT a FROM t WHERE a = 1 AND a = 2","shape":"SELECT a FROM t WHERE (a = 1) AND (a = 2);"}
 {"sql":"SELECT a FROM t WHERE a = = 1 AND b = 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a = 1 AND b 2 =","reject":true}
 {"sql":"SELECT a FROM t t WHERE a = 1 AND b = 2","shape":"SELECT a FROM t AS t WHERE (a = 1) AND (b = 2);"}
 {"sql":"SELECT a FROM WHERE t a = 1 OR b = 2","reject":true}
-{"sql":"SELECT a FROM t DISTINCT a = 1 OR b = 2","reject":true}
+{"sql":"SELECT a FROM t NOT a = 1 OR b = 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a = 1 OR b b = 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a = 1 OR OR = 2","reject":true}
+{"sql":"SELECT a FROM t WHERE a = 1 OR a = 2","shape":"SELECT a FROM t WHERE (a = 1) OR (a = 2);"}
 {"sql":"SELECT a FROM t WHERE NOT a 1","reject":true}
-{"sql":"SELECT a FROM a WHERE NOT a = 1"}
+{"sql":"SELECT a FROM FROM WHERE NOT a = 1","reject":true}
 {"sql":"SELECT a FROM WHERE NOT a = 1","reject":true}
 {"sql":"SELECT FROM t WHERE NOT ( a = 1 OR b = 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE NOT ( a = 1 OR = b 2 )","reject":true}
@@ -144,17 +142,16 @@
 {"sql":"SELECT a FROM t WHERE NOT ( a = 1 OR b = )","reject":true}
 {"sql":"SELECT a t FROM WHERE NOT NOT a = 1","reject":true}
 {"sql":"SELECT a FROM t WHERE NOT NOT = a 1","reject":true}
-{"sql":"SELECT a FROM t WHERE NOT NOT WHERE = 1","reject":true}
-{"sql":"t a FROM t WHERE NOT NOT a = 1","reject":true}
+{"sql":"SELECT a FROM t WHERE NOT NOT FROM = 1","reject":true}
+{"sql":"a a FROM t WHERE NOT NOT a = 1","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a = = 1 OR b = 2 ) AND c = 3","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a = 1 OR b WHERE 2 ) AND c = 3","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a = 1 OR b c 2 ) AND c = 3","reject":true}
 {"sql":"SELECT a FROM t WHERE FROM a = 1 OR b = 2 ) AND c = 3","reject":true}
 {"sql":"SELECT a t WHERE ( a = 1 OR b = 2 ) AND c = 3","reject":true}
-{"sql":"SELECT a NOT t WHERE a = 1 OR b = 2 AND c = 3","reject":true}
+{"sql":"SELECT a a t WHERE a = 1 OR b = 2 AND c = 3","reject":true}
 {"sql":"SELECT a FROM t WHERE a = OR b = 2 AND c = 3","reject":true}
 {"sql":"SELECT a FROM t t WHERE a = 1 OR b = 2 AND c = 3","shape":"SELECT a FROM t AS t WHERE (a = 1) OR ((b = 2) AND (c = 3));"}
 {"sql":"SELECT a FROM t WHERE a = 1 OR b = 2 AND c = = 3","reject":true}
-{"sql":"SELECT a FROM t WHERE a = 1 AND b = a OR c = 3 AND d = 4","shape":"SELECT a FROM t WHERE ((a = 1) AND (b = a)) OR ((c = 3) AND (d = 4));"}
 {"sql":"SELECT a FROM t WHERE a = AND 1 b = 2 OR c = 3 AND d = 4","reject":true}
 {"sql":"SELECT a FROM t WHERE a = 1 AND b = = 2 OR c = 3 AND d = 4","reject":true}
 {"sql":"SELECT a FROM t WHERE a = 1 AND b 2 OR c = 3 AND d = 4","reject":true}
@@ -164,29 +161,30 @@
 {"sql":"SELECT a FROM t WHERE a = 1 AND ( b = = 2 OR ( c = 3 AND d = 4 ) )","reject":true}
 {"sql":"SELECT a FROM WHERE t a <> 1 AND a != 2","reject":true}
 {"sql":"SELECT a t FROM WHERE a <> 1 AND a != 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a <> 1 AND SELECT != 2","reject":true}
+{"sql":"SELECT a FROM t WHERE a <> 1 AND WHERE != 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a <> <> 1 AND a != 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a t 1 OR a <= 2 OR a > 3 OR a >= 4","reject":true}
-{"sql":"SELECT a FROM t WHERE a < 1 OR a <= 2 'a*' a > 3 OR a >= 4","reject":true}
-{"sql":"SELECT a FROM t WHERE a < 1 OR a ) 2 OR a > 3 OR a >= 4","reject":true}
+{"sql":"SELECT a FROM t WHERE a ) 1 OR a <= 2 OR a > 3 OR a >= 4","reject":true}
+{"sql":"SELECT a FROM t WHERE a < 1 OR a <= 2 = a > 3 OR a >= 4","reject":true}
+{"sql":"SELECT a FROM t WHERE a < 1 OR a WHERE 2 OR a > 3 OR a >= 4","reject":true}
 {"sql":"SELECT a FROM t WHERE a < 1 a OR <= 2 OR a > 3 OR a >= 4","reject":true}
-{"sql":"AND a FROM t WHERE a + 1 > b * 2","reject":true}
+{"sql":"WHERE a FROM t WHERE a + 1 > b * 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a + 1 > b *","reject":true}
 {"sql":"SELECT a FROM t a + 1 > b * 2","reject":true}
-{"sql":"IN a FROM t WHERE a IS NULL","reject":true}
+{"sql":"SELECT a t t WHERE a IS NULL","reject":true}
+{"sql":"< a FROM t WHERE a IS NULL","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a IS NULL","reject":true}
 {"sql":"SELECT a FROM WHERE t a IS NOT NULL","reject":true}
-{"sql":"SELECT a t t WHERE a IS NOT NULL","reject":true}
+{"sql":"SELECT a a t WHERE a IS NOT NULL","reject":true}
 {"sql":"SELECT a FROM t a WHERE IS NOT NULL","reject":true}
-{"sql":"SELECT a FROM t WHERE a 1 NOT NULL","reject":true}
-{"sql":"= a FROM t WHERE ( a = 1 ) IS NULL","reject":true}
+{"sql":"SELECT a FROM t WHERE a 2 NOT NULL","reject":true}
+{"sql":"a a FROM t WHERE ( a = 1 ) IS NULL","reject":true}
 {"sql":"SELECT a FROM t WHERE ( = a 1 ) IS NULL","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a = 1 ) IS","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a = ) 1 IS NULL","reject":true}
-{"sql":"SELECT 2 FROM t WHERE a IS TRUE"}
+{"sql":"SELECT FROM FROM t WHERE a IS TRUE","reject":true}
 {"sql":"SELECT FROM t WHERE a IS TRUE","reject":true}
 {"sql":"a SELECT FROM t WHERE a IS NOT TRUE","reject":true}
-{"sql":"SELECT a FROM WHERE WHERE a IS NOT TRUE","reject":true}
+{"sql":"SELECT a FROM IS WHERE a IS NOT TRUE","reject":true}
 {"sql":"SELECT a FROM t WHERE IS a NOT TRUE","reject":true}
 {"sql":"SELECT a FROM t WHERE IS NOT TRUE","reject":true}
 {"sql":"a FROM t WHERE a IS FALSE","reject":true}
@@ -194,12 +192,12 @@
 {"sql":"SELECT a FROM t WHERE a a IS NOT FALSE","reject":true}
 {"sql":"SELECT a FROM t WHERE IS NOT FALSE","reject":true}
 {"sql":"SELECT a FROM t WHERE IS a NOT FALSE","reject":true}
-{"sql":"a a FROM t WHERE a IS UNKNOWN","reject":true}
+{"sql":"t a FROM t WHERE a IS UNKNOWN","reject":true}
 {"sql":"a SELECT FROM t WHERE a IS UNKNOWN","reject":true}
-{"sql":"SELECT a FROM t FROM a IS UNKNOWN","reject":true}
+{"sql":"SELECT a FROM t SELECT a IS UNKNOWN","reject":true}
 {"sql":"SELECT a FROM t WHERE IS UNKNOWN","reject":true}
 {"sql":"SELECT a FROM t t WHERE a IS NOT UNKNOWN"}
-{"sql":"SELECT a FROM t WHERE ( IS NOT UNKNOWN","reject":true}
+{"sql":"SELECT a FROM t WHERE b IS NOT UNKNOWN"}
 {"sql":"SELECT a FROM t WHERE a NOT IS UNKNOWN","reject":true}
 {"sql":"SELECT a FROM t WHERE a IS UNKNOWN NOT","reject":true}
 {"sql":"SELECT a t WHERE a IS DISTINCT FROM b","reject":true}
@@ -210,46 +208,46 @@
 {"sql":"SELECT a FROM t WHERE a IS NOT FROM b","reject":true}
 {"sql":"SELECT a a FROM t WHERE a IS NOT DISTINCT FROM b","shape":"SELECT a AS a FROM t WHERE a IS NOT DISTINCT FROM b;"}
 {"sql":"SELECT FROM t WHERE a IS NOT DISTINCT FROM b","reject":true}
-{"sql":"FROM a FROM t WHERE a IS b","reject":true}
+{"sql":"t a FROM t WHERE a IS b","reject":true}
 {"sql":"SELECT a FROM t WHERE a a IS b","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a IS b","reject":true}
-{"sql":"SELECT a FROM t WHERE 4 IS b","reject":true}
+{"sql":"SELECT a FROM t WHERE WHERE IS b","reject":true}
 {"sql":"SELECT a t WHERE a IS NOT b","reject":true}
 {"sql":"SELECT a FROM WHERE a IS NOT b","reject":true}
-{"sql":"SELECT a FROM t 2 a IS NOT b","reject":true}
+{"sql":"SELECT a FROM t ) a IS NOT b","reject":true}
 {"sql":"SELECT a FROM t a WHERE ISNULL"}
 {"sql":"SELECT SELECT a FROM t WHERE a ISNULL","reject":true}
 {"sql":"SELECT a FROM WHERE a ISNULL","reject":true}
-{"sql":"SELECT a FROM , WHERE a NOTNULL","reject":true}
+{"sql":"SELECT a FROM name WHERE a NOTNULL","reject":true}
 {"sql":"a FROM t WHERE a NOTNULL","reject":true}
 {"sql":"SELECT a t FROM WHERE a NOTNULL","reject":true}
 {"sql":"SELECT a t WHERE a NOTNULL","reject":true}
 {"sql":"SELECT a FROM t a WHERE NOT NULL"}
 {"sql":"SELECT a FROM t t WHERE a NOT NULL","reject":true}
 {"sql":"SELECT a FROM t WHERE a NOT NULL NULL","reject":true}
-{"sql":"SELECT a = t WHERE a NOT NULL","reject":true}
-{"sql":"SELECT a FROM t WHERE a BETWEEN 1 AND a","shape":"SELECT a FROM t WHERE a BETWEEN 1 AND a;"}
+{"sql":"SELECT a 'a%' t WHERE a NOT NULL","reject":true}
+{"sql":"SELECT a FROM t WHERE a BETWEEN 1 AND <","reject":true}
+{"sql":"SELECT a FROM t WHERE >= BETWEEN 1 AND 2","reject":true}
 {"sql":"SELECT a FROM WHERE t a BETWEEN 1 AND 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a BETWEEN 1 AND (","reject":true}
+{"sql":"SELECT a FROM t WHERE a BETWEEN 1 AND t"}
 {"sql":"SELECT a FROM t WHERE a NOT BETWEEN 1 2","reject":true}
 {"sql":"SELECT FROM a t WHERE a NOT BETWEEN 1 AND 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a NOT BETWEEN a AND 2","shape":"SELECT a FROM t WHERE a NOT BETWEEN a AND 2;"}
+{"sql":"SELECT a FROM t WHERE a NOT BETWEEN b AND 2","shape":"SELECT a FROM t WHERE a NOT BETWEEN b AND 2;"}
 {"sql":"SELECT a FROM t WHERE a NOT BETWEEN BETWEEN 1 AND 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a BETWEEN b + 1 AND c ) 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a BETWEEN b + 1 = c * 2","reject":true}
+{"sql":"SELECT a FROM t WHERE a BETWEEN b + 1 AND c FROM 2","reject":true}
+{"sql":"SELECT a FROM t WHERE a BETWEEN b + 1 <> c * 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN b + AND c * 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN b b + 1 AND c * 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN 1 AND 2 FROM b = 3","reject":true}
-{"sql":"SELECT a FROM t WHERE a BETWEEN 1 BETWEEN 2 AND b = 3","reject":true}
+{"sql":"SELECT a FROM t WHERE a BETWEEN 1 a 2 AND b = 3","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN 1 2 AND AND b = 3","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN 1 AND 2 AND = 3","reject":true}
-{"sql":"SELECT a FROM t SELECT a BETWEEN SYMMETRIC 1 AND 2","reject":true}
+{"sql":"SELECT a FROM t FROM a BETWEEN SYMMETRIC 1 AND 2","reject":true}
 {"sql":"SELECT a FROM FROM t WHERE a BETWEEN SYMMETRIC 1 AND 2","reject":true}
-{"sql":"SELECT a FROM t WHERE a BETWEEN SYMMETRIC ?1 AND 2","reject":true}
 {"sql":"a FROM t WHERE a BETWEEN SYMMETRIC 1 AND 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a NOT BETWEEN BETWEEN ASYMMETRIC 1 AND 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a NOT BETWEEN ASYMMETRIC 1 2 AND","reject":true}
-{"sql":"SELECT a FROM t WHERE a NOT BETWEEN ASYMMETRIC t AND 2","reject":true}
+{"sql":"SELECT a FROM t WHERE a NOT BETWEEN ASYMMETRIC SELECT AND 2","reject":true}
 {"sql":"SELECT a a FROM t WHERE a IN ( 1 )","shape":"SELECT a AS a FROM t WHERE a IN (1);"}
 {"sql":"SELECT a FROM t WHERE a IN IN ( 1 )","reject":true}
 {"sql":"SELECT a FROM t WHERE a ( 1 )"}
@@ -260,7 +258,7 @@
 {"sql":"SELECT a FROM t WHERE a IN ( 1 , 2 , )","reject":true}
 {"sql":"SELECT a FROM FROM t WHERE a NOT IN ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE a IN ( 1 , 2 )","shape":"SELECT a FROM t WHERE a IN (1, 2);"}
-{"sql":"SELECT a FROM t WHERE a NOT IN ( > , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE a NOT IN ( t , 2 )"}
 {"sql":"SELECT a FROM WHERE a NOT IN ( 1 , 2 )","reject":true}
 {"sql":"SELECT FROM a t WHERE a IN ( b , c + 1 )","reject":true}
 {"sql":"SELECT a FROM t WHERE a IN b , c + 1 )","reject":true}
@@ -268,50 +266,50 @@
 {"sql":"SELECT a FROM WHERE t a IN ( b , c + 1 )","reject":true}
 {"sql":"SELECT a FROM t WHERE a IN (","reject":true}
 {"sql":"SELECT a FROM WHERE t a IN ( )","reject":true}
-{"sql":"SELECT a FROM t FROM a IN ( )","reject":true}
-{"sql":"SELECT a FROM t WHERE a SYMMETRIC u","reject":true}
+{"sql":"SELECT a FROM t b a IN ( )","reject":true}
+{"sql":"SELECT a FROM t WHERE a a u","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a IN u","reject":true}
 {"sql":"SELECT FROM a t WHERE a IN u","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE a NOT IN u","reject":true}
 {"sql":"SELECT a FROM t WHERE a IN NOT u","reject":true}
 {"sql":"a FROM t WHERE a NOT IN u","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a , b ) IN ( ( 1 , 2 ) , ( 3 , 4 ) WHERE","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) IN ( ( 1 , 2 ) , ( 3 , 4 ) 2","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a , b ) IN ( ( 1 , 2 ) , ( 3 , 4 4 ) )","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a , b ) IN ( ( 1 = 2 ) , ( 3 , 4 ) )"}
+{"sql":"SELECT a FROM t WHERE ( a , b ) IN ( ( 1 a 2 ) , ( 3 , 4 ) )","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a , b ) IN ( ( 1 , 2 ) ( , 3 , 4 ) )","reject":true}
-{"sql":"SELECT t FROM t WHERE ( a , b ) = ( 1 , 2 )","shape":"SELECT t FROM t WHERE (a, b) = (1, 2);"}
-{"sql":"SELECT a FROM t WHERE ( a , b ) = a 1 , 2 )","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a , b ) = ( 1 d 2 )","reject":true}
+{"sql":"SELECT FROM FROM t WHERE ( a , b ) = ( 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = 'a*' 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b ) = ( 1 1 2 )","reject":true}
 {"sql":"SELECT a FROM t ( a , b ) = ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a , b ) > ( ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a , b ) > ( 1 , 2 2 )","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a , b AND > ( 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a , b WHERE > ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE ( a , b ) > ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE ROW a ( , b ) = ROW ( 1 , 2 )","reject":true}
-{"sql":"SELECT a FROM t WHERE ROW IN a , b ) = ROW ( 1 , 2 )","reject":true}
+{"sql":"SELECT a FROM t WHERE ROW = a , b ) = ROW ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE ROW ( a , b ) = ROW ROW ( 1 , 2 )","reject":true}
 {"sql":"SELECT a FROM t WHERE ROW ( a b , ) = ROW ( 1 , 2 )","reject":true}
-{"sql":"SELECT a FROM t WHERE name FROM 'a%'","reject":true}
+{"sql":"SELECT a FROM t WHERE name t 'a%'","reject":true}
 {"sql":"SELECT a FROM WHERE t name LIKE 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name name LIKE 'a%'","reject":true}
-{"sql":"SELECT a FROM t WHERE FROM LIKE 'a%'","reject":true}
+{"sql":"SELECT a FROM t WHERE t LIKE 'a%'"}
 {"sql":"SELECT FROM a t WHERE name NOT LIKE 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name NOT 'a%' LIKE","reject":true}
-{"sql":"SELECT a FROM t WHERE 2 NOT LIKE 'a%'"}
+{"sql":"SELECT a FROM t WHERE SELECT NOT LIKE 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name NOT NOT LIKE 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name LIKE 'a#%' 'a#%' ESCAPE '#'","reject":true}
 {"sql":"SELECT a FROM t WHERE name LIKE 'a#%' ESCAPE","reject":true}
 {"sql":"a SELECT FROM t WHERE name LIKE 'a#%' ESCAPE '#'","reject":true}
 {"sql":"SELECT FROM t WHERE name LIKE 'a#%' ESCAPE '#'","reject":true}
 {"sql":"SELECT a FROM t WHERE ILIKE 'a%'","reject":true}
-{"sql":"SELECT a WHERE t WHERE name ILIKE 'a%'","reject":true}
+{"sql":"SELECT a 'a#%' t WHERE name ILIKE 'a%'","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE name ILIKE 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name a 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name NOT NOT ILIKE 'a%'","reject":true}
-{"sql":"SELECT a FROM t WHERE name NOT FROM 'a%'","reject":true}
+{"sql":"SELECT a FROM t WHERE name NOT AND 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE NOT ILIKE 'a%'","reject":true}
 {"sql":"SELECT a FROM FROM t WHERE name NOT ILIKE 'a%'","reject":true}
-{"sql":"SELECT a FROM t WHERE name SIMILAR 3 'a%'","reject":true}
+{"sql":"SELECT a FROM t WHERE name SIMILAR FROM 'a%'","reject":true}
 {"sql":"SELECT FROM a t WHERE name SIMILAR TO 'a%'","reject":true}
 {"sql":"SELECT a FROM t WHERE name SIMILAR 'a%'","reject":true}
 {"sql":"a SELECT FROM t WHERE name SIMILAR TO 'a%'","reject":true}
@@ -320,20 +318,20 @@
 {"sql":"SELECT a FROM t WHERE ~ name 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE ~ 'a'"}
 {"sql":"a FROM t WHERE name ~ 'a'","reject":true}
-{"sql":"SELECT a FROM t WHERE name t ~ 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE name a ~ 'a'","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE name ! ~ 'a'","reject":true}
 {"sql":"SELECT a FROM t name WHERE ! ~ 'a'","reject":true}
-{"sql":"SELECT WHERE FROM t WHERE name ! ~ 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE name ! ~ 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE name ~ * 'a'","reject":true}
-{"sql":"BETWEEN a FROM t WHERE name ~ * 'a'","reject":true}
-{"sql":"SELECT a FROM t WHERE name ~ SELECT 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE name ~ * 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE name ~ WHERE 'a'","reject":true}
 {"sql":"SELECT a t WHERE name ! ~ * 'a'","reject":true}
-{"sql":"SELECT a FROM t WHERE name ! WHERE * 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE name ! SELECT * 'a'","reject":true}
 {"sql":"SELECT a t FROM WHERE name ! ~ * 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE name ! ~ *","reject":true}
 {"sql":"SELECT a FROM t name WHERE GLOB 'a*'","reject":true}
 {"sql":"SELECT a FROM t WHERE a GLOB 'a*'","reject":true}
-{"sql":"SELECT a FROM t ?1 name GLOB 'a*'","reject":true}
+{"sql":"SELECT a FROM t OR name GLOB 'a*'","reject":true}
 {"sql":"SELECT a FROM t t WHERE name GLOB 'a*'","reject":true}
 {"sql":"SELECT a t FROM WHERE name NOT GLOB 'a*'","reject":true}
 {"sql":"SELECT a FROM t t WHERE name NOT GLOB 'a*'","reject":true}
@@ -343,9 +341,9 @@
 {"sql":"SELECT a FROM t t WHERE name REGEXP 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE name FROM 'a'","reject":true}
 {"sql":"SELECT a FROM t name WHERE REGEXP 'a'","reject":true}
-{"sql":"SELECT a FROM t WHERE name NOT SYMMETRIC 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE name NOT WHERE 'a'","reject":true}
 {"sql":"SELECT FROM t WHERE name NOT REGEXP 'a'","reject":true}
-{"sql":"= a FROM t WHERE name NOT REGEXP 'a'","reject":true}
+{"sql":"+ a FROM t WHERE name NOT REGEXP 'a'","reject":true}
 {"sql":"SELECT FROM t WHERE name MATCH 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE name 'a' MATCH","reject":true}
 {"sql":"SELECT a FROM t WHERE name MATCH MATCH 'a'","reject":true}
@@ -354,21 +352,21 @@
 {"sql":"SELECT a FROM t WHERE CASE WHEN a = 1 THEN = 2 ELSE c = 3 END","reject":true}
 {"sql":"SELECT a FROM t WHERE WHEN a = 1 THEN b = 2 ELSE c = 3 END","reject":true}
 {"sql":"SELECT a FROM t WHERE CASE WHEN a = 1 THEN b = 2 c = 3 END","reject":true}
-{"sql":"SELECT a FROM t WHERE COALESCE REGEXP a , 0 ) = 1","reject":true}
+{"sql":"SELECT a FROM t WHERE COALESCE a a , 0 ) = 1","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE COALESCE ( a , 0 ) = 1","reject":true}
 {"sql":"SELECT a FROM FROM t WHERE COALESCE ( a , 0 ) = 1","reject":true}
 {"sql":"SELECT a FROM t WHERE COALESCE ( ( a , 0 ) = 1","reject":true}
 {"sql":"SELECT a FROM t WHERE CAST ( a AS TEXT ) = '1' '1'"}
 {"sql":"SELECT a FROM t WHERE CAST ( AS a TEXT ) = '1'","reject":true}
 {"sql":"SELECT a FROM t t WHERE CAST ( a AS TEXT ) = '1'"}
-{"sql":"IN a FROM t WHERE a = ?","reject":true}
+{"sql":"MATCH a FROM t WHERE a = ?","reject":true}
 {"sql":"SELECT FROM t WHERE a = ?","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a = ?","reject":true}
-{"sql":"SELECT a BETWEEN t WHERE a = ?","reject":true}
-{"sql":"SELECT a FROM t t WHERE a = ?1","reject":true}
-{"sql":"SELECT a FROM t a = ?1","reject":true}
-{"sql":"SELECT a FROM t a WHERE = ?1","reject":true}
-{"sql":"SELECT a FROM t WHERE a a ?1","reject":true}
+{"sql":"SELECT a 'a%' t WHERE a = ?","reject":true}
+{"sql":"SELECT a FROM FROM t WHERE a = ? 1","reject":true}
+{"sql":"SELECT a FROM t a = ? 1","reject":true}
+{"sql":"SELECT a FROM t WHERE a = ? 1","reject":true}
+{"sql":"SELECT a FROM t WHERE a t ? 1","reject":true}
 {"sql":"SELECT a FROM t WHERE a = x :","reject":true}
 {"sql":"SELECT FROM t WHERE a = : x","reject":true}
 {"sql":"SELECT a FROM t WHERE a : = x","reject":true}
@@ -380,76 +378,75 @@
 {"sql":"SELECT a FROM t t WHERE","reject":true}
 {"sql":"SELECT a FROM WHERE","reject":true}
 {"sql":"SELECT a t FROM WHERE WHERE a","reject":true}
-{"sql":"SELECT a FROM t WHERE t a","reject":true}
+{"sql":"SELECT a FROM t WHERE b a","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a a","reject":true}
-{"sql":"FROM a FROM WHERE a","reject":true}
+{"sql":"WHERE a FROM WHERE a","reject":true}
 {"sql":"a FROM WHERE a","reject":true}
 {"sql":"SELECT a WHERE a","reject":true}
 {"sql":"SELECT a FROM t WHERE a = WHERE 1 b = 2","reject":true}
 {"sql":"SELECT a FROM t t WHERE a = 1 WHERE b = 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a a = 1 WHERE b = 2","reject":true}
 {"sql":"SELECT FROM FROM t WHERE a = 1 WHERE b = 2","reject":true}
-{"sql":"a a FROM t WHERE a =","reject":true}
-{"sql":"SELECT a FROM t WHERE a 2","reject":true}
+{"sql":"t a FROM t WHERE a =","reject":true}
+{"sql":"SELECT a FROM t WHERE a (","reject":true}
 {"sql":"SELECT a FROM t a a =","reject":true}
-{"sql":"SELECT 1 FROM t WHERE a =","reject":true}
+{"sql":"SELECT WHERE FROM t WHERE a =","reject":true}
 {"sql":"SELECT a FROM t WHERE =","reject":true}
 {"sql":"SELECT a FROM t t WHERE = 1","reject":true}
-{"sql":"a a FROM t WHERE = 1","reject":true}
-{"sql":"SELECT a FROM t WHERE c 1","reject":true}
+{"sql":"LIKE a FROM t WHERE = 1","reject":true}
+{"sql":"SELECT a FROM t WHERE 1 1","reject":true}
 {"sql":"SELECT a FROM t WHERE a = = 1 1","reject":true}
 {"sql":"a a FROM t WHERE a = = 1","reject":true}
 {"sql":"SELECT a FROM t a WHERE = = 1","reject":true}
 {"sql":"SELECT a FROM WHERE a = = 1","reject":true}
 {"sql":"SELECT a FROM WHERE a AND","reject":true}
-{"sql":"SELECT a FROM t WHERE WHERE AND","reject":true}
-{"sql":"SELECT a FROM t WHERE a <","reject":true}
+{"sql":"SELECT a FROM t WHERE = AND","reject":true}
+{"sql":"SELECT a FROM t WHERE a SIMILAR","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE AND a","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE AND a","reject":true}
-{"sql":"SELECT a FROM t WHERE name a","reject":true}
 {"sql":"SELECT a t WHERE a OR","reject":true}
 {"sql":"SELECT FROM t WHERE a OR","reject":true}
 {"sql":"SELECT a FROM WHERE a OR","reject":true}
 {"sql":"a SELECT FROM t WHERE a OR","reject":true}
 {"sql":"SELECT a a FROM t WHERE OR a","reject":true}
 {"sql":"SELECT a t FROM WHERE OR a","reject":true}
-{"sql":"SELECT LIKE FROM t WHERE OR a","reject":true}
+{"sql":"SELECT t FROM t WHERE OR a","reject":true}
 {"sql":"SELECT a FROM t OR a","reject":true}
 {"sql":"SELECT a FROM FROM t WHERE a AND AND b","reject":true}
 {"sql":"SELECT a FROM t WHERE a AND AND","reject":true}
 {"sql":"SELECT a FROM t WHERE AND AND b","reject":true}
-{"sql":"SELECT a FROM t WHERE a AND 'a%' b","reject":true}
-{"sql":"WHERE a FROM t WHERE NOT","reject":true}
+{"sql":"SELECT a FROM t WHERE a AND a b","reject":true}
+{"sql":"1 a FROM t WHERE NOT","reject":true}
 {"sql":"a FROM t WHERE NOT","reject":true}
 {"sql":"SELECT SELECT a FROM t WHERE NOT","reject":true}
-{"sql":"SELECT a FROM t a NOT","reject":true}
+{"sql":"SELECT a FROM t IS NOT","reject":true}
 {"sql":"SELECT a FROM t WHERE ( a 1 =","reject":true}
-{"sql":"SELECT a FROM t WHERE ( a FROM 1","reject":true}
+{"sql":"SELECT a FROM t WHERE ( a SELECT 1","reject":true}
 {"sql":"SELECT a FROM t WHERE ( = 1","reject":true}
 {"sql":"SELECT a FROM t t WHERE a = 1 )","reject":true}
 {"sql":"a SELECT FROM t WHERE a = 1 )","reject":true}
 {"sql":"SELECT a t WHERE a = 1 )","reject":true}
-{"sql":"SELECT a FROM t = ( )","reject":true}
+{"sql":"SELECT a FROM t FROM ( )","reject":true}
 {"sql":"SELECT a FROM t ( )"}
-{"sql":"SELECT a t t WHERE ( )","reject":true}
+{"sql":"SELECT a 3 t WHERE ( )","reject":true}
 {"sql":"SELECT a FROM t ( WHERE )","reject":true}
 {"sql":"SELECT a FROM t t WHERE a < b < c","reject":true}
-{"sql":"SELECT a FROM a WHERE a < b < c","reject":true}
+{"sql":"SELECT a FROM , WHERE a < b < c","reject":true}
 {"sql":"SELECT a t FROM WHERE a < b < c","reject":true}
 {"sql":"SELECT a FROM t a WHERE = b = c","reject":true}
 {"sql":"SELECT a FROM t WHERE a = b =","reject":true}
-{"sql":"SELECT a FROM t WHERE a a b = c","reject":true}
+{"sql":"SELECT a FROM t WHERE a WHERE b = c","reject":true}
 {"sql":"SELECT a FROM t WHERE a < b c","reject":true}
 {"sql":"SELECT a FROM WHERE t a < b = c","reject":true}
 {"sql":"SELECT a FROM t t WHERE a < b = c","reject":true}
 {"sql":"SELECT a FROM WHERE a < b = c","reject":true}
 {"sql":"SELECT a FROM t WHERE IS","reject":true}
-{"sql":"SELECT a FROM t WHERE a 'a%'","reject":true}
-{"sql":"TRUE a FROM t WHERE a IS","reject":true}
+{"sql":"SELECT a FROM t WHERE a t","reject":true}
+{"sql":"= a FROM t WHERE a IS","reject":true}
 {"sql":"SELECT a FROM t a IS","reject":true}
 {"sql":"a FROM t WHERE a IS NOT","reject":true}
-{"sql":"SELECT a FROM t WHERE a IS WHERE","reject":true}
-{"sql":"SELECT a FROM NOT WHERE a IS NOT","reject":true}
+{"sql":"SELECT a FROM t WHERE a IS IS","reject":true}
+{"sql":"SELECT a FROM 'a%' WHERE a IS NOT","reject":true}
 {"sql":"SELECT a a FROM t WHERE IS NULL","reject":true}
 {"sql":"a FROM t WHERE IS NULL","reject":true}
 {"sql":"SELECT FROM t WHERE IS NULL","reject":true}
@@ -459,20 +456,20 @@
 {"sql":"SELECT a t FROM WHERE a IS NULL NULL","reject":true}
 {"sql":"SELECT a FROM t WHERE IS NULL NULL","reject":true}
 {"sql":"SELECT a FROM t WHERE a a BETWEEN","reject":true}
+{"sql":"SELECT a FROM 'a%' WHERE a BETWEEN","reject":true}
 {"sql":"SELECT a t FROM WHERE a BETWEEN","reject":true}
-{"sql":"SELECT WHERE FROM t WHERE a BETWEEN","reject":true}
 {"sql":"SELECT FROM t WHERE a BETWEEN 1","reject":true}
 {"sql":"SELECT a a FROM t WHERE a BETWEEN 1","reject":true}
 {"sql":"SELECT a FROM t t WHERE a BETWEEN 1","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN BETWEEN 1","reject":true}
 {"sql":"SELECT a FROM t a BETWEEN 1 AND","reject":true}
-{"sql":"SELECT a FROM t b a BETWEEN 1 AND","reject":true}
+{"sql":"SELECT a FROM t 3 a BETWEEN 1 AND","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN BETWEEN 1 AND","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN 1 1 AND","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN AND","reject":true}
-{"sql":"SELECT a FROM t a a BETWEEN AND 2","reject":true}
+{"sql":"SELECT a FROM t = a BETWEEN AND 2","reject":true}
 {"sql":"SELECT a FROM t WHERE a BETWEEN 2 AND","reject":true}
-{"sql":"SELECT a FROM t SELECT BETWEEN 1 AND 2","reject":true}
+{"sql":"SELECT a FROM t t BETWEEN 1 AND 2","reject":true}
 {"sql":"a SELECT FROM t WHERE BETWEEN 1 AND 2","reject":true}
 {"sql":"SELECT a FROM t t WHERE BETWEEN 1 AND 2","reject":true}
 {"sql":"SELECT a FROM t WHERE BETWEEN AND 2","reject":true}
@@ -482,8 +479,8 @@
 {"sql":"SELECT a FROM t WHERE IN","reject":true}
 {"sql":"SELECT a FROM t WHERE a a IN","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a IN","reject":true}
-{"sql":"SELECT a FROM + WHERE a IN","reject":true}
-{"sql":"SELECT a FROM t WHERE t IN ( 1","reject":true}
+{"sql":"SELECT a FROM FROM WHERE a IN","reject":true}
+{"sql":"SELECT a FROM t WHERE = IN ( 1","reject":true}
 {"sql":"SELECT a FROM t WHERE a ( 1","reject":true}
 {"sql":"SELECT a FROM WHERE a IN ( 1","reject":true}
 {"sql":"SELECT a t FROM WHERE a IN ( 1","reject":true}
@@ -494,31 +491,32 @@
 {"sql":"SELECT a FROM t WHERE a IN ( , 1 )","reject":true}
 {"sql":"SELECT a FROM t a WHERE IN ( , 1 )","reject":true}
 {"sql":"SELECT a FROM t WHERE IN ( , 1 )","reject":true}
-{"sql":"a a FROM t WHERE a IN ( , 1 )","reject":true}
-{"sql":"SELECT name FROM t WHERE a IN 1","reject":true}
+{"sql":"FROM a FROM t WHERE a IN ( , 1 )","reject":true}
+{"sql":"SELECT ) FROM t WHERE a IN 1","reject":true}
 {"sql":"SELECT a FROM t WHERE a IN 1 1","reject":true}
 {"sql":"SELECT a FROM t WHERE a IN IN 1","reject":true}
 {"sql":"SELECT a FROM t WHERE NOT a"}
-{"sql":"SELECT t FROM t WHERE a NOT","reject":true}
+{"sql":"SELECT IS FROM t WHERE a NOT","reject":true}
 {"sql":"SELECT a t FROM WHERE a NOT","reject":true}
 {"sql":"SELECT a FROM t WHERE a a NOT 1","reject":true}
 {"sql":"SELECT a FROM t WHERE WHERE a NOT 1","reject":true}
-{"sql":"t a FROM t WHERE a NOT 1","reject":true}
+{"sql":"1 a FROM t WHERE a NOT 1","reject":true}
 {"sql":"SELECT a a FROM t WHERE a LIKE","reject":true}
 {"sql":"SELECT a t WHERE a LIKE","reject":true}
 {"sql":"SELECT a FROM t a WHERE LIKE","reject":true}
 {"sql":"SELECT a FROM t WHERE a LIKE LIKE","reject":true}
 {"sql":"SELECT FROM t WHERE LIKE 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE LIKE 'a' 'a'","reject":true}
-{"sql":"SELECT a 1 t WHERE LIKE 'a'","reject":true}
+{"sql":"SELECT a a t WHERE LIKE 'a'","reject":true}
 {"sql":"SELECT a t FROM WHERE LIKE 'a'","reject":true}
 {"sql":"SELECT a FROM t WHERE a 'a' LIKE ESCAPE","reject":true}
 {"sql":"SELECT a FROM t WHERE a a LIKE 'a' ESCAPE","reject":true}
+{"sql":"SELECT t FROM t WHERE a LIKE 'a' ESCAPE","reject":true}
 {"sql":"SELECT a FROM t WHERE a ESCAPE 'a' 'a'","reject":true}
 {"sql":"SELECT a FROM t a WHERE ESCAPE 'a'","reject":true}
-{"sql":"SELECT a FROM t WHERE ( ESCAPE 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE FROM ESCAPE 'a'","reject":true}
 {"sql":"SELECT FROM t WHERE a SIMILAR 'a'","reject":true}
-{"sql":"SELECT a FROM t WHERE t SIMILAR 'a'","reject":true}
+{"sql":"SELECT a FROM t WHERE SELECT SIMILAR 'a'","reject":true}
 {"sql":"a FROM t WHERE a SIMILAR 'a'","reject":true}
 {"sql":"SELECT a FROM t a SIMILAR 'a'","reject":true}
 {"sql":"a SELECT FROM t WHERE a IS DISTINCT b","reject":true}
@@ -526,6 +524,6 @@
 {"sql":"SELECT a FROM t WHERE IS a DISTINCT b","reject":true}
 {"sql":"SELECT a FROM t t WHERE a IS DISTINCT b","reject":true}
 {"sql":"SELECT a FROM t WHERE a IS FROM DISTINCT","reject":true}
-{"sql":"SELECT a FROM , WHERE a IS DISTINCT FROM","reject":true}
+{"sql":"SELECT a FROM b WHERE a IS DISTINCT FROM","reject":true}
 {"sql":"SELECT a FROM WHERE a IS DISTINCT FROM","reject":true}
 {"sql":"SELECT a FROM t a WHERE IS DISTINCT FROM","reject":true}

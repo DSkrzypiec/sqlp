@@ -60,7 +60,7 @@ func (p *Parser) continueExprPrec(left ast.Expr, minPrec int) ast.Expr {
 		}
 		// `a IN (1) IN (2)` is legal because IN ends with its own parenthesis;
 		// every other non-associative operator ends with an open expression.
-		isIn := op == "IN" || op == "NOT" && p.isKwAt(1, "IN")
+		isIn := p.d.Features.Expr.ChainedIn && (op == "IN" || op == "NOT" && p.isKwAt(1, "IN"))
 		left = p.parseInfix(left, op, prec)
 		if p.d.NonAssoc[prec] && !isIn {
 			if _, next, ok := p.infixOp(); ok && next == prec {
@@ -1074,7 +1074,7 @@ func (p *Parser) parseFuncTail(fc *ast.FuncCall) {
 		fc.WithinGroup = p.parseOrderItems()
 		p.expectOp(")")
 	}
-	if p.isKw("FILTER") && p.isOpAt(1, "(") {
+	if p.d.Features.Expr.AggregateFilter && p.isKw("FILTER") && p.isOpAt(1, "(") {
 		p.next()
 		p.expectOp("(")
 		p.expectKw("WHERE")
@@ -1617,6 +1617,9 @@ func (p *Parser) parseWindowSpec() *ast.WindowSpec {
 	}
 	if p.acceptKwSeq("ORDER", "BY") {
 		ws.OrderBy = p.parseOrderItems()
+	}
+	if p.isKw("GROUPS") && !p.d.Features.Query.WindowGroups {
+		p.unexpected("ROWS or RANGE")
 	}
 	if units := p.acceptOneOf("ROWS", "RANGE", "GROUPS"); units != "" {
 		f := &ast.Frame{Units: units}

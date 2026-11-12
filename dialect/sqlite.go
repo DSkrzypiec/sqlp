@@ -88,13 +88,15 @@ var SQLite = &Dialect{
 
 	Features: Features{
 		Expr: ExprFeatures{
-			LikeEscape:   true,
-			IsAsOperator: true, NotNullPostfix: true, FreeFormTypeNames: true,
+			AggregateFilter: true,
+			LikeEscape:      true,
+			IsAsOperator:    true, NotNullPostfix: true, FreeFormTypeNames: true,
 		},
 		Names: NameFeatures{
 			StringAlias: true, MaxNameParts: 2,
 		},
 		Query: QueryFeatures{
+			CTEColumns: true, CTEMaterialized: true, ValuesQuery: true, NaturalJoin: true, WindowGroups: true,
 			IndexedBy: true, LimitComma: true, FreeJoinKeywords: true, InTable: true,
 		},
 		DML: DMLFeatures{

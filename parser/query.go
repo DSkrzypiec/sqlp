@@ -30,8 +30,10 @@ func (p *Parser) isQueryStartAtPos(pos int) bool {
 	switch t := p.tokAt(pos); t.Kind {
 	case lexer.Ident:
 		switch t.Value {
-		case "SELECT", "VALUES", "WITH":
+		case "SELECT", "WITH":
 			result = true
+		case "VALUES":
+			result = p.d.Features.Query.ValuesQuery
 		case "FROM":
 			result = p.d.Features.Query.Pipes
 		case "TABLE":
@@ -261,6 +263,9 @@ func (p *Parser) parseQueryTail(q *ast.Query) {
 		p.unexpected("end of query")
 	}
 	if p.acceptKwSeq("ORDER", "BY") {
+		if sel, ok := q.Body.(*ast.Select); ok && sel.From == nil && p.d.Features.Query.FromlessRules {
+			p.errorf(p.peekN(-1).Pos, "a query without FROM cannot have ORDER BY")
+		}
 		q.OrderBy = p.parseOrderItems()
 	}
 	// Limits and locking clauses each form one block, in either order.
@@ -342,6 +347,30 @@ func (p *Parser) checkWithTies(q *ast.Query) {
 	}
 }
 
+// checkLimitValue applies BigQuery's rule: LIMIT and OFFSET take an integer
+// literal or a parameter.
+func (p *Parser) checkLimitValue(e ast.Expr, pos int) {
+	if !p.d.Features.Query.LimitLiterals {
+		return
+	}
+	for {
+		paren, ok := e.(*ast.Paren)
+		if !ok {
+			break
+		}
+		e = paren.Expr
+	}
+	switch x := e.(type) {
+	case *ast.Param:
+		return
+	case *ast.Literal:
+		if x.Kind == ast.Integer {
+			return
+		}
+	}
+	p.errorf(pos, "LIMIT and OFFSET take an integer literal or a parameter")
+}
+
 func (p *Parser) parseLimit(dst **ast.Limit) {
 	if *dst == nil {
 		*dst = &ast.Limit{}
@@ -355,7 +384,9 @@ func (p *Parser) parseLimit(dst **ast.Limit) {
 		if p.d.Features.Query.OffsetWithoutLimit && p.acceptKw("ALL") {
 			l.All = true
 		} else {
+			pos := p.peek().Pos
 			l.Count = p.parseExpr()
+			p.checkLimitValue(l.Count, pos)
 			if p.d.Features.Query.LimitComma && p.acceptOp(",") { // LIMIT offset, count
 				l.Offset = l.Count
 				l.Count = p.parseExpr()
@@ -367,7 +398,9 @@ func (p *Parser) parseLimit(dst **ast.Limit) {
 			p.errorf(p.peek().Pos, "multiple OFFSET clauses not allowed")
 		}
 		p.next()
+		pos := p.peek().Pos
 		l.Offset = p.parseExpr()
+		p.checkLimitValue(l.Offset, pos)
 		if p.d.Features.Query.FetchFirst && p.isKw("ROW", "ROWS") {
 			if !isFetchValue(l.Offset) {
 				p.unexpected("end of OFFSET; with ROWS, only a constant or a parenthesized expression")
@@ -473,11 +506,12 @@ func (p *Parser) parseWith() *ast.With {
 
 func (p *Parser) parseCTE() *ast.CTE {
 	cte := &ast.CTE{Name: p.parseIdent()}
-	if p.isOp("(") {
+	if p.isOp("(") && p.d.Features.Query.CTEColumns {
 		cte.Columns = p.parseParenIdentList()
 	}
 	p.expectKw("AS")
 	switch {
+	case !p.d.Features.Query.CTEMaterialized:
 	case p.acceptKwSeq("NOT", "MATERIALIZED"):
 		f := false
 		cte.Materialized = &f
@@ -627,7 +661,7 @@ func (p *Parser) parseQueryPrimary() ast.QueryBody {
 		return &ast.ParenQuery{Query: q}
 	case p.isKw("SELECT"):
 		return p.parseSelect()
-	case p.isKw("VALUES"):
+	case p.isKw("VALUES") && p.d.Features.Query.ValuesQuery:
 		return p.parseValues()
 	case p.isKw("TABLE") && p.d.Features.Query.TableKeyword:
 		p.next()
@@ -704,6 +738,9 @@ func (p *Parser) parseSelect() *ast.Select {
 	}
 	if p.d.Features.Query.Qualify && p.acceptKw("QUALIFY") {
 		s.Qualify = p.parseExpr()
+	}
+	if p.d.Features.Query.FromlessRules && s.From == nil {
+		p.checkFromless(s)
 	}
 	return s
 }
@@ -787,6 +824,24 @@ func (p *Parser) parseStarModifiers(s *ast.Star) *ast.Star {
 	return s
 }
 
+// checkFromless applies BigQuery's rules to a SELECT without FROM.
+func (p *Parser) checkFromless(s *ast.Select) {
+	at := p.peekN(-1).Pos
+	switch {
+	case s.Where != nil:
+		p.errorf(at, "a query without FROM cannot have WHERE")
+	case s.GroupBy != nil:
+		p.errorf(at, "a query without FROM cannot have GROUP BY")
+	case s.Having != nil:
+		p.errorf(at, "a query without FROM cannot have HAVING")
+	}
+	for _, it := range s.Items {
+		if st, ok := it.Expr.(*ast.Star); ok && st.Qualifier == nil {
+			p.errorf(at, "SELECT * needs a FROM clause")
+		}
+	}
+}
+
 func (p *Parser) parseSelectItems() []*ast.SelectItem {
 	items := []*ast.SelectItem{p.parseSelectItem()}
 	for p.acceptOp(",") {
@@ -854,6 +909,16 @@ func (p *Parser) parseGroupBy() *ast.GroupBy {
 		}
 	}
 	g.Items = p.parseGroupItems()
+	if p.d.Features.Query.GroupingSetsAlone {
+		for _, it := range g.Items {
+			if _, set := it.(*ast.GroupingSet); set && len(g.Items) > 1 {
+				p.errorf(p.peekN(-1).Pos, "ROLLUP, CUBE, GROUPING SETS and () must be the only grouping item")
+			}
+			if _, tuple := it.(*ast.Tuple); tuple && len(g.Items) > 1 { // alone, (a, b) groups by both
+				p.errorf(p.peekN(-1).Pos, "a tuple cannot be a grouping item next to others")
+			}
+		}
+	}
 	return g
 }
 
@@ -1007,7 +1072,7 @@ func joinsArray(t ast.TableExpr) bool {
 
 // parseJoinKeywords parses standard [NATURAL] [kind [OUTER]] before JOIN.
 func (p *Parser) parseJoinKeywords(j *ast.Join) {
-	j.Natural = p.acceptKw("NATURAL")
+	j.Natural = p.d.Features.Query.NaturalJoin && p.acceptKw("NATURAL")
 	if j.Natural && p.isKw("CROSS") {
 		p.unexpected("JOIN")
 	}
@@ -1042,6 +1107,9 @@ func (p *Parser) parseFreeJoinKeywords(j *ast.Join) {
 		n++
 		switch word {
 		case "NATURAL":
+			if !p.d.Features.Query.NaturalJoin {
+				p.errorf(p.peekN(-1).Pos, "NATURAL JOIN is not supported in dialect %s", p.d.Name)
+			}
 			j.Natural = true
 		case "LEFT":
 			left = true
@@ -1259,7 +1327,10 @@ func (p *Parser) parseTableSample() *ast.TableSample {
 	ts := &ast.TableSample{Method: p.parseName()}
 	p.expectOp("(")
 	ts.Args = p.parseExprList()
-	ts.Percent = p.d.Features.Query.SamplePercent && p.acceptKw("PERCENT")
+	if p.d.Features.Query.SamplePercent {
+		p.expectKw("PERCENT")
+		ts.Percent = true
+	}
 	p.expectOp(")")
 	if p.acceptKw("REPEATABLE") {
 		p.expectOp("(")
