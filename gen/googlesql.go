@@ -427,7 +427,9 @@ func (g *Generator) googleAlterAction(a ast.AlterAction) {
 		case ast.DropDefault:
 			g.w(" DROP DEFAULT")
 		case ast.SetIdentity, ast.AddIdentity:
-			g.w(" SET GENERATED ", x.Generated, " AS IDENTITY (")
+			g.w(" SET GENERATED")
+			g.kw(x.Generated != "", x.Generated)
+			g.w(" AS IDENTITY (")
 			for i, o := range x.Identity {
 				if i > 0 {
 					g.w(" ")
@@ -548,4 +550,21 @@ func (g *Generator) googleCreateIndex(s *ast.CreateIndex) {
 		g.expr(s.PartitionExpr)
 	}
 	g.googleOptions(s.Options)
+}
+
+func (g *Generator) googleGrant(s *ast.Grant) {
+	if s.All || s.IsRole || s.AllIn != "" || s.WithOption != "" || s.GrantedBy != nil || s.OptionFor != "" || s.Behavior != "" {
+		g.warn("this form of GRANT or REVOKE")
+	}
+	g.w(map[bool]string{true: "REVOKE ", false: "GRANT "}[s.Revoke])
+	for i, p := range s.Privileges {
+		if i > 0 {
+			g.w(", ")
+		}
+		g.ident(p.Name)
+	}
+	g.w(" ON ", s.ObjectKind, " ")
+	g.nameList(s.Objects)
+	g.w(map[bool]string{true: " FROM ", false: " TO "}[s.Revoke])
+	g.exprList(s.Grantees)
 }

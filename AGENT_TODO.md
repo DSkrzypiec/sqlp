@@ -750,9 +750,9 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, after the DDL but procedures and DCL.** 13,016 frozen
-statements, 7,440 rejected by BigQuery, 4,311 with a verified shape, no
-mismatch. Known disagreements: 177 valid statements sqlp rejects (before the
+**Status, 2026-11-12, after the DDL and DCL but procedures.** 13,105 frozen
+statements, 7,525 rejected by BigQuery, 4,319 with a verified shape, no
+mismatch. Known disagreements: 175 valid statements sqlp rejects (before the
 day's work on the reference examples: 1,102) and 4 invalid ones it accepts
 (206). Many of the
 rest come from BigQuery's order of checks: it reports a missing name or a type
@@ -842,7 +842,10 @@ because the sample tables are recreated on every run.
   policies, search and vector indexes (`CreateIndex` with a `Kind`), and
   capacity, reservation, assignment, connection and data policy
   (`CreateResource`), each with the OR REPLACE and IF NOT EXISTS it allows.
-  To do: procedures (with phase 6), `GRANT`/`REVOKE`.
+  `GRANT`/`REVOKE` of roles on a SCHEMA, TABLE, MATERIALIZED VIEW or PROJECT
+  to strings or parameters (the DCL page of the reference has no examples
+  marked GoogleSQL, so all of it comes from dry runs). To do: procedures
+  (with phase 6).
   corpusgen trims BigQuery's messages before classifying them: some start
   with a space.
 - [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,

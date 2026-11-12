@@ -712,10 +712,10 @@ func (p *Parser) parseGoogleAlterAction(kind string) ast.AlterAction {
 			ac.Kind = ast.DropDefault
 		case p.acceptKwSeq("SET", "GENERATED"):
 			ac.Kind = ast.SetIdentity
-			if p.acceptKwSeq("BY", "DEFAULT") {
+			switch {
+			case p.acceptKwSeq("BY", "DEFAULT"):
 				ac.Generated = "BY DEFAULT"
-			} else {
-				p.expectKw("ALWAYS")
+			case p.acceptKw("ALWAYS"):
 				ac.Generated = "ALWAYS"
 			}
 			p.expectKw("AS", "IDENTITY")
@@ -937,4 +937,47 @@ func (p *Parser) parseResource(orReplace bool, kind string) ast.Statement {
 		r.Options = p.parseOptionList()
 	}
 	return r
+}
+
+// parseGoogleGrant parses GRANT roles ON kind name TO grantees, or REVOKE
+// ... FROM grantees. A role is a name, often quoted (`roles/...`); a grantee
+// is a string or a parameter.
+func (p *Parser) parseGoogleGrant() ast.Statement {
+	g := &ast.Grant{Revoke: p.next().Value == "REVOKE"}
+	for {
+		g.Privileges = append(g.Privileges, &ast.Privilege{Name: p.parseAnyIdent()})
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.expectKw("ON")
+	for _, words := range [][]string{{"MATERIALIZED", "VIEW"}, {"SCHEMA"}, {"TABLE"}, {"PROJECT"}} {
+		if p.acceptKwSeq(words...) {
+			g.ObjectKind = joinWords(words)
+			break
+		}
+	}
+	if g.ObjectKind == "" {
+		p.unexpected("SCHEMA, TABLE, MATERIALIZED VIEW or PROJECT")
+	}
+	g.Objects = []*ast.Name{p.parseName()}
+	if g.Revoke {
+		p.expectKw("FROM")
+	} else {
+		p.expectKw("TO")
+	}
+	for {
+		switch t := p.peek(); {
+		case t.Kind == lexer.String:
+			g.Grantees = append(g.Grantees, p.parseStringLit())
+		case t.Kind == lexer.Op && (t.Text == "@" || t.Text == "@@"):
+			g.Grantees = append(g.Grantees, p.parsePrefix())
+		default:
+			p.unexpected("a string literal or a parameter")
+		}
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	return g
 }

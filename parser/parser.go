@@ -730,6 +730,10 @@ func (p *Parser) parseStatement() ast.Statement {
 		if p.d.Features.DDL.GoogleSQL {
 			return p.parseUndrop()
 		}
+	case "GRANT", "REVOKE":
+		if p.d.Features.DDL.GoogleSQL {
+			return p.parseGoogleGrant()
+		}
 	case "ALTER":
 		return p.parseAlter()
 	case "TRUNCATE":

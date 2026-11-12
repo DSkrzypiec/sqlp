@@ -373,3 +373,22 @@ CREATE TABLE FUNCTION zf(x INT64) RETURNS TABLE<> AS SELECT 1
 CREATE TABLE FUNCTION zf(x INT64) RETURNS INT64 AS SELECT x
 CREATE AGGREGATE FUNCTION zf(x FLOAT64) RETURNS FLOAT64 REMOTE WITH CONNECTION c
 CREATE AGGREGATE TABLE FUNCTION zf(x INT64) AS SELECT x
+GRANT `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer`, `roles/bigquery.dataEditor` ON TABLE sqlp_oracle.t TO "user:nobody@example.com", "group:g@example.com"
+GRANT `roles/bigquery.dataViewer` ON VIEW sqlp_oracle.t TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON EXTERNAL TABLE sqlp_oracle.t TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON TABLE t TO 'user:nobody@example.com'
+GRANT `roles/bigquery.dataViewer` ON t TO "user:nobody@example.com"
+GRANT roles.x ON TABLE t TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON TABLE t TO user1
+GRANT `roles/bigquery.dataViewer` ON TABLE t TO @p
+GRANT `roles/bigquery.dataViewer` ON FUNCTION f TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON MODEL m TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON MATERIALIZED VIEW mv TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON PROJECT p TO "user:nobody@example.com"
+GRANT `roles/bigquery.dataViewer` ON TABLE t TO "user:nobody@example.com" WITH GRANT OPTION
+GRANT SELECT ON TABLE t TO "user:nobody@example.com"
+REVOKE `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle FROM "user:nobody@example.com"
+REVOKE `roles/bigquery.dataViewer` ON TABLE t FROM "user:nobody@example.com", "group:g@example.com"
+REVOKE `roles/bigquery.dataViewer` ON TABLE t TO "user:nobody@example.com"
+ALTER TABLE t ALTER COLUMN a SET GENERATED AS IDENTITY (START WITH 1)

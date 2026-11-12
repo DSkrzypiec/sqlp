@@ -35,7 +35,11 @@ func (g *Generator) extendedStmt(s ast.Statement) bool {
 	case *ast.Merge:
 		g.merge(s)
 	case *ast.Grant:
-		g.grant(s)
+		if g.d.Features.DDL.GoogleSQL {
+			g.googleGrant(s)
+		} else {
+			g.grant(s)
+		}
 	case *ast.Copy:
 		g.copyStmt(s)
 	case *ast.CommentOn:

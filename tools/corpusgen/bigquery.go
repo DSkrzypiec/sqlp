@@ -134,6 +134,9 @@ var bqRejects = messageTable(
 	`Vector Index options cannot be empty`,
 	`One and only one column is required to be indexed when creating vector index`,
 	`CREATE INDEX is not supported`,
+	`Must use 'TABLE' keyword when performing DCL operations on a table`,
+	`Invalid object type for (GRANT|REVOKE) statement`,
+	`object_type is required, but missing`,
 	`ALTER \S+ only supports SET OPTIONS operation`,
 	`ALTER MATERIALIZED VIEW does not support ALTER COLUMN SET OPTIONS`,
 	`WHERE clause is not supported inside Window function call`,
@@ -257,6 +260,8 @@ var bqAccepts = messageTable(
 	`unsupported option `,
 	// functions, policies and indexes: options, parameters and column types
 	`Incomplete query parameters`,
+	`Permission denied for project `,
+	`Default value expressions cannot reference columns`,
 	`'.*' is not a valid value; failed to set`,
 	`'.*' must be specified with a non empty value`,
 	`Function declared to return \S+ but the function body produces incompatible type`,

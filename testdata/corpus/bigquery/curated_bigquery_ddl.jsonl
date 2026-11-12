@@ -373,32 +373,51 @@
 {"sql":"CREATE TABLE FUNCTION zf(x INT64) RETURNS INT64 AS SELECT x","reject":true}
 {"sql":"CREATE AGGREGATE FUNCTION zf(x FLOAT64) RETURNS FLOAT64 REMOTE WITH CONNECTION c"}
 {"sql":"CREATE AGGREGATE TABLE FUNCTION zf(x INT64) AS SELECT x","reject":true}
-{"sql":"CREATE 1 zz1 ( x INT64 NOT NULL DEFAULT 1 )","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle TO \"user:nobody@example.com\"","shape":"GRANT `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle TO 'user:nobody@example.com';"}
+{"sql":"GRANT `roles/bigquery.dataViewer`, `roles/bigquery.dataEditor` ON TABLE sqlp_oracle.t TO \"user:nobody@example.com\", \"group:g@example.com\"","shape":"GRANT `roles/bigquery.dataViewer`, `roles/bigquery.dataEditor` ON TABLE sqlp_oracle.t TO 'user:nobody@example.com', 'group:g@example.com';"}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON VIEW sqlp_oracle.t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON EXTERNAL TABLE sqlp_oracle.t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO 'user:nobody@example.com'","shape":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO 'user:nobody@example.com';"}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT roles.x ON TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO user1","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO @p"}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON FUNCTION f TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MODEL m TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MATERIALIZED VIEW mv TO \"user:nobody@example.com\""}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON PROJECT p TO \"user:nobody@example.com\""}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO \"user:nobody@example.com\" WITH GRANT OPTION","reject":true}
+{"sql":"GRANT SELECT ON TABLE t TO \"user:nobody@example.com\"","shape":"GRANT `SELECT` ON TABLE t TO 'user:nobody@example.com';"}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle FROM \"user:nobody@example.com\"","shape":"REVOKE `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle FROM 'user:nobody@example.com';"}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON TABLE t FROM \"user:nobody@example.com\", \"group:g@example.com\"","shape":"REVOKE `roles/bigquery.dataViewer` ON TABLE t FROM 'user:nobody@example.com', 'group:g@example.com';"}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET GENERATED AS IDENTITY (START WITH 1)","shape":"ALTER TABLE t ALTER COLUMN a SET GENERATED AS IDENTITY (START WITH 1);"}
+{"sql":"CREATE index_granularity zz1 ( x INT64 NOT NULL DEFAULT 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( ( x INT64 NOT NULL DEFAULT 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x x INT64 NOT NULL DEFAULT 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 NULL DEFAULT 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 1 DEFAULT NOT NULL )","reject":true}
 {"sql":"TABLE CREATE zz1 ( x INT64 DEFAULT 1 NOT NULL )","reject":true}
 {"sql":"TABLE zz1 ( x INT64 DEFAULT 1 NOT NULL )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 TABLE 1 NOT NULL )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 SET 1 NOT NULL )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x OPTIONS INT64 ( ) NOT NULL )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 OPTIONS ( ) NOT NULL )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 OPTIONS ( NOT ) NULL )","reject":true}
-{"sql":"CREATE TABLE zz1 1 x INT64 OPTIONS ( ) NOT NULL )","reject":true}
+{"sql":"CREATE TABLE zz1 SUM x INT64 OPTIONS ( ) NOT NULL )","reject":true}
 {"sql":"CREATE TABLE zz1 ( INT64 x NOT NULL OPTIONS ( ) )"}
 {"sql":"CREATE TABLE zz1 ( ( x INT64 NOT NULL OPTIONS ( ) )","reject":true}
-{"sql":") TABLE zz1 ( x INT64 NOT NULL OPTIONS ( ) )","reject":true}
+{"sql":"STRING TABLE zz1 ( x INT64 NOT NULL OPTIONS ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 NOT NULL OPTIONS ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 DEFAULT 1 PRIMARY VIEW NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 DEFAULT 1 PRIMARY x NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 ( x INT64 DEFAULT 1 PRIMARY KEY NOT ENFORCED )","reject":true}
 {"sql":"CREATE zz1 TABLE ( x INT64 DEFAULT 1 PRIMARY KEY NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 INT64 DEFAULT 1 PRIMARY KEY NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( INT64 x PRIMARY KEY NOT ENFORCED DEFAULT 1 )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT zp DEFAULT 1 )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT a DEFAULT 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED DEFAULT 1 1 )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED DEFAULT 1 )","reject":true}
+{"sql":"ON TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED DEFAULT 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY )","reject":true}
-{"sql":"CREATE TABLE zz1 t x INT64 PRIMARY KEY )","reject":true}
+{"sql":"CREATE TABLE zz1 index_granularity x INT64 PRIMARY KEY )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY )","reject":true}
 {"sql":"CREATE TABLE zz1 x INT64 PRIMARY KEY )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 KEY ENFORCED )","reject":true}
@@ -407,17 +426,17 @@
 {"sql":"CREATE TABLE zz1 x INT64 PRIMARY KEY ENFORCED )","reject":true}
 {"sql":"CREATE TABLE ( zz1 x STRING ( 10 ) COLLATE 'und:ci' )","reject":true}
 {"sql":"CREATE TABLE zz1 x ( STRING ( 10 ) COLLATE 'und:ci' )","reject":true}
-{"sql":"CREATE ALTER zz1 ( x STRING ( 10 ) COLLATE 'und:ci' )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRING ( 10 ( COLLATE 'und:ci' )","reject":true}
+{"sql":"CREATE VIEW zz1 ( x STRING ( 10 ) COLLATE 'und:ci' )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRING ( 10 POLICY COLLATE 'und:ci' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 COLLATE 'und:ci' 'und:ci' )"}
-{"sql":"CREATE TABLE ALTER ( x INT64 COLLATE 'und:ci' )"}
-{"sql":"CREATE TABLE zz1 ( x ( COLLATE 'und:ci' )","reject":true}
+{"sql":"CREATE TABLE a ( x INT64 COLLATE 'und:ci' )"}
+{"sql":"CREATE TABLE zz1 ( x WITH COLLATE 'und:ci' )","reject":true}
 {"sql":"CREATE TABLE ( x INT64 COLLATE 'und:ci' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING COLLATE 'und:ci' NOT ( )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING COLLATE 'und:ci' NOT NULL","reject":true}
 {"sql":"CREATE TABLE zz1 ( ( x STRING COLLATE 'und:ci' NOT NULL )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING COLLATE 'und:ci' NOT NULL NULL )","reject":true}
-{"sql":"CREATE TABLE zz1 'und:ci' x STRING NOT NULL COLLATE 'und:ci' )","reject":true}
+{"sql":"CREATE TABLE zz1 ) x STRING NOT NULL COLLATE 'und:ci' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING NOT COLLATE NULL 'und:ci' )","reject":true}
 {"sql":"CREATE CREATE TABLE zz1 ( x STRING NOT NULL COLLATE 'und:ci' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING NULL COLLATE 'und:ci' )","reject":true}
@@ -427,34 +446,34 @@
 {"sql":"CREATE TABLE zz1 ( x ARRAY < STRING NOT NULL > ) )","reject":true}
 {"sql":"CREATE TABLE zz1 x ( ARRAY < STRING OPTIONS ( ) > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( ARRAY x < STRING OPTIONS ( ) > )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x ARRAY < STRING OPTIONS ( ) > )","shape":"CREATE TABLE zz1 (x ARRAY<STRING OPTIONS ()>);"}
+{"sql":"CREATE TABLE zz1 ( x ARRAY < STRING OPTIONS ( `us.c` > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x ARRAY < STRING OPTIONS ( ) ) > )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x ARRAY < STRING COLLATE 'und:ci' . )","reject":true}
-{"sql":") TABLE zz1 ( x ARRAY < STRING COLLATE 'und:ci' > )","reject":true}
-{"sql":"CREATE TABLE ) ( x ARRAY < STRING COLLATE 'und:ci' > )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x ARRAY < STRING COLLATE 'und:ci' CREATE )","reject":true}
+{"sql":"POLICY TABLE zz1 ( x ARRAY < STRING COLLATE 'und:ci' > )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x ARRAY < STRING COLLATE 'und:ci' > )","shape":"CREATE TABLE zz1 (x ARRAY<STRING COLLATE 'und:ci'>);"}
 {"sql":"CREATE TABLE zz1 ( x ARRAY < STRING 'und:ci' COLLATE > )","reject":true}
-{"sql":"CREATE DEFAULT zz1 ( x STRUCT < a INT64 NOT NULL OPTIONS ( description = 'd' ) > )","reject":true}
+{"sql":"CREATE ) zz1 ( x STRUCT < a INT64 NOT NULL OPTIONS ( description = 'd' ) > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 NOT NULL OPTIONS ( description = 'd' ) >","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 NOT NULL OPTIONS ( description = 'd' > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 NOT NULL ( description = 'd' ) > )","reject":true}
-{"sql":"DOUBLE TABLE zz1 ( x STRUCT < a INT64 DEFAULT 1 > )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 DEFAULT BY > )","reject":true}
+{"sql":"ADD TABLE zz1 ( x STRUCT < a INT64 DEFAULT 1 > )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 DEFAULT ) > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 INT64 DEFAULT 1 > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 DEFAULT DEFAULT 1 > )","reject":true}
 {"sql":"TABLE CREATE zz1 ( x STRUCT < a INT64 PRIMARY KEY NOT ENFORCED > )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 PRIMARY KEY NOT ENFORCED > )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRUCT < a u PRIMARY KEY NOT ENFORCED > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 PRIMARY KEY NOT ENFORCED ) >","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 PRIMARY KEY NOT assignee > )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRUCT < INT64 SELECT )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRUCT < a INT64 PRIMARY KEY NOT SELECT > )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRUCT < INT64 = )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT INT64 < > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x < INT64 > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( STRUCT x < INT64 > )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRUCT < a STRING COLLATE 'und:ci' > zz1","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRUCT < a STRING COLLATE 'und:ci' > ALL","reject":true}
 {"sql":"CREATE zz1 TABLE ( x STRUCT < a STRING COLLATE 'und:ci' > )","reject":true}
 {"sql":"CREATE zz1 ( x STRUCT < a STRING COLLATE 'und:ci' > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRUCT < a STRING 'und:ci' > )","reject":true}
 {"sql":"TABLE CREATE zz1 ( x INT64 AS IDENTITY )","reject":true}
-{"sql":"CREATE TABLE zz1 x x INT64 AS IDENTITY )","reject":true}
+{"sql":"CREATE TABLE zz1 SELECT x INT64 AS IDENTITY )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x AS INT64 IDENTITY )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x AS IDENTITY )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x AS IDENTITY ( ) )","reject":true}
@@ -464,12 +483,12 @@
 {"sql":"CREATE TABLE zz1 ( x INT64 GENERATED BY AS IDENTITY ( START WITH 1 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 GENERATED BY DEFAULT AS IDENTITY ( START 1 WITH ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 GENERATED BY DEFAULT AS IDENTITY ( START 1 ) )","reject":true}
-{"sql":"CREATE TABLE EXTERNAL ( x INT64 GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 2 START WITH 1 ) )","reject":true}
+{"sql":"CREATE TABLE ON ( x INT64 GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 2 START WITH 1 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 2 START WITH ) 1 )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 2 START WITH 1 ) 1","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 2 START WITH 1 ) ON","reject":true}
 {"sql":"CREATE TABLE zz1 ( x GENERATED ALWAYS AS IDENTITY ( INCREMENT BY 2 START WITH 1 ) )","reject":true}
 {"sql":"CREATE CREATE TABLE zz1 ( x INT64 GENERATED ALWAYS AS IDENTITY ( MAXVALUE 5 ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 GENERATED ALWAYS ( IDENTITY ( MAXVALUE 5 ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 GENERATED ALWAYS TABLE IDENTITY ( MAXVALUE 5 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 x ( INT64 GENERATED ALWAYS AS IDENTITY ( MAXVALUE 5 ) )","reject":true}
 {"sql":"CREATE zz1 TABLE ( x INT64 GENERATED ALWAYS AS IDENTITY ( MAXVALUE 5 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y ARRAY < FLOAT64 > GENERATED ALWAYS AS ( AI . EMBED x ) ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
@@ -480,49 +499,49 @@
 {"sql":"CREATE TABLE zz1 ( INT64 , y INT64 GENERATED ALWAYS AS ( x ) STORED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED ALWAYS AS ( x x ) STORED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x , y INT64 GENERATED ALWAYS AS ( x ) STORED )","reject":true}
-{"sql":"1 TABLE zz1 ( x INT64 , CONSTRAINT c PRIMARY KEY ( x ) NOT ENFORCED )","reject":true}
+{"sql":"( TABLE zz1 ( x INT64 , CONSTRAINT c PRIMARY KEY ( x ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , , CONSTRAINT c PRIMARY KEY ( x ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE TABLE zz1 ( x INT64 , CONSTRAINT c PRIMARY KEY ( x ) NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT c PRIMARY SEARCH ( x ) NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT c PRIMARY OPTIONS ( x ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( PRIMARY KEY ( x ) NOT ENFORCED , x INT64","reject":true}
 {"sql":"CREATE TABLE ( PRIMARY KEY ( x ) NOT ENFORCED , x INT64 )","reject":true}
 {"sql":"TABLE zz1 ( PRIMARY KEY ( x ) NOT ENFORCED , x INT64 )","reject":true}
-{"sql":"CREATE TABLE zz1 ( PRIMARY KEY ( x ) NOT ENFORCED , x KEY )"}
+{"sql":"CREATE TABLE zz1 ( PRIMARY KEY ( x ) NOT ENFORCED , x a )"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x NOT ) ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) t ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t ( a ) ENFORCED )"}
-{"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES t ( a INDEX NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES t ( a = NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES t ( ) a NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE ( x INT64 REFERENCES t ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES NOT t ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES REFERENCES t NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES t NOT NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES ) NOT ENFORCED )","reject":true}
-{"sql":"CREATE CREATE zz1 ( x INT64 CONSTRAINT k REFERENCES t ( a ) NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 CONSTRAINT COLLATE REFERENCES t ( a ) NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 REFERENCES c NOT ENFORCED )","reject":true}
+{"sql":"CREATE ( zz1 ( x INT64 CONSTRAINT k REFERENCES t ( a ) NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 CONSTRAINT ) REFERENCES t ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 CONSTRAINT k REFERENCES t ( a ) ENFORCED NOT )","reject":true}
-{"sql":"CREATE TABLE zz1 = x INT64 CONSTRAINT k REFERENCES t ( a ) NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 FUNCTION x INT64 CONSTRAINT k REFERENCES t ( a ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ) (","reject":true}
-{"sql":"CREATE TABLE zz1 ( IF","reject":true}
+{"sql":"CREATE TABLE zz1 ( TABLE","reject":true}
 {"sql":"CREATE TABLE TABLE zz1 ( )","reject":true}
-{"sql":"CREATE TABLE ENFORCED","reject":true}
-{"sql":"( TABLE zz1","reject":true}
+{"sql":"CREATE TABLE NULL","reject":true}
+{"sql":"TABLE TABLE zz1","reject":true}
 {"sql":"TABLE zz1"}
 {"sql":"CREATE TABLE zz1 zz1","reject":true}
-{"sql":"CREATE TABLE zz1 ( ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( INT64 )","reject":true}
 {"sql":"CREATE TABLE ( ( x )","reject":true}
 {"sql":"TABLE CREATE zz1 ( x )","reject":true}
 {"sql":"CREATE zz1 ( x )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 EXISTS AS SELECT 1","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 CONNECTION AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 ( x INT64 ) AS SELECT 1","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) AS ( 1","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) AS INT64 1","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) AS SELECT","reject":true}
 {"sql":"CREATE TABLE zz1 OPTIONS ( ( ) AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE zz1 OPTIONS ) ( AS SELECT 1","reject":true}
-{"sql":"CREATE TABLE zz1 IDENTITY ( ) AS SELECT 1","reject":true}
+{"sql":"CREATE TABLE zz1 SET ( ) AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE zz1 OPTIONS ( AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE TABLE zz1 AS ( SELECT 1 AS x )","reject":true}
 {"sql":"CREATE TABLE zz1 AS ( SELECT 1 1 AS x )","reject":true}
@@ -534,7 +553,7 @@
 {"sql":"CREATE TABLE zz1 ( INT64 ) OPTIONS ( description = 'a' ) PARTITION BY x","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 ( x DATE ) PARTITION BY x CLUSTER BY x","reject":true}
 {"sql":"CREATE TABLE zz1 ( x DATE PARTITION BY x CLUSTER BY x","reject":true}
-{"sql":"CREATE TABLE zz1 ( x DATE ) PARTITION BY NOT CLUSTER BY x","reject":true}
+{"sql":"CREATE TABLE zz1 ( x DATE ) PARTITION BY + CLUSTER BY x","reject":true}
 {"sql":"CREATE TABLE zz1 x DATE ) PARTITION BY x CLUSTER BY x","reject":true}
 {"sql":"CREATE TABLE zz1 ( x ) DATE CLUSTER BY x PARTITION BY x","reject":true}
 {"sql":"CREATE zz1 ( x DATE ) CLUSTER BY x PARTITION BY x","reject":true}
@@ -542,50 +561,51 @@
 {"sql":"CREATE TABLE ( x INT64 ) CLUSTER BY x , x","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY x ,","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY , x x","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY x ) x","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY ( a )"}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY x ALWAYS x","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY ( = )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x x INT64 ) CLUSTER BY ( x )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY x ( )"}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) PARTITION BY RANGE_BUCKET ( x , GENERATE_ARRAY ( 0 , , 100 , 10 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) PARTITION BY RANGE_BUCKET ( x , GENERATE_ARRAY ( 0 , 100 , 10 ) )","shape":"CREATE TABLE zz1 (x INT64) PARTITION BY RANGE_BUCKET(x, GENERATE_ARRAY(0, 100, 10));"}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) PARTITION BY RANGE_BUCKET ( x , ( 0 , 100 , 10 ) )"}
 {"sql":"CREATE TABLE zz1 ( x INT64 PARTITION BY RANGE_BUCKET ( x , GENERATE_ARRAY ( 0 , 100 , 10 ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x DATE ) DEFAULT COLLATE 'und:ci' SET BY x","reject":true}
+{"sql":"CREATE TABLE zz1 ( x DATE ) DEFAULT COLLATE 'und:ci' AS BY x","reject":true}
 {"sql":"CREATE TABLE zz1 ( x DATE DATE ) DEFAULT COLLATE 'und:ci' PARTITION BY x","reject":true}
-{"sql":"CREATE BY zz1 ( x DATE ) DEFAULT COLLATE 'und:ci' PARTITION BY x","reject":true}
+{"sql":"CREATE INT64 zz1 ( x DATE ) DEFAULT COLLATE 'und:ci' PARTITION BY x","reject":true}
 {"sql":"CREATE TABLE zz1 x ( DATE ) DEFAULT COLLATE 'und:ci' PARTITION BY x","reject":true}
-{"sql":"CREATE ( zz1 ( x DATE ) PARTITION BY x DEFAULT COLLATE 'und:ci'","reject":true}
-{"sql":"CREATE TABLE zz1 ( STRING DATE ) PARTITION BY x DEFAULT COLLATE 'und:ci'","reject":true}
-{"sql":"CREATE TABLE ( ( x DATE ) PARTITION BY x DEFAULT COLLATE 'und:ci'","reject":true}
+{"sql":"CREATE TABLE zz1 ( x DATE ) PARTITION BY x DEFAULT COLLATE 'und:ci'","reject":true}
+{"sql":"CREATE TABLE zz1 ( ENFORCED DATE ) PARTITION BY x DEFAULT COLLATE 'und:ci'","reject":true}
+{"sql":"CREATE TABLE START ( x DATE ) PARTITION BY x DEFAULT COLLATE 'und:ci'","reject":true}
 {"sql":"CREATE TABLE zz1 ( x DATE ) PARTITION BY DEFAULT COLLATE 'und:ci'","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 INT64 ) WITH CONNECTION DEFAULT","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 ( x INT64 ) WITH CONNECTION DEFAULT","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) 'und:ci' CONNECTION DEFAULT","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) `roles/bigquery.dataViewer` CONNECTION DEFAULT","reject":true}
 {"sql":"CREATE CREATE TABLE zz1 ( x INT64 ) WITH CONNECTION DEFAULT","reject":true}
 {"sql":"TABLE CREATE zz1 ( x INT64 ) WITH CONNECTION c OPTIONS ( )","reject":true}
-{"sql":"CREATE ON zz1 ( x INT64 ) WITH CONNECTION c OPTIONS ( )","reject":true}
+{"sql":"CREATE `zp.region-us.d` zz1 ( x INT64 ) WITH CONNECTION c OPTIONS ( )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) WITH WITH CONNECTION c OPTIONS ( )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) CONNECTION WITH c OPTIONS ( )","reject":true}
-{"sql":"CREATE TEMP TABLE zz1 ( x format )"}
+{"sql":"CREATE TEMP TABLE zz1 ( x INT64 )"}
 {"sql":"CREATE TEMP TABLE ( zz1 x INT64 )","reject":true}
 {"sql":"CREATE TEMP TABLE zz1 ( x x INT64 )","reject":true}
-{"sql":"CREATE TEMP TABLE zz1 ( DEFAULT INT64 )","reject":true}
+{"sql":"CREATE TEMP TABLE zz1 ( ) INT64 )","reject":true}
 {"sql":"CREATE OR REPLACE TABLE IF NOT EXISTS zz1 ( x ) INT64","reject":true}
 {"sql":"CREATE OR REPLACE TABLE IF NOT EXISTS ( zz1 x INT64 )","reject":true}
-{"sql":"CREATE OR REPLACE TABLE IF NOT EXISTS zz1 ( x INT64 )","reject":true}
+{"sql":"CREATE OR REPLACE TABLE IF TABLE EXISTS zz1 ( x INT64 )","reject":true}
 {"sql":"CREATE OR REPLACE TABLE IF NOT EXISTS EXISTS zz1 ( x INT64 )","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 LIKE t","reject":true}
 {"sql":"CREATE TABLE zz1 LIKE","reject":true}
 {"sql":"TABLE CREATE zz1 LIKE t","reject":true}
 {"sql":"CREATE zz1 LIKE t","reject":true}
 {"sql":"CREATE TABLE zz1 t","reject":true}
-{"sql":"CREATE zb zz1 COPY t","reject":true}
+{"sql":"CREATE ) zz1 COPY t","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 COPY t","reject":true}
-{"sql":"CREATE TABLE zz1 COPY TABLE"}
+{"sql":"CREATE TABLE zz1 COPY SELECT","reject":true}
 {"sql":"CREATE TABLE zz1 CLONE t FOR SYSTEM_TIME SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( )","reject":true}
-{"sql":"CREATE TABLE zz1 CLONE zz4 FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( )"}
+{"sql":"CREATE TABLE zz1 CLONE TABLE FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( )"}
 {"sql":"CREATE TABLE zz1 CLONE t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP (","reject":true}
 {"sql":"CREATE TABLE zz1 CLONE t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( ) )","reject":true}
+{"sql":"CREATE TABLE a LIKE t AS SELECT 1"}
 {"sql":"CREATE TABLE LIKE zz1 t AS SELECT 1","reject":true}
 {"sql":"TABLE zz1 LIKE t AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE zz1 t LIKE AS SELECT 1","reject":true}
@@ -596,32 +616,31 @@
 {"sql":"CREATE TABLE zz1 LIKE PARTITION t BY a OPTIONS ( )","reject":true}
 {"sql":"CREATE TABLE zz1 LIKE t BY a OPTIONS ( )","reject":true}
 {"sql":"TABLE zz1 LIKE t PARTITION BY a OPTIONS ( )","reject":true}
-{"sql":"DROP TABLE zz1 COPY t OPTIONS ( )","reject":true}
+{"sql":"TIMESTAMP TABLE zz1 COPY t OPTIONS ( )","reject":true}
 {"sql":"CREATE TABLE zz1 COPY t t OPTIONS ( )","reject":true}
 {"sql":"CREATE TABLE zz1 COPY OPTIONS t ( )","reject":true}
-{"sql":"CREATE TABLE zz1 COPY t src ( )","reject":true}
+{"sql":"CREATE TABLE zz1 COPY t sqlp_oracle ( )","reject":true}
 {"sql":"CREATE TABLE zz1 COPY COPY t PARTITION BY a","reject":true}
 {"sql":"CREATE TABLE zz1 COPY t PARTITION a","reject":true}
-{"sql":"CREATE TABLE zz1 zz1 t PARTITION BY a","reject":true}
-{"sql":"CREATE TABLE zz1 COPY `zp.region-us.r.a` PARTITION BY a"}
+{"sql":"CREATE TABLE zz1 NOT t PARTITION BY a","reject":true}
+{"sql":"CREATE TABLE zz1 COPY ( PARTITION BY a","reject":true}
 {"sql":"TABLE zz1 CLONE t OPTIONS ( )","reject":true}
-{"sql":"CREATE TABLE zz1 CLONE t 1 ( )","reject":true}
+{"sql":"CREATE TABLE zz1 CLONE t TABLE ( )","reject":true}
 {"sql":"TABLE CREATE zz1 CLONE t OPTIONS ( )","reject":true}
 {"sql":"CREATE zz1 CLONE t OPTIONS ( )","reject":true}
 {"sql":"CREATE TABLE zz1 CLONE PARTITION t BY a","reject":true}
-{"sql":"CREATE TABLE zz1 CLONE t DEFAULT BY a","reject":true}
-{"sql":"CREATE TABLE zz1 CLONE OPTIONS PARTITION BY a"}
+{"sql":"CREATE TABLE zz1 CLONE t NOT BY a","reject":true}
+{"sql":"CREATE TABLE zz1 CLONE x PARTITION BY a"}
 {"sql":"CREATE TABLE zz1 CLONE CLONE t PARTITION BY a","reject":true}
 {"sql":"CREATE OR REPLACE REPLACE TABLE zz1 CLONE t","reject":true}
 {"sql":"CREATE CREATE OR REPLACE TABLE zz1 CLONE t","reject":true}
 {"sql":"CREATE OR REPLACE TABLE zz1 CLONE t t","reject":true}
 {"sql":"TABLE CREATE zz1 LIKE t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( )","reject":true}
 {"sql":"CREATE TABLE zz1 LIKE t FOR SYSTEM_TIME AS AS OF CURRENT_TIMESTAMP ( )","reject":true}
-{"sql":"CREATE TABLE zz1 LIKE t FOR ] AS OF CURRENT_TIMESTAMP ( )","reject":true}
+{"sql":"CREATE TABLE zz1 LIKE t FOR a AS OF CURRENT_TIMESTAMP ( )","reject":true}
 {"sql":"CREATE TABLE zz1 LIKE FOR t SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( )","reject":true}
-{"sql":"CREATE = TABLE zz1 CLONE t","reject":true}
+{"sql":"CREATE zf TABLE zz1 CLONE t","reject":true}
 {"sql":"CREATE TABLE zz1 CLONE t","shape":"CREATE TABLE zz1 CLONE t;"}
-{"sql":"TYPE SNAPSHOT TABLE zz1 CLONE t","reject":true}
 {"sql":"CREATE REPLACE SNAPSHOT TABLE zz1 CLONE t","reject":true}
 {"sql":"CREATE OR REPLACE SNAPSHOT TABLE zz1 t CLONE","reject":true}
 {"sql":"CREATE OR REPLACE SNAPSHOT TABLE zz1 CLONE CLONE t","reject":true}
@@ -630,21 +649,21 @@
 {"sql":"CREATE SNAPSHOT TABLE zz1 CLONE t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( OPTIONS ( )","reject":true}
 {"sql":"CREATE SNAPSHOT TABLE zz1 CLONE t SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( ) OPTIONS ( )","reject":true}
 {"sql":"CREATE SNAPSHOT TABLE zz1 CLONE t FOR SYSTEM_TIME AS CURRENT_TIMESTAMP ( ) OPTIONS ( )","reject":true}
-{"sql":"CREATE SNAPSHOT OF zz1 LIKE t","reject":true}
+{"sql":"CREATE SNAPSHOT OPTIONS zz1 LIKE t","reject":true}
 {"sql":"CREATE SNAPSHOT SNAPSHOT TABLE zz1 LIKE t","reject":true}
 {"sql":"CREATE SNAPSHOT TABLE zz1 zz1 LIKE t","reject":true}
 {"sql":"CREATE CREATE SNAPSHOT TABLE zz1 LIKE t","reject":true}
 {"sql":"CREATE TEMP SNAPSHOT TABLE zz1 CLONE CLONE t","reject":true}
 {"sql":"CREATE TEMP SNAPSHOT TABLE CLONE zz1 t","reject":true}
 {"sql":"CREATE CREATE TEMP SNAPSHOT TABLE zz1 CLONE t","reject":true}
-{"sql":"CLONE EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":") EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )"}
 {"sql":"CREATE EXTERNAL TABLE zz1 OPTIONS OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE EXTERNAL [ zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE EXTERNAL ) zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) WITH CONNECTION DEFAULT WITH PARTITION COLUMNS OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) WITH CONNECTION DEFAULT WITH PARTITION COLUMNS OPTIONS ( format = 'CSV' , = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) CONNECTION WITH DEFAULT WITH PARTITION COLUMNS OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) WITH CONNECTION DEFAULT WITH PARTITION COLUMNS OPTIONS ( format = VIEW , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) WITH CONNECTION DEFAULT WITH PARTITION COLUMNS OPTIONS ( format = TABLE , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE TABLE EXTERNAL zz1 WITH PARTITION COLUMNS ( x STRING ) OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE WITH PARTITION COLUMNS ( x STRING ) OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 WITH PARTITION COLUMNS ( x STRING ) OPTIONS ( format = 'CSV' , uris = [ ] 'gs://b/x.csv' )","reject":true}
@@ -658,84 +677,84 @@
 {"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 NOT NULL OPTIONS ( ) ) OPTIONS ( format = 'CSV' uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE ( zz1 x INT64 NOT NULL OPTIONS ( ) ) OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE OPTIONS zz1 ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) AS SELECT 1","reject":true}
-{"sql":"CREATE EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris zz4 [ 'gs://b/x.csv' ] ) AS SELECT 1","reject":true}
+{"sql":"CREATE EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris t [ 'gs://b/x.csv' ] ) AS SELECT 1","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) AS SELECT 1 1","reject":true}
 {"sql":"EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ) AS SELECT 1","reject":true}
-{"sql":"CREATE TEMP EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = ) 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE TEMP EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE TEMP EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ROW","reject":true}
 {"sql":"CREATE TEMP EXTERNAL TABLE zz1 OPTIONS ( format = 'CSV' , uris [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE TEMP EXTERNAL TABLE zz1 OPTIONS ( format = , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE TABLE EXTERNAL zz1 PARTITION BY x OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 PARTITION BY x OPTIONS OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE CREATE EXTERNAL TABLE zz1 PARTITION BY x OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"1 EXTERNAL TABLE zz1 PARTITION BY x OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED NOT NULL (","reject":true}
-{"sql":"CREATE TABLE IF ( x INT64 PRIMARY KEY NOT ENFORCED NOT NULL )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT zd NOT NULL )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED NOT uris )","reject":true}
+{"sql":") EXTERNAL TABLE zz1 PARTITION BY x OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED NOT NULL TABLE","reject":true}
+{"sql":"CREATE TABLE ON ( x INT64 PRIMARY KEY NOT ENFORCED NOT NULL )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT VIEW NOT NULL )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 PRIMARY KEY NOT ENFORCED NOT , )","reject":true}
 {"sql":"CREATE TABLE zz1 ( INT64 NOT NULL PRIMARY KEY NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE TABLE zz1 ( x INT64 NOT NULL PRIMARY KEY NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ( NULL PRIMARY KEY NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 NOT NULL SELECT KEY NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 zf NULL PRIMARY KEY NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 NOT NULL `roles/bigquery.dataViewer` KEY NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE TABLE zz1 ( x INT64 NOT NULL NOT NULL )","reject":true}
-{"sql":") TABLE zz1 ( x INT64 NOT NULL NOT NULL )","reject":true}
+{"sql":"t TABLE zz1 ( x INT64 NOT NULL NOT NULL )","reject":true}
 {"sql":"TABLE CREATE zz1 ( x INT64 NOT NULL NOT NULL )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 NOT NOT NULL )","reject":true}
 {"sql":"CREATE zz1 ( x INT64 HIDDEN )","reject":true}
-{"sql":"CREATE TABLE zz1 LIKE x INT64 HIDDEN )","reject":true}
+{"sql":"CREATE TABLE zz1 INT64 x INT64 HIDDEN )","reject":true}
 {"sql":"CREATE TABLE zz1 x INT64 HIDDEN )","reject":true}
-{"sql":"CREATE TABLE zz1 ) x INT64 HIDDEN )","reject":true}
+{"sql":"CREATE TABLE zz1 AS x INT64 HIDDEN )","reject":true}
 {"sql":"CREATE CREATE TABLE zz1 ( x INT64 NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 NOT ENFORCED ) )","reject":true}
 {"sql":"CREATE TABLE ( x INT64 NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( ALTER INT64 NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( TABLE INT64 NOT ENFORCED )","reject":true}
 {"sql":"TABLE zz1 ( x INT64 DEFAULT 1 OPTIONS ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 DEFAULT 1 ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x DEFAULT 1 OPTIONS ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 DEFAULT 1 ( OPTIONS ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE ) )"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED ALWAYS AS ( ) x STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
-{"sql":"( TABLE zz1 ( x INT64 , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
+{"sql":"DEFAULT TABLE zz1 ( x INT64 , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING , y ARRAY < FLOAT64 > GENERATED ALWAYS AS ( AI . EMBED ( x , endpoint => 'e' ) ) ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING , y ARRAY < FLOAT64 > GENERATED ALWAYS AS ( AI . ( x , endpoint => 'e' ) ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING , y < FLOAT64 > GENERATED ALWAYS AS ( AI . EMBED ( x , endpoint => 'e' ) ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
 {"sql":"CREATE a zz1 ( x STRING , y ARRAY < FLOAT64 > GENERATED ALWAYS AS ( AI . EMBED ( x , endpoint => 'e' ) ) STORED OPTIONS ( asynchronous = TRUE ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED , AS ( x ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED IF AS ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED AS ( x ) )"}
 {"sql":"CREATE TABLE zz1 ( x x INT64 , y INT64 GENERATED ALWAYS AS ( x ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 t y INT64 GENERATED ALWAYS AS ( x ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 IF y INT64 GENERATED ALWAYS AS ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 AS x ( ) STORED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 AS ALTER x ) STORED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 AS ) x ) STORED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 AS ( x ) ) STORED","reject":true}
 {"sql":"TABLE zz1 ( x INT64 , y INT64 AS ( x ) STORED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x x INT64 , PRIMARY KEY ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , KEY PRIMARY ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 x INT64 , PRIMARY KEY ( x ) )","reject":true}
-{"sql":"CREATE NOT zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED OPTIONS ( ) )","reject":true}
+{"sql":"CREATE x zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED OPTIONS ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) ENFORCED OPTIONS ( ) )","reject":true}
-{"sql":"CREATE COLUMN zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED OPTIONS ( ) )","reject":true}
+{"sql":"CREATE zb zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED OPTIONS ( ) )","reject":true}
 {"sql":"CREATE zz1 TABLE ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED OPTIONS ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , FOREIGN KEY ( x ) REFERENCES t ( a ) ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 , FOREIGN KEY ( x ) REFERENCES t ( ON ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 , FOREIGN KEY ( x ) REFERENCES t ( f ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( INT64 x , FOREIGN KEY ( x ) REFERENCES t ( a ) )"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , FOREIGN KEY ( ) x REFERENCES t ( a ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT FOREIGN KEY ( x ) REFERENCES t NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE ( x INT64 , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t NOT ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT f = KEY ( x ) REFERENCES t NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT f TABLE KEY ( x ) REFERENCES t NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 ( INT64 , UNIQUE ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , UNIQUE ( ) x )","reject":true}
 {"sql":"CREATE TABLE zz1 ( ( x INT64 , UNIQUE ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , UNIQUE ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT c CHECK ( x > 0 ) ENFORCED )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT c CHECK x x > 0 ) NOT ENFORCED )","reject":true}
-{"sql":"( TABLE zz1 ( x INT64 , CONSTRAINT c CHECK ( x > 0 ) NOT ENFORCED )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 , CONSTRAINT c CHECK INT64 x > 0 ) NOT ENFORCED )","reject":true}
+{"sql":"NULL TABLE zz1 ( x INT64 , CONSTRAINT c CHECK ( x > 0 ) NOT ENFORCED )","reject":true}
 {"sql":"TABLE zz1 ( x INT64 , CONSTRAINT c CHECK ( x > 0 ) NOT ENFORCED )","reject":true}
 {"sql":"CREATE TABLE zz1 COPY t FOR AS OF CURRENT_TIMESTAMP ( )","reject":true}
 {"sql":"TABLE zz1 COPY t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( )","reject":true}
-{"sql":"CREATE TABLE zz1 COPY t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( AS","reject":true}
-{"sql":"CREATE TABLE zz1 COPY t FOR SYSTEM_TIME ) OF CURRENT_TIMESTAMP ( )","reject":true}
+{"sql":"CREATE TABLE zz1 COPY t FOR SYSTEM_TIME AS OF CURRENT_TIMESTAMP ( zz1","reject":true}
+{"sql":"CREATE TABLE zz1 COPY t FOR SYSTEM_TIME . OF CURRENT_TIMESTAMP ( )","reject":true}
 {"sql":"CREATE TABLE zz1 COPY t t CLUSTER BY a","reject":true}
 {"sql":"CREATE TABLE zz1 COPY t CLUSTER BY","reject":true}
 {"sql":"CREATE TABLE zz1 COPY t BY a","reject":true}
@@ -744,22 +763,22 @@
 {"sql":"CREATE TABLE zz1 t CLONE CLUSTER BY a","reject":true}
 {"sql":"CREATE TABLE zz1 CLONE t BY a","reject":true}
 {"sql":"CREATE TABLE zz1 LIKE LIKE t CLUSTER BY a","reject":true}
-{"sql":"CREATE TABLE zz1 LIKE t CLUSTER BY TABLE"}
+{"sql":"CREATE TABLE zz1 LIKE t CLUSTER BY ]","reject":true}
 {"sql":"CREATE TABLE LIKE zz1 t CLUSTER BY a","reject":true}
-{"sql":"CREATE TABLE zz1 LIKE t CLUSTER BY (","reject":true}
+{"sql":"CREATE TABLE zz1 LIKE t CLUSTER BY INDEX"}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY x OPTIONS ( description = ) AS SELECT 1 AS x","reject":true}
 {"sql":"CREATE TABLE TABLE zz1 ( x INT64 ) CLUSTER BY x OPTIONS ( description = 'a' ) AS SELECT 1 AS x","reject":true}
 {"sql":"CREATE TABLE zz1 ( ( x INT64 ) CLUSTER BY x OPTIONS ( description = 'a' ) AS SELECT 1 AS x","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) CLUSTER BY x OPTIONS ( description = 'a' ) AS SELECT 1 1 AS x","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( `description` = 'a' , labels = [ ( 'a' , 'b' ) ]","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS t `description` = 'a' , labels = [ ( 'a' , 'b' ) ] )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS `roles/bigquery.dataViewer` `description` = 'a' , labels = [ ( 'a' , 'b' ) ] )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( `description` = 'a' , labels = [ ( 'a' , 'b' ) ] ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( `description` = 'a' , labels = [ ( ( 'a' , 'b' ) ] )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x ) OPTIONS ( description = 'a' , )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( = = 'a' , )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( b = 'a' , )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 OPTIONS ) ( description = 'a' , )","reject":true}
 {"sql":"CREATE zz1 TABLE ( x INT64 ) OPTIONS ( description = 'a' , )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 ) ALTER ( description 'a' )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 ) TABLE ( description 'a' )","reject":true}
 {"sql":"TABLE CREATE zz1 ( x INT64 ) OPTIONS ( description 'a' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( ( x INT64 ) OPTIONS ( description 'a' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( 'a' )","reject":true}
@@ -770,8 +789,8 @@
 {"sql":"CREATE TABLE zz1 ( x INT64 OPTIONS ( default = 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 zz1 ( x INT64 ) OPTIONS ( default = 1 )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( default = = 1 )","reject":true}
-{"sql":"CREATE KEY zz1 ( x INT64 ) OPTIONS ( default = 1 )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x INT64 > OPTIONS ( description += 'a' )","reject":true}
+{"sql":"CREATE SELECT zz1 ( x INT64 ) OPTIONS ( default = 1 )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x INT64 STRING OPTIONS ( description += 'a' )","reject":true}
 {"sql":"CREATE TABLE ( x INT64 ) OPTIONS ( description += 'a' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) OPTIONS ( description 'a' )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x INT64 ) ( OPTIONS description += 'a' )","reject":true}
@@ -780,18 +799,18 @@
 {"sql":"CREATE EXTERNAL TABLE zz1 WITH PARTITION COLUMNS WITH CONNECTION DEFAULT ( OPTIONS format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 PARTITION WITH COLUMNS WITH CONNECTION DEFAULT OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 WITH COLUMNS WITH CONNECTION DEFAULT OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE EXTERNAL TABLE zz1 WITH PARTITION COLUMNS WITH CONNECTION DEFAULT OPTIONS zz3 format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) INT64 COLLATE 'und:ci' OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE EXTERNAL TABLE zz1 WITH PARTITION COLUMNS WITH CONNECTION DEFAULT OPTIONS NOT format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) ALTER COLLATE 'und:ci' OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) DEFAULT COLLATE 'und:ci' OPTIONS ( ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE TABLE EXTERNAL zz1 ( x INT64 ) DEFAULT COLLATE 'und:ci' OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 ( x INT64 ) DEFAULT COLLATE 'und:ci' OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 LIKE t OPTIONS ( format = 'CSV' , uris [ = 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE EXTERNAL TABLE zz1 LIKE t OPTIONS ( format = FUNCTION , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE EXTERNAL TABLE zz1 LIKE t OPTIONS ( format = DROP , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 LIKE t OPTIONS ( format = 'CSV' , uris = 'gs://b/x.csv' [ ] )","reject":true}
 {"sql":"CREATE EXTERNAL TABLE zz1 LIKE OPTIONS t ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE OR REPLACE EXTERNAL TABLE IF IF NOT EXISTS zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE OR REPLACE EXTERNAL TABLE IF NOT NOT EXISTS zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
-{"sql":"CREATE OR REPLACE EXTERNAL TABLE CREATE NOT EXISTS zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
+{"sql":"CREATE OR REPLACE EXTERNAL TABLE zd NOT EXISTS zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE OR REPLACE EXTERNAL TABLE IF NOT EXISTS zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' 'gs://b/x.csv' ] )","reject":true}
 {"sql":"CREATE VIEW zz2 ( a OPTIONS ( description = 'x' ) , b ) OPTIONS ( description = 'y' ) ) AS SELECT 1 , 2","reject":true}
 {"sql":"CREATE VIEW zz2 ( a OPTIONS ( description = ) , b ) OPTIONS ( description = 'y' ) AS SELECT 1 , 2","reject":true}
@@ -799,7 +818,7 @@
 {"sql":"CREATE VIEW zz2 ( a OPTIONS ( description = 'x' ) , b ) OPTIONS ( ( description = 'y' ) AS SELECT 1 , 2","reject":true}
 {"sql":"CREATE VIEW zz2 ( a , ) AS SELECT 1 , 2","reject":true}
 {"sql":"CREATE VIEW zz2 ( ( a , b ) AS SELECT 1 , 2","reject":true}
-{"sql":"CREATE ) zz2 ( a , b ) AS SELECT 1 , 2","reject":true}
+{"sql":"CREATE CREATE zz2 ( a , b ) AS SELECT 1 , 2","reject":true}
 {"sql":"VIEW CREATE zz2 ( a , b ) AS SELECT 1 , 2","reject":true}
 {"sql":"CREATE VIEW zz2 AS ( SELECT 1 AS ) a","reject":true}
 {"sql":"VIEW CREATE zz2 AS ( SELECT 1 AS a )","reject":true}
@@ -808,9 +827,9 @@
 {"sql":"CREATE CREATE TEMP VIEW zz2 AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE TEMP VIEW AS zz2 SELECT 1 AS a","reject":true}
 {"sql":"CREATE TEMP VIEW zz2 SELECT AS 1 AS a","reject":true}
-{"sql":"CREATE TEMP VIEW zz2 AS SELECT CREATE AS a","reject":true}
+{"sql":"CREATE TEMP VIEW zz2 AS SELECT TABLE AS a"}
 {"sql":"CREATE VIEW IF NOT EXISTS zz2 AS SELECT 1 AS","reject":true}
-{"sql":"CREATE COLUMN IF NOT EXISTS zz2 AS SELECT 1 AS a","reject":true}
+{"sql":"CREATE DEFAULT IF NOT EXISTS zz2 AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE VIEW NOT EXISTS zz2 AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE VIEW IF NOT EXISTS AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE OR REPLACE VIEW IF EXISTS NOT zz2 AS SELECT 1 AS a","reject":true}
@@ -818,59 +837,59 @@
 {"sql":"OR CREATE REPLACE VIEW IF NOT EXISTS zz2 AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE OR REPLACE VIEW IF NOT EXISTS zz2 AS AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE zz2 VIEW AS SELECT 1","reject":true}
-{"sql":"CREATE VIEW zz2 SCHEMA SELECT 1","reject":true}
+{"sql":"CREATE VIEW zz2 CREATE SELECT 1","reject":true}
 {"sql":"CREATE VIEW zz2 SELECT 1","reject":true}
-{"sql":"CREATE VIEW zz2 OPTIONS ( ) AS FROM t |> CREATE a","reject":true}
+{"sql":"CREATE VIEW zz2 OPTIONS ( ) AS FROM t |> zz3 a","reject":true}
 {"sql":"CREATE VIEW zz2 OPTIONS OPTIONS ( ) AS FROM t |> SELECT a","reject":true}
 {"sql":"CREATE VIEW zz2 OPTIONS ( ( ) AS FROM t |> SELECT a","reject":true}
 {"sql":"CREATE VIEW zz2 OPTIONS ( ) AS FROM |> SELECT a","reject":true}
 {"sql":"CREATE VIEW zz2 AS WITH AS x ( SELECT 1 AS a ) SELECT * FROM x","reject":true}
 {"sql":"CREATE VIEW zz2 AS WITH x AS ( 1 AS a ) SELECT * FROM x","reject":true}
 {"sql":"CREATE CREATE VIEW zz2 AS WITH x AS ( SELECT 1 AS a ) SELECT * FROM x","reject":true}
-{"sql":"CREATE VIEW zz2 AS WITH x AS ( SELECT CREATE AS a ) SELECT * FROM x","reject":true}
+{"sql":"CREATE VIEW zz2 AS WITH x AS ( SELECT SELECT AS a ) SELECT * FROM x","reject":true}
 {"sql":"CREATE VIEW zz2 ( a ) INT64 AS SELECT 1","reject":true}
 {"sql":"CREATE VIEW ( a INT64 ) AS SELECT 1","reject":true}
 {"sql":"CREATE VIEW zz2 ( a INT64 ) AS SELECT","reject":true}
-{"sql":"CREATE ( zz2 ( a INT64 ) AS SELECT 1","reject":true}
+{"sql":"CREATE OPTIONS zz2 ( a INT64 ) AS SELECT 1","reject":true}
 {"sql":"CREATE VIEW SQL zz2 SECURITY INVOKER AS SELECT 1 AS a","reject":true}
-{"sql":"CREATE VIEW zz2 SQL SECURITY INVOKER COLLATE SELECT 1 AS a","reject":true}
+{"sql":"CREATE VIEW zz2 SQL SECURITY INVOKER ( SELECT 1 AS a","reject":true}
 {"sql":"CREATE VIEW zz2 SQL SECURITY INVOKER AS 1 SELECT AS a","reject":true}
 {"sql":"CREATE VIEW zz2 SQL SECURITY INVOKER AS SELECT 1 AS","reject":true}
 {"sql":"CREATE VIEW RECURSIVE zz2 AS SELECT 1 AS a","reject":true}
-{"sql":"TABLE RECURSIVE VIEW zz2 AS SELECT 1 AS a","reject":true}
+{"sql":"index_type RECURSIVE VIEW zz2 AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE RECURSIVE VIEW zz2 AS AS SELECT 1 AS a","reject":true}
 {"sql":"CREATE RECURSIVE VIEW zz2 SELECT AS 1 AS a","reject":true}
 {"sql":"CREATE VIEW zz2 AS 1 AS a WITH CHECK OPTION","reject":true}
-{"sql":"CREATE VIEW zz2 AS SELECT 1 AS AGGREGATE WITH CHECK OPTION","reject":true}
+{"sql":"CREATE VIEW zz2 AS SELECT 1 AS ACCESS WITH CHECK OPTION","reject":true}
 {"sql":"VIEW zz2 AS SELECT 1 AS a WITH CHECK OPTION","reject":true}
 {"sql":"CREATE VIEW zz2 AS SELECT 1 AS a a WITH CHECK OPTION","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 PARTITION BY d CLUSTER BY BY a OPTIONS ( enable_refresh = true ) AS SELECT a , DATE ( b ) AS d FROM t","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 PARTITION BY d CLUSTER BY a OPTIONS ( enable_refresh = ( ) AS SELECT a , DATE ( b ) AS d FROM t","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 PARTITION BY d CLUSTER BY a OPTIONS ( enable_refresh = ADD ) AS SELECT a , DATE ( b ) AS d FROM t"}
 {"sql":"CREATE MATERIALIZED VIEW zz3 PARTITION BY d CLUSTER BY a OPTIONS ( enable_refresh = = true ) AS SELECT a , DATE ( b ) AS d FROM t","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 PARTITION BY d CLUSTER BY a OPTIONS ( enable_refresh = true ) ( SELECT a , DATE ( b ) AS d FROM t","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 AS SELECT a FROM SEARCH"}
-{"sql":"CREATE MATERIALIZED STRING zz3 AS SELECT a FROM t","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 PARTITION BY d CLUSTER BY a OPTIONS ( enable_refresh = true ) zf SELECT a , DATE ( b ) AS d FROM t","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 AS SELECT a FROM INT64"}
+{"sql":"CREATE MATERIALIZED CREATE zz3 AS SELECT a FROM t","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 AS SELECT a FROM t t","shape":"CREATE MATERIALIZED VIEW zz3 AS SELECT a FROM t AS t;"}
 {"sql":"CREATE MATERIALIZED VIEW zz3 ( a ) AS SELECT a a FROM t","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 ( a ) ) AS SELECT a FROM t","reject":true}
 {"sql":"MATERIALIZED CREATE VIEW zz3 ( a ) AS SELECT a FROM t","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 ( a ) AS , a FROM t","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 ( a ) AS AS a FROM t","reject":true}
 {"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS SELECT a FROM","reject":true}
 {"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS AS SELECT a FROM t","reject":true}
 {"sql":"CREATE OR REPLACE MATERIALIZED VIEW AS SELECT a FROM t","reject":true}
 {"sql":"OR CREATE REPLACE MATERIALIZED VIEW zz3 AS SELECT a FROM t","reject":true}
 {"sql":"CREATE VIEW zz3 OPTIONS ( ) AS REPLICA OF src","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW OPTIONS zz3 ( ) AS REPLICA OF src","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW ) OPTIONS ( ) AS REPLICA OF src","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 OPTIONS ( ) AS REPLICA DATE src","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 REFERENCES REPLICA OF src","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW COLLATE OPTIONS ( ) AS REPLICA OF src","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 OPTIONS ( ) AS REPLICA TABLE src","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 COLUMN REPLICA OF src","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW AS zz3 REPLICA OF src","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 AS REPLICA src OF","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 AS REPLICA REPLICA OF src","reject":true}
-{"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA = src","reject":true}
+{"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA ALTER src","reject":true}
 {"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA src OF","reject":true}
-{"sql":"OR OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA OF src","reject":true}
-{"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA OF RETURNS"}
+{"sql":"`roles/bigquery.dataViewer` OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA OF src","reject":true}
+{"sql":"CREATE OR REPLACE MATERIALIZED VIEW zz3 AS REPLICA OF )","reject":true}
 {"sql":"CREATE MATERIALIZED MATERIALIZED VIEW zz3 CLUSTER BY a AS REPLICA OF src","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 CLUSTER BY a AS REPLICA src","reject":true}
 {"sql":"CREATE VIEW MATERIALIZED zz3 CLUSTER BY a AS REPLICA OF src","reject":true}
@@ -880,7 +899,7 @@
 {"sql":"CREATE TEMP MATERIALIZED VIEW zz3 SELECT AS a FROM t","reject":true}
 {"sql":"CREATE VIEW MATERIALIZED zz3 DEFAULT COLLATE 'und:ci' AS SELECT a FROM t","reject":true}
 {"sql":"CREATE MATERIALIZED VIEW zz3 DEFAULT COLLATE AS 'und:ci' SELECT a FROM t","reject":true}
-{"sql":"CREATE MATERIALIZED VIEW zz3 DEFAULT COLLATE 'und:ci' AS SELECT a CAPACITY t","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW zz3 DEFAULT COLLATE 'und:ci' AS SELECT a zz1 t","reject":true}
 {"sql":"CREATE MATERIALIZED MATERIALIZED VIEW zz3 DEFAULT COLLATE 'und:ci' AS SELECT a FROM t","reject":true}
 {"sql":"CREATE zz4 SCHEMA DEFAULT COLLATE 'und:ci' OPTIONS ( location = 'us' )","reject":true}
 {"sql":"CREATE SCHEMA zz4 DEFAULT COLLATE OPTIONS ( location = 'us' )","reject":true}
@@ -893,18 +912,18 @@
 {"sql":"CREATE SCHEMA . zz4","reject":true}
 {"sql":"CREATE zzp SCHEMA . zz4","reject":true}
 {"sql":"CREATE SCHEMA a . b c .","reject":true}
-{"sql":"CREATE SCHEMA ( . b . c","reject":true}
+{"sql":"CREATE SCHEMA CREATE . b . c","reject":true}
 {"sql":"CREATE SCHEMA a . b . c c","reject":true}
 {"sql":"CREATE SCHEMA SCHEMA a . b . c","reject":true}
 {"sql":"CREATE OR REPLACE SCHEMA zz4 zz4","reject":true}
 {"sql":"CREATE OR REPLACE SCHEMA SCHEMA zz4","reject":true}
-{"sql":"CREATE OR REPLACE SCHEMA (","reject":true}
-{"sql":"CREATE SCHEMA t NOT EXISTS zz4 OPTIONS ( )","reject":true}
+{"sql":"CREATE OR REPLACE SCHEMA OPTIONS","reject":true}
+{"sql":"CREATE SCHEMA 'COLUMN' NOT EXISTS zz4 OPTIONS ( )","reject":true}
 {"sql":"CREATE SCHEMA IF NOT EXISTS OPTIONS ( )","reject":true}
 {"sql":"CREATE SCHEMA IF NOT EXISTS zz4 OPTIONS ( )","shape":"CREATE SCHEMA IF NOT EXISTS zz4 OPTIONS ();"}
 {"sql":"CREATE SCHEMA IF NOT EXISTS zz4 OPTIONS (","reject":true}
 {"sql":"CREATE TEMP TEMP SCHEMA zz4","reject":true}
-{"sql":"CREATE ( SCHEMA zz4","reject":true}
+{"sql":"CREATE description SCHEMA zz4","reject":true}
 {"sql":"CREATE TEMP SCHEMA SCHEMA zz4","reject":true}
 {"sql":"CREATE SCHEMA zz4 OPTIONS ( ) DEFAULT COLLATE 'und:ci'","reject":true}
 {"sql":"SCHEMA zz4 OPTIONS ( ) DEFAULT COLLATE 'und:ci'","reject":true}
@@ -914,7 +933,7 @@
 {"sql":"CREATE zz4 SCHEMA AUTHORIZATION u","reject":true}
 {"sql":"CREATE SCHEMA SCHEMA zz4 AUTHORIZATION u","reject":true}
 {"sql":"CREATE EXTERNAL SCHEMA zz4 WITH WITH CONNECTION c OPTIONS ( external_source = 'x' )","reject":true}
-{"sql":"CREATE EXTERNAL SCHEMA zz4 WITH CONNECTION c OPTIONS AS external_source = 'x' )","reject":true}
+{"sql":"CREATE EXTERNAL SCHEMA zz4 WITH CONNECTION c OPTIONS EXTERNAL external_source = 'x' )","reject":true}
 {"sql":"CREATE EXTERNAL SCHEMA zz4 WITH CONNECTION c OPTIONS ( = 'x' )","reject":true}
 {"sql":"CREATE CREATE EXTERNAL SCHEMA zz4 WITH CONNECTION c OPTIONS ( external_source = 'x' )","reject":true}
 {"sql":"CREATE CREATE EXTERNAL SCHEMA zz4 OPTIONS ( external_source = 'x' )","reject":true}
@@ -928,20 +947,20 @@
 {"sql":"CREATE OR REPLACE EXTERNAL SCHEMA zz4 OPTIONS ( external_source = = 'x' )","reject":true}
 {"sql":"CREATE OR REPLACE SCHEMA EXTERNAL zz4 OPTIONS ( external_source = 'x' )","reject":true}
 {"sql":"CREATE DATABASE zz4 zz4","reject":true}
-{"sql":"CREATE DATABASE c","reject":true}
+{"sql":"CREATE DATABASE a","reject":true}
 {"sql":"CREATE DATABASE DATABASE zz4","reject":true}
 {"sql":"DATABASE zz4","reject":true}
-{"sql":"DROP SCHEMA DROP CASCADE"}
+{"sql":"DROP SCHEMA x CASCADE"}
 {"sql":"DROP zz4 CASCADE","reject":true}
 {"sql":"DROP SCHEMA zz4 CASCADE CASCADE","reject":true}
 {"sql":"SCHEMA DROP zz4 CASCADE","reject":true}
 {"sql":"DROP SCHEMA SCHEMA IF EXISTS zz4 RESTRICT","reject":true}
 {"sql":"DROP SCHEMA IF EXISTS EXISTS zz4 RESTRICT","reject":true}
-{"sql":"DROP ) IF EXISTS zz4 RESTRICT","reject":true}
+{"sql":"DROP NOT IF EXISTS zz4 RESTRICT","reject":true}
 {"sql":"DROP IF SCHEMA EXISTS zz4 RESTRICT","reject":true}
 {"sql":"DROP EXTERNAL SCHEMA","reject":true}
-{"sql":", EXTERNAL SCHEMA zz4","reject":true}
-{"sql":"DROP EXTERNAL TABLE zz4"}
+{"sql":"STRING EXTERNAL SCHEMA zz4","reject":true}
+{"sql":"DROP EXTERNAL , zz4","reject":true}
 {"sql":"EXTERNAL DROP SCHEMA zz4","reject":true}
 {"sql":"DROP EXTERNAL zz4 CASCADE","reject":true}
 {"sql":"DROP EXTERNAL zz4 SCHEMA CASCADE","reject":true}
@@ -949,17 +968,17 @@
 {"sql":"DROP TABLE zz1 , zz2","reject":true}
 {"sql":"DROP TABLE TABLE zz1 , zz2","reject":true}
 {"sql":"DROP zz1 TABLE , zz2","reject":true}
-{"sql":"DROP TABLE zz1 FLOAT64","reject":true}
+{"sql":"DROP TABLE zz1 TEMP","reject":true}
 {"sql":"TABLE zz1 CASCADE","reject":true}
 {"sql":"DROP TABLE CASCADE zz1","reject":true}
 {"sql":"DROP DROP TABLE zz1 CASCADE","reject":true}
-{"sql":"DROP TABLE IF EXISTS (","reject":true}
+{"sql":"DROP TABLE IF EXISTS a","shape":"DROP TABLE IF EXISTS a;"}
 {"sql":"DROP TABLE IF EXISTS","reject":true}
 {"sql":"DROP TABLE EXISTS IF zz1","reject":true}
 {"sql":"DROP VIEW IF EXISTS zz2 zz2","reject":true}
 {"sql":"DROP IF VIEW EXISTS zz2","reject":true}
-{"sql":"DROP VIEW ) EXISTS zz2","reject":true}
-{"sql":"DROP VIEW zz2 enable_refresh","reject":true}
+{"sql":"DROP VIEW zz1 EXISTS zz2","reject":true}
+{"sql":"DROP VIEW zz2 ON","reject":true}
 {"sql":"DROP VIEW zz2 zz2 CASCADE","reject":true}
 {"sql":"DROP MATERIALIZED VIEW IF EXISTS EXISTS zz3","reject":true}
 {"sql":"DROP MATERIALIZED IF EXISTS zz3","reject":true}
@@ -967,12 +986,12 @@
 {"sql":"DROP MATERIALIZED VIEW IF EXISTS","reject":true}
 {"sql":"DROP SNAPSHOT TABLE TABLE IF EXISTS zz1","reject":true}
 {"sql":"DROP SNAPSHOT TABLE IF EXISTS EXISTS zz1","reject":true}
-{"sql":"DROP SNAPSHOT TABLE IF = zz1","reject":true}
-{"sql":"DROP EXTERNAL ACCESS IF EXISTS zz1","reject":true}
-{"sql":"DROP EXTERNAL TABLE IF ( zz1","reject":true}
+{"sql":"DROP SNAPSHOT TABLE IF ) zz1","reject":true}
+{"sql":"DROP EXTERNAL ALTER IF EXISTS zz1","reject":true}
+{"sql":"DROP EXTERNAL TABLE IF t zz1","reject":true}
 {"sql":"DROP EXTERNAL TABLE IF zz1 EXISTS","reject":true}
 {"sql":"DROP EXTERNAL TABLE TABLE IF EXISTS zz1","reject":true}
-{"sql":"DROP FUNCTION IF EXISTS SCHEMA","shape":"DROP FUNCTION IF EXISTS SCHEMA;"}
+{"sql":"DROP FUNCTION IF EXISTS PRIMARY","shape":"DROP FUNCTION IF EXISTS PRIMARY;"}
 {"sql":"DROP FUNCTION IF zzf EXISTS","reject":true}
 {"sql":"DROP IF FUNCTION EXISTS zzf","reject":true}
 {"sql":"DROP IF EXISTS zzf","reject":true}
@@ -984,31 +1003,32 @@
 {"sql":"DROP DROP TABLE FUNCTION IF EXISTS zzf","reject":true}
 {"sql":"DROP TABLE FUNCTION IF IF EXISTS zzf","reject":true}
 {"sql":"DROP TABLE TABLE FUNCTION IF EXISTS zzf","reject":true}
-{"sql":"DROP AGGREGATE ) zzf","reject":true}
+{"sql":"DROP AGGREGATE ( zzf","reject":true}
 {"sql":"DROP AGGREGATE FUNCTION","reject":true}
-{"sql":"ON AGGREGATE FUNCTION zzf","reject":true}
+{"sql":") AGGREGATE FUNCTION zzf","reject":true}
 {"sql":"DROP PROCEDURE IF zzp","reject":true}
 {"sql":"DROP PROCEDURE IF EXISTS","reject":true}
 {"sql":"DROP PROCEDURE IF EXISTS zzp zzp","reject":true}
 {"sql":"DROP PROCEDURE PROCEDURE IF EXISTS zzp","reject":true}
 {"sql":"DROP ROW ACCESS ACCESS POLICY IF EXISTS p ON t","reject":true}
 {"sql":"ROW DROP ACCESS POLICY IF EXISTS p ON t","reject":true}
+{"sql":"DROP DROP ACCESS POLICY IF EXISTS p ON t","reject":true}
 {"sql":"DROP ROW ACCESS POLICY POLICY p","reject":true}
-{"sql":"DROP ROW ACCESS CREATE p","reject":true}
+{"sql":"DROP ROW ACCESS [ p","reject":true}
 {"sql":"ROW ACCESS POLICY p","reject":true}
 {"sql":"DROP ALL ROW ACCESS ON POLICIES t","reject":true}
-{"sql":"AS ALL ROW ACCESS POLICIES ON t","reject":true}
-{"sql":"DROP ALL ROW ACCESS x ON t","reject":true}
+{"sql":"( ALL ROW ACCESS POLICIES ON t","reject":true}
+{"sql":"DROP ALL ROW ACCESS STRING ON t","reject":true}
 {"sql":"DROP ALL ROW ROW ACCESS POLICIES ON t","reject":true}
 {"sql":"DROP ALL ROW ROW ACCESS POLICY ON t","reject":true}
 {"sql":"ALL DROP ROW ACCESS POLICY ON t","reject":true}
 {"sql":"DROP ALL ACCESS ROW POLICY ON t","reject":true}
 {"sql":"DROP SEARCH INDEX IF i ON t","reject":true}
-{"sql":"DROP SEARCH INDEX IF EXISTS i ON CREATE","reject":true}
+{"sql":"DROP SEARCH INDEX IF EXISTS i ON COLUMN","shape":"DROP SEARCH INDEX IF EXISTS i ON COLUMN;"}
 {"sql":"DROP SEARCH INDEX IF EXISTS ON t","reject":true}
 {"sql":"DROP SEARCH INDEX IF EXISTS ON i t","reject":true}
 {"sql":"DROP SEARCH i","reject":true}
-{"sql":"DROP USING INDEX i","reject":true}
+{"sql":"DROP ON INDEX i","reject":true}
 {"sql":"SEARCH DROP INDEX i","reject":true}
 {"sql":"DROP SEARCH INDEX INDEX i","reject":true}
 {"sql":"DROP VECTOR VECTOR INDEX i ON t","reject":true}
@@ -1016,83 +1036,84 @@
 {"sql":"DROP VECTOR INDEX i ON","reject":true}
 {"sql":"DROP VECTOR INDEX INDEX i ON t","reject":true}
 {"sql":"INDEX DROP i","reject":true}
-{"sql":"t INDEX i","reject":true}
+{"sql":"USING INDEX i","reject":true}
 {"sql":"DROP INDEX i i","reject":true}
 {"sql":"CAPACITY DROP IF EXISTS `zzp.region-us.c`","reject":true}
 {"sql":"DROP CAPACITY IF EXISTS EXISTS `zzp.region-us.c`","reject":true}
 {"sql":"DROP CAPACITY IF IF EXISTS `zzp.region-us.c`","reject":true}
-{"sql":"DROP CREATE IF EXISTS `zzp.region-us.c`","reject":true}
+{"sql":"DROP zd IF EXISTS `zzp.region-us.c`","reject":true}
 {"sql":"DROP RESERVATION","reject":true}
-{"sql":"DROP = `zzp.region-us.r`","reject":true}
-{"sql":"DROP RESERVATION INDEX"}
+{"sql":"DROP MATERIALIZED `zzp.region-us.r`","reject":true}
+{"sql":"DROP RESERVATION zz3"}
 {"sql":"DROP DROP RESERVATION `zzp.region-us.r`","reject":true}
-{"sql":"x ASSIGNMENT `zzp.region-us.r.a`","reject":true}
+{"sql":"( ASSIGNMENT `zzp.region-us.r.a`","reject":true}
 {"sql":"DROP ASSIGNMENT ASSIGNMENT `zzp.region-us.r.a`","reject":true}
 {"sql":"DROP ASSIGNMENT `zzp.region-us.r.a` `zzp.region-us.r.a`","reject":true}
 {"sql":"DROP DROP ASSIGNMENT `zzp.region-us.r.a`","reject":true}
 {"sql":"DROP CONNECTION IF EXISTS EXISTS `us.c`","reject":true}
-{"sql":"RETURNS CONNECTION IF EXISTS `us.c`","reject":true}
-{"sql":"OPTIONS CONNECTION IF EXISTS `us.c`","reject":true}
+{"sql":") CONNECTION IF EXISTS `us.c`","reject":true}
+{"sql":"zzp CONNECTION IF EXISTS `us.c`","reject":true}
 {"sql":"DATA_POLICY IF EXISTS `zzp.region-us.d`","reject":true}
 {"sql":"DROP DATA_POLICY IF `zzp.region-us.d`","reject":true}
 {"sql":"DATA_POLICY DROP IF EXISTS `zzp.region-us.d`","reject":true}
 {"sql":"DROP DATA_POLICY IF EXISTS","reject":true}
 {"sql":"DROP DROP MODEL IF EXISTS m","reject":true}
-{"sql":"DROP SNAPSHOT IF EXISTS m","reject":true}
+{"sql":"DROP TEMP IF EXISTS m","reject":true}
 {"sql":"DROP MODEL IF EXISTS","reject":true}
 {"sql":"DROP MODEL IF m EXISTS","reject":true}
 {"sql":"DROP PROPERTY IF EXISTS g","reject":true}
 {"sql":"DROP GRAPH PROPERTY IF EXISTS g","reject":true}
 {"sql":"PROPERTY GRAPH IF EXISTS g","reject":true}
-{"sql":"DROP PROPERTY zf IF EXISTS g","reject":true}
+{"sql":"DROP PROPERTY CREATE IF EXISTS g","reject":true}
 {"sql":"DROP TYPE TYPE x","reject":true}
 {"sql":"TYPE DROP x","reject":true}
 {"sql":"SEQUENCE DROP x","reject":true}
 {"sql":"DROP DROP SEQUENCE x","reject":true}
 {"sql":"DROP x SEQUENCE","reject":true}
 {"sql":"SEQUENCE x","reject":true}
-{"sql":"DROP TRIGGER CHECK","reject":true}
+{"sql":"DROP TRIGGER )","reject":true}
 {"sql":"TRIGGER DROP x","reject":true}
 {"sql":"DROP x TRIGGER","reject":true}
-{"sql":"DROP TRIGGER )","reject":true}
-{"sql":"FUNCTION zz1","reject":true}
+{"sql":"DROP TRIGGER AS","reject":true}
+{"sql":"x zz1","reject":true}
 {"sql":"zz1","reject":true}
 {"sql":"UNDROP SCHEMA zz4 zz4","reject":true}
-{"sql":"REPLACE SCHEMA zz4","reject":true}
+{"sql":"b SCHEMA zz4","reject":true}
 {"sql":"UNDROP SCHEMA","reject":true}
 {"sql":"UNDROP UNDROP SCHEMA zz4","reject":true}
-{"sql":"UNDROP SCHEMA IF CREATE EXISTS zz4","reject":true}
+{"sql":"UNDROP SCHEMA IF OPTION EXISTS zz4","reject":true}
 {"sql":"UNDROP SCHEMA IF EXISTS zz4","reject":true}
 {"sql":"UNDROP SCHEMA IF IF NOT EXISTS zz4","reject":true}
 {"sql":"UNDROP SCHEMA IF EXISTS NOT zz4","reject":true}
 {"sql":"UNDROP TABLE TABLE zz1","reject":true}
-{"sql":"UNDROP INT64 zz1","reject":true}
+{"sql":"UNDROP ( zz1","reject":true}
+{"sql":"UNDROP t zz1","reject":true}
 {"sql":"UNDROP zz1 TABLE","reject":true}
-{"sql":"UNDROP CONSTRAINT zzp . zz4","reject":true}
-{"sql":"UNDROP SCHEMA zzp ALTER zz4","reject":true}
+{"sql":"UNDROP SEARCH zzp . zz4","reject":true}
+{"sql":"UNDROP SCHEMA zzp GENERATED zz4","reject":true}
 {"sql":"UNDROP SCHEMA zzp zzp . zz4","reject":true}
-{"sql":"CREATE SCHEMA zzp . zz4"}
+{"sql":"a SCHEMA zzp . zz4","reject":true}
 {"sql":"DROP DROP TEMP TABLE zz1","reject":true}
 {"sql":"DROP TEMP TABLE","reject":true}
 {"sql":"DROP TEMP zz1","reject":true}
-{"sql":"DROP TEMP ALTER zz1","reject":true}
+{"sql":"DROP TEMP zf zz1","reject":true}
 {"sql":"DROP zz1 TABLE RESTRICT","reject":true}
 {"sql":"DROP TABLE TABLE zz1 RESTRICT","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRING ( 10 ) , y NUMERIC ANY 10 , 2 ) , z STRING ( MAX ) , w BIGNUMERIC ( 76 , 38 ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRING ( 10 ) , y NUMERIC COLUMN 10 , 2 ) , z STRING ( MAX ) , w BIGNUMERIC ( 76 , 38 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING ( 10 ) , y NUMERIC ( 10 , ) 2 , z STRING ( MAX ) , w BIGNUMERIC ( 76 , 38 ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRING ( 10 ) , zf NUMERIC ( 10 , 2 ) , z STRING ( MAX ) , w BIGNUMERIC ( 76 , 38 ) )"}
+{"sql":"CREATE TABLE zz1 ( x STRING ( 10 ) , TEMP NUMERIC ( 10 , 2 ) , z STRING ( MAX ) , w BIGNUMERIC ( 76 , 38 ) )"}
 {"sql":"CREATE TABLE zz1 ( x x STRING ( 10 ) , y NUMERIC ( 10 , 2 ) , z STRING ( MAX ) , w BIGNUMERIC ( 76 , 38 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 x ( STRING ( x ) )","reject":true}
-{"sql":"CREATE TABLE REFERENCES ( x STRING ( x ) )","reject":true}
+{"sql":"CREATE TABLE GRANT ( x STRING ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING ( x )","reject":true}
-{"sql":"AS TABLE zz1 ( x STRING ( x ) )","reject":true}
+{"sql":"OPTIONS TABLE zz1 ( x STRING ( x ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( STRING x ( - 1 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING ( ( - 1 ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING ( - 1 ) ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRING ( - CASCADE ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRING ( - zz ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING ( ( ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( x STRING VIEW ) )","reject":true}
-{"sql":"CREATE TABLE zz1 ( ( STRING ( ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( x STRING t ) )","reject":true}
+{"sql":"CREATE TABLE zz1 ( IF STRING ( ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x STRING ) )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x < ARRAY STRING ( 10 ) > )","reject":true}
 {"sql":"CREATE TABLE zz1 ( x ARRAY < STRING 10 ( ) > )","reject":true}
@@ -1111,26 +1132,26 @@
 {"sql":"SELECT SAFE_CAST ( 'a' AS STRING ( MAX ) )","reject":true}
 {"sql":"SELECT SAFE_CAST ( 'a' STRING ( MAX ) )","reject":true}
 {"sql":"SELECT CAST ( [ 'a' ] AS ARRAY < STRING ( ( 10 ) > )","reject":true}
-{"sql":"SELECT CAST ( [ zz2 ] AS ARRAY < STRING ( 10 ) > )"}
+{"sql":"SELECT CAST ( [ t ] AS ARRAY < STRING ( 10 ) > )"}
 {"sql":"SELECT CAST ( [ ] 'a' AS ARRAY < STRING ( 10 ) > )","reject":true}
-{"sql":"SELECT CAST ( 'a' AS STRING ( 1 + format ) )","reject":true}
-{"sql":"SELECT CAST ( 'a' TABLE STRING ( 1 + 1 ) )","reject":true}
-{"sql":"SELECT CAST ( 'a' AS STRING ( 1 + EXTERNAL ) )","reject":true}
+{"sql":"SELECT CAST ( 'a' AS STRING ( 1 + OPTIONS ) )","reject":true}
+{"sql":"SELECT CAST ( 'a' a STRING ( 1 + 1 ) )","reject":true}
+{"sql":"SELECT CAST ( 'a' AS STRING ( 1 + ) ) )","reject":true}
 {"sql":"CAST SELECT ( 'a' AS STRING ( 1 + 1 ) )","reject":true}
 {"sql":"SELECT CAST ( 1 AS DOUBLE )"}
 {"sql":"CAST SELECT ( 1 AS DOUBLE PRECISION )","reject":true}
 {"sql":"SELECT ( CAST 1 AS DOUBLE PRECISION )","reject":true}
-{"sql":"uris CAST ( 1 AS DOUBLE PRECISION )","reject":true}
+{"sql":"( CAST ( 1 AS DOUBLE PRECISION )","reject":true}
 {"sql":"SELECT CAST ( '2020-01-01' AS TIMESTAMP WITH TIME TIME ZONE )","reject":true}
 {"sql":"SELECT CAST ( '2020-01-01' AS TIMESTAMP WITH WITH TIME ZONE )","reject":true}
 {"sql":"SELECT CAST ( '2020-01-01' TIMESTAMP WITH TIME ZONE )","reject":true}
 {"sql":"SELECT CAST ( [ 1 ] AS INT64 ] [ )","reject":true}
 {"sql":"SELECT CAST ( [ 1 1 ] AS INT64 [ ] )","reject":true}
-{"sql":"SELECT CAST ( [ 1 CREATE AS INT64 [ ] )","reject":true}
+{"sql":"SELECT CAST ( [ 1 ) AS INT64 [ ] )","reject":true}
 {"sql":"SELECT CAST ( [ 1 ] AS INT64 [ ] )","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN zz , INT64 ADD COLUMN zy STRING","reject":true}
 {"sql":"ALTER t ADD COLUMN zz INT64 , ADD COLUMN zy STRING","reject":true}
-{"sql":"ALTER TABLE t ADD COLUMN zz SET , ADD COLUMN zy STRING","reject":true}
+{"sql":"ALTER TABLE t ADD COLUMN zz 'IVF' , ADD COLUMN zy STRING","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN zz INT64 , zy","reject":true}
 {"sql":"ALTER TABLE t ADD zz INT64 , zy STRING","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN zz INT64 zy STRING","reject":true}
@@ -1139,7 +1160,7 @@
 {"sql":"ALTER TABLE t t ADD zz INT64","reject":true}
 {"sql":"TABLE ALTER t ADD zz INT64","reject":true}
 {"sql":"ALTER TABLE t ADD INT64 zz","reject":true}
-{"sql":"ALTER TABLE t ADD COLUMN IF NOT EXISTS zz4 INT64 NOT NULL"}
+{"sql":"ALTER TABLE t ADD COLUMN IF NOT EXISTS NOT INT64 NOT NULL","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN IF NOT EXISTS zz INT64 NULL","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN IF NOT EXISTS EXISTS zz INT64 NOT NULL","reject":true}
 {"sql":"ALTER TABLE t ADD IF COLUMN NOT EXISTS zz INT64 NOT NULL","reject":true}
@@ -1147,9 +1168,9 @@
 {"sql":"ALTER TABLE t ADD COLUMN zz zz INT64 DEFAULT 1 OPTIONS ( description = 'x' )","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN COLUMN zz INT64 DEFAULT 1 OPTIONS ( description = 'x' )","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN zz INT64 DEFAULT OPTIONS ( description = 'x' )"}
-{"sql":"ALTER TABLE t ADD COLUMN zz STRUCT < a INT64 NOT NULL ON","reject":true}
+{"sql":"ALTER TABLE t ADD COLUMN zz STRUCT < a INT64 NOT NULL FUNCTION","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN zz STRUCT < a INT64 INT64 NOT NULL >","reject":true}
-{"sql":"ALTER TABLE t ADD COLUMN zz STRUCT < a r NOT NULL >"}
+{"sql":"ALTER TABLE t ADD COLUMN zz STRUCT < a OR NOT NULL >","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN zz STRUCT < a INT64 NOT NOT NULL >","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN INT64 zz PRIMARY KEY NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD COLUMN INT64 PRIMARY KEY NOT ENFORCED","reject":true}
@@ -1158,19 +1179,18 @@
 {"sql":"TABLE t RENAME TO zu","reject":true}
 {"sql":"ALTER TABLE t RENAME TO","reject":true}
 {"sql":"ALTER t RENAME TO zu","reject":true}
-{"sql":"ALTER TABLE t RENAME TO BY . zu","reject":true}
+{"sql":"ALTER TABLE t RENAME TO TRUE . zu","reject":true}
 {"sql":"TABLE t RENAME TO sqlp_oracle . zu","reject":true}
 {"sql":"ALTER TABLE t RENAME TO sqlp_oracle zu .","reject":true}
 {"sql":"ALTER ALTER TABLE t RENAME TO sqlp_oracle . zu","reject":true}
-{"sql":"ALTER TABLE t RENAME COLUMN a TO zb , RENAME COLUMN b TO zz1","shape":"ALTER TABLE t RENAME COLUMN a TO zb, RENAME COLUMN b TO zz1;"}
+{"sql":"ALTER TABLE t RENAME COLUMN a TO zb , RENAME COLUMN b TO INT64","shape":"ALTER TABLE t RENAME COLUMN a TO zb, RENAME COLUMN b TO INT64;"}
 {"sql":"ALTER TABLE t RENAME COLUMN a TO zb , RENAME COLUMN COLUMN b TO zc","reject":true}
 {"sql":"ALTER TABLE t RENAME COLUMN a TO zb , RENAME COLUMN b zc TO","reject":true}
 {"sql":"ALTER TABLE t RENAME COLUMN a TO zb , RENAME COLUMN TO b zc","reject":true}
 {"sql":"ALTER TABLE t RENAME COLUMN IF IF EXISTS a TO zb","reject":true}
 {"sql":"ALTER TABLE t COLUMN RENAME IF EXISTS a TO zb","reject":true}
 {"sql":"ALTER TABLE t RENAME IF EXISTS a TO zb","reject":true}
-{"sql":"ALTER TABLE t RENAME COLUMN IF OPTIONS a TO zb","reject":true}
-{"sql":"ALTER CREATE t RENAME a TO zb","reject":true}
+{"sql":"ALTER TABLE t RENAME COLUMN IF ( a TO zb","reject":true}
 {"sql":"ALTER TABLE RENAME a TO zb","reject":true}
 {"sql":"ALTER TABLE t a RENAME TO zb","reject":true}
 {"sql":"ALTER TABLE t RENAME COLUMN a TO , zc TO zd","reject":true}
@@ -1187,29 +1207,29 @@
 {"sql":"ALTER TABLE t t DROP COLUMN a , b","reject":true}
 {"sql":"ALTER TABLE t DROP COLUMN COLUMN a CASCADE","reject":true}
 {"sql":"TABLE ALTER t DROP COLUMN a CASCADE","reject":true}
-{"sql":"( TABLE t DROP COLUMN a CASCADE","reject":true}
+{"sql":"INDEX TABLE t DROP COLUMN a CASCADE","reject":true}
 {"sql":"ALTER TABLE t DROP COLUMN CASCADE"}
 {"sql":"ALTER TABLE DROP CONSTRAINT IF EXISTS c","reject":true}
 {"sql":"ALTER TABLE t DROP CONSTRAINT IF IF EXISTS c","reject":true}
-{"sql":"ALTER TABLE t DROP CONSTRAINT IF CAPACITY c","reject":true}
+{"sql":"ALTER TABLE t DROP CONSTRAINT IF LIKE c","reject":true}
 {"sql":"ALTER TABLE t DROP PRIMARY KEY EXISTS IF","reject":true}
 {"sql":"ALTER ALTER TABLE t DROP PRIMARY KEY IF EXISTS","reject":true}
-{"sql":"ALTER TABLE t DROP PRIMARY KEY IF (","reject":true}
+{"sql":"ALTER TABLE t DROP PRIMARY KEY IF COLUMNS","reject":true}
 {"sql":"ALTER TABLE t DROP DROP PRIMARY KEY IF EXISTS","reject":true}
-{"sql":"ALTER TABLE t DROP WITH KEY","reject":true}
-{"sql":"ALTER COLUMN t DROP PRIMARY KEY","reject":true}
-{"sql":"ALTER TABLE ( DROP PRIMARY KEY","reject":true}
+{"sql":"ALTER TABLE t DROP FLOAT64 KEY","reject":true}
+{"sql":"ALTER ) t DROP PRIMARY KEY","reject":true}
+{"sql":"ALTER TABLE CREATE DROP PRIMARY KEY","reject":true}
 {"sql":"ALTER TABLE t DROP PRIMARY PRIMARY KEY","reject":true}
 {"sql":"TABLE t ADD PRIMARY KEY ( a ) NOT ENFORCED","reject":true}
-{"sql":"ALTER TABLE t ADD PRIMARY KEY ( a ) ENFORCED ENFORCED","reject":true}
+{"sql":"ALTER TABLE t ADD PRIMARY KEY ( a ) b ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD PRIMARY ( a ) NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD PRIMARY KEY ( a NOT ENFORCED","reject":true}
 {"sql":"TABLE ALTER t ADD PRIMARY KEY ( a )","reject":true}
 {"sql":"ALTER TABLE t PRIMARY KEY ( a )","reject":true}
-{"sql":"ALTER TABLE t ADD 1 KEY ( a )","reject":true}
+{"sql":"ALTER TABLE t ADD ) KEY ( a )","reject":true}
 {"sql":"ALTER ALTER TABLE t ADD CONSTRAINT IF NOT EXISTS c FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED","reject":true}
-{"sql":"ALTER TABLE t ADD CONSTRAINT IF NOT EXISTS c FOREIGN KEY ( a ) REFERENCES u ( a x NOT ENFORCED","reject":true}
-{"sql":"STORING TABLE t ADD CONSTRAINT IF NOT EXISTS c FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED","reject":true}
+{"sql":"ALTER TABLE t ADD CONSTRAINT IF NOT EXISTS c FOREIGN KEY ( a ) REFERENCES u ( a ALTER NOT ENFORCED","reject":true}
+{"sql":"SET TABLE t ADD CONSTRAINT IF NOT EXISTS c FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD CONSTRAINT IF NOT EXISTS c FOREIGN KEY ( a ) REFERENCES u ( a ) NOT NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD CONSTRAINT c PRIMARY KEY ( ( a ) NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD CONSTRAINT c PRIMARY KEY ( a ) DROP ENFORCED","reject":true}
@@ -1217,19 +1237,19 @@
 {"sql":"ALTER TABLE t ADD CONSTRAINT c PRIMARY KEY ( a ) ENFORCED NOT","reject":true}
 {"sql":"ALTER t TABLE ADD FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED , ADD FOREIGN KEY ( b ) REFERENCES u ( a ) NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED , ADD FOREIGN KEY ( b ) REFERENCES u ( a ) NOT","reject":true}
-{"sql":"ALTER TABLE t ADD FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED , ADD FOREIGN KEY ( b ) < u ( a ) NOT ENFORCED","reject":true}
+{"sql":"ALTER TABLE t ADD FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED , ADD FOREIGN KEY ( b ) ) u ( a ) NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD FOREIGN KEY ( a ) REFERENCES u ( a ) NOT ENFORCED , ADD FOREIGN KEY ( b ) REFERENCES u ( a ) NOT NOT ENFORCED","reject":true}
 {"sql":"ALTER TABLE t ADD c CONSTRAINT CHECK ( a > 0 )","reject":true}
-{"sql":"x TABLE t ADD CONSTRAINT c CHECK ( a > 0 )","reject":true}
-{"sql":"ALTER TABLE t ADD CONSTRAINT c CHECK AS a > 0 )","reject":true}
-{"sql":"ALTER TABLE t ADD CONSTRAINT ( CHECK ( a > 0 )","reject":true}
+{"sql":"TABLE TABLE t ADD CONSTRAINT c CHECK ( a > 0 )","reject":true}
+{"sql":"ALTER TABLE t ADD CONSTRAINT c CHECK slot_count a > 0 )","reject":true}
+{"sql":"ALTER TABLE t ADD CONSTRAINT AS CHECK ( a > 0 )","reject":true}
 {"sql":"ALTER TABLE t ADD CONSTRAINT c UNIQUE a )","reject":true}
 {"sql":"ALTER t TABLE ADD CONSTRAINT c UNIQUE ( a )","reject":true}
 {"sql":"TABLE ALTER t ADD CONSTRAINT c UNIQUE ( a )","reject":true}
 {"sql":"ALTER TABLE t ADD CONSTRAINT CONSTRAINT c UNIQUE ( a )","reject":true}
-{"sql":"STORING TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' )","reject":true}
-{"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' INDEX","reject":true}
-{"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = INT64 )","shape":"ALTER TABLE t ALTER COLUMN a SET OPTIONS (description = INT64);"}
+{"sql":"( TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' )","reject":true}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' t","reject":true}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = AS )","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description 'x' )","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN IF a DROP NOT NULL","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN IF EXISTS a DROP DROP NOT NULL","reject":true}
@@ -1240,24 +1260,26 @@
 {"sql":"ALTER TABLE t ALTER COLUMN a SET DATA NUMERIC","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a a SET DATA TYPE NUMERIC","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN s SET DATA DATA TYPE STRING ( 10 )","reject":true}
-{"sql":"ALTER TABLE TABLE ALTER COLUMN s SET DATA TYPE STRING ( 10 )"}
+{"sql":"ALTER TABLE CREATE ALTER COLUMN s SET DATA TYPE STRING ( 10 )","reject":true}
 {"sql":"ALTER TABLE ALTER t COLUMN s SET DATA TYPE STRING ( 10 )","reject":true}
 {"sql":"ALTER TABLE t ALTER s SET DATA TYPE STRING ( 10 )","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN s SET TYPE STRING COLLATE 'und:ci'","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN s SET SET DATA TYPE STRING COLLATE 'und:ci'","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN s SET DATA TYPE TYPE STRING COLLATE 'und:ci'","reject":true}
 {"sql":"TABLE t ALTER COLUMN s SET DATA TYPE STRING COLLATE 'und:ci'","reject":true}
-{"sql":"ALTER SELECT t ALTER COLUMN a SET DATA TYPE INT64 NOT NULL","reject":true}
+{"sql":"ALTER INDEX t ALTER COLUMN a SET DATA TYPE INT64 NOT NULL","reject":true}
 {"sql":"TABLE t ALTER COLUMN a SET DATA TYPE INT64 NOT NULL","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET DATA TYPE INT64 NULL NOT","reject":true}
-{"sql":"ALTER TABLE t ALTER UNDROP a SET DATA TYPE INT64 NOT NULL","reject":true}
+{"sql":"ALTER TABLE t ALTER OPTIONS a SET DATA TYPE INT64 NOT NULL","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET SET DEFAULT 1","reject":true}
-{"sql":"ALTER x t ALTER COLUMN a SET DEFAULT 1","reject":true}
+{"sql":"ALTER OPTIONS t ALTER COLUMN a SET DEFAULT 1","reject":true}
+{"sql":"ALTER = t ALTER COLUMN a SET DEFAULT 1","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a DEFAULT 1","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN DROP DEFAULT","reject":true}
-{"sql":"ALTER TABLE t ALTER x a DROP DEFAULT","reject":true}
-{"sql":"ALTER TABLE REMOTE ALTER COLUMN a DROP DEFAULT"}
-{"sql":"ALTER TABLE t ( COLUMN a SET GENERATED ALWAYS AS IDENTITY ( START WITH 1 )","reject":true}
+{"sql":"ALTER TABLE t ALTER zz1 a DROP DEFAULT","reject":true}
+{"sql":"ALTER ) t ALTER COLUMN a DROP DEFAULT","reject":true}
+{"sql":"ALTER TABLE CREATE ALTER COLUMN a DROP DEFAULT","reject":true}
+{"sql":"ALTER TABLE t ) COLUMN a SET GENERATED ALWAYS AS IDENTITY ( START WITH 1 )","reject":true}
 {"sql":"ALTER ALTER TABLE t ALTER COLUMN a SET GENERATED ALWAYS AS IDENTITY ( START WITH 1 )","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET GENERATED ALWAYS AS IDENTITY IDENTITY ( START WITH 1 )","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET GENERATED ALWAYS AS ( START WITH 1 )","reject":true}
@@ -1265,12 +1287,12 @@
 {"sql":"ALTER ALTER TABLE t ALTER COLUMN a SET GENERATED BY DEFAULT AS IDENTITY ( )","reject":true}
 {"sql":"ALTER TABLE t COLUMN ALTER a SET GENERATED BY DEFAULT AS IDENTITY ( )","reject":true}
 {"sql":"ALTER TABLE t t ALTER COLUMN a SET GENERATED BY DEFAULT AS IDENTITY ( )","reject":true}
-{"sql":"ALTER TABLE t KEY COLUMN a DROP GENERATED","reject":true}
+{"sql":"ALTER TABLE t OPTIONS COLUMN a DROP GENERATED","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN DROP GENERATED","reject":true}
 {"sql":"TABLE ALTER t ALTER COLUMN a DROP GENERATED","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a DROP GENERATED GENERATED","reject":true}
 {"sql":"ALTER TABLE t ALTER a DEFAULT SET 1","reject":true}
-{"sql":"ALTER TABLE t ALTER a SET DEFAULT RETURNS","reject":true}
+{"sql":"ALTER TABLE t ALTER a SET DEFAULT zz1","reject":true}
 {"sql":"ALTER TABLE t a ALTER SET DEFAULT 1","reject":true}
 {"sql":"ALTER TABLE ALTER t a SET DEFAULT 1","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a NOT SET NULL","reject":true}
@@ -1282,59 +1304,59 @@
 {"sql":"TABLE t ALTER COLUMN a TYPE INT64","reject":true}
 {"sql":"ALTER TABLE t COLUMN a TYPE INT64","reject":true}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' ) , ALTER COLUMN SET DEFAULT 2","reject":true}
-{"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' ) , ALTER COLUMN b SET DEFAULT INDEX"}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = 'x' ) , ALTER COLUMN b SET DEFAULT b"}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET OPTIONS ( description = ) , ALTER COLUMN b SET DEFAULT 2","reject":true}
 {"sql":"ALTER TABLE t t ALTER COLUMN a SET OPTIONS ( description = 'x' ) , ALTER COLUMN b SET DEFAULT 2","reject":true}
-{"sql":"ALTER TABLE t SET DEFAULT zz3 'und:ci'","reject":true}
+{"sql":"ALTER TABLE t SET DEFAULT CREATE 'und:ci'","reject":true}
 {"sql":"ALTER TABLE SET t DEFAULT COLLATE 'und:ci'","reject":true}
-{"sql":"ALTER CAPACITY t SET DEFAULT COLLATE 'und:ci'","reject":true}
+{"sql":"ALTER zc t SET DEFAULT COLLATE 'und:ci'","reject":true}
 {"sql":"TABLE t SET DEFAULT COLLATE 'und:ci'","reject":true}
-{"sql":"IF TABLE t SET OPTIONS ( description = 'x' ) , ADD COLUMN zz INT64","reject":true}
+{"sql":"TABLE TABLE t SET OPTIONS ( description = 'x' ) , ADD COLUMN zz INT64","reject":true}
 {"sql":"ALTER TABLE t SET OPTIONS ( description = 'x' ) , COLUMN ADD zz INT64","reject":true}
 {"sql":"ALTER TABLE t SET OPTIONS ( = description 'x' ) , ADD COLUMN zz INT64","reject":true}
 {"sql":"ALTER TABLE t SET OPTIONS ( description = 'x' ) , ADD COLUMN INT64","reject":true}
-{"sql":"ALTER TABLE IF EXISTS t SET OPTIONS ( SUM","reject":true}
+{"sql":"ALTER TABLE IF EXISTS t SET OPTIONS ( DATA","reject":true}
 {"sql":"ALTER TABLE TABLE IF EXISTS t SET OPTIONS ( )","reject":true}
 {"sql":"ALTER TABLE EXISTS IF t SET OPTIONS ( )","reject":true}
-{"sql":"ALTER TABLE IF EXISTS ADD SET OPTIONS ( )","shape":"ALTER TABLE IF EXISTS ADD SET OPTIONS ();"}
+{"sql":"ALTER TABLE IF EXISTS , SET OPTIONS ( )","reject":true}
 {"sql":"ALTER TABLE t t","reject":true}
 {"sql":"ALTER TABLE","reject":true}
-{"sql":"ALTER TABLE IF","reject":true}
+{"sql":"ALTER TABLE b","reject":true}
 {"sql":"TABLE ALTER t","reject":true}
 {"sql":"ALTER TABLE t SET OPTIONS labels ( += [ ( 'a' , 'b' ) ] )","reject":true}
-{"sql":"ALTER TABLE t SET LANGUAGE ( labels += [ ( 'a' , 'b' ) ] )","reject":true}
+{"sql":"ALTER TABLE t SET IF ( labels += [ ( 'a' , 'b' ) ] )","reject":true}
 {"sql":"ALTER TABLE t SET OPTIONS ( labels += [ ( 'a' , 'b' ] )","reject":true}
 {"sql":"ALTER VIEW v SET OPTIONS ( description = = )","reject":true}
 {"sql":"VIEW ALTER v SET OPTIONS ( description = 'x' )","reject":true}
 {"sql":"ALTER VIEW v SET OPTIONS ( description = 'x' 'x' )","shape":"ALTER VIEW v SET OPTIONS (description = 'xx');"}
-{"sql":"ALTER VIEW INT64 SET OPTIONS ( description = 'x' )"}
+{"sql":"ALTER VIEW ) SET OPTIONS ( description = 'x' )","reject":true}
 {"sql":"ALTER VIEW v ALTER COLUMN a SET OPTIONS ( description = 'x'","reject":true}
 {"sql":"ALTER VIEW v ALTER COLUMN a SET OPTIONS ( description = ) 'x'","reject":true}
 {"sql":"ALTER VIEW v ALTER COLUMN a SET OPTIONS description ( = 'x' )","reject":true}
 {"sql":"ALTER VIEW ADD COLUMN a INT64","reject":true}
-{"sql":"ALTER VIEW v ADD COLUMN x INT64","reject":true}
+{"sql":"ALTER VIEW v ADD COLUMN ROW INT64","reject":true}
 {"sql":"ALTER VIEW v COLUMN ADD a INT64","reject":true}
-{"sql":"ALTER VIEW v ADD AS a INT64","reject":true}
+{"sql":"ALTER VIEW v ADD v a INT64","reject":true}
 {"sql":"ALTER VIEW v RENAME TO w w","reject":true}
 {"sql":"ALTER VIEW v TO RENAME w","reject":true}
 {"sql":"VIEW ALTER v RENAME TO w","reject":true}
-{"sql":"ALTER VIEW v RENAME TO DROP","reject":true}
+{"sql":"ALTER VIEW v RENAME TO TABLE","reject":true}
 {"sql":"ALTER VIEW IF EXISTS v SET OPTIONS OPTIONS ( )","reject":true}
 {"sql":"ALTER VIEW VIEW IF EXISTS v SET OPTIONS ( )","reject":true}
-{"sql":") VIEW IF EXISTS v SET OPTIONS ( )","reject":true}
+{"sql":"RENAME VIEW IF EXISTS v SET OPTIONS ( )","reject":true}
 {"sql":"ALTER VIEW IF EXISTS SET OPTIONS ( )","reject":true}
 {"sql":"ALTER MATERIALIZED VIEW mv SET OPTIONS ( enable_refresh = )","reject":true}
 {"sql":"ALTER MATERIALIZED VIEW SET OPTIONS ( enable_refresh = TRUE )","reject":true}
 {"sql":"ALTER ALTER MATERIALIZED VIEW mv SET OPTIONS ( enable_refresh = TRUE )","reject":true}
-{"sql":"ALTER MATERIALIZED VIEW a ALTER COLUMN a SET OPTIONS ( )","reject":true}
+{"sql":"ALTER MATERIALIZED VIEW EXISTS ALTER COLUMN a SET OPTIONS ( )","reject":true}
 {"sql":"ALTER MATERIALIZED VIEW mv ALTER COLUMN a OPTIONS ( )","reject":true}
 {"sql":"ALTER MATERIALIZED VIEW mv COLUMN ALTER a SET OPTIONS ( )","reject":true}
 {"sql":"ALTER MATERIALIZED VIEW mv ALTER a COLUMN SET OPTIONS ( )","reject":true}
 {"sql":"ALTER SCHEMA zd SET OPTIONS ( description = = 'x' )","reject":true}
-{"sql":"ALTER SCHEMA zd SET OPTIONS zi description = 'x' )","reject":true}
+{"sql":"ALTER SCHEMA zd SET OPTIONS x description = 'x' )","reject":true}
 {"sql":"ALTER SCHEMA zd SET OPTIONS ( description 'x' = )","reject":true}
 {"sql":"ALTER SCHEMA zd SET ( OPTIONS description = 'x' )","reject":true}
-{"sql":"ALTER SCHEMA IF EXISTS zd SET DEFAULT + 'und:ci'","reject":true}
+{"sql":"ALTER SCHEMA IF EXISTS zd SET DEFAULT ROW 'und:ci'","reject":true}
 {"sql":"ALTER SCHEMA EXISTS IF zd SET DEFAULT COLLATE 'und:ci'","reject":true}
 {"sql":"ALTER SCHEMA IF IF EXISTS zd SET DEFAULT COLLATE 'und:ci'","reject":true}
 {"sql":"ALTER x zd ADD REPLICA `EU` OPTIONS ( location = 'eu' )","reject":true}
@@ -1350,7 +1372,7 @@
 {"sql":"ALTER SCHEMA zd DROP r REPLICA","reject":true}
 {"sql":"ALTER SCHEMA zd REPLICA DROP r","reject":true}
 {"sql":"ALTER SCHEMA zd SET OPTIONS ( , SET DEFAULT COLLATE 'x'","reject":true}
-{"sql":"ALTER SCHEMA zd SET OPTIONS ( ) , SET DEFAULT CREATE 'x'","reject":true}
+{"sql":"ALTER SCHEMA zd SET OPTIONS ( ) , SET DEFAULT TABLE 'x'","reject":true}
 {"sql":"ALTER SCHEMA zd SET OPTIONS ) ( , SET DEFAULT COLLATE 'x'","reject":true}
 {"sql":"ALTER SCHEMA zd SET OPTIONS ( ) , SET DEFAULT 'x' COLLATE","reject":true}
 {"sql":"ALTER SCHEMA zp . zd SET ( OPTIONS )","reject":true}
@@ -1362,7 +1384,7 @@
 {"sql":"ALTER ORGANIZATION SET OPTIONS ( ( `region-us.default_time_zone` = 'UTC' )","reject":true}
 {"sql":"ALTER ORGANIZATION zo SET OPTIONS ( `region-us.default_time_zone` 'UTC' )","reject":true}
 {"sql":"ALTER ORGANIZATION zo SET OPTIONS ( `region-us.default_time_zone` = 'UTC' ) )","reject":true}
-{"sql":"ALTER ORGANIZATION 1 SET OPTIONS ( `region-us.default_time_zone` = 'UTC' )","reject":true}
+{"sql":"ALTER ORGANIZATION ) SET OPTIONS ( `region-us.default_time_zone` = 'UTC' )","reject":true}
 {"sql":"ALTER ORGANIZATION zo zo SET OPTIONS ( `region-us.default_time_zone` = 'UTC' )","reject":true}
 {"sql":"ALTER PROJECT zp SET ( OPTIONS `region-us.default_time_zone` = 'UTC' )","reject":true}
 {"sql":"ALTER PROJECT SET OPTIONS ( `region-us.default_time_zone` = 'UTC' )","shape":"ALTER PROJECT SET OPTIONS (`region-us.default_time_zone` = 'UTC');"}
@@ -1373,17 +1395,17 @@
 {"sql":"ALTER SET OPTIONS ( `region-us.default_time_zone` = 'UTC' )","reject":true}
 {"sql":"ALTER BI_CAPACITY `region-us.default` SET OPTIONS ( = size_gb 1 )","reject":true}
 {"sql":"ALTER BI_CAPACITY `region-us.default` SET OPTIONS ( size_gb = )","reject":true}
-{"sql":"ALTER BI_CAPACITY x SET OPTIONS ( size_gb = 1 )"}
+{"sql":"ALTER BI_CAPACITY NUMERIC SET OPTIONS ( size_gb = 1 )"}
 {"sql":"ALTER BI_CAPACITY `region-us.default` SET OPTIONS ( size_gb = ) 1","reject":true}
-{"sql":"ALTER CAPACITY ) SET OPTIONS ( plan = 'FLEX' )","reject":true}
+{"sql":"ALTER CAPACITY OR SET OPTIONS ( plan = 'FLEX' )","reject":true}
 {"sql":"ALTER CAPACITY `zp.region-us.c` SET OPTIONS ( ( plan = 'FLEX' )","reject":true}
 {"sql":"ALTER CAPACITY `zp.region-us.c` `zp.region-us.c` SET OPTIONS ( plan = 'FLEX' )","reject":true}
 {"sql":"ALTER RESERVATION `zp.region-us.r` SET OPTIONS ( slot_capacity 1 = )","reject":true}
 {"sql":"ALTER ALTER RESERVATION `zp.region-us.r` SET OPTIONS ( slot_capacity = 1 )","reject":true}
-{"sql":"ALTER RESERVATION `zp.region-us.r` SET x ( slot_capacity = 1 )","reject":true}
+{"sql":"ALTER RESERVATION `zp.region-us.r` SET zz ( slot_capacity = 1 )","reject":true}
 {"sql":"ALTER RESERVATION `zp.region-us.r` SET OPTIONS ( = slot_capacity 1 )","reject":true}
 {"sql":"ALTER RESERVATION IF EXISTS `zp.region-us.r` SET ( slot_capacity = 1 )","reject":true}
-{"sql":"ALTER RESERVATION IF EXISTS `zp.region-us.r` SET OPTIONS ( slot_capacity = ) )","reject":true}
+{"sql":"ALTER RESERVATION IF EXISTS `zp.region-us.r` SET OPTIONS ( slot_capacity = LIKE )","reject":true}
 {"sql":"ALTER RESERVATION IF EXISTS `zp.region-us.r` SET OPTIONS ( ( slot_capacity = 1 )","reject":true}
 {"sql":"ALTER CONNECTION IF EXISTS `us.c` SET OPTIONS ( description = )","reject":true}
 {"sql":"ALTER CONNECTION IF EXISTS `us.c` SET OPTIONS OPTIONS ( description = 'x' )","reject":true}
@@ -1391,10 +1413,10 @@
 {"sql":"ALTER ALTER CONNECTION IF EXISTS `us.c` SET OPTIONS ( description = 'x' )","reject":true}
 {"sql":"ALTER DATA_POLICY IF EXISTS `zp.region-us.d` OPTIONS ( x = 1 )","reject":true}
 {"sql":"ALTER ALTER DATA_POLICY IF EXISTS `zp.region-us.d` SET OPTIONS ( x = 1 )","reject":true}
-{"sql":"ALTER DATA_POLICY IF EXISTS `zp.region-us.d` SET OPTIONS ( x = slot_capacity )"}
+{"sql":"ALTER DATA_POLICY IF EXISTS `zp.region-us.d` SET OPTIONS ( x = a )"}
 {"sql":"ALTER DATA_POLICY IF EXISTS `zp.region-us.d` SET OPTIONS ( x = 1","reject":true}
 {"sql":"ALTER SEARCH INDEX i ON t ADD COLUMN b OPTIONS ( x = 1 ) , ALTER COLUMN c SET OPTIONS x ( = 1 ) , DROP COLUMN a , SET OPTIONS ( x = 1 ) , REBUILD","reject":true}
-{"sql":"ALTER SEARCH INDEX i ON t ADD COLUMN b OPTIONS ( x = 1 ) , ALTER COLUMN c SET OPTIONS ( x = 1 ) , DROP COLUMN a , SET OPTIONS ( x = 1 ) , REBUILD"}
+{"sql":"ALTER SEARCH INDEX i ON t ADD COLUMN b OPTIONS ( x = 1 ) , ALTER COLUMN c SET OPTIONS t x = 1 ) , DROP COLUMN a , SET OPTIONS ( x = 1 ) , REBUILD","reject":true}
 {"sql":"ALTER SEARCH INDEX i ON t ADD COLUMN b OPTIONS ( x = 1 ) , ALTER COLUMN c SET OPTIONS ( x = 1 ) , DROP COLUMN a , SET OPTIONS ( ( x = 1 ) , REBUILD","reject":true}
 {"sql":"ALTER SEARCH INDEX i ON t ADD COLUMN b OPTIONS x ( = 1 ) , ALTER COLUMN c SET OPTIONS ( x = 1 ) , DROP COLUMN a , SET OPTIONS ( x = 1 ) , REBUILD","reject":true}
 {"sql":"ALTER SEARCH INDEX ON t REBUILD","reject":true}
@@ -1408,9 +1430,8 @@
 {"sql":"ALTER INDEX VECTOR IF EXISTS i ON t REBUILD","reject":true}
 {"sql":"ALTER VECTOR INDEX IF EXISTS i ON t REBUILD REBUILD","reject":true}
 {"sql":"ALTER VECTOR INDEX IF EXISTS i t REBUILD","reject":true}
-{"sql":"ALTER VECTOR x i ON t SET OPTIONS ( x = 1 )","reject":true}
+{"sql":"ALTER VECTOR 1 i ON t SET OPTIONS ( x = 1 )","reject":true}
 {"sql":"ALTER VECTOR i INDEX ON t SET OPTIONS ( x = 1 )","reject":true}
-{"sql":"ALTER VECTOR INDEX i ON t SET OPTIONS ( x = |> )","reject":true}
 {"sql":"ALTER VECTOR INDEX i ON t SET SET OPTIONS ( x = 1 )","reject":true}
 {"sql":"ALTER i INDEX RENAME TO j","reject":true}
 {"sql":"ALTER i RENAME TO j","reject":true}
@@ -1420,24 +1441,24 @@
 {"sql":"CREATE FUNCTION zf ( x INT64 ) AS ( x + ) 1","reject":true}
 {"sql":"FUNCTION CREATE zf ( x INT64 ) AS ( x + 1 )","reject":true}
 {"sql":"FUNCTION CREATE zf ( x INT64 ) RETURNS INT64 AS ( x + 1 ) OPTIONS ( description = 'd' )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS STRING AS ( x + 1 ) OPTIONS ( description = 'd' )"}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS ALTER AS ( x + 1 ) OPTIONS ( description = 'd' )"}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 AS AS ( x + 1 ) OPTIONS ( description = 'd' )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 ( AS x + 1 ) OPTIONS ( description = 'd' )","reject":true}
 {"sql":"FUNCTION CREATE zf ( x INT64 ) OPTIONS ( description = 'd' ) AS ( x + 1 )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) OPTIONS ( description = 'd' ) AS ( x x 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) OPTIONS ( description = 'd' ) AS ( x zf 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( ( x INT64 ) OPTIONS ( description = 'd' ) AS ( x + 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( AS ) ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ) ( AS ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( ) AS ( 1 1 )","reject":true}
-{"sql":"CREATE FUNCTION zf ( ) AS ( 1 )","shape":"CREATE FUNCTION zf() AS (1);"}
-{"sql":"CREATE FUNCTION zf AS REFERENCES 1 )","reject":true}
-{"sql":"CREATE 100 zf AS ( 1 )","reject":true}
-{"sql":"FUNCTION FUNCTION zf AS ( 1 )","reject":true}
-{"sql":"CREATE FUNCTION zf AS TABLE 1 )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) AS x + HIDDEN","reject":true}
+{"sql":"CREATE FUNCTION zf = ) AS ( 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf AS INT64 1 )","reject":true}
+{"sql":"CREATE ( zf AS ( 1 )","reject":true}
+{"sql":"zz1 FUNCTION zf AS ( 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf AS COLUMN 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) AS x + (","reject":true}
 {"sql":"CREATE FUNCTION zf zf ( x INT64 ) AS x + 1","reject":true}
 {"sql":"CREATE FUNCTION zf x ( INT64 ) AS x + 1","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) AS x + IF","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) AS x + zz3","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 AS AS ( ( SELECT x ) )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) INT64 RETURNS AS ( ( SELECT x ) )","reject":true}
 {"sql":"CREATE FUNCTION ( x INT64 ) RETURNS INT64 AS ( ( SELECT x ) )","reject":true}
@@ -1446,10 +1467,10 @@
 {"sql":"CREATE FUNCTION ( zf x ANY TYPE ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x ANY ) TYPE AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x ANY TYPE ) AS ( ) x","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 NOT AGGREGATE ) AS ( x t","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 NOT AGGREGATE ) AS ( x REPLACE","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 NOT AGGREGATE ) AS ( )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 NOT AGGREGATE ) ) ( x )","reject":true}
-{"sql":"CREATE FUNCTION UNDROP ( x INT64 NOT AGGREGATE ) AS ( x )","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 NOT AGGREGATE ) TABLE ( x )","reject":true}
+{"sql":"CREATE FUNCTION x ( x INT64 NOT AGGREGATE ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 DEFAULT 1 ) ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( INT64 x DEFAULT 1 ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 DEFAULT 1 ) AS x ( )","reject":true}
@@ -1461,61 +1482,60 @@
 {"sql":"FUNCTION zf ( INT64 ) AS ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( INT64 ) ) AS ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( INT64 ) AS AS ( 1 )","reject":true}
-{"sql":"CREATE OR REPLACE ) IF NOT EXISTS zf ( x INT64 ) AS ( x )","reject":true}
-{"sql":"CREATE OR REPLACE FUNCTION IF NOT EXISTS zf ( x NULL ) AS ( x )","reject":true}
-{"sql":"CREATE OR REPLACE FUNCTION IF NOT EXISTS zf ( x INT64 ) VIEW ( x )","reject":true}
+{"sql":"CREATE OR REPLACE ON IF NOT EXISTS zf ( x INT64 ) AS ( x )","reject":true}
+{"sql":"CREATE OR REPLACE FUNCTION IF NOT EXISTS zf ( x CREATE ) AS ( x )","reject":true}
+{"sql":"CREATE OR REPLACE FUNCTION IF NOT EXISTS zf ( x INT64 ) SELECT ( x )","reject":true}
 {"sql":"CREATE OR REPLACE FUNCTION IF NOT EXISTS zf ( INT64 x ) AS ( x )","reject":true}
 {"sql":"CREATE IF NOT EXISTS zf ( x INT64 ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION IF IF NOT EXISTS zf ( x INT64 ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION IF NOT zf ( x INT64 ) AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION IF NOT EXISTS zf ( x INT64 ) AS AS ( x )","reject":true}
-{"sql":"zf OR REPLACE FUNCTION zf ( x STRUCT < a INT64 > , y ARRAY < STRING > ) RETURNS STRUCT < b INT64 > AS ( STRUCT ( x . a AS b ) )","reject":true}
+{"sql":"i OR REPLACE FUNCTION zf ( x STRUCT < a INT64 > , y ARRAY < STRING > ) RETURNS STRUCT < b INT64 > AS ( STRUCT ( x . a AS b ) )","reject":true}
 {"sql":"CREATE OR REPLACE FUNCTION zf ( x STRUCT < a INT64 > , y ARRAY < STRING > ) RETURNS STRUCT < b > AS ( STRUCT ( x . a AS b ) )"}
-{"sql":"CREATE OR REPLACE FUNCTION zf ( x STRUCT < a INT64 > , y ARRAY < BY > ) RETURNS STRUCT < b INT64 > AS ( STRUCT ( x . a AS b ) )","reject":true}
+{"sql":"CREATE OR REPLACE FUNCTION zf ( x STRUCT < a INT64 > , y ARRAY < ALTER > ) RETURNS STRUCT < b INT64 > AS ( STRUCT ( x . a AS b ) )"}
 {"sql":"CREATE OR REPLACE FUNCTION zf ( x STRUCT < a INT64 > , y ARRAY < STRING > ) RETURNS STRUCT < b INT64 > AS ( STRUCT ( . x a AS b ) )","reject":true}
-{"sql":"CREATE ) zf ( x STRING ) RETURNS STRING LANGUAGE python AS 'return x'","reject":true}
-{"sql":"CREATE FUNCTION zf ( x DROP ) RETURNS STRING LANGUAGE python AS 'return x'"}
-{"sql":"CREATE FUNCTION zf ( x STRING ) RETURNS STRING DATA python AS 'return x'","reject":true}
+{"sql":"CREATE x zf ( x STRING ) RETURNS STRING LANGUAGE python AS 'return x'","reject":true}
+{"sql":"CREATE FUNCTION zf ( x MATERIALIZED ) RETURNS STRING LANGUAGE python AS 'return x'"}
+{"sql":"CREATE FUNCTION zf ( x STRING ) RETURNS STRING js python AS 'return x'","reject":true}
 {"sql":"CREATE FUNCTION zf zf ( x STRING ) RETURNS STRING LANGUAGE python AS 'return x'","reject":true}
 {"sql":"CREATE FUNCTION zf ( x STRING STRING ) RETURNS STRING LANGUAGE js","reject":true}
 {"sql":"FUNCTION CREATE zf ( x STRING ) RETURNS STRING LANGUAGE js","reject":true}
-{"sql":"CREATE FUNCTION zf ( x AS ) RETURNS STRING LANGUAGE js","reject":true}
+{"sql":"CREATE FUNCTION zf ( x x ) RETURNS STRING LANGUAGE js"}
 {"sql":"CREATE FUNCTION zf ( x STRING ) RETURNS LANGUAGE js","reject":true}
 {"sql":"CREATE FUNCTION ( zf x INT64 ) RETURNS INT64 DETERMINISTIC AS ( x )","reject":true}
-{"sql":"CREATE FUNCTION ( ( x INT64 ) RETURNS INT64 DETERMINISTIC AS ( x )","reject":true}
+{"sql":"CREATE FUNCTION , ( x INT64 ) RETURNS INT64 DETERMINISTIC AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION ( x INT64 ) RETURNS INT64 DETERMINISTIC AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 DETERMINISTIC DETERMINISTIC AS ( x )","reject":true}
 {"sql":"CREATE FUNCTION zf ( ( x INT64 ) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
-{"sql":". FUNCTION zf ( x INT64 ) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
+{"sql":"TABLE FUNCTION zf ( x INT64 ) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
 {"sql":"CREATE FUNCTION zf ( INT64 ) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )"}
 {"sql":"CREATE FUNCTION ( x INT64 ) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 b WITH CONNECTION c","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 [ WITH CONNECTION c","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 REMOTE WITH WITH CONNECTION c","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 zf WITH CONNECTION c","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 KEY WITH CONNECTION c","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 REMOTE CONNECTION c","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) COLLATE WITH CONNECTION c","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) REMOTE AS CONNECTION c","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) TYPE WITH CONNECTION c","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) REMOTE OF CONNECTION c","reject":true}
 {"sql":"CREATE FUNCTION zf ( INT64 x ) REMOTE WITH CONNECTION c"}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) CREATE WITH CONNECTION c","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) 1 WITH CONNECTION c","reject":true}
 {"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( ) x / y )","reject":true}
-{"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( INDEX ) / y )"}
-{"sql":"CREATE AGGREGATE FUNCTION zf ) x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( x ) / y )","reject":true}
-{"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( x ) / y )","shape":"CREATE AGGREGATE FUNCTION zf(x FLOAT64, y FLOAT64 NOT AGGREGATE) RETURNS FLOAT64 AS (SUM(x) / y);"}
+{"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( LANGUAGE ) / y )"}
+{"sql":"CREATE AGGREGATE FUNCTION zf AS x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( x ) / y )","reject":true}
+{"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 , y FLOAT64 NOT AGGREGATE ) RETURNS FLOAT64 AS ( SUM ( zz2 ) / y )"}
 {"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 ) AS ( SUM ( x )","reject":true}
 {"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 ) ( SUM ( x ) )","reject":true}
 {"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 ) AS AS ( SUM ( x ) )","reject":true}
 {"sql":"CREATE AGGREGATE AGGREGATE FUNCTION zf ( x FLOAT64 ) AS ( SUM ( x ) )","reject":true}
-{"sql":"CREATE TEMP AGGREGATE FUNCTION zf AS x FLOAT64 ) RETURNS FLOAT64 LANGUAGE js AS 'export function initialState() {}'","reject":true}
+{"sql":"CREATE TEMP AGGREGATE FUNCTION zf ) x FLOAT64 ) RETURNS FLOAT64 LANGUAGE js AS 'export function initialState() {}'","reject":true}
 {"sql":"CREATE TEMP AGGREGATE FUNCTION zf ( ( x FLOAT64 ) RETURNS FLOAT64 LANGUAGE js AS 'export function initialState() {}'","reject":true}
 {"sql":"CREATE TEMP AGGREGATE FUNCTION zf x FLOAT64 ) RETURNS FLOAT64 LANGUAGE js AS 'export function initialState() {}'","reject":true}
 {"sql":"CREATE TEMP AGGREGATE FUNCTION zf ( x FLOAT64 RETURNS FLOAT64 LANGUAGE js AS 'export function initialState() {}'","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS < x","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf 1 x INT64 ) AS SELECT x","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS NOT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS SELECT x","shape":"CREATE TABLE FUNCTION zf(x INT64) AS SELECT x;"}
-{"sql":"CREATE TABLE FUNCTION zf ( x INT64 PRECISION AS SELECT x","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x INT64 AGGREGATE AS SELECT x","reject":true}
 {"sql":"CREATE FUNCTION TABLE zf ( x INT64 ) AS ( SELECT x )","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS ( SELECT x )","shape":"CREATE TABLE FUNCTION zf(x INT64) AS (SELECT x);"}
-{"sql":"CREATE TABLE FUNCTION FOREIGN ( x INT64 ) AS ( SELECT x )","shape":"CREATE TABLE FUNCTION FOREIGN(x INT64) AS (SELECT x);"}
+{"sql":"CREATE TABLE FUNCTION MATERIALIZED ( x INT64 ) AS ( SELECT x )","shape":"CREATE TABLE FUNCTION MATERIALIZED(x INT64) AS (SELECT x);"}
 {"sql":"CREATE TABLE FUNCTION zf x INT64 ) AS ( SELECT x )","reject":true}
 {"sql":"TABLE FUNCTION zf ( x INT64 ) RETURNS TABLE < x INT64 > AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) RETURNS TABLE x INT64 > AS SELECT x","reject":true}
@@ -1526,18 +1546,18 @@
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) RETURNS < x INT64 > OPTIONS ( description = 'd' ) AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) RETURNS TABLE < < x INT64 > OPTIONS ( description = 'd' ) AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( t TABLE < INT64 > ) AS SELECT a FROM t"}
-{"sql":"CREATE TABLE FUNCTION zf ( t TABLE < SYSTEM_TIME INT64 > ) AS SELECT a FROM t"}
+{"sql":"CREATE TABLE FUNCTION zf ( t TABLE < a INT64 > ) AS SELECT a FROM t","shape":"CREATE TABLE FUNCTION zf(t TABLE<a INT64>) AS SELECT a FROM t;"}
 {"sql":"CREATE TABLE FUNCTION zf ( t TABLE a < INT64 > ) AS SELECT a FROM t","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf ( t TABLE < a INT64 > zf AS SELECT a FROM t","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( t TABLE < a INT64 > CREATE AS SELECT a FROM t","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( ANY TABLE ) AS SELECT * FROM t","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( t ANY TABLE ) AS SELECT * * FROM t","reject":true}
 {"sql":"CREATE CREATE TABLE FUNCTION zf ( t ANY TABLE ) AS SELECT * FROM t","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( t ANY TABLE AS SELECT * FROM t","reject":true}
-{"sql":"CREATE TABLE ) zf ( x ANY TYPE ) AS SELECT x","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf ( x ANY TYPE , AS SELECT x","reject":true}
+{"sql":"CREATE TABLE TABLE zf ( x ANY TYPE ) AS SELECT x","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x ANY TYPE CREATE AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x ANY TYPE ) AS SELECT x","shape":"CREATE TABLE FUNCTION zf(x ANY TYPE) AS SELECT x;"}
-{"sql":"CREATE TABLE FUNCTION zf ( x ANY TYPE ) AS TABLE x"}
-{"sql":"CREATE TEMP TABLE FUNCTION VIEW ( x INT64 ) AS SELECT x","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x ANY TYPE ) AS f x","reject":true}
+{"sql":"CREATE TEMP TABLE FUNCTION ALTER ( x INT64 ) AS SELECT x","reject":true}
 {"sql":"CREATE TEMP TABLE FUNCTION zf ( x INT64 INT64 ) AS SELECT x","reject":true}
 {"sql":"CREATE TEMP TABLE FUNCTION zf ( INT64 x ) AS SELECT x","reject":true}
 {"sql":"TEMP CREATE TABLE FUNCTION zf ( x INT64 ) AS SELECT x","reject":true}
@@ -1550,15 +1570,14 @@
 {"sql":"CREATE CREATE TABLE FUNCTION zf ( x INT64 ) AS ( x )","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x x INT64 ) AS ( x )","reject":true}
 {"sql":"CREATE TABLE zf FUNCTION AS SELECT 1 AS x","reject":true}
-{"sql":"CREATE TABLE FUNCTION IF AS SELECT 1 AS x","reject":true}
+{"sql":"CREATE TABLE FUNCTION OPTIONS AS SELECT 1 AS x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf SELECT AS 1 AS x","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf AS SELECT 1 AS zz1","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO ( 'user:a@b.c' , 'group:g@b.c' ) FILTER USING ( ( a = 1 )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO ( 'user:a@b.c' , 'group:g@b.c' ) FILTER USING ( a = 1","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO 'user:a@b.c' ( , 'group:g@b.c' ) FILTER USING ( a = 1 )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t FILTER USING USING ( TRUE )","reject":true}
-{"sql":"CREATE POLICIES ACCESS POLICY zp ON t FILTER USING ( TRUE )","reject":true}
-{"sql":"CREATE ROW RETURNS POLICY zp ON t FILTER USING ( TRUE )","reject":true}
+{"sql":"CREATE t ACCESS POLICY zp ON t FILTER USING ( TRUE )","reject":true}
+{"sql":"CREATE ROW ) POLICY zp ON t FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW POLICY zp ON t FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE OR REPLACE ROW ACCESS POLICY IF NOT NOT EXISTS zp ON t FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE OR REPLACE ROW ACCESS POLICY IF NOT EXISTS zp ON t FILTER ( USING TRUE )","reject":true}
@@ -1569,72 +1588,72 @@
 {"sql":"CREATE ROW POLICY zp ON t GRANT TO ( 'allUsers' ) FILTER USING a = 1","reject":true}
 {"sql":"ROW CREATE ACCESS POLICY zp ON t GRANT TO ( 'allUsers' ) FILTER USING a = 1","reject":true}
 {"sql":"CREATE ACCESS POLICY zp ON t","reject":true}
-{"sql":"CREATE ROW TABLE POLICY zp ON t","reject":true}
+{"sql":"CREATE ROW i POLICY zp ON t","reject":true}
 {"sql":"CREATE ROW ACCESS zp ON t","reject":true}
 {"sql":"CREATE CREATE ROW ACCESS POLICY zp ON t FILTER USING ( a IN ( SELECT 1 ) )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t FILTER USING ( a IN ( SELECT 1 ) ) )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t FILTER ( USING a IN ( SELECT 1 ) )","reject":true}
-{"sql":"CREATE SEARCH INDEX zi ) t ( ALL COLUMNS )","reject":true}
+{"sql":"CREATE SEARCH INDEX zi STRING t ( ALL COLUMNS )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ALL COLUMNS )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON ( ALL COLUMNS )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ( ALL COLUMNS WITH COLUMN OPTIONS ( a ( OPTIONS index_granularity = 'COLUMN' ) ) ) OPTIONS ( analyzer = 'LOG_ANALYZER' )","reject":true}
-{"sql":") SEARCH INDEX zi ON t ( ALL COLUMNS WITH COLUMN OPTIONS ( a OPTIONS ( index_granularity = 'COLUMN' ) ) ) OPTIONS ( analyzer = 'LOG_ANALYZER' )","reject":true}
-{"sql":"CREATE location INDEX zi ON t ( ALL COLUMNS WITH COLUMN OPTIONS ( a OPTIONS ( index_granularity = 'COLUMN' ) ) ) OPTIONS ( analyzer = 'LOG_ANALYZER' )","reject":true}
+{"sql":"IDENTITY SEARCH INDEX zi ON t ( ALL COLUMNS WITH COLUMN OPTIONS ( a OPTIONS ( index_granularity = 'COLUMN' ) ) ) OPTIONS ( analyzer = 'LOG_ANALYZER' )","reject":true}
+{"sql":"CREATE zf INDEX zi ON t ( ALL COLUMNS WITH COLUMN OPTIONS ( a OPTIONS ( index_granularity = 'COLUMN' ) ) ) OPTIONS ( analyzer = 'LOG_ANALYZER' )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ( ALL COLUMNS WITH COLUMN OPTIONS ( a OPTIONS ( index_granularity = 'COLUMN' ) ) ) OPTIONS ( = 'LOG_ANALYZER' )","reject":true}
-{"sql":"CREATE ) INDEX IF NOT EXISTS zi ON t ( a , b OPTIONS ( index_granularity = 'COLUMN' ) )","reject":true}
+{"sql":"CREATE 1 INDEX IF NOT EXISTS zi ON t ( a , b OPTIONS ( index_granularity = 'COLUMN' ) )","reject":true}
 {"sql":"CREATE SEARCH INDEX IF NOT zi EXISTS ON t ( a , b OPTIONS ( index_granularity = 'COLUMN' ) )","reject":true}
 {"sql":"CREATE SEARCH INDEX IF NOT EXISTS zi ON t ( a b , OPTIONS ( index_granularity = 'COLUMN' ) )","reject":true}
-{"sql":"CREATE SEARCH += IF NOT EXISTS zi ON t ( a , b OPTIONS ( index_granularity = 'COLUMN' ) )","reject":true}
-{"sql":"CREATE OR REPLACE SEARCH INDEX zi PARTITION t ( a )","reject":true}
+{"sql":"CREATE SEARCH zz1 IF NOT EXISTS zi ON t ( a , b OPTIONS ( index_granularity = 'COLUMN' ) )","reject":true}
+{"sql":"CREATE OR REPLACE SEARCH INDEX zi CREATE t ( a )","reject":true}
 {"sql":"CREATE OR SEARCH REPLACE INDEX zi ON t ( a )","reject":true}
 {"sql":"CREATE OR REPLACE REPLACE SEARCH INDEX zi ON t ( a )","reject":true}
-{"sql":"AS OR REPLACE SEARCH INDEX zi ON t ( a )","reject":true}
+{"sql":"FUNCTION OR REPLACE SEARCH INDEX zi ON t ( a )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ( a + ) 1","reject":true}
 {"sql":"CREATE SEARCH INDEX INDEX zi ON t ( a + 1 )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ( a + 1 1 )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t a ( ) OPTIONS ( index_type = 'IVF' )","reject":true}
-{"sql":"CREATE VECTOR INT64 zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
-{"sql":"CREATE ) INDEX zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
+{"sql":"CREATE VECTOR r zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
+{"sql":"CREATE ALTER INDEX zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a ) ( STORING b , c ) PARTITION BY d OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a ) STORING ( ( b , c ) PARTITION BY d OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a ) STORING ( b , c ) PARTITION BY d OPTIONS ( index_type = 'IVF' )"}
-{"sql":"NUMERIC VECTOR INDEX zi ON t ( a ) STORING ( b , c ) PARTITION BY d OPTIONS ( index_type = 'IVF' )","reject":true}
+{"sql":"LIKE VECTOR INDEX zi ON t ( a ) STORING ( b , c ) PARTITION BY d OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE OR REPLACE VECTOR INDEX IF NOT EXISTS zi ON t ( a ) OPTIONS ( index_type index_type = 'IVF' )","reject":true}
-{"sql":"CREATE OR REPLACE VECTOR INDEX IF NOT EXISTS zi ON t ( a ) OPTIONS SCHEMA index_type = 'IVF' )","reject":true}
+{"sql":"CREATE OR REPLACE VECTOR INDEX IF NOT EXISTS zi ON t ( a ) OPTIONS ) index_type = 'IVF' )","reject":true}
 {"sql":"CREATE OR REPLACE VECTOR INDEX IF NOT EXISTS zi ON t ( a a ) OPTIONS ( index_type = 'IVF' )","reject":true}
-{"sql":"CREATE ( REPLACE VECTOR INDEX IF NOT EXISTS zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
+{"sql":"CREATE DROP REPLACE VECTOR INDEX IF NOT EXISTS zi ON t ( a ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( ) a","reject":true}
 {"sql":"CREATE INDEX zi ON t ( a )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi zi ON t ( a )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON ( a )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a , b ) ( OPTIONS index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a , b ) OPTIONS ( index_type = )","reject":true}
-{"sql":"CREATE VECTOR INDEX zi ON t ( a , b ) OPTIONS ( ALL = 'IVF' )","reject":true}
+{"sql":"CREATE VECTOR INDEX zi ON t ( a , b ) OPTIONS ( = = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a , b ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE CREATE INDEX zi ON t ( a )","reject":true}
-{"sql":"CREATE INDEX SCHEMA ON t ( a )","reject":true}
+{"sql":"CREATE INDEX CLUSTER ON t ( a )","reject":true}
 {"sql":"CREATE INDEX zi ON ON t ( a )","reject":true}
 {"sql":"CREATE INDEX zi ON ( t a )","reject":true}
 {"sql":"CREATE CAPACITY `zp.region-us.c` OPTIONS ( slot_count 100 , plan = 'FLEX' )","reject":true}
 {"sql":"CREATE CAPACITY `zp.region-us.c` OPTIONS ( slot_count = 100 , plan = )","reject":true}
 {"sql":"CREATE CAPACITY `zp.region-us.c` `zp.region-us.c` OPTIONS ( slot_count = 100 , plan = 'FLEX' )","reject":true}
 {"sql":"CAPACITY CREATE `zp.region-us.c` OPTIONS ( slot_count = 100 , plan = 'FLEX' )","reject":true}
-{"sql":"CREATE RESERVATION OPTIONS OPTIONS ( slot_capacity = 100 )"}
+{"sql":"CREATE RESERVATION CONNECTION OPTIONS ( slot_capacity = 100 )"}
 {"sql":"CREATE RESERVATION `zp.region-us.r` OPTIONS ( slot_capacity = 100 ) )","reject":true}
 {"sql":"CREATE RESERVATION `zp.region-us.r` OPTIONS ( slot_capacity = 100 )","shape":"CREATE RESERVATION `zp.region-us.r` OPTIONS (slot_capacity = 100);"}
 {"sql":"CREATE RESERVATION `zp.region-us.r` OPTIONS ( slot_capacity = 100 100 )","reject":true}
-{"sql":"CREATE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = DROP )"}
+{"sql":"CREATE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = CREATE )","reject":true}
 {"sql":"CREATE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , = 'QUERY' )","reject":true}
 {"sql":"CREATE CONNECTION NOT IF EXISTS `us.c` OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"CREATE IF NOT EXISTS `us.c` OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"CREATE CONNECTION IF NOT EXISTS EXISTS `us.c` OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
-{"sql":"CREATE CONNECTION ON NOT EXISTS `us.c` OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
+{"sql":"CREATE CONNECTION ( NOT EXISTS `us.c` OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"CREATE `us.c`","reject":true}
 {"sql":"CREATE `us.c` CONNECTION","reject":true}
-{"sql":"CREATE x REPLACE DATA_POLICY IF NOT EXISTS `zp.region-us.d` OPTIONS ( data_policy_type = 'DATA_MASKING_POLICY' )","reject":true}
+{"sql":"CREATE CAST REPLACE DATA_POLICY IF NOT EXISTS `zp.region-us.d` OPTIONS ( data_policy_type = 'DATA_MASKING_POLICY' )","reject":true}
 {"sql":"CREATE OR REPLACE DATA_POLICY IF NOT `zp.region-us.d` OPTIONS ( data_policy_type = 'DATA_MASKING_POLICY' )","reject":true}
 {"sql":"CREATE OR REPLACE DATA_POLICY IF NOT EXISTS `zp.region-us.d` OPTIONS ( data_policy_type = = 'DATA_MASKING_POLICY' )","reject":true}
 {"sql":"CREATE REPLACE DATA_POLICY IF NOT EXISTS `zp.region-us.d` OPTIONS ( data_policy_type = 'DATA_MASKING_POLICY' )","reject":true}
@@ -1645,7 +1664,7 @@
 {"sql":"CREATE CAPACITY IF NOT EXISTS EXISTS `zp.region-us.c` OPTIONS ( slot_count = 100 )","reject":true}
 {"sql":"CREATE IF NOT EXISTS `zp.region-us.c` OPTIONS ( slot_count = 100 )","reject":true}
 {"sql":"CREATE CAPACITY IF NOT EXISTS `zp.region-us.c` OPTIONS ( slot_count = = 100 )","reject":true}
-{"sql":"CREATE CAPACITY IF NOT EXISTS `zp.region-us.c` OPTIONS ( slot_count = 100 zf","reject":true}
+{"sql":"CREATE CAPACITY IF NOT EXISTS `zp.region-us.c` OPTIONS ( slot_count = 100 zz1","reject":true}
 {"sql":"CREATE `zp.region-us.r`","reject":true}
 {"sql":"CREATE RESERVATION","reject":true}
 {"sql":"CREATE RESERVATION RESERVATION `zp.region-us.r`","reject":true}
@@ -1653,33 +1672,33 @@
 {"sql":"CREATE OR REPLACE RESERVATION `zp.region-us.r` OPTIONS ( slot_capacity = 100 ) )","reject":true}
 {"sql":"CREATE OR REPLACE RESERVATION `zp.region-us.r` OPTIONS ( = 100 )","reject":true}
 {"sql":"CREATE OR REPLACE RESERVATION `zp.region-us.r` OPTIONS ( slot_capacity = 100","reject":true}
-{"sql":"CREATE RESERVATION IF TABLE EXISTS `zp.region-us.r` OPTIONS ( slot_capacity = 100 )","reject":true}
+{"sql":"CREATE RESERVATION IF CREATE EXISTS `zp.region-us.r` OPTIONS ( slot_capacity = 100 )","reject":true}
 {"sql":"CREATE IF NOT EXISTS `zp.region-us.r` OPTIONS ( slot_capacity = 100 )","reject":true}
-{"sql":"CREATE RESERVATION IF NOT EXISTS `zp.region-us.r` OPTIONS ( slot_capacity NOT 100 )","reject":true}
+{"sql":"CREATE RESERVATION IF NOT EXISTS `zp.region-us.r` OPTIONS ( slot_capacity \"user:nobody@example.com\" 100 )","reject":true}
 {"sql":"CREATE RESERVATION IF NOT EXISTS `zp.region-us.r` OPTIONS ( slot_capacity = ) 100","reject":true}
 {"sql":"OR REPLACE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE OR REPLACE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , = 'QUERY' )","reject":true}
 {"sql":"CREATE OR REPLACE `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE OR OR REPLACE ASSIGNMENT `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
-{"sql":"CREATE ASSIGNMENT IF NOT EXISTS `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
+{"sql":"AS ASSIGNMENT IF NOT EXISTS `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE ASSIGNMENT NOT EXISTS `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE ASSIGNMENT IF NOT EXISTS `zp.region-us.r.a` OPTIONS ( assignee = 'projects/p' , job_type = = 'QUERY' )","reject":true}
-{"sql":"CREATE ASSIGNMENT IF NOT EXISTS `zp.region-us.r.a` OPTIONS ( FILTER = 'projects/p' , job_type = 'QUERY' )"}
+{"sql":"CREATE ASSIGNMENT IF NOT EXISTS `zp.region-us.r.a` OPTIONS ( ( = 'projects/p' , job_type = 'QUERY' )","reject":true}
 {"sql":"CREATE CREATE OR REPLACE CONNECTION `us.c` OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"CREATE OR REPLACE CONNECTION `us.c` OPTIONS OPTIONS ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"CREATE OR REPLACE CONNECTION OPTIONS `us.c` ( connection_type = 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"CREATE OR REPLACE CONNECTION `us.c` OPTIONS ( = connection_type 'CLOUD_RESOURCE' )","reject":true}
 {"sql":"DATA_POLICY CREATE `zp.region-us.d`","reject":true}
-{"sql":"CREATE zz `zp.region-us.d`","reject":true}
+{"sql":"CREATE zz1 `zp.region-us.d`","reject":true}
 {"sql":"CREATE DATA_POLICY `zp.region-us.d` `zp.region-us.d`","reject":true}
 {"sql":"CREATE DATA_POLICY","reject":true}
 {"sql":"CREATE TEMP CAPACITY `zp.region-us.c` OPTIONS ( slot_count = 100","reject":true}
 {"sql":"CREATE TEMP CAPACITY `zp.region-us.c` OPTIONS ( slot_count = 100 ) )","reject":true}
 {"sql":"CREATE TEMP CAPACITY OPTIONS ( slot_count = 100 )","reject":true}
 {"sql":"CREATE TEMP CAPACITY `zp.region-us.c` OPTIONS ( slot_count = = 100 )","reject":true}
-{"sql":"CREATE ROW INT64 POLICY zp ON t GRANT TO ( ) FILTER USING ( TRUE )","reject":true}
+{"sql":"CREATE ROW GENERATED POLICY zp ON t GRANT TO ( ) FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp t ON GRANT TO ( ) FILTER USING ( TRUE )","reject":true}
-{"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT REPLICA ( ) FILTER USING ( TRUE )","reject":true}
+{"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT ) ( ) FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY ON zp t GRANT TO ( ) FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO ( 'user:a@b.c' ) , FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ROW ACCESS POLICY zp ON t GRANT TO ( 'user:a@b.c' , ) FILTER USING ( TRUE )","reject":true}
@@ -1687,33 +1706,33 @@
 {"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT ( TO 'user:a@b.c' , ) FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO ( @ p ) FILTER ( USING TRUE )","reject":true}
 {"sql":"CREATE ROW ROW ACCESS POLICY zp ON t GRANT TO ( @ p ) FILTER USING ( TRUE )","reject":true}
-{"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO ( @ p zz1 FILTER USING ( TRUE )","reject":true}
+{"sql":"CREATE ROW ACCESS POLICY zp ON t GRANT TO ( @ p = FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ACCESS POLICY zp ON t GRANT TO ( @ p ) FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ACCESS ROW POLICY zp ON t FILTER USING ( TRUE ) GRANT TO ( 'allUsers' )","reject":true}
 {"sql":"ROW ACCESS POLICY zp ON t FILTER USING ( TRUE ) GRANT TO ( 'allUsers' )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY zp t ON FILTER USING ( TRUE ) GRANT TO ( 'allUsers' )","reject":true}
-{"sql":"CREATE ROW ACCESS POLICY zp ON t FILTER USING ( TRUE ) GRANT TO REPLACE 'allUsers' )","reject":true}
+{"sql":"CREATE ROW ACCESS POLICY zp ON t FILTER USING ( TRUE ) GRANT TO 'COLUMN' 'allUsers' )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY `p.d.zp` t ON FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ACCESS ACCESS POLICY `p.d.zp` ON t FILTER USING ( TRUE )","reject":true}
 {"sql":"CREATE ROW ACCESS POLICY `p.d.zp` `p.d.zp` ON t FILTER USING ( TRUE )","reject":true}
-{"sql":"CREATE ROW ACCESS POLICY `p.d.zp` ON t FILTER 2 ( TRUE )","reject":true}
-{"sql":"1 SEARCH INDEX zi ON t ( a . b )","reject":true}
+{"sql":"CREATE ROW ACCESS POLICY `p.d.zp` ON t FILTER CREATE ( TRUE )","reject":true}
+{"sql":"( SEARCH INDEX zi ON t ( a . b )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ( . a b )","reject":true}
-{"sql":"CREATE SEARCH INDEX zi ON t ( a . DEFAULT )"}
+{"sql":"CREATE SEARCH INDEX zi ON t ( a . x )"}
 {"sql":"SEARCH CREATE INDEX zi ON t ( a . b )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON ( t ALL COLUMNS , a )","reject":true}
-{"sql":"CREATE 1 INDEX zi ON t ( ALL COLUMNS , a )","reject":true}
-{"sql":"CREATE SEARCH INDEX zi CREATE t ( ALL COLUMNS , a )","reject":true}
+{"sql":"CREATE ( INDEX zi ON t ( ALL COLUMNS , a )","reject":true}
+{"sql":"CREATE SEARCH INDEX zi NULL t ( ALL COLUMNS , a )","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t ( ALL COLUMNS , a","reject":true}
 {"sql":"CREATE INDEX SEARCH zi ON t ( )","reject":true}
 {"sql":"CREATE SEARCH SEARCH INDEX zi ON t ( )","reject":true}
-{"sql":"CREATE SEARCH INDEX zi ON t ( NOT","reject":true}
+{"sql":"CREATE SEARCH INDEX zi ON t ( ON","reject":true}
 {"sql":"CREATE SEARCH INDEX zi ON t t ( )","reject":true}
 {"sql":"VIEW SEARCH INDEX d . zi ON t ( s )","reject":true}
 {"sql":"CREATE SEARCH INDEX d . zi ON t ( ) s","reject":true}
 {"sql":"SEARCH INDEX d . zi ON t ( s )","reject":true}
 {"sql":"SEARCH CREATE INDEX d . zi ON t ( s )","reject":true}
-{"sql":"CREATE VECTOR INDEX t ON t ( a ) STORING ( ) OPTIONS ( index_type = 'IVF' )","reject":true}
+{"sql":"CREATE VECTOR INDEX zz1 ON t ( a ) STORING ( ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t a ( ) STORING ( ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a ) STORING ) ( OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( a STORING ) ( ) OPTIONS ( index_type = 'IVF' )","reject":true}
@@ -1722,24 +1741,25 @@
 {"sql":"CREATE VECTOR INDEX zi ON t ( a ) PARTITION BY d STORING ( b ) OPTIONS ( index_type index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi t ON ( a ) PARTITION BY d STORING ( b ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX zi ON t ( ( ALL COLUMNS ) OPTIONS ( index_type = 'IVF' )","reject":true}
-{"sql":"CREATE VECTOR INDEX zi ON t ( ALL COLUMNS x OPTIONS ( index_type = 'IVF' )","reject":true}
+{"sql":"CREATE VECTOR INDEX zi ON t ( ALL COLUMNS SEARCH OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR INDEX ON t ( ALL COLUMNS ) OPTIONS ( index_type = 'IVF' )","reject":true}
 {"sql":"CREATE VECTOR VECTOR INDEX zi ON t ( ALL COLUMNS ) OPTIONS ( index_type = 'IVF' )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x ANY TABLE ) AS NUMERIC 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf ( x ANY TABLE ) AS , 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x ANY TABLE ) AS ( )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x ANY TABLE ) ) ( 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf ( x ANY TABLE ) ( ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x ANY ) TABLE AS ( 1 )","reject":true}
-{"sql":"CREATE FUNCTION zf ( t TABLE < MATERIALIZED INT64 > ) AS ( 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf ( t TABLE < ) INT64 > ) AS ( 1 )","reject":true}
+{"sql":"CREATE FUNCTION zf ( t TABLE < a INT64 > ) USING ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( t TABLE < a INT64 > ) AS 1 )","reject":true}
-{"sql":"CREATE FUNCTION AS ( t TABLE < a INT64 > ) AS ( 1 )","reject":true}
+{"sql":"CREATE FUNCTION ON ( t TABLE < a INT64 > ) AS ( 1 )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 OPTIONS ( description = 'd' ) AS ( x ) OPTIONS ( description description = 'e' )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 OPTIONS ( description = 'd' ) AS ( x ) OPTIONS ( description = 'e' zz","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 OPTIONS ( description = 'd' ) AS ( x ) OPTIONS ( description = 'e' x","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 OPTIONS ( description = 'd' ) AS ( x OPTIONS ) ( description = 'e' )","reject":true}
 {"sql":"FUNCTION zf ( x INT64 ) RETURNS INT64 OPTIONS ( description = 'd' ) AS ( x ) OPTIONS ( description = 'e' )","reject":true}
 {"sql":"CREATE FUNCTION zf x INT64 ) RETURNS INT64 LANGUAGE js AS 'return x' OPTIONS ( )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x ) RETURNS INT64 LANGUAGE js AS 'return x' OPTIONS ( )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 LANGUAGE js AS 'return x' OPTIONS OPTIONS ( )","reject":true}
-{"sql":"CREATE FUNCTION zf ( x INT64 CREATE RETURNS INT64 LANGUAGE js AS 'return x' OPTIONS ( )","reject":true}
+{"sql":"CREATE FUNCTION zf ( x INT64 `p.d.zp` RETURNS INT64 LANGUAGE js AS 'return x' OPTIONS ( )","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 LANGUAGE LANGUAGE `js` AS 'return x'","reject":true}
 {"sql":"CREATE FUNCTION zf ( x INT64 ) RETURNS INT64 `js` AS 'return x'","reject":true}
 {"sql":"CREATE FUNCTION zf zf ( x INT64 ) RETURNS INT64 LANGUAGE `js` AS 'return x'","reject":true}
@@ -1754,25 +1774,94 @@
 {"sql":"CREATE FUNCTION a . b . c . zf x ( INT64 ) AS ( x )","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS WITH q AS ( SELECT x ) SELECT * q FROM","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( INT64 x ) AS WITH q AS ( SELECT x ) SELECT * FROM q"}
-{"sql":"CREATE TABLE FUNCTION zf ( x INT64 CAPACITY AS WITH q AS ( SELECT x ) SELECT * FROM q","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x INT64 t AS WITH q AS ( SELECT x ) SELECT * FROM q","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) WITH q AS ( SELECT x ) SELECT * FROM q","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS FROM UNNEST ( [ x ] ) AS y t SELECT y","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS FROM UNNEST ( [ x ] ) AS y NULL SELECT y","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS FROM UNNEST ( [ x ] ) ) AS y |> SELECT y","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS FROM UNNEST ( [ x ] OPTIONS AS y |> SELECT y","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) AS FROM UNNEST ( [ x ] ( AS y |> SELECT y","reject":true}
 {"sql":"TABLE CREATE FUNCTION zf ( x INT64 ) AS FROM UNNEST ( [ x ] ) AS y |> SELECT y","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf zf ( x INT64 ) RETURNS TABLE <> AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) RETURNS TABLE <> AS AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 INT64 ) RETURNS TABLE <> AS SELECT 1","reject":true}
-{"sql":"CREATE TABLE FUNCTION zf ( zz1 INT64 ) RETURNS TABLE <> AS SELECT 1","reject":true}
+{"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) RETURNS TABLE <> AS SELECT 1","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) INT64 INT64 AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( x INT64 ) RETURNS INT64 AS AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION zf ( INT64 x ) RETURNS INT64 AS SELECT x","reject":true}
 {"sql":"CREATE TABLE FUNCTION ( x INT64 ) RETURNS INT64 AS SELECT x","reject":true}
-{"sql":"a AGGREGATE FUNCTION zf ( x FLOAT64 ) RETURNS FLOAT64 REMOTE WITH CONNECTION c","reject":true}
+{"sql":"CREATE AGGREGATE FUNCTION zf ( x FLOAT64 ) RETURNS FLOAT64 REMOTE WITH CONNECTION c"}
 {"sql":"CREATE FUNCTION AGGREGATE zf ( x FLOAT64 ) RETURNS FLOAT64 REMOTE WITH CONNECTION c","reject":true}
-{"sql":"CREATE AGGREGATE FUNCTION zf VIEW x FLOAT64 ) RETURNS FLOAT64 REMOTE WITH CONNECTION c","reject":true}
+{"sql":"CREATE AGGREGATE FUNCTION zf REPLACE x FLOAT64 ) RETURNS FLOAT64 REMOTE WITH CONNECTION c","reject":true}
 {"sql":"CREATE AGGREGATE FUNCTION zf x FLOAT64 ) RETURNS FLOAT64 REMOTE WITH CONNECTION c","reject":true}
-{"sql":"LANGUAGE AGGREGATE TABLE FUNCTION zf ( x INT64 ) AS SELECT x","reject":true}
-{"sql":"CREATE AGGREGATE TABLE FUNCTION CREATE ( x INT64 ) AS SELECT x","reject":true}
+{"sql":") AGGREGATE TABLE FUNCTION zf ( x INT64 ) AS SELECT x","reject":true}
+{"sql":"CREATE AGGREGATE TABLE FUNCTION ) ( x INT64 ) AS SELECT x","reject":true}
 {"sql":"CREATE AGGREGATE TABLE FUNCTION zf zf ( x INT64 ) AS SELECT x","reject":true}
 {"sql":"CREATE AGGREGATE TABLE FUNCTION zf ( INT64 x ) AS SELECT x","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle TO TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` SCHEMA sqlp_oracle TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT ) ON SCHEMA sqlp_oracle TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` , `roles/bigquery.dataEditor` `roles/bigquery.dataEditor` ON TABLE sqlp_oracle . t TO \"user:nobody@example.com\" , \"group:g@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` , `roles/bigquery.dataEditor` ON TABLE sqlp_oracle . t TO \"user:nobody@example.com\" \"group:g@example.com\"","shape":"GRANT `roles/bigquery.dataViewer`, `roles/bigquery.dataEditor` ON TABLE sqlp_oracle.t TO 'user:nobody@example.comgroup:g@example.com';"}
+{"sql":"GRANT `roles/bigquery.dataViewer` , `roles/bigquery.dataEditor` ON TABLE . sqlp_oracle t TO \"user:nobody@example.com\" , \"group:g@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON VIEW . sqlp_oracle t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"OPTIONS `roles/bigquery.dataViewer` ON VIEW sqlp_oracle . t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON VIEW sqlp_oracle . t TO","reject":true}
+{"sql":"GRANT ON `roles/bigquery.dataViewer` EXTERNAL TABLE sqlp_oracle . t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON EXTERNAL sqlp_oracle . t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON ON EXTERNAL TABLE sqlp_oracle . t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` CREATE TABLE t TO 'user:nobody@example.com'","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE TO t 'user:nobody@example.com'","reject":true}
+{"sql":"CLONE `roles/bigquery.dataViewer` ON TABLE t TO 'user:nobody@example.com'","reject":true}
+{"sql":"GRANT ON `roles/bigquery.dataViewer` t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON t TO TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON t \"user:nobody@example.com\" TO","reject":true}
+{"sql":"GRANT GRANT roles . x ON TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT roles . x x ON TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT roles . x TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT roles . x ON TABLE t ) \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE KEY TO user1","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE TO user1","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON ON TABLE t TO user1","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` TABLE ON t TO @ p","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t => @ p","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE TO @ p","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO @ p p","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON FUNCTION FUNCTION f TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` FUNCTION ON f TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON a f TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON FUNCTION TO f \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MODEL m TO TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON AS m TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MODEL m TO SEARCH","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` MODEL ON m TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MATERIALIZED VIEW mv TO TO \"user:nobody@example.com\"","reject":true}
+{"sql":"`roles/bigquery.dataViewer` ON MATERIALIZED VIEW mv TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MATERIALIZED VIEW CREATE TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON MATERIALIZED mv TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON PROJECT p TO CAPACITY","reject":true}
+{"sql":"`roles/bigquery.dataViewer` GRANT ON PROJECT p TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON PROJECT p TO \"user:nobody@example.com\" \"user:nobody@example.com\""}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON PROJECT TO p \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON t TABLE TO \"user:nobody@example.com\" WITH GRANT OPTION","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON ON TABLE t TO \"user:nobody@example.com\" WITH GRANT OPTION","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` ON TABLE t TO \"user:nobody@example.com\" WITH GRANT OPTION OPTION","reject":true}
+{"sql":"GRANT `roles/bigquery.dataViewer` `roles/bigquery.dataViewer` ON TABLE t TO \"user:nobody@example.com\" WITH GRANT OPTION","reject":true}
+{"sql":"GRANT SELECT ON ON TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT SELECT TABLE ON t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"GRANT SELECT ON TABLE TABLE TO \"user:nobody@example.com\""}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle \"user:nobody@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON SCHEMA FROM \"user:nobody@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` SCHEMA ON sqlp_oracle FROM \"user:nobody@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` SCHEMA sqlp_oracle FROM \"user:nobody@example.com\"","reject":true}
+{"sql":"`roles/bigquery.dataViewer` ON TABLE t FROM \"user:nobody@example.com\" , \"group:g@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON TABLE t \"user:nobody@example.com\" FROM , \"group:g@example.com\"","reject":true}
+{"sql":"REVOKE REVOKE `roles/bigquery.dataViewer` ON TABLE t FROM \"user:nobody@example.com\" , \"group:g@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON TABLE t FROM \"user:nobody@example.com\" , \"group:g@example.com\" \"group:g@example.com\"","shape":"REVOKE `roles/bigquery.dataViewer` ON TABLE t FROM 'user:nobody@example.com', 'group:g@example.comgroup:g@example.com';"}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON TABLE t AS \"user:nobody@example.com\"","reject":true}
+{"sql":"`roles/bigquery.dataViewer` ON TABLE t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` TABLE ON t TO \"user:nobody@example.com\"","reject":true}
+{"sql":"REVOKE `roles/bigquery.dataViewer` ON TABLE TO t \"user:nobody@example.com\"","reject":true}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET GENERATED a IDENTITY ( START WITH 1 )","reject":true}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET GENERATED AS IDENTITY ( START WITH WITH 1 )","reject":true}
+{"sql":"ALTER TABLE t ALTER COLUMN a SET GENERATED IDENTITY AS ( START WITH 1 )","reject":true}
+{"sql":"ALTER INT64 t ALTER COLUMN a SET GENERATED AS IDENTITY ( START WITH 1 )","reject":true}

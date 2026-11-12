@@ -85,6 +85,9 @@ var bigqueryIdentity = []string{
 	"CREATE OR REPLACE VECTOR INDEX zi ON t (a) STORING (b, c) PARTITION BY d OPTIONS (index_type = 'IVF')",
 	"CREATE RESERVATION IF NOT EXISTS `zp.region-us.r` OPTIONS (slot_capacity = 100)",
 	"CREATE OR REPLACE DATA_POLICY `zp.region-us.d` OPTIONS (data_policy_type = 'DATA_MASKING_POLICY')",
+	"GRANT `roles/bigquery.dataViewer`, `roles/bigquery.dataEditor` ON TABLE sqlp_oracle.t TO 'user:nobody@example.com', 'group:g@example.com'",
+	"REVOKE `roles/bigquery.dataViewer` ON SCHEMA sqlp_oracle FROM 'user:nobody@example.com'",
+	"ALTER TABLE t ALTER COLUMN a SET GENERATED AS IDENTITY (START WITH 1)",
 }
 
 // bigqueryFailures holds statements a BigQuery dry run rejects.

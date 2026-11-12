@@ -8,7 +8,6 @@
 {"sql":"DECLARE accumulator INT64 DEFAULT 0;\nCALL mydataset.AddDelta(accumulator, 5);\nCALL mydataset.AddDelta(accumulator, 3);\nSELECT accumulator;","kind":"rejects-valid"}
 {"sql":"CREATE PROCEDURE mydataset.SelectFromTablesAndAppend(\n  target_date DATE, OUT rows_added INT64)\nBEGIN\n  CREATE TEMP TABLE DataForTargetDate AS\n  SELECT t1.id, t1.x, t2.y\n  FROM dataset.partitioned_table1 AS t1\n  JOIN dataset.partitioned_table2 AS t2\n  ON t1.id = t2.id\n  WHERE t1.date = target_date\n    AND t2.date = target_date;\n\n  SET rows_added = (SELECT COUNT(*) FROM DataForTargetDate);\n\n  SELECT id, x, y, target_date  -- note that target_date is a parameter\n  FROM DataForTargetDate;\n\n  DROP TABLE DataForTargetDate;\nEND;","kind":"rejects-valid"}
 {"sql":"DECLARE rows_added INT64;\nCALL mydataset.SelectFromTablesAndAppend(CURRENT_DATE(), rows_added);\nSELECT FORMAT('Added %d rows', rows_added);","kind":"rejects-valid"}
-{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN id\nSET GENERATED AS IDENTITY (\n  START WITH 100\n  INCREMENT BY 10\n)","kind":"rejects-valid"}
 {"sql":"-- Declare a variable with type parameters.\nDECLARE x STRING(10);\n\n-- This is a valid assignment to x.\nSET x = \"hello\";\n\n-- This assignment to x violates the type parameter constraint and results in an OUT_OF_RANGE error.\nSET x = \"this string is too long\"","kind":"rejects-valid"}
 {"sql":"-- Declare variables with type parameters.\nDECLARE x NUMERIC(10) DEFAULT 12345;\nDECLARE y NUMERIC(5, 2) DEFAULT 123.45;\n\n-- The variable x is treated as a NUMERIC value when read, so the result of this query\n-- is a NUMERIC without type parameters.\nSELECT x;\n\n-- Type parameters aren't propagated within expressions, so variables x and y are treated\n-- as NUMERIC values when read and the result of this query is a NUMERIC without type parameters.\nSELECT x + y;","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN n.name","kind":"rejects-valid"}
@@ -153,17 +152,16 @@
 {"sql":"ALTER MATERIALIZED VIEW mv ALTER COLUMN a SET OPTIONS ()","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , PRIMARY KEY ( x ) NOT ENFORCED , FOREIGN KEY ( x ) REFERENCES t ( a ) NOT ENFORCED , CONSTRAINT f FOREIGN KEY ( x ) REFERENCES t ( a ) ENFORCED )","kind":"rejects-valid"}
 {"sql":"TABLE zz1","kind":"rejects-valid"}
-{"sql":"CREATE TABLE zz1 COPY `zp.region-us.r.a` PARTITION BY a","kind":"rejects-valid"}
-{"sql":"CREATE TABLE zz1 CLONE OPTIONS PARTITION BY a","kind":"rejects-valid"}
+{"sql":"CREATE TABLE zz1 CLONE x PARTITION BY a","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 OPTIONS ( format = 'CSV' , uris = [ 'gs://b/x.csv' ] )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , , y INT64 GENERATED ALWAYS AS ( x ) STORED OPTIONS ( asynchronous = TRUE ) )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( x INT64 , y INT64 GENERATED AS ( x ) )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE zz1 ( INT64 x , FOREIGN KEY ( x ) REFERENCES t ( a ) )","kind":"rejects-valid"}
-{"sql":"SELECT CAST ( [ zz2 ] AS ARRAY < STRING ( 10 ) > )","kind":"rejects-valid"}
+{"sql":"CREATE TEMP VIEW zz2 AS SELECT TABLE AS a","kind":"rejects-valid"}
+{"sql":"SELECT CAST ( [ t ] AS ARRAY < STRING ( 10 ) > )","kind":"rejects-valid"}
+{"sql":"CREATE FUNCTION zf ( x x ) RETURNS STRING LANGUAGE js","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION zf ( INT64 ) RETURNS INT64 REMOTE WITH CONNECTION `us.c` OPTIONS ( endpoint = 'https://x' )","kind":"rejects-valid"}
 {"sql":"CREATE TABLE FUNCTION zf ( t TABLE < INT64 > ) AS SELECT a FROM t","kind":"rejects-valid"}
-{"sql":"CREATE TABLE FUNCTION zf ( x ANY TYPE ) AS TABLE x","kind":"rejects-valid"}
-{"sql":"CREATE ASSIGNMENT IF NOT EXISTS `zp.region-us.r.a` OPTIONS ( FILTER = 'projects/p' , job_type = 'QUERY' )","kind":"rejects-valid"}
 {"sql":"SELECT a.1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT a .1 .1 FROM t","kind":"rejects-valid"}
 {"sql":"SELECT ( t ) . 2 FROM t","kind":"rejects-valid"}
