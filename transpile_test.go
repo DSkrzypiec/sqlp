@@ -192,3 +192,20 @@ func TestDialectByName(t *testing.T) {
 		t.Error("ByName(oracle) should fail")
 	}
 }
+
+// DML that BigQuery has no syntax for comes out unchanged, with a warning.
+func TestTranspileDMLToBigQuery(t *testing.T) {
+	bq := func(what string) []string { return unsupported(what, "bigquery") }
+	transpiles(t, dialect.Postgres, dialect.BigQuery, []transpileCase{
+		{in: "TRUNCATE t", out: "TRUNCATE TABLE t"},
+		{in: "TRUNCATE t, u RESTART IDENTITY", out: "TRUNCATE TABLE t, u RESTART IDENTITY",
+			warnings: bq("TRUNCATE with ONLY, several tables, IDENTITY, CASCADE or RESTRICT")},
+		{in: "INSERT INTO t DEFAULT VALUES", out: "INSERT INTO t DEFAULT VALUES", warnings: bq("DEFAULT VALUES")},
+		{in: "INSERT INTO t AS x VALUES (1)", out: "INSERT INTO t AS x VALUES (1)", warnings: bq("INSERT INTO t AS alias")},
+		{in: "UPDATE t SET (a, b) = (1, 2) WHERE true", out: "UPDATE t SET (a, b) = (1, 2) WHERE TRUE", warnings: bq("SET (a, b) = ...")},
+		{in: "WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)",
+			out:      "WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)",
+			warnings: bq("WITH before INSERT, UPDATE, DELETE or MERGE")},
+		{in: "UPDATE t SET a = 1 WHERE b = 2", out: "UPDATE t SET a = 1 WHERE b = 2"},
+	})
+}

@@ -45,6 +45,8 @@ type Merge struct {
 // MergeWhen is one WHEN [NOT] MATCHED [AND cond] THEN action arm.
 type MergeWhen struct {
 	NotMatched    bool
+	By            string // NOT MATCHED BY TARGET or BY SOURCE (BigQuery), or ""
+	InsertRow     bool   // INSERT ROW (BigQuery)
 	Cond          Expr
 	DoNothing     bool
 	Delete        bool

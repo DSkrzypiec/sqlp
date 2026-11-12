@@ -100,7 +100,8 @@ var SQLite = &Dialect{
 			IndexedBy: true, LimitComma: true, FreeJoinKeywords: true, InTable: true,
 		},
 		DML: DMLFeatures{
-			Returning: true, InsertOr: true, UpsertMulti: true, OrderLimitInDML: true,
+			Returning: true, InsertOr: true, UpsertMulti: true, OrderLimitInDML: true, WithDML: true,
+			InsertAlias: true, DefaultValues: true, SetTuples: true,
 		},
 		DDL: DDLFeatures{
 			LooseReferences: true, WithoutRowid: true, Autoincrement: true, ConflictClause: true,

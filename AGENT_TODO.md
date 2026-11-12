@@ -671,9 +671,13 @@ Findings of the spike (2026-11-12):
   supported`. So `corpusgen` keeps a reviewed table of messages, and it stops on
   a message it has not seen before instead of guessing.
 - The sandbox refuses every DML statement that parses, even a dry run, with
-  `billingNotEnabled`. That still means "parsed", so DML verdicts work. What DML
-  means (statement type, tables, rules applied after parsing such as UPDATE
-  without WHERE) needs billing.
+  `billingNotEnabled` (in a script: `invalidQuery` with the same message, after
+  the whole script parsed). That still means "parsed", so DML verdicts work.
+  The refusal comes before analysis, so everything checked after parsing is
+  invisible without billing: what DML means (statement type, tables), rules
+  such as "UPDATE and DELETE need WHERE" (the reference says so; sqlp accepts
+  both without it), and whether `THEN RETURN` (parsed, undocumented, left out)
+  is allowed. Dry runs stay free with billing on.
 - Constant queries execute for 0 bytes. With `maximumBytesBilled` set to 1, a
   query that reads a table fails instead of being billed. Grouping is checked
   by evaluating a generated expression and its fully parenthesized form, as for
@@ -746,11 +750,13 @@ Apache 2.0 code samples; `testdata/corpus/bigquery/NOTICE` says so.
 - Statements spanning lines go into `lexer/lexer_test.go` (`bqCfg`), checked with
   `-bq-probe` the same way.
 
-**Status, 2026-11-12, end of day.** 10,512 frozen statements, 5,350 rejected by
-BigQuery, 4,021 with a verified shape, no mismatch. Known disagreements: 443
-valid statements sqlp rejects (before this day's work on the reference examples:
-1,102) and 80 invalid ones it accepts (206). Of the 443, about 80 are queries;
-the rest are DDL, DML, scripts and GQL graph queries (102, out of scope for now).
+**Status, 2026-11-12, after DML.** 10,512 frozen statements, 5,350 rejected by
+BigQuery, 4,043 with a verified shape, no mismatch. Known disagreements: 357
+valid statements sqlp rejects (before the day's work on the reference examples:
+1,102) and 74 invalid ones it accepts (206). Rejected valid: 202 DDL, 98 GQL
+graph queries (out of scope for now), 28 queries (10 of them `GRAPH_TABLE` and
+`MATCH_RECOGNIZE`), 21 scripts, 4 `EXPORT`/`LOAD`, 4 others. Accepted invalid: 41
+DDL, 31 queries, 2 transaction statements, 1 script. DML: none either way.
 Shapes of constant queries are compared by value, except where a function's
 value changes from run to run (`bqVolatile`); FOR SYSTEM_TIME is left out
 because the sample tables are recreated on every run.
@@ -793,7 +799,12 @@ because the sample tables are recreated on every run.
   reserved though the reference's list leaves it out). Still to do: a
   function-name probe (`SELECT fn()`: "Function not found" or not) to fill
   `dialect.BigQuery.Functions` for Transpile's warnings.
-- [ ] 4. DML: `INSERT` (optional `INTO`), `UPDATE`, `DELETE`, `MERGE`, `TRUNCATE`.
+- [x] 4. DML: optional `INTO` (`INSERT`, `MERGE`) and `FROM` (`DELETE`); `MERGE`
+  with `NOT MATCHED BY TARGET|SOURCE` and `INSERT ROW`; `TRUNCATE TABLE t` only;
+  no `WITH` before DML, `INSERT … AS alias`, `DEFAULT VALUES`, `SET (a, b) =`,
+  `RETURNING`, `DO NOTHING`, `OVERRIDING` (each a `DMLFeatures` flag that
+  PostgreSQL or SQLite sets; Transpile warns when the target lacks one). Not
+  done: `THEN RETURN` and the WHERE rule, see the oracle findings above.
 - [ ] 5. DDL and DCL: `OPTIONS`, `PARTITION BY`, `CLUSTER BY`, tables, views,
   functions, procedures, schemas, `ALTER`, policies, indexes, `GRANT`.
 - [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,

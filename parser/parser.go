@@ -795,6 +795,7 @@ func (p *Parser) parseStatement() ast.Statement {
 func (p *Parser) parseWithStatement() ast.Statement {
 	with := p.parseWith()
 	switch {
+	case !p.d.Features.DML.WithDML:
 	case p.isKw("INSERT", "REPLACE"):
 		return p.parseInsert(with)
 	case p.isKw("UPDATE"):

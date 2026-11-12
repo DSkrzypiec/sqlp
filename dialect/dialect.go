@@ -193,6 +193,13 @@ type DMLFeatures struct {
 	OrderLimitInDML      bool // UPDATE/DELETE ... ORDER BY ... LIMIT (SQLite)
 	Truncate             bool
 	Merge                bool
+	MergeBy              bool // NOT MATCHED BY TARGET|SOURCE, INSERT ROW; no DO NOTHING or OVERRIDING (BigQuery)
+	OptionalDMLKeywords  bool // INSERT t, DELETE t, MERGE t: INTO and FROM may be left out (BigQuery)
+	WithDML              bool // WITH ... INSERT|UPDATE|DELETE|MERGE
+	InsertAlias          bool // INSERT INTO t AS x
+	DefaultValues        bool // INSERT INTO t DEFAULT VALUES, also in MERGE
+	SetTuples            bool // UPDATE t SET (a, b) = ...
+	TruncateOptions      bool // TRUNCATE [TABLE] [ONLY] a, b [RESTART|CONTINUE IDENTITY] [CASCADE|RESTRICT]; without it TRUNCATE TABLE t
 }
 
 // DDLFeatures lists schema statement syntax.

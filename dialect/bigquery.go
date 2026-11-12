@@ -79,7 +79,7 @@ var BigQuery = &Dialect{
 			ArrayLiterals: true, TypedStringLiteral: true, AtParams: true, Int64Literals: true,
 			FreePostfix: true, BracketArrays: true, AngleTypes: true, Extract: true, SafeCast: true,
 			CastFormat: true, IntervalUnits: true, LikeQuantified: true, IsUnknown: true, NamedArgs: true,
-			AggregateModifiers: true, TableArgs: true, MethodCalls: true, WithExprs: true,
+			AggregateModifiers: true, TableArgs: true, MethodCalls: true, WithExprs: true, DefaultExpr: true,
 		},
 		Names: NameFeatures{
 			QualifiedFunctions: true, MaxRelationParts: 3, KeywordsAfterDot: true,
@@ -90,6 +90,9 @@ var BigQuery = &Dialect{
 			TrailingComma: true, TableSample: true, SamplePercent: true, SystemTime: true, Pipes: true,
 			SetByName: true, JoinRequiresQual: true, FromlessRules: true, GroupingSetsAlone: true,
 			LimitLiterals: true, SelectWith: true, NestedQueryClauses: true, Pivot: true,
+		},
+		DML: DMLFeatures{
+			Merge: true, MergeBy: true, OptionalDMLKeywords: true, Truncate: true, BareDMLAlias: true,
 		},
 	},
 }

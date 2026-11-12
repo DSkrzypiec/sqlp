@@ -181,29 +181,8 @@
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_ENCRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'Plaintext',\n    'your_surrogate',\n    'aad') AS results;","kind":"rejects-valid"}
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_DECRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'your_surrogate(36):AWDeSznl9C7+NzTaCgiqiEAZ8Y55fZSuvCQ=',\n    'your_surrogate',\n    'aad') AS results;","kind":"rejects-valid"}
 {"sql":"DECLARE DLP_KEY_VALUE BYTES;\n\nSET DLP_KEY_VALUE =\n  FROM_BASE64(\n    'CiQA1W20a6Y5elj6xUMn4u4xPwwYVmchVmgKHhCCjSS3yNkMTpsSOQDz5Jg3vAfguw6KaZY0gP/Dh0NnKrcd6ARn9am5WzKppmp/DwW4JGGJTt8jHbNS4EjbtpD/p4SNmw==');\n\nSELECT\n  DLP_DETERMINISTIC_ENCRYPT(\n    DLP_KEY_CHAIN(\n      'gcp-kms://projects/myproject/locations/us/keyRings/kms-test/cryptoKeys/test-Kek',\n      DLP_KEY_VALUE),\n    'Plaintext',\n    '',\n    'aad') AS results;","kind":"rejects-valid"}
-{"sql":"INSERT dataset.Inventory (product, quantity)\nVALUES('top load washer', 10),\n      ('front load washer', 20),\n      ('dryer', 30),\n      ('refrigerator', 10),\n      ('microwave', 20),\n      ('dishwasher', 30),\n      ('oven', 5)","kind":"rejects-valid"}
 {"sql":"ALTER TABLE dataset.NewArrivals ALTER COLUMN quantity SET DEFAULT 100","kind":"rejects-valid"}
-{"sql":"INSERT dataset.NewArrivals (product, quantity, warehouse)\nVALUES('top load washer', DEFAULT, 'warehouse #1'),\n      ('dryer', 200, 'warehouse #2'),\n      ('oven', 300, 'warehouse #3')","kind":"rejects-valid"}
 {"sql":"CREATE TABLE dataset.Products (\n  id INT64 GENERATED ALWAYS AS IDENTITY(INCREMENT BY 2),\n  product STRING)","kind":"rejects-valid"}
-{"sql":"INSERT dataset.Products (id, product)\nVALUES (DEFAULT, 'dryer'),\n       (DEFAULT, 'top load washer')","kind":"rejects-valid"}
-{"sql":"INSERT dataset.Warehouse (warehouse, state)\nSELECT *\nFROM UNNEST([('warehouse #1', 'WA'),\n      ('warehouse #2', 'CA'),\n      ('warehouse #3', 'WA')])","kind":"rejects-valid"}
-{"sql":"INSERT dataset.Warehouse (warehouse, state)\nWITH w AS (\n  SELECT ARRAY<STRUCT<warehouse string, state string>>\n      [('warehouse #1', 'WA'),\n       ('warehouse #2', 'CA'),\n       ('warehouse #3', 'WA')] col\n)\nSELECT warehouse, state FROM w, UNNEST(w.col)","kind":"rejects-valid"}
-{"sql":"INSERT dataset.DetailedInventory (product, quantity, supply_constrained)\nSELECT product, quantity, false\nFROM dataset.Inventory","kind":"rejects-valid"}
-{"sql":"INSERT dataset.DetailedInventory (product, quantity)\nVALUES('countertop microwave',\n  (SELECT quantity FROM dataset.DetailedInventory\n   WHERE product = 'microwave'))","kind":"rejects-valid"}
-{"sql":"INSERT dataset.Warehouse VALUES('warehouse #4', 'WA'), ('warehouse #5', 'NY')","kind":"rejects-valid"}
-{"sql":"DELETE dataset.Inventory\nWHERE quantity = 0","kind":"rejects-valid"}
-{"sql":"DELETE dataset.Inventory i\nWHERE i.product NOT IN (SELECT product from dataset.NewArrivals)","kind":"rejects-valid"}
-{"sql":"DELETE dataset.Inventory\nWHERE NOT EXISTS\n  (SELECT * from dataset.NewArrivals\n   WHERE Inventory.product = NewArrivals.product)","kind":"rejects-valid"}
-{"sql":"UPDATE dataset.Inventory\nSET quantity = quantity - 10,\n    supply_constrained = DEFAULT\nWHERE product like '%washer%'","kind":"rejects-valid"}
-{"sql":"UPDATE dataset.Inventory i\nSET quantity = i.quantity + n.quantity,\n    supply_constrained = false\nFROM dataset.NewArrivals n\nWHERE i.product = n.product","kind":"rejects-valid"}
-{"sql":"MERGE dataset.DetailedInventory T\nUSING dataset.Inventory S\nON T.product = S.product\nWHEN NOT MATCHED AND quantity < 20 THEN\n  INSERT(product, quantity, supply_constrained, comments)\n  VALUES(product, quantity, true, ARRAY<STRUCT<created DATE, comment STRING>>[(DATE('2016-01-01'), 'comment1')])\nWHEN NOT MATCHED THEN\n  INSERT(product, quantity, supply_constrained)\n  VALUES(product, quantity, false)","kind":"rejects-valid"}
-{"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON T.product = S.product\nWHEN MATCHED THEN\n  UPDATE SET quantity = T.quantity + S.quantity\nWHEN NOT MATCHED THEN\n  INSERT (product, quantity) VALUES(product, quantity)","kind":"rejects-valid"}
-{"sql":"MERGE dataset.NewArrivals T\nUSING (SELECT * FROM dataset.NewArrivals WHERE warehouse <> 'warehouse #2') S\nON T.product = S.product\nWHEN MATCHED AND T.warehouse = 'warehouse #1' THEN\n  UPDATE SET quantity = T.quantity + 20\nWHEN MATCHED THEN\n  DELETE","kind":"rejects-valid"}
-{"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON FALSE\nWHEN NOT MATCHED AND product LIKE '%washer%' THEN\n  INSERT (product, quantity) VALUES(product, quantity)\nWHEN NOT MATCHED BY SOURCE AND product LIKE '%washer%' THEN\n  DELETE","kind":"rejects-valid"}
-{"sql":"MERGE dataset.DetailedInventory T\nUSING dataset.Inventory S\nON T.product = S.product\nWHEN MATCHED AND S.quantity < (SELECT AVG(quantity) FROM dataset.Inventory) THEN\n  UPDATE SET comments = ARRAY_CONCAT(comments, ARRAY<STRUCT<created DATE, comment STRING>>[(CAST('2016-02-01' AS DATE), 'comment2')])","kind":"rejects-valid"}
-{"sql":"MERGE dataset.Inventory T\nUSING (SELECT product, quantity, state FROM dataset.NewArrivals t1 JOIN dataset.Warehouse t2 ON t1.warehouse = t2.warehouse) S\nON T.product = S.product\nWHEN MATCHED AND state = 'CA' THEN\n  UPDATE SET quantity = T.quantity + S.quantity\nWHEN MATCHED THEN\n  DELETE","kind":"rejects-valid"}
-{"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON T.product = S.product\nWHEN MATCHED THEN\n  UPDATE SET quantity = T.quantity + S.quantity","kind":"rejects-valid"}
-{"sql":"MERGE dataset.NewArrivals\nUSING (SELECT * FROM UNNEST([('microwave', 10, 'warehouse #1'),\n                             ('dryer', 30, 'warehouse #1'),\n                             ('oven', 20, 'warehouse #2')]))\nON FALSE\nWHEN NOT MATCHED THEN\n  INSERT ROW\nWHEN NOT MATCHED BY SOURCE THEN\n  DELETE","kind":"rejects-valid"}
 {"sql":"SELECT (x).(SAFE.LEFT)(count) AS result","kind":"rejects-valid"}
 {"sql":"CREATE FUNCTION my_dataset.multiply_by_three(x INT64) AS (x * 3)","kind":"rejects-valid"}
 {"sql":"GRAPH graph_db.FinGraph\nMATCH (:Person)-[o:Owns]->(a:Account)\nRETURN a.id AS account_id, DESTINATION_NODE_ID(o) AS destination_node_id","kind":"rejects-valid"}
@@ -345,21 +324,12 @@
 {"sql":"CREATE OR REPLACE VIEW mydataset.ExamView\nOPTIONS(\n  privacy_policy= '{\"aggregation_threshold_policy\": {\"threshold\": 3, \"privacy_unit_column\": \"last_name\"}}'\n)\nAS ( SELECT * FROM mydataset.ExamTable )","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE TABLE professors AS (\n  SELECT 101 AS id, \"pencil\" AS item, 24 AS quantity UNION ALL\n  SELECT 123, \"pen\", 16 UNION ALL\n  SELECT 123, \"pencil\", 10 UNION ALL\n  SELECT 123, \"pencil\", 38 UNION ALL\n  SELECT 101, \"pen\", 19 UNION ALL\n  SELECT 101, \"pen\", 23 UNION ALL\n  SELECT 130, \"scissors\", 8 UNION ALL\n  SELECT 150, \"pencil\", 72)","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE TABLE students AS (\n  SELECT 1 AS id, \"pencil\" AS item, 5 AS quantity UNION ALL\n  SELECT 1, \"pen\", 2 UNION ALL\n  SELECT 2, \"pen\", 1 UNION ALL\n  SELECT 3, \"pen\", 4)","kind":"rejects-valid"}
-{"sql":"INSERT mydataset.my_sessionized_range_table (emp_id, dept_id, duration)\nVALUES(10, 1000, RANGE<DATE> '[2010-01-10, 2010-03-10)'),\n      (10, 2000, RANGE<DATE> '[2010-03-10, 2010-07-15)'),\n      (10, 2000, RANGE<DATE> '[2010-06-15, 2010-08-18)'),\n      (20, 2000, RANGE<DATE> '[2010-03-10, 2010-07-20)'),\n      (20, 1000, RANGE<DATE> '[2020-05-10, 2020-09-20)')","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE TABLE mydataset.base_table\n(\n  id STRING,\n  description STRING,\n  my_embedding ARRAY<FLOAT64>\n)","kind":"rejects-valid"}
-{"sql":"INSERT mydataset.base_table (id, description, my_embedding)\nVALUES('dog', 'Man\\'s best friend', [1.0, 2.0]),\n('wolf', 'The ultimate pack hunter', [2.0, 4.0]),\n('snake', 'The slithering serpent', [-2.0, 3.0]),\n('lion', 'King of the jungle', [2.0, -2.5]),\n('tiger', 'The striped stalker', [3.0, -2.0]),\n('otter', 'The river\\'s playful acrobat', [-3.0, -1.0]),\n('whale', 'The ocean\\'s gentle giant', [-5.0, -1.0])","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE TABLE mydataset.query_table\n(\n  query_id STRING,\n  embedding ARRAY<FLOAT64>\n)","kind":"rejects-valid"}
-{"sql":"INSERT mydataset.query_table (query_id, embedding)\nVALUES('dog', [1.0, 2.0]),\n('cat', [1.0, -1.0])","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE VIEW my_dataset.sales_view AS\nWITH\n  Orders AS (\n    SELECT 1001 AS order_id, 'Sales' AS department, 250.00 AS amount\n    UNION ALL\n    SELECT 1002 AS order_id, 'Engineering' AS department, 500.00 AS amount\n    UNION ALL\n    SELECT 1004 AS order_id, 'Sales' AS department, 430.50 AS amount\n  )\nSELECT\n  order_id,\n  department,\n  amount\nFROM Orders\nWHERE department = SECURE_CONTEXT('user_dept')","kind":"rejects-valid"}
 {"sql":"CREATE TABLE mydataset.Produce (product STRING, inventory INT64) AS (\n  SELECT 'apples' AS product, 10 AS inventory)","kind":"rejects-valid"}
-{"sql":"DELETE mydataset.Produce WHERE product = 'bananas'","kind":"rejects-valid"}
 {"sql":"CREATE TABLE mydataset.Produce (\n  product STRING,\n  inventory INT64)\nOPTIONS(enable_change_history=true)","kind":"rejects-valid"}
-{"sql":"DELETE mydataset.Produce\nWHERE product = 'bananas'","kind":"rejects-valid"}
 {"sql":"ALTER TABLE `my_dataset.my_table`\nSET OPTIONS (enable_change_history = TRUE)","kind":"rejects-valid"}
-{"sql":"WITH x AS (SELECT 1) INSERT INTO t (a) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS (SELECT 1) UPDATE t SET a = (SELECT * FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH a AS ( SELECT 1 ) INSERT INTO t ( a ) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM ( f )","kind":"accepts-invalid"}
 {"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)))","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(ORDER BY a) FROM t","kind":"rejects-valid"}
@@ -421,14 +391,7 @@
 {"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE CASCADE)","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE SET NULL)","kind":"accepts-invalid"}
 {"sql":"CREATE TABLE n (a INTEGER REFERENCES t ON DELETE SET DEFAULT)","kind":"accepts-invalid"}
-{"sql":"TRUNCATE TABLE t","kind":"rejects-valid"}
-{"sql":"INSERT INTO t (a) VALUES (DEFAULT)","kind":"rejects-valid"}
-{"sql":"UPDATE t SET a = DEFAULT","kind":"rejects-valid"}
-{"sql":"INSERT INTO t DEFAULT VALUES","kind":"accepts-invalid"}
 {"sql":"CREATE SCHEMA s","kind":"rejects-valid"}
-{"sql":"MERGE INTO t USING u ON t.a = u.a WHEN MATCHED THEN UPDATE SET b = 1 WHEN NOT MATCHED THEN INSERT (a) VALUES (1)","kind":"rejects-valid"}
-{"sql":"MERGE INTO t USING u ON t.a = u.a WHEN MATCHED AND u.b > 0 THEN UPDATE SET b = 1","kind":"rejects-valid"}
-{"sql":"MERGE INTO t USING u ON t.a = u.a WHEN MATCHED THEN DELETE","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET DATA TYPE BIGINT","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a DROP NOT NULL","kind":"rejects-valid"}
 {"sql":"ALTER TABLE t ALTER COLUMN a SET DEFAULT 1","kind":"rejects-valid"}
@@ -466,5 +429,3 @@
 {"sql":"CALL p(a => 1)","kind":"rejects-valid"}
 {"sql":"CREATE TABLE n (a INTEGER UNIQUE)","kind":"accepts-invalid"}
 {"sql":"SELECT SUM(a) OVER (ORDER BY c ROWS 1 PRECEDING EXCLUDE TIES) FROM t","kind":"accepts-invalid"}
-{"sql":"UPDATE t SET (a, b) = (1, 2)","kind":"accepts-invalid"}
-{"sql":"UPDATE t SET (a, b) = (SELECT a, b FROM u)","kind":"accepts-invalid"}

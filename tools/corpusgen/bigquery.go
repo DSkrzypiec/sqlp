@@ -419,8 +419,10 @@ func verdict(a bqAnswer) (reject, known bool) {
 	switch {
 	case a.OK:
 		return false, true
-	case a.Reason == "billingNotEnabled":
-		return false, true // DML in the sandbox, checked after parsing
+	case a.Reason == "billingNotEnabled", strings.HasPrefix(a.Message, "Billing has not been enabled"):
+		// DML in the sandbox, checked after parsing and before analysis; in a
+		// script the whole script parsed.
+		return false, true
 	case bqRejects.MatchString(a.Message):
 		return true, true
 	case bqAccepts.MatchString(a.Message):

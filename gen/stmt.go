@@ -19,6 +19,8 @@ func (g *Generator) stmt(s ast.Statement) {
 	case *ast.Truncate:
 		if !g.d.Features.DML.Truncate {
 			g.warn("TRUNCATE")
+		} else if !g.d.Features.DML.TruncateOptions && (len(s.Tables) > 1 || s.Tables[0].Only || s.Identity != "" || s.Behavior != "") {
+			g.warn("TRUNCATE with ONLY, several tables, IDENTITY, CASCADE or RESTRICT")
 		}
 		g.w("TRUNCATE TABLE ")
 		g.relationList(s.Tables)
@@ -240,6 +242,9 @@ func (g *Generator) stmt(s ast.Statement) {
 
 func (g *Generator) withPrefix(w *ast.With) {
 	if w != nil {
+		if !g.d.Features.DML.WithDML {
+			g.warn("WITH before INSERT, UPDATE, DELETE or MERGE")
+		}
 		g.with(w)
 		g.w(" ")
 	}
@@ -260,6 +265,9 @@ func (g *Generator) insert(s *ast.Insert) {
 	g.w(" INTO ")
 	g.name(s.Table)
 	if s.Alias != nil {
+		if !g.d.Features.DML.InsertAlias {
+			g.warn("INSERT INTO t AS alias")
+		}
 		g.w(" AS ")
 		g.ident(*s.Alias)
 	}
@@ -270,6 +278,9 @@ func (g *Generator) insert(s *ast.Insert) {
 	}
 	g.kw(s.Overriding != "", "OVERRIDING "+s.Overriding+" VALUE")
 	if s.DefaultValues {
+		if !g.d.Features.DML.DefaultValues {
+			g.warn("DEFAULT VALUES")
+		}
 		g.w(" DEFAULT VALUES")
 	} else {
 		g.w(" ")
@@ -337,6 +348,9 @@ func (g *Generator) assignments(as []*ast.Assignment) {
 			g.w(", ")
 		}
 		if a.Paren {
+			if !g.d.Features.DML.SetTuples {
+				g.warn("SET (a, b) = ...")
+			}
 			g.w("(")
 			g.exprList(a.Targets)
 			g.w(")")

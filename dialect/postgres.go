@@ -138,7 +138,8 @@ var Postgres = &Dialect{
 		},
 		DML: DMLFeatures{
 			Returning: true, ConflictOnConstraint: true, BareDMLAlias: true, DeleteUsing: true,
-			Truncate: true, Merge: true,
+			Truncate: true, Merge: true, WithDML: true, InsertAlias: true, DefaultValues: true, SetTuples: true,
+			TruncateOptions: true,
 		},
 		DDL: DDLFeatures{
 			StoredGeneratedOnly: true, ExtendedDDL: true, MultiDrop: true, IndexOpclass: true,

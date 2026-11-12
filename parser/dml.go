@@ -32,9 +32,11 @@ func (p *Parser) parseInsert(with *ast.With) ast.Statement {
 		p.expectKw("INSERT")
 		ins.Or = p.parseOrAction()
 	}
-	p.expectKw("INTO")
+	if !p.acceptKw("INTO") && !p.d.Features.DML.OptionalDMLKeywords {
+		p.unexpected("INTO")
+	}
 	ins.Table = p.parseRelationName()
-	if p.acceptKw("AS") {
+	if p.d.Features.DML.InsertAlias && p.acceptKw("AS") {
 		id := p.parseIdent()
 		ins.Alias = &id
 	}
@@ -49,7 +51,7 @@ func (p *Parser) parseInsert(with *ast.With) ast.Statement {
 	if p.d.Features.DDL.ExtendedDDL && p.acceptKw("OVERRIDING") {
 		ins.Overriding = p.parseOverriding()
 	}
-	if p.isKwSeq("DEFAULT", "VALUES") {
+	if p.d.Features.DML.DefaultValues && p.isKwSeq("DEFAULT", "VALUES") {
 		if p.d.Features.DDL.ExtendedDDL && (ins.Columns != nil || ins.Overriding != "") {
 			p.unexpected("query") // PostgreSQL: DEFAULT VALUES stands alone
 		}
@@ -121,7 +123,7 @@ func (p *Parser) parseAssignments() []*ast.Assignment {
 
 func (p *Parser) parseAssignment() *ast.Assignment {
 	a := &ast.Assignment{}
-	if p.acceptOp("(") {
+	if p.d.Features.DML.SetTuples && p.acceptOp("(") {
 		a.Paren = true
 		a.Targets = []ast.Expr{p.parseSetTarget()}
 		for p.acceptOp(",") {
@@ -196,7 +198,10 @@ func (p *Parser) parseUpdate(with *ast.With) ast.Statement {
 }
 
 func (p *Parser) parseDelete(with *ast.With) ast.Statement {
-	p.expectKw("DELETE", "FROM")
+	p.expectKw("DELETE")
+	if !p.acceptKw("FROM") && !p.d.Features.DML.OptionalDMLKeywords {
+		p.unexpected("FROM")
+	}
 	d := &ast.Delete{With: with}
 	d.Only, d.Table = p.parseRelationExpr()
 	d.Alias = p.parseDMLAlias()
@@ -258,6 +263,10 @@ func (p *Parser) parseRelationList() []*ast.TableRef {
 
 func (p *Parser) parseTruncate() ast.Statement {
 	p.expectKw("TRUNCATE")
+	if !p.d.Features.DML.TruncateOptions {
+		p.expectKw("TABLE")
+		return &ast.Truncate{Tables: []*ast.TableRef{{Name: p.parseRelationName()}}}
+	}
 	p.acceptKw("TABLE")
 	t := &ast.Truncate{Tables: p.parseRelationList()}
 	switch {
@@ -272,7 +281,10 @@ func (p *Parser) parseTruncate() ast.Statement {
 
 // parseMerge parses MERGE INTO target USING source ON cond WHEN ...
 func (p *Parser) parseMerge(with *ast.With) ast.Statement {
-	p.expectKw("MERGE", "INTO")
+	p.expectKw("MERGE")
+	if !p.acceptKw("INTO") && !p.d.Features.DML.OptionalDMLKeywords {
+		p.unexpected("INTO")
+	}
 	m := &ast.Merge{With: with}
 	m.Only, m.Target = p.parseRelationExpr()
 	m.Alias = p.parseMergeAlias()
@@ -303,18 +315,28 @@ func (p *Parser) parseMergeWhen() *ast.MergeWhen {
 	p.expectKw("WHEN")
 	w := &ast.MergeWhen{NotMatched: p.acceptKw("NOT")}
 	p.expectKw("MATCHED")
+	big := p.d.Features.DML.MergeBy
+	if w.NotMatched && big && p.acceptKw("BY") {
+		if w.By = p.acceptOneOf("TARGET", "SOURCE"); w.By == "" {
+			p.unexpected("TARGET or SOURCE")
+		}
+	}
 	if p.acceptKw("AND") {
 		w.Cond = p.parseExpr()
 	}
 	p.expectKw("THEN")
+	matched := !w.NotMatched || w.By == "SOURCE" // a target row: update or delete it
 	switch {
-	case p.acceptKwSeq("DO", "NOTHING"):
+	case !big && p.acceptKwSeq("DO", "NOTHING"):
 		w.DoNothing = true
-	case !w.NotMatched && p.acceptKw("DELETE"):
+	case matched && p.acceptKw("DELETE"):
 		w.Delete = true
-	case !w.NotMatched && p.acceptKwSeq("UPDATE", "SET"):
+	case matched && p.acceptKwSeq("UPDATE", "SET"):
 		w.Update = p.parseAssignments()
-	case w.NotMatched && p.acceptKw("INSERT"):
+	case !matched && big && p.isKwSeq("INSERT", "ROW"):
+		p.pos += 2
+		w.Insert, w.InsertRow = true, true
+	case !matched && p.acceptKw("INSERT"):
 		w.Insert = true
 		if p.acceptOp("(") {
 			for {
@@ -325,10 +347,10 @@ func (p *Parser) parseMergeWhen() *ast.MergeWhen {
 			}
 			p.expectOp(")")
 		}
-		if p.acceptKw("OVERRIDING") {
+		if !big && p.acceptKw("OVERRIDING") {
 			w.Overriding = p.parseOverriding()
 		}
-		if p.acceptKwSeq("DEFAULT", "VALUES") {
+		if p.d.Features.DML.DefaultValues && p.acceptKwSeq("DEFAULT", "VALUES") {
 			w.DefaultValues = true
 		} else {
 			p.expectKw("VALUES")

@@ -185,6 +185,7 @@ func (g *Generator) merge(s *ast.Merge) {
 		g.w(" WHEN")
 		g.kw(w.NotMatched, "NOT")
 		g.w(" MATCHED")
+		g.kw(w.By != "", "BY "+w.By)
 		if w.Cond != nil {
 			g.w(" AND ")
 			g.expr(w.Cond)
@@ -195,6 +196,8 @@ func (g *Generator) merge(s *ast.Merge) {
 			g.w("DO NOTHING")
 		case w.Delete:
 			g.w("DELETE")
+		case w.InsertRow:
+			g.w("INSERT ROW")
 		case w.Insert:
 			g.w("INSERT")
 			if len(w.Columns) > 0 {
@@ -204,6 +207,9 @@ func (g *Generator) merge(s *ast.Merge) {
 			}
 			g.kw(w.Overriding != "", "OVERRIDING "+w.Overriding+" VALUE")
 			if w.DefaultValues {
+				if !g.d.Features.DML.DefaultValues {
+					g.warn("DEFAULT VALUES")
+				}
 				g.w(" DEFAULT VALUES")
 			} else {
 				g.w(" VALUES (")
