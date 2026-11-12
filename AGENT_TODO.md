@@ -8,8 +8,8 @@ commit `e5bad07`. Every package was read, and suspicious spots were probed again
 PostgreSQL 16 and SQLite 3.51. On top of it sit a query-structure analysis
 (`analyze`, `catalog`) and a small public web UI (`cmd/sqlp_serv`, running at
 https://sqlp.dskrzypiec.dev). It is a first sketch. Go vs C++ is undecided, and
-wrapping the parser behind an API in Go is the likely direction. Snowflake is the
-expected next dialect.
+wrapping the parser behind an API in Go is the likely direction. BigQuery is the
+third dialect, in progress (section 9).
 
 For a code tour, read in this order: `sqlp.go`, `ast/ast.go`, `dialect/`,
 `lexer/lexer.go`, `parser/parser.go`, `parser/query.go`, `parser/expr.go`,
@@ -300,7 +300,8 @@ So that nobody repeats the work:
   source text and span and resumes at the next `;`. `Parse` stays all or nothing.
 - [ ] Comments are dropped. The lexer can emit them (`Comment` tokens); the parser
   and AST do not keep them.
-- [ ] Snowflake dialect, the first real test of the dialect-as-data design.
+- [ ] BigQuery dialect, the first real test of the dialect-as-data design (section 9).
+  Snowflake comes later.
 
 **Transpiling**
 
@@ -637,3 +638,101 @@ PostgreSQL statements as opaque, against a 0.5% budget.
 - [ ] `go.mod` requires Go 1.26.5.
 - [ ] `deploy/` covers only `sqlp_serv`. Changes to the installed nginx site are made
   by hand, because certbot edits that copy (`deploy/README.md`).
+
+## 9. BigQuery dialect (in progress, started 2026-11-12)
+
+Decided with the owner on 2026-11-12: BigQuery is the third dialect. SELECT comes
+first, then DML, then the rest. The phases below are the agreed order.
+
+**Oracle: BigQuery dry runs.** There is no local engine and no version to pin, so
+the engine is BigQuery itself, through dry runs (free; they parse and resolve but
+execute nothing). As for the other dialects, verdicts are frozen into
+`testdata/corpus/bigquery/`, and plain `go test` needs no network. Regenerating
+needs `gcloud` logged in on the machine (`gcloud auth print-access-token`); the
+project is gcloud's current one (`gcloud config get-value project`), a BigQuery
+sandbox without billing. Its dataset `sqlp_oracle` (location US) holds the
+sample tables, and `corpusgen` recreates them, because sandbox tables expire
+after 60 days.
+
+Findings of the spike (2026-11-12):
+
+- Use `jobs.insert` with `dryRun`. `jobs.query` returns no statistics. The job
+  gives `statementType`, the result `schema` (with BigQuery's own names for
+  unnamed columns, such as `f0_`) and `referencedTables`. Always send
+  `useLegacySql: false`: the REST API defaults to legacy SQL.
+- BigQuery parses a whole statement or script before anything else, so a syntax
+  error always wins over "Not found", "must be qualified with a dataset" or a
+  billing error. About 30 dry runs a second with 8 workers.
+- **Verdicts.** A statement is rejected when the message starts with
+  `Syntax error:`, or when it is one of the parser messages without that prefix,
+  such as `CAST operators are not supported` (`::`), `FOR UPDATE is not supported`
+  and `EXCEPT must be followed by ALL, DISTINCT, or "("`. Other "not supported"
+  messages are semantic: `Duplicate column names in the result are not
+  supported`. So `corpusgen` keeps a reviewed table of messages, and it stops on
+  a message it has not seen before instead of guessing.
+- The sandbox refuses every DML statement that parses, even a dry run, with
+  `billingNotEnabled`. That still means "parsed", so DML verdicts work. What DML
+  means (statement type, tables, rules applied after parsing such as UPDATE
+  without WHERE) needs billing.
+- Constant queries execute for 0 bytes. With `maximumBytesBilled` set to 1, a
+  query that reads a table fails instead of being billed. Grouping is checked
+  by evaluating a generated expression and its fully parenthesized form, as for
+  SQLite. BigQuery is strictly typed, so the generator must build well-typed
+  expressions.
+- Not guessable: `SELECT ARRAY[1,2]` is valid BigQuery. `SELECT @p` dry-runs
+  without declaring `p`; `?` needs positional mode.
+
+**Correctness checks**, each with its oracle:
+
+1. Accept or reject: frozen verdicts, `TestCorpus`, `testdata/known/bigquery.jsonl`.
+2. Grouping: generated typed expressions, evaluated in both forms.
+3. Meaning of a whole statement: the dry run of the statement and of
+   `sqlp.Format`'s output must give the same statement type, schema and
+   referenced tables. This stands in for `pg_query`'s tree comparison.
+4. Analyses: `referencedTables` checks `QStruct`'s objects; the schema checks
+   output column names for `ListOutCols` and `NameRules`.
+5. Dialect tables: reserved words probed one by one (`SELECT 1 AS kw`,
+   `SELECT kw FROM t`); function names with `SELECT fn()` ("Function not found"
+   versus "No matching signature").
+6. Transpile to and from BigQuery: dry-run the output, as in section 1.3.
+
+**Completeness.** `testdata/bigquery/features.txt` will list each syntax feature of
+the BigQuery SQL reference (lexical structure, query syntax, pipe syntax,
+operators, each DDL, DML and DCL statement, procedural language, BQML, other
+statements) with its doc URL, and a table like `corpus.ANSI` gives each feature
+a valid example and a near miss. Corpus sources, all frozen with dry-run
+verdicts: the curated SELECT lists with their mutations (BigQuery accepts 443 of
+the 972 statements, and disagrees with PostgreSQL on 251 and with SQLite on 208),
+new curated BigQuery lists, the code samples of the BigQuery reference
+(Apache 2.0), ZetaSQL's parser and analyzer test files (Apache 2.0), the ANSI
+table, and later the web UI's run log (ask the owner before sending visitors' SQL
+to Google). Each regeneration reports feature coverage, agreement per source,
+known disagreements, opaque statements, round trips and verified shapes in
+section 7.
+
+**Phases**
+
+- [ ] 0. Oracle: `corpusgen -bigquery`, the message table, the sample tables, a
+  verdict cache.
+- [ ] 1. Group `dialect.Features` by area before adding the dialect's flags.
+  `ExtendedDDL` is split in phase 5, when BigQuery needs parts of it. Source
+  positions on AST nodes are not part of this work.
+- [ ] 2. Lexer: `#` comments, `"…"` strings, raw, bytes and triple-quoted strings,
+  backslash escapes, backtick names, `@param`, `@@system_variable`, dashed
+  project names in paths.
+- [ ] 3. Queries: STRUCT and ARRAY types and literals, subscripts (`OFFSET`,
+  `ORDINAL`, `SAFE_…`), field access, `UNNEST … WITH OFFSET`, implicit unnest,
+  `* EXCEPT/REPLACE`, `SELECT AS STRUCT|VALUE`, `QUALIFY`, `PIVOT/UNPIVOT`,
+  `TABLESAMPLE`, `FOR SYSTEM_TIME AS OF`, `GROUP BY ALL`, aggregate modifiers,
+  `SAFE.` calls, `SAFE_CAST`, `CAST … FORMAT`, typed literals, `INTERVAL`, wildcard
+  tables, pipe syntax.
+- [ ] 4. DML: `INSERT` (optional `INTO`), `UPDATE`, `DELETE`, `MERGE`, `TRUNCATE`.
+- [ ] 5. DDL and DCL: `OPTIONS`, `PARTITION BY`, `CLUSTER BY`, tables, views,
+  functions, procedures, schemas, `ALTER`, policies, indexes, `GRANT`.
+- [ ] 6. Procedural language: `DECLARE`, `SET`, `IF`, loops, `BEGIN … EXCEPTION`,
+  `EXECUTE IMMEDIATE`, transactions, `CALL`, `RAISE`, `ASSERT`.
+- [ ] 7. BQML, `EXPORT DATA`, `LOAD DATA`.
+- [ ] 8. Web UI, transpile, run-log triage.
+
+Every phase follows section 3: AST node, parser, generator, identity test, then
+an oracle run. No verdict is written by hand.
