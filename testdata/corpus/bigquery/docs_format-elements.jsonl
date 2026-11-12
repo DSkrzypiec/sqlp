@@ -1,0 +1,46 @@
+{"sql":"SELECT FORMAT_DATE(\"%b-%d-%Y\", DATE \"2008-12-25\") AS formatted","shape":"SELECT FORMAT_DATE('%b-%d-%Y', DATE '2008-12-25') AS formatted;"}
+{"sql":"SELECT FORMAT_TIME(\"%R\", TIME \"15:30:00\") as formatted_time","shape":"SELECT FORMAT_TIME('%R', TIME '15:30:00') AS formatted_time;"}
+{"sql":"SELECT FORMAT_TIMESTAMP(\"%b %Y %Ez\", TIMESTAMP \"2008-12-25 15:30:00+00\")\n  AS formatted","shape":"SELECT FORMAT_TIMESTAMP('%b %Y %Ez', TIMESTAMP '2008-12-25 15:30:00+00') AS formatted;"}
+{"sql":"SELECT PARSE_DATE(\"%Y%m%d\", \"20081225\") AS parsed","shape":"SELECT PARSE_DATE('%Y%m%d', '20081225') AS parsed;"}
+{"sql":"SELECT PARSE_TIME('%I:%M:%S %p', '2:23:38 pm') AS parsed_time","shape":"SELECT PARSE_TIME('%I:%M:%S %p', '2:23:38 pm') AS parsed_time;"}
+{"sql":"SELECT PARSE_TIMESTAMP(\"%c\", \"Thu Dec 25 07:30:00 2008\") AS parsed","shape":"SELECT PARSE_TIMESTAMP('%c', 'Thu Dec 25 07:30:00 2008') AS parsed;"}
+{"sql":"format_clause:\n  FORMAT format_model\n\nformat_model:\n  format_string_expression","reject":true}
+{"sql":"CAST(bytes_expression AS STRING FORMAT format_string_expression)","reject":true}
+{"sql":"SELECT CAST(b'\\x48\\x65\\x6c\\x6c\\x6f' AS STRING FORMAT 'ASCII') AS bytes_to_string","shape":"SELECT CAST(b'Hello' AS STRING FORMAT 'ASCII') AS bytes_to_string;"}
+{"sql":"CAST(string_expression AS BYTES FORMAT format_string_expression)","reject":true}
+{"sql":"SELECT CAST('Hello' AS BYTES FORMAT 'ASCII') AS string_to_bytes\n\n-- Displays the bytes output value (b'\\x48\\x65\\x6c\\x6c\\x6f').","shape":"SELECT CAST('Hello' AS BYTES FORMAT 'ASCII') AS string_to_bytes;"}
+{"sql":"CAST(expression AS STRING FORMAT format_string_expression)","reject":true}
+{"sql":"SELECT CAST(DATE '2018-01-30' AS STRING FORMAT 'YYYY') AS date_time_to_string","shape":"SELECT CAST(DATE '2018-01-30' AS STRING FORMAT 'YYYY') AS date_time_to_string;"}
+{"sql":"SELECT CAST(DATE '2018-01-30' AS STRING FORMAT 'MONTH') AS date_time_to_string","shape":"SELECT CAST(DATE '2018-01-30' AS STRING FORMAT 'MONTH') AS date_time_to_string;"}
+{"sql":"SELECT CAST(DATE '2018-02-15' AS STRING FORMAT 'DD') AS date_time_to_string","shape":"SELECT CAST(DATE '2018-02-15' AS STRING FORMAT 'DD') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'HH24') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'HH24') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'HH12') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'HH12') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'MI') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'MI') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:25.16' AS STRING FORMAT 'SS') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:25.16' AS STRING FORMAT 'SS') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:25.16' AS STRING FORMAT 'FF2') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:25.16' AS STRING FORMAT 'FF2') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'AM') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'AM') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'PM') AS date_time_to_string","shape":"SELECT CAST(TIME '21:30:00' AS STRING FORMAT 'PM') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '01:30:00' AS STRING FORMAT 'AM') AS date_time_to_string","shape":"SELECT CAST(TIME '01:30:00' AS STRING FORMAT 'AM') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIME '01:30:00' AS STRING FORMAT 'PM') AS date_time_to_string","shape":"SELECT CAST(TIME '01:30:00' AS STRING FORMAT 'PM') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZH') AS date_time_to_string","shape":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZH') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZH' AT TIME ZONE 'Asia/Kolkata')\nAS date_time_to_string","shape":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZH' AT TIME ZONE 'Asia/Kolkata') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZM') AS date_time_to_string","shape":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZM') AS date_time_to_string;"}
+{"sql":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZM' AT TIME ZONE 'Asia/Kolkata')\nAS date_time_to_string","shape":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'TZM' AT TIME ZONE 'Asia/Kolkata') AS date_time_to_string;"}
+{"sql":"CAST(string_expression AS type FORMAT format_string_expression)","reject":true}
+{"sql":"SELECT CAST('18-12-03' AS DATE FORMAT 'YY-MM-DD') AS string_to_date","shape":"SELECT CAST('18-12-03' AS DATE FORMAT 'YY-MM-DD') AS string_to_date;"}
+{"sql":"SELECT CAST('DEC 03, 2018' AS DATE FORMAT 'MON DD, YYYY') AS string_to_date","shape":"SELECT CAST('DEC 03, 2018' AS DATE FORMAT 'MON DD, YYYY') AS string_to_date;"}
+{"sql":"SELECT CAST('DECEMBER 03, 2018' AS DATE FORMAT 'MONTH DD, YYYY') AS string_to_date","shape":"SELECT CAST('DECEMBER 03, 2018' AS DATE FORMAT 'MONTH DD, YYYY') AS string_to_date;"}
+{"sql":"SELECT CAST('15:30' AS TIME FORMAT 'HH24:MI') AS string_to_date_time","shape":"SELECT CAST('15:30' AS TIME FORMAT 'HH24:MI') AS string_to_date_time;"}
+{"sql":"SELECT CAST('03:30 P.M.' AS TIME FORMAT 'HH:MI P.M.') AS string_to_date_time","shape":"SELECT CAST('03:30 P.M.' AS TIME FORMAT 'HH:MI P.M.') AS string_to_date_time;"}
+{"sql":"SELECT CAST('01:05:07.16' AS TIME FORMAT 'HH24:MI:SS.FF1') AS string_to_date_time"}
+{"sql":"SELECT CAST('03:30 P.M.' AS TIME FORMAT 'HH:MI A.M.') AS string_to_date_time","shape":"SELECT CAST('03:30 P.M.' AS TIME FORMAT 'HH:MI A.M.') AS string_to_date_time;"}
+{"sql":"SELECT CAST('2020.06.03 00:00:53+00' AS TIMESTAMP FORMAT 'YYYY.MM.DD HH:MI:SSTZH') AS string_to_date_time"}
+{"sql":"CAST(string_expression AS data_type FORMAT format_string_expression)","reject":true}
+{"sql":"CAST(numeric_expression AS STRING FORMAT format_string_expression)","reject":true}
+{"sql":"SELECT input, CAST(input AS STRING FORMAT '$999,999.999') AS output\nFROM UNNEST([1.2, 12.3, 123.456, 1234.56, -12345.678, 1234567.89]) AS input"}
+{"sql":"SELECT\n  CAST(12 AS STRING FORMAT '999') as a,\n  CAST(-12 AS STRING FORMAT '999') as b","shape":"SELECT CAST(12 AS STRING FORMAT '999') AS a, CAST(-12 AS STRING FORMAT '999') AS b;"}
+{"sql":"SELECT CAST(12.5 AS STRING FORMAT '99.99') as a","shape":"SELECT CAST(12.5 AS STRING FORMAT '99.99') AS a;"}
+{"sql":"SELECT\n  CAST(12 AS STRING FORMAT 'S99') as a,\n  CAST(-12 AS STRING FORMAT 'S99') as b","shape":"SELECT CAST(12 AS STRING FORMAT 'S99') AS a, CAST(-12 AS STRING FORMAT 'S99') AS b;"}
+{"sql":"SELECT\n  CAST(12 AS STRING FORMAT '$99') as a,\n  CAST(-12 AS STRING FORMAT '$99') as b","shape":"SELECT CAST(12 AS STRING FORMAT '$99') AS a, CAST(-12 AS STRING FORMAT '$99') AS b;"}
+{"sql":"SELECT CAST(1234 AS STRING FORMAT '999,999') as a","shape":"SELECT CAST(1234 AS STRING FORMAT '999,999') AS a;"}
+{"sql":"SELECT CAST(-123456 AS STRING FORMAT '9.999EEEE') as a","shape":"SELECT CAST(-123456 AS STRING FORMAT '9.999EEEE') AS a;"}

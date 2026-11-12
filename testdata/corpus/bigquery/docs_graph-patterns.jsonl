@@ -1,0 +1,70 @@
+{"sql":"(a:Account)-[e:Transfers]->(b:Account)          -- path pattern\n  WHERE a != b                                    -- WHERE clause","reject":true}
+{"sql":"(a:Account)-[t:Transfers]->(b:Account),         -- path pattern 1\n(a)<-[o:Owns]-(p:Person)                        -- path pattern 2","reject":true}
+{"sql":"p = (a:Account)-[e:Transfers]->(b:Account)","reject":true}
+{"sql":"(a:Account)-[e:Transfers]->(b:Account)","reject":true}
+{"sql":"MATCH (a:Account)->(b:Account)\nWHERE a != b","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n)\nRETURN n.name, n.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH ()-[e]->()\nRETURN COUNT(e.id) AS results"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH ()-[e]-()\nRETURN COUNT(e.id) AS results"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  (src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account),\n  (mid)<-[:Owns]-(p:Person)\nRETURN\n  p.name, src.id AS src_account_id, mid.id AS mid_account_id,\n  dst.id AS dst_account_id"}
+{"sql":"(n:Person)          -- Matches all Person nodes in a property graph.","reject":true}
+{"sql":"(a:Account)            -- Matches all Account nodes in a property graph.","reject":true}
+{"sql":"()                  -- Matches all nodes in a property graph.","reject":true}
+{"sql":"-[Transfers]->        -- Matches all Transfers edges in a property graph.","reject":true}
+{"sql":"-[]->               -- Matches all right directed edges in a property graph.","reject":true}
+{"sql":"(n:Person)-(a:Account) -- Matches edges between Person and Account nodes in any direction.","reject":true}
+{"sql":"-[e:Transfers]-     -- Any-direction full edge with filler.\n-[]-                 -- Any-direction full edge, no filler.\n-                    -- Any-direction abbreviated edge.","reject":true}
+{"sql":"<-[e:Transfers]-  -- Left full edge with filler.\n<-[]-              -- Left full edge, no filler.\n<-                 -- Left abbreviated edge.","reject":true}
+{"sql":"-[e:Transfers]->  -- Right full edge with filler.\n-[]->              -- Right full edge, no filler.\n->                 -- Right abbreviated edge.","reject":true}
+{"sql":"(p:Person WHERE p.name = 'Alex')","reject":true}
+{"sql":"(p:Person)-[:Owns]->(a:Account),\n(a)-[:Transfers]->(a2:Account WHERE a2.nick_name = 'Vacation Fund')","reject":true}
+{"sql":"(p IS Person)","reject":true}
+{"sql":"(p:Person)","reject":true}
+{"sql":"-[IS Transfers]->","reject":true}
+{"sql":"-[:Transfers]->","reject":true}
+{"sql":"(p:Person WHERE p.name = 'Dana')","reject":true}
+{"sql":"(p:Person)->(a:Account)<-(p2)\nWHERE p.name != p2.name","reject":true}
+{"sql":"(p:Person)-[o:Owns]->\n(a:Account WHERE a.nick_name = 'Rainy Day Fund')","reject":true}
+{"sql":"(a:Account WHERE a.id = 100 AND a.is_blocked = true)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n)\nRETURN LABELS(n) AS label"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH -[e]->\nRETURN e.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN n.name, n.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person|Account)\nRETURN n.id, n.name, n.nick_name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH -[e:Owns]->\nRETURN e.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person WHERE n.birthday > '1990-01-10')\nRETURN n.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH -[e:Owns WHERE e.create_time > '2020-01-14'\n                 AND e.create_time < '2020-05-14']->\nRETURN e.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]->(dst:Account)\nRETURN src.id AS src_id, transfer.amount, dst.id AS dst_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]-(dst:Account)\nRETURN src.id AS src_id, transfer.amount, dst.id AS dst_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (account:Account)<-(person:Person)\nRETURN account.id, person.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(a:Account)\nRETURN a.id AS a_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(a2)\nRETURN a.id AS a_id, a2.id AS a2_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(a2)\nWHERE a.id != a2.id\nRETURN a.id AS a_id, a2.id AS a2_id"}
+{"sql":"(-[t:Transfers]->(a:Account)->(b:Account) WHERE t.id > a.id)","reject":true}
+{"sql":"(-[t:Transfers]->((a:Account)->(b:Account)) WHERE t.id > a.id)","reject":true}
+{"sql":"(-[t:Transfers]->((a:Account)->(b:Account) WHERE a.id = t.id))","reject":true}
+{"sql":"(-[t:Transfers]->(a:Account))->(b:Account) WHERE a.id = t.id","reject":true}
+{"sql":"(a:Account)-[t:Transfers]->(b:Account)-[u:Transfers]->(c:Account)","reject":true}
+{"sql":"((a:Account)-[t:Transfers]->(b:Account))-[u:Transfers]->(c:Account)","reject":true}
+{"sql":"(a:Account)-[t:Transfers]->((b:Account)-[u:Transfers]->(c:Account))","reject":true}
+{"sql":"((a:Account)-[t:Transfers]->(b:Account)-[u:Transfers]->(c:Account))","reject":true}
+{"sql":"((a:Account))-[t:Transfers]->(b:Account)-[u:Transfers]->(c:Account)","reject":true}
+{"sql":"(a:Account)(-[t:Transfers]->)(b:Account)-[u:Transfers]->(c:Account)","reject":true}
+{"sql":"((a:Account)(-[t:Transfers]->(b:Account)))-[u:Transfers]->(c:Account)","reject":true}
+{"sql":"((a:Account))(-[t:Transfers]->(b:Account))(-[u:Transfers]->(c:Account))","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  ((src:Account)-[t1:Transfers]->(mid:Account))-[t2:Transfers]->(dst:Account)\nRETURN\n  src.id AS src_account_id, mid.id AS mid_account_id, dst.id AS dst_account_id"}
+{"sql":"MATCH (p)-[t]->(f)","reject":true}
+{"sql":"(p:%)","reject":true}
+{"sql":"(p:(Person|Account))","reject":true}
+{"sql":"(p:(Person|(Account|Loan)))","reject":true}
+{"sql":"(p:(Person|(Account&Loan)))","reject":true}
+{"sql":"(p:(Person&Account))","reject":true}
+{"sql":"(p:(Person&(Account|Loan)))","reject":true}
+{"sql":"(p:(Person&(Account&Loan)))","reject":true}
+{"sql":"(p:!Person)","reject":true}
+{"sql":"(p:(!Person&!Account))","reject":true}
+{"sql":"(p:(Person|(!Account&!Loan)))","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person|Account)\nRETURN n.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  WALK (a1:Account)-[t1:Transfers]->(a2:Account)-[t2:Transfers]->\n  (a3:Account)-[t3:Transfers]->(a4:Account)\nWHERE a1.id < a4.id\nRETURN\n  t1.id as transfer1_id, t2.id as transfer2_id, t3.id as transfer3_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  ACYCLIC (a1:Account)-[t1:Transfers]->(a2:Account)-[t2:Transfers]->\n  (a3:Account)\nRETURN\n  a1.id as account1_id, a2.id as account2_id,\n  a3.id as account3_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  TRAIL (a1:Account)-[t1:Transfers]->(a2:Account)-[t2:Transfers]->\n  (a3:Account)-[t3:Transfers]->(a4:Account)\nWHERE a1.id < a4.id\nRETURN\n  t1.id as transfer1_id, t2.id as transfer2_id,\n  t3.id as transfer3_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH TRAIL (a1)-[t1]-(a2), (a2)-[t1]-(a3)\nRETURN COUNT(1) as num_paths\n\n\n\nGRAPH graph_db.FinGraph\nMATCH TRAIL (a1)-[t1]-(a2)-[t1]-(a3)\nRETURN COUNT(1) as num_paths","reject":true}

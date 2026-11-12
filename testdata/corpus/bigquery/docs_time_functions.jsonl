@@ -1,0 +1,24 @@
+{"sql":"CURRENT_TIME([time_zone])","reject":true}
+{"sql":"CURRENT_TIME","reject":true}
+{"sql":"SELECT CURRENT_TIME() as now","shape":"SELECT CURRENT_TIME() AS now;"}
+{"sql":"EXTRACT(part FROM time_expression)","reject":true}
+{"sql":"SELECT EXTRACT(HOUR FROM TIME \"15:30:00\") as hour","shape":"SELECT EXTRACT(HOUR FROM TIME '15:30:00') AS hour;"}
+{"sql":"FORMAT_TIME(format_string, time_expr)","reject":true}
+{"sql":"PARSE_TIME(format_string, time_string)","reject":true}
+{"sql":"SELECT PARSE_TIME(\"%I:%M:%S\", \"07:30:00\")","shape":"SELECT PARSE_TIME('%I:%M:%S', '07:30:00');"}
+{"sql":"SELECT PARSE_TIME(\"%S:%I:%M\", \"07:30:00\")"}
+{"sql":"SELECT PARSE_TIME(\"%I:%M\", \"07:30:00\")"}
+{"sql":"SELECT PARSE_TIME(\"%T\", \"07:30:00\")","shape":"SELECT PARSE_TIME('%T', '07:30:00');"}
+{"sql":"SELECT PARSE_TIME(\"%H\", \"15\") as parsed_time","shape":"SELECT PARSE_TIME('%H', '15') AS parsed_time;"}
+{"sql":"1. TIME(hour, minute, second)\n2. TIME(timestamp, [time_zone])\n3. TIME(datetime)","reject":true}
+{"sql":"SELECT\n  TIME(15, 30, 00) as time_hms,\n  TIME(TIMESTAMP \"2008-12-25 15:30:00+08\", \"America/Los_Angeles\") as time_tstz","shape":"SELECT TIME(15, 30, 00) AS time_hms, TIME(TIMESTAMP '2008-12-25 15:30:00+08', 'America/Los_Angeles') AS time_tstz;"}
+{"sql":"SELECT TIME(DATETIME \"2008-12-25 15:30:00.000000\") AS time_dt","shape":"SELECT TIME(DATETIME '2008-12-25 15:30:00.000000') AS time_dt;"}
+{"sql":"TIME_ADD(time_expression, INTERVAL step_size step_unit)","reject":true}
+{"sql":"SELECT\n  TIME \"15:30:00\" as original_time,\n  TIME_ADD(TIME \"15:30:00\", INTERVAL 10 MINUTE) as later","shape":"SELECT TIME '15:30:00' AS original_time, TIME_ADD(TIME '15:30:00', INTERVAL 10 MINUTE) AS later;"}
+{"sql":"TIME_DIFF(end_time, start_time, granularity)","reject":true}
+{"sql":"SELECT\n  TIME \"15:30:00\" as first_time,\n  TIME \"14:35:00\" as second_time,\n  TIME_DIFF(TIME \"15:30:00\", TIME \"14:35:00\", MINUTE) as difference","shape":"SELECT TIME '15:30:00' AS first_time, TIME '14:35:00' AS second_time, TIME_DIFF(TIME '15:30:00', TIME '14:35:00', MINUTE) AS difference;"}
+{"sql":"SELECT\n  TIME_DIFF(TIME '04:54:00', TIME '01:00:00', HOUR) AS diff_3_9,\n  TIME_DIFF(TIME '04:06:00', TIME '01:00:00', HOUR) AS diff_3_1,\n  TIME_DIFF(TIME '01:00:00', TIME '04:54:00', HOUR) AS diff_negative_3_9,\n  TIME_DIFF(TIME '01:00:00', TIME '04:06:00', HOUR) AS diff_negative_3_1","shape":"SELECT TIME_DIFF(TIME '04:54:00', TIME '01:00:00', HOUR) AS diff_3_9, TIME_DIFF(TIME '04:06:00', TIME '01:00:00', HOUR) AS diff_3_1, TIME_DIFF(TIME '01:00:00', TIME '04:54:00', HOUR) AS diff_negative_3_9, TIME_DIFF(TIME '01:00:00', TIME '04:06:00', HOUR) AS diff_negative_3_1;"}
+{"sql":"TIME_SUB(time_expression, INTERVAL step_size step_unit)","reject":true}
+{"sql":"SELECT\n  TIME \"15:30:00\" as original_date,\n  TIME_SUB(TIME \"15:30:00\", INTERVAL 10 MINUTE) as earlier","shape":"SELECT TIME '15:30:00' AS original_date, TIME_SUB(TIME '15:30:00', INTERVAL 10 MINUTE) AS earlier;"}
+{"sql":"TIME_TRUNC(time_value, time_granularity)","reject":true}
+{"sql":"SELECT\n  TIME \"15:30:00\" as original,\n  TIME_TRUNC(TIME \"15:30:00\", HOUR) as truncated","shape":"SELECT TIME '15:30:00' AS original, TIME_TRUNC(TIME '15:30:00', HOUR) AS truncated;"}

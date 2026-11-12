@@ -32,7 +32,7 @@
 {"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (CUBE (a), ROLLUP (b), ())","shape":"SELECT a, b FROM t GROUP BY GROUPING SETS (CUBE (a), ROLLUP (b), ());"}
 {"sql":"SELECT a, b FROM t GROUP BY GROUPING SETS (GROUPING SETS ((a), (b)))","reject":true}
 {"sql":"SELECT a, b FROM t GROUP BY DISTINCT ROLLUP (a, b)","reject":true}
-{"sql":"SELECT a, GROUPING(a) FROM t GROUP BY ROLLUP (a)"}
+{"sql":"SELECT a, GROUPING(a) FROM t GROUP BY ROLLUP (a)","shape":"SELECT a, GROUPING(a) FROM t GROUP BY ROLLUP (a);"}
 {"sql":"SELECT a, GROUPING(a, b) FROM t GROUP BY a, b"}
 {"sql":"SELECT a FROM t HAVING COUNT(*) > 1"}
 {"sql":"SELECT COUNT(*) FROM t HAVING COUNT(*) > 1","shape":"SELECT COUNT(*) FROM t HAVING COUNT(*) > 1;"}

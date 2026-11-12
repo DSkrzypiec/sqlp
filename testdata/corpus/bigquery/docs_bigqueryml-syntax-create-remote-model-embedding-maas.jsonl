@@ -1,0 +1,2 @@
+{"sql":"`[PROJECT_ID].[LOCATION].[CONNECTION_ID]`","reject":true}
+{"sql":"`myproject.us.my_connection`","reject":true}

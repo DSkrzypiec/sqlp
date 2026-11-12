@@ -1,0 +1,6 @@
+{"sql":"SELECT *\nFROM AI.SEARCH(TABLE product_table, 'product_description', \"A really fun toy\")"}
+{"sql":"SELECT *\nFROM AI.SEARCH(\n  TABLE mydataset.images,\n  'ref',\n  'A really fun toy'  -- Searching a table of images with a text query is\n                      -- possible with a multimodal embedding model\n)"}
+{"sql":"CREATE TABLE mydataset.products (\n  name STRING,\n  description STRING,\n  description_embedding STRUCT<result ARRAY<FLOAT64>, status STRING>\n    GENERATED ALWAYS AS (AI.EMBED(\n      description,\n      connection_id => 'us.example_connection',\n      endpoint => 'text-embedding-005'\n    ))\n    STORED OPTIONS( asynchronous = TRUE )\n)"}
+{"sql":"INSERT INTO mydataset.products (name, description) VALUES\n  (\"Lounger chair\", \"A comfortable chair for relaxing in.\"),\n  (\"Super slingers\", \"An exciting board game for the whole family.\"),\n  (\"Encyclopedia set\", \"A collection of informational books.\")"}
+{"sql":"SELECT base.name, base.description, distance\nFROM AI.SEARCH(TABLE mydataset.products, 'description', \"A really fun toy\")"}
+{"sql":"SELECT base.name, base.description, distance\nFROM\n  AI.SEARCH(\n    TABLE mydataset.products,\n    'description',\n    \"A really fun toy\",\n    mode => 'HYBRID')"}

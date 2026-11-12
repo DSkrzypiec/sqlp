@@ -375,7 +375,9 @@ func (g *Generator) expr(e ast.Expr) {
 		g.operand(e.Right, p, true)
 	case *ast.Quantified:
 		g.w(e.Kind, " (")
-		if sq, ok := e.Expr.(*ast.Subquery); ok {
+		if e.List != nil {
+			g.exprList(e.List)
+		} else if sq, ok := e.Expr.(*ast.Subquery); ok {
 			g.query(sq.Query)
 		} else {
 			g.expr(e.Expr)
@@ -503,6 +505,12 @@ func (g *Generator) expr(e ast.Expr) {
 			g.w("[")
 			g.exprList(e.Elems)
 			g.w("]")
+		case e.Of != nil:
+			g.w("ARRAY<")
+			g.dataType(e.Of)
+			g.w(">[")
+			g.exprList(e.Elems)
+			g.w("]")
 		default:
 			g.w("ARRAY[")
 			g.exprList(e.Elems)
@@ -510,6 +518,24 @@ func (g *Generator) expr(e ast.Expr) {
 		}
 	case *ast.Cast:
 		g.cast(e)
+	case *ast.Struct:
+		if e.Type != nil {
+			g.dataType(e.Type)
+		} else {
+			g.w("STRUCT")
+		}
+		g.w("(")
+		for i, f := range e.Fields {
+			if i > 0 {
+				g.w(", ")
+			}
+			g.expr(f.Expr)
+			if f.As != nil {
+				g.w(" AS ")
+				g.label(*f.As)
+			}
+		}
+		g.w(")")
 	case *ast.Case:
 		g.w("CASE")
 		if e.Operand != nil {
@@ -548,9 +574,22 @@ func (g *Generator) expr(e ast.Expr) {
 		} else {
 			g.ident(e.Field)
 		}
+		if e.FieldArg != nil {
+			g.w("(")
+			g.ident(*e.FieldArg)
+			g.w(")")
+		}
 		g.w(" FROM ")
 		g.expr(e.Expr)
+		if e.TimeZone != nil {
+			g.w(" AT TIME ZONE ")
+			g.expr(e.TimeZone)
+		}
 		g.w(")")
+	case *ast.Interval:
+		g.w("INTERVAL ")
+		g.expr(e.Value)
+		g.w(" ", e.Unit)
 	case *ast.Substring:
 		g.w("SUBSTRING(")
 		g.expr(e.Expr)
@@ -714,19 +753,24 @@ func (g *Generator) cast(c *ast.Cast) {
 		g.expr(c.Expr)
 		g.w("::")
 		g.dataType(c.Type)
-	case c.Style == ast.CastTry:
-		g.w("TRY_CAST(")
-		g.expr(c.Expr)
-		g.w(" AS ")
-		g.dataType(c.Type)
-		g.w(")")
 	default:
-		g.w("CAST(")
+		g.w(map[ast.CastStyle]string{ast.CastTry: "TRY_CAST(", ast.CastSafe: "SAFE_CAST("}[c.Style])
+		if c.Style != ast.CastTry && c.Style != ast.CastSafe {
+			g.w("CAST(")
+		}
 		g.expr(c.Expr)
 		g.w(" AS")
 		if c.Type.Name != "" { // SQLite allows CAST(x AS)
 			g.w(" ")
 			g.dataType(c.Type)
+		}
+		if c.Format != nil {
+			g.w(" FORMAT ")
+			g.expr(c.Format)
+		}
+		if c.TimeZone != nil {
+			g.w(" AT TIME ZONE ")
+			g.expr(c.TimeZone)
 		}
 		g.w(")")
 	}
@@ -769,6 +813,24 @@ func (g *Generator) dataType(dt *ast.DataType) {
 	}
 	if dt.Setof {
 		g.w("SETOF ")
+	}
+	if dt.Angle {
+		g.w(name, "<")
+		if dt.Of != nil {
+			g.dataType(dt.Of)
+		}
+		for i, f := range dt.Struct {
+			if i > 0 {
+				g.w(", ")
+			}
+			if f.Name.Name != "" {
+				g.label(f.Name)
+				g.w(" ")
+			}
+			g.dataType(f.Type)
+		}
+		g.w(">")
+		return
 	}
 	g.w(name)
 	if len(dt.Args) > 0 {
@@ -1148,8 +1210,10 @@ func (g *Generator) sel(s *ast.Select) {
 		g.w(" GROUP BY")
 		g.kw(s.GroupBy.Distinct, "DISTINCT")
 		g.kw(s.GroupBy.All, "ALL")
-		g.w(" ")
-		g.exprList(s.GroupBy.Items)
+		if len(s.GroupBy.Items) > 0 {
+			g.w(" ")
+			g.exprList(s.GroupBy.Items)
+		}
 	}
 	if s.Having != nil {
 		g.w(" HAVING ")

@@ -1,0 +1,221 @@
+{"sql":"CREATE TABLE mydataset.newtable ( x INT64 )"}
+{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  location=\"us\",\n  default_table_expiration_days=3.75,\n  labels=[(\"label1\",\"value1\"),(\"label2\",\"value2\")]\n  )"}
+{"sql":"CREATE SCHEMA mydataset\nOPTIONS(\n  is_case_insensitive=TRUE\n)"}
+{"sql":"CREATE SCHEMA mydataset\nDEFAULT COLLATE 'und:ci'"}
+{"sql":"STRING COLLATE collate_specification","reject":true}
+{"sql":"CREATE TABLE mydataset.newtable\n(\n  x INT64 OPTIONS(description=\"An optional INTEGER field\"),\n  y STRUCT <\n    a ARRAY <STRING> OPTIONS(description=\"A repeated STRING field\"),\n    b BOOL\n  >\n)\nPARTITION BY _PARTITIONDATE\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  partition_expiration_days=1,\n  description=\"a table that expires in 2025, with each partition living for 24 hours\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
+{"sql":"CREATE TABLE mydataset.top_words\nOPTIONS(\n  description=\"Top ten words per Shakespeare corpus\"\n) AS\nSELECT\n  corpus,\n  ARRAY_AGG(STRUCT(word, word_count) ORDER BY word_count DESC LIMIT 10) AS top_words\nFROM `bigquery-public-data`.samples.shakespeare\nGROUP BY corpus"}
+{"sql":"CREATE TABLE IF NOT EXISTS mydataset.newtable (x INT64, y STRUCT <a ARRAY <STRING>, b BOOL>)\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  description=\"a table that expires in 2025\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
+{"sql":"CREATE OR REPLACE TABLE mydataset.newtable (x INT64, y STRUCT <a ARRAY <STRING>, b BOOL>)\nOPTIONS(\n  expiration_timestamp=TIMESTAMP \"2025-01-01 00:00:00 UTC\",\n  description=\"a table that expires in 2025\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
+{"sql":"CREATE TABLE mydataset.newtable (\n  x INT64 NOT NULL,\n  y STRUCT <\n    a ARRAY <STRING>,\n    b BOOL NOT NULL,\n    c FLOAT64\n  > NOT NULL,\n  z STRING\n)"}
+{"sql":"CREATE TABLE mydataset.newtable (\n  a STRING,\n  b STRING,\n  c STRUCT <\n    x FLOAT64\n    y ARRAY <STRING>\n  >\n)\nDEFAULT COLLATE 'und:ci'","reject":true}
+{"sql":"CREATE TABLE mydataset.newtable (\n  a STRING,\n  b STRING COLLATE 'und:ci',\n  c STRUCT <\n    x FLOAT64\n    y ARRAY <STRING COLLATE 'und:ci'>\n  >\n)","reject":true}
+{"sql":"CREATE TABLE mydataset.newtable (\n  x STRING(10),\n  y STRUCT <\n    a ARRAY <BYTES(5)>,\n    b NUMERIC(15, 2) OPTIONS(rounding_mode = 'ROUND_HALF_EVEN'),\n    c FLOAT64\n  >,\n  z BIGNUMERIC(35)\n)"}
+{"sql":"CREATE TABLE mydataset.newtable (transaction_id INT64, transaction_date DATE)\nPARTITION BY transaction_date\nOPTIONS(\n  partition_expiration_days=3,\n  description=\"a table partitioned by transaction_date\"\n)"}
+{"sql":"CREATE TABLE mydataset.days_with_rain\nPARTITION BY date\nOPTIONS (\n  partition_expiration_days=365,\n  description=\"weather stations with precipitation, partitioned by day\"\n) AS\nSELECT\n  DATE(CAST(year AS INT64), CAST(mo AS INT64), CAST(da AS INT64)) AS date,\n  (SELECT ANY_VALUE(name) FROM `bigquery-public-data.noaa_gsod.stations` AS stations\n   WHERE stations.usaf = stn) AS station_name,  -- Stations can have multiple names\n  prcp\nFROM `bigquery-public-data.noaa_gsod.gsod2017` AS weather\nWHERE prcp != 99.9  -- Filter unknown values\n  AND prcp > 0      -- Filter stations/days with no precipitation"}
+{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  input_timestamp TIMESTAMP,\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nPARTITION BY TIMESTAMP_TRUNC(input_timestamp, HOUR)\nCLUSTER BY customer_id\nOPTIONS (\n  partition_expiration_days=3,\n  description=\"a table clustered by customer_id\"\n)"}
+{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nPARTITION BY DATE(_PARTITIONTIME)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  partition_expiration_days=3,\n  description=\"a table clustered by customer_id\"\n)"}
+{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  description=\"a table clustered by customer_id\"\n)"}
+{"sql":"CREATE TABLE mydataset.embedded_table (\n  id INT64,\n  content STRING,\n  embedding STRUCT, status STRING>\n    GENERATED ALWAYS AS (\n      AI.EMBED(\n        content,\n        connection_id => \"US.embed_connection\",\n        endpoint => \"text-embedding-005\")\n    )\n    STORED OPTIONS (asynchronous = true)\n)","reject":true}
+{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  input_timestamp TIMESTAMP,\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nPARTITION BY DATE(input_timestamp)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  partition_expiration_days=3,\n  description=\"a table clustered by customer_id\"\n)\nAS SELECT * FROM mydataset.myothertable"}
+{"sql":"CREATE TABLE mydataset.myclusteredtable\n(\n  customer_id STRING,\n  transaction_amount NUMERIC\n)\nCLUSTER BY\n  customer_id\nOPTIONS (\n  description=\"a table clustered by customer_id\"\n)\nAS SELECT * FROM mydataset.myothertable"}
+{"sql":"CREATE TABLE mydataset.embedded_table (\n  id INT64,\n  content STRING,\n  embedding STRUCT<result ARRAY<FLOAT64>, status STRING>\n    GENERATED ALWAYS AS (\n      AI.EMBED(\n        content,\n        connection_id => \"US.embed_connection\",\n        endpoint => \"text-embedding-005\")\n    )\n    STORED OPTIONS (asynchronous = true)\n)"}
+{"sql":"CREATE TABLE mydataset.identity_table (\n  name STRING,\n  id INT64 GENERATED ALWAYS AS IDENTITY(START WITH 0 INCREMENT BY 2)\n)"}
+{"sql":"CREATE TEMP TABLE Example\n(\n  x INT64,\n  y STRING\n)"}
+{"sql":"INSERT INTO Example\nVALUES (5, 'foo')"}
+{"sql":"INSERT INTO Example\nVALUES (6, 'bar')"}
+{"sql":"SELECT *\nFROM Example"}
+{"sql":"+-----+---+-----+\n| Row | x | y   |\n+-----+---|-----+\n| 1   | 5 | foo |\n| 2   | 6 | bar |\n+-----+---|-----+","reject":true}
+{"sql":"CREATE OR REPLACE TABLE\n  myotherdataset.orders\n  PARTITION BY DATE_TRUNC(l_commitdate, YEAR) AS\nSELECT\n  *\nFROM\n  myawsdataset.orders\nWHERE\n  EXTRACT(YEAR FROM l_commitdate) = 1992"}
+{"sql":"SELECT\n  orders.l_orderkey,\n  orders.l_orderkey,\n  orders.l_suppkey,\n  orders.l_commitdate,\n  orders.l_returnflag,\n  shipments.l_shipmode,\n  shipments.l_shipinstruct\nFROM\n  myotherdataset.shipments\nJOIN\n  `myotherdataset.orders` as orders\nON\n  orders.l_orderkey = shipments.l_orderkey\nAND orders.l_partkey = shipments.l_partkey\nAND orders.l_suppkey = shipments.l_suppkey\nWHERE orders.l_returnflag = 'R'"}
+{"sql":"INSERT INTO\n   myotherdataset.orders\n SELECT\n   *\n FROM\n   myawsdataset.orders\n WHERE\n   EXTRACT(YEAR FROM l_commitdate) = 1993"}
+{"sql":"CREATE TABLE\n mydataset.orders(id String, numeric_id INT64)\nPARTITION BY _PARTITIONDATE"}
+{"sql":"INSERT INTO\n mydataset.orders(\n   _PARTITIONTIME,\n   id,\n   numeric_id)\nSELECT\n TIMESTAMP(\"2023-01-01\"),\n id,\n numeric_id,\nFROM\n mydataset.ordersof23\nWHERE\n numeric_id > 4000000"}
+{"sql":"CREATE TABLE mydataset.newtable\nLIKE mydataset.sourcetable"}
+{"sql":"CREATE TABLE mydataset.newtable\nLIKE mydataset.sourcetable\nAS SELECT * FROM mydataset.myothertable"}
+{"sql":"CREATE SNAPSHOT TABLE `myproject.mydataset.mytablesnapshot`\nCLONE `myproject.mydataset.mytable`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"my_table_snapshot\",\n  description=\"A table snapshot that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
+{"sql":"CREATE SNAPSHOT TABLE IF NOT EXISTS `myproject.mydataset.mytablesnapshot`\nCLONE `myproject.mydataset.mytable`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"my_table_snapshot\",\n  description=\"A table snapshot that expires in 2 days\"\n  labels=[(\"org_unit\", \"development\")]\n)","reject":true}
+{"sql":"CREATE TABLE `myproject.mydataset.mytable`\nCLONE `myproject.mydataset.mytablesnapshot`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 365 DAY),\n  friendly_name=\"my_table\",\n  description=\"A table that expires in 1 year\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
+{"sql":"CREATE TABLE IF NOT EXISTS `myproject.mydataset.mytableclone`\nCLONE `myproject.mydataset.mytable`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 365 DAY),\n  friendly_name=\"my_table\",\n  description=\"A table that expires in 1 year\",\n  labels=[(\"org_unit\", \"development\")]\n)"}
+{"sql":"CREATE VIEW mydataset.age_groups(age, count) AS SELECT age, COUNT(*)\nFROM mydataset.people\ngroup by age"}
+{"sql":"SELECT age, count from mydataset.age_groups"}
+{"sql":"CREATE VIEW myProject.myDataset.myView AS SELECT * FROM anotherDataset.myTable"}
+{"sql":"CREATE VIEW `myproject.mydataset.newview`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"newview\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`"}
+{"sql":"CREATE VIEW IF NOT EXISTS `myproject.mydataset.newview`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"newview\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`"}
+{"sql":"CREATE OR REPLACE VIEW `myproject.mydataset.newview`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"newview\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")]\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`"}
+{"sql":"CREATE VIEW `myproject.mydataset.newview` (\n  column_1_new_name OPTIONS (DESCRIPTION='Description of the column 1 contents'),\n  column_2_new_name OPTIONS (DESCRIPTION='Description of the column 2 contents'),\n  column_3_new_name OPTIONS (DESCRIPTION='Description of the column 3 contents')\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`"}
+{"sql":"CREATE MATERIALIZED VIEW myProject.myDataset.myView AS SELECT * FROM anotherDataset.myTable"}
+{"sql":"CREATE MATERIALIZED VIEW `myproject.mydataset.new_mv`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"new_mv\",\n  description=\"a materialized view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")],\n  enable_refresh=true,\n  refresh_interval_minutes=20\n)\nAS SELECT column_1, SUM(column_2) AS sum_2, AVG(column_3) AS avg_3\nFROM `myproject.mydataset.mytable`\nGROUP BY column_1"}
+{"sql":"CREATE MATERIALIZED VIEW IF NOT EXISTS `myproject.mydataset.new_mv`\nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 48 HOUR),\n  friendly_name=\"new_mv\",\n  description=\"a view that expires in 2 days\",\n  labels=[(\"org_unit\", \"development\")],\n  enable_refresh=false\n)\nAS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`"}
+{"sql":"CREATE MATERIALIZED VIEW `myproject.mydataset.new_mv`\nPARTITION BY DATE(col_datetime)\nCLUSTER BY col_int\nAS SELECT col_int, col_datetime, COUNT(1) as cnt\n   FROM `myproject.mydataset.mv_base_table`\n   GROUP BY col_int, col_datetime"}
+{"sql":"CREATE MATERIALIZED VIEW replica_name\n[OPTIONS(materialized_view_replica_option_list)]\nAS REPLICA OF source_materialized_view_name","reject":true}
+{"sql":"CREATE MATERIALIZED VIEW `myproject.bq_dataset.mv_replica`\nOPTIONS(\n  replication_interval_seconds=600\n)\nAS REPLICA OF `myproject.s3_dataset.my_s3_mv`"}
+{"sql":"CREATE EXTERNAL SCHEMA mydataset\nWITH CONNECTION myproject.`aws-us-east-1`.myconnection\n  OPTIONS (\n    external_source = 'aws-glue://arn:aws:glue:us-east-1:123456789:database/test_database',\n    location = 'aws-us-east-1')"}
+{"sql":"CREATE OR REPLACE EXTERNAL TABLE mydataset.newtable (x INT64, y STRING, z BOOL)\n  WITH CONNECTION myconnection\n  OPTIONS(\n    format =\"PARQUET\",\n    max_staleness = STALENESS_INTERVAL,\n    metadata_cache_mode = 'AUTOMATIC')"}
+{"sql":"CREATE EXTERNAL TABLE dataset.CsvTable OPTIONS (\n  format = 'CSV',\n  uris = ['gs://bucket/path1.csv', 'gs://bucket/path2.csv']\n)"}
+{"sql":"CREATE OR REPLACE EXTERNAL TABLE dataset.CsvTable\n(\n  x INT64,\n  y STRING\n)\nOPTIONS (\n  format = 'CSV',\n  uris = ['gs://bucket/path1.csv'],\n  field_delimiter = '|',\n  max_bad_records = 5\n)"}
+{"sql":"CREATE EXTERNAL TABLE dataset.AutoHivePartitionedTable\nWITH PARTITION COLUMNS\nOPTIONS (\n  uris = ['gs://bucket/path/*'],\n  format = 'PARQUET',\n  hive_partition_uri_prefix = 'gs://bucket/path',\n  require_hive_partition_filter = false)"}
+{"sql":"CREATE EXTERNAL TABLE dataset.CustomHivePartitionedTable\nWITH PARTITION COLUMNS (\n  field_1 STRING, -- column order must match the external path\n  field_2 INT64)\nOPTIONS (\n  uris = ['gs://bucket/path/*'],\n  format = 'PARQUET',\n  hive_partition_uri_prefix = 'gs://bucket/path',\n  require_hive_partition_filter = false)"}
+{"sql":"CREATE FUNCTION mydataset.multiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nAS (x * y)"}
+{"sql":"CREATE TEMP FUNCTION multiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nLANGUAGE js\nAS r\"\"\"\n  return x*y;\n\"\"\""}
+{"sql":"SELECT multiplyInputs(a, b) FROM (SELECT 3 as a, 2 as b)"}
+{"sql":"CREATE TEMP FUNCTION tempRemoteMultiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nREMOTE WITH CONNECTION us.myconnection\nOPTIONS(endpoint=\"https://us-central1-myproject.cloudfunctions.net/multiply\")"}
+{"sql":"CREATE FUNCTION mydataset.remoteMultiplyInputs(x FLOAT64, y FLOAT64)\nRETURNS FLOAT64\nREMOTE WITH CONNECTION us.myconnection\nOPTIONS(endpoint=\"https://us-central1-myproject.cloudfunctions.net/multiply\")"}
+{"sql":"CREATE AGGREGATE FUNCTION myProject.myDataset.ScaledSum(\n  dividend FLOAT64,\n  divisor FLOAT64 NOT AGGREGATE)\nRETURNS FLOAT64\nAS (\n  SUM(dividend) / divisor\n)"}
+{"sql":"SELECT ScaledSum(col1, 2) AS scaled_sum\nFROM (\n  SELECT 1 AS col1 UNION ALL\n  SELECT 3 AS col1 UNION ALL\n  SELECT 5 AS col1\n)"}
+{"sql":"CREATE TEMP AGGREGATE FUNCTION SumPositive(x FLOAT64)\nRETURNS FLOAT64\nLANGUAGE js\nAS r'''\n  export function initialState() {\n    return {sum: 0}\n  }\n  export function aggregate(state, x) {\n    if (x > 0) {\n      state.sum += x;\n    }\n  }\n  export function merge(state, partialState) {\n    state.sum += partialState.sum;\n  }\n  export function finalize(state) {\n    return state.sum;\n  }\n''';\n\n-- Call the JavaScript UDAF.\nWITH numbers AS (\n  SELECT * FROM UNNEST([1.0, -1.0, 3.0, -3.0, 5.0, -5.0]) AS x)\nSELECT SumPositive(x) AS sum\nFROM numbers;"}
+{"sql":"CREATE OR REPLACE AGGREGATE FUNCTION my_project.my_dataset.WeightedAverage(\n    x INT64,\n    weight FLOAT64,\n    initialSum FLOAT64 NOT AGGREGATE)\nRETURNS INT64\nLANGUAGE js\nAS '''\n   export function initialState(initialSum) {\n     return {count: 0, sum: initialSum}\n   }\n   export function aggregate(state, x, weight) {\n     state.count += 1;\n     state.sum += Number(x) * weight;\n   }\n   export function merge(state, partialState) {\n     state.sum += partialState.sum;\n     state.count += partialState.count;\n   }\n   export function finalize(state) {\n     return state.sum / state.count;\n   }\n'''"}
+{"sql":"SELECT my_project.my_dataset.WeightedAverage(item, weight, 2) AS weighted_average\nFROM (\n  SELECT 1 AS item, 2.45 AS weight UNION ALL\n  SELECT 3 AS item, 0.11 AS weight UNION ALL\n  SELECT 5 AS item, 7.02 AS weight\n)"}
+{"sql":"CREATE OR REPLACE TABLE FUNCTION mydataset.names_by_year(y INT64)\nAS\n  SELECT year, name, SUM(number) AS total\n  FROM `bigquery-public-data.usa_names.usa_1910_current`\n  WHERE year = y\n  GROUP BY year, name"}
+{"sql":"CREATE OR REPLACE TABLE FUNCTION mydataset.names_by_year(y INT64)\nRETURNS TABLE<name STRING, year INT64, total INT64>\nAS\n  SELECT year, name, SUM(number) AS total\n  FROM `bigquery-public-data.usa_names.usa_1910_current`\n  WHERE year = y\n  GROUP BY year, name"}
+{"sql":"CREATE TABLE FUNCTION mydataset.compute_sales (\n  orders TABLE<item STRING, sales INT64>, item_name STRING)\nAS (\n  SELECT SUM(sales) AS total_sales, item\n  FROM orders\n  WHERE item = item_name\n  GROUP BY item\n)"}
+{"sql":"CREATE PROCEDURE myProject.myDataset.QueryTable()\nBEGIN\n  SELECT * FROM anotherDataset.myTable;\nEND;"}
+{"sql":"CREATE PROCEDURE mydataset.AddDelta(INOUT x INT64, delta INT64)\nBEGIN\n  SET x = x + delta;\nEND;"}
+{"sql":"DECLARE accumulator INT64 DEFAULT 0;\nCALL mydataset.AddDelta(accumulator, 5);\nCALL mydataset.AddDelta(accumulator, 3);\nSELECT accumulator;"}
+{"sql":"+-------------+\n| accumulator |\n+-------------+\n|           8 |\n+-------------+","reject":true}
+{"sql":"CREATE PROCEDURE mydataset.SelectFromTablesAndAppend(\n  target_date DATE, OUT rows_added INT64)\nBEGIN\n  CREATE TEMP TABLE DataForTargetDate AS\n  SELECT t1.id, t1.x, t2.y\n  FROM dataset.partitioned_table1 AS t1\n  JOIN dataset.partitioned_table2 AS t2\n  ON t1.id = t2.id\n  WHERE t1.date = target_date\n    AND t2.date = target_date;\n\n  SET rows_added = (SELECT COUNT(*) FROM DataForTargetDate);\n\n  SELECT id, x, y, target_date  -- note that target_date is a parameter\n  FROM DataForTargetDate;\n\n  DROP TABLE DataForTargetDate;\nEND;"}
+{"sql":"DECLARE rows_added INT64;\nCALL mydataset.SelectFromTablesAndAppend(CURRENT_DATE(), rows_added);\nSELECT FORMAT('Added %d rows', rows_added);"}
+{"sql":"CREATE CAPACITY\n`project_id.location_id.commitment_id`\nOPTIONS (capacity_commitment_option_list)","reject":true}
+{"sql":"CREATE CAPACITY `admin_project.region-us.my-commitment`\nOPTIONS (\n  slot_count = 100,\n  plan = 'ANNUAL')"}
+{"sql":"CREATE RESERVATION\n`project_id.location_id.reservation_id`\nOPTIONS (reservation_option_list)","reject":true}
+{"sql":"CREATE RESERVATION `admin_project.region-us.prod`\nOPTIONS (\n  slot_capacity = 100)"}
+{"sql":"CREATE ASSIGNMENT\n`project_id.location_id.reservation_id.assignment_id`\nOPTIONS (assignment_option_list)","reject":true}
+{"sql":"CREATE ASSIGNMENT `admin_project.region-us.prod.my_assignment`\nOPTIONS (\n  assignee = 'projects/my_project',\n  job_type = 'QUERY')"}
+{"sql":"CREATE ASSIGNMENT `admin_project.region-us.prod.my_assignment`\nOPTIONS (\n  assignee = 'organizations/1234',\n  job_type = 'PIPELINE')"}
+{"sql":"CREATE TABLE dataset.my_table(a STRING, b INT64)"}
+{"sql":"CREATE SEARCH INDEX my_index\nON dataset.my_table(ALL COLUMNS)"}
+{"sql":"CREATE TABLE dataset.complex_table(\n  a STRING,\n  my_struct STRUCT <string_field STRING, int_field INT64>,\n  b ARRAY <STRING>\n)"}
+{"sql":"CREATE SEARCH INDEX my_index\nON dataset.complex_table(\n  a OPTIONS(index_granularity = 'GLOBAL'),\n  my_struct,\n  b)\nOPTIONS (\n  analyzer = 'NO_OP_ANALYZER',\n  default_index_column_granularity = 'COLUMN')"}
+{"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (index_type = 'IVF')"}
+{"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (\n  index_type = 'IVF',\n  distance_type = 'COSINE',\n  ivf_options = '{\"num_lists\":2500}')"}
+{"sql":"CREATE VECTOR INDEX my_index ON my_dataset.my_table(embedding)\nOPTIONS (\n  index_type = 'TREE_AH',\n  distance_type = 'EUCLIDEAN',\n  tree_ah_options = '{\"normalization_type\": \"L2\"}')"}
+{"sql":"CREATE CONNECTION [IF NOT EXISTS] `[[project_id.]location.]connection_id`\nOPTIONS (connection_option_list)","reject":true}
+{"sql":"CREATE CONNECTION IF NOT EXISTS `us.my_cloud_resource_connection`\nOPTIONS (\n  connection_type = \"CLOUD_RESOURCE\",\n  friendly_name = \"My Resource Connection\",\n  description = \"Connection to access Cloud resources\"\n  )"}
+{"sql":"ALTER SCHEMA [IF EXISTS]\n[project_name.]dataset_name\nSET DEFAULT COLLATE collate_specification","reject":true}
+{"sql":"CREATE SCHEMA mydataset"}
+{"sql":"CREATE TABLE mydataset.mytable_a\n(\n  number INT64,\n  word STRING\n)"}
+{"sql":"ALTER SCHEMA mydataset\nSET DEFAULT COLLATE 'und:ci'"}
+{"sql":"CREATE TABLE mydataset.mytable_b\n(\n  amount INT64,\n  characters STRING\n)"}
+{"sql":"ALTER SCHEMA [IF EXISTS]\n[project_name.]dataset_name\nSET OPTIONS(schema_set_options_list)","reject":true}
+{"sql":"ALTER SCHEMA mydataset\nSET OPTIONS(\n  default_table_expiration_days=3.75\n  )"}
+{"sql":"ALTER SCHEMA mydataset\nSET OPTIONS(\n  is_case_insensitive=TRUE\n)"}
+{"sql":"ALTER SCHEMA [IF EXISTS]\n[project_name.]dataset_name\nADD REPLICA replica_name [OPTIONS(add_replica_options_list)]","reject":true}
+{"sql":"ALTER SCHEMA cross_region_dataset\nADD REPLICA `EU` OPTIONS(location=`eu`)"}
+{"sql":"ALTER SCHEMA [IF EXISTS] dataset_name\nDROP REPLICA replica_name","reject":true}
+{"sql":"ALTER SCHEMA [IF EXISTS] cross_region_dataset\nDROP REPLICA `us-east4`","reject":true}
+{"sql":"ALTER TABLE [IF EXISTS] table_name\nSET OPTIONS(table_set_options_list)","reject":true}
+{"sql":"ALTER TABLE mydataset.mytable\nSET OPTIONS (\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 7 DAY),\n  description=\"Table that expires seven days from now\"\n)"}
+{"sql":"ALTER TABLE mydataset.mypartitionedtable\nSET OPTIONS (require_partition_filter=true)"}
+{"sql":"ALTER TABLE mydataset.mytable\nSET OPTIONS (expiration_timestamp=NULL)"}
+{"sql":"ALTER TABLE mydataset.mytable\n  ADD COLUMN A STRING,\n  ADD COLUMN IF NOT EXISTS B GEOGRAPHY,\n  ADD COLUMN C ARRAY <NUMERIC>,\n  ADD COLUMN D DATE OPTIONS(description=\"my description\")"}
+{"sql":"ALTER TABLE mydataset.mytable\n   ADD COLUMN A STRUCT<\n       B GEOGRAPHY,\n       C ARRAY <INT64>,\n       D INT64 NOT NULL,\n       E TIMESTAMP OPTIONS(description=\"creation time\")\n       >"}
+{"sql":"ALTER TABLE mydataset.mytable\nADD COLUMN word STRING COLLATE 'und:ci'"}
+{"sql":"ALTER TABLE mydataset.embedded_table\n  ADD COLUMN embedding\n    STRUCT, status STRING>\n    GENERATED ALWAYS AS (\n      AI.EMBED(\n        content,\n        connection_id => \"US.embed_connection\",\n        endpoint => \"text-embedding-005\")\n    )\n    STORED OPTIONS (asynchronous = TRUE)","reject":true}
+{"sql":"ALTER TABLE pk_table\nADD PRIMARY KEY (x,y) NOT ENFORCED"}
+{"sql":"CREATE TABLE fk_table(x int64, y int64, i int64, j int64, u int64, v int64)","shape":"CREATE TABLE fk_table (x int64, y int64, i int64, j int64, u int64, v int64);"}
+{"sql":"ALTER TABLE fk_table\nADD CONSTRAINT my_fk_name FOREIGN KEY (u, v)\nREFERENCES pk_table(x, y) NOT ENFORCED"}
+{"sql":"ALTER TABLE fk_table\nADD PRIMARY KEY (x,y) NOT ENFORCED,\nADD CONSTRAINT fk FOREIGN KEY (u, v) REFERENCES pk_table(x, y) NOT ENFORCED,\nADD CONSTRAINT fk2 FOREIGN KEY (i, j) REFERENCES pk_table(x, y) NOT ENFORCED"}
+{"sql":"ALTER TABLE [[project_name.]dataset_name.]table_name\nADD PRIMARY KEY(column_list) NOT ENFORCED","reject":true}
+{"sql":"ALTER TABLE pk_table ADD PRIMARY KEY (x,y) NOT ENFORCED"}
+{"sql":"ALTER TABLE [IF EXISTS] table_name\nRENAME TO new_table_name","reject":true}
+{"sql":"ALTER TABLE mydataset.mytable RENAME TO mynewtable"}
+{"sql":"ALTER TABLE mydataset.mytable\n  RENAME COLUMN A TO columnA,\n  RENAME COLUMN IF EXISTS B TO columnB"}
+{"sql":"ALTER TABLE mydataset.mytable\n  RENAME COLUMN columnA TO temp_col,\n  RENAME COLUMN columnB TO columnA,\n  RENAME COLUMN temp_col TO columnB"}
+{"sql":"ALTER TABLE mydataset.mytable\n  DROP COLUMN A,\n  DROP COLUMN IF EXISTS B"}
+{"sql":"ALTER TABLE [[project_name.]dataset_name.]table_name\nDROP CONSTRAINT [IF EXISTS] constraint_name","reject":true}
+{"sql":"ALTER TABLE mytable DROP CONSTRAINT myConstraint"}
+{"sql":"ALTER TABLE [[project_name.]dataset_name.]table_name\nDROP PRIMARY KEY [IF EXISTS]","reject":true}
+{"sql":"ALTER TABLE myTable\nDROP PRIMARY KEY"}
+{"sql":"ALTER TABLE\n  table_name\n  SET DEFAULT COLLATE collate_specification","reject":true}
+{"sql":"CREATE TABLE mydataset.mytable\n(\n  number INT64,\n  word STRING\n) DEFAULT COLLATE 'und:ci'"}
+{"sql":"ALTER TABLE mydataset.mytable\nSET DEFAULT COLLATE ''"}
+{"sql":"ALTER TABLE mydataset.mytable\nADD COLUMN name STRING"}
+{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN price\nSET OPTIONS (description = 'Price per unit')"}
+{"sql":"ALTER VIEW mydataset.myview\nALTER COLUMN total\nSET OPTIONS (description = 'Total sales of the product')"}
+{"sql":"ALTER TABLE [IF EXISTS] table_name\nALTER COLUMN [IF EXISTS] column DROP NOT NULL","reject":true}
+{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN mycolumn\nDROP NOT NULL"}
+{"sql":"ALTER TABLE [IF EXISTS] table_name\nALTER COLUMN [IF EXISTS] column_name SET DATA TYPE column_schema","reject":true}
+{"sql":"CREATE TABLE dataset.my_table(c1 INT64)"}
+{"sql":"ALTER TABLE dataset.my_table ALTER COLUMN c1 SET DATA TYPE NUMERIC"}
+{"sql":"CREATE TABLE dataset.my_table(s1 STRUCT <a INT64, b STRING>)"}
+{"sql":"ALTER TABLE dataset.my_table ALTER COLUMN s1\nSET DATA TYPE STRUCT <a NUMERIC, b STRING>"}
+{"sql":"CREATE TABLE dataset.my_table (pt NUMERIC(7,2))"}
+{"sql":"ALTER TABLE dataset.my_table\nALTER COLUMN pt\nSET DATA TYPE NUMERIC(8,2)"}
+{"sql":"ALTER TABLE [IF EXISTS] table_name ALTER COLUMN [IF EXISTS] column_name\nSET DEFAULT default_expression","reject":true}
+{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN mycolumn\nSET DEFAULT CURRENT_TIME()"}
+{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN id\nSET GENERATED AS IDENTITY (\n  START WITH 100\n  INCREMENT BY 10\n)"}
+{"sql":"ALTER TABLE [IF EXISTS] table_name ALTER COLUMN [IF EXISTS] column_name\nDROP DEFAULT","reject":true}
+{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN mycolumn\nDROP DEFAULT"}
+{"sql":"ALTER TABLE [IF EXISTS] table_name ALTER COLUMN [IF EXISTS] column_name\nDROP GENERATED","reject":true}
+{"sql":"ALTER TABLE mydataset.mytable\nALTER COLUMN id_col\nDROP GENERATED"}
+{"sql":"ALTER VIEW [IF EXISTS] view_name\nSET OPTIONS(view_set_options_list)","reject":true}
+{"sql":"ALTER VIEW mydataset.myview\nSET OPTIONS (\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 7 DAY),\n  description=\"View that expires seven days from now\"\n)"}
+{"sql":"ALTER MATERIALIZED VIEW [IF EXISTS] materialized_view_name\nSET OPTIONS(materialized_view_set_options_list)","reject":true}
+{"sql":"ALTER MATERIALIZED VIEW mydataset.my_mv\nSET OPTIONS (\n  enable_refresh=true,\n  refresh_interval_minutes=20\n)"}
+{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  organization_set_options_list)","reject":true}
+{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = \"America/Chicago\",\n  `region-us.default_job_query_timeout_ms` = 3600000\n)"}
+{"sql":"ALTER ORGANIZATION\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL)"}
+{"sql":"ALTER PROJECT project_id\nSET OPTIONS (project_set_options_list)","reject":true}
+{"sql":"ALTER PROJECT project_id\nSET OPTIONS (\n  `region-us.default_time_zone` = \"America/New_York\",\n  `region-us.default_job_query_timeout_ms` = 1800000\n)"}
+{"sql":"ALTER PROJECT project_id\nSET OPTIONS (\n  `region-us.default_time_zone` = NULL,\n  `region-us.default_kms_key_name` = NULL,\n  `region-us.default_query_job_timeout_ms` = NULL,\n  `region-us.default_interactive_query_queue_timeout_ms` = NULL,\n  `region-us.default_batch_query_queue_timeout_ms` = NULL,\n  `region-us.default_sql_dialect_option` = NULL)"}
+{"sql":"ALTER BI_CAPACITY `project_id.location_id.default`\nSET OPTIONS(bi_capacity_options_list)","reject":true}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250\n)"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 0\n)"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  preferred_tables = NULL\n)"}
+{"sql":"ALTER BI_CAPACITY `my-project.region-us.default`\nSET OPTIONS(\n  size_gb = 250,\n  preferred_tables = [\"data_project1.dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)"}
+{"sql":"ALTER BI_CAPACITY `region-us.default`\nSET OPTIONS(\n  preferred_tables = [\"dataset1.table1\",\n                      \"data_project2.dataset2.table2\"]\n)"}
+{"sql":"ALTER CAPACITY `project_id.location_id.commitment_id`\nSET OPTIONS (alter_capacity_commitment_option_list)","reject":true}
+{"sql":"ALTER CAPACITY `admin_project.region-us.my-commitment`\nSET OPTIONS (\n  plan = 'THREE_YEAR')"}
+{"sql":"ALTER RESERVATION `project_id.location_id.reservation_id`\nSET OPTIONS (alter_reservation_option_list)","reject":true}
+{"sql":"ALTER RESERVATION `admin_project.region-us.my-reservation`\nSET OPTIONS (\n  slot_capacity = 300,\n  autoscale_max_slots = 400)"}
+{"sql":"CREATE TABLE dataset.complex_table(\n  a STRING,\n  my_struct STRUCT <string_field STRING, int_field INT64>,\n  b INT64\n)"}
+{"sql":"CREATE SEARCH INDEX my_index\nON dataset.complex_table(ALL COLUMNS)\nOPTIONS (data_types = ['STRING'])"}
+{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nADD COLUMN b OPTIONS (data_types = ['INT64'],\n                      index_granularity = 'COLUMN')"}
+{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nALTER COLUMN my_struct SET OPTIONS(data_types = ['STRING', 'INT64'])"}
+{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nSET OPTIONS(data_types = ['STRING', 'INT64'])"}
+{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\nDROP COLUMN a"}
+{"sql":"ALTER SEARCH INDEX my_index ON dataset.complex_table\n  ADD COLUMN b OPTIONS(data_types = ['INT64'], index_granularity = 'COLUMN'),\n  ALTER COLUMN my_struct SET OPTIONS(data_types = ['STRING', 'INT64']),\n  DROP COLUMN a,\n  SET OPTIONS(default_index_column_granularity = 'GLOBAL'),\n  REBUILD"}
+{"sql":"ALTER VECTOR INDEX IF EXISTS index1\nON mydataset.sales\nREBUILD"}
+{"sql":"ALTER CONNECTION [IF EXISTS] `[[project_id.]location.]connection_id`\nSET OPTIONS (alter_connection_option_list)","reject":true}
+{"sql":"ALTER CONNECTION `us.my_cloud_resource_connection`\nSET OPTIONS (\n  description = \"Updated description for my Cloud resource connection\"\n  )"}
+{"sql":"DROP SCHEMA mydataset"}
+{"sql":"DROP SCHEMA IF EXISTS mydataset CASCADE"}
+{"sql":"UNDROP SCHEMA [IF NOT EXISTS]\n[project_name.]dataset_name\n[OPTIONS (location=\"us\")]","reject":true}
+{"sql":"UNDROP SCHEMA mydataset"}
+{"sql":"DROP TABLE [IF EXISTS] table_name","reject":true}
+{"sql":"DROP TABLE mydataset.mytable"}
+{"sql":"DROP TABLE IF EXISTS mydataset.mytable"}
+{"sql":"DROP SNAPSHOT TABLE [IF EXISTS] table_snapshot_name","reject":true}
+{"sql":"DROP SNAPSHOT TABLE mydataset.mytablesnapshot"}
+{"sql":"DROP SNAPSHOT TABLE IF EXISTS mydataset.mytablesnapshot"}
+{"sql":"DROP EXTERNAL TABLE [IF EXISTS] table_name","reject":true}
+{"sql":"DROP EXTERNAL TABLE mydataset.external_table"}
+{"sql":"DROP EXTERNAL TABLE IF EXISTS mydataset.external_table"}
+{"sql":"DROP VIEW [IF EXISTS] view_name","reject":true}
+{"sql":"DROP VIEW mydataset.myview"}
+{"sql":"DROP VIEW IF EXISTS mydataset.myview"}
+{"sql":"DROP MATERIALIZED VIEW [IF EXISTS] mv_name","reject":true}
+{"sql":"DROP MATERIALIZED VIEW mydataset.my_mv"}
+{"sql":"DROP MATERIALIZED VIEW IF EXISTS mydataset.my_mv"}
+{"sql":"DROP FUNCTION [IF EXISTS] [[project_name.]dataset_name.]function_name","reject":true}
+{"sql":"DROP FUNCTION mydataset.parseJsonAsStruct"}
+{"sql":"DROP FUNCTION `other_project`.sample_dataset.parseJsonAsStruct"}
+{"sql":"DROP TABLE FUNCTION [IF EXISTS] [[project_name.]dataset_name.]function_name","reject":true}
+{"sql":"DROP TABLE FUNCTION mydataset.my_table_function"}
+{"sql":"DROP PROCEDURE [IF EXISTS] [[project_name.]dataset_name.]procedure_name","reject":true}
+{"sql":"DROP PROCEDURE mydataset.myProcedure"}
+{"sql":"DROP PROCEDURE `other-project`.sample_dataset.myprocedure"}
+{"sql":"DROP ALL ROW ACCESS POLICIES ON table_name"}
+{"sql":"DROP ROW ACCESS POLICY my_row_filter ON project.dataset.my_table"}
+{"sql":"DROP ALL ROW ACCESS POLICIES ON project.dataset.my_table"}
+{"sql":"DROP CAPACITY [IF EXISTS]\nproject_id.location.capacity-commitment-id","reject":true}
+{"sql":"DROP CAPACITY `admin_project.region-us.1234`"}
+{"sql":"DROP RESERVATION [IF EXISTS]\nproject_id.location.reservation_id","reject":true}
+{"sql":"DROP RESERVATION `admin_project.region-us.prod`"}
+{"sql":"DROP ASSIGNMENT [IF EXISTS]\nproject_id.location.reservation_id.assignment_id","reject":true}
+{"sql":"DROP ASSIGNMENT `admin_project.region-us.prod.1234`"}
+{"sql":"DROP SEARCH INDEX my_index ON dataset.my_table"}
+{"sql":"DROP VECTOR INDEX my_index ON dataset.my_table"}
+{"sql":"DROP CONNECTION [IF EXISTS] `[[project_id.]location.]connection_id`","reject":true}
+{"sql":"DROP CONNECTION IF EXISTS `us.my_cloud_resource_connection`"}
+{"sql":"table_path :=\n  [[project_name.]dataset_name.]table_name","reject":true}

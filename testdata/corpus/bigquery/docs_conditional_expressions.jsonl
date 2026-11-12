@@ -1,0 +1,16 @@
+{"sql":"WITH Numbers AS (\n  SELECT 90 as A, 2 as B UNION ALL\n  SELECT 50, 8 UNION ALL\n  SELECT 60, 6 UNION ALL\n  SELECT 50, 10\n)\nSELECT\n  A,\n  B,\n  CASE A\n    WHEN 90 THEN 'red'\n    WHEN 50 THEN 'blue'\n    ELSE 'green'\n    END\n    AS result\nFROM Numbers","shape":"WITH Numbers AS (((SELECT 90 AS A, 2 AS B UNION ALL SELECT 50, 8) UNION ALL SELECT 60, 6) UNION ALL SELECT 50, 10) SELECT A, B, CASE A WHEN 90 THEN 'red' WHEN 50 THEN 'blue' ELSE 'green' END AS result FROM Numbers;"}
+{"sql":"WITH Numbers AS (\n  SELECT 90 as A, 2 as B UNION ALL\n  SELECT 50, 6 UNION ALL\n  SELECT 20, 10\n)\nSELECT\n  A,\n  B,\n  CASE\n    WHEN A > 60 THEN 'red'\n    WHEN B = 6 THEN 'blue'\n    ELSE 'green'\n    END\n    AS result\nFROM Numbers","shape":"WITH Numbers AS ((SELECT 90 AS A, 2 AS B UNION ALL SELECT 50, 6) UNION ALL SELECT 20, 10) SELECT A, B, CASE WHEN A > 60 THEN 'red' WHEN B = 6 THEN 'blue' ELSE 'green' END AS result FROM Numbers;"}
+{"sql":"SELECT COALESCE('A', 'B', 'C') as result","shape":"SELECT COALESCE('A', 'B', 'C') AS result;"}
+{"sql":"SELECT COALESCE(NULL, 'B', 'C') as result","shape":"SELECT COALESCE(NULL, 'B', 'C') AS result;"}
+{"sql":"SELECT COALESCE(10, 1 / 0) as result","shape":"SELECT COALESCE(10, 1 / 0) AS result;"}
+{"sql":"SELECT COALESCE(\n  (SELECT event_date FROM recent_events LIMIT 1),\n  (SELECT MAX(event_date) FROM weekly_events),\n  (SELECT MAX(event_date) FROM all_events)\n)"}
+{"sql":"IF(expr, true_result, else_result)","reject":true}
+{"sql":"SELECT\n  10 AS A,\n  20 AS B,\n  IF(10 < 20, 'true', 'false') AS result","shape":"SELECT 10 AS A, 20 AS B, IF(10 < 20, 'true', 'false') AS result;"}
+{"sql":"SELECT\n  30 AS A,\n  20 AS B,\n  IF(30 < 20, 'true', 'false') AS result","shape":"SELECT 30 AS A, 20 AS B, IF(30 < 20, 'true', 'false') AS result;"}
+{"sql":"IFNULL(expr, null_result)","reject":true}
+{"sql":"SELECT IFNULL(NULL, 0) as result","shape":"SELECT IFNULL(NULL, 0) AS result;"}
+{"sql":"SELECT IFNULL(10, 0) as result","shape":"SELECT IFNULL(10, 0) AS result;"}
+{"sql":"SELECT IFNULL(10, 1 / 0) as result","shape":"SELECT IFNULL(10, 1 / 0) AS result;"}
+{"sql":"NULLIF(expr, expr_to_match)","reject":true}
+{"sql":"SELECT NULLIF(0, 0) as result","shape":"SELECT NULLIF(0, 0) AS result;"}
+{"sql":"SELECT NULLIF(10, 0) as result","shape":"SELECT NULLIF(10, 0) AS result;"}

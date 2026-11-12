@@ -1,0 +1,65 @@
+{"sql":"CAST(expression AS typename [format_clause])","reject":true}
+{"sql":"CAST(x=1 AS STRING)","reject":true}
+{"sql":"CAST(expression AS ARRAY<element_type>)","reject":true}
+{"sql":"CAST(expression AS BIGNUMERIC)","reject":true}
+{"sql":"CAST(expression AS BOOL)","reject":true}
+{"sql":"CAST(expression AS BYTES [format_clause])","reject":true}
+{"sql":"CAST(expression AS DATE [format_clause])","reject":true}
+{"sql":"CAST(expression AS DATETIME [format_clause])","reject":true}
+{"sql":"CAST(expression AS FLOAT64)","reject":true}
+{"sql":"CAST(expression AS INT64)","reject":true}
+{"sql":"SELECT '0x123' as hex_value, CAST('0x123' as INT64) as hex_to_int","shape":"SELECT '0x123' AS hex_value, CAST('0x123' AS INT64) AS hex_to_int;"}
+{"sql":"SELECT '-0x123' as hex_value, CAST('-0x123' as INT64) as hex_to_int","shape":"SELECT '-0x123' AS hex_value, CAST('-0x123' AS INT64) AS hex_to_int;"}
+{"sql":"CAST(expression AS INTERVAL)","reject":true}
+{"sql":"SELECT input, CAST(input AS INTERVAL) AS output\nFROM UNNEST([\n  '1-2 3 10:20:30.456',\n  '1-2',\n  '10:20:30',\n  'P1Y2M3D',\n  'PT10H20M30,456S'\n]) input"}
+{"sql":"CAST(expression AS NUMERIC)","reject":true}
+{"sql":"CAST(expression AS RANGE)","reject":true}
+{"sql":"SELECT CAST(\n  '[2020-01-01, 2020-01-02)'\n  AS RANGE<DATE>) AS string_to_range","shape":"SELECT CAST('[2020-01-01, 2020-01-02)' AS RANGE<DATE>) AS string_to_range;"}
+{"sql":"SELECT CAST(\n  '[2014-09-27 12:30:00.45, 2016-10-17 11:15:00.33)'\n  AS RANGE<DATETIME>) AS string_to_range","shape":"SELECT CAST('[2014-09-27 12:30:00.45, 2016-10-17 11:15:00.33)' AS RANGE<DATETIME>) AS string_to_range;"}
+{"sql":"SELECT CAST(\n  '[2014-09-27 12:30:00+08, 2016-10-17 11:15:00+08)'\n  AS RANGE<TIMESTAMP>) AS string_to_range\n\n-- Results depend upon where this query was executed.","shape":"SELECT CAST('[2014-09-27 12:30:00+08, 2016-10-17 11:15:00+08)' AS RANGE<TIMESTAMP>) AS string_to_range;"}
+{"sql":"SELECT CAST(\n  '[UNBOUNDED, 2020-01-02)'\n  AS RANGE<DATE>) AS string_to_range","shape":"SELECT CAST('[UNBOUNDED, 2020-01-02)' AS RANGE<DATE>) AS string_to_range;"}
+{"sql":"SELECT CAST(\n  '[2020-01-01, NULL)'\n  AS RANGE<DATE>) AS string_to_range","shape":"SELECT CAST('[2020-01-01, NULL)' AS RANGE<DATE>) AS string_to_range;"}
+{"sql":"CAST(expression AS STRING [format_clause [AT TIME ZONE timezone_expr]])","reject":true}
+{"sql":"SELECT CAST(CURRENT_DATE() AS STRING) AS current_date","shape":"SELECT CAST(CURRENT_DATE() AS STRING) AS current_date;"}
+{"sql":"SELECT CAST(CURRENT_DATE() AS STRING FORMAT 'DAY') AS current_day","shape":"SELECT CAST(CURRENT_DATE() AS STRING FORMAT 'DAY') AS current_day;"}
+{"sql":"SELECT CAST(\n  TIMESTAMP '2008-12-25 00:00:00+00:00'\n  AS STRING FORMAT 'YYYY-MM-DD HH24:MI:SS TZH:TZM') AS date_time_to_string\n\n-- Results depend upon where this query was executed.","shape":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'YYYY-MM-DD HH24:MI:SS TZH:TZM') AS date_time_to_string;"}
+{"sql":"SELECT CAST(\n  TIMESTAMP '2008-12-25 00:00:00+00:00'\n  AS STRING FORMAT 'YYYY-MM-DD HH24:MI:SS TZH:TZM'\n  AT TIME ZONE 'Asia/Kolkata') AS date_time_to_string\n\n-- Because the time zone is specified, the result is always the same.","shape":"SELECT CAST(TIMESTAMP '2008-12-25 00:00:00+00:00' AS STRING FORMAT 'YYYY-MM-DD HH24:MI:SS TZH:TZM' AT TIME ZONE 'Asia/Kolkata') AS date_time_to_string;"}
+{"sql":"SELECT CAST(INTERVAL 3 DAY AS STRING) AS interval_to_string","shape":"SELECT CAST(INTERVAL 3 DAY AS STRING) AS interval_to_string;"}
+{"sql":"SELECT CAST(\n  INTERVAL \"1-2 3 4:5:6.789\" YEAR TO SECOND\n  AS STRING) AS interval_to_string","shape":"SELECT CAST(INTERVAL '1-2 3 4:5:6.789' YEAR TO SECOND AS STRING) AS interval_to_string;"}
+{"sql":"CAST(expression AS STRUCT)","reject":true}
+{"sql":"CAST(expression AS TIME [format_clause])","reject":true}
+{"sql":"CAST(expression AS TIMESTAMP [format_clause [AT TIME ZONE timezone_expr]])","reject":true}
+{"sql":"SELECT CAST(\"2020-06-02 17:00:53.110+00:00\" AS TIMESTAMP) AS as_timestamp\n\n-- Results depend upon where this query was executed.","shape":"SELECT CAST('2020-06-02 17:00:53.110+00:00' AS TIMESTAMP) AS as_timestamp;"}
+{"sql":"SELECT CAST('06/02/2020 17:00:53.110' AS TIMESTAMP FORMAT 'MM/DD/YYYY HH24:MI:SS.FF3' AT TIME ZONE 'UTC') AS as_timestamp","shape":"SELECT CAST('06/02/2020 17:00:53.110' AS TIMESTAMP FORMAT 'MM/DD/YYYY HH24:MI:SS.FF3' AT TIME ZONE 'UTC') AS as_timestamp;"}
+{"sql":"SELECT CAST('06/02/2020 17:00:53.110' AS TIMESTAMP FORMAT 'MM/DD/YYYY HH24:MI:SS.FF3' AT TIME ZONE '+00') AS as_timestamp","shape":"SELECT CAST('06/02/2020 17:00:53.110' AS TIMESTAMP FORMAT 'MM/DD/YYYY HH24:MI:SS.FF3' AT TIME ZONE '+00') AS as_timestamp;"}
+{"sql":"SELECT CAST('06/02/2020 17:00:53.110 +00' AS TIMESTAMP FORMAT 'MM/DD/YYYY HH24:MI:SS.FF3 TZH') AS as_timestamp","shape":"SELECT CAST('06/02/2020 17:00:53.110 +00' AS TIMESTAMP FORMAT 'MM/DD/YYYY HH24:MI:SS.FF3 TZH') AS as_timestamp;"}
+{"sql":"PARSE_BIGNUMERIC(string_expression)","reject":true}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"123.45\") AS parsed","shape":"SELECT PARSE_BIGNUMERIC('123.45') AS parsed;"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"123.456E37\") AS parsed"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"1.123456789012345678901234567890123456789\") as parsed","shape":"SELECT PARSE_BIGNUMERIC('1.123456789012345678901234567890123456789') AS parsed;"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"  -  12.34 \") as parsed","shape":"SELECT PARSE_BIGNUMERIC('  -  12.34 ') AS parsed;"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"12.34e-1-\") as parsed","shape":"SELECT PARSE_BIGNUMERIC('12.34e-1-') AS parsed;"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"  1,2,,3,.45 + \") as parsed","shape":"SELECT PARSE_BIGNUMERIC('  1,2,,3,.45 + ') AS parsed;"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\".1234  \") as parsed","shape":"SELECT PARSE_BIGNUMERIC('.1234  ') AS parsed;"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\",,,.1234  \") as parsed"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"1  23.4 5  \") as parsed"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"  e1 \") as parsed"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"  - 12.3 - \") as parsed"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"12.34E100 \") as parsed"}
+{"sql":"SELECT PARSE_BIGNUMERIC(\"$12.34\") as parsed"}
+{"sql":"PARSE_NUMERIC(string_expression)","reject":true}
+{"sql":"SELECT PARSE_NUMERIC(\"123.45\") AS parsed","shape":"SELECT PARSE_NUMERIC('123.45') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\"12.34E27\") as parsed","shape":"SELECT PARSE_NUMERIC('12.34E27') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\"1.0123456789\") as parsed","shape":"SELECT PARSE_NUMERIC('1.0123456789') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\"  -  12.34 \") as parsed","shape":"SELECT PARSE_NUMERIC('  -  12.34 ') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\"12.34e-1-\") as parsed","shape":"SELECT PARSE_NUMERIC('12.34e-1-') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\"  1,2,,3,.45 + \") as parsed","shape":"SELECT PARSE_NUMERIC('  1,2,,3,.45 + ') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\".1234  \") as parsed","shape":"SELECT PARSE_NUMERIC('.1234  ') AS parsed;"}
+{"sql":"SELECT PARSE_NUMERIC(\",,,.1234  \") as parsed"}
+{"sql":"SELECT PARSE_NUMERIC(\"1  23.4 5  \") as parsed"}
+{"sql":"SELECT PARSE_NUMERIC(\"  e1 \") as parsed"}
+{"sql":"SELECT PARSE_NUMERIC(\"  - 12.3 - \") as parsed"}
+{"sql":"SELECT PARSE_NUMERIC(\"12.34E100 \") as parsed"}
+{"sql":"SELECT PARSE_NUMERIC(\"$12.34\") as parsed"}
+{"sql":"SELECT CAST(\"apple\" AS INT64) AS not_a_number"}
+{"sql":"SELECT SAFE_CAST(\"apple\" AS INT64) AS not_a_number","shape":"SELECT SAFE_CAST('apple' AS INT64) AS not_a_number;"}

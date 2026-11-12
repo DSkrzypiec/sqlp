@@ -12,7 +12,7 @@ var (
 		IsDistinctFrom: "IsDistinctFrom", IsOther: "IsOther",
 	}
 	castStyleNames = []string{
-		CastStandard: "CastStandard", CastDoubleColon: "CastDoubleColon", CastTry: "CastTry",
+		CastStandard: "CastStandard", CastDoubleColon: "CastDoubleColon", CastTry: "CastTry", CastSafe: "CastSafe",
 	}
 	timeZoneSpecNames = []string{
 		TZUnspecified: "TZUnspecified", TZWith: "TZWith", TZWithout: "TZWithout",

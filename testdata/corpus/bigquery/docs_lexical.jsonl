@@ -1,0 +1,65 @@
+{"sql":"foo().dataField","reject":true}
+{"sql":"items[OFFSET(3)].dataField","reject":true}
+{"sql":"@param.dataField","reject":true}
+{"sql":"myproject.mydatabase.mytable287","reject":true}
+{"sql":"myproject287.mydatabase.mytable","reject":true}
+{"sql":"my-project.mydataset.mytable","reject":true}
+{"sql":"my-table","reject":true}
+{"sql":"myproject.mydataset.my-table","reject":true}
+{"sql":"my-dataset.mytable","reject":true}
+{"sql":"123\n0xABC\n-123","reject":true}
+{"sql":"SELECT NUMERIC '0'","shape":"SELECT NUMERIC '0';"}
+{"sql":"SELECT NUMERIC '123456'","shape":"SELECT NUMERIC '123456';"}
+{"sql":"SELECT NUMERIC '-3.14'","shape":"SELECT NUMERIC '-3.14';"}
+{"sql":"SELECT NUMERIC '-0.54321'","shape":"SELECT NUMERIC '-0.54321';"}
+{"sql":"SELECT NUMERIC '1.23456e05'","shape":"SELECT NUMERIC '1.23456e05';"}
+{"sql":"SELECT NUMERIC '-9.876e-3'","shape":"SELECT NUMERIC '-9.876e-3';"}
+{"sql":"SELECT BIGNUMERIC '0'","shape":"SELECT BIGNUMERIC '0';"}
+{"sql":"SELECT BIGNUMERIC '123456'","shape":"SELECT BIGNUMERIC '123456';"}
+{"sql":"SELECT BIGNUMERIC '-3.14'","shape":"SELECT BIGNUMERIC '-3.14';"}
+{"sql":"SELECT BIGNUMERIC '-0.54321'","shape":"SELECT BIGNUMERIC '-0.54321';"}
+{"sql":"SELECT BIGNUMERIC '1.23456e05'","shape":"SELECT BIGNUMERIC '1.23456e05';"}
+{"sql":"SELECT BIGNUMERIC '-9.876e-3'","shape":"SELECT BIGNUMERIC '-9.876e-3';"}
+{"sql":"[+-]DIGITS.[DIGITS][e[+-]DIGITS]\n[+-][DIGITS].DIGITS[e[+-]DIGITS]\nDIGITSe[+-]DIGITS","reject":true}
+{"sql":"123.456e-67\n.1E4\n58.\n4e2","reject":true}
+{"sql":"[1, 2, 3]\n['x', 'y', 'xy']\nARRAY[1, 2, 3]\nARRAY<STRING>['x', 'y', 'xy']\nARRAY<INT64>[]","reject":true}
+{"sql":"DATE 'date_canonical_format'","reject":true}
+{"sql":"DATE '2014-09-27'","reject":true}
+{"sql":"SELECT * FROM foo WHERE date_col = \"2014-09-27\""}
+{"sql":"TIME 'time_canonical_format'","reject":true}
+{"sql":"TIME '12:30:00.45'","reject":true}
+{"sql":"DATETIME 'datetime_canonical_format'","reject":true}
+{"sql":"DATETIME '2014-09-27 12:30:00.45'","reject":true}
+{"sql":"SELECT * FROM foo\nWHERE datetime_col = \"2014-09-27 12:30:00.45\""}
+{"sql":"DATETIME '2014-09-27T12:30:00.45'\nDATETIME '2014-09-27t12:30:00.45'","reject":true}
+{"sql":"TIMESTAMP 'timestamp_canonical_format'","reject":true}
+{"sql":"TIMESTAMP '2014-09-27 12:30:00.45-08'","reject":true}
+{"sql":"TIMESTAMP '2014-09-27 12:30:00.45'","reject":true}
+{"sql":"SELECT * FROM foo\nWHERE timestamp_col = \"2014-09-27 12:30:00.45 America/Los_Angeles\""}
+{"sql":"TIMESTAMP '2017-01-18T12:34:56.123456Z'\nTIMESTAMP '2017-01-18t12:34:56.123456'\nTIMESTAMP '2017-01-18 12:34:56.123456z'\nTIMESTAMP '2017-01-18 12:34:56.123456Z'","reject":true}
+{"sql":"'-08:00'\n'-8:15'\n'+3:00'\n'+07:30'\n'-7'","reject":true}
+{"sql":"TIMESTAMP '2014-09-27 12:30:00 America/Los_Angeles'\nTIMESTAMP '2014-09-27 12:30:00 America/Argentina/Buenos_Aires'","reject":true}
+{"sql":"RANGE<DATE> '[2020-01-01, 2020-12-31)'","reject":true}
+{"sql":"RANGE<DATETIME> '[2020-01-01 12:00:00, 2020-12-31 12:00:00)'","reject":true}
+{"sql":"RANGE<TIMESTAMP> '[2020-10-01 12:00:00+08, 2020-12-31 12:00:00+08)'","reject":true}
+{"sql":"RANGE<DATE> '[UNBOUNDED, 2020-12-31)'","reject":true}
+{"sql":"RANGE<DATE> '[NULL, 2020-12-31)'","reject":true}
+{"sql":"RANGE<DATE> '[2020-01-01, UNBOUNDED)'","reject":true}
+{"sql":"RANGE<DATE> '[2020-01-01, NULL)'","reject":true}
+{"sql":"RANGE<DATE> '[UNBOUNDED, UNBOUNDED)'","reject":true}
+{"sql":"RANGE<DATE> '[NULL, NULL)'","reject":true}
+{"sql":"RANGE<DATE> '[2020-01-01,2020-12-31)'","reject":true}
+{"sql":"INTERVAL 5 DAY\n\n-- 0 years, 0 months, -5 days, 0 hours, 0 minutes, 0 seconds (0-0 -5 0:0:0)\nINTERVAL -5 DAY\n\n-- 0 years, 0 months, 0 days, 0 hours, 0 minutes, 1 seconds (0-0 0 0:0:1)\nINTERVAL 1 SECOND","reject":true}
+{"sql":"INTERVAL -25 MONTH\n\n-- 0 years, 0 months, 0 days, -1 hours, -30 minutes, and 0 seconds (0-0 0 -1:30:0)\nINTERVAL -90 MINUTE","reject":true}
+{"sql":"INTERVAL '10:20:30.52' HOUR TO SECOND\n\n-- 1 year, 2 months, 0 days, 0 hours, 0 minutes, 0 seconds (1-2 0 0:0:0)\nINTERVAL '1-2' YEAR TO MONTH\n\n-- 0 years, 1 month, -15 days, 0 hours, 0 minutes, 0 seconds (0-1 -15 0:0:0)\nINTERVAL '1 -15' MONTH TO DAY\n\n-- 0 years, 0 months, 1 day, 5 hours, 30 minutes, 0 seconds (0-0 1 5:30:0)\nINTERVAL '1 5:30' DAY TO MINUTE","reject":true}
+{"sql":"INTERVAL '-23-2 10 -12:30' YEAR TO MINUTE\n\n-- -23 years, -2 months, 10 days, 0 hours, -30 minutes, and 0 seconds (-23-2 10 -0:30:0)\nSELECT INTERVAL '-23-2 10 -0:30' YEAR TO MINUTE\n\n-- Produces an error because the negative sign for minutes must come before the hour.\nSELECT INTERVAL '-23-2 10 0:-30' YEAR TO MINUTE\n\n-- Produces an error because the negative sign for months must come before the year.\nSELECT INTERVAL '23--2 10 0:30' YEAR TO MINUTE\n\n-- 0 years, -2 months, 10 days, 0 hours, 30 minutes, and 0 seconds (-0-2 10 0:30:0)\nSELECT INTERVAL '-2 10 0:30' MONTH TO MINUTE\n\n-- 0 years, 0 months, 0 days, 0 hours, -30 minutes, and -10 seconds (0-0 0 -0:30:10)\nSELECT INTERVAL '-30:10' MINUTE TO SECOND","reject":true}
+{"sql":"JSON 'json_formatted_data'","reject":true}
+{"sql":"SELECT name, release_date, FROM Books"}
+{"sql":"@parameter_name","reject":true}
+{"sql":"SELECT * FROM Roster WHERE LastName = @myparam"}
+{"sql":"SELECT * FROM Roster WHERE FirstName = ? and LastName = ?"}
+{"sql":"SELECT book FROM library"}
+{"sql":"SELECT book FROM library\n/* this is a single-line comment */\nWHERE book = \"Ulysses\""}
+{"sql":"SELECT book FROM library /* this is an inline comment */ WHERE book = \"Ulysses\""}
+{"sql":"SELECT book FROM library\n/*\n  This is a multiline comment\n  on multiple lines\n*/\nWHERE book = \"Ulysses\""}
+{"sql":"SELECT book FROM library\n/* this is a multiline comment\non two lines */\nWHERE book = \"Ulysses\""}

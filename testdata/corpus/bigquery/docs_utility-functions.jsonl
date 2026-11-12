@@ -1,0 +1,6 @@
+{"sql":"GENERATE_UUID()","reject":true}
+{"sql":"SELECT GENERATE_UUID() AS uuid","shape":"SELECT GENERATE_UUID() AS uuid;"}
+{"sql":"TYPEOF(expression)","reject":true}
+{"sql":"SELECT\n  TYPEOF(NULL) AS A,\n  TYPEOF('hello') AS B,\n  TYPEOF(12+1) AS C,\n  TYPEOF(4.7) AS D","shape":"SELECT TYPEOF(NULL) AS A, TYPEOF('hello') AS B, TYPEOF(12 + 1) AS C, TYPEOF(4.7) AS D;"}
+{"sql":"SELECT\n  TYPEOF(STRUCT<x INT64, y STRING>(25, 'apples')) AS struct_type,\n  TYPEOF(STRUCT<x INT64, y STRING>(25, 'apples').y) AS field_type","shape":"SELECT TYPEOF(STRUCT<x INT64, y STRING>(25, 'apples')) AS struct_type, TYPEOF(STRUCT<x INT64, y STRING>(25, 'apples').y) AS field_type;"}
+{"sql":"SELECT\n  TYPEOF(ARRAY<INT64>[25, 32]) AS array_type,\n  TYPEOF(ARRAY<INT64>[25, 32][0]) AS element_type","shape":"SELECT TYPEOF(ARRAY<INT64>[25, 32]) AS array_type, TYPEOF(ARRAY<INT64>[25, 32][0]) AS element_type;"}

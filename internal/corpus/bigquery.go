@@ -2,8 +2,12 @@ package corpus
 
 import (
 	"fmt"
+	"html"
 	"math/rand"
+	"regexp"
 	"strings"
+
+	"sqlp/dialect"
 )
 
 // BigQuery is strictly typed, so an expression that mixes types at random
@@ -170,4 +174,40 @@ func (g *bqGen) expr(t bqType, depth int) bqExpr {
 	default:
 		return g.binary(g.expr(bqBool, d), "OR", bqOr, g.expr(bqBool, d))
 	}
+}
+
+// The BigQuery reference marks its SQL examples as <pre ... syntax="GoogleSQL">.
+var (
+	bqCodeBlock = regexp.MustCompile(`(?s)<pre[^>]*syntax="GoogleSQL"[^>]*>(.*?)</pre>`)
+	htmlTag     = regexp.MustCompile(`<[^>]+>`)
+	// Result tables drawn in block comments: /*---+---+ ... +---*/.
+	bqResultTable = regexp.MustCompile(`(?s)/\*[-+].*?\*/`)
+	// Grammar notation rather than SQL: [, ...], { a | b }, [ DISTINCT ].
+	bqNotation = regexp.MustCompile(`\[ ?, ?\.\.\.\]|\.\.\.|\{[^{}]*\|[^{}]*\}|\[ [A-Z]`)
+	// Procedural statements keep their block whole: cut at ";", BEGIN ... END
+	// would fall apart.
+	bqScript = regexp.MustCompile(`(?im)^\s*(DECLARE\s|BEGIN\b|IF\s|LOOP\b|WHILE\s|REPEAT\b|FOR\s+\w+\s+IN\b|EXECUTE\s+IMMEDIATE\b|CREATE\s+(OR\s+REPLACE\s+)?(TEMP(ORARY)?\s+)?PROCEDURE\b)`)
+)
+
+// BigQueryDocStatements extracts the SQL examples of a page of the BigQuery
+// reference: every statement of every example, except grammar notation. A
+// block with procedural statements stays one script.
+func BigQueryDocStatements(page string) []string {
+	var out []string
+	for _, m := range bqCodeBlock.FindAllStringSubmatch(page, -1) {
+		block := html.UnescapeString(htmlTag.ReplaceAllString(m[1], ""))
+		block = strings.TrimSpace(bqResultTable.ReplaceAllString(block, ""))
+		switch {
+		case block == "" || bqNotation.MatchString(block):
+		case bqScript.MatchString(block):
+			out = append(out, block)
+		default:
+			for _, s := range splitStatements(block, dialect.BigQuery) {
+				if s != "" {
+					out = append(out, s)
+				}
+			}
+		}
+	}
+	return out
 }

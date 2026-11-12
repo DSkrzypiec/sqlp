@@ -1,0 +1,2 @@
+{"sql":"HOLIDAY_REGION = 'GLOBAL'","reject":true}
+{"sql":"HOLIDAY_REGION = ['US', 'GB']","reject":true}

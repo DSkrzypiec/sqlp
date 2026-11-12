@@ -1,0 +1,53 @@
+{"sql":"CURRENT_DATE()","reject":true}
+{"sql":"CURRENT_DATE(time_zone_expression)","reject":true}
+{"sql":"CURRENT_DATE","reject":true}
+{"sql":"SELECT CURRENT_DATE() AS the_date","shape":"SELECT CURRENT_DATE() AS the_date;"}
+{"sql":"SELECT CURRENT_DATE('America/Los_Angeles') AS the_date","shape":"SELECT CURRENT_DATE('America/Los_Angeles') AS the_date;"}
+{"sql":"SELECT CURRENT_DATE('-08') AS the_date","shape":"SELECT CURRENT_DATE('-08') AS the_date;"}
+{"sql":"SELECT CURRENT_DATE AS the_date","shape":"SELECT CURRENT_DATE AS the_date;"}
+{"sql":"DATE(year, month, day)","reject":true}
+{"sql":"DATE(timestamp_expression)","reject":true}
+{"sql":"DATE(timestamp_expression, time_zone_expression)","reject":true}
+{"sql":"DATE(datetime_expression)","reject":true}
+{"sql":"SELECT\n  DATE(2016, 12, 25) AS date_ymd,\n  DATE(DATETIME '2016-12-25 23:59:59') AS date_dt,\n  DATE(TIMESTAMP '2016-12-25 05:30:00+07', 'America/Los_Angeles') AS date_tstz","shape":"SELECT DATE(2016, 12, 25) AS date_ymd, DATE(DATETIME '2016-12-25 23:59:59') AS date_dt, DATE(TIMESTAMP '2016-12-25 05:30:00+07', 'America/Los_Angeles') AS date_tstz;"}
+{"sql":"DATE_ADD(date_expression, INTERVAL step_size step_unit)","reject":true}
+{"sql":"SELECT DATE_ADD(DATE '2008-12-25', INTERVAL 5 DAY) AS five_days_later","shape":"SELECT DATE_ADD(DATE '2008-12-25', INTERVAL 5 DAY) AS five_days_later;"}
+{"sql":"DATE_DIFF(end_date, start_date, granularity)","reject":true}
+{"sql":"SELECT DATE_DIFF(DATE '2010-07-07', DATE '2008-12-25', DAY) AS days_diff","shape":"SELECT DATE_DIFF(DATE '2010-07-07', DATE '2008-12-25', DAY) AS days_diff;"}
+{"sql":"SELECT\n  DATE_DIFF(DATE '2023-11-30', DATE '2020-01-01', YEAR) AS diff_3_9,\n  DATE_DIFF(DATE '2023-02-01', DATE '2020-01-01', YEAR) AS diff_3_1,\n  DATE_DIFF(DATE '2020-01-01', DATE '2023-11-30', YEAR) AS diff_negative_3_9,\n  DATE_DIFF(DATE '2020-01-01', DATE '2023-02-01', YEAR) AS diff_negative_3_1","shape":"SELECT DATE_DIFF(DATE '2023-11-30', DATE '2020-01-01', YEAR) AS diff_3_9, DATE_DIFF(DATE '2023-02-01', DATE '2020-01-01', YEAR) AS diff_3_1, DATE_DIFF(DATE '2020-01-01', DATE '2023-11-30', YEAR) AS diff_negative_3_9, DATE_DIFF(DATE '2020-01-01', DATE '2023-02-01', YEAR) AS diff_negative_3_1;"}
+{"sql":"SELECT\n  DATE_DIFF(DATE '2017-10-15', DATE '2017-10-14', DAY) AS days_diff,\n  DATE_DIFF(DATE '2017-10-15', DATE '2017-10-14', WEEK) AS weeks_diff","shape":"SELECT DATE_DIFF(DATE '2017-10-15', DATE '2017-10-14', DAY) AS days_diff, DATE_DIFF(DATE '2017-10-15', DATE '2017-10-14', WEEK) AS weeks_diff;"}
+{"sql":"SELECT\n  DATE_DIFF('2017-12-30', '2014-12-30', YEAR) AS year_diff,\n  DATE_DIFF('2017-12-30', '2014-12-30', ISOYEAR) AS isoyear_diff","shape":"SELECT DATE_DIFF('2017-12-30', '2014-12-30', YEAR) AS year_diff, DATE_DIFF('2017-12-30', '2014-12-30', ISOYEAR) AS isoyear_diff;"}
+{"sql":"SELECT\n  DATE_DIFF('2017-12-18', '2017-12-17', WEEK) AS week_diff,\n  DATE_DIFF('2017-12-18', '2017-12-17', WEEK(MONDAY)) AS week_weekday_diff,\n  DATE_DIFF('2017-12-18', '2017-12-17', ISOWEEK) AS isoweek_diff","shape":"SELECT DATE_DIFF('2017-12-18', '2017-12-17', WEEK) AS week_diff, DATE_DIFF('2017-12-18', '2017-12-17', WEEK(MONDAY)) AS week_weekday_diff, DATE_DIFF('2017-12-18', '2017-12-17', ISOWEEK) AS isoweek_diff;"}
+{"sql":"DATE_FROM_UNIX_DATE(int64_expression)","reject":true}
+{"sql":"SELECT DATE_FROM_UNIX_DATE(14238) AS date_from_epoch","shape":"SELECT DATE_FROM_UNIX_DATE(14238) AS date_from_epoch;"}
+{"sql":"DATE_SUB(date_expression, INTERVAL step_size step_unit)","reject":true}
+{"sql":"SELECT DATE_SUB(DATE '2008-12-25', INTERVAL 5 DAY) AS five_days_ago","shape":"SELECT DATE_SUB(DATE '2008-12-25', INTERVAL 5 DAY) AS five_days_ago;"}
+{"sql":"DATE_TRUNC(date_value, date_granularity)","reject":true}
+{"sql":"DATE_TRUNC(datetime_value, datetime_granularity)","reject":true}
+{"sql":"DATE_TRUNC(timestamp_value, timestamp_granularity[, time_zone])","reject":true}
+{"sql":"SELECT DATE_TRUNC(DATE '2008-12-25', MONTH) AS month","shape":"SELECT DATE_TRUNC(DATE '2008-12-25', MONTH) AS month;"}
+{"sql":"SELECT date AS original, DATE_TRUNC(date, WEEK(MONDAY)) AS truncated\nFROM (SELECT DATE('2017-11-05') AS date)","shape":"SELECT date AS original, DATE_TRUNC(date, WEEK(MONDAY)) AS truncated FROM (SELECT DATE('2017-11-05') AS date);"}
+{"sql":"SELECT\n  DATE_TRUNC('2015-06-15', ISOYEAR) AS isoyear_boundary,\n  EXTRACT(ISOYEAR FROM DATE '2015-06-15') AS isoyear_number","shape":"SELECT DATE_TRUNC('2015-06-15', ISOYEAR) AS isoyear_boundary, EXTRACT(ISOYEAR FROM DATE '2015-06-15') AS isoyear_number;"}
+{"sql":"EXTRACT(part FROM date_expression)","reject":true}
+{"sql":"SELECT EXTRACT(DAY FROM DATE '2013-12-25') AS the_day","shape":"SELECT EXTRACT(DAY FROM DATE '2013-12-25') AS the_day;"}
+{"sql":"SELECT\n  date,\n  EXTRACT(ISOYEAR FROM date) AS isoyear,\n  EXTRACT(ISOWEEK FROM date) AS isoweek,\n  EXTRACT(YEAR FROM date) AS year,\n  EXTRACT(WEEK FROM date) AS week\nFROM UNNEST(GENERATE_DATE_ARRAY('2015-12-23', '2016-01-09')) AS date\nORDER BY date"}
+{"sql":"WITH table AS (SELECT DATE('2017-11-05') AS date)\nSELECT\n  date,\n  EXTRACT(WEEK(SUNDAY) FROM date) AS week_sunday,\n  EXTRACT(WEEK(MONDAY) FROM date) AS week_monday FROM table","shape":"WITH table AS (SELECT DATE('2017-11-05') AS date) SELECT date, EXTRACT(WEEK(SUNDAY) FROM date) AS week_sunday, EXTRACT(WEEK(MONDAY) FROM date) AS week_monday FROM table;"}
+{"sql":"FORMAT_DATE(format_string, date_expr)","reject":true}
+{"sql":"SELECT FORMAT_DATE('%x', DATE '2008-12-25') AS US_format","shape":"SELECT FORMAT_DATE('%x', DATE '2008-12-25') AS US_format;"}
+{"sql":"SELECT FORMAT_DATE('%b-%d-%Y', DATE '2008-12-25') AS formatted","shape":"SELECT FORMAT_DATE('%b-%d-%Y', DATE '2008-12-25') AS formatted;"}
+{"sql":"SELECT FORMAT_DATE('%b %Y', DATE '2008-12-25') AS formatted","shape":"SELECT FORMAT_DATE('%b %Y', DATE '2008-12-25') AS formatted;"}
+{"sql":"LAST_DAY(date_expression[, date_part])","reject":true}
+{"sql":"SELECT LAST_DAY(DATE '2008-11-25', MONTH) AS last_day","shape":"SELECT LAST_DAY(DATE '2008-11-25', MONTH) AS last_day;"}
+{"sql":"SELECT LAST_DAY(DATE '2008-11-25') AS last_day","shape":"SELECT LAST_DAY(DATE '2008-11-25') AS last_day;"}
+{"sql":"SELECT LAST_DAY(DATE '2008-11-25', YEAR) AS last_day","shape":"SELECT LAST_DAY(DATE '2008-11-25', YEAR) AS last_day;"}
+{"sql":"SELECT LAST_DAY(DATE '2008-11-10', WEEK(SUNDAY)) AS last_day","shape":"SELECT LAST_DAY(DATE '2008-11-10', WEEK(SUNDAY)) AS last_day;"}
+{"sql":"SELECT LAST_DAY(DATE '2008-11-10', WEEK(MONDAY)) AS last_day","shape":"SELECT LAST_DAY(DATE '2008-11-10', WEEK(MONDAY)) AS last_day;"}
+{"sql":"PARSE_DATE(format_string, date_string)","reject":true}
+{"sql":"SELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008')","shape":"SELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008');"}
+{"sql":"SELECT PARSE_DATE('%Y %A %b %e', 'Thursday Dec 25 2008')"}
+{"sql":"SELECT PARSE_DATE('%A %b %e', 'Thursday Dec 25 2008')"}
+{"sql":"SELECT PARSE_DATE('%F', '2000-12-30')","shape":"SELECT PARSE_DATE('%F', '2000-12-30');"}
+{"sql":"SELECT PARSE_DATE('%x', '12/25/08') AS parsed","shape":"SELECT PARSE_DATE('%x', '12/25/08') AS parsed;"}
+{"sql":"SELECT PARSE_DATE('%Y%m%d', '20081225') AS parsed","shape":"SELECT PARSE_DATE('%Y%m%d', '20081225') AS parsed;"}
+{"sql":"UNIX_DATE(date_expression)","reject":true}
+{"sql":"SELECT UNIX_DATE(DATE '2008-12-25') AS days_from_epoch","shape":"SELECT UNIX_DATE(DATE '2008-12-25') AS days_from_epoch;"}

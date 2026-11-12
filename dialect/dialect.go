@@ -87,6 +87,7 @@ type ExprFeatures struct {
 	Overlaps             bool // (a, b) OVERLAPS (c, d)
 	BetweenSymmetric     bool // BETWEEN [A]SYMMETRIC
 	IsUnknown            bool // IS [NOT] UNKNOWN keyword form
+	IsOtherPredicates    bool // IS [NOT] DOCUMENT, NORMALIZED, JSON (PostgreSQL)
 	NotNullPostfix       bool // a NOT NULL as a predicate (SQLite)
 	TypedStringLiteral   bool // DATE '2020-01-01', int4 '7'
 	LikeEscape           bool // LIKE pattern ESCAPE char
@@ -99,6 +100,12 @@ type ExprFeatures struct {
 	AtParams             bool // @name, @`name`, @ name and @@system_variable (BigQuery)
 	FreePostfix          bool // . and [ ] apply to any operand, not only names, parentheses and subqueries (BigQuery)
 	BracketArrays        bool // [1, 2] is an array without the word ARRAY (BigQuery)
+	AngleTypes           bool // ARRAY<T>, STRUCT<a T>, RANGE<T>, STRUCT(...) values, ARRAY<T>[...] (BigQuery)
+	Extract              bool // EXTRACT(part FROM x) without StandardFuncSyntax; WEEK(MONDAY), AT TIME ZONE (BigQuery)
+	SafeCast             bool // SAFE_CAST(x AS t) (BigQuery)
+	CastFormat           bool // CAST(x AS t FORMAT 'fmt' [AT TIME ZONE tz]) (BigQuery)
+	IntervalUnits        bool // INTERVAL expr unit, as in INTERVAL 5 DAY (BigQuery)
+	LikeQuantified       bool // LIKE ANY|SOME|ALL (pattern, ...) (BigQuery)
 	Int64Literals        bool // integer literals must fit INT64, -9223372036854775808 included (BigQuery)
 }
 
@@ -135,6 +142,7 @@ type QueryFeatures struct {
 	FreeJoinKeywords      bool // up to three join keywords in any order, ON after a comma (SQLite)
 	InTable               bool // x IN tbl, x IN f(args), x IN () (SQLite)
 	GroupingSets          bool // ROLLUP, CUBE, GROUPING SETS, GROUP BY ()
+	GroupByAll            bool // GROUP BY ALL, grouping by every non-aggregate output (BigQuery)
 	OrderByUsing          bool // ORDER BY x USING <
 	FetchFirst            bool // FETCH FIRST n ROWS ONLY
 	OffsetWithoutLimit    bool // OFFSET without LIMIT, LIMIT ALL

@@ -1,0 +1,6 @@
+{"sql":"SELECT AI.TRANSLATE('Hello, how are you?', 'fr')","shape":"SELECT AI.TRANSLATE('Hello, how are you?', 'fr');"}
+{"sql":"\"Bonjour, comment allez-vous ?\"","reject":true}
+{"sql":"SELECT AI.TRANSLATE(\n  'Hello, how are you?',\n  'fr',\n  source_language => 'en'\n)","shape":"SELECT AI.TRANSLATE('Hello, how are you?', 'fr', source_language => 'en');"}
+{"sql":"SELECT AI.TRANSLATE(\n  'Hello, how are you?',\n  'fr',\n  model => 'translation-llm'\n)","shape":"SELECT AI.TRANSLATE('Hello, how are you?', 'fr', model => 'translation-llm');"}
+{"sql":"\"Bonjour comment allez-vous ?\"","reject":true}
+{"sql":"SELECT AI.TRANSLATE(\n    'Hello, how are you?',\n    'fr',\n    return_details => TRUE\n  )","shape":"SELECT AI.TRANSLATE('Hello, how are you?', 'fr', return_details => TRUE);"}

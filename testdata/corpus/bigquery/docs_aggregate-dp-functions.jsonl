@@ -1,0 +1,11 @@
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=10, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    AVG(quantity, contribution_bounds_per_group => (0,100)) average_quantity\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=1e20, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    AVG(quantity) average_quantity\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=10, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    COUNT(*, contribution_bounds_per_group=>(0, 100)) times_requested\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=1e20, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    COUNT(*, contribution_bounds_per_group=>(0, 100)) times_requested\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=10, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    COUNT(item, contribution_bounds_per_group => (0,100)) times_requested\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=1e20, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    COUNT(item, contribution_bounds_per_group => (0,100)) times_requested\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=10, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    PERCENTILE_CONT(quantity, 0.5, contribution_bounds_per_row => (0,100)) percentile_requested\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=10, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    SUM(quantity, contribution_bounds_per_group => (0,100)) quantity\nFROM professors\nGROUP BY item"}
+{"sql":"SELECT\n  WITH DIFFERENTIAL_PRIVACY\n    OPTIONS(epsilon=1e20, delta=.01, max_groups_contributed=1, privacy_unit_column=id)\n    item,\n    SUM(quantity) quantity\nFROM professors\nGROUP BY item"}
+{"sql":"contribution_bounds_per_group => (lower_bound,upper_bound)","reject":true}
+{"sql":"contribution_bounds_per_row => (lower_bound,upper_bound)","reject":true}

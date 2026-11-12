@@ -1,0 +1,3 @@
+{"sql":"SELECT *\nFROM AI.GENERATE_EMBEDDING(MODEL mydataset.embedding_model, (SELECT 'Text to embed' AS content))"}
+{"sql":"AI.GENERATE_EMBEDDING(\n  MODEL `PROJECT_ID.DATASET.MODEL_NAME`,\n  STRUCT([TRIAL_ID AS trial_id])\n)","reject":true}
+{"sql":"A retryable error occurred: RESOURCE EXHAUSTED error from <remote endpoint>","reject":true}

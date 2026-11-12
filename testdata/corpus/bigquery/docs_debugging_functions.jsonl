@@ -1,0 +1,4 @@
+{"sql":"ERROR(error_message)","reject":true}
+{"sql":"SELECT ERROR('Show this error message')"}
+{"sql":"SELECT\n  CASE\n    WHEN value = 'foo' THEN 'Value is foo.'\n    WHEN value = 'bar' THEN 'Value is bar.'\n    ELSE ERROR(CONCAT('Found unexpected value: ', value))\n  END AS new_value\nFROM (\n  SELECT 'foo' AS value UNION ALL\n  SELECT 'bar' AS value UNION ALL\n  SELECT 'baz' AS value)"}
+{"sql":"SELECT *\nFROM (SELECT -1 AS x)\nWHERE IF(x > 0, true, ERROR(FORMAT('Error: x must be positive but is %t', x)))"}

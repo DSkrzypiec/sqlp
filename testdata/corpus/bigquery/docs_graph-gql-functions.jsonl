@@ -1,0 +1,31 @@
+{"sql":"DESTINATION_NODE_ID(edge_element)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (:Person)-[o:Owns]->(a:Account)\nRETURN a.id AS account_id, DESTINATION_NODE_ID(o) AS destination_node_id"}
+{"sql":"EDGES(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account)\nLET es = EDGES(p)\nRETURN TO_JSON(es) AS edges"}
+{"sql":"ELEMENT_ID(element)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(:Account)\nRETURN p.name AS name, ELEMENT_ID(p) AS node_element_id, ELEMENT_ID(o) AS edge_element_id"}
+{"sql":"IS_ACYCLIC(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account)\nRETURN src.id AS source_account_id, IS_ACYCLIC(p) AS is_acyclic_path"}
+{"sql":"IS_SIMPLE(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(a1:Account)-[t1:Transfers where t1.amount > 200]->\n        (a2:Account)-[t2:Transfers where t2.amount > 200]->\n        (a3:Account)-[t3:Transfers where t3.amount > 100]->(a4:Account)\nRETURN\n  IS_SIMPLE(p) AS is_simple_path,\n  a1.id as a1_id, a2.id as a2_id, a3.id as a3_id, a4.id as a4_id"}
+{"sql":"IS_TRAIL(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  p=(a1:Account)-[t1:Transfers]->(a2:Account)-[t2:Transfers]->\n    (a3:Account)-[t3:Transfers]->(a4:Account)\nWHERE a1.id < a4.id\nRETURN\n  IS_TRAIL(p) AS is_trail_path, t1.id as t1_id, t2.id as t2_id, t3.id as t3_id"}
+{"sql":"LABELS(element)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person|Account)\nRETURN LABELS(n) AS label, n.id"}
+{"sql":"NODES(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account)\nLET ns = NODES(p)\nRETURN\n  JSON_QUERY(TO_JSON(ns)[0], '$.labels') AS labels,\n  JSON_QUERY(TO_JSON(ns)[0], '$.properties.nick_name') AS nick_name"}
+{"sql":"PATH_FIRST(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account)\nLET f = PATH_FIRST(p)\nRETURN\n  LABELS(f) AS labels,\n  f.nick_name AS nick_name"}
+{"sql":"PATH_LAST(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account)\nLET f = PATH_LAST(p)\nRETURN\n  LABELS(f) AS labels,\n  f.nick_name AS nick_name"}
+{"sql":"PATH_LENGTH(graph_path)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH p=(src:Account)-[t1:Transfers]->(mid:Account)-[t2:Transfers]->(dst:Account)\nRETURN PATH_LENGTH(p) AS results"}
+{"sql":"SOURCE_NODE_ID(edge_element)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(:Account)\nRETURN p.name AS name, SOURCE_NODE_ID(o) AS source_node_id"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr = [1, 2, 3]\nLET total = SUM(arr)\nRETURN total"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr = [STRUCT(1 as x, 10 as y), STRUCT(2, 9), STRUCT(3, 8)]\nLET total = SUM(arr.x)\nRETURN total"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr = [STRUCT(1 as x, 10 as y), STRUCT(2, 9), STRUCT(3, 8)]\nLET avg_sum = AVG(arr.x + arr.y)\nRETURN avg_sum"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr = [STRUCT(1 as x, 9 as y), STRUCT(2, 9), STRUCT(4, 8)]\nLET result = ARRAY_AGG(arr.x + arr.y)\nRETURN result"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr1 = [1, 2, 3]\nLET arr2 = [5, 4, 3]\nLET avg_val = AVG(arr1 + arr2)\nRETURN avg_val"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr1 = [1, 2, 3]\nLET bad_avg_val = SUM(arr1 / ARRAY_LENGTH(arr1))\nRETURN bad_avg_val"}
+{"sql":"GRAPH graph_db.FinGraph\nLET arr1 = [1, 2, 3]\nLET len = ARRAY_LENGTH(arr1)\nLET avg_val = SUM(arr1 / len)\nRETURN avg_val"}

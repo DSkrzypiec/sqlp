@@ -1,0 +1,14 @@
+{"sql":"ZSTD_COMPRESS(string_or_bytes_value [, [ level => ] 3])","reject":true}
+{"sql":"SELECT ZSTD_COMPRESS('string_value') AS result","shape":"SELECT ZSTD_COMPRESS('string_value') AS result;"}
+{"sql":"SELECT ZSTD_COMPRESS(b'bytes_value', level => 1)","shape":"SELECT ZSTD_COMPRESS(b'bytes_value', level => 1);"}
+{"sql":"SELECT ZSTD_COMPRESS(NULL) AS result","shape":"SELECT ZSTD_COMPRESS(NULL) AS result;"}
+{"sql":"ZSTD_DECOMPRESS_TO_BYTES(bytes_value [, size_limit => 128 * 1024 * 1024])","reject":true}
+{"sql":"SELECT ZSTD_DECOMPRESS_TO_BYTES(ZSTD_COMPRESS(b'bytes')) AS result","shape":"SELECT ZSTD_DECOMPRESS_TO_BYTES(ZSTD_COMPRESS(b'bytes')) AS result;"}
+{"sql":"SELECT ZSTD_DECOMPRESS_TO_BYTES(ZSTD_COMPRESS(b'bytes'), size_limit => 1) AS result"}
+{"sql":"Statement failed: ZSTD output is too large: (5 bytes) > limit (1 bytes)","reject":true}
+{"sql":"SELECT ZSTD_DECOMPRESS_TO_BYTES(NULL) AS result","shape":"SELECT ZSTD_DECOMPRESS_TO_BYTES(NULL) AS result;"}
+{"sql":"ZSTD_DECOMPRESS_TO_STRING(bytes_value [, size_limit => 128 * 1024 * 1024])","reject":true}
+{"sql":"SELECT ZSTD_DECOMPRESS_TO_STRING(ZSTD_COMPRESS('zstd')) AS result","shape":"SELECT ZSTD_DECOMPRESS_TO_STRING(ZSTD_COMPRESS('zstd')) AS result;"}
+{"sql":"SELECT ZSTD_DECOMPRESS_TO_STRING(ZSTD_COMPRESS('zstd'), size_limit => 1) AS result"}
+{"sql":"Statement failed: ZSTD output is too large: (4 bytes) > limit (1 bytes)","reject":true}
+{"sql":"SELECT ZSTD_DECOMPRESS_TO_STRING(NULL) AS result","shape":"SELECT ZSTD_DECOMPRESS_TO_STRING(NULL) AS result;"}

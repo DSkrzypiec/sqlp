@@ -1,0 +1,10 @@
+{"sql":"FARM_FINGERPRINT(value)","reject":true}
+{"sql":"WITH example AS (\n  SELECT 1 AS x, \"foo\" AS y, true AS z UNION ALL\n  SELECT 2 AS x, \"apple\" AS y, false AS z UNION ALL\n  SELECT 3 AS x, \"\" AS y, true AS z\n)\nSELECT\n  *,\n  FARM_FINGERPRINT(CONCAT(CAST(x AS STRING), y, CAST(z AS STRING)))\n    AS row_fingerprint\nFROM example","shape":"WITH example AS ((SELECT 1 AS x, 'foo' AS y, TRUE AS z UNION ALL SELECT 2 AS x, 'apple' AS y, FALSE AS z) UNION ALL SELECT 3 AS x, '' AS y, TRUE AS z) SELECT *, FARM_FINGERPRINT(CONCAT(CAST(x AS STRING), y, CAST(z AS STRING))) AS row_fingerprint FROM example;"}
+{"sql":"MD5(input)","reject":true}
+{"sql":"SELECT MD5(\"Hello World\") as md5","shape":"SELECT MD5('Hello World') AS md5;"}
+{"sql":"SHA1(input)","reject":true}
+{"sql":"SELECT SHA1(\"Hello World\") as sha1","shape":"SELECT SHA1('Hello World') AS sha1;"}
+{"sql":"SHA256(input)","reject":true}
+{"sql":"SELECT SHA256(\"Hello World\") as sha256","shape":"SELECT SHA256('Hello World') AS sha256;"}
+{"sql":"SHA512(input)","reject":true}
+{"sql":"SELECT SHA512(\"Hello World\") as sha512","shape":"SELECT SHA512('Hello World') AS sha512;"}

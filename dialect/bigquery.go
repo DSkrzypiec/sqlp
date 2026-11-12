@@ -39,6 +39,8 @@ var BigQuery = &Dialect{
 		},
 	},
 	Reserved: bigQueryReserved,
+	// Reserved words that are also functions, checked with dry runs.
+	FuncNameKeywords: set("IF", "LEFT", "RIGHT", "GROUPING", "COLLATE", "RANGE"),
 	// Checked with dry runs: columns, aliases and CTEs match in any case,
 	// datasets and tables only in their own; unqualified names are in the
 	// request's default dataset, which the empty schema name stands for;
@@ -73,14 +75,15 @@ var BigQuery = &Dialect{
 	Features: Features{
 		Expr: ExprFeatures{
 			ArrayLiterals: true, TypedStringLiteral: true, AtParams: true, Int64Literals: true,
-			FreePostfix: true, BracketArrays: true,
+			FreePostfix: true, BracketArrays: true, AngleTypes: true, Extract: true, SafeCast: true,
+			CastFormat: true, IntervalUnits: true, LikeQuantified: true, IsUnknown: true, NamedArgs: true,
 		},
 		Names: NameFeatures{
 			QualifiedFunctions: true, MaxRelationParts: 3,
 		},
 		Query: QueryFeatures{
 			ParenQueries: true, SetQuantifierRequired: true, UnmixedSetOps: true, Qualify: true,
-			GroupingSets: true,
+			GroupingSets: true, GroupByAll: true,
 		},
 	},
 }

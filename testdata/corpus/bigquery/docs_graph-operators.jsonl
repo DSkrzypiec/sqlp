@@ -1,0 +1,6 @@
+{"sql":"GRAPH graph_db.FinGraph\nMATCH\n  (a1:Account)-[t1:Transfers]->(a2:Account)-[t2:Transfers]->\n  (a3:Account)-[t3:Transfers]->(a4:Account)\nWHERE a1.id < a4.id\nRETURN\n  ALL_DIFFERENT(t1, t2, t3) AS results"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[transfer:Transfers]-(b:Account)\nWHERE a IS DESTINATION of transfer\nRETURN a.id AS a_id, b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[transfer:Transfers]-(b:Account)\nWHERE b IS DESTINATION of transfer\nRETURN a.id AS a_id, b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[transfer:Transfers]-(b:Account)\nWHERE a IS SOURCE of transfer\nRETURN a.id AS a_id, b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (a:Account)-[transfer:Transfers]-(b:Account)\nWHERE b IS SOURCE of transfer\nRETURN a.id AS a_id, b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)<-[transfer:Transfers]-(dest:Account)\nWHERE NOT SAME(src, dest)\nRETURN src.id AS source_id, dest.id AS destination_id"}

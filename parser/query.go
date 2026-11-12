@@ -603,7 +603,11 @@ func (p *Parser) canBeBareAlias() bool {
 
 func (p *Parser) parseGroupBy() *ast.GroupBy {
 	g := &ast.GroupBy{}
-	if p.d.Features.Query.GroupingSets {
+	if p.d.Features.Query.GroupByAll && p.acceptKw("ALL") { // every non-aggregate output, no items
+		g.All = true
+		return g
+	}
+	if p.d.Features.Query.GroupingSets && !p.d.Features.Query.GroupByAll { // PostgreSQL's quantifier
 		switch {
 		case p.acceptKw("DISTINCT"):
 			g.Distinct = true

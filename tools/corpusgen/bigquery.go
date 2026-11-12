@@ -78,6 +78,7 @@ var bqRejects = messageTable(
 	`Struct constructors are not supported within group by keys`,
 	`(Starting|Ending) window framing expression cannot be `,
 	`Window framing expression must be a literal or parameter`,
+	`The INTERVAL keyword followed by an integer expression can only specify a single datetime field`,
 	`COLLATE is not supported`,
 	`Invalid (hex )?integer literal`,
 	`The LIKE ANY\|SOME\|ALL operator does not support subquery expression as patterns`,
@@ -85,7 +86,7 @@ var bqRejects = messageTable(
 	`Expected keyword `,
 	`Unexpected identifier `,
 	`Statement not supported: `,
-	`\w+ is not a supported object type`,
+	`\S+ is not a supported object type`,
 	`\S+ is not a supported nested object type`,
 	`CHECK (CONSTRAINT is|constraints are) not supported`,
 	`Enforcement of (foreign|primary) keys is not supported`,
@@ -115,6 +116,7 @@ var bqAccepts = messageTable(
 	// types
 	`Could not cast `,
 	`Invalid cast from `,
+	`Values referenced in FROM clause must be arrays`,
 	`Array elements of types .* do not have a common supertype`,
 	`Field name .* does not exist in `,
 	`Invalid [A-Z]+ literal`,
@@ -137,12 +139,39 @@ var bqAccepts = messageTable(
 	`Duplicate column names in the result are not supported`,
 	`Invalid field name `,
 	// what a function is, or which columns are grouped
-	`SELECT list expression references (column|table alias) .* which is neither grouped nor aggregated`,
+	`SELECT list expression references .* which is neither grouped nor aggregated`,
 	`The HAVING clause only allows aggregation if GROUP BY or SELECT list aggregation is present`,
 	`The QUALIFY clause requires analytic function`,
 	`Aggregate function .* does not support ORDER BY in arguments`,
 	`Aggregate function .* not allowed in `,
 	`TABLESAMPLE is not allowed with array scans`,
+	// recursive CTEs, whose rules depend on which CTE refers to which
+	`A query containing a recursive reference must not use `,
+	`A recursive reference from inside an expression subquery is not allowed`,
+	`A subquery containing a recursive reference must not contain `,
+	`Multiple recursive references to table `,
+	`Recursive query does not have the form `,
+	`Recursive reference is not allowed in non-recursive UNION term`,
+	`Table '.*' must not be recursively referenced from inside an inner recursive query`,
+	`Unsupported WITH entry dependency cycle`,
+	`Column '.*' is introduced by WITH`,
+	`Function \w+ has both having expression and group by list`,
+	// values: projects, connections, options, timestamps, lengths
+	`Invalid project ID `,
+	`Unknown project ID`,
+	`Connection name should conform to the pattern`,
+	`Error validating procedure body`,
+	`Invalid time travel timestamp`,
+	`Table '.*' is referenced with multiple snapshot read timestamps`,
+	`\S+ is not a valid option for `,
+	`STRING\(\d+\) has maximum length`,
+	`Field offset \d+ is out of bounds`,
+	`Operands of LIKE cannot be literal NULL`,
+	`Search query parser error`,
+	`Unsupported remote model endpoint`,
+	`Location specified in query .* is not consistent with current execution region`,
+	// the request: a temporary function needs a query after it in one script
+	`CREATE TEMPORARY FUNCTION statements must be followed by an actual query`,
 	// the sandbox project
 	`Use of CREATE TEMPORARY TABLE requires a script or session`,
 )
@@ -439,13 +468,17 @@ func (b *bigQuery) checkable(sql string) bool {
 	if !x.OK {
 		return false
 	}
-	return x.Type != "SELECT" || len(x.Tables) > 0 || b.run(sql).OK
+	return x.Type != "SELECT" || len(x.Tables) > 0 || bqVolatile.MatchString(sql) || b.run(sql).OK
 }
+
+// bqVolatile finds functions whose value changes from one run to the next;
+// such queries are compared by what they resolve to, not by their values.
+var bqVolatile = regexp.MustCompile(`(?i)\b(CURRENT_(DATE|DATETIME|TIME|TIMESTAMP)|RAND|GENERATE_UUID|NEW_KEYSET|SESSION_USER|AI\.\w+)\b`)
 
 // sameQuery checks a curated statement: by its values when it reads no table,
 // so execution is free, otherwise by what it resolves to.
 func (b *bigQuery) sameQuery(sql, shape string) bool {
-	if x := b.dry(sql); x.OK && x.Type == "SELECT" && len(x.Tables) == 0 {
+	if x := b.dry(sql); x.OK && x.Type == "SELECT" && len(x.Tables) == 0 && !bqVolatile.MatchString(sql) {
 		return b.sameValue(sql, shape)
 	}
 	return b.sameMeaning(sql, shape)
@@ -527,4 +560,54 @@ func (b *bigQuery) probe(path string) {
 			fmt.Printf("        [%s] %s\n", a.Reason, oneLine(a.Message))
 		}
 	}
+}
+
+const bqDocsRoot = "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/"
+
+// fetchDocs saves the SQL examples of every page of the BigQuery SQL
+// reference as dir/docs_<page>.html: only the code blocks, which
+// corpus.BigQueryDocStatements reads. Like the test suites of the other
+// engines, the pages are untrusted data and stay outside the repository.
+func fetchDocs(dir string) {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		log.Fatal(err)
+	}
+	client := &http.Client{Timeout: time.Minute}
+	get := func(url string) []byte {
+		req, _ := http.NewRequest("GET", url, nil)
+		req.Header.Set("User-Agent", "sqlp-corpusgen")
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			log.Fatalf("%s: %s", url, resp.Status)
+		}
+		data, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return data
+	}
+	link := regexp.MustCompile(`href="/bigquery/docs/reference/standard-sql/([a-z0-9_-]+)"`)
+	block := regexp.MustCompile(`(?s)<pre[^>]*syntax="GoogleSQL"[^>]*>.*?</pre>`)
+	seen := map[string]bool{}
+	pages := []string{"query-syntax"}
+	for _, m := range link.FindAllSubmatch(get(bqDocsRoot+"query-syntax"), -1) {
+		if p := string(m[1]); !seen[p] && p != "query-syntax" {
+			seen[p] = true
+			pages = append(pages, p)
+		}
+	}
+	blocks := 0
+	for _, p := range pages {
+		found := block.FindAll(get(bqDocsRoot+p), -1)
+		blocks += len(found)
+		if err := os.WriteFile(filepath.Join(dir, "docs_"+p+".html"), bytes.Join(found, []byte("\n")), 0o644); err != nil {
+			log.Fatal(err)
+		}
+		time.Sleep(300 * time.Millisecond)
+	}
+	fmt.Printf("bigquery docs: %d pages, %d code blocks, in %s\n", len(pages), blocks, dir)
 }

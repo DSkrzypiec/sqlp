@@ -1,0 +1,2 @@
+{"sql":"BIT_COUNT(expression)","reject":true}
+{"sql":"SELECT a, BIT_COUNT(a) AS a_bits, FORMAT(\"%T\", b) as b, BIT_COUNT(b) AS b_bits\nFROM UNNEST([\n  STRUCT(0 AS a, b'' AS b), (0, b'\\x00'), (5, b'\\x05'), (8, b'\\x00\\x08'),\n  (0xFFFF, b'\\xFF\\xFF'), (-2, b'\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFE'),\n  (-1, b'\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF'),\n  (NULL, b'\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF\\xFF')\n]) AS x"}

@@ -1,0 +1,20 @@
+{"sql":"named_argument => value","reject":true}
+{"sql":"CountTokensInText(paragraph STRING, tokens ARRAY<STRING>, delimiters STRING)","reject":true}
+{"sql":"SELECT token, count\nFROM CountTokensInText(\n  'Would you prefer softball, baseball, or tennis? There is also swimming.',\n  ['baseball', 'football', 'tennis'],\n  ' .,!?()')"}
+{"sql":"SELECT token, count\nFROM CountTokensInText(\n  paragraph => 'Would you prefer softball, baseball, or tennis? There is also swimming.',\n  tokens => ['baseball', 'football', 'tennis'],\n  delimiters => ' .,!?()')"}
+{"sql":"SELECT token, count\nFROM CountTokensInText(\n  tokens => ['baseball', 'football', 'tennis'],\n  delimiters => ' .,!?()',\n  paragraph => 'Would you prefer softball, baseball, or tennis? There is also swimming.')"}
+{"sql":"SELECT token, count\nFROM CountTokensInText(\n  'Would you prefer softball, baseball, or tennis? There is also swimming.',\n  tokens => ['baseball', 'football', 'tennis'],\n  delimiters => ' .,!?()')"}
+{"sql":"SELECT token, count\nFROM CountTokensInText(\n  paragraph => 'Would you prefer softball, baseball, or tennis? There is also swimming.',\n  ['baseball', 'football', 'tennis'],\n  delimiters => ' .,!?()')"}
+{"sql":"SELECT token, count\nFROM CountTokensInText(\n  ['baseball', 'football', 'tennis'],\n  delimiters => ' .,!?()',\n  paragraph => 'Would you prefer softball, baseball, or tennis? There is also swimming.')\n\n-- This works.\nSELECT token, count\nFROM CountTokensInText(\n  'Would you prefer softball, baseball, or tennis? There is also swimming.',\n  ['baseball', 'football', 'tennis'],\n  delimiters => ' .,!?()')","reject":true}
+{"sql":"SELECT\n  REPLACE(\n    REPLACE(\n      REPLACE(\n        REPLACE(\n          REPLACE('one two three four five', 'one', '1'),\n          'two', '2'),\n        'three', '3'),\n      'four', '4'),\n    'five', '5')","shape":"SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('one two three four five', 'one', '1'), 'two', '2'), 'three', '3'), 'four', '4'), 'five', '5');"}
+{"sql":"SELECT\n  ('one two three four five')\n  .REPLACE('one', '1')\n  .REPLACE('two', '2')\n  .REPLACE('three', '3')\n  .REPLACE('four', '4')\n  .REPLACE('five', '5')"}
+{"sql":"UPPER(x)\n(x).UPPER()  # Chained function call equivalent; the x must be within ()\n\nSUBSTR(x, 1, 4)\n(x).SUBSTR(1, 4)  # Chained function call equivalent\n\nSTRPOS(x, 'pattern string')\n(x).STRPOS('pattern string')  # Chained function call equivalent\n\nFUNC(x, y, named_argument=>z)  # Some function that meets the chained function call requirements\n(x).FUNC(y, named_argument=>z)  # Chained function call equivalent\n\nARRAY_CONCAT(array1, array2)\n(array1).ARRAY_CONCAT(array2)  # Chained function call equivalent\n\nSELECT SAFE.LEFT(x, count) AS result","reject":true}
+{"sql":"SELECT (x).(SAFE.LEFT)(count) AS result"}
+{"sql":"SELECT \"Two birds and one mouse\"\n  .REPLACE(\"bird\", \"dog\")\n  .REPLACE(\"mouse\", \"cat\") AS result"}
+{"sql":"FUNC(named_argument=>x).  # Some function\n(x).FUNC()  # Error: The first argument can't be a named argument.\n\nCAST(x AS INT64)\n(x).CAST(AS INT64)  # Error: CAST syntax isn't supported in chained function calls.\n\nGROUPING(x)\n(x).GROUPING()  # Error: The argument isn't an expression.","reject":true}
+{"sql":"SAFE.function_name()","reject":true}
+{"sql":"SELECT SAFE.SUBSTR('foo', 0, -2) AS safe_output UNION ALL\nSELECT SAFE.SUBSTR('bar', 0, 2) AS safe_output","shape":"SELECT SAFE.SUBSTR('foo', 0, -2) AS safe_output UNION ALL SELECT SAFE.SUBSTR('bar', 0, 2) AS safe_output;"}
+{"sql":"CREATE FUNCTION my_dataset.multiply_by_three(x INT64) AS (x * 3)"}
+{"sql":"SELECT my_dataset.multiply_by_three(5) AS result"}
+{"sql":"CREATE `other_project`.other_dataset.other_function(x INT64, y INT64)\n  AS (x * y * 2)","reject":true}
+{"sql":"SELECT `other_project`.other_dataset.other_function(3, 4)"}

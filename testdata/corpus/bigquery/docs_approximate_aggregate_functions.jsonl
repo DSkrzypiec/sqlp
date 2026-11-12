@@ -1,0 +1,14 @@
+{"sql":"SELECT APPROX_COUNT_DISTINCT(x) as approx_distinct\nFROM UNNEST([0, 1, 1, 2, 3, 5]) as x"}
+{"sql":"SELECT APPROX_QUANTILES(x, 2) AS approx_quantiles\nFROM UNNEST([1, 1, 1, 4, 5, 6, 7, 8, 9, 10]) AS x"}
+{"sql":"SELECT APPROX_QUANTILES(x, 100)[OFFSET(90)] AS percentile_90\nFROM UNNEST([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) AS x"}
+{"sql":"SELECT APPROX_QUANTILES(DISTINCT x, 2) AS approx_quantiles\nFROM UNNEST([1, 1, 1, 4, 5, 6, 7, 8, 9, 10]) AS x"}
+{"sql":"SELECT FORMAT(\"%T\", APPROX_QUANTILES(x, 2 RESPECT NULLS)) AS approx_quantiles\nFROM UNNEST([NULL, NULL, 1, 1, 1, 4, 5, 6, 7, 8, 9, 10]) AS x"}
+{"sql":"SELECT FORMAT(\"%T\", APPROX_QUANTILES(DISTINCT x, 2 RESPECT NULLS)) AS approx_quantiles\nFROM UNNEST([NULL, NULL, 1, 1, 1, 4, 5, 6, 7, 8, 9, 10]) AS x"}
+{"sql":"APPROX_TOP_COUNT(expression, number)","reject":true}
+{"sql":"SELECT APPROX_TOP_COUNT(x, 2) as approx_top_count\nFROM UNNEST([\"apple\", \"apple\", \"pear\", \"pear\", \"pear\", \"banana\"]) as x"}
+{"sql":"SELECT APPROX_TOP_COUNT(x, 2) as approx_top_count\nFROM UNNEST([NULL, \"pear\", \"pear\", \"pear\", \"apple\", NULL]) as x"}
+{"sql":"APPROX_TOP_SUM(expression, weight, number)","reject":true}
+{"sql":"SELECT APPROX_TOP_SUM(x, weight, 2) AS approx_top_sum FROM\nUNNEST([\n  STRUCT(\"apple\" AS x, 3 AS weight),\n  (\"pear\", 2),\n  (\"apple\", 0),\n  (\"banana\", 5),\n  (\"pear\", 4)\n])"}
+{"sql":"SELECT APPROX_TOP_SUM(x, weight, 2) AS approx_top_sum FROM\nUNNEST([STRUCT(\"apple\" AS x, NULL AS weight), (\"pear\", 0), (\"pear\", NULL)])"}
+{"sql":"SELECT APPROX_TOP_SUM(x, weight, 2) AS approx_top_sum FROM\nUNNEST([STRUCT(\"apple\" AS x, 0 AS weight), (NULL, 2)])"}
+{"sql":"SELECT APPROX_TOP_SUM(x, weight, 2) AS approx_top_sum FROM\nUNNEST([STRUCT(\"apple\" AS x, 0 AS weight), (NULL, NULL)])"}

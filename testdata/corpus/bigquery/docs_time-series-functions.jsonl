@@ -1,0 +1,38 @@
+{"sql":"APPENDS(\n  TABLE table,\n  start_timestamp DEFAULT NULL,\n  end_timestamp DEFAULT NULL)","reject":true}
+{"sql":"CREATE TABLE mydataset.Produce (product STRING, inventory INT64) AS (\n  SELECT 'apples' AS product, 10 AS inventory)"}
+{"sql":"INSERT INTO mydataset.Produce\nVALUES\n  ('bananas', 20),\n  ('carrots', 30)"}
+{"sql":"SELECT\n  product,\n  inventory,\n  _CHANGE_TYPE AS change_type,\n  _CHANGE_TIMESTAMP AS change_time\nFROM\n  APPENDS(TABLE mydataset.Produce, NULL, NULL)"}
+{"sql":"ALTER TABLE mydataset.Produce ADD COLUMN color STRING"}
+{"sql":"INSERT INTO mydataset.Produce VALUES ('grapes', 40, 'purple')"}
+{"sql":"UPDATE mydataset.Produce SET inventory = inventory + 5 WHERE TRUE"}
+{"sql":"DELETE mydataset.Produce WHERE product = 'bananas'"}
+{"sql":"SELECT * FROM mydataset.Produce"}
+{"sql":"SELECT\n  product,\n  inventory,\n  color,\n  _CHANGE_TYPE AS change_type,\n  _CHANGE_TIMESTAMP AS change_time\nFROM\n  APPENDS(TABLE mydataset.Produce, NULL, NULL)"}
+{"sql":"CHANGES(\n  TABLE table,\n  start_timestamp DEFAULT NULL,\n  end_timestamp)","reject":true}
+{"sql":"CREATE TABLE mydataset.Produce (\n  product STRING,\n  inventory INT64)\nOPTIONS(enable_change_history=true)"}
+{"sql":"DELETE mydataset.Produce\nWHERE product = 'bananas'"}
+{"sql":"UPDATE mydataset.Produce\nSET inventory = inventory - 10\nWHERE product = 'carrots'"}
+{"sql":"SELECT\n  product,\n  inventory,\n  _CHANGE_TYPE AS change_type,\n  _CHANGE_TIMESTAMP AS change_time,\n  _CHANGE_IS_FOR_UPDATE as change_is_for_update\nFROM\n  CHANGES(TABLE mydataset.Produce, NULL, NULL)\nORDER BY change_time, product"}
+{"sql":"ALTER TABLE `my_dataset.my_table`\nSET OPTIONS (enable_change_history = TRUE)"}
+{"sql":"DATE_BUCKET(date_in_bucket, bucket_width)","reject":true}
+{"sql":"DATE_BUCKET(date_in_bucket, bucket_width, bucket_origin_date)","reject":true}
+{"sql":"DATETIME_BUCKET(datetime_in_bucket, bucket_width)","reject":true}
+{"sql":"DATETIME_BUCKET(datetime_in_bucket, bucket_width, bucket_origin_datetime)","reject":true}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(1, DATETIME '2023-11-01 09:34:01', 74, 'INACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:36:00', 77, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:37:00', 78, 'ACTIVE'),\n    STRUCT(4, DATETIME '2023-11-01 09:38:01', 80, 'ACTIVE')\n])"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'locf')\n  ]\n)\nORDER BY time"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'linear')\n  ]\n)\nORDER BY time"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'null')\n  ]\n)\nORDER BY time"}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(1, DATETIME '2023-11-01 09:34:01', 74, 'INACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:36:00', 77, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:37:00', NULL, 'ACTIVE'),\n    STRUCT(4, DATETIME '2023-11-01 09:38:01', 80, 'ACTIVE')\n])"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'linear')\n  ],\n  ignore_null_values => FALSE\n)\nORDER BY time"}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(1, DATETIME '2023-11-01 09:34:01', 74, 'INACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:36:00', 77, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:37:00', 79, 'ACTIVE'),\n    STRUCT(4, DATETIME '2023-11-01 09:38:01', 80, 'ACTIVE')\n])"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE\n)\nORDER BY time"}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(1, DATETIME '2023-11-01 09:35:39', 74, 'INACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:37:39', 77, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:38:00', 77, 'ACTIVE'),\n    STRUCT(4, DATETIME '2023-11-01 09:40:00', 80, 'ACTIVE')\n])"}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(1, DATETIME '2023-11-01 09:35:39', 74, 'INACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:36:60', 77, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:37:00', 77, 'ACTIVE'),\n    STRUCT(4, DATETIME '2023-11-01 09:37:20', 80, 'ACTIVE')\n])"}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(2, DATETIME '2023-11-01 09:35:07', 87, 'ACTIVE'),\n    STRUCT(1, DATETIME '2023-11-01 09:35:26', 82, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:35:39', 74, 'INACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:36:07', 88, 'ACTIVE'),\n    STRUCT(1, DATETIME '2023-11-01 09:36:26', 82, 'ACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:37:07', 88, 'ACTIVE'),\n    STRUCT(1, DATETIME '2023-11-01 09:37:28', 80, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:37:39', 77, 'ACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:38:07', 86, 'ACTIVE'),\n    STRUCT(1, DATETIME '2023-11-01 09:38:26', 81, 'ACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:38:39', 77, 'ACTIVE')\n])"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  partitioning_columns => ['device_id'],\n  value_columns => [\n    ('signal', 'locf')\n  ]\n)\nORDER BY device_id"}
+{"sql":"CREATE TEMP TABLE device_data AS\nSELECT * FROM UNNEST(\n  ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n    STRUCT(1, DATETIME '2023-11-01 09:34:01', 74, 'ACTIVE'),\n    STRUCT(2, DATETIME '2023-11-01 09:36:00', 77, 'INACTIVE'),\n    STRUCT(3, DATETIME '2023-11-01 09:38:00', 78, 'ACTIVE'),\n    STRUCT(4, DATETIME '2023-11-01 09:39:01', 80, 'ACTIVE')\n])"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'linear'),\n    ('state', 'locf')\n  ]\n)\nORDER BY time"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  TABLE device_data,\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'null')\n  ],\n  origin => DATETIME '2023-11-01 09:30:01'\n)\nORDER BY time"}
+{"sql":"SELECT *\nFROM GAP_FILL(\n  (\n    SELECT * FROM UNNEST(\n    ARRAY<STRUCT<device_id INT64, time DATETIME, signal INT64, state STRING>>[\n      STRUCT(1, DATETIME '2023-11-01 09:34:01', 74, 'INACTIVE'),\n      STRUCT(2, DATETIME '2023-11-01 09:36:00', 77, 'ACTIVE'),\n      STRUCT(3, DATETIME '2023-11-01 09:37:00', 78, 'ACTIVE'),\n      STRUCT(4, DATETIME '2023-11-01 09:38:01', 80, 'ACTIVE')\n    ])\n  ),\n  ts_column => 'time',\n  bucket_width => INTERVAL 1 MINUTE,\n  value_columns => [\n    ('signal', 'linear')\n  ]\n)\nORDER BY time"}
+{"sql":"TIMESTAMP_BUCKET(timestamp_in_bucket, bucket_width)","reject":true}
+{"sql":"TIMESTAMP_BUCKET(timestamp_in_bucket, bucket_width, bucket_origin_timestamp)","reject":true}

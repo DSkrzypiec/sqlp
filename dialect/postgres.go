@@ -119,7 +119,7 @@ var Postgres = &Dialect{
 		Expr: ExprFeatures{
 			LikeEscape:      true,
 			DoubleColonCast: true, ArrayLiterals: true, RowConstructor: true, DefaultExpr: true,
-			Ilike: true, IsUnknown: true, BetweenSymmetric: true, Overlaps: true,
+			Ilike: true, IsUnknown: true, IsOtherPredicates: true, BetweenSymmetric: true, Overlaps: true,
 			DistinctFromNonAssoc: true, TypedStringLiteral: true, AtTimeZone: true, NamedArgs: true,
 			VariadicArgs: true, WithinGroup: true, StandardFuncSyntax: true,
 		},

@@ -222,7 +222,7 @@
 {"sql":"CREATE TABLE n (a TIMESTAMP WITH TIME ZONE, b TIME WITH TIME ZONE, c TIMESTAMP(3) WITHOUT TIME ZONE)","reject":true}
 {"sql":"SELECT a AT TIME ZONE 'UTC' FROM t","reject":true}
 {"sql":"SELECT a AT LOCAL FROM t","reject":true}
-{"sql":"SELECT CURRENT_TIME, CURRENT_TIMESTAMP"}
+{"sql":"SELECT CURRENT_TIME, CURRENT_TIMESTAMP","shape":"SELECT CURRENT_TIME, CURRENT_TIMESTAMP;"}
 {"sql":"CREATE TABLE n (a NATIONAL CHARACTER(5), b NCHAR(5), c NATIONAL CHARACTER VARYING(5))","reject":true}
 {"sql":"SELECT N'x'","reject":true}
 {"sql":"DECLARE c SCROLL CURSOR FOR SELECT a FROM t","reject":true}
@@ -246,8 +246,8 @@
 {"sql":"SELECT a FROM t WHERE a IN (b + 1, c * 2)","shape":"SELECT a FROM t WHERE a IN (b + 1, c * 2);"}
 {"sql":"SELECT a FROM t WHERE (a = 1) IS TRUE","shape":"SELECT a FROM t WHERE (a = 1) IS TRUE;"}
 {"sql":"SELECT a FROM t WHERE (a = 1) IS NOT FALSE","shape":"SELECT a FROM t WHERE (a = 1) IS NOT FALSE;"}
-{"sql":"SELECT a FROM t WHERE (a = 1) IS UNKNOWN"}
-{"sql":"SELECT a FROM t WHERE (a = 1) IS NOT UNKNOWN"}
+{"sql":"SELECT a FROM t WHERE (a = 1) IS UNKNOWN","shape":"SELECT a FROM t WHERE (a = 1) IS UNKNOWN;"}
+{"sql":"SELECT a FROM t WHERE (a = 1) IS NOT UNKNOWN","shape":"SELECT a FROM t WHERE (a = 1) IS NOT UNKNOWN;"}
 {"sql":"SELECT x.a FROM (SELECT a FROM t) AS x","shape":"SELECT x.a FROM (SELECT a FROM t) AS x;"}
 {"sql":"VALUES (1, 2), (3, 4)","reject":true}
 {"sql":"SELECT a FROM t WHERE (a, b) = (1, 2)","shape":"SELECT a FROM t WHERE (a, b) = (1, 2);"}

@@ -1,0 +1,2 @@
+{"sql":"EXTERNAL_OBJECT_TRANSFORM(TABLE object_table_name, transform_types_array)","reject":true}
+{"sql":"SELECT uri, signed_url\nFROM EXTERNAL_OBJECT_TRANSFORM(TABLE mydataset.myobjecttable, ['SIGNED_URL'])"}

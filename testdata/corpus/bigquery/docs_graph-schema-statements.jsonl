@@ -1,0 +1,25 @@
+{"sql":"NODE TABLES (\n  Account,\n  Customer\n    LABEL Client\n    PROPERTIES (cid, name),\n  Location AS GeoLocation\n    DEFAULT LABEL\n    PROPERTIES ALL COLUMNS\n)","reject":true}
+{"sql":"EDGE TABLES (\n  Own\n    SOURCE KEY (cid) REFERENCES Customer (cid)\n    DESTINATION KEY (aid) REFERENCES Account\n    NO PROPERTIES,\n  Transfer\n    SOURCE KEY (from_id) REFERENCES Account (aid)\n    DESTINATION KEY (to_id) REFERENCES Account (aid)\n    LABEL Transfer NO PROPERTIES\n)","reject":true}
+{"sql":"Customer\n  LABEL Client\n    PROPERTIES (cid, name)","reject":true}
+{"sql":"KEY (item1_column, item2_column)","reject":true}
+{"sql":"KEY (item1_column, item2_column)\nSOURCE KEY (item1_column) REFERENCES item_node (item_node_column)\nDESTINATION KEY (item2_column) REFERENCES item_node (item_node_column)","reject":true}
+{"sql":"SOURCE KEY (item1_column) REFERENCES item_node (item_node_column)","reject":true}
+{"sql":"DESTINATION KEY (item2_column) REFERENCES item_node (item_node_column)","reject":true}
+{"sql":"LABEL Tourist PROPERTIES (home_city, home_country)","reject":true}
+{"sql":"DEFAULT LABEL PROPERTIES ARE ALL COLUMNS","reject":true}
+{"sql":"PROPERTIES ARE ALL COLUMNS","reject":true}
+{"sql":"PROPERTIES ALL COLUMNS","reject":true}
+{"sql":"PROPERTIES ARE ALL COLUMNS EXCEPT (home_city, home_country)","reject":true}
+{"sql":"PROPERTIES (id, name, salary + bonus AS income)","reject":true}
+{"sql":"CREATE SCHEMA IF NOT EXISTS graph_db"}
+{"sql":"CREATE OR REPLACE TABLE graph_db.Person (\n  id               INT64,\n  name             STRING,\n  birthday         TIMESTAMP,\n  country          STRING,\n  city             STRING,\n  PRIMARY KEY (id) NOT ENFORCED\n)"}
+{"sql":"CREATE OR REPLACE TABLE graph_db.Account (\n  id               INT64,\n  create_time      TIMESTAMP,\n  is_blocked       BOOL,\n  nick_name        STRING,\n  PRIMARY KEY (id) NOT ENFORCED\n)"}
+{"sql":"CREATE OR REPLACE TABLE graph_db.PersonOwnAccount (\n  id               INT64 NOT NULL,\n  account_id       INT64 NOT NULL,\n  create_time      TIMESTAMP,\n  PRIMARY KEY (id, account_id) NOT ENFORCED,\n  FOREIGN KEY (id) REFERENCES graph_db.Person(id) NOT ENFORCED,\n  FOREIGN KEY (account_id) REFERENCES graph_db.Account(id) NOT ENFORCED\n)"}
+{"sql":"CREATE OR REPLACE TABLE graph_db.AccountTransferAccount (\n  id               INT64 NOT NULL,\n  to_id            INT64 NOT NULL,\n  amount           FLOAT64,\n  create_time      TIMESTAMP NOT NULL,\n  order_number     STRING,\n  PRIMARY KEY (id, to_id, create_time) NOT ENFORCED,\n  FOREIGN KEY (id) REFERENCES graph_db.Account(id) NOT ENFORCED,\n  FOREIGN KEY (to_id) REFERENCES graph_db.Account(id) NOT ENFORCED\n)"}
+{"sql":"INSERT INTO graph_db.Account\n  (id, create_time, is_blocked, nick_name)\nVALUES\n  (7,\"2020-01-10 06:22:20.222\",false,\"Vacation Fund\"),\n  (16,\"2020-01-27 17:55:09.206\",true,\"Vacation Fund\"),\n  (20,\"2020-02-18 05:44:20.655\",false,\"Rainy Day Fund\")"}
+{"sql":"INSERT INTO graph_db.Person\n  (id, name, birthday, country, city)\nVALUES\n  (1,\"Alex\",\"1991-12-21 00:00:00\",\"Australia\",\"Adelaide\"),\n  (2,\"Dana\",\"1980-10-31 00:00:00\",\"Czech_Republic\",\"Moravia\"),\n  (3,\"Lee\",\"1986-12-07 00:00:00\",\"India\",\"Kollam\")"}
+{"sql":"INSERT INTO graph_db.AccountTransferAccount\n  (id, to_id, amount, create_time, order_number)\nVALUES\n  (7,16,300,\"2020-08-29 15:28:58.647\",\"304330008004315\"),\n  (7,16,100,\"2020-10-04 16:55:05.342\",\"304120005529714\"),\n  (16,20,300,\"2020-09-25 02:36:14.926\",\"103650009791820\"),\n  (20,7,500,\"2020-10-04 16:55:05.342\",\"304120005529714\"),\n  (20,16,200,\"2020-10-17 03:59:40.247\",\"302290001255747\")"}
+{"sql":"INSERT INTO graph_db.PersonOwnAccount\n  (id, account_id, create_time)\nVALUES\n  (1,7,\"2020-01-10 06:22:20.222\"),\n  (2,20,\"2020-01-27 17:55:09.206\"),\n  (3,16,\"2020-02-18 05:44:20.655\")"}
+{"sql":"CREATE OR REPLACE PROPERTY GRAPH graph_db.FinGraph\n  NODE TABLES (\n    graph_db.Account,\n    graph_db.Person\n  )\n  EDGE TABLES (\n    graph_db.PersonOwnAccount\n      SOURCE KEY (id) REFERENCES Person (id)\n      DESTINATION KEY (account_id) REFERENCES Account (id)\n      LABEL Owns,\n    graph_db.AccountTransferAccount\n      SOURCE KEY (id) REFERENCES Account (id)\n      DESTINATION KEY (to_id) REFERENCES Account (id)\n      LABEL Transfers\n  )"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name"}
+{"sql":"DROP PROPERTY GRAPH graph_db.FinGraph"}

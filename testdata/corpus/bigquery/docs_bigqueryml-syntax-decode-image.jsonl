@@ -1,0 +1,7 @@
+{"sql":"SELECT * FROM\nML.PREDICT(\n  MODEL `my_dataset.vision_model`,\n  (SELECT uri, ML.RESIZE_IMAGE(ML.DECODE_IMAGE(data), 480, 480, FALSE) AS input\n  FROM `my_dataset.object_table`)\n)"}
+{"sql":"SELECT * FROM\n  ML.PREDICT(\n    MODEL `my_dataset.vision_model`,\n    (SELECT uri, ML.CONVERT_COLOR_SPACE(ML.RESIZE_IMAGE(ML.DECODE_IMAGE(data), 224, 280, TRUE), 'YIQ') AS input\n    FROM `my_dataset.object_table`\n    WHERE content_type = 'image/jpeg')\n  )"}
+{"sql":"CREATE OR REPLACE TABLE `my_dataset.decoded_images`\n  AS (SELECT ML.DECODE_IMAGE(data) AS decoded_image\n  FROM `my_dataset.object_table`)"}
+{"sql":"SELECT * FROM\nML.PREDICT(\n  MODEL`my_dataset.vision_model`,\n  (SELECT uri, ML.CONVERT_IMAGE_TYPE(ML.RESIZE_IMAGE(decoded_image, 480, 480, FALSE)) AS input\n  FROM `my_dataset.decoded_images`)\n)"}
+{"sql":"CREATE OR REPLACE TABLE `my_dataset.decoded_images`\n  AS (SELECT ML.RESIZE_IMAGE(ML.DECODE_IMAGE(data) 480, 480, FALSE) AS decoded_image\n  FROM `my_dataset.object_table`)","reject":true}
+{"sql":"SELECT * FROM\nML.PREDICT(\n  MODEL `my_dataset.vision_model`,\n  (SELECT uri, decoded_image AS input\n  FROM `my_dataset.decoded_images`)\n)"}
+{"sql":"SELECT * FROM\n  ML.PREDICT(\n    MODEL `my_dataset.mixed_model`,\n    (SELECT uri, ML.RESIZE_IMAGE(ML.DECODE_IMAGE(my_dataset.my_object_table.data), 224, 224, FALSE) AS f_img,\n      my_dataset.image_description.description AS f_txt\n    FROM `my_dataset.object_table`\n    JOIN `my_dataset.image_description`\n    ON object_table.uri = image_description.uri)\n  )"}

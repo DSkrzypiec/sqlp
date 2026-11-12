@@ -112,7 +112,7 @@
 {"sql":"SELECT 1 AS `\\u0000`"}
 {"sql":"SELECT 'a' LIKE 'a' ESCAPE '#'","reject":true}
 {"sql":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', DATETIME '2020-01-01 00:00:00', TIME '12:00:00'","shape":"SELECT NUMERIC '1.5', BIGNUMERIC '2', JSON '{}', DATETIME '2020-01-01 00:00:00', TIME '12:00:00';"}
-{"sql":"SELECT RANGE<DATE> '[2020-01-01, 2021-01-01)'"}
+{"sql":"SELECT RANGE<DATE> '[2020-01-01, 2021-01-01)'","shape":"SELECT RANGE<DATE> '[2020-01-01, 2021-01-01)';"}
 {"sql":"SELECT INT64 '1'","reject":true}
 {"sql":"SELECT STRING 'a'","reject":true}
 {"sql":"SELECT BOOL 'true'","reject":true}

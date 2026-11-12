@@ -1,0 +1,2 @@
+{"sql":"SELECT *\nFROM\nML.GENERATE_EMBEDDING(\n  MODEL `mydataset.embedding_model`,\n  (SELECT abstract as content, header as title, publication_number\n  FROM `mydataset.publications`),\n  STRUCT(TRUE AS flatten_json_output, 'RETRIEVAL_DOCUMENT' as task_type)\n)"}
+{"sql":"ML.GENERATE_EMBEDDING(\n  MODEL `PROJECT_ID.DATASET.MODEL_NAME`,\n  STRUCT([TRIAL_ID AS trial_id])\n)","reject":true}

@@ -389,6 +389,13 @@ func (p *Parser) parseNegatable(left ast.Expr, op string, prec int, not bool) as
 
 // tryQuantifiedLike parses LIKE ANY (...) and friends.
 func (p *Parser) tryQuantifiedLike() *ast.Quantified {
+	if p.d.Features.Expr.LikeQuantified && p.isKw("ANY", "SOME", "ALL") && p.isOpAt(1, "(") {
+		q := &ast.Quantified{Kind: p.next().Value}
+		p.expectOp("(")
+		q.List = p.parseExprList()
+		p.expectOp(")")
+		return q
+	}
 	if !p.d.Lexer.CustomOperators {
 		return nil
 	}
@@ -409,7 +416,7 @@ func (p *Parser) parseIs(left ast.Expr, prec int) ast.Expr {
 		is.Kind = ast.IsFalse
 	case p.d.Features.Expr.IsUnknown && p.acceptKw("UNKNOWN"):
 		is.Kind = ast.IsUnknown
-	case p.d.Features.Expr.IsUnknown && p.parseIsOther(is):
+	case p.d.Features.Expr.IsOtherPredicates && p.parseIsOther(is):
 	case p.acceptKwSeq("DISTINCT", "FROM"):
 		is.Kind = ast.IsDistinctFrom
 		is.Other = p.parseExprPrec(prec)
@@ -663,8 +670,13 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			return &ast.Exists{Query: q}
 		}
 	case "ARRAY":
-		if p.d.Features.Expr.ArrayLiterals && (p.isOpAt(1, "[") || p.isOpAt(1, "(")) {
+		if p.d.Features.Expr.ArrayLiterals && (p.isOpAt(1, "[") || p.isOpAt(1, "(") ||
+			p.d.Features.Expr.AngleTypes && p.isOpAt(1, "<")) {
 			return p.parseArray()
+		}
+	case "STRUCT":
+		if p.d.Features.Expr.AngleTypes && (p.isOpAt(1, "(") || p.isOpAt(1, "<") || p.isOpAt(1, "<>")) {
+			return p.parseStruct()
 		}
 	case "ROW":
 		if p.d.Features.Expr.RowConstructor && p.isOpAt(1, "(") {
@@ -677,8 +689,22 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			p.expectOp(")")
 			return p.finishRow(tup)
 		}
+	case "INTERVAL":
+		if p.d.Features.Expr.IntervalUnits && p.peekN(1).Kind != lexer.String {
+			p.next()
+			iv := &ast.Interval{Value: p.parseExpr()}
+			if t := p.peek(); t.Kind != lexer.Ident || p.d.IsReserved(t.Value) {
+				p.unexpected("date or time part")
+			}
+			iv.Unit = p.next().Value
+			return iv
+		}
+	case "SAFE_CAST":
+		if p.d.Features.Expr.SafeCast && p.isOpAt(1, "(") {
+			return p.parseCast()
+		}
 	case "EXTRACT":
-		if p.d.Features.Expr.StandardFuncSyntax && p.isOpAt(1, "(") {
+		if (p.d.Features.Expr.StandardFuncSyntax || p.d.Features.Expr.Extract) && p.isOpAt(1, "(") {
 			p.next()
 			p.expectOp("(")
 			e := &ast.Extract{}
@@ -693,8 +719,16 @@ func (p *Parser) parseWordExpr() ast.Expr {
 			default:
 				p.unexpected("field name")
 			}
+			if p.d.Features.Expr.Extract && p.acceptOp("(") { // WEEK(MONDAY)
+				arg := p.parseAnyIdent()
+				e.FieldArg = &arg
+				p.expectOp(")")
+			}
 			p.expectKw("FROM")
 			e.Expr = p.parseExpr()
+			if p.d.Features.Expr.Extract && p.acceptKwSeq("AT", "TIME", "ZONE") {
+				e.TimeZone = p.parseExpr()
+			}
 			p.expectOp(")")
 			return e
 		}
@@ -821,7 +855,8 @@ func (p *Parser) tryTypedString() ast.Expr {
 		return ts
 	}
 	if !p.isKw("TIMESTAMP", "TIME", "INTERVAL", "DOUBLE", "CHARACTER", "CHAR", "VARCHAR",
-		"NUMERIC", "DECIMAL", "DEC", "BIT", "NATIONAL", "NCHAR", "FLOAT") {
+		"NUMERIC", "DECIMAL", "DEC", "BIT", "NATIONAL", "NCHAR", "FLOAT") &&
+		!(p.d.Features.Expr.AngleTypes && p.isKw("RANGE") && p.isOpAt(1, "<")) {
 		return nil
 	}
 	var ts *ast.TypedString
@@ -1084,8 +1119,11 @@ func (p *Parser) parseCase() ast.Expr {
 
 func (p *Parser) parseCast() ast.Expr {
 	style := ast.CastStandard
-	if p.next().Value == "TRY_CAST" {
+	switch p.next().Value {
+	case "TRY_CAST":
 		style = ast.CastTry
+	case "SAFE_CAST":
+		style = ast.CastSafe
 	}
 	p.expectOp("(")
 	e := p.parseExpr()
@@ -1096,6 +1134,12 @@ func (p *Parser) parseCast() ast.Expr {
 	} else {
 		c.Type = p.parseType()
 	}
+	if p.d.Features.Expr.CastFormat && p.acceptKw("FORMAT") {
+		c.Format = p.parseExpr()
+		if p.acceptKwSeq("AT", "TIME", "ZONE") {
+			c.TimeZone = p.parseExpr()
+		}
+	}
 	p.expectOp(")")
 	return c
 }
@@ -1103,6 +1147,12 @@ func (p *Parser) parseCast() ast.Expr {
 func (p *Parser) parseArray() ast.Expr {
 	p.expectKw("ARRAY")
 	arr := &ast.Array{}
+	if p.d.Features.Expr.AngleTypes && p.acceptOp("<") {
+		arr.Of = p.parseType()
+		p.expectCloseAngle()
+		p.parseArrayBody(arr)
+		return arr
+	}
 	if p.acceptOp("(") {
 		arr.Subquery = p.parseQuery()
 		p.expectOp(")")
@@ -1110,6 +1160,29 @@ func (p *Parser) parseArray() ast.Expr {
 	}
 	p.parseArrayBody(arr)
 	return arr
+}
+
+// parseStruct parses STRUCT(1 AS a, 'x') or STRUCT<a INT64, b STRING>(1, 'x').
+func (p *Parser) parseStruct() ast.Expr {
+	p.expectKw("STRUCT")
+	s := &ast.Struct{}
+	if p.isOp("<") || p.isOp("<>") {
+		s.Type = p.parseAngleType("STRUCT")
+	}
+	p.expectOp("(")
+	for !p.isOp(")") {
+		v := &ast.StructValue{Expr: p.parseExpr()}
+		if p.acceptKw("AS") {
+			name := p.parseAnyIdent()
+			v.As = &name
+		}
+		s.Fields = append(s.Fields, v)
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.expectOp(")")
+	return s
 }
 
 // parseArrayBody parses [a, b] or [[a, b], [c, d]].
@@ -1208,6 +1281,9 @@ func (p *Parser) parseType() *ast.DataType {
 	t := p.peek()
 	dt := &ast.DataType{}
 	switch {
+	case p.d.Features.Expr.AngleTypes && t.Kind == lexer.Ident && angleTypes[t.Value] && (p.isOpAt(1, "<") || p.isOpAt(1, "<>")):
+		p.next()
+		return p.parseAngleType(t.Value)
 	case p.d.Features.Expr.FreeFormTypeNames && (t.Kind == lexer.QuotedIdent || t.Kind == lexer.String):
 		p.next()
 		dt.Name = p.parseTypeWords(t)
@@ -1247,6 +1323,50 @@ func (p *Parser) parseType() *ast.DataType {
 	}
 	p.parseArrayBounds(dt)
 	return dt
+}
+
+// angleTypes are the types that take angle brackets (BigQuery).
+var angleTypes = map[string]bool{"ARRAY": true, "STRUCT": true, "RANGE": true}
+
+// parseAngleType parses the <...> after ARRAY, STRUCT or RANGE, which is
+// consumed. A STRUCT field has a name when two words start it.
+func (p *Parser) parseAngleType(word string) *ast.DataType {
+	dt := &ast.DataType{Name: word, Angle: true}
+	if word == "STRUCT" && p.acceptOp("<>") { // STRUCT<>, lexed as not-equal
+		return dt
+	}
+	p.expectOp("<")
+	if word != "STRUCT" {
+		dt.Of = p.parseType()
+		p.expectCloseAngle()
+		return dt
+	}
+	for !p.isCloseAngle() {
+		f := &ast.StructField{}
+		if word := func(k lexer.Kind) bool { return k == lexer.Ident || k == lexer.QuotedIdent }; word(p.peek().Kind) && word(p.peekN(1).Kind) {
+			f.Name = p.parseAnyIdent()
+		}
+		f.Type = p.parseType()
+		dt.Struct = append(dt.Struct, f)
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	p.expectCloseAngle()
+	return dt
+}
+
+// isCloseAngle reports whether a > comes next, alone or as the first half of
+// >> (ARRAY<STRUCT<a INT64>>).
+func (p *Parser) isCloseAngle() bool { return p.isOp(">") || p.isOp(">>") }
+
+func (p *Parser) expectCloseAngle() {
+	if p.isOp(">>") { // leave the second > for the enclosing type
+		t := &p.toks[p.pos]
+		t.Text, t.Value, t.Pos = ">", ">", t.Pos+1
+		return
+	}
+	p.expectOp(">")
 }
 
 // integerOnlyTypes take a single integer argument in gram.y; other types take

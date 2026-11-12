@@ -1,0 +1,3 @@
+{"sql":"SELECT\n  AI.COUNT_TOKENS(\"Token count isn't always equal to word count.\").result AS num_tokens","shape":"SELECT AI.COUNT_TOKENS('Token count isn\\'t always equal to word count.').result AS num_tokens;"}
+{"sql":"AI.COUNT_TOKENS(\n  INPUT,\n  [, endpoint => ENDPOINT ]\n)","reject":true}
+{"sql":"SELECT\n  review,\n  AI.COUNT_TOKENS(review).*\nFROM\n  `bigquery-public-data.imdb.reviews`\nLIMIT 2","shape":"SELECT review, AI.COUNT_TOKENS(review).* FROM `bigquery-public-data.imdb.reviews` LIMIT 2;"}

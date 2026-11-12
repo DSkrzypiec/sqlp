@@ -1,0 +1,11 @@
+{"sql":"WITH\n  Players AS (\n    SELECT 'gorbie' AS username, 29 AS level, 'red' AS team UNION ALL\n    SELECT 'junelyn', 2 , 'blue' UNION ALL\n    SELECT 'corba', 43, 'green'),\n  NPCs AS (\n    SELECT 'niles' AS username, 'red' AS team UNION ALL\n    SELECT 'jujul', 'red' UNION ALL\n    SELECT 'effren', 'blue'),\n  Mascots AS (\n    SELECT 'cardinal' AS mascot , 'red' AS team UNION ALL\n    SELECT 'parrot', 'green' UNION ALL\n    SELECT 'finch', 'blue' UNION ALL\n    SELECT 'sparrow', 'yellow')\nSELECT * FROM (\n  SELECT username, team FROM Players UNION ALL\n  SELECT username, team FROM NPCs)","shape":"WITH Players AS ((SELECT 'gorbie' AS username, 29 AS level, 'red' AS team UNION ALL SELECT 'junelyn', 2, 'blue') UNION ALL SELECT 'corba', 43, 'green'), NPCs AS ((SELECT 'niles' AS username, 'red' AS team UNION ALL SELECT 'jujul', 'red') UNION ALL SELECT 'effren', 'blue'), Mascots AS (((SELECT 'cardinal' AS mascot, 'red' AS team UNION ALL SELECT 'parrot', 'green') UNION ALL SELECT 'finch', 'blue') UNION ALL SELECT 'sparrow', 'yellow') SELECT * FROM (SELECT username, team FROM Players UNION ALL SELECT username, team FROM NPCs);"}
+{"sql":"SELECT\n  username,\n  (SELECT mascot FROM Mascots WHERE Players.team = Mascots.team) AS player_mascot\nFROM\n  Players"}
+{"sql":"SELECT\n  username,\n  level,\n  (SELECT AVG(level) FROM Players) AS avg_level\nFROM\n  Players"}
+{"sql":"SELECT\n  ARRAY(SELECT username FROM NPCs WHERE team = 'red') AS red"}
+{"sql":"SELECT\n  'corba' IN (SELECT username FROM Players) AS result"}
+{"sql":"SELECT\n  EXISTS(SELECT username FROM Players WHERE team = 'yellow') AS result"}
+{"sql":"SELECT results.username\nFROM (SELECT * FROM Players) AS results"}
+{"sql":"SELECT\n  username\nFROM (\n  WITH red_team AS (SELECT * FROM NPCs WHERE team = 'red')\n  SELECT * FROM red_team\n)"}
+{"sql":"SELECT mascot\nFROM Mascots\nWHERE\n  NOT EXISTS(SELECT username FROM Players WHERE Mascots.team = Players.team)"}
+{"sql":"SELECT\n  username,\n  (SELECT mascot FROM Mascots WHERE Players.team = Mascots.team) AS player_mascot\nFROM Players"}
+{"sql":"SELECT\n  results.username\nFROM\n  (SELECT * FROM Players WHERE RAND() < 0.5) AS results"}

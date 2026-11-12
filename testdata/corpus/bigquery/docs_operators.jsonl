@@ -1,0 +1,83 @@
+{"sql":"SELECT\n  STRUCT(\n    STRUCT('Yonge Street' AS street, 'Canada' AS country)\n      AS address).address.country","shape":"SELECT STRUCT(STRUCT('Yonge Street' AS street, 'Canada' AS country) AS address).address.country;"}
+{"sql":"SELECT\n  [\"coffee\", \"tea\", \"milk\"] AS item_array,\n  [\"coffee\", \"tea\", \"milk\"][0] AS item_index,\n  [\"coffee\", \"tea\", \"milk\"][OFFSET(0)] AS item_offset,\n  [\"coffee\", \"tea\", \"milk\"][ORDINAL(1)] AS item_ordinal,\n  [\"coffee\", \"tea\", \"milk\"][SAFE_OFFSET(6)] AS item_safe_offset","shape":"SELECT ARRAY['coffee', 'tea', 'milk'] AS item_array, ARRAY['coffee', 'tea', 'milk'][0] AS item_index, ARRAY['coffee', 'tea', 'milk'][OFFSET(0)] AS item_offset, ARRAY['coffee', 'tea', 'milk'][ORDINAL(1)] AS item_ordinal, ARRAY['coffee', 'tea', 'milk'][SAFE_OFFSET(6)] AS item_safe_offset;"}
+{"sql":"SELECT [\"coffee\", \"tea\", \"milk\"][6] AS item_offset"}
+{"sql":"SELECT [\"coffee\", \"tea\", \"milk\"][OFFSET(6)] AS item_offset"}
+{"sql":"SELECT\n  STRUCT<INT64, STRING, BOOL>(23, \"tea\", FALSE)[0] AS field_index,\n  STRUCT<INT64, STRING, BOOL>(23, \"tea\", FALSE)[OFFSET(0)] AS field_offset,\n  STRUCT<INT64, STRING, BOOL>(23, \"tea\", FALSE)[ORDINAL(1)] AS field_ordinal","shape":"SELECT STRUCT<INT64, STRING, BOOL>(23, 'tea', FALSE)[0] AS field_index, STRUCT<INT64, STRING, BOOL>(23, 'tea', FALSE)[OFFSET(0)] AS field_offset, STRUCT<INT64, STRING, BOOL>(23, 'tea', FALSE)[ORDINAL(1)] AS field_ordinal;"}
+{"sql":"SELECT STRUCT<INT64, STRING, BOOL>(23, \"tea\", FALSE)[6] AS field_offset"}
+{"sql":"SELECT STRUCT<INT64, STRING, BOOL>(23, \"tea\", FALSE)[OFFSET(6)] AS field_offset"}
+{"sql":"json_expression \"[\" array_element_id \"]\"","reject":true}
+{"sql":"json_expression \"[\" field_name \"]\"","reject":true}
+{"sql":"SELECT json_value.class.students[0]['name'] AS first_student\nFROM\n  UNNEST(\n    [\n      JSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}',\n      JSON '{\"class\" : {\"students\" : []}}',\n      JSON '{\"class\" : {\"students\" : [{\"name\" : \"John\"}, {\"name\": \"Jamie\"}]}}'])\n    AS json_value"}
+{"sql":"date_expression + int64_expression\nint64_expression + date_expression\ndate_expression - int64_expression","reject":true}
+{"sql":"SELECT DATE \"2020-09-22\" + 1 AS day_later, DATE \"2020-09-22\" - 7 AS week_ago","shape":"SELECT DATE '2020-09-22' + 1 AS day_later, DATE '2020-09-22' - 7 AS week_ago;"}
+{"sql":"date_expression - date_expression\ntimestamp_expression - timestamp_expression\ndatetime_expression - datetime_expression","reject":true}
+{"sql":"SELECT\n  DATE \"2021-05-20\" - DATE \"2020-04-19\" AS date_diff,\n  TIMESTAMP \"2021-06-01 12:34:56.789\" - TIMESTAMP \"2021-05-31 00:00:00\" AS time_diff","shape":"SELECT DATE '2021-05-20' - DATE '2020-04-19' AS date_diff, TIMESTAMP '2021-06-01 12:34:56.789' - TIMESTAMP '2021-05-31 00:00:00' AS time_diff;"}
+{"sql":"date_expression + interval_expression = DATETIME\ndate_expression - interval_expression = DATETIME\ntimestamp_expression + interval_expression = TIMESTAMP\ntimestamp_expression - interval_expression = TIMESTAMP\ndatetime_expression + interval_expression = DATETIME\ndatetime_expression - interval_expression = DATETIME","reject":true}
+{"sql":"SELECT\n  DATE \"2021-04-20\" + INTERVAL 25 HOUR AS date_plus,\n  TIMESTAMP \"2021-05-02 00:01:02.345+00\" - INTERVAL 10 SECOND AS time_minus","shape":"SELECT DATE '2021-04-20' + INTERVAL 25 HOUR AS date_plus, TIMESTAMP '2021-05-02 00:01:02.345+00' - INTERVAL 10 SECOND AS time_minus;"}
+{"sql":"interval_expression * integer_expression = INTERVAL\ninterval_expression / integer_expression = INTERVAL","reject":true}
+{"sql":"SELECT\n  INTERVAL '1:2:3' HOUR TO SECOND * 10 AS mul1,\n  INTERVAL 35 SECOND * 4 AS mul2,\n  INTERVAL 10 YEAR / 3 AS div1,\n  INTERVAL 1 MONTH / 12 AS div2","shape":"SELECT INTERVAL '1:2:3' HOUR TO SECOND * 10 AS mul1, INTERVAL 35 SECOND * 4 AS mul2, INTERVAL 10 YEAR / 3 AS div1, INTERVAL 1 MONTH / 12 AS div2;"}
+{"sql":"SELECT 'a' FROM entry_table WHERE entry = 'a'\n\n-- a => 'a' = 'a' => TRUE\n-- b => 'b' = 'a' => FALSE\n-- NULL => NULL = 'a' => NULL"}
+{"sql":"SELECT entry FROM entry_table WHERE NOT (entry = 'a')\n\n-- a => NOT('a' = 'a') => NOT(TRUE) => FALSE\n-- b => NOT('b' = 'a') => NOT(FALSE) => TRUE\n-- NULL => NOT(NULL = 'a') => NOT(NULL) => NULL"}
+{"sql":"SELECT entry FROM entry_table WHERE entry IS NULL\n\n-- a => 'a' IS NULL => FALSE\n-- b => 'b' IS NULL => FALSE\n-- NULL => NULL IS NULL => TRUE"}
+{"sql":"EXISTS( subquery )","reject":true}
+{"sql":"WITH Words AS (\n  SELECT 'Intend' as value, 'east' as direction UNION ALL\n  SELECT 'Secure', 'north' UNION ALL\n  SELECT 'Clarity', 'west'\n )\nSELECT EXISTS( SELECT value FROM Words WHERE direction = 'south' ) as result","shape":"WITH Words AS ((SELECT 'Intend' AS value, 'east' AS direction UNION ALL SELECT 'Secure', 'north') UNION ALL SELECT 'Clarity', 'west') SELECT EXISTS (SELECT value FROM Words WHERE direction = 'south') AS result;"}
+{"sql":"IN (SELECT element FROM UNNEST(array_expression) AS element)","reject":true}
+{"sql":"x [NOT] IN UNNEST(<array expression>)","reject":true}
+{"sql":"x IN UNNEST(@array_parameter)","reject":true}
+{"sql":"(Key1, Key2) IN ( (12,34), (56,78) )\n(Key1, Key2) IN ( SELECT (table.a, table.b) FROM table )","reject":true}
+{"sql":"WITH Words AS (\n  SELECT 'Intend' as value UNION ALL\n  SELECT 'Secure' UNION ALL\n  SELECT 'Clarity' UNION ALL\n  SELECT 'Peace' UNION ALL\n  SELECT 'Intend'\n )\nSELECT * FROM Words","shape":"WITH Words AS ((((SELECT 'Intend' AS value UNION ALL SELECT 'Secure') UNION ALL SELECT 'Clarity') UNION ALL SELECT 'Peace') UNION ALL SELECT 'Intend') SELECT * FROM Words;"}
+{"sql":"WITH\n  Items AS (\n    SELECT STRUCT('blue' AS color, 'round' AS shape) AS info UNION ALL\n    SELECT STRUCT('blue', 'square') UNION ALL\n    SELECT STRUCT('red', 'round')\n  )\nSELECT * FROM Items","shape":"WITH Items AS ((SELECT STRUCT('blue' AS color, 'round' AS shape) AS info UNION ALL SELECT STRUCT('blue', 'square')) UNION ALL SELECT STRUCT('red', 'round')) SELECT * FROM Items;"}
+{"sql":"SELECT * FROM Words WHERE value IN ('Intend', 'Secure')"}
+{"sql":"SELECT * FROM Words WHERE value NOT IN ('Intend')"}
+{"sql":"SELECT * FROM Words WHERE value IN ((SELECT 'Intend'), 'Clarity')"}
+{"sql":"SELECT * FROM Words WHERE value IN UNNEST(['Secure', 'Clarity'])"}
+{"sql":"SELECT\n  Items.info as item\nFROM\n  Items\nWHERE (info.shape, info.color) IN (('round', 'blue'))"}
+{"sql":"expression_1 IS [NOT] DISTINCT FROM expression_2","reject":true}
+{"sql":"SELECT 1 IS DISTINCT FROM 2","shape":"SELECT 1 IS DISTINCT FROM 2;"}
+{"sql":"SELECT 1 IS DISTINCT FROM NULL","shape":"SELECT 1 IS DISTINCT FROM NULL;"}
+{"sql":"SELECT 1 IS NOT DISTINCT FROM 1","shape":"SELECT 1 IS NOT DISTINCT FROM 1;"}
+{"sql":"SELECT NULL IS NOT DISTINCT FROM NULL","shape":"SELECT NULL IS NOT DISTINCT FROM NULL;"}
+{"sql":"SELECT NULL IS DISTINCT FROM NULL","shape":"SELECT NULL IS DISTINCT FROM NULL;"}
+{"sql":"SELECT 1 IS DISTINCT FROM 1","shape":"SELECT 1 IS DISTINCT FROM 1;"}
+{"sql":"SELECT 1 IS NOT DISTINCT FROM 2","shape":"SELECT 1 IS NOT DISTINCT FROM 2;"}
+{"sql":"SELECT 1 IS NOT DISTINCT FROM NULL","shape":"SELECT 1 IS NOT DISTINCT FROM NULL;"}
+{"sql":"expression [NOT] LIKE pattern","reject":true}
+{"sql":"SELECT 'apple' LIKE 'a%'","shape":"SELECT 'apple' LIKE 'a%';"}
+{"sql":"SELECT '%a' LIKE 'apple'","shape":"SELECT '%a' LIKE 'apple';"}
+{"sql":"SELECT 'apple' NOT LIKE 'a%'","shape":"SELECT 'apple' NOT LIKE 'a%';"}
+{"sql":"SELECT '%a' NOT LIKE 'apple'","shape":"SELECT '%a' NOT LIKE 'apple';"}
+{"sql":"SELECT NULL LIKE 'a%'"}
+{"sql":"SELECT 'apple' LIKE NULL"}
+{"sql":"WITH Words AS\n (SELECT 'Intend with clarity.' as value UNION ALL\n  SELECT 'Secure with intention.' UNION ALL\n  SELECT 'Clarity and security.')\nSELECT value\nFROM Words WHERE\n  EXISTS(\n    SELECT value FROM UNNEST(['%ity%', '%and%']) AS pattern\n    WHERE value LIKE pattern\n  )"}
+{"sql":"'Foo' LIKE '%foo%'","reject":true}
+{"sql":"COLLATE('Foo', 'und:ci') LIKE COLLATE('%foo%', 'und:ci')","reject":true}
+{"sql":"COLLATE('Foo', 'und:ci') = COLLATE('foo', 'und:ci')","reject":true}
+{"sql":"COLLATE('Foo', 'und:ci') LIKE COLLATE('%foo%', 'binary')","reject":true}
+{"sql":"COLLATE('Foo', 'und:ci') LIKE COLLATE('%f_o%', 'und:ci')","reject":true}
+{"sql":"COLLATE('Foo_', 'und:ci') LIKE COLLATE('%foo\\\\_%', 'und:ci')","reject":true}
+{"sql":"'MASSE' LIKE 'Maße'","reject":true}
+{"sql":"COLLATE('MASSE', 'und:ci') LIKE '%Maße%'","reject":true}
+{"sql":"COLLATE('MASSE', 'und:ci') = COLLATE('Maße', 'und:ci')","reject":true}
+{"sql":"'\\u3042' LIKE '%\\u30A2%'","reject":true}
+{"sql":"COLLATE('\\u3042', 'und:ci') LIKE COLLATE('%\\u30A2%', 'und:ci')","reject":true}
+{"sql":"COLLATE('\\u3042', 'und:ci') = COLLATE('\\u30A2', 'und:ci')","reject":true}
+{"sql":"'\\u0061\\u030A' LIKE '%\\u00C5%'","reject":true}
+{"sql":"COLLATE('\\u0061\\u030A', 'und:ci') LIKE '%\\u00C5%'","reject":true}
+{"sql":"COLLATE('\\u0061\\u030A', 'und:ci') = COLLATE('\\u00C5', 'und:ci')","reject":true}
+{"sql":"'\\u0083' LIKE ''","reject":true}
+{"sql":"COLLATE('\\u0083', 'und:ci') LIKE ''","reject":true}
+{"sql":"WITH Words AS\n (SELECT 'Intend with clarity.' as value UNION ALL\n  SELECT 'Secure with intention.' UNION ALL\n  SELECT 'Clarity and security.')","reject":true}
+{"sql":"SELECT * FROM Words WHERE value LIKE ANY ('Intend%', '%intention%')"}
+{"sql":"SELECT * FROM Words WHERE value LIKE ALL ('%ity%')"}
+{"sql":"SELECT * FROM Words WHERE value NOT LIKE ('%ity%')"}
+{"sql":"SELECT * FROM Words WHERE value LIKE ANY UNNEST(['%ion%', '%and%'])"}
+{"sql":"SELECT\n  NULL LIKE ANY ('a', 'b'), -- NULL\n  'a' LIKE ANY ('a', 'c'), -- TRUE\n  'a' LIKE ANY ('b', 'c'), -- FALSE\n  'a' LIKE ANY ('a', NULL), -- TRUE\n  'a' LIKE ANY ('b', NULL), -- NULL\n  NULL NOT LIKE ANY ('a', 'b'), -- NULL\n  'a' NOT LIKE ANY ('a', 'b'), -- TRUE\n  'a' NOT LIKE ANY ('a', '%a%'), -- FALSE\n  'a' NOT LIKE ANY ('a', NULL), -- NULL\n  'a' NOT LIKE ANY ('b', NULL)","shape":"SELECT NULL LIKE ANY ('a', 'b'), 'a' LIKE ANY ('a', 'c'), 'a' LIKE ANY ('b', 'c'), 'a' LIKE ANY ('a', NULL), 'a' LIKE ANY ('b', NULL), NULL NOT LIKE ANY ('a', 'b'), 'a' NOT LIKE ANY ('a', 'b'), 'a' NOT LIKE ANY ('a', '%a%'), 'a' NOT LIKE ANY ('a', NULL), 'a' NOT LIKE ANY ('b', NULL);"}
+{"sql":"SELECT\n  NULL LIKE SOME ('a', 'b'), -- NULL\n  'a' LIKE SOME ('a', 'c'), -- TRUE\n  'a' LIKE SOME ('b', 'c'), -- FALSE\n  'a' LIKE SOME ('a', NULL), -- TRUE\n  'a' LIKE SOME ('b', NULL), -- NULL\n  NULL NOT LIKE SOME ('a', 'b'), -- NULL\n  'a' NOT LIKE SOME ('a', 'b'), -- TRUE\n  'a' NOT LIKE SOME ('a', '%a%'), -- FALSE\n  'a' NOT LIKE SOME ('a', NULL), -- NULL\n  'a' NOT LIKE SOME ('b', NULL)","shape":"SELECT NULL LIKE SOME ('a', 'b'), 'a' LIKE SOME ('a', 'c'), 'a' LIKE SOME ('b', 'c'), 'a' LIKE SOME ('a', NULL), 'a' LIKE SOME ('b', NULL), NULL NOT LIKE SOME ('a', 'b'), 'a' NOT LIKE SOME ('a', 'b'), 'a' NOT LIKE SOME ('a', '%a%'), 'a' NOT LIKE SOME ('a', NULL), 'a' NOT LIKE SOME ('b', NULL);"}
+{"sql":"SELECT\n  NULL LIKE ALL ('a', 'b'), -- NULL\n  'a' LIKE ALL ('a', '%a%'), -- TRUE\n  'a' LIKE ALL ('a', 'c'), -- FALSE\n  'a' LIKE ALL ('a', NULL), -- NULL\n  'a' LIKE ALL ('b', NULL), -- FALSE\n  NULL NOT LIKE ALL ('a', 'b'), -- NULL\n  'a' NOT LIKE ALL ('b', 'c'), -- TRUE\n  'a' NOT LIKE ALL ('a', 'c'), -- FALSE\n  'a' NOT LIKE ALL ('a', NULL), -- FALSE\n  'a' NOT LIKE ALL ('b', NULL)","shape":"SELECT NULL LIKE ALL ('a', 'b'), 'a' LIKE ALL ('a', '%a%'), 'a' LIKE ALL ('a', 'c'), 'a' LIKE ALL ('a', NULL), 'a' LIKE ALL ('b', NULL), NULL NOT LIKE ALL ('a', 'b'), 'a' NOT LIKE ALL ('b', 'c'), 'a' NOT LIKE ALL ('a', 'c'), 'a' NOT LIKE ALL ('a', NULL), 'a' NOT LIKE ALL ('b', NULL);"}
+{"sql":"SELECT\n  COLLATE('a', 'und:ci') LIKE ALL ('a', 'A'), -- TRUE\n  'a' LIKE ALL (COLLATE('a', 'und:ci'), 'A'), -- TRUE\n  'a' LIKE ALL ('%A%', COLLATE('a', 'und:ci'))","shape":"SELECT COLLATE('a', 'und:ci') LIKE ALL ('a', 'A'), 'a' LIKE ALL (COLLATE('a', 'und:ci'), 'A'), 'a' LIKE ALL ('%A%', COLLATE('a', 'und:ci'));"}
+{"sql":"SELECT b'a' LIKE ALL (COLLATE('a', 'und:ci'), 'A')"}
+{"sql":"SELECT WITH(a AS '123',               -- a is '123'\n            b AS CONCAT(a, '456'),    -- b is '123456'\n            c AS '789',               -- c is '789'\n            CONCAT(b, c)) AS result"}
+{"sql":"SELECT WITH(a AS RAND(), a - a)"}
+{"sql":"SELECT WITH(s AS SUM(input), c AS COUNT(input), s/c)\nFROM UNNEST([1.0, 2.0, 3.0]) AS input"}
+{"sql":"SELECT WITH(diff AS a - b, AVG(diff))\nFROM UNNEST([\n              STRUCT(1 AS a, 2 AS b),\n              STRUCT(3 AS a, 4 AS b),\n              STRUCT(5 AS a, 6 AS b)\n            ])"}
+{"sql":"WITH my_table AS (\n  SELECT 1 AS x, 2 AS y\n  UNION ALL\n  SELECT 3 AS x, 4 AS y\n  UNION ALL\n  SELECT 5 AS x, 6 AS y\n)\nSELECT WITH(a AS SUM(x), b AS COUNT(x), a/b) AS avg_x, AVG(y) AS avg_y\nFROM my_table\nWHERE x > 1"}

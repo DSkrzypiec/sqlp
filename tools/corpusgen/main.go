@@ -4,7 +4,8 @@
 // sqlite3 -safe, in a scratch directory, because the corpus is untrusted.
 //
 //	cd tools/corpusgen && go run . -root ../.. -pg DIR -sqlite DIR -sqlite-bin PATH
-//	cd tools/corpusgen && go run . -bigquery
+//	cd tools/corpusgen && go run . -bq-docs-fetch DIR
+//	cd tools/corpusgen && go run . -bigquery -bq-docs DIR
 //	cd tools/corpusgen && go run . -bq-probe FILE
 //
 // -pg is src/test/regress/sql of PostgreSQL 16; -sqlite is test/ of SQLite 3.51.
@@ -70,6 +71,8 @@ func main() {
 	ansi := flag.Bool("ansi", false, "check the ANSI table's dialect lists against the engines")
 	bq := flag.Bool("bigquery", false, "freeze BigQuery verdicts (needs gcloud logged in)")
 	bqProbe := flag.String("bq-probe", "", "print BigQuery's verdict on each statement of this file")
+	bqDocs := flag.String("bq-docs", "", "with -bigquery: the reference pages saved by -bq-docs-fetch")
+	bqDocsFetch := flag.String("bq-docs-fetch", "", "save the examples of the BigQuery SQL reference in this directory")
 	home, _ := os.UserHomeDir()
 	bqCache := flag.String("bq-cache", filepath.Join(home, ".cache", "sqlp", "bigquery.jsonl"), "BigQuery answers already received")
 	flag.IntVar(&workers, "workers", workers, "statements checked at a time")
@@ -79,8 +82,12 @@ func main() {
 		newBigQuery(*bqCache).probe(*bqProbe)
 		return
 	}
+	if *bqDocsFetch != "" {
+		fetchDocs(*bqDocsFetch)
+		return
+	}
 	if *bq {
-		freezeBigQuery(*root, newBigQuery(*bqCache))
+		freezeBigQuery(*root, *bqDocs, newBigQuery(*bqCache))
 		return
 	}
 
@@ -449,15 +456,18 @@ func sqliteSameQuery(bin string) func(string, string) bool {
 // freezeBigQuery asks BigQuery about every statement first, without writing.
 // It writes nothing while some message is unclassified, since the verdict on
 // those statements would be a guess.
-func freezeBigQuery(root string, b *bigQuery) {
+func freezeBigQuery(root, docs string, b *bigQuery) {
 	b.setUp()
 	e := engine{d: dialect.BigQuery, rejects: b.rejects, sameTree: b.sameValue, sameQuery: b.sameQuery, checkable: b.checkable, report: &stats{}, ansi: true}
-	e.freeze(root, "", "", nil, nil)
+	if docs == "" {
+		log.Fatal("-bigquery needs -bq-docs: the reference examples (-bq-docs-fetch saves them)")
+	}
+	e.freeze(root, docs, "docs_*.html", corpus.BigQueryDocStatements, b.sameQuery)
 	if b.reportUnknown() {
 		os.Exit(1)
 	}
 	e.write, e.report = true, &stats{}
-	e.freeze(root, "", "", nil, nil)
+	e.freeze(root, docs, "docs_*.html", corpus.BigQueryDocStatements, b.sameQuery)
 	note := "Verdicts in this directory are BigQuery's (GoogleSQL), from dry runs taken on " + b.dayRange() +
 		",\nwritten by tools/corpusgen -bigquery. BigQuery has no versions; regenerate to\nfollow it, and review verdicts that change.\n"
 	if err := os.WriteFile(filepath.Join(root, "testdata", "corpus", "bigquery", "ORACLE"), []byte(note), 0o644); err != nil {

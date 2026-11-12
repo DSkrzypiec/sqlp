@@ -141,6 +141,7 @@ type Binary struct {
 type Quantified struct {
 	Kind string // ANY, ALL, SOME
 	Expr Expr   // *Subquery or array-valued expression
+	List []Expr // LIKE ANY ('a%', 'b%'), when Expr is nil (BigQuery)
 }
 
 // IsKind classifies an Is predicate.
@@ -233,7 +234,21 @@ type Tuple struct {
 type Array struct {
 	Elems    []Expr
 	Subquery *Query
-	Nested   bool // an inner [a, b] of a multi-dimensional literal
+	Nested   bool      // an inner [a, b] of a multi-dimensional literal
+	Of       *DataType // the element type of ARRAY<T>[...] (BigQuery)
+}
+
+// Struct builds a STRUCT value (BigQuery): STRUCT(1 AS a, 'x'), or with a
+// type, STRUCT<a INT64, b STRING>(1, 'x').
+type Struct struct {
+	Type   *DataType // STRUCT<...>, or nil
+	Fields []*StructValue
+}
+
+// StructValue is one value of a STRUCT constructor; As names its field.
+type StructValue struct {
+	Expr Expr
+	As   *Ident
 }
 
 // CastStyle is how a cast was written.
@@ -243,6 +258,7 @@ const (
 	CastStandard    CastStyle = iota // CAST(x AS t)
 	CastDoubleColon                  // x::t
 	CastTry                          // TRY_CAST(x AS t)
+	CastSafe                         // SAFE_CAST(x AS t) (BigQuery)
 )
 
 // Cast converts an expression to a type.
@@ -250,6 +266,9 @@ type Cast struct {
 	Expr  Expr
 	Type  *DataType
 	Style CastStyle
+	// Format and TimeZone are CAST(x AS STRING FORMAT 'YYYY' AT TIME ZONE 'UTC')
+	// (BigQuery); nil when absent.
+	Format, TimeZone Expr
 }
 
 // Case is a CASE expression. Operand is nil for the searched form.
@@ -300,6 +319,15 @@ type Extract struct {
 	Field       Ident
 	FieldString *Literal
 	Expr        Expr
+	FieldArg    *Ident // EXTRACT(WEEK(MONDAY) FROM d) (BigQuery)
+	TimeZone    Expr   // EXTRACT(HOUR FROM ts AT TIME ZONE 'UTC') (BigQuery)
+}
+
+// Interval is BigQuery's INTERVAL expr unit, as in INTERVAL 5 DAY. A string
+// with its fields, INTERVAL '1-2' YEAR TO MONTH, is a TypedString.
+type Interval struct {
+	Value Expr
+	Unit  string
 }
 
 // Substring is `SUBSTRING(x FROM a FOR b)`; From/For may be nil.
@@ -365,6 +393,17 @@ type DataType struct {
 	ArrayBounds []string
 	TimeZone    TimeZoneSpec
 	Fields      string // INTERVAL qualifier: YEAR, DAY TO SECOND(3), ...
+	// Angle marks a type written with angle brackets (BigQuery): ARRAY<T> and
+	// RANGE<T> have Of, STRUCT<a INT64, STRING> has Struct, and STRUCT<> none.
+	Angle  bool
+	Of     *DataType
+	Struct []*StructField
+}
+
+// StructField is one field of a STRUCT type. Name is empty when unnamed.
+type StructField struct {
+	Name Ident
+	Type *DataType
 }
 
 // ============================================================================
@@ -1223,6 +1262,8 @@ func (*AtTimeZone) node()  {}
 func (*Subscript) node()   {}
 func (*Paren) node()       {}
 func (*Tuple) node()       {}
+func (*Struct) node()      {}
+func (*Interval) node()    {}
 func (*Array) node()       {}
 func (*Cast) node()        {}
 func (*Case) node()        {}
@@ -1258,6 +1299,8 @@ func (*AtTimeZone) expr()  {}
 func (*Subscript) expr()   {}
 func (*Paren) expr()       {}
 func (*Tuple) expr()       {}
+func (*Struct) expr()      {}
+func (*Interval) expr()    {}
 func (*Array) expr()       {}
 func (*Cast) expr()        {}
 func (*Case) expr()        {}

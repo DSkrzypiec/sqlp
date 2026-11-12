@@ -1,0 +1,44 @@
+{"sql":"-- Declare a variable with type parameters.\nDECLARE x STRING(10);\n\n-- This is a valid assignment to x.\nSET x = \"hello\";\n\n-- This assignment to x violates the type parameter constraint and results in an OUT_OF_RANGE error.\nSET x = \"this string is too long\""}
+{"sql":"-- Declare variables with type parameters.\nDECLARE x NUMERIC(10) DEFAULT 12345;\nDECLARE y NUMERIC(5, 2) DEFAULT 123.45;\n\n-- The variable x is treated as a NUMERIC value when read, so the result of this query\n-- is a NUMERIC without type parameters.\nSELECT x;\n\n-- Type parameters aren't propagated within expressions, so variables x and y are treated\n-- as NUMERIC values when read and the result of this query is a NUMERIC without type parameters.\nSELECT x + y;"}
+{"sql":"SELECT CAST(NULL AS ARRAY<INT64>) IS NULL AS array_is_null","shape":"SELECT CAST(NULL AS ARRAY<INT64>) IS NULL AS array_is_null;"}
+{"sql":"WITH Items AS (\n  SELECT [] AS numbers, \"Empty array in query\" AS description UNION ALL\n  SELECT CAST(NULL AS ARRAY<INT64>), \"NULL array in query\")\nSELECT numbers, description, numbers IS NULL AS numbers_null\nFROM Items","shape":"WITH Items AS (SELECT ARRAY[] AS numbers, 'Empty array in query' AS description UNION ALL SELECT CAST(NULL AS ARRAY<INT64>), 'NULL array in query') SELECT numbers, description, numbers IS NULL AS numbers_null FROM Items;"}
+{"sql":"SELECT numbers, description, numbers IS NULL AS numbers_null\nFROM Items"}
+{"sql":"SELECT FORMAT(\"%T\", [1, NULL, 3]) as numbers","shape":"SELECT FORMAT('%T', ARRAY[1, NULL, 3]) AS numbers;"}
+{"sql":"SELECT [1, NULL, 3] as numbers"}
+{"sql":"ARRAY<T>","reject":true}
+{"sql":"SELECT [1, 2, 3] AS numbers","shape":"SELECT ARRAY[1, 2, 3] AS numbers;"}
+{"sql":"SELECT [\"apple\", \"pear\", \"orange\"] AS fruit","shape":"SELECT ARRAY['apple', 'pear', 'orange'] AS fruit;"}
+{"sql":"SELECT [true, false, true] AS booleans","shape":"SELECT ARRAY[TRUE, FALSE, TRUE] AS booleans;"}
+{"sql":"SELECT [a, b, c]\nFROM\n  (SELECT 5 AS a,\n          37 AS b,\n          406 AS c)","shape":"SELECT ARRAY[a, b, c] FROM (SELECT 5 AS a, 37 AS b, 406 AS c);"}
+{"sql":"SELECT [a, b, c]\nFROM\n  (SELECT CAST(5 AS INT64) AS a,\n          CAST(37 AS FLOAT64) AS b,\n          406 AS c)","shape":"SELECT ARRAY[a, b, c] FROM (SELECT CAST(5 AS INT64) AS a, CAST(37 AS FLOAT64) AS b, 406 AS c);"}
+{"sql":"SELECT ARRAY<FLOAT64>[1, 2, 3] AS floats","shape":"SELECT ARRAY<FLOAT64>[1, 2, 3] AS floats;"}
+{"sql":"SELECT GENERATE_ARRAY(11, 33, 2) AS odds","shape":"SELECT GENERATE_ARRAY(11, 33, 2) AS odds;"}
+{"sql":"SELECT GENERATE_ARRAY(21, 14, -1) AS countdown","shape":"SELECT GENERATE_ARRAY(21, 14, -1) AS countdown;"}
+{"sql":"SELECT\n  GENERATE_DATE_ARRAY('2017-11-21', '2017-12-31', INTERVAL 1 WEEK)\n    AS date_array","shape":"SELECT GENERATE_DATE_ARRAY('2017-11-21', '2017-12-31', INTERVAL 1 WEEK) AS date_array;"}
+{"sql":"YYYY-[M]M-[D]D","reject":true}
+{"sql":"SELECT\n  ST_GEOGFROMTEXT('POINT EMPTY') AS a,\n  ST_GEOGFROMTEXT('GEOMETRYCOLLECTION EMPTY') AS b","shape":"SELECT ST_GEOGFROMTEXT('POINT EMPTY') AS a, ST_GEOGFROMTEXT('GEOMETRYCOLLECTION EMPTY') AS b;"}
+{"sql":"SELECT\n  ST_GEOGFROMTEXT('MULTIPOINT(1 1, 2 2)') AS a,\n  ST_GEOGFROMTEXT('GEOMETRYCOLLECTION(POINT(1 1), POINT(2 2))') AS b","shape":"SELECT ST_GEOGFROMTEXT('MULTIPOINT(1 1, 2 2)') AS a, ST_GEOGFROMTEXT('GEOMETRYCOLLECTION(POINT(1 1), POINT(2 2))') AS b;"}
+{"sql":"GRAPH_ELEMENT<T>","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN n.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (n:Person)\nRETURN TYPEOF(n) AS t\nLIMIT 1"}
+{"sql":"GRAPH_PATH<NODE_TYPE, EDGE_TYPE>","reject":true}
+{"sql":"[sign]Y-M [sign]D [sign]H:M:S[.F]","reject":true}
+{"sql":"INTERVAL step_size step_unit","reject":true}
+{"sql":"INTERVAL 1 YEAR\nINTERVAL 4 QUARTER\nINTERVAL 12 MONTH\n\n-- 0 years, 3 months, 0 days, 0 hours, 0 minutes, and 0 seconds (0-3 0 0:0:0)\nINTERVAL 1 QUARTER\nINTERVAL 3 MONTH\n\n-- 0 years, 0 months, 42 days, 0 hours, 0 minutes, and 0 seconds (0-0 42 0:0:0)\nINTERVAL 6 WEEK\nINTERVAL 42 DAY\n\n-- 0 years, 0 months, 0 days, 25 hours, 0 minutes, and 0 seconds (0-0 0 25:0:0)\nINTERVAL 25 HOUR\nINTERVAL 1500 MINUTE\nINTERVAL 90000 SECOND\n\n-- 0 years, 0 months, 0 days, 1 hours, 30 minutes, and 0 seconds (0-0 0 1:30:0)\nINTERVAL 90 MINUTE\n\n-- 0 years, 0 months, 0 days, 0 hours, 1 minutes, and 30 seconds (0-0 0 0:1:30)\nINTERVAL 90 SECOND\n\n-- 0 years, 0 months, -5 days, 0 hours, 0 minutes, and 0 seconds (0-0 -5 0:0:0)\nINTERVAL -5 DAY","reject":true}
+{"sql":"INTERVAL datetime_parts_string starting_datetime_part TO ending_datetime_part","reject":true}
+{"sql":"INTERVAL '8 20 17' MONTH TO HOUR\n\n-- 0 years, 8 months, -20 days, 17 hours, 0 minutes, and 0 seconds (0-8 -20 17:0:0)\nINTERVAL '8 -20 17' MONTH TO HOUR","reject":true}
+{"sql":"RANGE<T> '[lower_bound, upper_bound)'","reject":true}
+{"sql":"STRUCT<T>","reject":true}
+{"sql":"WHERE (Key1,Key2) IN ( (12,34), (56,78) )","reject":true}
+{"sql":"[H]H:[M]M:[S]S[.F]","reject":true}
+{"sql":"SELECT UNIX_MILLIS(TIMESTAMP '2008-12-25 15:30:00 America/Los_Angeles') AS millis","shape":"SELECT UNIX_MILLIS(TIMESTAMP '2008-12-25 15:30:00 America/Los_Angeles') AS millis;"}
+{"sql":"SELECT UNIX_MILLIS(TIMESTAMP '2008-12-25 15:30:00-08:00') AS millis","shape":"SELECT UNIX_MILLIS(TIMESTAMP '2008-12-25 15:30:00-08:00') AS millis;"}
+{"sql":"SELECT TIMESTAMP '2014-09-27T12:30:00.45Z'\nSELECT TIMESTAMP '2014-09-27 12:30:00.45z'\nSELECT TIMESTAMP '2014-09-27T12:30:00.45 Etc/UTC'","reject":true}
+{"sql":"-08:00\n-8:15\n+3:00\n+07:30\n-7","reject":true}
+{"sql":"2014-09-27 12:30:00.45-8:00","reject":true}
+{"sql":"tz_identifier","reject":true}
+{"sql":"America/Los_Angeles\nAmerica/Argentina/Buenos_Aires\nEtc/UTC\nPacific/Auckland","reject":true}
+{"sql":"2014-09-27 12:30:00.45 America/Los_Angeles","reject":true}
+{"sql":"SELECT\nFORMAT_TIMESTAMP(\"%c %Z\", \"2024-03-10 02:30:00 America/Los_Angeles\", \"UTC\") AS two_thirty,\nFORMAT_TIMESTAMP(\"%c %Z\", \"2024-03-10 03:30:00 America/Los_Angeles\", \"UTC\") AS three_thirty","shape":"SELECT FORMAT_TIMESTAMP('%c %Z', '2024-03-10 02:30:00 America/Los_Angeles', 'UTC') AS two_thirty, FORMAT_TIMESTAMP('%c %Z', '2024-03-10 03:30:00 America/Los_Angeles', 'UTC') AS three_thirty;"}
+{"sql":"SELECT\nFORMAT_TIMESTAMP(\"%c %Z\", \"2024-03-10 10:30:00 UTC\", \"America/Los_Angeles\") as ten_thirty","shape":"SELECT FORMAT_TIMESTAMP('%c %Z', '2024-03-10 10:30:00 UTC', 'America/Los_Angeles') AS ten_thirty;"}
+{"sql":"SELECT\nFORMAT_TIMESTAMP(\"%c %Z\", \"2024-11-03 01:30:00 America/Los_Angeles\", \"UTC\") as one_thirty,\nFORMAT_TIMESTAMP(\"%c %Z\", \"2024-11-03 02:30:00 America/Los_Angeles\", \"UTC\") as two_thirty","shape":"SELECT FORMAT_TIMESTAMP('%c %Z', '2024-11-03 01:30:00 America/Los_Angeles', 'UTC') AS one_thirty, FORMAT_TIMESTAMP('%c %Z', '2024-11-03 02:30:00 America/Los_Angeles', 'UTC') AS two_thirty;"}

@@ -1,0 +1,39 @@
+{"sql":"GENERATE_RANGE_ARRAY(range_to_split, step_interval)","reject":true}
+{"sql":"GENERATE_RANGE_ARRAY(range_to_split, step_interval, include_last_partial_range)","reject":true}
+{"sql":"SELECT GENERATE_RANGE_ARRAY(\n  RANGE(DATE '2020-01-01', DATE '2020-01-06'),\n  INTERVAL 1 DAY) AS results","shape":"SELECT GENERATE_RANGE_ARRAY(RANGE(DATE '2020-01-01', DATE '2020-01-06'), INTERVAL 1 DAY) AS results;"}
+{"sql":"SELECT GENERATE_RANGE_ARRAY(\n  RANGE(DATE '2020-01-01', DATE '2020-01-06'),\n  INTERVAL 2 DAY) AS results","shape":"SELECT GENERATE_RANGE_ARRAY(RANGE(DATE '2020-01-01', DATE '2020-01-06'), INTERVAL 2 DAY) AS results;"}
+{"sql":"SELECT GENERATE_RANGE_ARRAY(\n  RANGE(DATE '2020-01-01', DATE '2020-01-06'),\n  INTERVAL 2 DAY,\n  TRUE) AS results","shape":"SELECT GENERATE_RANGE_ARRAY(RANGE(DATE '2020-01-01', DATE '2020-01-06'), INTERVAL 2 DAY, TRUE) AS results;"}
+{"sql":"SELECT GENERATE_RANGE_ARRAY(\n  RANGE(DATE '2020-01-01', DATE '2020-01-06'),\n  INTERVAL 2 DAY,\n  FALSE) AS results","shape":"SELECT GENERATE_RANGE_ARRAY(RANGE(DATE '2020-01-01', DATE '2020-01-06'), INTERVAL 2 DAY, FALSE) AS results;"}
+{"sql":"RANGE(lower_bound, upper_bound)","reject":true}
+{"sql":"SELECT RANGE(DATE '2022-12-01', DATE '2022-12-31') AS results","shape":"SELECT RANGE(DATE '2022-12-01', DATE '2022-12-31') AS results;"}
+{"sql":"SELECT RANGE(DATETIME '2022-10-01 14:53:27',\n             DATETIME '2022-10-01 16:00:00') AS results","shape":"SELECT RANGE(DATETIME '2022-10-01 14:53:27', DATETIME '2022-10-01 16:00:00') AS results;"}
+{"sql":"SELECT RANGE(TIMESTAMP '2022-10-01 14:53:27 America/Los_Angeles',\n             TIMESTAMP '2022-10-01 16:00:00 America/Los_Angeles') AS results","shape":"SELECT RANGE(TIMESTAMP '2022-10-01 14:53:27 America/Los_Angeles', TIMESTAMP '2022-10-01 16:00:00 America/Los_Angeles') AS results;"}
+{"sql":"SELECT RANGE(NULL, DATE '2022-12-31') AS results","shape":"SELECT RANGE(NULL, DATE '2022-12-31') AS results;"}
+{"sql":"SELECT RANGE(DATE '2022-10-01', NULL) AS results","shape":"SELECT RANGE(DATE '2022-10-01', NULL) AS results;"}
+{"sql":"RANGE_CONTAINS(outer_range, inner_range)","reject":true}
+{"sql":"SELECT RANGE_CONTAINS(\n  RANGE<DATE> '[2022-01-01, 2023-01-01)',\n  RANGE<DATE> '[2022-04-01, 2022-07-01)') AS results","shape":"SELECT RANGE_CONTAINS(RANGE<DATE> '[2022-01-01, 2023-01-01)', RANGE<DATE> '[2022-04-01, 2022-07-01)') AS results;"}
+{"sql":"SELECT RANGE_CONTAINS(\n  RANGE<DATE> '[2022-01-01, 2023-01-01)',\n  RANGE<DATE> '[2023-01-01, 2023-04-01)') AS results","shape":"SELECT RANGE_CONTAINS(RANGE<DATE> '[2022-01-01, 2023-01-01)', RANGE<DATE> '[2023-01-01, 2023-04-01)') AS results;"}
+{"sql":"RANGE_CONTAINS(range_to_search, value_to_find)","reject":true}
+{"sql":"SELECT RANGE_CONTAINS(\n  RANGE<DATE> '[2022-01-01, 2023-01-01)',\n  DATE '2022-04-01') AS results","shape":"SELECT RANGE_CONTAINS(RANGE<DATE> '[2022-01-01, 2023-01-01)', DATE '2022-04-01') AS results;"}
+{"sql":"SELECT RANGE_CONTAINS(\n  RANGE<DATE> '[2022-01-01, 2023-01-01)',\n  DATE '2023-04-01') AS results","shape":"SELECT RANGE_CONTAINS(RANGE<DATE> '[2022-01-01, 2023-01-01)', DATE '2023-04-01') AS results;"}
+{"sql":"RANGE_END(range_to_check)","reject":true}
+{"sql":"SELECT RANGE_END(RANGE<DATE> '[2022-12-01, 2022-12-31)') AS results","shape":"SELECT RANGE_END(RANGE<DATE> '[2022-12-01, 2022-12-31)') AS results;"}
+{"sql":"SELECT RANGE_END(RANGE<DATE> '[2022-12-01, UNBOUNDED)') AS results","shape":"SELECT RANGE_END(RANGE<DATE> '[2022-12-01, UNBOUNDED)') AS results;"}
+{"sql":"RANGE_INTERSECT(range_a, range_b)","reject":true}
+{"sql":"SELECT RANGE_INTERSECT(\n  RANGE<DATE> '[2022-02-01, 2022-09-01)',\n  RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results","shape":"SELECT RANGE_INTERSECT(RANGE<DATE> '[2022-02-01, 2022-09-01)', RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results;"}
+{"sql":"SELECT RANGE_INTERSECT(\n  RANGE<DATE> '[2022-02-01, UNBOUNDED)',\n  RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results","shape":"SELECT RANGE_INTERSECT(RANGE<DATE> '[2022-02-01, UNBOUNDED)', RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results;"}
+{"sql":"SELECT RANGE_INTERSECT(\n  RANGE<DATE> '[2022-02-01, UNBOUNDED)',\n  RANGE<DATE> '[2021-06-15, UNBOUNDED)') AS results","shape":"SELECT RANGE_INTERSECT(RANGE<DATE> '[2022-02-01, UNBOUNDED)', RANGE<DATE> '[2021-06-15, UNBOUNDED)') AS results;"}
+{"sql":"RANGE_OVERLAPS(range_a, range_b)","reject":true}
+{"sql":"SELECT RANGE_OVERLAPS(\n  RANGE<DATE> '[2022-02-01, 2022-09-01)',\n  RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results","shape":"SELECT RANGE_OVERLAPS(RANGE<DATE> '[2022-02-01, 2022-09-01)', RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results;"}
+{"sql":"SELECT RANGE_OVERLAPS(\n  RANGE<DATE> '[2020-02-01, 2020-09-01)',\n  RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results","shape":"SELECT RANGE_OVERLAPS(RANGE<DATE> '[2020-02-01, 2020-09-01)', RANGE<DATE> '[2021-06-15, 2022-04-15)') AS results;"}
+{"sql":"SELECT RANGE_OVERLAPS(\n  RANGE<DATE> '[2022-02-01, UNBOUNDED)',\n  RANGE<DATE> '[2021-06-15, UNBOUNDED)') AS results","shape":"SELECT RANGE_OVERLAPS(RANGE<DATE> '[2022-02-01, UNBOUNDED)', RANGE<DATE> '[2021-06-15, UNBOUNDED)') AS results;"}
+{"sql":"RANGE_SESSIONIZE(\n  TABLE table_name,\n  range_column,\n  partitioning_columns\n)","reject":true}
+{"sql":"RANGE_SESSIONIZE(\n  TABLE table_name,\n  range_column,\n  partitioning_columns,\n  sessionize_option\n)","reject":true}
+{"sql":"INSERT mydataset.my_sessionized_range_table (emp_id, dept_id, duration)\nVALUES(10, 1000, RANGE<DATE> '[2010-01-10, 2010-03-10)'),\n      (10, 2000, RANGE<DATE> '[2010-03-10, 2010-07-15)'),\n      (10, 2000, RANGE<DATE> '[2010-06-15, 2010-08-18)'),\n      (20, 2000, RANGE<DATE> '[2010-03-10, 2010-07-20)'),\n      (20, 1000, RANGE<DATE> '[2020-05-10, 2020-09-20)')"}
+{"sql":"SELECT * FROM mydataset.my_sessionized_range_table ORDER BY emp_id"}
+{"sql":"SELECT\n  emp_id, duration, session_range\nFROM\n  RANGE_SESSIONIZE(\n    TABLE mydataset.my_sessionized_range_table,\n    'duration',\n    ['emp_id'])\nORDER BY emp_id"}
+{"sql":"SELECT\n  emp_id, duration, session_range\nFROM\n  RANGE_SESSIONIZE(\n    TABLE mydataset.my_sessionized_range_table,\n    'duration',\n    ['emp_id'],\n    'OVERLAPS')\nORDER BY emp_id"}
+{"sql":"SELECT emp_id, session_range AS normalized FROM (\n  SELECT emp_id, session_range\n  FROM RANGE_SESSIONIZE(\n    TABLE mydataset.my_sessionized_range_table,\n    'duration',\n    ['emp_id'],\n    'MEETS')\n)\nGROUP BY emp_id, normalized"}
+{"sql":"RANGE_START(range_to_check)","reject":true}
+{"sql":"SELECT RANGE_START(RANGE<DATE> '[2022-12-01, 2022-12-31)') AS results","shape":"SELECT RANGE_START(RANGE<DATE> '[2022-12-01, 2022-12-31)') AS results;"}
+{"sql":"SELECT RANGE_START(RANGE<DATE> '[UNBOUNDED, 2022-12-31)') AS results","shape":"SELECT RANGE_START(RANGE<DATE> '[UNBOUNDED, 2022-12-31)') AS results;"}

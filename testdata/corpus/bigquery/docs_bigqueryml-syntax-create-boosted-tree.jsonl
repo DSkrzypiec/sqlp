@@ -1,0 +1,2 @@
+{"sql":"total_input_rows / (input_rows_for_class_n * number_of_unique_classes)","reject":true}
+{"sql":"CLASS_WEIGHTS = [STRUCT('example_label', .2)]","reject":true}

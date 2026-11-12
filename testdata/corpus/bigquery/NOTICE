@@ -1,0 +1,7 @@
+The docs_*.jsonl files hold SQL statements taken from the code samples of the
+BigQuery SQL reference (https://cloud.google.com/bigquery/docs/reference/standard-sql),
+saved by tools/corpusgen -bq-docs-fetch and frozen by tools/corpusgen -bigquery.
+Copyright Google LLC. The code samples are licensed under the Apache License,
+Version 2.0, whose text is in LICENSE-APACHE-2.0 next to this file. The
+statements were split out of the samples and their result tables, which are
+comments, were left out; nothing else was changed.

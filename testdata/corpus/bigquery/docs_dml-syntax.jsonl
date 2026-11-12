@@ -1,0 +1,34 @@
+{"sql":"INSERT dataset.Inventory (product, quantity)\nVALUES('top load washer', 10),\n      ('front load washer', 20),\n      ('dryer', 30),\n      ('refrigerator', 10),\n      ('microwave', 20),\n      ('dishwasher', 30),\n      ('oven', 5)"}
+{"sql":"ALTER TABLE dataset.NewArrivals ALTER COLUMN quantity SET DEFAULT 100"}
+{"sql":"INSERT dataset.NewArrivals (product, quantity, warehouse)\nVALUES('top load washer', DEFAULT, 'warehouse #1'),\n      ('dryer', 200, 'warehouse #2'),\n      ('oven', 300, 'warehouse #3')"}
+{"sql":"CREATE TABLE dataset.Products (\n  id INT64 GENERATED ALWAYS AS IDENTITY(INCREMENT BY 2),\n  product STRING)"}
+{"sql":"INSERT dataset.Products (id, product)\nVALUES (DEFAULT, 'dryer'),\n       (DEFAULT, 'top load washer')"}
+{"sql":"INSERT dataset.Warehouse (warehouse, state)\nSELECT *\nFROM UNNEST([('warehouse #1', 'WA'),\n      ('warehouse #2', 'CA'),\n      ('warehouse #3', 'WA')])"}
+{"sql":"INSERT dataset.Warehouse (warehouse, state)\nWITH w AS (\n  SELECT ARRAY<STRUCT<warehouse string, state string>>\n      [('warehouse #1', 'WA'),\n       ('warehouse #2', 'CA'),\n       ('warehouse #3', 'WA')] col\n)\nSELECT warehouse, state FROM w, UNNEST(w.col)"}
+{"sql":"INSERT dataset.DetailedInventory (product, quantity, supply_constrained)\nSELECT product, quantity, false\nFROM dataset.Inventory"}
+{"sql":"INSERT dataset.DetailedInventory (product, quantity)\nVALUES('countertop microwave',\n  (SELECT quantity FROM dataset.DetailedInventory\n   WHERE product = 'microwave'))"}
+{"sql":"INSERT dataset.Warehouse VALUES('warehouse #4', 'WA'), ('warehouse #5', 'NY')"}
+{"sql":"+-------------------+\n|       names       |\n+-------------------+\n| [\"name1\",\"name2\"] |\n+-------------------+","reject":true}
+{"sql":"DELETE [FROM] target_name [alias]\nWHERE condition","reject":true}
+{"sql":"DELETE dataset.Inventory\nWHERE quantity = 0"}
+{"sql":"DELETE dataset.Inventory i\nWHERE i.product NOT IN (SELECT product from dataset.NewArrivals)"}
+{"sql":"DELETE dataset.Inventory\nWHERE NOT EXISTS\n  (SELECT * from dataset.NewArrivals\n   WHERE Inventory.product = NewArrivals.product)"}
+{"sql":"UPDATE dataset.Inventory\nSET quantity = quantity - 10,\n    supply_constrained = DEFAULT\nWHERE product like '%washer%'"}
+{"sql":"UPDATE dataset.Inventory\nSET quantity = quantity +\n  (SELECT quantity FROM dataset.NewArrivals\n   WHERE Inventory.product = NewArrivals.product),\n    supply_constrained = false\nWHERE product IN (SELECT product FROM dataset.NewArrivals)"}
+{"sql":"UPDATE dataset.Inventory i\nSET quantity = i.quantity + n.quantity,\n    supply_constrained = false\nFROM dataset.NewArrivals n\nWHERE i.product = n.product"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET specifications.color = 'white',\n    specifications.warranty = '1 year'\nWHERE product like '%washer%'"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET specifications\n   = STRUCT<color STRING, warranty STRING,\n   dimensions STRUCT<depth FLOAT64, height FLOAT64, width FLOAT64>>('white', '1 year', NULL)\nWHERE product like '%washer%'"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET comments = ARRAY(\n  SELECT comment FROM UNNEST(comments) AS comment\n  UNION ALL\n  SELECT (CAST('2016-01-01' AS DATE), 'comment1')\n)\nWHERE product like '%washer%'"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET comments = ARRAY_CONCAT(comments,\n  ARRAY<STRUCT<created DATE, comment STRING>>[(CAST('2016-01-01' AS DATE), 'comment1')])\nWHERE product like '%washer%'"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET comments = ARRAY(\n  SELECT comment FROM UNNEST(comments) AS comment\n  UNION ALL\n  SELECT (CAST('2016-01-01' AS DATE), 'comment2')\n)\nWHERE true\n\nSELECT product, comments FROM dataset.DetailedInventory","reject":true}
+{"sql":"UPDATE dataset.DetailedInventory\nSET comments = ARRAY(\n  SELECT c FROM UNNEST(comments) AS c\n  WHERE c.comment NOT LIKE '%comment2%'\n)\nWHERE true"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET supply_constrained = true\nFROM dataset.NewArrivals, dataset.Warehouse\nWHERE DetailedInventory.product = NewArrivals.product AND\n      NewArrivals.warehouse = Warehouse.warehouse AND\n      Warehouse.state = 'WA'"}
+{"sql":"UPDATE dataset.DetailedInventory\nSET supply_constrained = true\nFROM dataset.NewArrivals\nINNER JOIN dataset.Warehouse\nON NewArrivals.warehouse = Warehouse.warehouse\nWHERE DetailedInventory.product = NewArrivals.product AND\n      Warehouse.state = 'WA'"}
+{"sql":"MERGE dataset.DetailedInventory T\nUSING dataset.Inventory S\nON T.product = S.product\nWHEN NOT MATCHED AND quantity < 20 THEN\n  INSERT(product, quantity, supply_constrained, comments)\n  VALUES(product, quantity, true, ARRAY<STRUCT<created DATE, comment STRING>>[(DATE('2016-01-01'), 'comment1')])\nWHEN NOT MATCHED THEN\n  INSERT(product, quantity, supply_constrained)\n  VALUES(product, quantity, false)"}
+{"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON T.product = S.product\nWHEN MATCHED THEN\n  UPDATE SET quantity = T.quantity + S.quantity\nWHEN NOT MATCHED THEN\n  INSERT (product, quantity) VALUES(product, quantity)"}
+{"sql":"MERGE dataset.NewArrivals T\nUSING (SELECT * FROM dataset.NewArrivals WHERE warehouse <> 'warehouse #2') S\nON T.product = S.product\nWHEN MATCHED AND T.warehouse = 'warehouse #1' THEN\n  UPDATE SET quantity = T.quantity + 20\nWHEN MATCHED THEN\n  DELETE"}
+{"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON FALSE\nWHEN NOT MATCHED AND product LIKE '%washer%' THEN\n  INSERT (product, quantity) VALUES(product, quantity)\nWHEN NOT MATCHED BY SOURCE AND product LIKE '%washer%' THEN\n  DELETE"}
+{"sql":"MERGE dataset.DetailedInventory T\nUSING dataset.Inventory S\nON T.product = S.product\nWHEN MATCHED AND S.quantity < (SELECT AVG(quantity) FROM dataset.Inventory) THEN\n  UPDATE SET comments = ARRAY_CONCAT(comments, ARRAY<STRUCT<created DATE, comment STRING>>[(CAST('2016-02-01' AS DATE), 'comment2')])"}
+{"sql":"MERGE dataset.Inventory T\nUSING (SELECT product, quantity, state FROM dataset.NewArrivals t1 JOIN dataset.Warehouse t2 ON t1.warehouse = t2.warehouse) S\nON T.product = S.product\nWHEN MATCHED AND state = 'CA' THEN\n  UPDATE SET quantity = T.quantity + S.quantity\nWHEN MATCHED THEN\n  DELETE"}
+{"sql":"MERGE dataset.Inventory T\nUSING dataset.NewArrivals S\nON T.product = S.product\nWHEN MATCHED THEN\n  UPDATE SET quantity = T.quantity + S.quantity"}
+{"sql":"MERGE dataset.NewArrivals\nUSING (SELECT * FROM UNNEST([('microwave', 10, 'warehouse #1'),\n                             ('dryer', 30, 'warehouse #1'),\n                             ('oven', 20, 'warehouse #2')]))\nON FALSE\nWHEN NOT MATCHED THEN\n  INSERT ROW\nWHEN NOT MATCHED BY SOURCE THEN\n  DELETE"}

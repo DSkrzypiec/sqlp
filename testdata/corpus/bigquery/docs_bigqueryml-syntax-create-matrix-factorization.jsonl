@@ -1,0 +1,1 @@
+{"sql":"max(num_rated_user, num_rated_item) < 100 million","reject":true}

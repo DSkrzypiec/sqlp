@@ -1,0 +1,3 @@
+{"sql":"LOAD DATA INTO mydataset.testparquet\n  FROM FILES (\n    uris = ['s3://test-bucket/sample.parquet'],\n    format = 'PARQUET'\n  )\n  WITH CONNECTION `aws-us-east-1.test-connection`"}
+{"sql":"LOAD DATA INTO mydataset.test_csv (Number INT64, Name STRING, Time DATE)\n  PARTITION BY Time\n  FROM FILES (\n    format = 'CSV', uris = ['azure://test.blob.core.windows.net/container/sampled*'],\n    skip_leading_rows=1\n  )\n  WITH CONNECTION `azure-eastus2.test-connection`"}
+{"sql":"LOAD DATA OVERWRITE mydataset.testparquet\n  FROM FILES (\n    uris = ['s3://test-bucket/sample.parquet'],\n    format = 'PARQUET'\n  )\n  WITH CONNECTION `aws-us-east-1.test-connection`"}

@@ -1,0 +1,5 @@
+{"sql":"SECURE_CONTEXT(key)","reject":true}
+{"sql":"CREATE OR REPLACE VIEW my_dataset.sales_view AS\nWITH\n  Orders AS (\n    SELECT 1001 AS order_id, 'Sales' AS department, 250.00 AS amount\n    UNION ALL\n    SELECT 1002 AS order_id, 'Engineering' AS department, 500.00 AS amount\n    UNION ALL\n    SELECT 1004 AS order_id, 'Sales' AS department, 430.50 AS amount\n  )\nSELECT\n  order_id,\n  department,\n  amount\nFROM Orders\nWHERE department = SECURE_CONTEXT('user_dept')"}
+{"sql":"SELECT * FROM my_dataset.sales_view"}
+{"sql":"SESSION_USER()","reject":true}
+{"sql":"SELECT SESSION_USER() as user","shape":"SELECT SESSION_USER() AS user;"}

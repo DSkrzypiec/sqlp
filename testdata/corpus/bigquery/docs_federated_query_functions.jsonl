@@ -1,0 +1,5 @@
+{"sql":"EXTERNAL_QUERY('connection_id', '''external_database_query'''[, 'options'])","reject":true}
+{"sql":"SELECT\n  c.customer_id, c.name, SUM(t.amount) AS total_revenue, rq.first_order_date\nFROM customers AS c\nINNER JOIN transaction_fact AS t ON c.customer_id = t.customer_id\nLEFT OUTER JOIN\n  EXTERNAL_QUERY(\n    'connection_id',\n    '''SELECT customer_id, MIN(order_date) AS first_order_date\n       FROM orders\n       GROUP BY customer_id'''\n  ) AS rq\n  ON rq.customer_id = c.customer_id\nGROUP BY c.customer_id, c.name, rq.first_order_date"}
+{"sql":"SELECT *\nFROM\n  EXTERNAL_QUERY(\n    'connection_id',\n    '''SELECT * FROM information_schema.tables'''\n  )"}
+{"sql":"SELECT *\nFROM\n  EXTERNAL_QUERY(\n    'connection_id',\n    '''SELECT * FROM information_schema.columns WHERE table_name='x';'''\n  )"}
+{"sql":"SELECT *\nFROM\n  EXTERNAL_QUERY(\n    'connection_id',\n    '''SELECT * FROM customers AS c ORDER BY c.customer_id'''\n  )"}

@@ -1,0 +1,1 @@
+{"sql":"CREATE OR REPLACE MODEL `myproject.mydataset.invoice_parser`\nREMOTE WITH CONNECTION `myproject.myregion.myconnection`\nOPTIONS (remote_service_type = 'cloud_ai_document_v1',\n         document_processor='processor_id')"}

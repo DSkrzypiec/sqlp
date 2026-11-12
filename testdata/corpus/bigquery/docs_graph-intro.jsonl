@@ -1,0 +1,2 @@
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFILTER p.birthday < '1990-01-10'\nRETURN p.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, 1 AS group_id\nUNION ALL\nMATCH (p:Person)\nRETURN 2 AS group_id, p.name"}

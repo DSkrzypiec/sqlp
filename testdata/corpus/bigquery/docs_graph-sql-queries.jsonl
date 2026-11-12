@@ -1,0 +1,6 @@
+{"sql":"CREATE OR REPLACE TABLE mydataset.Locations (\n  id INT64 PRIMARY KEY NOT ENFORCED,\n  name STRING,\n  population INT64\n) AS (\n  SELECT 101 AS id, 'Anytown' AS name, 1000 AS population\n  UNION ALL\n  SELECT 102 AS id, 'Sometown' AS name, 500 AS population\n)"}
+{"sql":"SELECT\n  name,\n  location_id,\n  L.name AS location_name,\n  AGG(L.total_population) AS true_total_population\nFROM GRAPH_EXPAND('mydataset.StoreGraph', flatten_results => FALSE)\nGROUP BY name, location_id, location_name"}
+{"sql":"SELECT name, id\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n.name AS name, n.id AS id\n)"}
+{"sql":"SELECT name, id\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n.name\n)"}
+{"sql":"SELECT n\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n\n)"}
+{"sql":"SELECT TO_JSON(n) as json_node\nFROM GRAPH_TABLE(\n  graph_db.FinGraph\n  MATCH (n:Person)\n  RETURN n\n)"}

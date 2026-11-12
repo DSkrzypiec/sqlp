@@ -1,0 +1,52 @@
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (:Account)-[:Transfers]->(account:Account)\nRETURN account, COUNT(*) AS num_incoming_transfers\nGROUP BY account\n\nNEXT\n\nMATCH (account:Account)<-[:Owns]-(owner:Person)\nRETURN\n  account.id AS account_id, owner.name AS owner_name,\n  num_incoming_transfers"}
+{"sql":"CREATE OR REPLACE TABLE FUNCTION graph_db.return_input_tvf(arg STRING) AS (\n  SELECT arg AS col\n)"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nCALL graph_db.return_input_tvf(p.name) YIELD col AS name\nRETURN name\nORDER BY name"}
+{"sql":"CREATE OR REPLACE TABLE FUNCTION graph_db.return_input_table_tvf(t TABLE<name STRING>) AS (\n  SELECT * FROM t\n)"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name AS name\n\nNEXT\n\nCALL PER() graph_db.return_input_table_tvf() YIELD name\nRETURN name\nORDER BY name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFILTER p.Id <> 1\nRETURN p.name, a.Id AS account_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFILTER WHERE p.Id <> 1\nRETURN p.name, a.Id AS account_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(dest:Account)\nRETURN source, COUNT(e) AS num_transfers\nGROUP BY source\n\nNEXT\n\nFILTER WHERE num_transfers > 1\nRETURN source.id AS source_id, num_transfers"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFILTER WHERE m.Id <> 1\nRETURN p.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFILTER WHERE p.date_of_birth < '1990-01-10'\nRETURN p.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFOR element in [\"all\",\"some\"] WITH OFFSET\nRETURN p.Id, element as alert_type, offset\nORDER BY p.Id, element, offset"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)-[o:Owns]->(a:Account)\nFILTER WHERE p.Id <> 1\nFOR element in GENERATE_ARRAY(1, p.Id)\nRETURN p.Id, element\nORDER BY p.Id, element"}
+{"sql":"-- No rows produced\nGRAPH graph_db.FinGraph\nMATCH (p:Person)\nFOR element in [] WITH OFFSET AS off\nRETURN p.name, element, off"}
+{"sql":"-- No rows produced\nGRAPH graph_db.FinGraph\nMATCH (p:Person)\nFOR element in CAST(NULL AS ARRAY<STRING>) WITH OFFSET\nRETURN p.name, element, offset"}
+{"sql":"-- Error: Expected keyword OFFSET but got identifier \"element\"\nGRAPH graph_db.FinGraph\nFOR element in [1,2,3]\nWITH element as col\nRETURN col\nORDER BY col","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nFOR element in [1,2,3] WITH OFFSET\nWITH element as col\nRETURN col\nORDER BY col"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nRETURN a.id AS a_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nRETURN a\n\nNEXT\n\nLET b = a -- Valid: 'a' is defined and returned from the linear query statement above.\nRETURN b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nRETURN source.id\n\nNEXT\n\nLET b = a  -- ERROR: 'a' doesn't exist.\nRETURN b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source, b = a -- ERROR: Can't define and reference 'a' in the same operation.\nRETURN a"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nLET b = a\nRETURN b.id AS b_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source, a = destination -- ERROR: 'a' has already been defined.\nRETURN a.id AS a_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nLET a = destination -- ERROR: 'a' has already been defined.\nRETURN a.id AS a_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nLET b = destination\nRETURN a, b\n\nNEXT\n\nMATCH (a)\nLET b = a -- ERROR: 'b' has already been defined.\nRETURN b.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nLET a = source\nLET b = destination\nRETURN a\n\nNEXT\n\nMATCH (a)\nLET b = a\nRETURN b.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (source:Account)-[e:Transfers]->(destination:Account)\nORDER BY source.Id\nLIMIT 3\nRETURN source.Id, source.nick_name"}
+{"sql":"MATCH (person:Person)-[:Owns]->(account:Account)\nMATCH (account)-[:Transfers]->(otherAcct:Account)","reject":true}
+{"sql":"MATCH (person1:Person)-[:Owns]->(account:Account)\nMATCH (person2:Person)-[:Owns]->(otherAcct:Account)","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, p.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person WHERE p.birthday < '1990-01-10')\nRETURN p.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH -[e:Owns WHERE e.create_time > '2020-01-14' AND e.create_time < '2020-05-14']->\nRETURN e.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (:Account)-[:Transfers]->(account:Account)\nRETURN account, COUNT(*) AS num_incoming_transfers\nGROUP BY account\n\nNEXT\n\nMATCH (account:Account)<-[:Owns]-(owner:Person)\nRETURN\n  account.id AS account_id, owner.name AS owner_name,\n  num_incoming_transfers\n\nNEXT\n\nFILTER num_incoming_transfers < 2\nRETURN account_id, owner_name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nOFFSET 2\nRETURN p.name, p.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src_account:Account)-[transfer:Transfers]->(dst_account:Account)\nORDER BY transfer.amount DESC\nLIMIT 3\nRETURN src_account.id AS account_id, transfer.amount AS transfer_amount"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src_account:Account)-[transfer:Transfers]->(dst_account:Account)\nORDER BY transfer.amount DESC\nOFFSET 1\nRETURN src_account.id AS account_id, transfer.amount AS transfer_amount"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src_account:Account)-[transfer:Transfers]->(dst_account:Account)\nORDER BY transfer.amount DESC\nRETURN src_account.id AS account_id, transfer.amount AS transfer_amount"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src_account:Account)-[transfer:Transfers]->(dst_account:Account)\nORDER BY transfer.amount DESC\nRETURN src_account.id AS account_id, transfer.amount AS transfer_amount\nLIMIT 10"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nLET a = 1, b = 2, c = 3\nRETURN *\n\nNEXT\n\nRETURN p.name, (a + b + c) AS d"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (:Account)-[:Transfers]->(account:Account)\nRETURN account, COUNT(*) AS num_incoming_transfers\nGROUP BY account\n\nNEXT\n\nMATCH (account:Account)<-[:Owns]-(owner:Person)\nRETURN owner.name AS owner_name, num_incoming_transfers\nORDER BY num_incoming_transfers DESC"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (:Account)-[:Transfers]->(account:Account)\nRETURN account, COUNT(*) AS num_incoming_transfers\nGROUP BY ALL\nORDER BY num_incoming_transfers DESC\n\nNEXT\n\nMATCH (account:Account)<-[:Owns]-(owner:Person)\nRETURN owner.name AS owner_name, num_incoming_transfers"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, p.id\nLIMIT 1"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, p.id\nOFFSET 1"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, p.id\nOFFSET 1\nLIMIT 1"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, p.id\nLIMIT 1\nOFFSET 1","reject":true}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nSKIP 2\nRETURN p.name, p.id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]->(dst:Account)\nWITH DISTINCT dst\nRETURN dst.id AS destination_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]->(dst:Account)\nWITH *, dst.id\nRETURN dst.id AS destination_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]->(dst:Account)\nWITH COUNT(*) AS transfer_total, src.id AS source_id, dst.id AS destination_id\nRETURN transfer_total, destination_id, source_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (src:Account)-[transfer:Transfers]->(dst:Account)\nWITH dst\nRETURN src.id AS source_id"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, 1 AS group_id\nUNION ALL\nMATCH (p:Person)\nRETURN 2 AS group_id, p.name\nUNION ALL\nMATCH (p:Person)\nRETURN 3 AS group_id, p.name"}
+{"sql":"GRAPH graph_db.FinGraph\nMATCH (p:Person)\nRETURN p.name, 1 AS group_id\nUNION ALL\nMATCH (p:Person)\nRETURN 2 AS group_id, p.name\nEXCEPT DISTINCT\nMATCH (p:Person)\nRETURN 3 AS group_id, p.name"}

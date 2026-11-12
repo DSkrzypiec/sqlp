@@ -1,0 +1,56 @@
+{"sql":"ARRAY(subquery)","reject":true}
+{"sql":"SELECT ARRAY\n  (SELECT 1 UNION ALL\n   SELECT 2 UNION ALL\n   SELECT 3) AS new_array","shape":"SELECT ARRAY((SELECT 1 UNION ALL SELECT 2) UNION ALL SELECT 3) AS new_array;"}
+{"sql":"SELECT\n  ARRAY\n    (SELECT AS STRUCT 1, 2, 3\n     UNION ALL SELECT AS STRUCT 4, 5, 6) AS new_array"}
+{"sql":"SELECT ARRAY\n  (SELECT AS STRUCT [1, 2, 3] UNION ALL\n   SELECT AS STRUCT [4, 5, 6]) AS new_array"}
+{"sql":"SELECT ARRAY_CONCAT([1, 2], [3, 4], [5, 6]) as count_to_six","shape":"SELECT ARRAY_CONCAT(ARRAY[1, 2], ARRAY[3, 4], ARRAY[5, 6]) AS count_to_six;"}
+{"sql":"ARRAY_FIRST(array_expression)","reject":true}
+{"sql":"SELECT ARRAY_FIRST(['a','b','c','d']) as first_element","shape":"SELECT ARRAY_FIRST(ARRAY['a', 'b', 'c', 'd']) AS first_element;"}
+{"sql":"ARRAY_LAST(array_expression)","reject":true}
+{"sql":"SELECT ARRAY_LAST(['a','b','c','d']) as last_element","shape":"SELECT ARRAY_LAST(ARRAY['a', 'b', 'c', 'd']) AS last_element;"}
+{"sql":"ARRAY_LENGTH(array_expression)","reject":true}
+{"sql":"SELECT\n  ARRAY_LENGTH([\"coffee\", NULL, \"milk\" ]) AS size_a,\n  ARRAY_LENGTH([\"cake\", \"pie\"]) AS size_b","shape":"SELECT ARRAY_LENGTH(ARRAY['coffee', NULL, 'milk']) AS size_a, ARRAY_LENGTH(ARRAY['cake', 'pie']) AS size_b;"}
+{"sql":"ARRAY_REVERSE(value)","reject":true}
+{"sql":"SELECT ARRAY_REVERSE([1, 2, 3]) AS reverse_arr","shape":"SELECT ARRAY_REVERSE(ARRAY[1, 2, 3]) AS reverse_arr;"}
+{"sql":"ARRAY_SLICE(array_to_slice, start_offset, end_offset)","reject":true}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 1, 3) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 1, 3) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], -1, 3) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], -1, 3) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 1, -3) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 1, -3) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], -1, -3) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], -1, -3) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], -3, -1) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], -3, -1) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 3, 3) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 3, 3) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], -3, -3) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], -3, -3) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 1, 30) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 1, 30) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 1, -30) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 1, -30) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], -30, 30) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], -30, 30) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], -30, -5) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], -30, -5) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 5, 30) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 5, 30) AS result;"}
+{"sql":"SELECT ARRAY_SLICE(['a', 'b', 'c', 'd', 'e'], 1, NULL) AS result","shape":"SELECT ARRAY_SLICE(ARRAY['a', 'b', 'c', 'd', 'e'], 1, NULL) AS result;"}
+{"sql":"ARRAY_TO_STRING(array_expression, delimiter[, null_text])","reject":true}
+{"sql":"SELECT ARRAY_TO_STRING(['coffee', 'tea', 'milk', NULL], '--', 'MISSING') AS text","shape":"SELECT ARRAY_TO_STRING(ARRAY['coffee', 'tea', 'milk', NULL], '--', 'MISSING') AS text;"}
+{"sql":"SELECT ARRAY_TO_STRING(['cake', 'pie', NULL], '--', 'MISSING') AS text","shape":"SELECT ARRAY_TO_STRING(ARRAY['cake', 'pie', NULL], '--', 'MISSING') AS text;"}
+{"sql":"SELECT ARRAY_TO_STRING([b'prefix', b'middle', b'suffix', b'\\x00'], b'--') AS data","shape":"SELECT ARRAY_TO_STRING(ARRAY[b'prefix', b'middle', b'suffix', b'\\x00'], b'--') AS data;"}
+{"sql":"GENERATE_ARRAY(start_expression, end_expression[, step_expression])","reject":true}
+{"sql":"SELECT GENERATE_ARRAY(1, 5) AS example_array","shape":"SELECT GENERATE_ARRAY(1, 5) AS example_array;"}
+{"sql":"SELECT GENERATE_ARRAY(0, 10, 3) AS example_array","shape":"SELECT GENERATE_ARRAY(0, 10, 3) AS example_array;"}
+{"sql":"SELECT GENERATE_ARRAY(10, 0, -3) AS example_array","shape":"SELECT GENERATE_ARRAY(10, 0, -3) AS example_array;"}
+{"sql":"SELECT GENERATE_ARRAY(4, 4, 10) AS example_array","shape":"SELECT GENERATE_ARRAY(4, 4, 10) AS example_array;"}
+{"sql":"SELECT GENERATE_ARRAY(10, 0, 3) AS example_array","shape":"SELECT GENERATE_ARRAY(10, 0, 3) AS example_array;"}
+{"sql":"SELECT GENERATE_ARRAY(5, NULL, 1) AS example_array","shape":"SELECT GENERATE_ARRAY(5, NULL, 1) AS example_array;"}
+{"sql":"SELECT GENERATE_ARRAY(start, 5) AS example_array\nFROM UNNEST([3, 4, 5]) AS start"}
+{"sql":"GENERATE_DATE_ARRAY(start_date, end_date[, INTERVAL step_size step_unit])","reject":true}
+{"sql":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-08') AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-08') AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY(\n '2016-10-05', '2016-10-09', INTERVAL 2 DAY) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-09', INTERVAL 2 DAY) AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY('2016-10-05',\n  '2016-10-01', INTERVAL -3 DAY) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-01', INTERVAL -3 DAY) AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY('2016-10-05',\n  '2016-10-05', INTERVAL 8 DAY) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-05', INTERVAL 8 DAY) AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY('2016-10-05',\n  '2016-10-01', INTERVAL 1 DAY) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', '2016-10-01', INTERVAL 1 DAY) AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY('2016-10-05', NULL) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-10-05', NULL) AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY('2016-01-01',\n  '2016-12-31', INTERVAL 2 MONTH) AS example","shape":"SELECT GENERATE_DATE_ARRAY('2016-01-01', '2016-12-31', INTERVAL 2 MONTH) AS example;"}
+{"sql":"SELECT GENERATE_DATE_ARRAY(date_start, date_end, INTERVAL 1 WEEK) AS date_range\nFROM (\n  SELECT DATE '2016-01-01' AS date_start, DATE '2016-01-31' AS date_end\n  UNION ALL SELECT DATE \"2016-04-01\", DATE \"2016-04-30\"\n  UNION ALL SELECT DATE \"2016-07-01\", DATE \"2016-07-31\"\n  UNION ALL SELECT DATE \"2016-10-01\", DATE \"2016-10-31\"\n) AS items","shape":"SELECT GENERATE_DATE_ARRAY(date_start, date_end, INTERVAL 1 WEEK) AS date_range FROM (((SELECT DATE '2016-01-01' AS date_start, DATE '2016-01-31' AS date_end UNION ALL SELECT DATE '2016-04-01', DATE '2016-04-30') UNION ALL SELECT DATE '2016-07-01', DATE '2016-07-31') UNION ALL SELECT DATE '2016-10-01', DATE '2016-10-31') AS items;"}
+{"sql":"GENERATE_TIMESTAMP_ARRAY(start_timestamp, end_timestamp,\n                         INTERVAL step_size step_unit)","reject":true}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', '2016-10-07 00:00:00',\n                                INTERVAL 1 DAY) AS timestamp_array","shape":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', '2016-10-07 00:00:00', INTERVAL 1 DAY) AS timestamp_array;"}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', '2016-10-05 00:00:02',\n                                INTERVAL 1 SECOND) AS timestamp_array","shape":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', '2016-10-05 00:00:02', INTERVAL 1 SECOND) AS timestamp_array;"}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-06 00:00:00', '2016-10-01 00:00:00',\n                                INTERVAL -2 DAY) AS timestamp_array","shape":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-06 00:00:00', '2016-10-01 00:00:00', INTERVAL -2 DAY) AS timestamp_array;"}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', '2016-10-05 00:00:00',\n                                INTERVAL 1 HOUR) AS timestamp_array","shape":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', '2016-10-05 00:00:00', INTERVAL 1 HOUR) AS timestamp_array;"}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-06 00:00:00', '2016-10-05 00:00:00',\n                                INTERVAL 1 HOUR) AS timestamp_array","shape":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-06 00:00:00', '2016-10-05 00:00:00', INTERVAL 1 HOUR) AS timestamp_array;"}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', NULL, INTERVAL 1 HOUR)\n  AS timestamp_array","shape":"SELECT GENERATE_TIMESTAMP_ARRAY('2016-10-05 00:00:00', NULL, INTERVAL 1 HOUR) AS timestamp_array;"}
+{"sql":"SELECT GENERATE_TIMESTAMP_ARRAY(start_timestamp, end_timestamp, INTERVAL 1 HOUR)\n  AS timestamp_array\nFROM\n  (SELECT\n    TIMESTAMP '2016-10-05 00:00:00' AS start_timestamp,\n    TIMESTAMP '2016-10-05 02:00:00' AS end_timestamp\n   UNION ALL\n   SELECT\n    TIMESTAMP '2016-10-05 12:00:00' AS start_timestamp,\n    TIMESTAMP '2016-10-05 14:00:00' AS end_timestamp\n   UNION ALL\n   SELECT\n    TIMESTAMP '2016-10-05 23:59:00' AS start_timestamp,\n    TIMESTAMP '2016-10-06 01:59:00' AS end_timestamp)","shape":"SELECT GENERATE_TIMESTAMP_ARRAY(start_timestamp, end_timestamp, INTERVAL 1 HOUR) AS timestamp_array FROM ((SELECT TIMESTAMP '2016-10-05 00:00:00' AS start_timestamp, TIMESTAMP '2016-10-05 02:00:00' AS end_timestamp UNION ALL SELECT TIMESTAMP '2016-10-05 12:00:00' AS start_timestamp, TIMESTAMP '2016-10-05 14:00:00' AS end_timestamp) UNION ALL SELECT TIMESTAMP '2016-10-05 23:59:00' AS start_timestamp, TIMESTAMP '2016-10-06 01:59:00' AS end_timestamp);"}

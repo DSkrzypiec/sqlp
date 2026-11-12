@@ -1,0 +1,2 @@
+{"sql":"VECTOR_INDEX.STATISTICS(\n  TABLE table_name\n)","reject":true}
+{"sql":"SELECT * FROM VECTOR_INDEX.STATISTICS(TABLE mydataset.mytable)"}
