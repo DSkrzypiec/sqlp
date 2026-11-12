@@ -167,6 +167,24 @@ func (b *builder) query(q *ast.Query, n *QStructNode, sc *scope) {
 	b.exprs(q.OrderBy, n, sc)
 	b.exprs(q.Limit, n, sc)
 	// FOR UPDATE OF names aliases, not objects.
+	for _, op := range q.Pipes { // BigQuery's |> steps, in order
+		switch x := op.(type) {
+		case *ast.PipeJoin:
+			b.table(x.Join.Right, n, sc)
+			b.exprs(x.Join.On, n, sc)
+		case *ast.PipeSetOp: // more branches, like a set operation's
+			for _, branch := range x.Queries {
+				b.query(branch, n, sc)
+			}
+		case *ast.PipeCall:
+			b.function(x.Func, n, sc)
+		case *ast.PipeWith: // seen by the steps after it
+			b.withs = append(b.withs, x.With)
+			sc = b.finder.with(x.With, sc)
+		default:
+			b.exprs(op, n, sc)
+		}
+	}
 }
 
 func (b *builder) body(body ast.QueryBody, n *QStructNode, sc *scope) {
@@ -195,6 +213,10 @@ func (b *builder) body(body ast.QueryBody, n *QStructNode, sc *scope) {
 		b.query(x.Query, n, sc)
 	case *ast.TableBody:
 		b.addChild(n, b.relation(x.Name, sc))
+	case *ast.FromQuery:
+		for _, t := range x.From {
+			b.table(t, n, sc)
+		}
 	default:
 		panic(fmt.Sprintf("analyze: unexpected query body %T", body))
 	}

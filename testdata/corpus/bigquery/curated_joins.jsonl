@@ -18,9 +18,9 @@
 {"sql":"SELECT * FROM a JOIN b ON a.id = b.id JOIN c ON b.id = c.id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id;"}
 {"sql":"SELECT * FROM a JOIN b ON a.id = b.id LEFT JOIN c ON b.id = c.id RIGHT JOIN d ON c.id = d.id","shape":"SELECT * FROM ((a JOIN b ON a.id = b.id) LEFT JOIN c ON b.id = c.id) RIGHT JOIN d ON c.id = d.id;"}
 {"sql":"SELECT * FROM a LEFT JOIN b ON a.id = b.id LEFT JOIN c ON a.id = c.id LEFT JOIN d ON a.id = d.id","shape":"SELECT * FROM ((a LEFT JOIN b ON a.id = b.id) LEFT JOIN c ON a.id = c.id) LEFT JOIN d ON a.id = d.id;"}
-{"sql":"SELECT * FROM a JOIN b JOIN c ON b.id = c.id ON a.id = b.id"}
-{"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b.id = c.id ON a.id = b.id"}
-{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON c.id = d.id ON b.id = c.id ON a.id = b.id"}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b.id = c.id ON a.id = b.id","shape":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b.id = c.id ON a.id = b.id","shape":"SELECT * FROM a LEFT JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
+{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON c.id = d.id ON b.id = c.id ON a.id = b.id","shape":"SELECT * FROM a JOIN (b LEFT JOIN (c JOIN d ON c.id = d.id) ON b.id = c.id) ON a.id = b.id;"}
 {"sql":"SELECT * FROM (a JOIN b ON a.id = b.id)","shape":"SELECT * FROM (a JOIN b ON a.id = b.id);"}
 {"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id","shape":"SELECT * FROM (a JOIN b ON a.id = b.id) JOIN c ON b.id = c.id;"}
 {"sql":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id","shape":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
@@ -156,7 +156,7 @@
 {"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b . id = c . id ON a . id = b id","reject":true}
 {"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b . id = c . id ON a . = id b . id","reject":true}
 {"sql":"* FROM a LEFT JOIN b JOIN c ON b . id = c . id ON a . id = b . id","reject":true}
-{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . id ON a . id = b . id"}
+{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . id ON a . id = b . id","shape":"SELECT * FROM a JOIN (b JOIN c ON b.id = c.id) ON a.id = b.id;"}
 {"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON ON c . id = d . id ON b . id = c . id ON a . id = b . id","reject":true}
 {"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON c . id = d . id ON b id = c . id ON a . id = b . id","reject":true}
 {"sql":"SELECT * FROM a JOIN b LEFT JOIN c d JOIN ON c . id = d . id ON b . id = c . id ON a . id = b . id","reject":true}

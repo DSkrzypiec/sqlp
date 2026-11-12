@@ -695,6 +695,10 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch t.Value {
 	case "SELECT", "VALUES":
 		return p.parseQuery()
+	case "FROM":
+		if p.d.Features.Query.Pipes {
+			return p.parseQuery()
+		}
 	case "TABLE":
 		if p.d.Features.Query.TableKeyword {
 			return p.parseQuery()

@@ -22,9 +22,9 @@
 {"sql":"SELECT COUNT(*)\nFROM TABLE_QUERY([bigquery-public-data:noaa_gsod],\n                 'table_id IN (\"gsod2010\", \"gsod2011\")')","reject":true}
 {"sql":"SELECT COUNT(*)\nFROM `bigquery-public-data.noaa_gsod.*`\nWHERE _TABLE_SUFFIX IN (\"gsod2010\", \"gsod2011\")","shape":"SELECT COUNT(*) FROM `bigquery-public-data.noaa_gsod.*` WHERE _TABLE_SUFFIX IN ('gsod2010', 'gsod2011');"}
 {"sql":"SELECT\n  x,\n  y\nFROM\n  (SELECT 1 AS x, \"foo\" AS y),\n  (SELECT 2 AS x, \"bar\" AS y)"}
-{"sql":"SELECT\n  x,\n  y\nFROM\n  (SELECT 1 AS x, \"foo\" AS y UNION ALL BY NAME\n   SELECT 2 AS x, \"bar\" AS y)"}
+{"sql":"SELECT\n  x,\n  y\nFROM\n  (SELECT 1 AS x, \"foo\" AS y UNION ALL BY NAME\n   SELECT 2 AS x, \"bar\" AS y)","shape":"SELECT x, y FROM (SELECT 1 AS x, 'foo' AS y UNION ALL BY NAME SELECT 2 AS x, 'bar' AS y);"}
 {"sql":"SELECT * FROM (SELECT 1 AS A, 2 as B), (SELECT 3 AS B, 4 as A)","shape":"SELECT * FROM (SELECT 1 AS A, 2 AS B), (SELECT 3 AS B, 4 AS A);"}
-{"sql":"SELECT * FROM (SELECT 1 AS A, 2 as B) UNION ALL BY NAME (SELECT 3 AS B, 4 as A)"}
+{"sql":"SELECT * FROM (SELECT 1 AS A, 2 as B) UNION ALL BY NAME (SELECT 3 AS B, 4 as A)","shape":"SELECT * FROM (SELECT 1 AS A, 2 AS B) UNION ALL BY NAME (SELECT 3 AS B, 4 AS A);"}
 {"sql":"+---+---+\n| A | B |\n+---+---+\n| 1 | 2 |\n| 4 | 3 |\n+---+---+","reject":true}
 {"sql":"SELECT *, UTC_USEC_TO_DAY(timestamp_col) AS day\nFROM MyTable"}
 {"sql":"SELECT user, action, day\nFROM V"}

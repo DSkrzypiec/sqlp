@@ -337,8 +337,6 @@
 {"sql":"LOAD DATA INTO mydataset.test_csv (Number INT64, Name STRING, Time DATE)\n  PARTITION BY Time\n  FROM FILES (\n    format = 'CSV', uris = ['azure://test.blob.core.windows.net/container/sampled*'],\n    skip_leading_rows=1\n  )\n  WITH CONNECTION `azure-eastus2.test-connection`","kind":"rejects-valid"}
 {"sql":"LOAD DATA OVERWRITE mydataset.testparquet\n  FROM FILES (\n    uris = ['s3://test-bucket/sample.parquet'],\n    format = 'PARQUET'\n  )\n  WITH CONNECTION `aws-us-east-1.test-connection`","kind":"rejects-valid"}
 {"sql":"CREATE TEMP FUNCTION TimestampIsValid(t TIMESTAMP) AS (\n  t >= TIMESTAMP('0001-01-01 00:00:00') AND\n  t <= TIMESTAMP('9999-12-31 23:59:59.999999')\n)","kind":"rejects-valid"}
-{"sql":"SELECT\n  x,\n  y\nFROM\n  (SELECT 1 AS x, \"foo\" AS y UNION ALL BY NAME\n   SELECT 2 AS x, \"bar\" AS y)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM (SELECT 1 AS A, 2 as B) UNION ALL BY NAME (SELECT 3 AS B, 4 as A)","kind":"rejects-valid"}
 {"sql":"#GoogleSQL\n-- Takes a struct of x, y, and z and returns a struct with a new field foo.\nCREATE TEMPORARY FUNCTION AddField(s STRUCT<x FLOAT64, y BOOL, z STRING>)\n  RETURNS STRUCT<x FLOAT64, y BOOL, z STRING, foo STRING> LANGUAGE js AS \"\"\"\nvar new_struct = new Object();\nnew_struct.x = s.x;\nnew_struct.y = s.y;\nnew_struct.z = s.z;\nif (s.y) {\n  new_struct.foo = 'bar';\n} else {\n  new_struct.foo = 'baz';\n}\n\nreturn new_struct;\n\"\"\";\n\nWITH T AS (\n  SELECT x, MOD(off, 2) = 0 AS y, CAST(x AS STRING) AS z\n  FROM UNNEST([5.0, 4.0, 3.0, 2.0, 1.0]) AS x WITH OFFSET off\n)\nSELECT AddField(t).*\nFROM T AS t;","kind":"rejects-valid"}
 {"sql":"#GoogleSQL\nBEGIN\n  DECLARE missing_suffixes STRING;\n\n  SET missing_suffixes = (\n    SELECT STRING_AGG(FORMAT_DATE('%Y%m%d', day), ', ')\n    FROM UNNEST(GENERATE_DATE_ARRAY(DATE '2016-05-01', DATE '2016-05-09')) AS day\n    WHERE FORMAT_DATE('%Y%m%d', day) NOT IN (\n      SELECT _TABLE_SUFFIX\n      FROM `mydataset.sea_weather_*`\n      WHERE _TABLE_SUFFIX BETWEEN '20160501' AND '20160509'\n    )\n  );\n\n  -- Raise error or run query\n  IF missing_suffixes IS NOT NULL THEN\n    SELECT ERROR(FORMAT(\"Not found suffixes: %s\", missing_suffixes));\n  ELSE\n    SELECT\n      ROUND(AVG(TemperatureF),1) AS AVG_TEMP_F\n    FROM\n      `mydataset.sea_weather_*`\n    WHERE\n      _TABLE_SUFFIX BETWEEN '20160501' AND '20160509';\n  END IF;\nEND;","kind":"rejects-valid"}
 {"sql":"SELECT WITH(a AS '123',               -- a is '123'\n            b AS CONCAT(a, '456'),    -- b is '123456'\n            c AS '789',               -- c is '789'\n            CONCAT(b, c)) AS result","kind":"rejects-valid"}
@@ -347,60 +345,10 @@
 {"sql":"SELECT WITH(diff AS a - b, AVG(diff))\nFROM UNNEST([\n              STRUCT(1 AS a, 2 AS b),\n              STRUCT(3 AS a, 4 AS b),\n              STRUCT(5 AS a, 6 AS b)\n            ])","kind":"rejects-valid"}
 {"sql":"WITH my_table AS (\n  SELECT 1 AS x, 2 AS y\n  UNION ALL\n  SELECT 3 AS x, 4 AS y\n  UNION ALL\n  SELECT 5 AS x, 6 AS y\n)\nSELECT WITH(a AS SUM(x), b AS COUNT(x), a/b) AS avg_x, AVG(y) AS avg_y\nFROM my_table\nWHERE x > 1","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE TABLE Produce AS (\n  SELECT 'apples' AS item, 2 AS sales, 'fruit' AS category\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales, 'vegetable' AS category\n  UNION ALL\n  SELECT 'apples' AS item, 7 AS sales, 'fruit' AS category\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales, 'fruit' AS category\n)","kind":"rejects-valid"}
-{"sql":"FROM Produce\n|> WHERE\n    item != 'bananas'\n    AND category IN ('fruit', 'nut')\n|> AGGREGATE COUNT(*) AS num_items, SUM(sales) AS total_sales\n   GROUP BY item\n|> ORDER BY item DESC","kind":"rejects-valid"}
-{"sql":"FROM Produce","kind":"rejects-valid"}
-{"sql":"FROM\n  Produce AS p1\n  JOIN Produce AS p2\n    USING (item)\n|> WHERE item = 'bananas'\n|> SELECT p1.item, p2.sales","kind":"rejects-valid"}
-{"sql":"FROM (SELECT 'apples' AS item, 2 AS sales)\n|> SELECT item AS fruit_name","kind":"rejects-valid"}
 {"sql":"FROM Produce\n|> SELECT item, sales, category, SUM(sales) OVER item_window AS category_total\n   WINDOW item_window AS (PARTITION BY category)","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 8 AS sales\n)\n|> EXTEND item IN ('bananas', 'lemons') AS is_yellow","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> EXTEND SUM(sales) OVER() AS total_sales","kind":"rejects-valid"}
 {"sql":"FROM Produce\n|> EXTEND SUM(sales) OVER item_window AS category_total\n   WINDOW item_window AS (PARTITION BY category)","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 1 AS x, 11 AS y\n  UNION ALL\n  SELECT 2 AS x, 22 AS y\n)\n|> SET x = x * x, y = 3","kind":"rejects-valid"}
-{"sql":"FROM (SELECT 2 AS x, 3 AS y) AS t\n|> SET x = x * x, y = 8\n|> SELECT t.x AS original_x, x, y","kind":"rejects-valid"}
-{"sql":"SELECT 'apples' AS item, 2 AS sales, 'fruit' AS category\n|> DROP sales, category","kind":"rejects-valid"}
-{"sql":"FROM (SELECT 1 AS x, 2 AS y) AS t\n|> DROP x\n|> SELECT t.x AS original_x, y","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS x, 2 AS y, 3 AS z\n|> AS t\n|> RENAME y AS renamed_y\n|> SELECT *, t.y AS t_y","kind":"rejects-valid"}
 {"sql":"(\n  SELECT \"000123\" AS id, \"apples\" AS item, 2 AS sales\n  UNION ALL\n  SELECT \"000456\" AS id, \"bananas\" AS item, 5 AS sales\n) AS sales_table\n|> AGGREGATE SUM(sales) AS total_sales GROUP BY id, item\n-- AGGREGATE creates an output table, so the sales_table alias is now out of\n-- scope. Add a t1 alias so the join can refer to its id column.\n|> AS t1\n|> JOIN (SELECT 456 AS id, \"yellow\" AS color) AS t2\n   ON CAST(t1.id AS INT64) = t2.id\n|> SELECT t2.id, total_sales, color","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> WHERE sales >= 3","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'apples' AS item, 7 AS sales\n)\n|> AGGREGATE COUNT(*) AS num_items, SUM(sales) AS total_sales","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'apples' AS item, 7 AS sales\n)\n|> AGGREGATE COUNT(*) AS num_items, SUM(sales) AS total_sales\n   GROUP BY item","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'apples' AS item, 7 AS sales\n)\n|> EXTEND UPPER(item) AS bucket\n|> AGGREGATE COUNT(*) AS num_items, SUM(sales) AS total_sales\n   GROUP BY ROLLUP(bucket)\n|> ORDER BY bucket","kind":"rejects-valid"}
-{"sql":"FROM Produce\n|> AGGREGATE SUM(sales) AS total_sales\n   GROUP AND ORDER BY category, item DESC","kind":"rejects-valid"}
-{"sql":"FROM Produce\n|> AGGREGATE SUM(sales) AS total_sales\n   GROUP BY category, item\n|> ORDER BY category, item DESC","kind":"rejects-valid"}
-{"sql":"FROM Produce\n|> AGGREGATE SUM(sales) AS total_sales ASC\n   GROUP BY item, category DESC","kind":"rejects-valid"}
-{"sql":"FROM Produce\n|> AGGREGATE SUM(sales) AS total_sales\n   GROUP BY item, category\n|> ORDER BY category DESC, total_sales","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> DISTINCT\n|> WHERE sales >= 3","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> AS Produce\n|> DISTINCT\n|> SELECT Produce.item","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> AS Produce\n|> SELECT DISTINCT *\n|> SELECT Produce.item","kind":"rejects-valid"}
-{"sql":"SELECT AS STRUCT 1 x, 2 y\n|> DISTINCT","kind":"rejects-valid"}
-{"sql":"SELECT AS STRUCT 1 x, 2 y\n|> SELECT DISTINCT *","kind":"rejects-valid"}
-{"sql":"FROM table\n|> SELECT DISTINCT a, b, c","kind":"rejects-valid"}
-{"sql":"FROM table\n|> SELECT a, b, c\n|> DISTINCT","kind":"rejects-valid"}
-{"sql":"FROM table\n|> AGGREGATE\n   GROUP BY a, b, c","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n)\n|> AS produce_sales\n|> LEFT JOIN\n     (\n       SELECT \"apples\" AS item, 123 AS id\n     ) AS produce_data\n   ON produce_sales.item = produce_data.item\n|> SELECT produce_sales.item, sales, id","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  tvf2(arg2, arg3, TABLE tvf1(TABLE input_table, arg1))","kind":"rejects-valid"}
-{"sql":"FROM input_table\n|> CALL tvf1(arg1)\n|> CALL tvf2(arg2, arg3)","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 1 AS x\n  UNION ALL\n  SELECT 3 AS x\n  UNION ALL\n  SELECT 2 AS x\n)\n|> ORDER BY x DESC","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> ORDER BY item\n|> LIMIT 1","kind":"rejects-valid"}
-{"sql":"(\n  SELECT 'apples' AS item, 2 AS sales\n  UNION ALL\n  SELECT 'bananas' AS item, 5 AS sales\n  UNION ALL\n  SELECT 'carrots' AS item, 8 AS sales\n)\n|> ORDER BY item\n|> LIMIT 1 OFFSET 2","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3]) AS number\n|> UNION ALL (SELECT 1)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3]) AS number\n|> UNION DISTINCT (SELECT 1)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3]) AS number\n|> UNION DISTINCT\n    (SELECT 1),\n    (SELECT 2)","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit\n|> UNION ALL BY NAME\n    (SELECT 20 AS two_digit, 2 AS one_digit)","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit\n|> UNION ALL\n    (SELECT 20 AS two_digit, 2 AS one_digit)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3, 3, 4]) AS number\n|> INTERSECT DISTINCT\n    (SELECT * FROM UNNEST(ARRAY<INT64>[2, 3, 3, 5]) AS number)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3, 3, 4]) AS number\n|> INTERSECT DISTINCT\n    (SELECT * FROM UNNEST(ARRAY<INT64>[2, 3, 3, 5]) AS number),\n    (SELECT * FROM UNNEST(ARRAY<INT64>[3, 3, 4, 5]) AS number)","kind":"rejects-valid"}
-{"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\n|> INTERSECT DISTINCT BY NAME\n    (SELECT 10 AS two_digit, 1 AS one_digit)","kind":"rejects-valid"}
-{"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\n|> INTERSECT DISTINCT\n    (SELECT 10 AS two_digit, 1 AS one_digit)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3, 3, 4]) AS number\n|> EXCEPT DISTINCT\n    (SELECT * FROM UNNEST(ARRAY<INT64>[1, 2]) AS number)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3, 3, 4]) AS number\n|> EXCEPT DISTINCT\n    (SELECT * FROM UNNEST(ARRAY<INT64>[1, 2]) AS number),\n    (SELECT * FROM UNNEST(ARRAY<INT64>[1, 4]) AS number)","kind":"rejects-valid"}
-{"sql":"SELECT * FROM UNNEST(ARRAY<INT64>[1, 2, 3, 3, 4]) AS number\n|> EXCEPT DISTINCT\n(\n  SELECT * FROM UNNEST(ARRAY<INT64>[1, 2]) AS number\n  |> EXCEPT DISTINCT\n      (SELECT * FROM UNNEST(ARRAY<INT64>[1, 4]) AS number)\n)","kind":"rejects-valid"}
-{"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\n|> EXCEPT DISTINCT BY NAME\n    (SELECT 10 AS two_digit, 1 AS one_digit)","kind":"rejects-valid"}
-{"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\n|> EXCEPT DISTINCT\n    (SELECT 10 AS two_digit, 1 AS one_digit)","kind":"rejects-valid"}
-{"sql":"FROM LargeTable\n|> TABLESAMPLE SYSTEM (1 PERCENT)","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS key\n|> WITH t AS (\n    SELECT 1 AS key, 'my_value' AS value\n  )\n|> INNER JOIN t USING (key)","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS key\n-- Define multiple CTEs.\n|> WITH t1 AS (\n    SELECT 2\n  ), t2 AS (\n    SELECT 3\n  )\n|> UNION ALL (FROM t1), (FROM t2)","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS key\n|> WITH t1 AS (\n     SELECT 2\n   ), t2 AS (\n     SELECT 3\n   ),\n|> UNION ALL (FROM t1), (FROM t2)","kind":"rejects-valid"}
 {"sql":"(\n  SELECT \"kale\" AS product, 51 AS sales, \"Q1\" AS quarter\n  UNION ALL\n  SELECT \"kale\" AS product, 4 AS sales, \"Q1\" AS quarter\n  UNION ALL\n  SELECT \"kale\" AS product, 45 AS sales, \"Q2\" AS quarter\n  UNION ALL\n  SELECT \"apple\" AS product, 8 AS sales, \"Q1\" AS quarter\n  UNION ALL\n  SELECT \"apple\" AS product, 10 AS sales, \"Q2\" AS quarter\n)\n|> PIVOT(SUM(sales) FOR quarter IN ('Q1', 'Q2'))","kind":"rejects-valid"}
 {"sql":"(\n  SELECT \"kale\" AS product, 51 AS sales, \"Q1\" AS quarter\n  UNION ALL\n  SELECT \"kale\" AS product, 4 AS sales, \"Q1\" AS quarter\n  UNION ALL\n  SELECT \"kale\" AS product, 45 AS sales, \"Q2\" AS quarter\n  UNION ALL\n  SELECT \"apple\" AS product, 8 AS sales, \"Q1\" AS quarter\n  UNION ALL\n  SELECT \"apple\" AS product, 10 AS sales, \"Q2\" AS quarter\n)\n|> PIVOT(SUM(sales) FOR quarter IN ('Q1' AS first_quarter, 'Q2' AS second_quarter)) AS pivoted_sales\n|> SELECT pivoted_sales.*","kind":"rejects-valid"}
 {"sql":"(\n  SELECT 'kale' as product, 55 AS Q1, 45 AS Q2\n  UNION ALL\n  SELECT 'apple', 8, 10\n)\n|> UNPIVOT(sales FOR quarter IN (Q1, Q2))","kind":"rejects-valid"}
@@ -425,36 +373,9 @@
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    LAST(electronics.sale_date) AS last_electronics_sale_date,\n    FIRST(software.sale_date) AS first_software_sale_date,\n    DATE_DIFF(FIRST(software.sale_date), LAST(electronics.sale_date), day) AS date_gap\n  PATTERN (electronics+ any_category*? software+)\n  DEFINE\n    electronics AS product_category = 'Electronics',\n    software AS product_category = 'Software',\n    any_category AS TRUE\n)","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    MATCH_NUMBER() AS match_number,\n    ARRAY_AGG(STRUCT(MATCH_ROW_NUMBER() AS row,\n                     CLASSIFIER() AS symbol,\n                     sale_date,\n                     product_category)) AS sales\n  PATTERN (low+ mid+ high+)\n  DEFINE\n    low AS amount < 50,\n    mid AS amount >= 50 AND amount <= 100,\n    high AS amount > 100\n)","kind":"rejects-valid"}
 {"sql":"SELECT *\nFROM\n  Sales\nMATCH_RECOGNIZE (\n  PARTITION BY customer\n  ORDER BY sale_date\n  MEASURES\n    MATCH_NUMBER() AS match_number,\n    ARRAY_AGG(STRUCT(MATCH_ROW_NUMBER() AS row,\n                     CLASSIFIER() AS symbol,\n                     sale_date,\n                     product_category)) AS sales\n  AFTER MATCH SKIP TO NEXT ROW\n  PATTERN (low+ mid+ high+)\n  DEFINE\n    low AS amount < 50,\n    mid AS amount >= 50 AND amount <= 100,\n    high AS amount > 100\n)","kind":"rejects-valid"}
-{"sql":"FROM A INNER JOIN B ON A.w = B.y\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +---------------+\n| w | x |  *  | y | z |  =  | w | x | y | z |\n+-------+     +-------+     +---------------+\n| 1 | a |     | 2 | k |     | 2 | b | 2 | k |\n| 2 | b |     | 3 | m |     | 3 | c | 3 | m |\n| 3 | c |     | 3 | n |     | 3 | c | 3 | n |\n| 3 | d |     | 4 | p |     | 3 | d | 3 | m |\n+-------+     +-------+     | 3 | d | 3 | n |\n                            +---------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A INNER JOIN B USING (x)\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +-----------+\n| x | y |  *  | x | z |  =  | x | y | z |\n+-------+     +-------+     +-----------+\n| 1 | a |     | 2 | k |     | 2 | b | k |\n| 2 | b |     | 3 | m |     | 3 | c | m |\n| 3 | c |     | 3 | n |     | 3 | c | n |\n| 3 | d |     | 4 | p |     | 3 | d | m |\n+-------+     +-------+     | 3 | d | n |\n                            +-----------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A CROSS JOIN B\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +---------------+\n| w | x |  *  | y | z |  =  | w | x | y | z |\n+-------+     +-------+     +---------------+\n| 1 | a |     | 2 | c |     | 1 | a | 2 | c |\n| 2 | b |     | 3 | d |     | 1 | a | 3 | d |\n+-------+     +-------+     | 2 | b | 2 | c |\n                            | 2 | b | 3 | d |\n                            +---------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A, B\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +---------------+\n| w | x |  *  | y | z |  =  | w | x | y | z |\n+-------+     +-------+     +---------------+\n| 1 | a |     | 2 | c |     | 1 | a | 2 | c |\n| 2 | b |     | 3 | d |     | 1 | a | 3 | d |\n+-------+     +-------+     | 2 | b | 2 | c |\n                            | 2 | b | 3 | d |\n                            +---------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A FULL OUTER JOIN B ON A.w = B.y\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +---------------------------+\n| w | x |  *  | y | z |  =  | w    | x    | y    | z    |\n+-------+     +-------+     +---------------------------+\n| 1 | a |     | 2 | k |     | 1    | a    | NULL | NULL |\n| 2 | b |     | 3 | m |     | 2    | b    | 2    | k    |\n| 3 | c |     | 3 | n |     | 3    | c    | 3    | m    |\n| 3 | d |     | 4 | p |     | 3    | c    | 3    | n    |\n+-------+     +-------+     | 3    | d    | 3    | m    |\n                            | 3    | d    | 3    | n    |\n                            | NULL | NULL | 4    | p    |\n                            +---------------------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A FULL OUTER JOIN B USING (x)\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +--------------------+\n| x | y |  *  | x | z |  =  | x    | y    | z    |\n+-------+     +-------+     +--------------------+\n| 1 | a |     | 2 | k |     | 1    | a    | NULL |\n| 2 | b |     | 3 | m |     | 2    | b    | k    |\n| 3 | c |     | 3 | n |     | 3    | c    | m    |\n| 3 | d |     | 4 | p |     | 3    | c    | n    |\n+-------+     +-------+     | 3    | d    | m    |\n                            | 3    | d    | n    |\n                            | 4    | NULL | p    |\n                            +--------------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A LEFT OUTER JOIN B ON A.w = B.y\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +---------------------------+\n| w | x |  *  | y | z |  =  | w    | x    | y    | z    |\n+-------+     +-------+     +---------------------------+\n| 1 | a |     | 2 | k |     | 1    | a    | NULL | NULL |\n| 2 | b |     | 3 | m |     | 2    | b    | 2    | k    |\n| 3 | c |     | 3 | n |     | 3    | c    | 3    | m    |\n| 3 | d |     | 4 | p |     | 3    | c    | 3    | n    |\n+-------+     +-------+     | 3    | d    | 3    | m    |\n                            | 3    | d    | 3    | n    |\n                            +---------------------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A LEFT OUTER JOIN B USING (x)\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +--------------------+\n| x | y |  *  | x | z |  =  | x    | y    | z    |\n+-------+     +-------+     +--------------------+\n| 1 | a |     | 2 | k |     | 1    | a    | NULL |\n| 2 | b |     | 3 | m |     | 2    | b    | k    |\n| 3 | c |     | 3 | n |     | 3    | c    | m    |\n| 3 | d |     | 4 | p |     | 3    | c    | n    |\n+-------+     +-------+     | 3    | d    | m    |\n                            | 3    | d    | n    |\n                            +--------------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A RIGHT OUTER JOIN B ON A.w = B.y\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +---------------------------+\n| w | x |  *  | y | z |  =  | w    | x    | y    | z    |\n+-------+     +-------+     +---------------------------+\n| 1 | a |     | 2 | k |     | 2    | b    | 2    | k    |\n| 2 | b |     | 3 | m |     | 3    | c    | 3    | m    |\n| 3 | c |     | 3 | n |     | 3    | c    | 3    | n    |\n| 3 | d |     | 4 | p |     | 3    | d    | 3    | m    |\n+-------+     +-------+     | 3    | d    | 3    | n    |\n                            | NULL | NULL | 4    | p    |\n                            +---------------------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A RIGHT OUTER JOIN B USING (x)\n\n/*\nTable A       Table B       Result\n+-------+     +-------+     +--------------------+\n| x | y |  *  | x | z |  =  | x    | y    | z    |\n+-------+     +-------+     +--------------------+\n| 1 | a |     | 2 | k |     | 2    | b    | k    |\n| 2 | b |     | 3 | m |     | 3    | c    | m    |\n| 3 | c |     | 3 | n |     | 3    | c    | n    |\n| 3 | d |     | 4 | p |     | 3    | d    | m    |\n+-------+     +-------+     | 3    | d    | n    |\n                            | 4    | NULL | p    |\n                            +--------------------+\n*/","kind":"rejects-valid"}
-{"sql":"FROM A JOIN B USING (x) JOIN C USING (x)\n\n-- A JOIN B USING (x)        = result_1\n-- result_1 JOIN C USING (x) = result_2\n-- result_2                  = return value","kind":"rejects-valid"}
-{"sql":"FROM ( (A JOIN B USING (x)) JOIN C USING (x) )\n\n-- A JOIN B USING (x)        = result_1\n-- result_1 JOIN C USING (x) = result_2\n-- result_2                  = return value","kind":"rejects-valid"}
-{"sql":"FROM ( A JOIN (B JOIN C USING (x)) USING (x) )\n\n-- B JOIN C USING (x)       = result_1\n-- A JOIN result_1          = result_2\n-- result_2                 = return value","kind":"rejects-valid"}
-{"sql":"FROM A JOIN B JOIN C JOIN D USING (w) ON B.x = C.y ON A.z = B.x","kind":"rejects-valid"}
-{"sql":"FROM A JOIN B USING (x) JOIN C USING (x), D\n\n-- A JOIN B USING (x)        = result_1\n-- result_1 JOIN C USING (x) = result_2\n-- result_2 CROSS JOIN D     = return value","kind":"rejects-valid"}
-{"sql":"FROM A JOIN UNNEST(ARRAY(SELECT AS STRUCT * FROM B WHERE A.ID = B.ID)) AS C","kind":"rejects-valid"}
-{"sql":"FROM A JOIN UNNEST(A.array_of_IDs) AS C","kind":"rejects-valid"}
-{"sql":"FROM A JOIN UNNEST(A.array_of_IDs) AS IDs","kind":"rejects-valid"}
-{"sql":"FROM A JOIN A.array_of_IDs AS IDs","kind":"rejects-valid"}
-{"sql":"FROM\n  A\n  JOIN\n  UNNEST(ARRAY(SELECT AS STRUCT * FROM B WHERE A.ID = B.ID)) AS C\n  ON A.Name = C.Name","kind":"rejects-valid"}
 {"sql":"SELECT item, purchases, category, LAST_VALUE(item)\n  OVER (c ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING) AS most_popular\nFROM Produce\nWINDOW\n  a AS (PARTITION BY category),\n  b AS (a ORDER BY purchases),\n  c AS b","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit\nUNION ALL BY NAME\nSELECT 20 AS two_digit, 2 AS one_digit","kind":"rejects-valid"}
 {"sql":"SELECT 1 AS one_digit, 10 AS two_digit\nUNION ALL STRICT CORRESPONDING\nSELECT 20 AS two_digit, 2 AS one_digit","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit, 100 AS three_digit\nINNER UNION ALL BY NAME\nSELECT 20 AS two_digit, 2 AS one_digit, 1000 AS four_digit","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit, 100 AS three_digit\nFULL OUTER UNION ALL BY NAME\nSELECT 20 AS two_digit, 2 AS one_digit, 1000 AS four_digit","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit, 100 AS three_digit\nLEFT OUTER UNION ALL BY NAME\nSELECT 20 AS two_digit, 2 AS one_digit, 1000 AS four_digit","kind":"rejects-valid"}
-{"sql":"SELECT 1 AS one_digit, 10 AS two_digit, 100 AS three_digit\nFULL OUTER UNION ALL BY NAME ON (three_digit, two_digit)\nSELECT 20 AS two_digit, 2 AS one_digit, 1000 AS four_digit","kind":"rejects-valid"}
-{"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\nINTERSECT DISTINCT BY NAME\nSELECT 10 AS two_digit, 1 AS one_digit","kind":"rejects-valid"}
 {"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\nINTERSECT DISTINCT STRICT CORRESPONDING\nSELECT 10 AS two_digit, 1 AS one_digit","kind":"rejects-valid"}
-{"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\nEXCEPT DISTINCT BY NAME\nSELECT 10 AS two_digit, 1 AS one_digit","kind":"rejects-valid"}
 {"sql":"WITH\n  NumbersTable AS (\n    SELECT 1 AS one_digit, 10 AS two_digit\n    UNION ALL\n    SELECT 2, 20\n    UNION ALL\n    SELECT 3, 30\n  )\nSELECT one_digit, two_digit FROM NumbersTable\nEXCEPT DISTINCT STRICT CORRESPONDING\nSELECT 10 AS two_digit, 1 AS one_digit","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE TABLE `myproject.mydataset.new_table` AS\n  WITH RECURSIVE\n    T1 AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM T1 WHERE n < 3)\n  SELECT * FROM T1","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE VIEW `myproject.mydataset.new_view` AS\n  WITH RECURSIVE\n    T1 AS (SELECT 1 AS n UNION ALL SELECT n + 1 FROM T1 WHERE n < 3)\n  SELECT * FROM T1","kind":"rejects-valid"}
@@ -477,7 +398,6 @@
 {"sql":"CREATE OR REPLACE TABLE mydataset.query_table\n(\n  query_id STRING,\n  embedding ARRAY<FLOAT64>\n)","kind":"rejects-valid"}
 {"sql":"INSERT mydataset.query_table (query_id, embedding)\nVALUES('dog', [1.0, 2.0]),\n('cat', [1.0, -1.0])","kind":"rejects-valid"}
 {"sql":"CREATE OR REPLACE VIEW my_dataset.sales_view AS\nWITH\n  Orders AS (\n    SELECT 1001 AS order_id, 'Sales' AS department, 250.00 AS amount\n    UNION ALL\n    SELECT 1002 AS order_id, 'Engineering' AS department, 500.00 AS amount\n    UNION ALL\n    SELECT 1004 AS order_id, 'Sales' AS department, 430.50 AS amount\n  )\nSELECT\n  order_id,\n  department,\n  amount\nFROM Orders\nWHERE department = SECURE_CONTEXT('user_dept')","kind":"rejects-valid"}
-{"sql":"FROM UNNEST(['02:30:10', '01:02:03']) AS time_str\n|> EXTEND REGEXP_EXTRACT_GROUPS(time_str, r'(?<h__INT64>\\d{2}):(?<m__INT64>\\d{2}):(?<s__INT64>\\d{2})').*\n|> SELECT time_str, h * 3600 + m * 60 + s AS total_seconds","kind":"rejects-valid"}
 {"sql":"CREATE TABLE mydataset.Produce (product STRING, inventory INT64) AS (\n  SELECT 'apples' AS product, 10 AS inventory)","kind":"rejects-valid"}
 {"sql":"DELETE mydataset.Produce WHERE product = 'bananas'","kind":"rejects-valid"}
 {"sql":"CREATE TABLE mydataset.Produce (\n  product STRING,\n  inventory INT64)\nOPTIONS(enable_change_history=true)","kind":"rejects-valid"}
@@ -496,8 +416,6 @@
 {"sql":"WITH x AS (SELECT 1) INSERT INTO t (a) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH x AS (SELECT 1) UPDATE t SET a = (SELECT * FROM x)","kind":"accepts-invalid"}
 {"sql":"WITH x AS (SELECT 1) DELETE FROM t WHERE a IN (SELECT * FROM x)","kind":"accepts-invalid"}
-{"sql":"WITH x AS (SELECT 1) FROM x","kind":"rejects-valid"}
-{"sql":"WITH x AS (FROM t) SELECT 1","kind":"rejects-valid"}
 {"sql":"WITH x ( p ) AS ( SELECT a * t ) SELECT p FROM x","kind":"accepts-invalid"}
 {"sql":"WITH x ( p , q ) AS ( SELECT a , b FROM t ) SELECT p , RETURNING FROM x","kind":"accepts-invalid"}
 {"sql":"WITH x ( p ) AS ( SELECT 1 ) , y ( q ) AS ( SELECT p p FROM x ) SELECT q FROM y","kind":"accepts-invalid"}
@@ -507,7 +425,6 @@
 {"sql":"WITH x ( p ) AS MATERIALIZED ( SELECT 1 ) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH a AS ( SELECT 1 ) INSERT INTO t ( a ) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH x AS MATERIALIZED ( SELECT 1 ) SELECT * FROM x","kind":"accepts-invalid"}
-{"sql":"WITH x AS ( SELECT 1 ) FROM x x","kind":"rejects-valid"}
 {"sql":"WITH RECURSIVE x (n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH RECURSIVE x (n, m) AS (SELECT 1, 2 UNION ALL SELECT n + 1, m * 2 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
 {"sql":"WITH RECURSIVE x (n) AS (VALUES (1) UNION ALL SELECT n + 1 FROM x WHERE n < 5) SELECT * FROM x","kind":"accepts-invalid"}
@@ -565,39 +482,16 @@
 {"sql":"SELECT * FROM t NATURAL LEFT JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t NATURAL RIGHT JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t NATURAL FULL JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a JOIN b JOIN c ON b.id = c.id ON a.id = b.id","kind":"rejects-valid"}
-{"sql":"SELECT * FROM a LEFT JOIN b JOIN c ON b.id = c.id ON a.id = b.id","kind":"rejects-valid"}
-{"sql":"SELECT * FROM a JOIN b LEFT JOIN c JOIN d ON c.id = d.id ON b.id = c.id ON a.id = b.id","kind":"rejects-valid"}
 {"sql":"SELECT * FROM (a JOIN b ON a.id = b.id) AS x","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM a NATURAL JOIN b NATURAL JOIN c","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t JOIN u ON t.a IN (SELECT id FROM c)","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t JOIN u ON EXISTS (SELECT 1 FROM c WHERE c.id = t.a)","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t LEFT JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t INNER JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL JOIN u ON t.a = u.a","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t NATURAL JOIN u USING (a)","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t CROSS JOIN u ON t.a = u.a","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t CROSS JOIN u USING (a)","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a JOIN b JOIN c ON b.id = c.id","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM (a JOIN b)","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a JOIN (b JOIN c) ON a.id = b.id","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t . OUTER JOIN u ON t . a = u . a","kind":"rejects-valid"}
 {"sql":"SELECT * FROM t NATURAL JOIN a","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t t NATURAL INNER JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t t NATURAL RIGHT JOIN u","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . id ON a . id = b . id","kind":"rejects-valid"}
-{"sql":"SELECT * FROM a id JOIN b CROSS JOIN c","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a CROSS JOIN b JOIN c","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a , b CROSS JOIN c JOIN d","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a , b JOIN c , d","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t t LEFT JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t . JOIN u","kind":"rejects-valid"}
-{"sql":"SELECT * FROM t t INNER JOIN u","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM t . RIGHT JOIN u ON t . a = u . a","kind":"rejects-valid"}
-{"sql":"SELECT * FROM t NATURAL JOIN u u USING ( a )","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM t CROSS JOIN u u USING ( a )","kind":"accepts-invalid"}
-{"sql":"SELECT * FROM a JOIN b JOIN c ON b . id = c . id","kind":"accepts-invalid"}
 {"sql":"SELECT * FROM ( a b )","kind":"accepts-invalid"}
 {"sql":"SELECT a FROM t LIMIT 1 + 1","kind":"accepts-invalid"}
 {"sql":"SELECT a FROM t LIMIT NULL","kind":"accepts-invalid"}
@@ -619,13 +513,11 @@
 {"sql":"SELECT a FROM t LIMIT (SELECT 1)","kind":"accepts-invalid"}
 {"sql":"SELECT a FROM t LIMIT 1 OFFSET (SELECT 1)","kind":"accepts-invalid"}
 {"sql":"SELECT COUNT(*) FILTER (WHERE a IN (SELECT a FROM u)) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT (FROM t)","kind":"rejects-valid"}
 {"sql":"SELECT EXISTS ( ( SELECT MAX ( a ) FROM t ) AS TEXT )","kind":"rejects-valid"}
 {"sql":"SELECT ( SELECT a t ORDER BY a LIMIT 1 )","kind":"accepts-invalid"}
 {"sql":"SELECT a t WHERE ( a ) IN ( SELECT a FROM u )","kind":"accepts-invalid"}
 {"sql":"SELECT a t WHERE a IN ( SELECT a FROM u WHERE b IN ( SELECT id FROM c ) )","kind":"accepts-invalid"}
 {"sql":"SELECT COUNT ( ) FILTER ( WHERE a IN ( SELECT a FROM u ) ) FROM t","kind":"accepts-invalid"}
-{"sql":"SELECT ( FROM t t )","kind":"rejects-valid"}
 {"sql":"VALUES (1)","kind":"accepts-invalid"}
 {"sql":"VALUES (1, 2)","kind":"accepts-invalid"}
 {"sql":"VALUES (1), (2), (3)","kind":"accepts-invalid"}

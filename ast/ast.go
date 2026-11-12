@@ -441,7 +441,112 @@ type Query struct {
 	OrderBy []*OrderItem
 	Limit   *Limit
 	Locking []*Locking
+	Pipes   []PipeOp // BigQuery's |> operators, applied to everything before them
 }
+
+// FromQuery is a query that starts with FROM (BigQuery): FROM t |> WHERE a > 1.
+// Alone it reads like SELECT * FROM the same items.
+type FromQuery struct {
+	From []TableExpr
+}
+
+// PipeOp is one |> step of BigQuery's pipe syntax.
+type PipeOp interface {
+	Node
+	pipeOp()
+}
+
+// The pipe operators. Each works on the table the steps before it produce.
+type (
+	PipeWhere  struct{ Cond Expr }
+	PipeSelect struct {
+		Distinct bool
+		As       string // STRUCT or VALUE, or ""
+		Items    []*SelectItem
+	}
+	PipeExtend struct{ Items []*SelectItem }
+	PipeWindow struct{ Items []*SelectItem } // the older form of EXTEND for window functions
+	PipeSet    struct{ Items []*PipeAssign }
+	PipeDrop   struct{ Columns []Ident }
+	PipeRename struct{ Items []*PipeRenameItem }
+	PipeAs     struct{ Alias Ident }
+	// PipeAggregate is AGGREGATE items [GROUP [AND ORDER] BY items].
+	PipeAggregate struct {
+		Items         []*PipeAggItem
+		GroupBy       []*PipeAggItem
+		GroupAndOrder bool
+	}
+	PipeOrderBy struct{ Items []*OrderItem }
+	PipeLimit   struct{ Count, Offset Expr }
+	// PipeSetOp is UNION ALL (query), (query): the input is the first branch.
+	PipeSetOp struct {
+		Op      SetOpKind
+		All     bool
+		Match   *SetMatch
+		Queries []*Query
+	}
+	PipeJoin struct{ Join *Join } // Join.Left is nil: the input is the left side
+	PipeCall struct {
+		Func  *FuncCall
+		Alias *Ident
+	}
+	PipeWith        struct{ With *With }
+	PipeDistinct    struct{}
+	PipeTableSample struct{ Sample *TableSample }
+)
+
+// PipeAssign is one column = value of SET.
+type PipeAssign struct {
+	Column Ident
+	Value  Expr
+}
+
+// PipeRenameItem is one old AS new of RENAME.
+type PipeRenameItem struct{ From, To Ident }
+
+// PipeAggItem is an item of AGGREGATE or its GROUP BY: expr [AS alias] [ASC|DESC].
+type PipeAggItem struct {
+	Expr      Expr
+	Alias     *Ident
+	Direction string
+}
+
+func (*FromQuery) node()         {}
+func (*FromQuery) queryBody()    {}
+func (*PipeWhere) node()         {}
+func (*PipeSelect) node()        {}
+func (*PipeExtend) node()        {}
+func (*PipeWindow) node()        {}
+func (*PipeSet) node()           {}
+func (*PipeDrop) node()          {}
+func (*PipeRename) node()        {}
+func (*PipeAs) node()            {}
+func (*PipeAggregate) node()     {}
+func (*PipeOrderBy) node()       {}
+func (*PipeLimit) node()         {}
+func (*PipeSetOp) node()         {}
+func (*PipeJoin) node()          {}
+func (*PipeCall) node()          {}
+func (*PipeWith) node()          {}
+func (*PipeDistinct) node()      {}
+func (*PipeTableSample) node()   {}
+func (*PipeWhere) pipeOp()       {}
+func (*PipeSelect) pipeOp()      {}
+func (*PipeExtend) pipeOp()      {}
+func (*PipeWindow) pipeOp()      {}
+func (*PipeSet) pipeOp()         {}
+func (*PipeDrop) pipeOp()        {}
+func (*PipeRename) pipeOp()      {}
+func (*PipeAs) pipeOp()          {}
+func (*PipeAggregate) pipeOp()   {}
+func (*PipeOrderBy) pipeOp()     {}
+func (*PipeLimit) pipeOp()       {}
+func (*PipeSetOp) pipeOp()       {}
+func (*PipeJoin) pipeOp()        {}
+func (*PipeCall) pipeOp()        {}
+func (*PipeWith) pipeOp()        {}
+func (*PipeDistinct) pipeOp()    {}
+func (*PipeTableSample) pipeOp() {}
 
 // With is a WITH [RECURSIVE] clause.
 type With struct {
@@ -542,6 +647,16 @@ type SetOp struct {
 	Op          SetOpKind
 	All         bool
 	Left, Right QueryBody
+	Match       *SetMatch // BigQuery's BY NAME or CORRESPONDING, or nil
+}
+
+// SetMatch is how BigQuery lines up the columns of a set operation by name:
+// [INNER | FULL [OUTER] | LEFT [OUTER]] UNION ALL BY NAME [ON (cols)], or
+// CORRESPONDING [BY (cols)].
+type SetMatch struct {
+	Mode          string // "", "INNER", "FULL" or "LEFT"
+	Corresponding bool   // CORRESPONDING rather than BY NAME
+	Columns       []Ident
 }
 
 // Values is a VALUES (...), (...) list.

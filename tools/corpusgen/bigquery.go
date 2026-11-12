@@ -473,7 +473,9 @@ func (b *bigQuery) sameMeaning(sql, shape string) bool {
 // grouping: it must resolve, and a constant query must also evaluate.
 func (b *bigQuery) checkable(sql string) bool {
 	x := b.dry(sql)
-	if !x.OK {
+	// The sample tables are recreated on every run, so FOR SYSTEM_TIME AS OF
+	// a moment ago can fall before they existed.
+	if !x.OK || strings.Contains(strings.ToUpper(sql), "SYSTEM_TIME") {
 		return false
 	}
 	return x.Type != "SELECT" || len(x.Tables) > 0 || bqVolatile.MatchString(sql) || b.run(sql).OK

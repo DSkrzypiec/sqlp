@@ -755,11 +755,11 @@ func TestPerfQStruct(t *testing.T) {
 func TestQStructSeesEveryField(t *testing.T) {
 	testkit.Require(t, "postgres", "sqlite")
 	for typ, want := range map[reflect.Type]string{
-		reflect.TypeFor[ast.Query]():       "With Body OrderBy Limit Locking",
+		reflect.TypeFor[ast.Query]():       "With Body OrderBy Limit Locking Pipes",
 		reflect.TypeFor[ast.With]():        "Recursive CTEs",
 		reflect.TypeFor[ast.CTE]():         "Name Columns Materialized Query DML Search Cycle",
 		reflect.TypeFor[ast.Select]():      "Distinct DistinctOn Items Into From Where GroupBy Having Windows Qualify As",
-		reflect.TypeFor[ast.SetOp]():       "Op All Left Right",
+		reflect.TypeFor[ast.SetOp]():       "Op All Left Right Match",
 		reflect.TypeFor[ast.Values]():      "Rows",
 		reflect.TypeFor[ast.ParenQuery]():  "Query",
 		reflect.TypeFor[ast.TableBody]():   "Name",

@@ -139,6 +139,7 @@ type QueryFeatures struct {
 	OnlyTable             bool // FROM ONLY t
 	IndexedBy             bool // FROM t INDEXED BY idx / NOT INDEXED
 	JoinRequiresQual      bool // [INNER|LEFT|...] JOIN must have ON/USING
+	JoinUsingAlias        bool // JOIN ... USING (a) AS x (PostgreSQL)
 	ParenTableIsJoin      bool // ( ... ) in FROM must hold a join, not a lone table
 	ValuesTail            bool // VALUES ... ORDER BY / LIMIT
 	WithOrdinality        bool // FROM f() WITH ORDINALITY
@@ -152,6 +153,8 @@ type QueryFeatures struct {
 	TrailingComma         bool // SELECT a, b, FROM t (BigQuery)
 	SamplePercent         bool // TABLESAMPLE SYSTEM (n PERCENT) (BigQuery)
 	SystemTime            bool // FROM t [AS x] FOR SYSTEM_TIME AS OF expr (BigQuery)
+	Pipes                 bool // FROM t |> WHERE ... and |> after any query (BigQuery)
+	SetByName             bool // [FULL|LEFT|INNER] UNION ALL BY NAME [ON (...)], CORRESPONDING [BY (...)] (BigQuery)
 	OrderByUsing          bool // ORDER BY x USING <
 	FetchFirst            bool // FETCH FIRST n ROWS ONLY
 	OffsetWithoutLimit    bool // OFFSET without LIMIT, LIMIT ALL

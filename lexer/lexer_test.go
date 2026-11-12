@@ -29,7 +29,7 @@ var bqCfg = dialectConfig{name: "bigquery", Config: Config{
 	IdentQuotes: "`", NoEmptyQuotedIdent: true, BackslashEscapes: true, DoubleQuotedStrings: true,
 	PrefixedStrings: true, AdjacentStrings: true, HashComments: true, ASCIIIdents: true, CommentEndsAtCR: true,
 	ParamPrefixes: "?",
-	Operators:     []string{"<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@", "=", "<", ">", "+", "-", "*", "/", "&", "|", "^", "~", "@"},
+	Operators:     []string{"|>", "<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@", "=", "<", ">", "+", "-", "*", "/", "&", "|", "^", "~", "@"},
 }}
 
 // render is a compact token description used in test tables: "Kind:Value".

@@ -130,7 +130,7 @@ var Postgres = &Dialect{
 			StrictFrames: true, ParenQueries: true, IntersectBindsTighter: true,
 			SetQuantifiers: true, EmptySelectList: true, SelectInto: true, DistinctOn: true,
 			Lateral: true, TableSample: true, TableKeyword: true, OnlyTable: true,
-			JoinRequiresQual: true, ParenTableIsJoin: true, WithOrdinality: true, ValuesTail: true,
+			JoinRequiresQual: true, JoinUsingAlias: true, ParenTableIsJoin: true, WithOrdinality: true, ValuesTail: true,
 			GroupingSets: true, OrderByUsing: true, FetchFirst: true, OffsetWithoutLimit: true,
 			Locking: true, DataModifyingCTE: true, CTESearchCycle: true,
 		},

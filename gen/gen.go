@@ -1049,6 +1049,186 @@ func (g *Generator) query(q *ast.Query) {
 		}
 		g.kw(lk.Wait != "", lk.Wait)
 	}
+	for _, op := range q.Pipes {
+		g.w(" |> ")
+		g.pipe(op)
+	}
+}
+
+func (g *Generator) tableSample(s *ast.TableSample) {
+	g.w("TABLESAMPLE ")
+	g.name(s.Method)
+	g.w("(")
+	g.exprList(s.Args)
+	g.kw(s.Percent, "PERCENT")
+	g.w(")")
+	if s.Repeatable != nil {
+		g.w(" REPEATABLE (")
+		g.expr(s.Repeatable)
+		g.w(")")
+	}
+}
+
+// join writes a join from its keywords on, without its left side: a pipe's
+// input is the left side of |> JOIN.
+func (g *Generator) join(t *ast.Join) {
+	kind := t.Kind
+	if t.Natural && kind == ast.CrossJoin && g.from != nil && !g.d.Features.Query.FreeJoinKeywords {
+		kind = ast.InnerJoin // SQLite's NATURAL CROSS JOIN is a natural inner join
+	}
+	if t.Natural {
+		g.w("NATURAL ")
+	}
+	g.w([...]string{"JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL JOIN", "CROSS JOIN"}[kind], " ")
+	g.joinOperand(t.Right)
+	if t.On != nil {
+		g.w(" ON ")
+		g.expr(t.On)
+	}
+	if len(t.Using) > 0 {
+		g.w(" USING (")
+		g.identList(t.Using)
+		g.w(")")
+		if t.UsingAlias != nil {
+			g.w(" AS ")
+			g.ident(*t.UsingAlias)
+		}
+	}
+}
+
+// pipe writes one operator of BigQuery's pipe syntax.
+func (g *Generator) pipe(op ast.PipeOp) {
+	switch x := op.(type) {
+	case *ast.PipeWhere:
+		g.w("WHERE ")
+		g.expr(x.Cond)
+	case *ast.PipeSelect:
+		g.w("SELECT ")
+		g.kwInline(x.Distinct, "DISTINCT ")
+		if x.As != "" {
+			g.w("AS ", x.As, " ")
+		}
+		g.selectItems(x.Items)
+	case *ast.PipeExtend:
+		g.w("EXTEND ")
+		g.selectItems(x.Items)
+	case *ast.PipeWindow:
+		g.w("WINDOW ")
+		g.selectItems(x.Items)
+	case *ast.PipeSet:
+		g.w("SET ")
+		for i, a := range x.Items {
+			if i > 0 {
+				g.w(", ")
+			}
+			g.ident(a.Column)
+			g.w(" = ")
+			g.expr(a.Value)
+		}
+	case *ast.PipeDrop:
+		g.w("DROP ")
+		g.identList(x.Columns)
+	case *ast.PipeRename:
+		g.w("RENAME ")
+		for i, r := range x.Items {
+			if i > 0 {
+				g.w(", ")
+			}
+			g.ident(r.From)
+			g.w(" AS ")
+			g.ident(r.To)
+		}
+	case *ast.PipeAs:
+		g.w("AS ")
+		g.ident(x.Alias)
+	case *ast.PipeAggregate:
+		g.w("AGGREGATE")
+		g.pipeAggItems(x.Items)
+		if len(x.GroupBy) > 0 {
+			g.w(" GROUP")
+			g.kw(x.GroupAndOrder, "AND ORDER")
+			g.w(" BY")
+			g.pipeAggItems(x.GroupBy)
+		}
+	case *ast.PipeOrderBy:
+		g.w("ORDER BY ")
+		g.orderItems(x.Items)
+	case *ast.PipeLimit:
+		g.w("LIMIT ")
+		g.expr(x.Count)
+		if x.Offset != nil {
+			g.w(" OFFSET ")
+			g.expr(x.Offset)
+		}
+	case *ast.PipeSetOp:
+		g.setOpWords(x.Op, x.All, x.Match)
+		for i, q := range x.Queries {
+			if i > 0 {
+				g.w(",")
+			}
+			g.w(" (")
+			g.query(q)
+			g.w(")")
+		}
+	case *ast.PipeJoin:
+		g.join(x.Join)
+	case *ast.PipeCall:
+		g.w("CALL ")
+		g.funcCall(x.Func)
+		if x.Alias != nil {
+			g.w(" AS ")
+			g.ident(*x.Alias)
+		}
+	case *ast.PipeWith:
+		g.with(x.With)
+	case *ast.PipeDistinct:
+		g.w("DISTINCT")
+	case *ast.PipeTableSample:
+		g.tableSample(x.Sample)
+	}
+}
+
+func (g *Generator) pipeAggItems(items []*ast.PipeAggItem) {
+	for i, it := range items {
+		if i > 0 {
+			g.w(",")
+		}
+		g.w(" ")
+		g.expr(it.Expr)
+		if it.Alias != nil {
+			g.w(" AS ")
+			g.ident(*it.Alias)
+		}
+		g.kw(it.Direction != "", it.Direction)
+	}
+}
+
+// setOpWords writes UNION ALL and the like, with BigQuery's mode and BY NAME
+// or CORRESPONDING when there is a match. It writes no leading space.
+func (g *Generator) setOpWords(op ast.SetOpKind, all bool, m *ast.SetMatch) {
+	if m != nil && m.Mode != "" {
+		g.w(m.Mode, " ")
+	}
+	g.w([...]string{"UNION", "INTERSECT", "EXCEPT"}[op])
+	g.kw(all, "ALL")
+	g.kw(!all && g.d.Features.Query.SetQuantifierRequired, "DISTINCT")
+	switch {
+	case m == nil:
+	case m.Corresponding:
+		g.w(" CORRESPONDING")
+		if len(m.Columns) > 0 {
+			g.w(" BY (")
+			g.identList(m.Columns)
+			g.w(")")
+		}
+	default:
+		g.w(" BY NAME")
+		if len(m.Columns) > 0 {
+			g.w(" ON (")
+			g.identList(m.Columns)
+			g.w(")")
+		}
+	}
 }
 
 func isNegativeInteger(e ast.Expr) bool {
@@ -1163,9 +1343,8 @@ func (g *Generator) body(b ast.QueryBody) {
 		g.sel(b)
 	case *ast.SetOp:
 		g.setOperand(b.Left)
-		g.w(" ", [...]string{"UNION", "INTERSECT", "EXCEPT"}[b.Op])
-		g.kw(b.All, "ALL")
-		g.kw(!b.All && g.d.Features.Query.SetQuantifierRequired, "DISTINCT")
+		g.w(" ")
+		g.setOpWords(b.Op, b.All, b.Match)
 		g.w(" ")
 		g.setOperand(b.Right)
 	case *ast.Values:
@@ -1177,6 +1356,9 @@ func (g *Generator) body(b ast.QueryBody) {
 	case *ast.TableBody:
 		g.w("TABLE ")
 		g.name(b.Name)
+	case *ast.FromQuery:
+		g.w("FROM ")
+		g.tableExprs(b.From)
 	}
 }
 
@@ -1314,17 +1496,8 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 			g.expr(t.SystemTime)
 		}
 		if t.Sample != nil {
-			g.w(" TABLESAMPLE ")
-			g.name(t.Sample.Method)
-			g.w("(")
-			g.exprList(t.Sample.Args)
-			g.kw(t.Sample.Percent, "PERCENT")
-			g.w(")")
-			if t.Sample.Repeatable != nil {
-				g.w(" REPEATABLE (")
-				g.expr(t.Sample.Repeatable)
-				g.w(")")
-			}
+			g.w(" ")
+			g.tableSample(t.Sample)
 		}
 		g.indexed(t.Indexed)
 	case *ast.SubqueryRef:
@@ -1377,15 +1550,12 @@ func (g *Generator) tableExpr(t ast.TableExpr) {
 		g.joinOperand(t.Left)
 		if t.Comma {
 			g.w(", ")
+			g.joinOperand(t.Right)
 		} else {
-			kind := t.Kind
-			if t.Natural && kind == ast.CrossJoin && g.from != nil && !g.d.Features.Query.FreeJoinKeywords {
-				kind = ast.InnerJoin // SQLite's NATURAL CROSS JOIN is a natural inner join
-			}
-			g.kw(t.Natural, "NATURAL")
-			g.w(" ", [...]string{"JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL JOIN", "CROSS JOIN"}[kind], " ")
+			g.w(" ")
+			g.join(t)
+			return
 		}
-		g.joinOperand(t.Right)
 		if t.On != nil {
 			g.w(" ON ")
 			g.expr(t.On)

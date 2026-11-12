@@ -76,8 +76,8 @@
 {"sql":"WITH x AS MATERIALIZED SELECT 1","reject":true}
 {"sql":"WITH x AS NOT (SELECT 1) SELECT * FROM x","reject":true}
 {"sql":"WITH x AS MATERIALIZED NOT (SELECT 1) SELECT * FROM x","reject":true}
-{"sql":"WITH x AS (SELECT 1) FROM x"}
-{"sql":"WITH x AS (FROM t) SELECT 1"}
+{"sql":"WITH x AS (SELECT 1) FROM x","shape":"WITH x AS (SELECT 1) FROM x;"}
+{"sql":"WITH x AS (FROM t) SELECT 1","shape":"WITH x AS (FROM t) SELECT 1;"}
 {"sql":"WITH x AS (t) SELECT 1","reject":true}
 {"sql":"SELECT 1 WITH x AS (SELECT 1)","reject":true}
 {"sql":"SELECT a FROM t WITH x AS (SELECT 1)","reject":true}
@@ -383,7 +383,7 @@
 {"sql":"WITH x x AS MATERIALIZED NOT ( SELECT 1 ) SELECT * FROM x","reject":true}
 {"sql":"WITH x AS MATERIALIZED NOT ( SELECT 1 ) SELECT * FROM x","reject":true}
 {"sql":"WITH x AS MATERIALIZED NOT ( SELECT 1 x SELECT * FROM x","reject":true}
-{"sql":"WITH x AS ( SELECT 1 ) FROM x x"}
+{"sql":"WITH x AS ( SELECT 1 ) FROM x x","shape":"WITH x AS (SELECT 1) FROM x AS x;"}
 {"sql":"x x AS ( SELECT 1 ) FROM x","reject":true}
 {"sql":"WITH x AS ( 1 SELECT ) FROM x","reject":true}
 {"sql":"WITH x AS SELECT 1 ) FROM x","reject":true}

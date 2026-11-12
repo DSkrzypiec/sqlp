@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"strings"
+
 	"sqlp/ast"
 	"sqlp/lexer"
 )
@@ -30,6 +32,8 @@ func (p *Parser) isQueryStartAtPos(pos int) bool {
 		switch t.Value {
 		case "SELECT", "VALUES", "WITH":
 			result = true
+		case "FROM":
+			result = p.d.Features.Query.Pipes
 		case "TABLE":
 			result = p.d.Features.Query.TableKeyword
 		}
@@ -60,7 +64,194 @@ func (p *Parser) parseQuery() *ast.Query {
 func (p *Parser) parseQueryAfterWith(with *ast.With) *ast.Query {
 	q := &ast.Query{With: with, Body: p.parseQueryBody()}
 	p.parseQueryTail(q)
+	for p.d.Features.Query.Pipes && p.acceptOp("|>") {
+		q.Pipes = append(q.Pipes, p.parsePipeOp())
+	}
 	return q
+}
+
+// parsePipeOp parses one operator of BigQuery's pipe syntax, after |>.
+func (p *Parser) parsePipeOp() ast.PipeOp {
+	switch {
+	case p.acceptKw("WHERE"):
+		return &ast.PipeWhere{Cond: p.parseExpr()}
+	case p.acceptKw("SELECT"):
+		op := &ast.PipeSelect{}
+		if op.Distinct = p.acceptKw("DISTINCT"); !op.Distinct {
+			p.acceptKw("ALL")
+		}
+		if p.isKw("AS") && p.isKwAt(1, "STRUCT", "VALUE") {
+			p.next()
+			op.As = p.next().Value
+		}
+		op.Items = p.parseSelectItems()
+		return op
+	case p.acceptKw("EXTEND"):
+		return &ast.PipeExtend{Items: p.parseSelectItems()}
+	case p.acceptKw("WINDOW"):
+		return &ast.PipeWindow{Items: p.parseSelectItems()}
+	case p.acceptKw("SET"):
+		op := &ast.PipeSet{}
+		for {
+			a := &ast.PipeAssign{Column: p.parseIdent()}
+			p.expectOp("=")
+			a.Value = p.parseExpr()
+			op.Items = append(op.Items, a)
+			if !p.acceptOp(",") || p.atPipeEnd() {
+				return op
+			}
+		}
+	case p.acceptKw("DROP"):
+		op := &ast.PipeDrop{}
+		for {
+			op.Columns = append(op.Columns, p.parseIdent())
+			if !p.acceptOp(",") || p.atPipeEnd() {
+				return op
+			}
+		}
+	case p.acceptKw("RENAME"):
+		op := &ast.PipeRename{}
+		for {
+			r := &ast.PipeRenameItem{From: p.parseIdent()}
+			p.acceptKw("AS")
+			r.To = p.parseIdent()
+			op.Items = append(op.Items, r)
+			if !p.acceptOp(",") || p.atPipeEnd() {
+				return op
+			}
+		}
+	case p.acceptKw("AS"):
+		return &ast.PipeAs{Alias: p.parseIdent()}
+	case p.acceptKw("AGGREGATE"):
+		op := &ast.PipeAggregate{Items: p.parsePipeAggItems(false)}
+		if p.acceptKw("GROUP") {
+			op.GroupAndOrder = p.acceptKwSeq("AND", "ORDER")
+			p.expectKw("BY")
+			op.GroupBy = p.parsePipeAggItems(true)
+		}
+		return op
+	case p.acceptKwSeq("ORDER", "BY"):
+		return &ast.PipeOrderBy{Items: p.parseOrderItems()}
+	case p.acceptKw("LIMIT"):
+		op := &ast.PipeLimit{Count: p.parseExpr()}
+		if p.acceptKw("OFFSET") {
+			op.Offset = p.parseExpr()
+		}
+		return op
+	case p.acceptKw("CALL"):
+		op := &ast.PipeCall{Func: p.parseFuncCall(p.parseName())}
+		if a := p.parseAlias(false); a != nil {
+			op.Alias = &a.Name
+		}
+		return op
+	case p.isKw("WITH"):
+		return &ast.PipeWith{With: p.parseWith()}
+	case p.acceptKw("DISTINCT"):
+		return &ast.PipeDistinct{}
+	case p.isKw("TABLESAMPLE"):
+		return &ast.PipeTableSample{Sample: p.parseTableSample()}
+	}
+	mode := p.parseSetMode()
+	if kind, ok := map[string]ast.SetOpKind{"UNION": ast.Union, "INTERSECT": ast.Intersect, "EXCEPT": ast.Except}[p.peek().Value]; ok && p.peek().Kind == lexer.Ident {
+		p.next()
+		op := &ast.PipeSetOp{Op: kind, All: p.parseSetQuantifier(kind), Match: p.parseSetMatch(mode)}
+		for {
+			p.expectOp("(")
+			op.Queries = append(op.Queries, p.parseQuery())
+			p.expectOp(")")
+			if !p.acceptOp(",") {
+				return op
+			}
+		}
+	}
+	if j, ok := p.parseJoin(nil); ok {
+		return &ast.PipeJoin{Join: j}
+	}
+	p.unexpected("pipe operator")
+	return nil
+}
+
+// atPipeEnd reports whether the current pipe operator ends here, as after a
+// trailing comma.
+func (p *Parser) atPipeEnd() bool {
+	t := p.peek()
+	return t.Kind == lexer.EOF || t.Kind == lexer.Op && (t.Text == "|>" || t.Text == ")" || t.Text == ";")
+}
+
+// parsePipeAggItems parses AGGREGATE's items, or its GROUP BY's: expr [[AS]
+// alias] [ASC|DESC], up to GROUP or the end of the operator.
+func (p *Parser) parsePipeAggItems(group bool) []*ast.PipeAggItem {
+	var items []*ast.PipeAggItem
+	for !p.atPipeEnd() && !(!group && p.isKw("GROUP")) {
+		it := &ast.PipeAggItem{}
+		if group {
+			it.Expr = p.parseGroupItem()
+		} else {
+			it.Expr = p.parseExpr()
+		}
+		switch {
+		case p.acceptKw("AS"):
+			id := p.parseIdent()
+			it.Alias = &id
+		case p.canBeIdent() && !p.isKw("GROUP", "ASC", "DESC"):
+			id := p.parseIdent()
+			it.Alias = &id
+		}
+		it.Direction = p.acceptOneOf("ASC", "DESC")
+		items = append(items, it)
+		if !p.acceptOp(",") {
+			break
+		}
+	}
+	return items
+}
+
+// parseSetMode parses BigQuery's INNER, FULL [OUTER] or LEFT [OUTER] before a
+// set operator.
+func (p *Parser) parseSetMode() string {
+	if !p.d.Features.Query.SetByName {
+		return ""
+	}
+	for _, m := range []string{"INNER", "FULL", "LEFT"} {
+		if !p.isKw(m) {
+			continue
+		}
+		n := 1
+		if m != "INNER" && p.isKwAt(1, "OUTER") {
+			n = 2
+		}
+		if p.isKwAt(n, "UNION", "INTERSECT", "EXCEPT") {
+			p.pos += n
+			return m
+		}
+	}
+	return ""
+}
+
+// parseSetMatch parses BY NAME [ON (cols)] or CORRESPONDING [BY (cols)] after
+// a set operator's quantifier. A mode needs one of them.
+func (p *Parser) parseSetMatch(mode string) *ast.SetMatch {
+	if !p.d.Features.Query.SetByName {
+		return nil
+	}
+	m := &ast.SetMatch{Mode: mode}
+	switch {
+	case p.acceptKwSeq("BY", "NAME"):
+		if p.acceptKw("ON") {
+			m.Columns = p.parseParenIdentList()
+		}
+	case p.acceptKw("CORRESPONDING"):
+		m.Corresponding = true
+		if p.acceptKw("BY") {
+			m.Columns = p.parseParenIdentList()
+		}
+	default:
+		if mode != "" {
+			p.unexpected("BY NAME or CORRESPONDING")
+		}
+		return nil
+	}
+	return m
 }
 
 // parseQueryTail parses ORDER BY, then LIMIT/OFFSET/FETCH and locking clauses,
@@ -274,7 +465,7 @@ func (p *Parser) parseWith() *ast.With {
 	}
 	for {
 		w.CTEs = append(w.CTEs, p.parseCTE())
-		if !p.acceptOp(",") {
+		if !p.acceptOp(",") || p.d.Features.Query.Pipes && p.atPipeEnd() { // |> WITH a AS (...), |>
 			return w
 		}
 	}
@@ -355,6 +546,8 @@ func (p *Parser) parseQueryBody() ast.QueryBody {
 		for {
 			var op ast.SetOpKind
 			pos := p.peek().Pos
+			save := p.pos
+			mode := p.parseSetMode()
 			switch {
 			case p.acceptKw("UNION"):
 				op = ast.Union
@@ -363,10 +556,13 @@ func (p *Parser) parseQueryBody() ast.QueryBody {
 			case p.acceptKw("INTERSECT"):
 				op = ast.Intersect
 			default:
+				p.pos = save
 				return left
 			}
 			all := p.parseSetQuantifier(op)
+			match := p.parseSetMatch(mode)
 			left = p.setOp(pos, op, all, left, p.parseQueryPrimary)
+			left.(*ast.SetOp).Match = match
 		}
 	}
 	left := p.parseIntersectTerm()
@@ -420,6 +616,9 @@ func (p *Parser) setOp(pos int, op ast.SetOpKind, all bool, left ast.QueryBody, 
 }
 
 func (p *Parser) parseQueryPrimary() ast.QueryBody {
+	if p.d.Features.Query.Pipes && p.acceptKw("FROM") { // FROM t |> ...
+		return &ast.FromQuery{From: p.parseFromList()}
+	}
 	switch {
 	case p.isOp("(") && p.d.Features.Query.ParenQueries:
 		p.next()
@@ -525,7 +724,7 @@ func (p *Parser) atSelectListEnd() bool {
 	case lexer.EOF:
 		return true
 	case lexer.Op:
-		return t.Text == ";" || t.Text == ")"
+		return t.Text == ";" || t.Text == ")" || t.Text == "|>"
 	case lexer.Ident:
 		return p.isKw("FROM", "WHERE", "GROUP", "HAVING", "WINDOW", "ORDER", "LIMIT", "OFFSET",
 			"FETCH", "FOR", "UNION", "INTERSECT", "EXCEPT", "INTO")
@@ -763,6 +962,10 @@ func (p *Parser) parseJoin(left ast.TableExpr) (*ast.Join, bool) {
 	j.Right = p.parseTableFactor()
 	strict := p.d.Features.Query.JoinRequiresQual
 	needsQual := strict && j.Kind != ast.CrossJoin && !j.Natural
+	// BigQuery: joining an array, UNNEST(...) or a path such as t.arr, needs no
+	// ON. A path cannot be told from dataset.table, which does need one.
+	optional := needsQual && p.d.Features.Query.Unnest && joinsArray(j.Right)
+	needsQual = needsQual && !optional
 	if needsQual {
 		// a JOIN b JOIN c ON x ON y nests to the right.
 		for {
@@ -773,13 +976,13 @@ func (p *Parser) parseJoin(left ast.TableExpr) (*ast.Join, bool) {
 			j.Right = inner
 		}
 	}
-	if needsQual || !strict {
+	if needsQual || !strict || optional {
 		switch {
 		case p.acceptKw("ON"):
 			j.On = p.parseExpr()
 		case p.acceptKw("USING"):
 			j.Using = p.parseParenIdentList()
-			if strict && p.acceptKw("AS") {
+			if p.d.Features.Query.JoinUsingAlias && p.acceptKw("AS") {
 				id := p.parseIdent()
 				j.UsingAlias = &id
 			}
@@ -788,6 +991,18 @@ func (p *Parser) parseJoin(left ast.TableExpr) (*ast.Join, bool) {
 		}
 	}
 	return j, true
+}
+
+// joinsArray reports whether a join's right side may be an array: UNNEST(...)
+// or a name of more than one part.
+func joinsArray(t ast.TableExpr) bool {
+	switch x := t.(type) {
+	case *ast.FuncRef:
+		return x.Func != nil && len(x.Func.Name.Parts) == 1 && strings.EqualFold(x.Func.Name.Parts[0].Name, "UNNEST")
+	case *ast.TableRef:
+		return len(x.Name.Parts) > 1
+	}
+	return false
 }
 
 // parseJoinKeywords parses standard [NATURAL] [kind [OUTER]] before JOIN.

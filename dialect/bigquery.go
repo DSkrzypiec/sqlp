@@ -34,7 +34,7 @@ var BigQuery = &Dialect{
 		CommentEndsAtCR:     true,
 		ParamPrefixes:       "?", // @name is parsed: BigQuery allows `@ name`
 		Operators: []string{
-			"<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@",
+			"|>", "<<", ">>", "<=", ">=", "<>", "!=", "||", "=>", "@@",
 			"=", "<", ">", "+", "-", "*", "/", "&", "|", "^", "~", "@",
 		},
 	},
@@ -85,7 +85,8 @@ var BigQuery = &Dialect{
 		Query: QueryFeatures{
 			ParenQueries: true, SetQuantifierRequired: true, UnmixedSetOps: true, Qualify: true,
 			GroupingSets: true, GroupByAll: true, Unnest: true, StarModifiers: true, SelectAs: true,
-			TrailingComma: true, TableSample: true, SamplePercent: true, SystemTime: true,
+			TrailingComma: true, TableSample: true, SamplePercent: true, SystemTime: true, Pipes: true,
+			SetByName: true, JoinRequiresQual: true,
 		},
 	},
 }

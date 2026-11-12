@@ -663,7 +663,188 @@ func (b *colBuilder) query(q *ast.Query, outer *colScope, ctes *scope, first fun
 		ctes = b.finder.with(q.With, ctes)
 		b.outer[q.With] = outer
 	}
-	return b.body(q.Body, outer, ctes, first)
+	if len(q.Pipes) == 0 {
+		return b.body(q.Body, outer, ctes, first)
+	}
+	var sc *colScope
+	if fq, ok := q.Body.(*ast.FromQuery); ok { // the FROM items stay visible to the steps
+		sc = b.fromScope(fq, outer, ctes)
+	} else {
+		sc = &colScope{parent: outer, ctes: ctes, items: []*rel{{cols: b.body(q.Body, outer, ctes, first)}}}
+	}
+	return b.pipes(q.Pipes, sc)
+}
+
+func (b *colBuilder) fromScope(fq *ast.FromQuery, outer *colScope, ctes *scope) *colScope {
+	sc := &colScope{parent: outer, ctes: ctes}
+	for _, t := range fq.From {
+		sc.items = append(sc.items, b.fromItem(t, sc))
+	}
+	return sc
+}
+
+// pipes runs BigQuery's |> steps. The table between two steps is a scope of
+// relations, so that the names it carries, such as the aliases of FROM t AS
+// x, stay visible until a step like SELECT makes a new table. Steps that only
+// filter or order rows change no columns: columns used only there are not
+// listed, as for WHERE and ORDER BY.
+func (b *colBuilder) pipes(ops []ast.PipeOp, sc *colScope) []col {
+	table := func(cols []col, name string) *colScope { // a new table, which steps after it read
+		rl := &rel{name: b.r.key(name), label: name, cols: b.relabel(cols, name)}
+		return &colScope{parent: sc.parent, ctes: sc.ctes, items: []*rel{rl}, bases: []*rel{rl}}
+	}
+	items := func(list []*ast.SelectItem) []col {
+		var cols []col
+		for _, it := range list {
+			cols = b.appendCols(cols, b.selectItem(it, sc))
+		}
+		return cols
+	}
+	// edit makes a copy of the scope whose columns f has changed.
+	edit := func(f func(c col) []col) *colScope {
+		out := &colScope{parent: sc.parent, ctes: sc.ctes}
+		for _, rl := range sc.items {
+			cp := *rl
+			cp.cols = nil
+			for _, c := range rl.cols {
+				cp.cols = append(cp.cols, f(c)...)
+			}
+			out.items = append(out.items, &cp)
+		}
+		out.bases = out.items
+		return out
+	}
+	for _, op := range ops {
+		switch x := op.(type) {
+		case *ast.PipeSelect:
+			sc = table(b.fit(items(x.Items), "a SELECT list"), "")
+		case *ast.PipeAggregate:
+			var cols []col
+			for _, list := range [][]*ast.PipeAggItem{x.GroupBy, x.Items} { // the grouping columns come first
+				for _, it := range list {
+					name := b.outName(it.Expr)
+					if it.Alias != nil {
+						name = b.r.ident(*it.Alias)
+					}
+					cols = b.appendCols(cols, []col{b.newCol(name, b.exprSrcs(it.Expr, sc), "")})
+				}
+			}
+			sc = table(cols, "")
+		case *ast.PipeExtend, *ast.PipeWindow:
+			var list []*ast.SelectItem
+			if e, ok := x.(*ast.PipeExtend); ok {
+				list = e.Items
+			} else {
+				list = x.(*ast.PipeWindow).Items
+			}
+			added := &rel{cols: items(list)}
+			sc = &colScope{parent: sc.parent, ctes: sc.ctes, items: append(slices.Clip(sc.items), added),
+				bases: slices.Clip(sc.bases)}
+		case *ast.PipeSet:
+			with := map[string]*ast.PipeAssign{}
+			for _, a := range x.Items {
+				with[b.r.key(b.r.ident(a.Column))] = a
+			}
+			cur := sc
+			sc = edit(func(c col) []col {
+				if a := with[c.key]; c.open == nil && a != nil {
+					return []col{b.newCol(c.name, b.exprSrcs(a.Value, cur), c.from)}
+				}
+				return []col{c}
+			})
+		case *ast.PipeDrop:
+			drop := map[string]bool{}
+			for _, id := range x.Columns {
+				drop[b.r.key(b.r.ident(id))] = true
+			}
+			sc = edit(func(c col) []col {
+				if c.open == nil && drop[c.key] {
+					return nil
+				}
+				return []col{c}
+			})
+		case *ast.PipeRename:
+			to := map[string]string{}
+			for _, r := range x.Items {
+				to[b.r.key(b.r.ident(r.From))] = b.r.ident(r.To)
+			}
+			sc = edit(func(c col) []col {
+				if n, ok := to[c.key]; c.open == nil && ok {
+					c.name, c.key = n, b.r.key(n)
+				}
+				return []col{c}
+			})
+		case *ast.PipeAs:
+			sc = table(b.star(&ast.Star{}, sc), b.r.ident(x.Alias))
+		case *ast.PipeJoin:
+			j := x.Join
+			right := b.fromItem(j.Right, sc)
+			next := &colScope{parent: sc.parent, ctes: sc.ctes, items: append(slices.Clip(sc.items), right),
+				bases: append(slices.Clip(sc.bases), right)}
+			if j.On != nil {
+				b.emit(b.exprSrcs(j.On, next), inJoin)
+			}
+			for _, id := range j.Using { // both sides' columns of that name
+				key := b.r.key(b.r.ident(id))
+				for _, rl := range next.items {
+					for _, c := range rl.cols {
+						if c.open == nil && c.key == key {
+							b.emit(c.srcs, inJoin)
+						}
+					}
+				}
+			}
+			sc = next
+		case *ast.PipeSetOp:
+			branches := [][]col{b.star(&ast.Star{}, sc)}
+			for _, q := range x.Queries {
+				branches = append(branches, b.query(q, sc.parent, sc.ctes, nil))
+			}
+			if x.Match != nil {
+				branches = b.alignByName(branches)
+			}
+			sc = table(b.setOp(&ast.SetOp{Op: x.Op, All: x.All}, branches), "")
+		case *ast.PipeCall: // a table-valued function of the table so far
+			name := strings.Join(b.idents(x.Func.Name), ".")
+			if x.Alias != nil {
+				name = b.r.ident(*x.Alias)
+			}
+			srcs := set(append(b.allSrcs(b.star(&ast.Star{}, sc)), b.callSrcs(x.Func, sc)...))
+			rl := &rel{name: b.r.key(name), label: name, cols: []col{{open: &openCols{srcs: srcs, labels: []string{name}}}}}
+			sc = &colScope{parent: sc.parent, ctes: sc.ctes, items: []*rel{rl}, bases: []*rel{rl}}
+		case *ast.PipeWith:
+			ctes := b.finder.with(x.With, sc.ctes)
+			b.outer[x.With] = sc.parent
+			sc = &colScope{parent: sc.parent, ctes: ctes, items: sc.items, bases: sc.bases}
+		}
+	}
+	return b.star(&ast.Star{}, sc)
+}
+
+// alignByName reorders the columns of later branches of a set operation to
+// match the first branch's names, as BY NAME and CORRESPONDING do. Columns
+// whose names analysis does not know stay where they are.
+func (b *colBuilder) alignByName(branches [][]col) [][]col {
+	out := [][]col{branches[0]}
+	for _, br := range branches[1:] {
+		byKey := map[string]col{}
+		for _, c := range br {
+			if c.open == nil && c.key != "" {
+				byKey[c.key] = c
+			}
+		}
+		var aligned []col
+		for i, c := range branches[0] {
+			switch m, ok := byKey[c.key]; {
+			case c.open == nil && ok:
+				aligned = append(aligned, m)
+			case i < len(br):
+				aligned = append(aligned, br[i])
+			}
+		}
+		out = append(out, aligned)
+	}
+	return out
 }
 
 func (b *colBuilder) body(body ast.QueryBody, outer *colScope, ctes *scope, first func([]col)) []col {
@@ -679,6 +860,9 @@ func (b *colBuilder) body(body ast.QueryBody, outer *colScope, ctes *scope, firs
 			}
 			branches = append(branches, b.body(br, outer, ctes, first))
 		}
+		if x.Match != nil { // BigQuery's BY NAME and CORRESPONDING
+			branches = b.alignByName(branches)
+		}
 		return b.setOp(x, branches)
 	case *ast.ParenQuery:
 		return b.query(x.Query, outer, ctes, first)
@@ -686,6 +870,8 @@ func (b *colBuilder) body(body ast.QueryBody, outer *colScope, ctes *scope, firs
 		cols = b.values(x, &colScope{parent: outer, ctes: ctes})
 	case *ast.TableBody:
 		cols = b.relation(x.Name, ctes).cols
+	case *ast.FromQuery:
+		cols = b.star(&ast.Star{}, b.fromScope(x, outer, ctes))
 	default:
 		panic(fmt.Sprintf("analyze: unexpected query body %T", body))
 	}
